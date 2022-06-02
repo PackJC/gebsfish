@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\scripts",
+    "\\scripts\\4_world",
+    "\\scripts\\4_world\\classes\\useractioncomponent",
+    "\\scripts\\4_world\\classes\\useractioncomponent\\actions",
+    "\\scripts\\4_world\\classes\\useractioncomponent\\actions\\continuous"
+  ],
+  "SelectedNode": "\\scripts\\4_world\\FileReadHelper.c",
+  "PreviewInSolutionExplorer": false
+}
