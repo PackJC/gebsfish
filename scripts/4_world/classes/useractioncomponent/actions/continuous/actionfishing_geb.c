@@ -1,3 +1,145 @@
+class FileReader
+{
+	static const string CONFIG_PATH = "$profile:gebsfish/gebsfishCfg.cfg";
+	static const string DIRECTORY = "$profile:gebsfish";
+
+	private const float MACKEREL_CHANCE = 0.5;
+	private const float MACKEREL_CHANCE = 0;
+	private const float ANGELFISH_CHANCE = 0;
+	private const float BLUEMARLIN_CHANCE = 0;
+	private const float BONITA_CHANCE = 0;
+	private const float CHERRYSALMON_CHANCE = 0;
+	private const float FLATHEADMULLET_CHANCE = 0;
+	private const float LEOPARDSHARK_CHANCE = 0;
+	private const float PACIFICCOD_CHANCE = 0;
+	private const float REDHEADCICHLID_CHANCE = 0;
+	private const float ROUGHNECKROCK_CHANCE = 0;
+	private const float SEVERUM_CHANCE = 0;
+	private const float SHRIMP_CHANCE = 0;
+	private const float BLUETANG_CHANCE = 0;
+	private const float HAIRTAILFISH_CHANCE = 0;
+	private const float HUMPHEADWRASSE_CHANCE = 0;
+	private const float SIAMESETIGERFISH_CHANCE = 0;
+	private const float ASIANSEABASS_CHANCE = 0;
+	private const float JELLYFISH_CHANCE = 0;
+	private const float STARFISH_CHANCE = 0;
+	private const float BLOODCLAM_CHANCE = 0;
+	private const float KINGCRAB_CHANCE = 0;
+
+
+
+	void FileReader()
+	{
+
+		if (GetGame().IsServer() && GetGame().IsMultiplayer())
+		{
+			LoadFromConfigFile();
+		}
+	}
+
+	static FileReader GetInstance()
+	{
+		if (!instance) instance = new FileReader;
+		return instance;
+	}
+
+	void LoadFromConfigFile()
+	{
+		if (FileExist(CONFIG_PATH))
+		{
+			FileHandle file = OpenFile(CONFIG_PATH, FileMode.READ);
+			string line;
+			while (FGets(file, line) != -1)
+			{
+				line.BetterTrim(); //Removes remaining whitespaces
+				//BLUEGILL=30
+				//create map here maybe or up above
+				line.Split("=", tokens);
+
+				//add to map here
+
+			}
+			CloseFile(file);
+		}
+		else
+		{
+			Print("Creating gebsfish config file...");
+			CreateConfig();
+		}
+	}
+
+	// Creates the config file and sets default values.
+	void CreateConfig()
+	{
+		bool success = MakeDirectory(DIRECTORY);
+		if (success)
+		{
+			FileHandle f = OpenFile(CONFIG_PATH, FileMode.WRITE);
+			array<string> sortedKeys = m_LessFishing_Vals.GetKeyArray();
+			sortedKeys.Sort();
+
+			foreach(string key : sortedKeys)
+			{
+				FPrintln(f, key + "=" + m_LessFishing_Vals.Get(key));
+			}
+
+			CloseFile(f);
+		}
+	}
+	static string BetterTrim(string line)
+	{
+		line.Replace("	", ""); // Replace Tabs("\t" or "	") with nothing.
+		line.Replace(";", "");
+		line.Trim(); //Removes remaining whitespaces
+
+		bool hasSpaces = true;
+		while (hasSpaces)
+		{
+			line = line.Trim();
+
+			if (line.Length() > 0)
+				hasSpaces = line.Get(0) == " " || line.Get(line.Length() - 1) == " ";
+			else
+				hasSpaces = false;
+		}
+
+		return line;
+	}
+
+	//Get fish weighted chance
+	map<string, float> GetLessFishingVals()
+	{
+		return m_LessFishing_Vals;
+	}
+
+	//Set fish weighted chance
+	void SetLessFishingVals(string key, float val)
+	{
+		m_LessFishing_Vals.Set(key, val);
+	}
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 modded class ActionFishingNewCB : ActionContinuousBaseCB
 {
 	
@@ -12,27 +154,27 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 		string selected_fresh_fish = "";
 
 		//Saltwater Fish Chances
-		float MACKEREL_CHANCE = 25;
-		float ANGELFISH_CHANCE = 25;
-		float BLUEMARLIN_CHANCE = 25;
-		float BONITA_CHANCE = 25;
-		float CHERRYSALMON_CHANCE = 25;
-		float FLATHEADMULLET_CHANCE = 25;
-		float LEOPARDSHARK_CHANCE = 25;
-		float PACIFICCOD_CHANCE = 25;
-		float REDHEADCICHLID_CHANCE = 25;
-		float ROUGHNECKROCK_CHANCE = 25;
-		float SEVERUM_CHANCE = 25;
-		float SHRIMP_CHANCE = 25;
-		float BLUETANG_CHANCE = 25;
-		float HAIRTAILFISH_CHANCE = 25;
-		float HUMPHEADWRASSE_CHANCE = 25;
-		float SIAMESETIGERFISH_CHANCE = 25;
-		float ASIANSEABASS_CHANCE = 25;
-		float JELLYFISH_CHANCE = 25;
-		float STARFISH_CHANCE = 25;
-		float BLOODCLAM_CHANCE = 25;
-		float KINGCRAB_CHANCE = 25;
+		float MACKEREL_CHANCE = 0;
+		float ANGELFISH_CHANCE = 0;
+		float BLUEMARLIN_CHANCE = 0;
+		float BONITA_CHANCE = 0;
+		float CHERRYSALMON_CHANCE = 0;
+		float FLATHEADMULLET_CHANCE = 0;
+		float LEOPARDSHARK_CHANCE = 0;
+		float PACIFICCOD_CHANCE = 0;
+		float REDHEADCICHLID_CHANCE = 0;
+		float ROUGHNECKROCK_CHANCE = 0;
+		float SEVERUM_CHANCE = 0;
+		float SHRIMP_CHANCE = 0;
+		float BLUETANG_CHANCE = 0;
+		float HAIRTAILFISH_CHANCE = 0;
+		float HUMPHEADWRASSE_CHANCE = 0;
+		float SIAMESETIGERFISH_CHANCE = 0;
+		float ASIANSEABASS_CHANCE = 0;
+		float JELLYFISH_CHANCE = 0;
+		float STARFISH_CHANCE = 0;
+		float BLOODCLAM_CHANCE = 0;
+		float KINGCRAB_CHANCE = 0;
 
 		//Freshwater Fish Chances
 		float CARP_CHANCE = 25;
