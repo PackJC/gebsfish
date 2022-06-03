@@ -13,37 +13,13 @@ class FileReader
 	static auto bug_chance_map = new map<string, float>();	//2 bug
 	static auto worm_chance_map = new map<string, float>();	//2 worm
 
-	private const float MACKEREL_CHANCE = 0.5;
-	private const float MACKEREL_CHANCE = 0;
-	private const float ANGELFISH_CHANCE = 0;
-	private const float BLUEMARLIN_CHANCE = 0;
-	private const float BONITA_CHANCE = 0;
-	private const float CHERRYSALMON_CHANCE = 0;
-	private const float FLATHEADMULLET_CHANCE = 0;
-	private const float LEOPARDSHARK_CHANCE = 0;
-	private const float PACIFICCOD_CHANCE = 0;
-	private const float REDHEADCICHLID_CHANCE = 0;
-	private const float ROUGHNECKROCK_CHANCE = 0;
-	private const float SEVERUM_CHANCE = 0;
-	private const float SHRIMP_CHANCE = 0;
-	private const float BLUETANG_CHANCE = 0;
-	private const float HAIRTAILFISH_CHANCE = 0;
-	private const float HUMPHEADWRASSE_CHANCE = 0;
-	private const float SIAMESETIGERFISH_CHANCE = 0;
-	private const float ASIANSEABASS_CHANCE = 0;
-	private const float JELLYFISH_CHANCE = 0;
-	private const float STARFISH_CHANCE = 0;
-	private const float BLOODCLAM_CHANCE = 0;
-	private const float KINGCRAB_CHANCE = 0;
-
-
 
 	void FileReader()
 	{
 
 		if (GetGame().IsServer() && GetGame().IsMultiplayer())
 		{
-			LoadFromConfigFile();
+			LoadSaltConfigFile();
 		}
 	}
 
@@ -53,48 +29,123 @@ class FileReader
 		return instance;
 	}
 
-	void LoadFromConfigFile()
+	void LoadSaltConfigFile()
 	{
 		if (FileExist(SALT_CONFIG_PATH))
 		{
-			FileHandle file = OpenFile(SALT_CONFIG_PATH, FileMode.READ);
-			string line;
-			while (FGets(file, line) != -1)
+			FileHandle salt_file = OpenFile(SALT_CONFIG_PATH, FileMode.READ);
+			string salt_line;
+			while (FGets(salt_file, salt_line) != -1)
 			{
-				line.BetterTrim(); //Removes remaining whitespaces
-				//BLUEGILL=30
-				//create map here maybe or up above
-				line.Split("=", tokens);
-
-				//add to map here
+				/// <summary>
+				/// Bluegill=30 turns to name=bluegill and value=30
+				/// </summary>
+				salt_line.BetterTrim(); //Removes remaining whitespaces
+				int tokenIndex = salt_line.IndexOf('=');
+				//string name = salt_line.Substring(0, tokenIndex);
+				int lengthIndex = salt_line.Length - tokenIndex;
+				//string value = salt_line.Substring(tokenIndex + 1, lengthIndex - 1);
+				salt_chance_map[salt_line.Substring(0, tokenIndex)] = salt_line.Substring(tokenIndex + 1, lengthIndex - 1);
 
 			}
-			CloseFile(file);
+			CloseFile(salt_file);
 		}
 		
+		if (FileExist(FRESH_CONFIG_PATH))
+		{
+			FileHandle fresh_file = OpenFile(FRESH_CONFIG_PATH, FileMode.READ);
+			string fresh_line;
+			while (FGets(fresh_file, fresh_line) != -1)
+			{
+				fresh_line.BetterTrim(); //Removes remaining whitespaces
+				int tokenIndex = fresh_line.IndexOf('=');
+				int lengthIndex = fresh_line.Length - tokenIndex;
+				fresh_chance_map[fresh_line.Substring(0, tokenIndex)] = fresh_line.Substring(tokenIndex + 1, lengthIndex - 1);
+			}
+			CloseFile(fresh_file);
+		}
+
+		if (FileExist(TRAP_CONFIG_PATH))
+		{
+			FileHandle trap_file = OpenFile(TRAP_CONFIG_PATH, FileMode.READ);
+			string trap_line;
+			while (FGets(trap_file, trap_line) != -1)
+			{
+				trap_line.BetterTrim(); //Removes remaining whitespaces
+				int tokenIndex = trap_line.IndexOf('=');
+				int lengthIndex = trap_line.Length - tokenIndex;
+				trap_chance_map[trap_line.Substring(0, tokenIndex)] = trap_line.Substring(tokenIndex + 1, lengthIndex - 1);
+			}
+			CloseFile(trap_file);
+		}
+
+		if (FileExist(BUG_CONFIG_PATH))
+		{
+			FileHandle bug_file = OpenFile(BUG_CONFIG_PATH, FileMode.READ);
+			string bug_line;
+			while (FGets(bug_file, bug_line) != -1)
+			{
+				bug_line.BetterTrim(); //Removes remaining whitespaces
+				int tokenIndex = bug_line.IndexOf('=');
+				int lengthIndex = bug_line.Length - tokenIndex;
+				bug_chance_map[fresh_line.Substring(0, tokenIndex)] = bug_line.Substring(tokenIndex + 1, lengthIndex - 1);
+			}
+			CloseFile(fresh_file);
+		}
+
+		if (FileExist(WORM_CONFIG_PATH))
+		{
+			FileHandle worm_file = OpenFile(WORM_CONFIG_PATH, FileMode.READ);
+			string worm_line;
+			while (FGets(worm_file, worm_line) != -1)
+			{
+				worm_line.BetterTrim(); //Removes remaining whitespaces
+				int tokenIndex = worm_line.IndexOf('=');
+				int lengthIndex = worm_line.Length - tokenIndex;
+				worm_chance_map[worm_line.Substring(0, tokenIndex)] = worm_line.Substring(tokenIndex + 1, lengthIndex - 1);
+			}
+			CloseFile(worm_file);
+		}
+
 		if (!FileExist(SALT_CONFIG_PATH))
 		{
 			Print("[gebsfish] NOT FOUND: SaltwaterCfg.cfg ");
 			Print("[gebsfish] CREATING FILE: SaltwaterCfg.cfg");
-			CreateConfig();
+			CreateConfig(SALT_CONFIG_PATH);
+		}
+		if (!FileExist(FRESH_CONFIG_PATH))
+		{
+			Print("[gebsfish] NOT FOUND: FreshwaterCfg.cfg ");
+			Print("[gebsfish] CREATING FILE: FreshwaterCfg.cfg");
+			CreateConfig(FRESH_CONFIG_PATH);
+		}
+		if (!FileExist(TRAP_CONFIG_PATH))
+		{
+			Print("[gebsfish] NOT FOUND: TrapCfg.cfg ");
+			Print("[gebsfish] CREATING FILE: TrapCfg.cfg");
+			CreateConfig(TRAP_CONFIG_PATH);
+		}
+		if (!FileExist(BUG_CONFIG_PATH))
+		{
+			Print("[gebsfish] NOT FOUND: BugCfg.cfg ");
+			Print("[gebsfish] CREATING FILE: BugCfg.cfg");
+			CreateConfig(BUG_CONFIG_PATH);
+		}
+		if (!FileExist(WORM_CONFIG_PATH))
+		{
+			Print("[gebsfish] NOT FOUND: WormCfg.cfg ");
+			Print("[gebsfish] CREATING FILE: WormCfg.cfg");
+			CreateConfig(WORM_CONFIG_PATH);
 		}
 	}
 
 	// Creates the config file and sets default values.
-	void CreateConfig()
+	void CreateConfig(CONFIG_PATH)
 	{
 		bool success = MakeDirectory(DIRECTORY);
 		if (success)
 		{
 			FileHandle f = OpenFile(CONFIG_PATH, FileMode.WRITE);
-			array<string> sortedKeys = m_LessFishing_Vals.GetKeyArray();
-			sortedKeys.Sort();
-
-			foreach(string key : sortedKeys)
-			{
-				FPrintln(f, key + "=" + m_LessFishing_Vals.Get(key));
-			}
-
 			CloseFile(f);
 		}
 	}
@@ -119,15 +170,15 @@ class FileReader
 	}
 
 	//Get fish weighted chance
-	map<string, float> GetFreshFishMap()
+	map<string, float> GetSaltChanceMap()
 	{
-		return FreshFishMap;
+		return salt_chance_map;
 	}
 
 	//Set fish weighted chance
 	void SetFreshFishMap(string key, float val)
 	{
-		FreshFishMap.Set(key, val);
+		salt_chance_map.Set(key, val);
 	}
 
 };
