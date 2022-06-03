@@ -1,7 +1,17 @@
 class FileReader
 {
-	static const string CONFIG_PATH = "$profile:gebsfish/gebsfishCfg.cfg";
+	static const string SALT_CONFIG_PATH = "$profile:gebsfish/SaltwaterCfg.cfg";
+	static const string TRAP_CONFIG_PATH = "$profile:gebsfish/TrapCfg.cfg";
+	static const string BUG_CONFIG_PATH = "$profile:gebsfish/BugCfg.cfg";
+	static const string WORM_CONFIG_PATH = "$profile:gebsfish/WormCfg.cfg";
+	static const string FRESH_CONFIG_PATH = "$profile:gebsfish/FreshwaterCfg.cfg";
 	static const string DIRECTORY = "$profile:gebsfish";
+
+	static auto fresh_chance_map = new map<string, float>();	//15 fish
+	static auto salt_chance_map = new map<string, float>();	//21 fish
+	static auto trap_chance_map = new map<string, float>();	//? fish
+	static auto bug_chance_map = new map<string, float>();	//2 bug
+	static auto worm_chance_map = new map<string, float>();	//2 worm
 
 	private const float MACKEREL_CHANCE = 0.5;
 	private const float MACKEREL_CHANCE = 0;
@@ -45,9 +55,9 @@ class FileReader
 
 	void LoadFromConfigFile()
 	{
-		if (FileExist(CONFIG_PATH))
+		if (FileExist(SALT_CONFIG_PATH))
 		{
-			FileHandle file = OpenFile(CONFIG_PATH, FileMode.READ);
+			FileHandle file = OpenFile(SALT_CONFIG_PATH, FileMode.READ);
 			string line;
 			while (FGets(file, line) != -1)
 			{
@@ -61,9 +71,11 @@ class FileReader
 			}
 			CloseFile(file);
 		}
-		else
+		
+		if (!FileExist(SALT_CONFIG_PATH))
 		{
-			Print("Creating gebsfish config file...");
+			Print("[gebsfish] NOT FOUND: SaltwaterCfg.cfg ");
+			Print("[gebsfish] CREATING FILE: SaltwaterCfg.cfg");
 			CreateConfig();
 		}
 	}
@@ -107,15 +119,15 @@ class FileReader
 	}
 
 	//Get fish weighted chance
-	map<string, float> GetLessFishingVals()
+	map<string, float> GetFreshFishMap()
 	{
-		return m_LessFishing_Vals;
+		return FreshFishMap;
 	}
 
 	//Set fish weighted chance
-	void SetLessFishingVals(string key, float val)
+	void SetFreshFishMap(string key, float val)
 	{
-		m_LessFishing_Vals.Set(key, val);
+		FreshFishMap.Set(key, val);
 	}
 
 };

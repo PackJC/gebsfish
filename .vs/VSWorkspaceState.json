@@ -1,16 +1,15 @@
 {
   "ExpandedNodes": [
     "",
-    "\\languagecore",
+    "\\scripts",
     "\\scripts\\4_world",
     "\\scripts\\4_world\\classes",
     "\\scripts\\4_world\\classes\\recipes",
-    "\\scripts\\4_world\\classes\\recipes\\recipes",
     "\\scripts\\4_world\\classes\\useractioncomponent",
     "\\scripts\\4_world\\classes\\useractioncomponent\\actions",
     "\\scripts\\4_world\\classes\\useractioncomponent\\actions\\continuous",
     "\\scripts\\5_mission"
   ],
-  "SelectedNode": "\\languagecore",
+  "SelectedNode": "\\scripts\\4_world\\classes\\useractioncomponent\\actions\\continuous\\actionfishing_geb.c",
   "PreviewInSolutionExplorer": false
 }
