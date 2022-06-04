@@ -5,8 +5,7 @@ modded class ActionConstructor
 		super.RegisterActions(actions);
 
 		actions.Insert(ActionDigBugs);
-		actions.Insert(ActionDigFieldCricket);
-		actions.Insert(ActionDigGrubWorm);
+		actions.Insert(ActionDigWorms);
 		actions.Insert(ActionBambooFishingNet);
 
 	}

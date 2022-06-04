@@ -1,4 +1,4 @@
-class ActionDigWormsCB : ActionContinuousBaseCB
+modded class ActionDigWormsCB : ActionContinuousBaseCB
 {
 	override void CreateActionComponent()
 	{
@@ -9,21 +9,22 @@ class ActionDigWormsCB : ActionContinuousBaseCB
 	}
 };
 
-class ActionDigBugs: ActionContinuousBase
+modded class ActionDigWorms: ActionContinuousBase
 {
 
-	auto worm_map = new map<string, float>();
-	worm_map["Worm"] = FIELDCRICKET_CHANCE;
-	worm_map["GrubWorm"] = GRASSHOPPER_CHANCE;
-	float WORM_CHANCE = 50;
-	float GRUBWORM_CHANCE = 50;
-	float worm_chance_sum;
-	string selected_worm = "";
-	float rndWorm;
+	static ref map<string, float> worm_map = new map<string, float>();
+	static float WORM_CHANCE = 50;
+	static float GRUBWORM_CHANCE = 50;
+	static float worm_chance_sum;
+	static string selected_worm = "";
+	static float rndWorm;
 
 
-	void ActionDigBugs()
+	void ActionDigWorms()
 	{
+		worm_map["Worm"] = WORM_CHANCE;
+		worm_map["GrubWorm"] = GRUBWORM_CHANCE;
+
 		m_CallbackClass = ActionDigBugsCB;
 		m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DIGMANIPULATE;
 		m_FullBody = true;
@@ -110,8 +111,8 @@ class ActionDigBugs: ActionContinuousBase
 		rndWorm = Math.RandomFloatInclusive(0.0, worm_chance_sum);
 
 		foreach(auto _worm_name, auto _worm_chance: worm_map) {
-			if (rndWorm <= _worm_chance && _worm_worm > 0) {
-				selected_worm = _insect_worm;
+			if (rndWorm <= _worm_chance && _worm_chance > 0) {
+				selected_worm = _worm_name;
 				break;
 			}
 			rndWorm -= _worm_chance;
@@ -120,7 +121,7 @@ class ActionDigBugs: ActionContinuousBase
 
 
 		ItemBase bugs;
-		bugs = ItemBase.Cast(GetGame().CreateObject(selected_worm, m_ActionDataFishing.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
+		bugs = ItemBase.Cast(GetGame().CreateObject(selected_worm, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
 		bugs.SetQuantity(10, false);
 		MiscGameplayFunctions.DealAbsoluteDmg(action_data.m_MainItem, 4);
 		action_data.m_Player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);

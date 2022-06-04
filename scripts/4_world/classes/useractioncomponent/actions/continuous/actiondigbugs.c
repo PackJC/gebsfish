@@ -12,18 +12,19 @@ class ActionDigBugsCB : ActionContinuousBaseCB
 class ActionDigBugs: ActionContinuousBase
 {
 
-	auto insect_map = new map<string, float>();
-	insect_map["FieldCricket"] = FIELDCRICKET_CHANCE;
-	insect_map["GrassHopper"] = GRASSHOPPER_CHANCE;
-	float GRASSHOPPER_CHANCE = 50;
-	float FIELDCRICKET_CHANCE = 50;
-	float insect_chance_sum;
-	string selected_insect = "";
-	float rndInsect;
+	static ref map<string, float> insect_map = new map<string, float>();
+	static float GRASSHOPPER_CHANCE = 50;
+	static float FIELDCRICKET_CHANCE = 50;
+	static float insect_chance_sum;
+	static string selected_insect = "";
+	static float rndInsect;
 
 
 	void ActionDigBugs()
 	{
+		insect_map["FieldCricket"] = FIELDCRICKET_CHANCE;
+		insect_map["GrassHopper"] = GRASSHOPPER_CHANCE;
+
 		m_CallbackClass = ActionDigBugsCB;
 		m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DIGMANIPULATE;
 		m_FullBody = true;
@@ -120,7 +121,7 @@ class ActionDigBugs: ActionContinuousBase
 
 
 		ItemBase bugs;
-		bugs = ItemBase.Cast(GetGame().CreateObject(selected_insect, m_ActionDataFishing.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
+		bugs = ItemBase.Cast(GetGame().CreateObject(selected_insect, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
 		bugs.SetQuantity(10, false);
 		MiscGameplayFunctions.DealAbsoluteDmg(action_data.m_MainItem, 4);
 		action_data.m_Player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
