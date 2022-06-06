@@ -1,11 +1,11 @@
 class FileReader
 {
 	static const string SALT_CONFIG_PATH = "$profile:gebsfish/SaltwaterCfg.cfg";
-	static const string TRAP_CONFIG_PATH = "$profile:gebsfish/TrapCfg.cfg";
-	static const string BUG_CONFIG_PATH = "$profile:gebsfish/BugCfg.cfg";
-	static const string WORM_CONFIG_PATH = "$profile:gebsfish/WormCfg.cfg";
-	static const string FRESH_CONFIG_PATH = "$profile:gebsfish/FreshwaterCfg.cfg";
-	static const string DIRECTORY = "$profile:gebsfish";
+	static const string TRAP_CONFIG_PATH = "$profile:TrapCfg.cfg";
+	static const string BUG_CONFIG_PATH = "$profile:BugCfg.cfg";
+	static const string WORM_CONFIG_PATH = "$profile:WormCfg.cfg";
+	static const string FRESH_CONFIG_PATH = "$profile:FreshwaterCfg.cfg";
+	static const string DIRECTORY = "$profile:gebsfish.txt";
 
 	static ref map<string, float> fresh_chance_map = new map<string, float>();	//15 fish
 	static ref map<string, float> salt_chance_map = new map<string, float>();	//21 fish
@@ -20,7 +20,7 @@ class FileReader
 
 		if (GetGame().IsServer() && GetGame().IsMultiplayer())
 		{
-			FileReader();
+			LoadFiles();
 		}
 	}
 
@@ -30,8 +30,16 @@ class FileReader
 		return instance;
 	}
 
-	void FileReader()
+	void LoadFiles()
 	{
+
+
+		if (!FileExist(DIRECTORY))
+		{
+			Print("[gebsfish] NOT FOUND: SaltwaterCfg.cfg ");
+			Print("[gebsfish] CREATING FILE: SaltwaterCfg.cfg");
+			CreateConfig(DIRECTORY);
+		}
 
 		if (!FileExist(SALT_CONFIG_PATH))
 		{
@@ -151,12 +159,8 @@ class FileReader
 	// Creates the config file and sets default values.
 	void CreateConfig(string CONFIG_PATH)
 	{
-		bool success = MakeDirectory(DIRECTORY);
-		if (success)
-		{
 			FileHandle f = OpenFile(CONFIG_PATH, FileMode.WRITE);
 			CloseFile(f);
-		}
 	}
 	static string BetterTrim(string line)
 	{
