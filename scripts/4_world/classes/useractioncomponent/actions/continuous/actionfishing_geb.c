@@ -1,23 +1,25 @@
 class FileReader
 {
-	static const string SALT_CONFIG_PATH = "$profile:gebsfish/SaltwaterCfg.cfg";
-	static const string TRAP_CONFIG_PATH = "$profile:TrapCfg.cfg";
-	static const string BUG_CONFIG_PATH = "$profile:BugCfg.cfg";
-	static const string WORM_CONFIG_PATH = "$profile:WormCfg.cfg";
-	static const string FRESH_CONFIG_PATH = "$profile:FreshwaterCfg.cfg";
-	static const string DIRECTORY = "$profile:gebsfish.txt";
+	static const string FRESH_CONFIG_PATH = "$profile:gebsfish/Freshwater.cfg";
+	static const string SALT_CONFIG_PATH = "$profile:gebsfish/Saltwater.cfg";
 
-	static ref map<string, float> fresh_chance_map = new map<string, float>();	//15 fish
-	static ref map<string, float> salt_chance_map = new map<string, float>();	//21 fish
-	static ref map<string, float> trap_chance_map = new map<string, float>();	//? fish
-	static ref map<string, float> bug_chance_map = new map<string, float>();	//2 bug
-	static ref map<string, float> worm_chance_map = new map<string, float>();	//2 worm
+	static const string TRAP_CONFIG_PATH = "$profile:gebsfish/FishTrap.cfg";
+
+	static const string BUG_CONFIG_PATH = "$profile:gebsfish/Bugs.cfg";
+	static const string WORM_CONFIG_PATH = "$profile:gebsfish/Worms.cfg";
+
+	static const string DIRECTORY = "$profile:gebsfish";
+
+	static ref map<string, float> fresh_chance_map = new map<string, float>();
+	static ref map<string, float> salt_chance_map = new map<string, float>();
+	static ref map<string, float> trap_chance_map = new map<string, float>();
+	static ref map<string, float> bug_chance_map = new map<string, float>();
+	static ref map<string, float> worm_chance_map = new map<string, float>();
 
 	private static ref FileReader instance;
 
 	void FileReader()
 	{
-
 		if (GetGame().IsServer() && GetGame().IsMultiplayer())
 		{
 			LoadFiles();
@@ -33,42 +35,25 @@ class FileReader
 	void LoadFiles()
 	{
 
-
-		if (!FileExist(DIRECTORY))
-		{
-			Print("[gebsfish] NOT FOUND: SaltwaterCfg.cfg ");
-			Print("[gebsfish] CREATING FILE: SaltwaterCfg.cfg");
-			CreateConfig(DIRECTORY);
-		}
-
 		if (!FileExist(SALT_CONFIG_PATH))
 		{
-			Print("[gebsfish] NOT FOUND: SaltwaterCfg.cfg ");
-			Print("[gebsfish] CREATING FILE: SaltwaterCfg.cfg");
+			MakeDirectory(DIRECTORY);
 			CreateConfig(SALT_CONFIG_PATH);
 		}
 		if (!FileExist(FRESH_CONFIG_PATH))
 		{
-			Print("[gebsfish] NOT FOUND: FreshwaterCfg.cfg ");
-			Print("[gebsfish] CREATING FILE: FreshwaterCfg.cfg");
 			CreateConfig(FRESH_CONFIG_PATH);
 		}
 		if (!FileExist(TRAP_CONFIG_PATH))
 		{
-			Print("[gebsfish] NOT FOUND: TrapCfg.cfg ");
-			Print("[gebsfish] CREATING FILE: TrapCfg.cfg");
 			CreateConfig(TRAP_CONFIG_PATH);
 		}
 		if (!FileExist(BUG_CONFIG_PATH))
 		{
-			Print("[gebsfish] NOT FOUND: BugCfg.cfg ");
-			Print("[gebsfish] CREATING FILE: BugCfg.cfg");
 			CreateConfig(BUG_CONFIG_PATH);
 		}
 		if (!FileExist(WORM_CONFIG_PATH))
 		{
-			Print("[gebsfish] NOT FOUND: WormCfg.cfg ");
-			Print("[gebsfish] CREATING FILE: WormCfg.cfg");
 			CreateConfig(WORM_CONFIG_PATH);
 		}
 
@@ -88,9 +73,6 @@ class FileReader
 				//string name = salt_line.Substring(0, tokenIndex);
 				int lengthIndex = salt_line.Length() - tokenIndex;
 				//string value = salt_line.Substring(tokenIndex + 1, lengthIndex - 1);
-
-				//string to float here
-
 				salt_chance_map[salt_line.Substring(0, tokenIndex)] = (salt_line.Substring(tokenIndex + 1, lengthIndex - 1)).ToFloat();
 
 			}
@@ -160,7 +142,66 @@ class FileReader
 	void CreateConfig(string CONFIG_PATH)
 	{
 			FileHandle f = OpenFile(CONFIG_PATH, FileMode.WRITE);
+			switch (CONFIG_PATH) {
+				case "$profile:gebsfish/Saltwater.cfg":
+					FPrintln(f, "MACKEREL_CHANCE=25");
+					FPrintln(f, "ANGELFISH_CHANCE=25");
+					FPrintln(f, "BLUEMARLIN_CHANCE=25");
+					FPrintln(f, "BONITA_CHANCE=25");
+					FPrintln(f, "CHERRYSALMON_CHANCE=25");
+					FPrintln(f, "FLATHEADMULLET_CHANCE=25");
+					FPrintln(f, "LEOPARDSHARK_CHANCE=25");
+					FPrintln(f, "PACIFICCOD_CHANCE=25");
+					FPrintln(f, "REDHEADCICHLID_CHANCE=25");
+					FPrintln(f, "ROUGHNECKROCK_CHANCE=25");
+					FPrintln(f, "SEVERUM_CHANCE=25");
+					FPrintln(f, "SHRIMP_CHANCE=25");
+					FPrintln(f, "BLUETANG_CHANCE=25");
+					FPrintln(f, "HAIRTAILFISH_CHANCE=25");
+					FPrintln(f, "HUMPHEADWRASSE_CHANCE=25");
+					FPrintln(f, "SIAMESETIGERFISH_CHANCE=25");
+					FPrintln(f, "ASIANSEABASS_CHANCE=25");
+					FPrintln(f, "JELLYFISH_CHANCE=25");
+					FPrintln(f, "STARFISH_CHANCE=25");
+					FPrintln(f, "BLOODCLAM_CHANCE=25");
+					FPrintln(f, "KINGCRAB_CHANCE=25");
+					break;
+				case "$profile:gebsfish/Freshwater.cfg":
+					FPrintln(f, "CARP_CHANCE=25");
+					FPrintln(f, "CRAYFISH_CHANCE=25");
+					FPrintln(f, "BLUEGILL_CHANCE=25");
+					FPrintln(f, "BLACKBASS_CHANCE=25");
+					FPrintln(f, "CATFISH_CHANCE=25");
+					FPrintln(f, "LARGEMOUTHBASS_CHANCE=25");
+					FPrintln(f, "MINNOW_CHANCE=25");
+					FPrintln(f, "NORTHERNPIKE_CHANCE=25");
+					FPrintln(f, "PERCH_CHANCE=25");
+					FPrintln(f, "SAUGER_CHANCE=25");
+					FPrintln(f, "TROUT_CHANCE=25");
+					FPrintln(f, "WHITEBASS_CHANCE=25");
+					FPrintln(f, "BOWFIN_CHANCE=25");
+					FPrintln(f, "SLIMYSCULPIN_CHANCE=25");
+					FPrintln(f, "MUSSEL_CHANCE=25");
+					break;
+				case "$profile:gebsfish/FishTrap.cfg":
+					FPrintln(f, "CRAYFISH_CHANCE=25");
+					FPrintln(f, "MINNOW_CHANCE=25");
+					FPrintln(f, "BOWFIN_CHANCE=25");
+					FPrintln(f, "SLIMYSCULPIN_CHANCE=25");
+					FPrintln(f, "MUSSEL_CHANCE=25");
+					break;
+				case "$profile:gebsfish/Bugs.cfg":
+					FPrintln(f, "FieldCricket=50");
+					FPrintln(f, "GrassHopper=50");
+					break;
+				case "$profile:gebsfish/Worms.cfg":
+					FPrintln(f, "Worm=50");
+					FPrintln(f, "GrubWorm=50");
+					break;
+			}
 			CloseFile(f);
+
+
 	}
 	static string BetterTrim(string line)
 	{
@@ -188,25 +229,16 @@ class FileReader
 		return salt_chance_map;
 	}
 
-	//Set fish weighted chance
-	void SetFreshFishMap(string key, float val)
+
+	//Get fish weighted chance
+	static map<string, float> GetFreshChanceMap()
 	{
-		salt_chance_map.Set(key, val);
+		return fresh_chance_map;
 	}
 
+
+
 };
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -253,23 +285,24 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 		float KINGCRAB_CHANCE = 0;
 
 		//Freshwater Fish Chances
-		float CARP_CHANCE = 25;
-		float CRAYFISH_CHANCE = 25;
-		float BLUEGILL_CHANCE = 25;
-		float BLACKBASS_CHANCE = 25;
-		float CATFISH_CHANCE = 25;
-		float LARGEMOUTHBASS_CHANCE = 25;
-		float MINNOW_CHANCE = 25;
-		float NORTHERNPIKE_CHANCE = 25;
-		float PERCH_CHANCE = 25;
-		float SAUGER_CHANCE = 25;
-		float TROUT_CHANCE = 25;
-		float WHITEBASS_CHANCE = 25;
-		float BOWFIN_CHANCE = 25;
-		float SLIMYSCULPIN_CHANCE = 25;
-		float MUSSEL_CHANCE = 25;
+		float CARP_CHANCE = 0;
+		float CRAYFISH_CHANCE = 0;
+		float BLUEGILL_CHANCE = 0;
+		float BLACKBASS_CHANCE = 0;
+		float CATFISH_CHANCE = 0;
+		float LARGEMOUTHBASS_CHANCE = 0;
+		float MINNOW_CHANCE = 0;
+		float NORTHERNPIKE_CHANCE = 0;
+		float PERCH_CHANCE = 0;
+		float SAUGER_CHANCE = 0;
+		float TROUT_CHANCE = 0;
+		float WHITEBASS_CHANCE = 0;
+		float BOWFIN_CHANCE = 0;
+		float SLIMYSCULPIN_CHANCE = 0;
+		float MUSSEL_CHANCE = 0;
 
 		auto salt_chance_map = FileReader.GetSaltChanceMap();
+		auto fresh_chance_map = FileReader.GetFreshChanceMap();
 
 
 
@@ -320,8 +353,11 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 			salt_fish_map = salt_chance_map;
 
 		}
+		if (fresh_chance_map.Count() > 0) {
+			fresh_fish_map = fresh_chance_map;
 
-		Print("[gebsfish] salt_fish_map " + salt_fish_map);
+		}
+
 		if (!GetGame().IsMultiplayer() || GetGame().IsServer())
 		{
 			ItemBase fish;
@@ -356,6 +392,7 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 			foreach (auto s_key, auto s_value: salt_fish_map) {
 				if (rndSaltFish <= s_value && s_value > 0) {
 					selected_salt_fish = s_key;
+					selected_salt_fish.Replace("_CHANCE", "");
 					break;
 				}
 				rndSaltFish -= s_value;
@@ -364,6 +401,8 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 			foreach (auto f_key, auto f_value: fresh_fish_map) {
 				if (rndFreshFish <= f_value && f_value > 0) {
 					selected_fresh_fish = f_key;
+					selected_fresh_fish.Replace("_CHANCE", "");
+
 					break;
 				}
 				rndFreshFish -= f_value;
@@ -410,4 +449,3 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 		}
 	}
 };
-

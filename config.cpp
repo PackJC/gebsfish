@@ -18,9 +18,9 @@ class CfgMods
 	class gebsfish
 	{
 		dir="gebsfish";
-		picture = "gebsfish\logo.paa";			// picture in expanded description
-		logoSmall = "gebsfish\logo.paa";	// icon next to mod name when description is not expanded
-		logo = "gebsfish\logo.paa";				// logo below game menu
+		picture = "gebsfish/logo.paa";			// picture in expanded description
+		logoSmall = "gebsfish/logo.paa";	// icon next to mod name when description is not expanded
+		logo = "gebsfish/logo.paa";				// logo below game menu
 		overview = "Fish Expansion"
 		action="";
 		name="gebsfish";
@@ -41,7 +41,15 @@ class CfgMods
 				value="";
 				files[]=
 				{
-					"gebsfish\scripts\4_world"
+					"gebsfish/scripts/4_world"
+				};
+			};
+			class missionScriptModule
+			{
+				value = "";
+				files[] =
+				{
+					"gebsfish/scripts/5_mission"
 				};
 			};
 		};
