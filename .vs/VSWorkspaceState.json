@@ -1,8 +1,7 @@
 {
   "ExpandedNodes": [
     "",
-    "\\data",
-    "\\data\\food",
+    "\\languagecore",
     "\\scripts",
     "\\scripts\\4_world",
     "\\scripts\\4_world\\classes",
@@ -11,5 +10,6 @@
     "\\scripts\\4_world\\classes\\useractioncomponent\\actions",
     "\\scripts\\4_world\\classes\\useractioncomponent\\actions\\continuous"
   ],
+  "SelectedNode": "\\scripts",
   "PreviewInSolutionExplorer": false
 }

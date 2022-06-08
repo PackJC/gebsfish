@@ -11072,8 +11072,8 @@ class cfgVehicles {
   class Carp;
   class Bluegill: Edible_Base {
     scope = 2;
-    displayName = "Bluegill";
-    descriptionShort = "Bluegills can grow up to 12 inches (30 cm) long and about 4+1⁄2 pounds (2.0 kg). While their color can vary from population to population, they typically have a very distinctive coloring, with deep blue and purple on the face and gill cover, dark olive-colored bands down the side, and a fiery orange to yellow belly. The fish are omnivores and will eat anything they can fit in their mouth. They mostly feed on small aquatic insects and fish. The fish play a key role in the food chain, and are prey for bass, other sunfish, northern pike, walleye, muskies, trout, and snapping turtles";
+    displayName = "$g_bluegill";
+    descriptionShort = "$g_bluegill_desc";
     model = "gebsfish\data\food\bluegill.p3d";
     itemSize[] = {
       3,
@@ -11220,8 +11220,8 @@ class cfgVehicles {
   };
   class Blackbass: Edible_Base {
     scope = 2;
-    displayName = "Black Bass";
-    descriptionShort = "Black bass of all species are highly sought-after game fish, and bass fishing is an extremely popular sport. These fish are well known as strong fighters, and taste good.";
+    displayName = "$g_blackbass";
+    descriptionShort = "$g_blackbass_desc";
     model = "gebsfish\data\food\blackbass.p3d";
     itemSize[] = {
       5,
@@ -11368,8 +11368,8 @@ class cfgVehicles {
   };
   class Catfish: Edible_Base {
     scope = 2;
-    displayName = "Catfish";
-    descriptionShort = "Catfish belong to the bony fish order Siluriformes, and are mainly freshwater forms with representatives throughout the world. Most species of catfish lack scales, although some species are covered with heavy plates of tough, armored skin.";
+    displayName = "$g_catfish";
+    descriptionShort = "$g_catfish_desc";
     model = "gebsfish\data\food\catfish.p3d";
     itemSize[] = {
       7,
@@ -11516,8 +11516,8 @@ class cfgVehicles {
   };
   class Largemouthbass: Edible_Base {
     scope = 2;
-    displayName = "Large Mouth Bass";
-    descriptionShort = "The Large Mouth Bass is a carnivorous freshwater gamefish in the sunfish family, a species of black bass native to the eastern and central United States, southeastern Canada and northern Mexico, but widely introduced elsewhere.";
+    displayName = "$g_largemouthbass";
+    descriptionShort = "$g_largemouthbass_desc";
     model = "gebsfish\data\food\largemouthbass.p3d";
     itemSize[] = {
       5,
@@ -11664,8 +11664,8 @@ class cfgVehicles {
   };
   class Minnow: Edible_Base {
     scope = 2;
-    displayName = "Minnow";
-    descriptionShort = "The common minnow is a small fish which reaches a maximum total length of 14 centimetres (5+1⁄2 in), but is normally around 7 centimetres (3 in) in length. It has 3 spines and 6–8 soft rays in its dorsal fin with 3 spines and 6–8 soft rays in its anal fin.";
+    displayName = "$g_minnow";
+    descriptionShort = "$g_minnow_desc";
     model = "gebsfish\data\food\minnow.p3d";
     itemSize[] = {
       1,
@@ -11812,8 +11812,8 @@ class cfgVehicles {
   };
   class Northernpike: Edible_Base {
     scope = 2;
-    displayName = "Northernpike";
-    descriptionShort = "The northernpike is a species of carnivorous fish of the genus Esox. They are typical of brackish and fresh waters of the Northern Hemisphere.";
+    displayName = "$g_northernpike";
+    descriptionShort = "$g_northernpike_desc";
     model = "gebsfish\data\food\northernpike.p3d";
     itemSize[] = {
       6,
@@ -11959,8 +11959,8 @@ class cfgVehicles {
   };
   class Perch: Edible_Base {
     scope = 2;
-    displayName = "Perch";
-    descriptionShort = "Perch are a popular sport fish species. They are known to put up a fight, and to be good for eating. They can be caught with a variety of methods, including float fishing, lure fishing, and legering. Fly fishing for perch using patterns that imitate small fry or invertebrates can be successful.";
+    displayName = "$g_perch";
+    descriptionShort = "$g_perch_desc";
     model = "gebsfish\data\food\perch.p3d";
     itemSize[] = {
       4,
@@ -12107,8 +12107,8 @@ class cfgVehicles {
   };
   class Sauger: Edible_Base {
     scope = 2;
-    displayName = "Sauger";
-    descriptionShort = "The Sauger is a freshwater perciform fish of the family Percidae that resembles its close relative, the walleye. The species is a member of the largest vertebrate order, the Perciformes. It is the most migratory percid species in North America.";
+    displayName = "$g_sauger";
+    descriptionShort = "$g_sauger_desc";
     model = "gebsfish\data\food\sauger.p3d";
     itemSize[] = {
       4,
@@ -12255,8 +12255,8 @@ class cfgVehicles {
   };
   class Crayfish: Edible_Base {
     scope = 2;
-    displayName = "Crayfish";
-    descriptionShort = "Crayfish are freshwater crustaceans resembling small lobsters (to which they are related). In some locations, they are also known as crawfish, craydids, crawdaddies, crawdads, freshwater lobsters, mountain lobsters, rock lobsters, mudbugs, or yabbies. Taxonomically, they are members of the superfamilies Astacoidea and Parastacoidea. They breathe through feather-like gills!";
+    displayName = "$g_crayfish";
+    descriptionShort = "$g_crayfish_desc";
     model = "gebsfish\data\food\Crayfish.p3d";
     itemSize[] = {
       2,
@@ -12403,8 +12403,8 @@ class cfgVehicles {
   };
   class Trout: Edible_Base {
     scope = 2;
-    displayName = "Trout";
-    descriptionShort = "Trout are an important food source for humans and wildlife, including brown bears, birds of prey such as eagles, and other animals. They are classified as oily fish.";
+    displayName = "$g_trout";
+    descriptionShort = "$g_trout_desc";
     model = "gebsfish\data\food\trout.p3d";
     itemSize[] = {
       5,
@@ -12551,8 +12551,8 @@ class cfgVehicles {
   };
   class Whitebass: Edible_Base {
     scope = 2;
-    displayName = "White Bass";
-    descriptionShort = "The White Bass is a freshwater fish of the temperate bass family Moronidae. The species' main color is silver-white to pale green. Its back is dark, with white sides and belly, and with narrow dark stripes running lengthwise on its sides. It has large, rough scales and two dorsal fins. The more anterior dorsal fin is much harder and appears to have spines on them. Although these are not true spines, this type of fin is called a spinous ray. The more posterior of the two dorsal fins is much softer, and is thus called a soft-ray.";
+    displayName = "$g_whitebass";
+    descriptionShort = "$g_whitebass_desc";
     model = "gebsfish\data\food\whitebass.p3d";
     itemSize[] = {
       5,
@@ -12699,8 +12699,8 @@ class cfgVehicles {
   };
   class Bowfin: Edible_Base {
     scope = 2;
-    displayName = "Bowfin";
-    descriptionShort = "The bowfin is a bony fish, native to North America. Common names include mudfish, mud pike, dogfish, grindle, grinnel, swamp trout, and choupique. It is regarded a relict, being the sole surviving species of the Halecomorphi, a group of fish that first appeared during the Early Triassic, around 250 million years ago.";
+    displayName = "$g_bowfin";
+    descriptionShort = "$g_bowfin_desc";
     model = "gebsfish\data\food\bowfin.p3d";
     itemSize[] = {
       4,
@@ -12846,8 +12846,8 @@ class cfgVehicles {
   };
   class Slimysculpin: Edible_Base {
     scope = 2;
-    displayName = "Slimy Sculpin";
-    descriptionShort = "The slimy sculpin is a freshwater species of fish belonging to the family Cottidae, which is the largest sculpin family. They usually inhabit cold rocky streams or lakes across North America, ranging from the Great Lakes, southeast Minnesota, northeast Iowa, southwest Wisconsin and northeast Canada.";
+    displayName = "$g_slimysculpin";
+    descriptionShort = "$g_slimysculpin_desc";
     model = "gebsfish\data\food\slimysculpin.p3d";
     itemSize[] = {
       2,
@@ -12995,8 +12995,8 @@ class cfgVehicles {
   //Saltwater Fish
   class Angelfish: Edible_Base {
     scope = 2;
-    displayName = "Angel Fish";
-    descriptionShort = "Angel Fish, particularly tilapia, are important food fishes, while others, such as the Cichla species, are valued game fish. The family also includes many popular freshwater aquarium fish kept by hobbyists, including the angelfish, oscars, and discus.";
+    displayName = "$g_angelfish";
+    descriptionShort = "$g_angelfish_desc";
     model = "gebsfish\data\food\angelfish.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -13142,8 +13142,8 @@ class cfgVehicles {
   }
   class Asianseabass: Edible_Base {
     scope = 2;
-    displayName = "Asian Sea Bass";
-    descriptionShort = "The barramundi or Asian sea bass, is a species of catadromous fish in the family Latidae of the order Perciformes. The species is widely distributed in the Indo-West Pacific region from South Asia to Papua New Guinea and Northern Australia. ";
+    displayName = "$g_asianseabass";
+    descriptionShort = "$g_asianseabass_desc";
     model = "gebsfish\data\food\asianseabass.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -13289,8 +13289,8 @@ class cfgVehicles {
   }
   class Bluemarlin: Edible_Base {
     scope = 2;
-    displayName = "Blue Marlin";
-    descriptionShort = "Blue marlin are distributed throughout the tropical and subtropical waters of the Atlantic Ocean. A bluewater fish that spends the majority of its life in the open sea far from land,[2] the blue marlin preys on a wide variety of marine organisms, mostly near the surface, often using its bill to stun or injure its prey. Way too heavy to carry!";
+    displayName = "$g_bluemarlin";
+    descriptionShort = "$g_bluemarlin_desc";
     model = "gebsfish\data\food\bluemarlin.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -13437,8 +13437,8 @@ class cfgVehicles {
   }
   class Bonita: Edible_Base {
     scope = 2;
-    displayName = "Bonita Fish";
-    descriptionShort = "Bonitos are a tribe of medium-sized, ray-finned predatory fish in the family Scombridae – a family it shares with the mackerel, tuna, and Spanish mackerel tribes, and also the butterfly kingfish.";
+    displayName = "$g_bonita";
+    descriptionShort = "$g_bonita_desc";
     model = "gebsfish\data\food\bonita.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -13584,8 +13584,8 @@ class cfgVehicles {
   }
   class Cherrysalmon: Edible_Base {
     scope = 2;
-    displayName = "Cherry Salmon";
-    descriptionShort = "The masu salmon, also known as masu or cherry trout in Japan, is a species of salmon belonging to the genus Oncorhynchus, found in the North Pacific along Northeast/East Asian coasts from the Russian Far East to south through Korea, Japan and Taiwan.";
+    displayName = "$g_cherrysalmon";
+    descriptionShort = "$g_cherrysalmon_desc";
     model = "gebsfish\data\food\cherrysalmon.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -13731,8 +13731,8 @@ class cfgVehicles {
   }
   class Flatheadmullet: Edible_Base {
     scope = 2;
-    displayName = "Flathead Mullet";
-    descriptionShort = "The flathead grey mullet is an important food fish species in the mullet family Mugilidae. It is found in coastal tropical and subtropical waters worldwide. Its length is typically 30 to 75 centimetres. ";
+    displayName = "$g_flatheadmullet";
+    descriptionShort = "$g_flatheadmullet_desc";
     model = "gebsfish\data\food\flatheadmullet.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -13878,8 +13878,8 @@ class cfgVehicles {
   }
   class Leopardshark: Edible_Base {
     scope = 2;
-    displayName = "Leopard Shark";
-    descriptionShort = "The Leopard shark (Triakis semifasciata) is a species of houndshark, in the family Triakidae. Typically measuring 1.2–1.5 m (3.9–4.9 ft) long, this slender-bodied shark is immediately identifiable by the striking pattern of black saddle-like markings and large spots over its back, from which it derives its common name. Way too heavy to carry!";
+    displayName = "$g_leopardshark";
+    descriptionShort = "$g_leopardshark_desc";
     model = "gebsfish\data\food\leopardshark.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -14025,8 +14025,8 @@ class cfgVehicles {
   }
   class Pacificcod: Edible_Base {
     scope = 2;
-    displayName = "Pacific Cod";
-    descriptionShort = "The Pacific cod, Gadus macrocephalus, is a species of ray-finned fish in the family Gadidae. It is a bottom-dwelling fish found in the northern Pacific Ocean, mainly on the continental shelf and upper slopes, to depths of about 900 m. It can grow to a length of a meter or so and is found in large schools. ";
+    displayName = "$g_pacificcod";
+    descriptionShort = "$g_pacificcod_desc";
     model = "gebsfish\data\food\pacificcod.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -14172,8 +14172,8 @@ class cfgVehicles {
   }
   class Redheadcichlid: Edible_Base {
     scope = 2;
-    displayName = "Red Head Cichlid";
-    descriptionShort = "Vieja melanurus, the quetzal cichlid, redhead cichlid or firehead cichlid, is a species of cichlid that is native to the Lake Petén system, the Grijalva–Usumacinta River basin and other Atlantic river drainages in southern Mexico, Belize and Guatemala, with introduced populations in a few other countries.";
+    displayName = "$g_redheadcichlid";
+    descriptionShort = "$g_redheadcichlid_desc";
     model = "gebsfish\data\food\redheadcichlid.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -14319,8 +14319,8 @@ class cfgVehicles {
   }
   class Roughneckrock: Edible_Base {
     scope = 2;
-    displayName = "Roughneck Rock Fish";
-    descriptionShort = "The rougheye rockfish (Sebastes aleutianus) is a rockfish of the genus Sebastes. It is also known as the blackthroat rockfish or the blacktip rockfish and grows to a maximum of about 97 cm.";
+    displayName = "$g_roughneckrock";
+    descriptionShort = "g_roughneckrock_desc";
     model = "gebsfish\data\food\roughneckrock.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -14466,8 +14466,8 @@ class cfgVehicles {
   }
   class Severum: Edible_Base {
     scope = 2;
-    displayName = "Severum Fish";
-    descriptionShort = "Heros severus, is a species of tropical freshwater cichlid native to the upper Orinoco and upper Rio Negro basins in South America. It has historically been confused with several other species in the genus, most recently H. liberifer. This species is rarely found in the aquarium trade.";
+    displayName = "$g_severum";
+    descriptionShort = "$g_severum_desc";
     model = "gebsfish\data\food\severum.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -14614,8 +14614,8 @@ class cfgVehicles {
   }
   class Shrimp: Edible_Base {
     scope = 2;
-    displayName = "Shrimp";
-    descriptionShort = "Shrimp are decapod crustaceans with elongated bodies and a primarily swimming mode of locomotion – most commonly Caridea and Dendrobranchiata. More narrow definitions may be restricted to Caridea, to smaller species of either group or to only the marine species.";
+    displayName = "$g_shrimp";
+    descriptionShort = "$g_shrimp_desc";
     model = "gebsfish\data\food\shrimp.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -14761,8 +14761,8 @@ class cfgVehicles {
   }
   class Bluetang: Edible_Base {
     scope = 2;
-    displayName = "Blue Tang";
-    descriptionShort = "Paracanthurus hepatus is a species of Indo-Pacific surgeonfish. A popular fish in marine aquaria, it is the only member of the genus Paracanthurus.";
+    displayName = "$g_bluetang";
+    descriptionShort = "$g_bluetang_desc";
     model = "gebsfish\data\food\bluetang.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -14908,8 +14908,8 @@ class cfgVehicles {
   }
   class Hairtailfish: Edible_Base {
     scope = 2;
-    displayName = "Hair Tail Fish";
-    descriptionShort = "The largehead hairtail or beltfish is a member of the cutlassfish family, Trichiuridae. This common to abundant species is found in tropical and temperate oceans throughout the world.";
+    displayName = "$g_hairtailfish";
+    descriptionShort = "$g_hairtailfish_desc";
     model = "gebsfish\data\food\hairtailfish.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -15055,8 +15055,8 @@ class cfgVehicles {
   }
   class Humpheadwrasse: Edible_Base {
     scope = 2;
-    displayName = "Humphead Wrasse";
-    descriptionShort = "The humphead wrasse is a large species of wrasse mainly found on coral reefs in the Indo-Pacific region. It is also known as the Māori wrasse, Napoleon wrasse, Napoleon fish, Napoleonfish, so mei 蘇眉, mameng, and merer in the Pohnpeian language of the Caroline Islands.";
+    displayName = "$g_humpheadwrasse";
+    descriptionShort = "$g_humpheadwrasse_desc";
     model = "gebsfish\data\food\humpheadwrasse.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -15202,8 +15202,8 @@ class cfgVehicles {
   }
   class Siamesetigerfish: Edible_Base {
     scope = 2;
-    displayName = "Siamese Tiger Fish";
-    descriptionShort = "The Siamese tigerfish, also known as the Siamese tiger perch, is a critically endangered Asian fish native to the Chao Phraya, Mae Klong and Mekong basins. It has vertical yellow and black stripes running the length of its body. The dorsal fin has a spiny appearance. Siamese tigerfish grow to 40 cm in standard length.";
+    displayName = "$g_siamesetigerfish";
+    descriptionShort = "$g_siamesetigerfish";
     model = "gebsfish\data\food\siamesetigerfish.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -15354,8 +15354,8 @@ class cfgVehicles {
   //Crusts Fish
   class Bloodclam : Edible_Base {
       scope = 2;
-      displayName = "Blood Clam";
-      descriptionShort = "Clams have two shells of equal size connected by two adductor muscles and have a powerful burrowing foot. They live in both freshwater and marine environments; in salt water they prefer to burrow down into the mud and the turbidity of the water required varies with species and location; the greatest diversity of these is in North America.";
+      displayName = "$g_bloodclam";
+      descriptionShort = "$g_bloodclam_desc";
       model = "gebsfish\data\food\bloodclam.p3d";
       debug_ItemCategory = 6;
       rotationFlags = 17;
@@ -15501,8 +15501,8 @@ class cfgVehicles {
   }
   class Mussel : Edible_Base {
       scope = 2;
-      displayName = "Mussel";
-      descriptionShort = "Mussel is the common name used for members of several families of bivalve molluscs, from saltwater and freshwater habitats. These groups have in common a shell whose outline is elongated and asymmetrical compared with other edible clams, which are often more or less rounded or oval.";
+      displayName = "$g_mussel";
+      descriptionShort = "$g_mussel_desc";
       model = "gebsfish\data\food\mussel.p3d";
       debug_ItemCategory = 6;
       rotationFlags = 17;
@@ -15648,8 +15648,8 @@ class cfgVehicles {
   }
   class Blackdevilsnail : Edible_Base {
       scope = 2;
-      displayName = "Black Devil Snail";
-      descriptionShort = "A common freshwater snail.";
+      displayName = "$g_blackdevilsnail";
+      descriptionShort = "$g_blackdevilsnail_desc";
       model = "gebsfish\data\food\blackdevilsnail.p3d";
       debug_ItemCategory = 6;
       rotationFlags = 17;
@@ -15795,8 +15795,8 @@ class cfgVehicles {
   }
   class Starfish : Edible_Base {
       scope = 2;
-      displayName = "Starfish";
-      descriptionShort = "A common starfish.";
+      displayName = "$g_starfish";
+      descriptionShort = "g_starfish_desc";
       model = "gebsfish\data\food\starfish.p3d";
       debug_ItemCategory = 6;
       rotationFlags = 17;
@@ -15942,8 +15942,8 @@ class cfgVehicles {
   }
   class Kingcrab : Edible_Base {
       scope = 2;
-      displayName = "King Crab";
-      descriptionShort = "A Kingcrab.";
+      displayName = "$g_kingcrab";
+      descriptionShort = "$g_kingcrab_desc";
       model = "gebsfish\data\food\kingcrab.p3d";
       debug_ItemCategory = 6;
       rotationFlags = 17;
@@ -16089,8 +16089,8 @@ class cfgVehicles {
   }
   class Jellyfish : Edible_Base {
       scope = 2;
-      displayName = "Jellyfish";
-      descriptionShort = "A Jellyfish.";
+      displayName = "$g_jellyfish";
+      descriptionShort = "$g_jellyfish_desc";
       model = "gebsfish\data\food\jellyfish.p3d";
       debug_ItemCategory = 6;
       rotationFlags = 17;
@@ -16236,8 +16236,8 @@ class cfgVehicles {
   }
   class Lobster : Edible_Base {
       scope = 2;
-      displayName = "Lobster";
-      descriptionShort = "A Lobster. DEVELOPMENT";
+      displayName = "$g_lobster";
+      descriptionShort = "$g_lobster_desc";
       model = "gebsfish\data\food\lobster.p3d";
       debug_ItemCategory = 6;
       rotationFlags = 17;
