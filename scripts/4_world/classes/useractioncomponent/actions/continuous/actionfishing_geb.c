@@ -229,15 +229,25 @@ class FileReader
 		return salt_chance_map;
 	}
 
-
-	//Get fish weighted chance
 	static map<string, float> GetFreshChanceMap()
 	{
 		return fresh_chance_map;
 	}
 
+	static map<string, float> GetTrapChanceMap()
+	{
+		return trap_chance_map;
+	}
 
+	static map<string, float> GetBugChanceMap()
+	{
+		return bug_chance_map;
+	}
 
+	static map<string, float> GetWormChanceMap()
+	{
+		return worm_chance_map;
+	}
 };
 
 

@@ -14320,7 +14320,7 @@ class cfgVehicles {
   class Roughneckrock: Edible_Base {
     scope = 2;
     displayName = "Roughneck Rock Fish";
-    descriptionShort = "The rougheye rockfish (Sebastes aleutianus) is a rockfish of the genus Sebastes. It is also known as the blackthroat rockfish or the blacktip rockfish and grows to a maximum of about 97 cm ";
+    descriptionShort = "The rougheye rockfish (Sebastes aleutianus) is a rockfish of the genus Sebastes. It is also known as the blackthroat rockfish or the blacktip rockfish and grows to a maximum of about 97 cm.";
     model = "gebsfish\data\food\roughneckrock.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
