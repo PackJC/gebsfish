@@ -67,8 +67,8 @@ class cfgVehicles {
   class NBCGloves_ColorBase;
   class OrangeFishGloves: NBCGloves_ColorBase
 	{
-		displayName="Orange Fishing Gloves";
-		descriptionShort="A pair of gloves useful when cutting fish.";
+		displayName="$STR_fishinggloves_orange";
+		descriptionShort="$STR_fishinggloves_desc";
 		scope=2;
 		hiddenSelectionsTextures[]=
 		{
@@ -79,8 +79,8 @@ class cfgVehicles {
 	};
   class BlueFishGloves: NBCGloves_ColorBase
 	{
-		displayName="Blue Fishing Gloves";
-		descriptionShort="A pair of gloves useful when cutting fish.";
+		displayName="$STR_fishinggloves_orange";
+		descriptionShort="$STR_fishinggloves_desc";
 		scope=2;
 		hiddenSelectionsTextures[]=
 		{
@@ -94,8 +94,8 @@ class cfgVehicles {
   class BaseballCap_ColorBase;
   class BlueFishHat: BaseballCap_ColorBase
 	{
-		displayName="Blue Fishing Hat";
-		descriptionShort="A hat with a decal of a fish!";
+		displayName="$STR_fishing_hat_blue";
+		descriptionShort="$STR_fishing_hat_desc";
 		scope=2;
 		visibilityModifier=0.94999999;
 		hiddenSelectionsTextures[]=
@@ -107,8 +107,8 @@ class cfgVehicles {
 	};
   class RedFishHat: BaseballCap_ColorBase
 	{
-		displayName="Red Fishing Hat";
-		descriptionShort="A hat with a decal of a fish!";
+		displayName="$STR_fishing_hat_red";
+		descriptionShort="$STR_fishing_hat_desc";
 		scope=2;
 		visibilityModifier=0.94999999;
 		hiddenSelectionsTextures[]=
@@ -121,8 +121,8 @@ class cfgVehicles {
   class GreenFishHat: BaseballCap_ColorBase
 	{
 		scope=2;
-		displayName="Green Fishing Hat";
-		descriptionShort="A hat with a decal of a fish!";
+		displayName="$STR_fishing_hat_green";
+		descriptionShort="$STR_fishing_hat_desc";
 		visibilityModifier=0.94999999;
 		hiddenSelectionsTextures[]=
 		{
@@ -133,8 +133,8 @@ class cfgVehicles {
 	};	
   class PurpleFishHat: BaseballCap_ColorBase
 	{
-		displayName="Purple Fishing Hat";
-		descriptionShort="A hat with a decal of a fish!";
+		displayName="$STR_fishing_hat_purple";
+		descriptionShort="$STR_fishing_hat_desc";
 		scope=2;
 		visibilityModifier=0.94999999;
 		hiddenSelectionsTextures[]=
@@ -149,6 +149,8 @@ class cfgVehicles {
   class TShirt_ColorBase;
   class RedFishShirt : TShirt_ColorBase
     {
+        displayName = "$STR_fishing_shirt_red";
+        descriptionShort = "$STR_fishing_shirt_desc";
         scope = 2;
         visibilityModifier = 0.94999999;
         hiddenSelectionsTextures[] =
@@ -160,6 +162,8 @@ class cfgVehicles {
     };
   class GreenFishShirt : TShirt_ColorBase
     {
+        displayName = "$STR_fishing_shirt_green";
+        descriptionShort = "$STR_fishing_shirt_desc";
         scope = 2;
         visibilityModifier = 0.94999999;
         hiddenSelectionsTextures[] =
@@ -171,6 +175,8 @@ class cfgVehicles {
     };
   class BlueFishShirt : TShirt_ColorBase
     {
+        displayName = "$STR_fishing_shirt_blue";
+        descriptionShort = "$STR_fishing_shirt_desc";
         scope = 2;
         visibilityModifier = 0.94999999;
         hiddenSelectionsTextures[] =
@@ -182,6 +188,8 @@ class cfgVehicles {
     };
   class PurpleFishShirt : TShirt_ColorBase
     {
+        displayName = "$STR_fishing_shirt_purple";
+        descriptionShort = "$STR_fishing_shirt_desc";
         scope = 2;
         visibilityModifier = 0.94999999;
         hiddenSelectionsTextures[] =
@@ -203,9 +211,9 @@ class cfgVehicles {
   {
       scope = 2;
       displayName = "Yellow Tackle Box";
-      descriptionShort = "A safe place to put some hooks and sinkers.";
+      descriptionShort = "$STR_tackle_desc";
       model = "gebsfish\data\food\geb_yellowtackle.p3d";
-      rotationFlags = 17;
+      rotationFlags = 8;
       weight = 140;
       itemSize[] = {
         3,
@@ -298,9 +306,9 @@ class cfgVehicles {
   {
       scope = 2;
       displayName = "Red Tackle Box";
-      descriptionShort = "A safe place to put some hooks and sinkers.";
+      descriptionShort = "$STR_tackle_desc";
       model = "gebsfish\data\food\geb_redtackle.p3d";
-      rotationFlags = 17;
+      rotationFlags = 8;
       weight = 140;
       itemSize[] = {
         3,
@@ -394,9 +402,9 @@ class cfgVehicles {
       inventorySlot = "tacklebox";
       scope = 2;
       displayName = "Blue Tackle Box";
-      descriptionShort = "A safe place to put some hooks and sinkers.";
+      descriptionShort = "$STR_tackle_desc";
       model = "gebsfish\data\food\geb_bluetackle.p3d";
-      rotationFlags = 17;
+      rotationFlags = 8;
       weight = 140;
       itemSize[] = {
         3,
@@ -489,9 +497,9 @@ class cfgVehicles {
   {
       scope = 2;
       displayName = "Orange Tackle Box";
-      descriptionShort = "A safe place to put some hooks and sinkers.";
+      descriptionShort = "$STR_tackle_desc";
       model = "gebsfish\data\food\geb_orangetackle.p3d";
-      rotationFlags = 17;
+      rotationFlags = 8;
       weight = 140;
       itemSize[] = {
         3,
@@ -584,9 +592,9 @@ class cfgVehicles {
   {
       scope = 2;
       displayName = "Brown Tackle Box";
-      descriptionShort = "A safe place to put some hooks and sinkers.";
+      descriptionShort = "$STR_tackle_desc";
       model = "gebsfish\data\food\geb_browntackle.p3d";
-      rotationFlags = 17;
+      rotationFlags = 8;
       weight = 140;
       itemSize[] = {
         3,
@@ -679,9 +687,9 @@ class cfgVehicles {
   {
       scope = 2;
       displayName = "Purple Tackle Box";
-      descriptionShort = "A safe place to put some hooks and sinkers.";
+      descriptionShort = "$STR_tackle_desc";
       model = "gebsfish\data\food\geb_purpletackle.p3d";
-      rotationFlags = 17;
+      rotationFlags = 8;
       weight = 140;
       itemSize[] = {
         3,
@@ -774,9 +782,9 @@ class cfgVehicles {
   {
       scope = 2;
       displayName = "Pink Tackle Box";
-      descriptionShort = "A safe place to put some hooks and sinkers.";
+      descriptionShort = "$STR_tackle_desc";
       model = "gebsfish\data\food\geb_pinktackle.p3d";
-      rotationFlags = 17;
+      rotationFlags = 8;
       weight = 140;
       itemSize[] = {
         3,
@@ -869,9 +877,9 @@ class cfgVehicles {
   {
       scope = 2;
       displayName = "Lime Tackle Box";
-      descriptionShort = "A safe place to put some hooks and sinkers.";
+      descriptionShort = "$STR_tackle_desc";
       model = "gebsfish\data\food\geb_limetackle.p3d";
-      rotationFlags = 17;
+      rotationFlags = 8;
       weight = 140;
       itemSize[] = {
         3,
@@ -964,9 +972,9 @@ class cfgVehicles {
   {
       scope = 2;
       displayName = "Light Blue Tackle Box";
-      descriptionShort = "A safe place to put some hooks and sinkers.";
+      descriptionShort = "$STR_tackle_desc";
       model = "gebsfish\data\food\geb_lightbluetackle.p3d";
-      rotationFlags = 17;
+      rotationFlags = 8;
       weight = 140;
       itemSize[] = {
         3,
@@ -1059,9 +1067,9 @@ class cfgVehicles {
   {
       scope = 2;
       displayName = "Green Tackle Box";
-      descriptionShort = "A safe place to put some hooks and sinkers.";
+      descriptionShort = "$STR_tackle_desc";
       model = "gebsfish\data\food\geb_greentackle.p3d";
-      rotationFlags = 17;
+      rotationFlags = 8;
       weight = 140;
       itemSize[] = {
         3,
@@ -1154,9 +1162,9 @@ class cfgVehicles {
   {
       scope = 2;
       displayName = "Camo Tackle Box";
-      descriptionShort = "A safe place to put some hooks and sinkers.";
+      descriptionShort = "$STR_tackle_desc";
       model = "gebsfish\data\food\geb_camotackle.p3d";
-      rotationFlags = 17;
+      rotationFlags = 8;
       weight = 140;
       itemSize[] = {
         3,
@@ -1250,9 +1258,9 @@ class cfgVehicles {
   {
       scope = 2;
       displayName = "Fun Yellow Tackle Box";
-      descriptionShort = "A safe place to put some hooks and sinkers.";
+      descriptionShort = "$STR_tackle_desc";
       model = "gebsfish\data\food\geb_funyellowtackle.p3d";
-      rotationFlags = 17;
+      rotationFlags = 8;
       weight = 140;
       itemSize[] = {
         3,
@@ -1345,9 +1353,9 @@ class cfgVehicles {
   {
       scope = 2;
       displayName = "Fun Red Tackle Box";
-      descriptionShort = "A safe place to put some hooks and sinkers.";
+      descriptionShort = "$STR_tackle_desc";
       model = "gebsfish\data\food\geb_funredtackle.p3d";
-      rotationFlags = 17;
+      rotationFlags = 8;
       weight = 140;
       itemSize[] = {
         3,
@@ -1440,9 +1448,9 @@ class cfgVehicles {
   {
       scope = 2;
       displayName = "Fun Purple Tackle Box";
-      descriptionShort = "A safe place to put some hooks and sinkers.";
+      descriptionShort = "$STR_tackle_desc";
       model = "gebsfish\data\food\geb_funpurpletackle.p3d";
-      rotationFlags = 17;
+      rotationFlags = 8;
       weight = 140;
       itemSize[] = {
         3,
@@ -1535,9 +1543,9 @@ class cfgVehicles {
   {
       scope = 2;
       displayName = "Fun Green Tackle Box";
-      descriptionShort = "A safe place to put some hooks and sinkers.";
+      descriptionShort = "$STR_tackle_desc";
       model = "gebsfish\data\food\geb_fungreentackle.p3d";
-      rotationFlags = 17;
+      rotationFlags = 8;
       weight = 140;
       itemSize[] = {
         3,
@@ -1631,8 +1639,8 @@ class cfgVehicles {
   class SmallTackle: Container_Base {
 	  
     scope = 2;
-    displayName = "Mini Tackle";
-    descriptionShort = "A safe place to put some worms or hooks!";
+    displayName = "$STR_smalltackle";
+    descriptionShort = "$STR_smalltackle_desc";
     model = "gebsfish\data\food\geb_smalltackle.p3d";
     hiddenSelections[] = {
       "zbytek"
@@ -1728,8 +1736,8 @@ class cfgVehicles {
   class WormContainer: Container_Base {
 	  
     scope = 2;
-    displayName = "Worm Container";
-    descriptionShort = "A safe place to put some worms!";
+    displayName = "$STR_wormcontainer";
+    descriptionShort = "$STR_wormcontainer_desc";
     model = "gebsfish\data\food\geb_wormcontainer.p3d";
     hiddenSelections[] = {
       "zbytek"
@@ -1825,8 +1833,8 @@ class cfgVehicles {
 
 
     scope = 2;
-    displayName = "Bug Container";
-    descriptionShort = "A safe place to put some bugs, can also be used to catch them! Grasshoppers, Field Crickets, and Grubs!";
+    displayName = "$STR_bugcontainer";
+    descriptionShort = "$STR_bugcontainer_desc";
     model = "gebsfish\data\food\geb_bugcontainer.p3d";
     hiddenSelections[] = {
       "zbytek"
@@ -1838,7 +1846,7 @@ class cfgVehicles {
     {
         "CatchBugs"
     };
-    rotationFlags = 17;
+    rotationFlags = 12;
     weight = 140;
     itemSize[] = {
       1,
@@ -1925,8 +1933,8 @@ class cfgVehicles {
   class MinnowBucket : WaterBottle
   {
       scope = 2;
-      displayName = "Minnow Bucket";
-      descriptionShort = "A great place to store small marine life. Minnows, sardines, Slimy Sculpin, Crayfish, Shrimp!";
+      displayName = "$STR_minnowcontainer";
+      descriptionShort = "$STR_minnowcontainer_desc";
       model = "gebsfish\data\food\geb_minnowbucket.p3d";
       debug_ItemCategory = 6;
       weight = 25;
@@ -2045,7 +2053,7 @@ class cfgVehicles {
   class OldGreenTackleBox: Container_Base {
     scope = 2;
     displayName = "Old Green Tackle Box";
-    descriptionShort = "A safe place to put some hooks and sinkers.";
+    descriptionShort = "$STR_tackle_desc";
     model = "gebsfish\data\food\geb_old_greentackle.p3d";
     hiddenSelections[] = {
       "zbytek"
@@ -2138,7 +2146,7 @@ class cfgVehicles {
   class OldRedTackleBox: Container_Base {
     scope = 2;
     displayName = "Old Red Tackle Box";
-    descriptionShort = "A safe place to put some hooks and sinkers.";
+    descriptionShort = "$STR_tackle_desc";
     model = "gebsfish\data\food\geb_old_redtackle.p3d";
     hiddenSelections[] = {
       "zbytek"
@@ -2231,7 +2239,7 @@ class cfgVehicles {
   class OldBlueTackleBox: Container_Base {
     scope = 2;
     displayName = "Old Blue Tackle Box";
-    descriptionShort = "A safe place to put some hooks and sinkers.";
+    descriptionShort = "$STR_tackle_desc";
     model = "gebsfish\data\food\geb_old_bluetackle.p3d";
     hiddenSelections[] = {
       "zbytek"
@@ -2324,7 +2332,7 @@ class cfgVehicles {
   class OldPurpleTackleBox: Container_Base {
     scope = 2;
     displayName = "Old Purple Tackle Box";
-    descriptionShort = "A safe place to put some hooks and sinkers.";
+    descriptionShort = "$STR_tackle_desc";
     model = "gebsfish\data\food\geb_old_purpletackle.p3d";
     hiddenSelections[] = {
       "zbytek"
@@ -2427,8 +2435,8 @@ class cfgVehicles {
   class BambooFishingNet : Container_Base {
       scope = 2;
       rotationFlags = 17;
-      displayName = "Bamboo Fishing Net";
-      descriptionShort = "A safe place to put some bugs, can also be used to catch them! Grasshoppers, Field Crickets, and Grubs!";
+      displayName = "$STR_fishingnet";
+      descriptionShort = "$STR_fishingnet_desc";
       model = "gebsfish\data\food\geb_fishingnet.p3d";
       hiddenSelections[] = {
         "zbytek"
@@ -8701,8 +8709,8 @@ class cfgVehicles {
 
   class Lure1 : Inventory_Base {
       scope = 2;
-      displayName = "Lure 1";
-      descriptionShort = "A bait to catch marine life!";
+      displayName = "$STR_lure1";
+      descriptionShort = "$STR_lure1_desc";
       model = "gebsfish\data\food\lure1.p3d";
       weight = 15;
       absorbency = 0.80000001;
@@ -8780,8 +8788,8 @@ class cfgVehicles {
   };
   class Lure2 : Inventory_Base {
       scope = 2;
-      displayName = "Lure 2";
-      descriptionShort = "A bait to catch marine life!";
+      displayName = "$STR_lure2";
+      descriptionShort = "$STR_lure2_desc";
       model = "gebsfish\data\food\lure2.p3d";
       weight = 15;
       absorbency = 0.80000001;
@@ -8859,8 +8867,8 @@ class cfgVehicles {
   };
   class Lure3 : Inventory_Base {
       scope = 2;
-      displayName = "Lure 3";
-      descriptionShort = "A bait to catch marine life!";
+      displayName = "$STR_lure3";
+      descriptionShort = "$STR_lure3_desc";
       model = "gebsfish\data\food\lure3.p3d";
       weight = 15;
       absorbency = 0.80000001;
@@ -8938,8 +8946,8 @@ class cfgVehicles {
   };
   class Lure4 : Inventory_Base {
       scope = 2;
-      displayName = "Lure 4";
-      descriptionShort = "A bait to catch marine life!";
+      displayName = "$STR_lure4";
+      descriptionShort = "$STR_lure4_desc";
       model = "gebsfish\data\food\lure4.p3d";
       weight = 15;
       absorbency = 0.80000001;

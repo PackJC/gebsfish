@@ -15,6 +15,7 @@ class ActionDigBugs: ActionContinuousBase
 	static ref map<string, float> insect_map = new map<string, float>();
 	static float GRASSHOPPER_CHANCE = 50;
 	static float FIELDCRICKET_CHANCE = 50;
+	static float GRUBWORM_CHANCE = 50;
 	static float insect_chance_sum;
 	static string selected_insect = "";
 	static float rndInsect;
@@ -24,6 +25,7 @@ class ActionDigBugs: ActionContinuousBase
 	{
 		insect_map["FieldCricket"] = FIELDCRICKET_CHANCE;
 		insect_map["GrassHopper"] = GRASSHOPPER_CHANCE;
+		insect_map["GrubWorm"] = GRUBWORM_CHANCE;
 
 		m_CallbackClass = ActionDigBugsCB;
 		m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DIGMANIPULATE;

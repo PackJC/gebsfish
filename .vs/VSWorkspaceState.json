@@ -1,8 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\data",
-    "\\data\\food"
+    "\\scripts",
+    "\\scripts\\4_world",
+    "\\scripts\\4_world\\classes",
+    "\\scripts\\4_world\\classes\\useractioncomponent",
+    "\\scripts\\4_world\\classes\\useractioncomponent\\actions",
+    "\\scripts\\4_world\\classes\\useractioncomponent\\actions\\continuous",
+    "\\scripts\\4_world\\entities",
+    "\\scripts\\4_world\\entities\\itembase",
+    "\\scripts\\4_world\\entities\\itembase\\container_base",
+    "\\scripts\\5_mission"
   ],
   "PreviewInSolutionExplorer": false
 }

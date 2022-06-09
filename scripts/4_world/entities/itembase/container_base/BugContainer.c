@@ -23,7 +23,6 @@ modded class BugContainer extends Container_Base
 		super.SetActions();
 
 		AddAction(ActionDigBugs);
-		AddAction(ActionDigWorms);
 
 	}
 }
