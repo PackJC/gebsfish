@@ -11072,8 +11072,8 @@ class cfgVehicles {
   class Carp;
   class Bluegill: Edible_Base {
     scope = 2;
-    displayName = "$g_bluegill";
-    descriptionShort = "$g_bluegill_desc";
+    displayName = "$STR_bluegill";
+    descriptionShort = "$STR_bluegill_desc";
     model = "gebsfish\data\food\bluegill.p3d";
     itemSize[] = {
       3,
@@ -11220,8 +11220,8 @@ class cfgVehicles {
   };
   class Blackbass: Edible_Base {
     scope = 2;
-    displayName = "$g_blackbass";
-    descriptionShort = "$g_blackbass_desc";
+    displayName = "$STR_blackbass";
+    descriptionShort = "$STR_blackbass_desc";
     model = "gebsfish\data\food\blackbass.p3d";
     itemSize[] = {
       5,
@@ -11368,8 +11368,8 @@ class cfgVehicles {
   };
   class Catfish: Edible_Base {
     scope = 2;
-    displayName = "$g_catfish";
-    descriptionShort = "$g_catfish_desc";
+    displayName = "$STR_catfish";
+    descriptionShort = "$STR_catfish_desc";
     model = "gebsfish\data\food\catfish.p3d";
     itemSize[] = {
       7,
@@ -11516,8 +11516,8 @@ class cfgVehicles {
   };
   class Largemouthbass: Edible_Base {
     scope = 2;
-    displayName = "$g_largemouthbass";
-    descriptionShort = "$g_largemouthbass_desc";
+    displayName = "$STR_largemouthbass";
+    descriptionShort = "$STR_largemouthbass_desc";
     model = "gebsfish\data\food\largemouthbass.p3d";
     itemSize[] = {
       5,
@@ -11664,8 +11664,8 @@ class cfgVehicles {
   };
   class Minnow: Edible_Base {
     scope = 2;
-    displayName = "$g_minnow";
-    descriptionShort = "$g_minnow_desc";
+    displayName = "$STR_minnow";
+    descriptionShort = "$STR_minnow_desc";
     model = "gebsfish\data\food\minnow.p3d";
     itemSize[] = {
       1,
@@ -11812,8 +11812,8 @@ class cfgVehicles {
   };
   class Northernpike: Edible_Base {
     scope = 2;
-    displayName = "$g_northernpike";
-    descriptionShort = "$g_northernpike_desc";
+    displayName = "$STR_northernpike";
+    descriptionShort = "$STR_northernpike_desc";
     model = "gebsfish\data\food\northernpike.p3d";
     itemSize[] = {
       6,
@@ -11959,8 +11959,8 @@ class cfgVehicles {
   };
   class Perch: Edible_Base {
     scope = 2;
-    displayName = "$g_perch";
-    descriptionShort = "$g_perch_desc";
+    displayName = "$STR_perch";
+    descriptionShort = "$STR_perch_desc";
     model = "gebsfish\data\food\perch.p3d";
     itemSize[] = {
       4,
@@ -12107,8 +12107,8 @@ class cfgVehicles {
   };
   class Sauger: Edible_Base {
     scope = 2;
-    displayName = "$g_sauger";
-    descriptionShort = "$g_sauger_desc";
+    displayName = "$STR_sauger";
+    descriptionShort = "$STR_sauger_desc";
     model = "gebsfish\data\food\sauger.p3d";
     itemSize[] = {
       4,
@@ -12255,8 +12255,8 @@ class cfgVehicles {
   };
   class Crayfish: Edible_Base {
     scope = 2;
-    displayName = "$g_crayfish";
-    descriptionShort = "$g_crayfish_desc";
+    displayName = "$STR_crayfish";
+    descriptionShort = "$STR_crayfish_desc";
     model = "gebsfish\data\food\Crayfish.p3d";
     itemSize[] = {
       2,
@@ -12403,8 +12403,8 @@ class cfgVehicles {
   };
   class Trout: Edible_Base {
     scope = 2;
-    displayName = "$g_trout";
-    descriptionShort = "$g_trout_desc";
+    displayName = "$STR_trout";
+    descriptionShort = "$STR_trout_desc";
     model = "gebsfish\data\food\trout.p3d";
     itemSize[] = {
       5,
@@ -12551,8 +12551,8 @@ class cfgVehicles {
   };
   class Whitebass: Edible_Base {
     scope = 2;
-    displayName = "$g_whitebass";
-    descriptionShort = "$g_whitebass_desc";
+    displayName = "$STR_whitebass";
+    descriptionShort = "$STR_whitebass_desc";
     model = "gebsfish\data\food\whitebass.p3d";
     itemSize[] = {
       5,
@@ -12699,8 +12699,8 @@ class cfgVehicles {
   };
   class Bowfin: Edible_Base {
     scope = 2;
-    displayName = "$g_bowfin";
-    descriptionShort = "$g_bowfin_desc";
+    displayName = "$STR_bowfin";
+    descriptionShort = "$STR_bowfin_desc";
     model = "gebsfish\data\food\bowfin.p3d";
     itemSize[] = {
       4,
@@ -12846,8 +12846,8 @@ class cfgVehicles {
   };
   class Slimysculpin: Edible_Base {
     scope = 2;
-    displayName = "$g_slimysculpin";
-    descriptionShort = "$g_slimysculpin_desc";
+    displayName = "$STR_slimysculpin";
+    descriptionShort = "$STR_slimysculpin_desc";
     model = "gebsfish\data\food\slimysculpin.p3d";
     itemSize[] = {
       2,
@@ -12995,8 +12995,8 @@ class cfgVehicles {
   //Saltwater Fish
   class Angelfish: Edible_Base {
     scope = 2;
-    displayName = "$g_angelfish";
-    descriptionShort = "$g_angelfish_desc";
+    displayName = "$STR_angelfish";
+    descriptionShort = "$STR_angelfish_desc";
     model = "gebsfish\data\food\angelfish.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -13142,8 +13142,8 @@ class cfgVehicles {
   }
   class Asianseabass: Edible_Base {
     scope = 2;
-    displayName = "$g_asianseabass";
-    descriptionShort = "$g_asianseabass_desc";
+    displayName = "$STR_asianseabass";
+    descriptionShort = "$STR_asianseabass_desc";
     model = "gebsfish\data\food\asianseabass.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -13289,8 +13289,8 @@ class cfgVehicles {
   }
   class Bluemarlin: Edible_Base {
     scope = 2;
-    displayName = "$g_bluemarlin";
-    descriptionShort = "$g_bluemarlin_desc";
+    displayName = "$STR_bluemarlin";
+    descriptionShort = "$STR_bluemarlin_desc";
     model = "gebsfish\data\food\bluemarlin.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -13437,8 +13437,8 @@ class cfgVehicles {
   }
   class Bonita: Edible_Base {
     scope = 2;
-    displayName = "$g_bonita";
-    descriptionShort = "$g_bonita_desc";
+    displayName = "$STR_bonita";
+    descriptionShort = "$STR_bonita_desc";
     model = "gebsfish\data\food\bonita.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -13584,8 +13584,8 @@ class cfgVehicles {
   }
   class Cherrysalmon: Edible_Base {
     scope = 2;
-    displayName = "$g_cherrysalmon";
-    descriptionShort = "$g_cherrysalmon_desc";
+    displayName = "$STR_cherrysalmon";
+    descriptionShort = "$STR_cherrysalmon_desc";
     model = "gebsfish\data\food\cherrysalmon.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -13731,8 +13731,8 @@ class cfgVehicles {
   }
   class Flatheadmullet: Edible_Base {
     scope = 2;
-    displayName = "$g_flatheadmullet";
-    descriptionShort = "$g_flatheadmullet_desc";
+    displayName = "$STR_flatheadmullet";
+    descriptionShort = "$STR_flatheadmullet_desc";
     model = "gebsfish\data\food\flatheadmullet.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -13878,8 +13878,8 @@ class cfgVehicles {
   }
   class Leopardshark: Edible_Base {
     scope = 2;
-    displayName = "$g_leopardshark";
-    descriptionShort = "$g_leopardshark_desc";
+    displayName = "$STR_leopardshark";
+    descriptionShort = "$STR_leopardshark_desc";
     model = "gebsfish\data\food\leopardshark.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -14025,8 +14025,8 @@ class cfgVehicles {
   }
   class Pacificcod: Edible_Base {
     scope = 2;
-    displayName = "$g_pacificcod";
-    descriptionShort = "$g_pacificcod_desc";
+    displayName = "$STR_pacificcod";
+    descriptionShort = "$STR_pacificcod_desc";
     model = "gebsfish\data\food\pacificcod.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -14172,8 +14172,8 @@ class cfgVehicles {
   }
   class Redheadcichlid: Edible_Base {
     scope = 2;
-    displayName = "$g_redheadcichlid";
-    descriptionShort = "$g_redheadcichlid_desc";
+    displayName = "$STR_redheadcichlid";
+    descriptionShort = "$STR_redheadcichlid_desc";
     model = "gebsfish\data\food\redheadcichlid.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -14319,7 +14319,7 @@ class cfgVehicles {
   }
   class Roughneckrock: Edible_Base {
     scope = 2;
-    displayName = "$g_roughneckrock";
+    displayName = "$STR_roughneckrock";
     descriptionShort = "g_roughneckrock_desc";
     model = "gebsfish\data\food\roughneckrock.p3d";
     debug_ItemCategory = 6;
@@ -14466,8 +14466,8 @@ class cfgVehicles {
   }
   class Severum: Edible_Base {
     scope = 2;
-    displayName = "$g_severum";
-    descriptionShort = "$g_severum_desc";
+    displayName = "$STR_severum";
+    descriptionShort = "$STR_severum_desc";
     model = "gebsfish\data\food\severum.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -14614,8 +14614,8 @@ class cfgVehicles {
   }
   class Shrimp: Edible_Base {
     scope = 2;
-    displayName = "$g_shrimp";
-    descriptionShort = "$g_shrimp_desc";
+    displayName = "$STR_shrimp";
+    descriptionShort = "$STR_shrimp_desc";
     model = "gebsfish\data\food\shrimp.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -14761,8 +14761,8 @@ class cfgVehicles {
   }
   class Bluetang: Edible_Base {
     scope = 2;
-    displayName = "$g_bluetang";
-    descriptionShort = "$g_bluetang_desc";
+    displayName = "$STR_bluetang";
+    descriptionShort = "$STR_bluetang_desc";
     model = "gebsfish\data\food\bluetang.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -14908,8 +14908,8 @@ class cfgVehicles {
   }
   class Hairtailfish: Edible_Base {
     scope = 2;
-    displayName = "$g_hairtailfish";
-    descriptionShort = "$g_hairtailfish_desc";
+    displayName = "$STR_hairtailfish";
+    descriptionShort = "$STR_hairtailfish_desc";
     model = "gebsfish\data\food\hairtailfish.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -15055,8 +15055,8 @@ class cfgVehicles {
   }
   class Humpheadwrasse: Edible_Base {
     scope = 2;
-    displayName = "$g_humpheadwrasse";
-    descriptionShort = "$g_humpheadwrasse_desc";
+    displayName = "$STR_humpheadwrasse";
+    descriptionShort = "$STR_humpheadwrasse_desc";
     model = "gebsfish\data\food\humpheadwrasse.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -15202,8 +15202,8 @@ class cfgVehicles {
   }
   class Siamesetigerfish: Edible_Base {
     scope = 2;
-    displayName = "$g_siamesetigerfish";
-    descriptionShort = "$g_siamesetigerfish";
+    displayName = "$STR_siamesetigerfish";
+    descriptionShort = "$STR_siamesetigerfish";
     model = "gebsfish\data\food\siamesetigerfish.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -15354,8 +15354,8 @@ class cfgVehicles {
   //Crusts Fish
   class Bloodclam : Edible_Base {
       scope = 2;
-      displayName = "$g_bloodclam";
-      descriptionShort = "$g_bloodclam_desc";
+      displayName = "$STR_bloodclam";
+      descriptionShort = "$STR_bloodclam_desc";
       model = "gebsfish\data\food\bloodclam.p3d";
       debug_ItemCategory = 6;
       rotationFlags = 17;
@@ -15501,8 +15501,8 @@ class cfgVehicles {
   }
   class Mussel : Edible_Base {
       scope = 2;
-      displayName = "$g_mussel";
-      descriptionShort = "$g_mussel_desc";
+      displayName = "$STR_mussel";
+      descriptionShort = "$STR_mussel_desc";
       model = "gebsfish\data\food\mussel.p3d";
       debug_ItemCategory = 6;
       rotationFlags = 17;
@@ -15648,8 +15648,8 @@ class cfgVehicles {
   }
   class Blackdevilsnail : Edible_Base {
       scope = 2;
-      displayName = "$g_blackdevilsnail";
-      descriptionShort = "$g_blackdevilsnail_desc";
+      displayName = "$STR_blackdevilsnail";
+      descriptionShort = "$STR_blackdevilsnail_desc";
       model = "gebsfish\data\food\blackdevilsnail.p3d";
       debug_ItemCategory = 6;
       rotationFlags = 17;
@@ -15795,7 +15795,7 @@ class cfgVehicles {
   }
   class Starfish : Edible_Base {
       scope = 2;
-      displayName = "$g_starfish";
+      displayName = "$STR_starfish";
       descriptionShort = "g_starfish_desc";
       model = "gebsfish\data\food\starfish.p3d";
       debug_ItemCategory = 6;
@@ -15942,8 +15942,8 @@ class cfgVehicles {
   }
   class Kingcrab : Edible_Base {
       scope = 2;
-      displayName = "$g_kingcrab";
-      descriptionShort = "$g_kingcrab_desc";
+      displayName = "$STR_kingcrab";
+      descriptionShort = "$STR_kingcrab_desc";
       model = "gebsfish\data\food\kingcrab.p3d";
       debug_ItemCategory = 6;
       rotationFlags = 17;
@@ -16089,8 +16089,8 @@ class cfgVehicles {
   }
   class Jellyfish : Edible_Base {
       scope = 2;
-      displayName = "$g_jellyfish";
-      descriptionShort = "$g_jellyfish_desc";
+      displayName = "$STR_jellyfish";
+      descriptionShort = "$STR_jellyfish_desc";
       model = "gebsfish\data\food\jellyfish.p3d";
       debug_ItemCategory = 6;
       rotationFlags = 17;
@@ -16236,8 +16236,8 @@ class cfgVehicles {
   }
   class Lobster : Edible_Base {
       scope = 2;
-      displayName = "$g_lobster";
-      descriptionShort = "$g_lobster_desc";
+      displayName = "$STR_lobster";
+      descriptionShort = "$STR_lobster_desc";
       model = "gebsfish\data\food\lobster.p3d";
       debug_ItemCategory = 6;
       rotationFlags = 17;
