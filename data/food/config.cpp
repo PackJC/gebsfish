@@ -3105,8 +3105,8 @@ class cfgVehicles {
 
   class MetalHook : Inventory_Base {
       scope = 2;
-      displayName = "Metal Hook";
-      descriptionShort = "A metal hook!";
+      displayName = "$STR_metalhook";
+      descriptionShort = "$STR_metalhook_desc";
       model = "gebsfish\data\food\geb_metalhook.p3d";
       weight = 1;
       absorbency = 0.80000001;
@@ -3314,8 +3314,8 @@ class cfgVehicles {
   class FieldCricket : Worm
     {
         scope = 2;
-        displayName = "Field Cricket";
-        descriptionShort = "Gryllus is a genus of field cricket (Orthoptera, Gryllidae, Gryllinae). Members of the genus are typically 15–31 mm long and darkly coloured.";
+        displayName = "$STR_fieldcricket";
+        descriptionShort = "$STR_fieldcricket_desc";
         model = "gebsfish\data\food\geb_fieldcricket.p3d";
         rotationFlags = 17;
         weight = 21;
@@ -3449,9 +3449,9 @@ class cfgVehicles {
   class GrubWorm: Worm
 	{
 		scope=2;
-		displayName="Grub Worm";
-		descriptionShort="The C-shaped larvae, called grubs, are pale yellow or white. Most adult beetles are nocturnal, although the flower chafers (Cetoniinae) and many leaf chafers (Rutelinae) are active during the day. The grubs mostly live underground or under debris, so are not exposed to sunlight. Many scarabs are scavengers that recycle dung, carrion, or decaying plant material.";
-		model="\dz\gear\food\bait_worm.p3d";
+        displayName = "$STR_grubworm";
+        descriptionShort = "$STR_grubworm_desc";
+        model="\dz\gear\food\bait_worm.p3d";
         hiddenSelectionsTextures[] = {
         "gebsfish\data\food\geb_grubworm.paa";
         };
@@ -3581,8 +3581,8 @@ class cfgVehicles {
   class RubberWorm: Worm
 	{
 		scope=2;
-		displayName="Rubber Worm #1";
-		descriptionShort="A rubber worm from the tackle shop!";
+		displayName="$STR_rubberworm";
+		descriptionShort= "$STR_rubberworm_desc";
 		model="\dz\gear\food\bait_worm.p3d";
         hiddenSelectionsTextures[] = {
         "gebsfish\data\food\geb_rubberworm.paa";
@@ -8390,8 +8390,8 @@ class cfgVehicles {
 
   class SpinnerBait1 : Inventory_Base {
       scope = 2;
-      displayName = "Spinner Bait1";
-      descriptionShort = "A bait to catch marine life!";
+      displayName = "$STR_spinnerbait1";
+      descriptionShort = "$STR_spinnerbait_desc";
       model = "gebsfish\data\food\geb_spinnerbait1.p3d";
       weight = 15;
       absorbency = 0.80000001;
@@ -8469,8 +8469,8 @@ class cfgVehicles {
   };
   class SpinnerBait2 : Inventory_Base {
       scope = 2;
-      displayName = "Spinner Bait2";
-      descriptionShort = "A bait to catch marine life!";
+      displayName = "$STR_spinnerbait2";
+      descriptionShort = "$STR_spinnerbait_desc";
       model = "gebsfish\data\food\geb_spinnerbait2.p3d";
       weight = 15;
       absorbency = 0.80000001;
@@ -8548,8 +8548,8 @@ class cfgVehicles {
   };
   class SpinnerBait3 : Inventory_Base {
       scope = 2;
-      displayName = "Spinner Bait3";
-      descriptionShort = "A bait to catch marine life!";
+      displayName = "$STR_spinnerbait3";
+      descriptionShort = "$STR_spinnerbait_desc";
       model = "gebsfish\data\food\geb_spinnerbait3.p3d";
       weight = 15;
       absorbency = 0.80000001;
@@ -8627,8 +8627,8 @@ class cfgVehicles {
   };
   class SpinnerBait4 : Inventory_Base {
       scope = 2;
-      displayName = "Spinner Bait4";
-      descriptionShort = "A bait to catch marine life!";
+      displayName = "$STR_spinnerbait4";
+      descriptionShort = "$STR_spinnerbait_desc";
       model = "gebsfish\data\food\geb_spinnerbait4.p3d";
       weight = 15;
       absorbency = 0.80000001;
@@ -9034,8 +9034,8 @@ class cfgVehicles {
   class BlueFishKnife: HuntingKnife
 	{
 		scope=2;
-		displayName="Blue Fillet Knife";
-		descriptionShort="A blue fillet knife, good for gutting fish";
+		displayName="$STR_blue_fishknife";
+		descriptionShort="$STR_fishingknife_desc";
 		model="gebsfish\data\food\geb_bluefishknife.p3d";
 		inventorySlot[]=
 		{
@@ -9302,9 +9302,9 @@ class cfgVehicles {
   class OrangeFishKnife: HuntingKnife
 	{
 		scope=2;
-		displayName="Orange Fillet Knife";
-		descriptionShort="An orange fillet knife, good for gutting fish";
-		model="gebsfish\data\food\geb_orangefishknife.p3d";
+        displayName = "$STR_orange_fishknife";
+        descriptionShort = "$STR_fishingknife_desc";
+        model="gebsfish\data\food\geb_orangefishknife.p3d";
 		inventorySlot[]=
 		{
 			"Knife"
@@ -9570,8 +9570,8 @@ class cfgVehicles {
   class GreenFishKnife : HuntingKnife
     {
         scope = 2;
-        displayName = "Green Fillet Knife";
-        descriptionShort = "An green fillet knife, good for gutting fish";
+        displayName = "$STR_green_fishknife";
+        descriptionShort = "$STR_fishingknife_desc";
         model = "gebsfish\data\food\geb_greenfishknife.p3d";
         inventorySlot[] =
         {
@@ -9838,8 +9838,8 @@ class cfgVehicles {
   class YellowFishKnife : HuntingKnife
     {
         scope = 2;
-        displayName = "Yellow Fillet Knife";
-        descriptionShort = "An yellow fillet knife, good for gutting fish";
+        displayName = "$STR_yellow_fishknife";
+        descriptionShort = "$STR_fishingknife_desc";
         model = "gebsfish\data\food\geb_yellowfishknife.p3d";
         inventorySlot[] =
         {
@@ -10106,8 +10106,8 @@ class cfgVehicles {
   class RedFishKnife : HuntingKnife
     {
         scope = 2;
-        displayName = "Red Fillet Knife";
-        descriptionShort = "An red fillet knife, good for gutting fish";
+        displayName = "$STR_red_fishknife";
+        descriptionShort = "$STR_fishingknife_desc";
         model = "gebsfish\data\food\geb_redfishknife.p3d";
         inventorySlot[] =
         {
@@ -10374,8 +10374,8 @@ class cfgVehicles {
   class PurpleFishKnife : HuntingKnife
     {
         scope = 2;
-        displayName = "Purple Fillet Knife";
-        descriptionShort = "An purple fillet knife, good for gutting fish";
+        displayName = "$STR_purple_fishknife";
+        descriptionShort = "$STR_fishingknife_desc";
         model = "gebsfish\data\food\geb_purplefishknife.p3d";
         inventorySlot[] =
         {
@@ -10740,8 +10740,8 @@ class cfgVehicles {
   class Rope;
   class BigGameFishingline: Rope {
     scope = 2;
-    displayName = "Big Game Fishing Line";
-    descriptionShort = "Catch a ton of bass with this line! Used to craft makeshift fishing pole, or possibly used as a string.";
+    displayName = "$STR_gameline";
+    descriptionShort = "$STR_gameline_desc";
     model = "gebsfish\data\food\geb_fishingline_biggame.p3d";
     OnRestrainChange = "RopeLocked";
     RestrainTime = 10;
@@ -10764,8 +10764,8 @@ class cfgVehicles {
   };
   class SaltwaterFishingLine: Rope {
     scope = 2;
-    displayName = "Salt Water Fishing Line";
-    descriptionShort = "Good fishing line for the ocean! Used to craft makeshift fishing pole, or possibly used as a string.";
+    displayName = "$STR_saltline";
+    descriptionShort = "$STR_saltline_desc";
     model = "gebsfish\data\food\geb_fishingline_saltwater.p3d";
     OnRestrainChange = "RopeLocked";
     RestrainTime = 10;
@@ -10788,8 +10788,8 @@ class cfgVehicles {
   };
   class FlyFishingLine: Rope {
     scope = 2;
-    displayName = "Fly Fishing Line";
-    descriptionShort = "A pretty good spool of fly fishing line, great for trout! Used to craft makeshift fishing pole, or possibly used as a string.";
+    displayName = "$STR_flyline";
+    descriptionShort = "$STR_flyline_desc";
     model = "gebsfish\data\food\geb_fishingline_flyfishing.p3d";
     OnRestrainChange = "RopeLocked";
     RestrainTime = 10;

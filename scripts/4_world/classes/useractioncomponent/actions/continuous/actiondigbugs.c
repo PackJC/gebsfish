@@ -27,6 +27,15 @@ class ActionDigBugs: ActionContinuousBase
 		insect_map["GrassHopper"] = GRASSHOPPER_CHANCE;
 		insect_map["GrubWorm"] = GRUBWORM_CHANCE;
 
+		auto bug_chance_map = FileReader.GetBugChanceMap();
+
+		if (bug_chance_map.Count() > 0) {
+			insect_map = salt_bug_map;
+
+		}
+
+
+
 		m_CallbackClass = ActionDigBugsCB;
 		m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DIGMANIPULATE;
 		m_FullBody = true;

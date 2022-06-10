@@ -6,7 +6,6 @@ class FileReader
 	static const string TRAP_CONFIG_PATH = "$profile:gebsfish/FishTrap.cfg";
 
 	static const string BUG_CONFIG_PATH = "$profile:gebsfish/Bugs.cfg";
-	static const string WORM_CONFIG_PATH = "$profile:gebsfish/Worms.cfg";
 
 	static const string DIRECTORY = "$profile:gebsfish";
 
@@ -14,7 +13,6 @@ class FileReader
 	static ref map<string, float> salt_chance_map = new map<string, float>();
 	static ref map<string, float> trap_chance_map = new map<string, float>();
 	static ref map<string, float> bug_chance_map = new map<string, float>();
-	static ref map<string, float> worm_chance_map = new map<string, float>();
 
 	private static ref FileReader instance;
 
@@ -52,10 +50,7 @@ class FileReader
 		{
 			CreateConfig(BUG_CONFIG_PATH);
 		}
-		if (!FileExist(WORM_CONFIG_PATH))
-		{
-			CreateConfig(WORM_CONFIG_PATH);
-		}
+
 
 
 
@@ -121,19 +116,6 @@ class FileReader
 			CloseFile(fresh_file);
 		}
 
-		if (FileExist(WORM_CONFIG_PATH))
-		{
-			FileHandle worm_file = OpenFile(WORM_CONFIG_PATH, FileMode.READ);
-			string worm_line;
-			while (FGets(worm_file, worm_line) != -1)
-			{
-				worm_line.Trim(); //Removes remaining whitespaces
-				int tokenIndex5 = worm_line.IndexOf("=");
-				int lengthIndex5 = worm_line.Length() - tokenIndex5;
-				worm_chance_map[worm_line.Substring(0, tokenIndex5)] = (worm_line.Substring(tokenIndex5 + 1, lengthIndex5 - 1)).ToFloat();
-			}
-			CloseFile(worm_file);
-		}
 
 		
 	}
@@ -193,9 +175,6 @@ class FileReader
 				case "$profile:gebsfish/Bugs.cfg":
 					FPrintln(f, "FieldCricket=50");
 					FPrintln(f, "GrassHopper=50");
-					break;
-				case "$profile:gebsfish/Worms.cfg":
-					FPrintln(f, "Worm=50");
 					FPrintln(f, "GrubWorm=50");
 					break;
 			}
@@ -244,10 +223,7 @@ class FileReader
 		return bug_chance_map;
 	}
 
-	static map<string, float> GetWormChanceMap()
-	{
-		return worm_chance_map;
-	}
+
 };
 
 
