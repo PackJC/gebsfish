@@ -1,42 +1,15 @@
+/*
+
+  CREATED BY PACKJC
+  https://github.com/PackJC/gebsfish
+  https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
+  https://discord.com/invite/G8uSGZ8yyf
+  Contributions welcome via github
+
+*/
+
 class CfgPatches {
   class gebsfish {
-    units[] = {
-      "Bluegill",
-      "Blackbass",
-      "Catfish",
-      "Largemouthbass",
-      "Minnow",
-      "Northernpike",
-      "Perch",
-      "Sauger",
-      "Crayfish",
-      "Trout",
-      "Whitebass",
-      "Angelfish",
-      "Asianseabass",
-      "Bluemarlin",
-      "Bonita",
-      "Cherrysalmon",
-      "Flatheadmullet",
-      "Leopardshark",
-      "Pacificcod",
-      "Redheadcichlid",
-      "Roughneckrock",
-      "Severum",
-      "Shrimp",
-      "Bownfin",
-      "Slimysculpin",
-      "Bluetang",
-      "Hairtailfish",
-      "Humpheadwrasse",
-      "Siamesetigerfish",
-      "Bloodclam",
-      "Mussel",
-      "Blackdevilsnail",
-      "Starfish",
-      "Kingcrab",
-      "Jellyfish"
-    };
     weapons[] = {};
     requiredVersion = 0.1;
     requiredAddons[] = {
@@ -44,11 +17,9 @@ class CfgPatches {
       "DZ_Characters",
       "DZ_Scripts"
     };
-	
-	
-	
   };
 };
+
 class cfgVehicles {
 
   //Instantiate Needed Classes
@@ -1635,7 +1606,6 @@ class cfgVehicles {
       };
   };
 
-
   class SmallTackle: Container_Base {
 	  
     scope = 2;
@@ -1732,7 +1702,6 @@ class cfgVehicles {
     };
 
   }
-
   class WormContainer: Container_Base {
 	  
     scope = 2;
@@ -2048,7 +2017,6 @@ class cfgVehicles {
           };
       };
   };
-
 
   class OldGreenTackleBox: Container_Base {
     scope = 2;
@@ -2531,12 +2499,10 @@ class cfgVehicles {
       };
   };
 
-
-
   class MetalHookBobber1 : Inventory_Base {
     scope = 2;
-    displayName = "Metal Hook and Bobber #1";
-    descriptionShort = "A hook with a bobber.";
+    displayName = "$STR_metalhookbobber1";
+    descriptionShort = "$STR_hookbobber_desc";
     hiddenSelections[] = {
       "zbytek"
     };
@@ -2606,8 +2572,8 @@ class cfgVehicles {
   };
   class MetalHookBobber2 : Inventory_Base {
     scope = 2;
-    displayName = "Metal Hook and Bobber #2";
-    descriptionShort = "A hook with a bobber.";
+    displayName = "$STR_metalhookbobber2";
+    descriptionShort = "$STR_hookbobber_desc";
     hiddenSelections[] = {
       "zbytek"
     };
@@ -2677,8 +2643,8 @@ class cfgVehicles {
   };
   class MetalHookBobber3 : Inventory_Base {
     scope = 2;
-    displayName = "Metal Hook and Bobber #3";
-    descriptionShort = "A hook with a bobber.";
+    displayName = "$STR_metalhookbobber3";
+    descriptionShort = "$STR_hookbobber_desc";
     hiddenSelections[] = {
       "zbytek"
     };
@@ -2748,8 +2714,8 @@ class cfgVehicles {
   };
   class MetalHookBobber4 : Inventory_Base {
     scope = 2;
-    displayName = "Metal Hook and Bobber #4";
-    descriptionShort = "A hook with a bobber.";
+    displayName = "$STR_metalhookbobber4";
+    descriptionShort = "$STR_hookbobber_desc";
     hiddenSelections[] = {
       "zbytek"
     };
@@ -2820,8 +2786,8 @@ class cfgVehicles {
 
   class BoneHookBobber1 : Inventory_Base {
       scope = 2;
-      displayName = "Bone Hook and Bobber #1";
-      descriptionShort = "A hook with a bobber.";
+      displayName = "$STR_bonehookbobber1";
+      descriptionShort = "$STR_hookbobber_desc";
       hiddenSelections[] = {
         "zbytek"
       };
@@ -2891,8 +2857,8 @@ class cfgVehicles {
   };
   class BoneHookBobber2 : Inventory_Base {
       scope = 2;
-      displayName = "Hook and Bobber #2";
-      descriptionShort = "A hook with a bobber.";
+      displayName = "$STR_bonehookbobber2";
+      descriptionShort = "$STR_hookbobber_desc";
       hiddenSelections[] = {
         "zbytek"
       };
@@ -2962,8 +2928,8 @@ class cfgVehicles {
   };
   class BoneHookBobber3 : Inventory_Base {
       scope = 2;
-      displayName = "Hook and Bobber #3";
-      descriptionShort = "A hook with a bobber.";
+      displayName = "$STR_bonehookbobber3";
+      descriptionShort = "$STR_hookbobber_desc";
       hiddenSelections[] = {
         "zbytek"
       };
@@ -3033,8 +2999,8 @@ class cfgVehicles {
   };
   class BoneHookBobber4 : Inventory_Base {
       scope = 2;
-      displayName = "Hook and Bobber #4";
-      descriptionShort = "A hook with a bobber.";
+      displayName = "$STR_bonehookbobber4";
+      descriptionShort = "$STR_hookbobber_desc";
       hiddenSelections[] = {
         "zbytek"
       };
@@ -3176,13 +3142,13 @@ class cfgVehicles {
   	INSECTS & BAITS
   
   */
-  //Bugs
+
   class Worm;
   class GrassHopper : Worm
 	{
 		scope=2;
-		displayName="Grasshopper";
-		descriptionShort="Grasshoppers are a group of insects belonging to the suborder Caelifera. They are among what is probably the most ancient living group of chewing herbivorous insects, dating back to the early Triassic around 250 million years ago.";
+		displayName="$STR_grasshopper";
+		descriptionShort="$STR_grasshopper_desc";
 		model="gebsfish\data\food\geb_grasshopper.p3d";
 		rotationFlags=17;
 		weight=21;
@@ -8705,8 +8671,6 @@ class cfgVehicles {
       };
   };
 
-
-
   class Lure1 : Inventory_Base {
       scope = 2;
       displayName = "$STR_lure1";
@@ -10731,7 +10695,9 @@ class cfgVehicles {
     hiddenSelectionsTextures[] = {
       "gebsfish\data\food\geb_fishingrod_purple.paa";
     };
-  };  /* 
+  };  
+
+  /* 
   
   	ITEMS
   
@@ -10816,8 +10782,8 @@ class cfgVehicles {
   class Bobber1 : Inventory_Base
   {
       scope = 2;
-      displayName = "Bobber 1";
-      descriptionShort = "A fishing bobber. Can be combined with a hook to create a hook and bobber.";
+      displayName = "$STR_bobber1";
+      descriptionShort = "$STR_bobber_desc";
       model = "gebsfish\data\food\geb_bobber1.p3d";
       animClass = "NoFireClass";
       weight = 50;
@@ -10880,8 +10846,8 @@ class cfgVehicles {
   class Bobber2 : Inventory_Base
   {
       scope = 2;
-      displayName = "Bobber 2";
-      descriptionShort = "A fishing bobber. Can be combined with a hook to create a hook and bobber.";
+      displayName = "$STR_bobber2";
+      descriptionShort = "$STR_bobber_desc";
       model = "gebsfish\data\food\geb_bobber2.p3d";
       animClass = "NoFireClass";
       weight = 50;
@@ -10944,8 +10910,8 @@ class cfgVehicles {
   class Bobber3 : Inventory_Base
   {
       scope = 2;
-      displayName = "Bobber 3";
-      descriptionShort = "A fishing bobber. Can be combined with a hook to create a hook and bobber.";
+      displayName = "$STR_bobber3";
+      descriptionShort = "$STR_bobber_desc";
       model = "gebsfish\data\food\geb_bobber3.p3d";
       animClass = "NoFireClass";
       weight = 50;
@@ -11008,8 +10974,8 @@ class cfgVehicles {
   class Bobber4 : Inventory_Base
   {
       scope = 2;
-      displayName = "Bobber 4";
-      descriptionShort = "A fishing bobber. Can be combined with a hook to create a hook and bobber.";
+      displayName = "$STR_bobber4";
+      descriptionShort = "$STR_bobber_desc";
       model = "gebsfish\data\food\geb_bobber4.p3d";
       animClass = "NoFireClass";
       weight = 50;
@@ -15356,10 +15322,7 @@ class cfgVehicles {
     };
   }
 
-
-
-
-  //Crusts Fish
+  //Crustaceans Fish
   class Bloodclam : Edible_Base {
       scope = 2;
       displayName = "$STR_bloodclam";
@@ -16390,9 +16353,6 @@ class cfgVehicles {
       };
   }
 
-
-
-
   //Freshwater Fish Fillets
   class CarpFilletMeat;
   class BluegillFilletMeat: CarpFilletMeat {
@@ -16769,7 +16729,7 @@ class cfgVehicles {
     };
   };
 
-  //Crusts Fish Fillets
+  //Crustaceans Fish Fillets
   class ClamFilletMeat : MackerelFilletMeat {
       scope = 2;
       displayName = "Clam Meat";

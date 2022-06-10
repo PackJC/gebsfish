@@ -4,15 +4,13 @@
     "\\scripts",
     "\\scripts\\4_world",
     "\\scripts\\4_world\\classes",
-    "\\scripts\\4_world\\classes\\useractioncomponent",
-    "\\scripts\\4_world\\classes\\useractioncomponent\\actions",
-    "\\scripts\\4_world\\classes\\useractioncomponent\\actions\\continuous",
+    "\\scripts\\4_world\\classes\\recipes",
     "\\scripts\\4_world\\entities",
     "\\scripts\\4_world\\entities\\itembase",
     "\\scripts\\4_world\\entities\\itembase\\container_base",
     "\\scripts\\4_world\\entities\\itembase\\trapspawnbase",
     "\\scripts\\5_mission"
   ],
-  "SelectedNode": "\\scripts\\4_world\\entities\\itembase\\trapspawnbase\\geb_trap_fishnet.c",
+  "SelectedNode": "\\scripts\\4_world\\classes\\useractioncomponent",
   "PreviewInSolutionExplorer": false
 }

@@ -1,3 +1,13 @@
+/*
+
+  CREATED BY PACKJC
+  https://github.com/PackJC/gebsfish
+  https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
+  https://discord.com/invite/G8uSGZ8yyf
+  Contributions welcome via github
+
+*/
+
 class CfgPatches
 {
 	class gebsfish
@@ -18,9 +28,9 @@ class CfgMods
 	class gebsfish
 	{
 		dir="gebsfish";
-		picture = "gebsfish/logo.paa";			// picture in expanded description
+		picture = "gebsfish/logo.paa";		// picture in expanded description
 		logoSmall = "gebsfish/logo.paa";	// icon next to mod name when description is not expanded
-		logo = "gebsfish/logo.paa";				// logo below game menu
+		logo = "gebsfish/logo.paa";			// logo below game menu
 		overview = "Fish Expansion"
 		action="";
 		name="gebsfish";
