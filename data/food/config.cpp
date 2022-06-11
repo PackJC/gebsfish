@@ -273,7 +273,7 @@ class cfgVehicles {
           };
       };
   };
-  class geb_RedTackle : YellowTackle
+  class geb_RedTackle : Container_Base
   {
       scope = 2;
       displayName = "Red Tackle Box";
