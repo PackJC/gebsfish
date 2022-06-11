@@ -24,7 +24,7 @@ class CraftMetalMinnowBait extends RecipeBase
 		
 		//INGREDIENTS
 		//ingredient 1
-		InsertIngredient(0,"Minnow");//you can insert multiple ingredients this way
+		InsertIngredient(0,"geb_Minnow");//you can insert multiple ingredients this way
 
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
@@ -33,7 +33,7 @@ class CraftMetalMinnowBait extends RecipeBase
 		m_IngredientUseSoftSkills[0] = false;// set 'true' to allow modification of the values by softskills on this ingredient
 		
 		//ingredient 2
-		InsertIngredient(1,"MetalHook");//you can insert multiple ingredients this way
+		InsertIngredient(1,"geb_MetalHook");//you can insert multiple ingredients this way
 		
 		m_IngredientAddHealth[1] = 0;// 0 = do nothing
 		m_IngredientSetHealth[1] = -1; // -1 = do nothing
@@ -43,7 +43,7 @@ class CraftMetalMinnowBait extends RecipeBase
 		//----------------------------------------------------------------------------------------------------------------------
 		
 		//result1
-		AddResult("MetalMinnowBait");//add results here
+		AddResult("geb_MetalMinnowBait");//add results here
 
 		m_ResultSetFullQuantity[0] = false;//true = set full quantity, false = do nothing
 		m_ResultSetQuantity[0] = -1;//-1 = do nothing

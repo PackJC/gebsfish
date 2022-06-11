@@ -24,7 +24,7 @@ class PrepareTrout extends PrepareFish
 		
 		//INGREDIENTS
 		//ingredient 1
-		InsertIngredient(0,"Trout");//you can insert multiple ingredients this way
+		InsertIngredient(0,"geb_Trout");//you can insert multiple ingredients this way
 
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
@@ -56,12 +56,12 @@ class PrepareTrout extends PrepareFish
 		InsertIngredient(1,"Mosin_Bayonet");
 		InsertIngredient(1,"SKS_Bayonet");
 		InsertIngredient(1,"BoneKnife");
-		InsertIngredient(1,"BlueFishKnife");
-		InsertIngredient(1,"OrangeFishKnife");
-		InsertIngredient(1,"GreenFishKnife");
-		InsertIngredient(1,"YellowFishKnife");
-		InsertIngredient(1,"RedFishKnife");
-		InsertIngredient(1,"PurpleFishKnife");
+		InsertIngredient(1,"geb_BlueFishKnife");
+		InsertIngredient(1,"geb_OrangeFishKnife");
+		InsertIngredient(1,"geb_GreenFishKnife");
+		InsertIngredient(1,"geb_YellowFishKnife");
+		InsertIngredient(1,"geb_RedFishKnife");
+		InsertIngredient(1,"geb_PurpleFishKnife");
 		
 		m_IngredientAddHealth[1] = -12;// 0 = do nothing
 		m_IngredientSetHealth[1] = -1; // -1 = do nothing
@@ -70,7 +70,7 @@ class PrepareTrout extends PrepareFish
 		m_IngredientUseSoftSkills[1] = true;// set 'true' to allow modification of the values by softskills on this ingredient
 		//----------------------------------------------------------------------------------------------------------------------
 		for (int i = 0; i < 2; ++i){
-			AddResult("TroutFilletMeat");//add results here
+			AddResult("geb_TroutFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
 			m_ResultSetHealth[i] = -1;//-1 = do nothing

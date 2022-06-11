@@ -107,7 +107,7 @@ class ActionBambooFishingNet : ActionContinuousBase
 	override void OnFinishProgressServer( ActionData action_data )
 	{	
 		ItemBase bugs;
-		Class.CastTo(bugs, GetGame().CreateObjectEx("Minnow", action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
+		Class.CastTo(bugs, GetGame().CreateObjectEx("geb_Minnow", action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
 
 		bugs.SetQuantity(100, false);
 		MiscGameplayFunctions.DealAbsoluteDmg(action_data.m_MainItem, 4);

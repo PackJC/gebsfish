@@ -24,7 +24,7 @@ class CraftBoneHookBobber1 extends RecipeBase
 		
 		//INGREDIENTS
 		//ingredient 1
-		InsertIngredient(0,"Bobber1");//you can insert multiple ingredients this way
+		InsertIngredient(0,"geb_Bobber1");//you can insert multiple ingredients this way
 
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing

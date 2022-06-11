@@ -33,9 +33,9 @@ class ActionDigBugs: ActionContinuousBase
 
 	void ActionDigBugs()
 	{
-		insect_map["FieldCricket"] = FIELDCRICKET_CHANCE;
-		insect_map["GrassHopper"] = GRASSHOPPER_CHANCE;
-		insect_map["GrubWorm"] = GRUBWORM_CHANCE;
+		insect_map["geb_FieldCricket"] = FIELDCRICKET_CHANCE;
+		insect_map["geb_GrassHopper"] = GRASSHOPPER_CHANCE;
+		insect_map["geb_GrubWorm"] = GRUBWORM_CHANCE;
 
 		auto bug_chance_map = FileReader.GetBugChanceMap();
 

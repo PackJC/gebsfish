@@ -36,7 +36,7 @@ class cfgVehicles {
 
   //Gloves
   class NBCGloves_ColorBase;
-  class OrangeFishGloves: NBCGloves_ColorBase
+  class geb_OrangeFishGloves: NBCGloves_ColorBase
 	{
 		displayName="$STR_fishinggloves_orange";
 		descriptionShort="$STR_fishinggloves_desc";
@@ -48,7 +48,7 @@ class cfgVehicles {
 			"gebsfish\data\food\geb_orangefishgloves.paa"
 		};
 	};
-  class BlueFishGloves: NBCGloves_ColorBase
+  class geb_BlueFishGloves: NBCGloves_ColorBase
 	{
 		displayName="$STR_fishinggloves_orange";
 		descriptionShort="$STR_fishinggloves_desc";
@@ -63,7 +63,7 @@ class cfgVehicles {
 
   //Hats
   class BaseballCap_ColorBase;
-  class BlueFishHat: BaseballCap_ColorBase
+  class geb_BlueFishHat: BaseballCap_ColorBase
 	{
 		displayName="$STR_fishing_hat_blue";
 		descriptionShort="$STR_fishing_hat_desc";
@@ -76,7 +76,7 @@ class cfgVehicles {
 			"gebsfish\data\food\geb_bluefishhat.paa"
 		};
 	};
-  class RedFishHat: BaseballCap_ColorBase
+  class geb_RedFishHat: BaseballCap_ColorBase
 	{
 		displayName="$STR_fishing_hat_red";
 		descriptionShort="$STR_fishing_hat_desc";
@@ -89,7 +89,7 @@ class cfgVehicles {
 			"gebsfish\data\food\geb_redfishhat.paa"
 		};
 	};	
-  class GreenFishHat: BaseballCap_ColorBase
+  class geb_GreenFishHat: BaseballCap_ColorBase
 	{
 		scope=2;
 		displayName="$STR_fishing_hat_green";
@@ -102,7 +102,7 @@ class cfgVehicles {
 			"gebsfish\data\food\geb_greenfishhat.paa"
 		};
 	};	
-  class PurpleFishHat: BaseballCap_ColorBase
+  class geb_PurpleFishHat: BaseballCap_ColorBase
 	{
 		displayName="$STR_fishing_hat_purple";
 		descriptionShort="$STR_fishing_hat_desc";
@@ -118,7 +118,7 @@ class cfgVehicles {
 	
   //Shirts
   class TShirt_ColorBase;
-  class RedFishShirt : TShirt_ColorBase
+  class geb_RedFishShirt : TShirt_ColorBase
     {
         displayName = "$STR_fishing_shirt_red";
         descriptionShort = "$STR_fishing_shirt_desc";
@@ -131,7 +131,7 @@ class cfgVehicles {
             "gebsfish\data\food\geb_redfishshirt.paa"
         };
     };
-  class GreenFishShirt : TShirt_ColorBase
+  class geb_GreenFishShirt : TShirt_ColorBase
     {
         displayName = "$STR_fishing_shirt_green";
         descriptionShort = "$STR_fishing_shirt_desc";
@@ -144,7 +144,7 @@ class cfgVehicles {
             "gebsfish\data\food\geb_greenfishshirt.paa"
         };
     };
-  class BlueFishShirt : TShirt_ColorBase
+  class geb_BlueFishShirt : TShirt_ColorBase
     {
         displayName = "$STR_fishing_shirt_blue";
         descriptionShort = "$STR_fishing_shirt_desc";
@@ -157,7 +157,7 @@ class cfgVehicles {
             "gebsfish\data\food\geb_bluefishshirt.paa"
         };
     };
-  class PurpleFishShirt : TShirt_ColorBase
+  class geb_PurpleFishShirt : TShirt_ColorBase
     {
         displayName = "$STR_fishing_shirt_purple";
         descriptionShort = "$STR_fishing_shirt_desc";
@@ -178,7 +178,7 @@ class cfgVehicles {
   */
 
   class Container_Base;
-  class YellowTackle : Container_Base
+  class geb_YellowTackle : Container_Base
   {
       scope = 2;
       displayName = "Yellow Tackle Box";
@@ -273,7 +273,7 @@ class cfgVehicles {
           };
       };
   };
-  class RedTackle : YellowTackle
+  class geb_RedTackle : YellowTackle
   {
       scope = 2;
       displayName = "Red Tackle Box";
@@ -368,7 +368,7 @@ class cfgVehicles {
           };
       };
   };
-  class BlueTackle : Container_Base
+  class geb_BlueTackle : Container_Base
   {
       inventorySlot = "tacklebox";
       scope = 2;
@@ -464,7 +464,7 @@ class cfgVehicles {
           };
       };
   };
-  class OrangeTackle : Container_Base
+  class geb_OrangeTackle : Container_Base
   {
       scope = 2;
       displayName = "Orange Tackle Box";
@@ -559,7 +559,7 @@ class cfgVehicles {
           };
       };
   };
-  class BrownTackle : Container_Base
+  class geb_BrownTackle : Container_Base
   {
       scope = 2;
       displayName = "Brown Tackle Box";
@@ -654,7 +654,7 @@ class cfgVehicles {
           };
       };
   };
-  class PurpleTackle : Container_Base
+  class geb_PurpleTackle : Container_Base
   {
       scope = 2;
       displayName = "Purple Tackle Box";
@@ -749,7 +749,7 @@ class cfgVehicles {
           };
       };
   };
-  class PinkTackle : Container_Base
+  class geb_PinkTackle : Container_Base
   {
       scope = 2;
       displayName = "Pink Tackle Box";
@@ -844,7 +844,7 @@ class cfgVehicles {
           };
       };
   };
-  class LimeTackle : Container_Base
+  class geb_LimeTackle : Container_Base
   {
       scope = 2;
       displayName = "Lime Tackle Box";
@@ -939,7 +939,7 @@ class cfgVehicles {
           };
       };
   };
-  class LightBlueTackle : Container_Base
+  class geb_LightBlueTackle : Container_Base
   {
       scope = 2;
       displayName = "Light Blue Tackle Box";
@@ -1034,7 +1034,7 @@ class cfgVehicles {
           };
       };
   };
-  class GreenTackle : Container_Base
+  class geb_GreenTackle : Container_Base
   {
       scope = 2;
       displayName = "Green Tackle Box";
@@ -1129,7 +1129,7 @@ class cfgVehicles {
           };
       };
   };
-  class CamoTackle : Container_Base
+  class geb_CamoTackle : Container_Base
   {
       scope = 2;
       displayName = "Camo Tackle Box";
@@ -1225,7 +1225,7 @@ class cfgVehicles {
       };
   };
 
-  class FunYellowTackle : Container_Base
+  class geb_FunYellowTackle : Container_Base
   {
       scope = 2;
       displayName = "Fun Yellow Tackle Box";
@@ -1320,7 +1320,7 @@ class cfgVehicles {
           };
       };
   };
-  class FunRedTackle : Container_Base
+  class geb_FunRedTackle : Container_Base
   {
       scope = 2;
       displayName = "Fun Red Tackle Box";
@@ -1415,7 +1415,7 @@ class cfgVehicles {
           };
       };
   };
-  class FunPurpleTackle : Container_Base
+  class geb_FunPurpleTackle : Container_Base
   {
       scope = 2;
       displayName = "Fun Purple Tackle Box";
@@ -1510,7 +1510,7 @@ class cfgVehicles {
           };
       };
   };
-  class FunGreenTackle : Container_Base
+  class geb_FunGreenTackle : Container_Base
   {
       scope = 2;
       displayName = "Fun Green Tackle Box";
@@ -1606,7 +1606,7 @@ class cfgVehicles {
       };
   };
 
-  class SmallTackle: Container_Base {
+  class geb_SmallTackle: Container_Base {
 	  
     scope = 2;
     displayName = "$STR_smalltackle";
@@ -1702,7 +1702,7 @@ class cfgVehicles {
     };
 
   }
-  class WormContainer: Container_Base {
+  class geb_WormContainer: Container_Base {
 	  
     scope = 2;
     displayName = "$STR_wormcontainer";
@@ -1798,7 +1798,7 @@ class cfgVehicles {
     };
 
   }
-  class BugContainer: Container_Base {
+  class geb_BugContainer: Container_Base {
 
 
     scope = 2;
@@ -1899,7 +1899,7 @@ class cfgVehicles {
     };
 
   }
-  class MinnowBucket : WaterBottle
+  class geb_MinnowBucket : WaterBottle
   {
       scope = 2;
       displayName = "$STR_minnowcontainer";
@@ -2018,7 +2018,7 @@ class cfgVehicles {
       };
   };
 
-  class OldGreenTackleBox: Container_Base {
+  class geb_OldGreenTackleBox: Container_Base {
     scope = 2;
     displayName = "Old Green Tackle Box";
     descriptionShort = "$STR_tackle_desc";
@@ -2111,7 +2111,7 @@ class cfgVehicles {
       };
     };
   };
-  class OldRedTackleBox: Container_Base {
+  class geb_OldRedTackleBox: Container_Base {
     scope = 2;
     displayName = "Old Red Tackle Box";
     descriptionShort = "$STR_tackle_desc";
@@ -2204,7 +2204,7 @@ class cfgVehicles {
       };
     };
   };
-  class OldBlueTackleBox: Container_Base {
+  class geb_OldBlueTackleBox: Container_Base {
     scope = 2;
     displayName = "Old Blue Tackle Box";
     descriptionShort = "$STR_tackle_desc";
@@ -2297,7 +2297,7 @@ class cfgVehicles {
       };
     };
   };
-  class OldPurpleTackleBox: Container_Base {
+  class geb_OldPurpleTackleBox: Container_Base {
     scope = 2;
     displayName = "Old Purple Tackle Box";
     descriptionShort = "$STR_tackle_desc";
@@ -2400,7 +2400,7 @@ class cfgVehicles {
   class Hook;
   class Inventory_Base;
 
-  class BambooFishingNet : Container_Base {
+  class geb_BambooFishingNet : Container_Base {
       scope = 2;
       rotationFlags = 17;
       displayName = "$STR_fishingnet";
@@ -2499,7 +2499,7 @@ class cfgVehicles {
       };
   };
 
-  class MetalHookBobber1 : Inventory_Base {
+  class geb_MetalHookBobber1 : Inventory_Base {
     scope = 2;
     displayName = "$STR_metalhookbobber1";
     descriptionShort = "$STR_hookbobber_desc";
@@ -2570,7 +2570,7 @@ class cfgVehicles {
       };
     };
   };
-  class MetalHookBobber2 : Inventory_Base {
+  class geb_MetalHookBobber2 : Inventory_Base {
     scope = 2;
     displayName = "$STR_metalhookbobber2";
     descriptionShort = "$STR_hookbobber_desc";
@@ -2641,7 +2641,7 @@ class cfgVehicles {
       };
     };
   };
-  class MetalHookBobber3 : Inventory_Base {
+  class geb_MetalHookBobber3 : Inventory_Base {
     scope = 2;
     displayName = "$STR_metalhookbobber3";
     descriptionShort = "$STR_hookbobber_desc";
@@ -2712,7 +2712,7 @@ class cfgVehicles {
       };
     };
   };
-  class MetalHookBobber4 : Inventory_Base {
+  class geb_MetalHookBobber4 : Inventory_Base {
     scope = 2;
     displayName = "$STR_metalhookbobber4";
     descriptionShort = "$STR_hookbobber_desc";
@@ -2784,7 +2784,7 @@ class cfgVehicles {
     };
   };
 
-  class BoneHookBobber1 : Inventory_Base {
+  class geb_BoneHookBobber1 : Inventory_Base {
       scope = 2;
       displayName = "$STR_bonehookbobber1";
       descriptionShort = "$STR_hookbobber_desc";
@@ -2855,7 +2855,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber2 : Inventory_Base {
+  class geb_BoneHookBobber2 : Inventory_Base {
       scope = 2;
       displayName = "$STR_bonehookbobber2";
       descriptionShort = "$STR_hookbobber_desc";
@@ -2926,7 +2926,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber3 : Inventory_Base {
+  class geb_BoneHookBobber3 : Inventory_Base {
       scope = 2;
       displayName = "$STR_bonehookbobber3";
       descriptionShort = "$STR_hookbobber_desc";
@@ -2997,7 +2997,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber4 : Inventory_Base {
+  class geb_BoneHookBobber4 : Inventory_Base {
       scope = 2;
       displayName = "$STR_bonehookbobber4";
       descriptionShort = "$STR_hookbobber_desc";
@@ -3069,7 +3069,7 @@ class cfgVehicles {
       };
   };
 
-  class MetalHook : Inventory_Base {
+  class geb_MetalHook : Inventory_Base {
       scope = 2;
       displayName = "$STR_metalhook";
       descriptionShort = "$STR_metalhook_desc";
@@ -3144,7 +3144,7 @@ class cfgVehicles {
   */
 
   class Worm;
-  class GrassHopper : Worm
+  class geb_GrassHopper : Worm
 	{
 		scope=2;
 		displayName="$STR_grasshopper";
@@ -3277,7 +3277,7 @@ class cfgVehicles {
 			};
 		};
 	};
-  class FieldCricket : Worm
+  class geb_FieldCricket : Worm
     {
         scope = 2;
         displayName = "$STR_fieldcricket";
@@ -3412,7 +3412,7 @@ class cfgVehicles {
     };
 
   //Retextures
-  class GrubWorm: Worm
+  class geb_GrubWorm: Worm
 	{
 		scope=2;
         displayName = "$STR_grubworm";
@@ -3544,7 +3544,7 @@ class cfgVehicles {
 			};
 		};
 	};
-  class RubberWorm: Worm
+  class geb_RubberWorm: Worm
 	{
 		scope=2;
 		displayName="$STR_rubberworm";
@@ -3683,7 +3683,7 @@ class cfgVehicles {
 
   */
 
-  class MetalHookBobber1WormBait: Inventory_Base {
+  class geb_MetalHookBobber1WormBait: Inventory_Base {
     scope = 2;
     displayName = "Metal Hook & Bobber with Worm";
     descriptionShort = "A metal hook with a bobber attached, with a Worm used as bait.";
@@ -3762,7 +3762,7 @@ class cfgVehicles {
       };
     };
   };
-  class MetalHookBobber1RubberWormBait: Inventory_Base {
+  class geb_MetalHookBobber1RubberWormBait: Inventory_Base {
     scope = 2;
     displayName = "Metal Hook & Bobber with RubberWorm";
     descriptionShort = "A metal hook with a bobber attached, with a Rubber Worm used as bait.";
@@ -3841,7 +3841,7 @@ class cfgVehicles {
       };
     };
   };
-  class MetalHookBobber1GrubWormBait: Inventory_Base {
+  class geb_MetalHookBobber1GrubWormBait: Inventory_Base {
     scope = 2;
     displayName = "Metal Hook & Bobber with GrubWorm";
     descriptionShort = "A metal hook with a bobber attached, with a grubworm used as bait.";
@@ -3920,7 +3920,7 @@ class cfgVehicles {
       };
     };
   };
-  class MetalHookBobber1GrassHopperBait: Inventory_Base {
+  class geb_MetalHookBobber1GrassHopperBait: Inventory_Base {
     scope = 2;
     displayName = "Metal Hook & Bobber with Grasshopper";
     descriptionShort = "A metal hook with a bobber attached, with a Grasshopper used as bait.";
@@ -3999,7 +3999,7 @@ class cfgVehicles {
       };
     };
   };
-  class MetalHookBobber1FieldCricketBait : Inventory_Base {
+  class geb_MetalHookBobber1FieldCricketBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook & Bobber with Field Cricket";
       descriptionShort = "A metal hook with a bobber attached, with a Field Cricket used as bait.";
@@ -4078,7 +4078,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalHookBobber1MinnowBait : Inventory_Base {
+  class geb_MetalHookBobber1MinnowBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook & Bobber with Minnow";
       descriptionShort = "A metal hook with a bobber attached, with a minnow used as bait.";
@@ -4158,7 +4158,7 @@ class cfgVehicles {
       };
   };
 
-  class MetalHookBobber2WormBait : Inventory_Base {
+  class geb_MetalHookBobber2WormBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook & Bobber with Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Worm used as bait.";
@@ -4237,7 +4237,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalHookBobber2RubberWormBait : Inventory_Base {
+  class geb_MetalHookBobber2RubberWormBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook & Bobber with RubberWorm";
       descriptionShort = "A metal hook with a bobber attached, with a Rubber Worm used as bait.";
@@ -4316,7 +4316,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalHookBobber2GrubWormBait : Inventory_Base {
+  class geb_MetalHookBobber2GrubWormBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook & Bobber with GrubWorm";
       descriptionShort = "A metal hook with a bobber attached, with a grubworm used as bait.";
@@ -4395,7 +4395,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalHookBobber2GrassHopperBait : Inventory_Base {
+  class geb_MetalHookBobber2GrassHopperBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook & Bobber with Grasshopper";
       descriptionShort = "A metal hook with a bobber attached, with a Grasshopper used as bait.";
@@ -4474,7 +4474,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalHookBobber2FieldCricketBait : Inventory_Base {
+  class geb_MetalHookBobber2FieldCricketBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook & Bobber with Field Cricket";
       descriptionShort = "A metal hook with a bobber attached, with a Field Cricket used as bait.";
@@ -4553,7 +4553,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalHookBobber2MinnowBait : Inventory_Base {
+  class geb_MetalHookBobber2MinnowBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook & Bobber with Minnow";
       descriptionShort = "A metal hook with a bobber attached, with a minnow used as bait.";
@@ -4633,7 +4633,7 @@ class cfgVehicles {
       };
   };
 
-  class MetalHookBobber3WormBait : Inventory_Base {
+  class geb_MetalHookBobber3WormBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook & Bobber with Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Worm used as bait.";
@@ -4712,7 +4712,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalHookBobber3RubberWormBait : Inventory_Base {
+  class geb_MetalHookBobber3RubberWormBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook & Bobber with RubberWorm";
       descriptionShort = "A metal hook with a bobber attached, with a Rubber Worm used as bait.";
@@ -4791,7 +4791,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalHookBobber3GrubWormBait : Inventory_Base {
+  class geb_MetalHookBobber3GrubWormBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook & Bobber with GrubWorm";
       descriptionShort = "A metal hook with a bobber attached, with a grubworm used as bait.";
@@ -4870,7 +4870,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalHookBobber3GrassHopperBait : Inventory_Base {
+  class geb_MetalHookBobber3GrassHopperBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook & Bobber with Grasshopper";
       descriptionShort = "A metal hook with a bobber attached, with a Grasshopper used as bait.";
@@ -4949,7 +4949,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalHookBobber3FieldCricketBait : Inventory_Base {
+  class geb_MetalHookBobber3FieldCricketBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook & Bobber with Field Cricket";
       descriptionShort = "A metal hook with a bobber attached, with a Field Cricket used as bait.";
@@ -5028,7 +5028,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalHookBobber3MinnowBait : Inventory_Base {
+  class geb_MetalHookBobber3MinnowBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook & Bobber with Minnow";
       descriptionShort = "A metal hook with a bobber attached, with a minnow used as bait.";
@@ -5108,7 +5108,7 @@ class cfgVehicles {
       };
   };
 
-  class MetalHookBobber4WormBait : Inventory_Base {
+  class geb_MetalHookBobber4WormBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook & Bobber with Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Worm used as bait.";
@@ -5187,7 +5187,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalHookBobber4RubberWormBait : Inventory_Base {
+  class geb_MetalHookBobber4RubberWormBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook & Bobber with RubberWorm";
       descriptionShort = "A metal hook with a bobber attached, with a Rubber Worm used as bait.";
@@ -5266,7 +5266,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalHookBobber4GrubWormBait : Inventory_Base {
+  class geb_MetalHookBobber4GrubWormBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook & Bobber with GrubWorm";
       descriptionShort = "A metal hook with a bobber attached, with a grubworm used as bait.";
@@ -5345,7 +5345,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalHookBobber4GrassHopperBait : Inventory_Base {
+  class geb_MetalHookBobber4GrassHopperBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook & Bobber with Grasshopper";
       descriptionShort = "A metal hook with a bobber attached, with a Grasshopper used as bait.";
@@ -5424,7 +5424,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalHookBobber4FieldCricketBait : Inventory_Base {
+  class geb_MetalHookBobber4FieldCricketBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook & Bobber with Field Cricket";
       descriptionShort = "A metal hook with a bobber attached, with a Field Cricket used as bait.";
@@ -5503,7 +5503,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalHookBobber4MinnowBait : Inventory_Base {
+  class geb_MetalHookBobber4MinnowBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook & Bobber with Minnow";
       descriptionShort = "A metal hook with a bobber attached, with a minnow used as bait.";
@@ -5583,7 +5583,7 @@ class cfgVehicles {
       };
   };
 
-  class MetalRubberWormBait : Inventory_Base {
+  class geb_MetalRubberWormBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook with Rubber Worm";
       descriptionShort = "A bait to catch marine life!";
@@ -5662,7 +5662,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalGrubWormBait : Inventory_Base {
+  class geb_MetalGrubWormBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook with Grub Worm";
       descriptionShort = "A bait to catch marine life!";
@@ -5741,7 +5741,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalGrassHopperBait : Inventory_Base {
+  class geb_MetalGrassHopperBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook with Grasshopper";
       descriptionShort = "A bait to catch marine life!";
@@ -5820,7 +5820,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalFieldCricketBait : Inventory_Base {
+  class geb_MetalFieldCricketBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook with Field Cricket";
       descriptionShort = "A bait to catch marine life!";
@@ -5899,7 +5899,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalWormBait : Inventory_Base {
+  class geb_MetalWormBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook with Worm";
       descriptionShort = "A bait to catch marine life!";
@@ -5978,7 +5978,7 @@ class cfgVehicles {
           };
       };
   };
-  class MetalMinnowBait : Inventory_Base {
+  class geb_MetalMinnowBait : Inventory_Base {
       scope = 2;
       displayName = "Metal Hook with Minnow";
       descriptionShort = "A bait to catch marine life!";
@@ -6058,7 +6058,7 @@ class cfgVehicles {
       };
   };
 
-  class BoneHookBobber1WormBait : Inventory_Base {
+  class geb_BoneHookBobber1WormBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with Worm";
       descriptionShort = "A bone hook with a bobber attached, with a Worm used as bait.";
@@ -6137,7 +6137,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber1RubberWormBait : Inventory_Base {
+  class geb_BoneHookBobber1RubberWormBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with RubberWorm";
       descriptionShort = "A bone hook with a bobber attached, with a Rubber Worm used as bait.";
@@ -6216,7 +6216,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber1GrubWormBait : Inventory_Base {
+  class geb_BoneHookBobber1GrubWormBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with GrubWorm";
       descriptionShort = "A bone hook with a bobber attached, with a grubworm used as bait.";
@@ -6295,7 +6295,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber1GrassHopperBait : Inventory_Base {
+  class geb_BoneHookBobber1GrassHopperBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with Grasshopper";
       descriptionShort = "A bone hook with a bobber attached, with a Grasshopper used as bait.";
@@ -6374,7 +6374,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber1FieldCricketBait : Inventory_Base {
+  class geb_BoneHookBobber1FieldCricketBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with Field Cricket";
       descriptionShort = "A bone hook with a bobber attached, with a Field Cricket used as bait.";
@@ -6453,7 +6453,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber1MinnowBait : Inventory_Base {
+  class geb_BoneHookBobber1MinnowBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with Minnow";
       descriptionShort = "A bone hook with a bobber attached, with a minnow used as bait.";
@@ -6533,7 +6533,7 @@ class cfgVehicles {
       };
   };
 
-  class BoneHookBobber2WormBait : Inventory_Base {
+  class geb_BoneHookBobber2WormBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with Worm";
       descriptionShort = "A bone hook with a bobber attached, with a Worm used as bait.";
@@ -6612,7 +6612,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber2RubberWormBait : Inventory_Base {
+  class geb_BoneHookBobber2RubberWormBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with RubberWorm";
       descriptionShort = "A bone hook with a bobber attached, with a Rubber Worm used as bait.";
@@ -6691,7 +6691,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber2GrubWormBait : Inventory_Base {
+  class geb_BoneHookBobber2GrubWormBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with GrubWorm";
       descriptionShort = "A bone hook with a bobber attached, with a grubworm used as bait.";
@@ -6770,7 +6770,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber2GrassHopperBait : Inventory_Base {
+  class geb_BoneHookBobber2GrassHopperBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with Grasshopper";
       descriptionShort = "A bone hook with a bobber attached, with a Grasshopper used as bait.";
@@ -6849,7 +6849,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber2FieldCricketBait : Inventory_Base {
+  class geb_BoneHookBobber2FieldCricketBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with Field Cricket";
       descriptionShort = "A bone hook with a bobber attached, with a Field Cricket used as bait.";
@@ -6928,7 +6928,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber2MinnowBait : Inventory_Base {
+  class geb_BoneHookBobber2MinnowBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with Minnow";
       descriptionShort = "A bone hook with a bobber attached, with a minnow used as bait.";
@@ -7008,7 +7008,7 @@ class cfgVehicles {
       };
   };
 
-  class BoneHookBobber3WormBait : Inventory_Base {
+  class geb_BoneHookBobber3WormBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with Worm";
       descriptionShort = "A bone hook with a bobber attached, with a Worm used as bait.";
@@ -7087,7 +7087,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber3RubberWormBait : Inventory_Base {
+  class geb_BoneHookBobber3RubberWormBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with RubberWorm";
       descriptionShort = "A bone hook with a bobber attached, with a Rubber Worm used as bait.";
@@ -7166,7 +7166,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber3GrubWormBait : Inventory_Base {
+  class geb_BoneHookBobber3GrubWormBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with GrubWorm";
       descriptionShort = "A bone hook with a bobber attached, with a grubworm used as bait.";
@@ -7245,7 +7245,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber3GrassHopperBait : Inventory_Base {
+  class geb_BoneHookBobber3GrassHopperBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with Grasshopper";
       descriptionShort = "A bone hook with a bobber attached, with a Grasshopper used as bait.";
@@ -7324,7 +7324,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber3FieldCricketBait : Inventory_Base {
+  class geb_BoneHookBobber3FieldCricketBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with Field Cricket";
       descriptionShort = "A bone hook with a bobber attached, with a Field Cricket used as bait.";
@@ -7403,7 +7403,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber3MinnowBait : Inventory_Base {
+  class geb_BoneHookBobber3MinnowBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with Minnow";
       descriptionShort = "A bone hook with a bobber attached, with a minnow used as bait.";
@@ -7483,7 +7483,7 @@ class cfgVehicles {
       };
   };
 
-  class BoneHookBobber4WormBait : Inventory_Base {
+  class geb_BoneHookBobber4WormBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with Worm";
       descriptionShort = "A bone hook with a bobber attached, with a Worm used as bait.";
@@ -7562,7 +7562,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber4RubberWormBait : Inventory_Base {
+  class geb_BoneHookBobber4RubberWormBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with RubberWorm";
       descriptionShort = "A bone hook with a bobber attached, with a Rubber Worm used as bait.";
@@ -7641,7 +7641,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber4GrubWormBait : Inventory_Base {
+  class geb_BoneHookBobber4GrubWormBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with GrubWorm";
       descriptionShort = "A bone hook with a bobber attached, with a grubworm used as bait.";
@@ -7720,7 +7720,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber4GrassHopperBait : Inventory_Base {
+  class geb_BoneHookBobber4GrassHopperBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with Grasshopper";
       descriptionShort = "A bone hook with a bobber attached, with a Grasshopper used as bait.";
@@ -7799,7 +7799,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber4FieldCricketBait : Inventory_Base {
+  class geb_BoneHookBobber4FieldCricketBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with Field Cricket";
       descriptionShort = "A bone hook with a bobber attached, with a Field Cricket used as bait.";
@@ -7878,7 +7878,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneHookBobber4MinnowBait : Inventory_Base {
+  class geb_BoneHookBobber4MinnowBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook & Bobber with Minnow";
       descriptionShort = "A bone hook with a bobber attached, with a minnow used as bait.";
@@ -7958,7 +7958,7 @@ class cfgVehicles {
       };
   };
 
-  class BoneRubberWormBait : Inventory_Base {
+  class geb_BoneRubberWormBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook with Rubber Worm";
       descriptionShort = "$STR_CfgVehicles_Bait1";
@@ -8037,7 +8037,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneGrubWormBait : Inventory_Base {
+  class geb_BoneGrubWormBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook with Grub Worm";
       descriptionShort = "$STR_CfgVehicles_Bait1";
@@ -8116,7 +8116,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneGrassHopperBait : Inventory_Base {
+  class geb_BoneGrassHopperBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook with Grasshopper";
       descriptionShort = "$STR_CfgVehicles_Bait1";
@@ -8195,7 +8195,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneFieldCricketBait : Inventory_Base {
+  class geb_BoneFieldCricketBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook with Field Cricket";
       descriptionShort = "$STR_CfgVehicles_Bait1";
@@ -8274,7 +8274,7 @@ class cfgVehicles {
           };
       };
   };
-  class BoneMinnowBait : Inventory_Base {
+  class geb_BoneMinnowBait : Inventory_Base {
       scope = 2;
       displayName = "Bone Hook with Minnow";
       descriptionShort = "A bait to catch marine life!";
@@ -8354,7 +8354,7 @@ class cfgVehicles {
       };
   };
 
-  class SpinnerBait1 : Inventory_Base {
+  class geb_SpinnerBait1 : Inventory_Base {
       scope = 2;
       displayName = "$STR_spinnerbait1";
       descriptionShort = "$STR_spinnerbait_desc";
@@ -8433,7 +8433,7 @@ class cfgVehicles {
           };
       };
   };
-  class SpinnerBait2 : Inventory_Base {
+  class geb_SpinnerBait2 : Inventory_Base {
       scope = 2;
       displayName = "$STR_spinnerbait2";
       descriptionShort = "$STR_spinnerbait_desc";
@@ -8512,7 +8512,7 @@ class cfgVehicles {
           };
       };
   };
-  class SpinnerBait3 : Inventory_Base {
+  class geb_SpinnerBait3 : Inventory_Base {
       scope = 2;
       displayName = "$STR_spinnerbait3";
       descriptionShort = "$STR_spinnerbait_desc";
@@ -8591,7 +8591,7 @@ class cfgVehicles {
           };
       };
   };
-  class SpinnerBait4 : Inventory_Base {
+  class geb_SpinnerBait4 : Inventory_Base {
       scope = 2;
       displayName = "$STR_spinnerbait4";
       descriptionShort = "$STR_spinnerbait_desc";
@@ -8671,7 +8671,7 @@ class cfgVehicles {
       };
   };
 
-  class Lure1 : Inventory_Base {
+  class geb_Lure1 : Inventory_Base {
       scope = 2;
       displayName = "$STR_lure1";
       descriptionShort = "$STR_lure1_desc";
@@ -8750,7 +8750,7 @@ class cfgVehicles {
           };
       };
   };
-  class Lure2 : Inventory_Base {
+  class geb_Lure2 : Inventory_Base {
       scope = 2;
       displayName = "$STR_lure2";
       descriptionShort = "$STR_lure2_desc";
@@ -8829,7 +8829,7 @@ class cfgVehicles {
           };
       };
   };
-  class Lure3 : Inventory_Base {
+  class geb_Lure3 : Inventory_Base {
       scope = 2;
       displayName = "$STR_lure3";
       descriptionShort = "$STR_lure3_desc";
@@ -8908,7 +8908,7 @@ class cfgVehicles {
           };
       };
   };
-  class Lure4 : Inventory_Base {
+  class geb_Lure4 : Inventory_Base {
       scope = 2;
       displayName = "$STR_lure4";
       descriptionShort = "$STR_lure4_desc";
@@ -8995,7 +8995,7 @@ class cfgVehicles {
   */
 
   class HuntingKnife;
-  class BlueFishKnife: HuntingKnife
+  class geb_BlueFishKnife: HuntingKnife
 	{
 		scope=2;
 		displayName="$STR_blue_fishknife";
@@ -9263,7 +9263,7 @@ class cfgVehicles {
 			};
 		};
 	};
-  class OrangeFishKnife: HuntingKnife
+  class geb_OrangeFishKnife: HuntingKnife
 	{
 		scope=2;
         displayName = "$STR_orange_fishknife";
@@ -9531,7 +9531,7 @@ class cfgVehicles {
 			};
 		};
 	};
-  class GreenFishKnife : HuntingKnife
+  class geb_GreenFishKnife : HuntingKnife
     {
         scope = 2;
         displayName = "$STR_green_fishknife";
@@ -9799,7 +9799,7 @@ class cfgVehicles {
             };
         };
     };
-  class YellowFishKnife : HuntingKnife
+  class geb_YellowFishKnife : HuntingKnife
     {
         scope = 2;
         displayName = "$STR_yellow_fishknife";
@@ -10067,7 +10067,7 @@ class cfgVehicles {
             };
         };
     };
-  class RedFishKnife : HuntingKnife
+  class geb_RedFishKnife : HuntingKnife
     {
         scope = 2;
         displayName = "$STR_red_fishknife";
@@ -10335,7 +10335,7 @@ class cfgVehicles {
             };
         };
     };
-  class PurpleFishKnife : HuntingKnife
+  class geb_PurpleFishKnife : HuntingKnife
     {
         scope = 2;
         displayName = "$STR_purple_fishknife";
@@ -10616,7 +10616,7 @@ class cfgVehicles {
             "\DZ\gear\tools\data\fishing_rod_co.paa"
         };
    }; 
-  class RedFishingRod: FishingRod {
+  class geb_RedFishingRod: FishingRod {
     scope = 2;
     displayName = "Red Fishing Rod";
     descriptionShort = "$STR_CfgVehicles_FishingRod1";
@@ -10636,7 +10636,7 @@ class cfgVehicles {
       "gebsfish\data\food\geb_fishingrod_red.paa";
     };
   };
-  class GreenFishingRod: FishingRod {
+  class geb_GreenFishingRod: FishingRod {
     scope = 2;
     displayName = "Green Fishing Rod";
     descriptionShort = "$STR_CfgVehicles_FishingRod1";
@@ -10656,7 +10656,7 @@ class cfgVehicles {
       "gebsfish\data\food\geb_fishingrod_green.paa";
     };
   };
-  class BlueFishingRod: FishingRod {
+  class geb_BlueFishingRod: FishingRod {
     scope = 2;
     displayName = "Blue Fishing Rod";
     descriptionShort = "$STR_CfgVehicles_FishingRod1";
@@ -10676,7 +10676,7 @@ class cfgVehicles {
       "gebsfish\data\food\geb_fishingrod_blue.paa";
     };
   };
-  class PurpleFishingRod: FishingRod {
+  class geb_PurpleFishingRod: FishingRod {
     scope = 2;
     displayName = "Purple Fishing Rod";
     descriptionShort = "$STR_CfgVehicles_FishingRod1";
@@ -10704,7 +10704,7 @@ class cfgVehicles {
   */
 
   class Rope;
-  class BigGameFishingline: Rope {
+  class geb_BigGameFishingline: Rope {
     scope = 2;
     displayName = "$STR_gameline";
     descriptionShort = "$STR_gameline_desc";
@@ -10728,7 +10728,7 @@ class cfgVehicles {
       "gebsfish\data\food\geb_fishingline_biggame.paa";
     };
   };
-  class SaltwaterFishingLine: Rope {
+  class geb_SaltwaterFishingLine: Rope {
     scope = 2;
     displayName = "$STR_saltline";
     descriptionShort = "$STR_saltline_desc";
@@ -10752,7 +10752,7 @@ class cfgVehicles {
       "gebsfish\data\food\geb_fishingline_saltwater.paa";
     };
   };
-  class FlyFishingLine: Rope {
+  class geb_FlyFishingLine: Rope {
     scope = 2;
     displayName = "$STR_flyline";
     descriptionShort = "$STR_flyline_desc";
@@ -10779,7 +10779,7 @@ class cfgVehicles {
   };
 
 
-  class Bobber1 : Inventory_Base
+  class geb_Bobber1 : Inventory_Base
   {
       scope = 2;
       displayName = "$STR_bobber1";
@@ -10843,7 +10843,7 @@ class cfgVehicles {
           };
       };
   };
-  class Bobber2 : Inventory_Base
+  class geb_Bobber2 : Inventory_Base
   {
       scope = 2;
       displayName = "$STR_bobber2";
@@ -10907,7 +10907,7 @@ class cfgVehicles {
           };
       };
   };
-  class Bobber3 : Inventory_Base
+  class geb_Bobber3 : Inventory_Base
   {
       scope = 2;
       displayName = "$STR_bobber3";
@@ -10971,7 +10971,7 @@ class cfgVehicles {
           };
       };
   };
-  class Bobber4 : Inventory_Base
+  class geb_Bobber4 : Inventory_Base
   {
       scope = 2;
       displayName = "$STR_bobber4";
@@ -11044,7 +11044,7 @@ class cfgVehicles {
   
   //Freshwater Fish
   class Carp;
-  class Bluegill: Edible_Base {
+  class geb_Bluegill: Edible_Base {
     scope = 2;
     displayName = "$STR_bluegill";
     descriptionShort = "$STR_bluegill_desc";
@@ -11192,7 +11192,7 @@ class cfgVehicles {
     };
 
   };
-  class Blackbass: Edible_Base {
+  class geb_Blackbass: Edible_Base {
     scope = 2;
     displayName = "$STR_blackbass";
     descriptionShort = "$STR_blackbass_desc";
@@ -11340,7 +11340,7 @@ class cfgVehicles {
     };
 
   };
-  class Catfish: Edible_Base {
+  class geb_Catfish: Edible_Base {
     scope = 2;
     displayName = "$STR_catfish";
     descriptionShort = "$STR_catfish_desc";
@@ -11488,7 +11488,7 @@ class cfgVehicles {
     };
 
   };
-  class Largemouthbass: Edible_Base {
+  class geb_Largemouthbass: Edible_Base {
     scope = 2;
     displayName = "$STR_largemouthbass";
     descriptionShort = "$STR_largemouthbass_desc";
@@ -11636,7 +11636,7 @@ class cfgVehicles {
     };
 
   };
-  class Minnow: Edible_Base {
+  class geb_Minnow: Edible_Base {
     scope = 2;
     displayName = "$STR_minnow";
     descriptionShort = "$STR_minnow_desc";
@@ -11784,7 +11784,7 @@ class cfgVehicles {
     };
 
   };
-  class Northernpike: Edible_Base {
+  class geb_Northernpike: Edible_Base {
     scope = 2;
     displayName = "$STR_northernpike";
     descriptionShort = "$STR_northernpike_desc";
@@ -11931,7 +11931,7 @@ class cfgVehicles {
       };
     };
   };
-  class Perch: Edible_Base {
+  class geb_Perch: Edible_Base {
     scope = 2;
     displayName = "$STR_perch";
     descriptionShort = "$STR_perch_desc";
@@ -12079,7 +12079,7 @@ class cfgVehicles {
     };
 
   };
-  class Sauger: Edible_Base {
+  class geb_Sauger: Edible_Base {
     scope = 2;
     displayName = "$STR_sauger";
     descriptionShort = "$STR_sauger_desc";
@@ -12227,7 +12227,7 @@ class cfgVehicles {
     };
 
   };
-  class Crayfish: Edible_Base {
+  class geb_Crayfish: Edible_Base {
     scope = 2;
     displayName = "$STR_crayfish";
     descriptionShort = "$STR_crayfish_desc";
@@ -12375,7 +12375,7 @@ class cfgVehicles {
     };
 
   };
-  class Trout: Edible_Base {
+  class geb_Trout: Edible_Base {
     scope = 2;
     displayName = "$STR_trout";
     descriptionShort = "$STR_trout_desc";
@@ -12523,7 +12523,7 @@ class cfgVehicles {
     };
 
   };
-  class Whitebass: Edible_Base {
+  class geb_Whitebass: Edible_Base {
     scope = 2;
     displayName = "$STR_whitebass";
     descriptionShort = "$STR_whitebass_desc";
@@ -12671,7 +12671,7 @@ class cfgVehicles {
     };
 
   };
-  class Bowfin: Edible_Base {
+  class geb_Bowfin: Edible_Base {
     scope = 2;
     displayName = "$STR_bowfin";
     descriptionShort = "$STR_bowfin_desc";
@@ -12818,7 +12818,7 @@ class cfgVehicles {
       };
     };
   };
-  class Slimysculpin: Edible_Base {
+  class geb_Slimysculpin: Edible_Base {
     scope = 2;
     displayName = "$STR_slimysculpin";
     descriptionShort = "$STR_slimysculpin_desc";
@@ -12967,7 +12967,7 @@ class cfgVehicles {
   };
 
   //Saltwater Fish
-  class Angelfish: Edible_Base {
+  class geb_Angelfish: Edible_Base {
     scope = 2;
     displayName = "$STR_angelfish";
     descriptionShort = "$STR_angelfish_desc";
@@ -13114,7 +13114,7 @@ class cfgVehicles {
       };
     };
   }
-  class Asianseabass: Edible_Base {
+  class geb_Asianseabass: Edible_Base {
     scope = 2;
     displayName = "$STR_asianseabass";
     descriptionShort = "$STR_asianseabass_desc";
@@ -13261,7 +13261,7 @@ class cfgVehicles {
       };
     };
   }
-  class Bluemarlin: Edible_Base {
+  class geb_Bluemarlin: Edible_Base {
     scope = 2;
     displayName = "$STR_bluemarlin";
     descriptionShort = "$STR_bluemarlin_desc";
@@ -13409,7 +13409,7 @@ class cfgVehicles {
     };
 
   }
-  class Bonita: Edible_Base {
+  class geb_Bonita: Edible_Base {
     scope = 2;
     displayName = "$STR_bonita";
     descriptionShort = "$STR_bonita_desc";
@@ -13556,7 +13556,7 @@ class cfgVehicles {
       };
     };
   }
-  class Cherrysalmon: Edible_Base {
+  class geb_Cherrysalmon: Edible_Base {
     scope = 2;
     displayName = "$STR_cherrysalmon";
     descriptionShort = "$STR_cherrysalmon_desc";
@@ -13703,7 +13703,7 @@ class cfgVehicles {
       };
     };
   }
-  class Flatheadmullet: Edible_Base {
+  class geb_Flatheadmullet: Edible_Base {
     scope = 2;
     displayName = "$STR_flatheadmullet";
     descriptionShort = "$STR_flatheadmullet_desc";
@@ -13850,7 +13850,7 @@ class cfgVehicles {
       };
     };
   }
-  class Leopardshark: Edible_Base {
+  class geb_Leopardshark: Edible_Base {
     scope = 2;
     displayName = "$STR_leopardshark";
     descriptionShort = "$STR_leopardshark_desc";
@@ -13997,7 +13997,7 @@ class cfgVehicles {
       };
     };
   }
-  class Pacificcod: Edible_Base {
+  class geb_Pacificcod: Edible_Base {
     scope = 2;
     displayName = "$STR_pacificcod";
     descriptionShort = "$STR_pacificcod_desc";
@@ -14144,7 +14144,7 @@ class cfgVehicles {
       };
     };
   }
-  class Redheadcichlid: Edible_Base {
+  class geb_Redheadcichlid: Edible_Base {
     scope = 2;
     displayName = "$STR_redheadcichlid";
     descriptionShort = "$STR_redheadcichlid_desc";
@@ -14291,7 +14291,7 @@ class cfgVehicles {
       };
     };
   }
-  class Roughneckrock: Edible_Base {
+  class geb_Roughneckrock: Edible_Base {
     scope = 2;
     displayName = "$STR_roughneckrock";
     descriptionShort = "g_roughneckrock_desc";
@@ -14438,7 +14438,7 @@ class cfgVehicles {
       };
     };
   }
-  class Severum: Edible_Base {
+  class geb_Severum: Edible_Base {
     scope = 2;
     displayName = "$STR_severum";
     descriptionShort = "$STR_severum_desc";
@@ -14586,7 +14586,7 @@ class cfgVehicles {
       };
     };
   }
-  class Shrimp: Edible_Base {
+  class geb_Shrimp: Edible_Base {
     scope = 2;
     displayName = "$STR_shrimp";
     descriptionShort = "$STR_shrimp_desc";
@@ -14733,7 +14733,7 @@ class cfgVehicles {
       };
     };
   }
-  class Bluetang: Edible_Base {
+  class geb_Bluetang: Edible_Base {
     scope = 2;
     displayName = "$STR_bluetang";
     descriptionShort = "$STR_bluetang_desc";
@@ -14880,7 +14880,7 @@ class cfgVehicles {
       };
     };
   }
-  class Hairtailfish: Edible_Base {
+  class geb_Hairtailfish: Edible_Base {
     scope = 2;
     displayName = "$STR_hairtailfish";
     descriptionShort = "$STR_hairtailfish_desc";
@@ -15027,7 +15027,7 @@ class cfgVehicles {
       };
     };
   }
-  class Humpheadwrasse: Edible_Base {
+  class geb_Humpheadwrasse: Edible_Base {
     scope = 2;
     displayName = "$STR_humpheadwrasse";
     descriptionShort = "$STR_humpheadwrasse_desc";
@@ -15174,7 +15174,7 @@ class cfgVehicles {
       };
     };
   }
-  class Siamesetigerfish: Edible_Base {
+  class geb_Siamesetigerfish: Edible_Base {
     scope = 2;
     displayName = "$STR_siamesetigerfish";
     descriptionShort = "$STR_siamesetigerfish";
@@ -15323,7 +15323,7 @@ class cfgVehicles {
   }
 
   //Crustaceans Fish
-  class Bloodclam : Edible_Base {
+  class geb_Bloodclam : Edible_Base {
       scope = 2;
       displayName = "$STR_bloodclam";
       descriptionShort = "$STR_bloodclam_desc";
@@ -15470,7 +15470,7 @@ class cfgVehicles {
           };
       };
   }
-  class Mussel : Edible_Base {
+  class geb_Mussel : Edible_Base {
       scope = 2;
       displayName = "$STR_mussel";
       descriptionShort = "$STR_mussel_desc";
@@ -15617,7 +15617,7 @@ class cfgVehicles {
           };
       };
   }
-  class Blackdevilsnail : Edible_Base {
+  class geb_Blackdevilsnail : Edible_Base {
       scope = 2;
       displayName = "$STR_blackdevilsnail";
       descriptionShort = "$STR_blackdevilsnail_desc";
@@ -15764,7 +15764,7 @@ class cfgVehicles {
           };
       };
   }
-  class Starfish : Edible_Base {
+  class geb_Starfish : Edible_Base {
       scope = 2;
       displayName = "$STR_starfish";
       descriptionShort = "g_starfish_desc";
@@ -15911,7 +15911,7 @@ class cfgVehicles {
           };
       };
   }
-  class Kingcrab : Edible_Base {
+  class geb_Kingcrab : Edible_Base {
       scope = 2;
       displayName = "$STR_kingcrab";
       descriptionShort = "$STR_kingcrab_desc";
@@ -16058,7 +16058,7 @@ class cfgVehicles {
           };
       };
   }
-  class Jellyfish : Edible_Base {
+  class geb_Jellyfish : Edible_Base {
       scope = 2;
       displayName = "$STR_jellyfish";
       descriptionShort = "$STR_jellyfish_desc";
@@ -16205,7 +16205,7 @@ class cfgVehicles {
           };
       };
   }
-  class Lobster : Edible_Base {
+  class geb_Lobster : Edible_Base {
       scope = 2;
       displayName = "$STR_lobster";
       descriptionShort = "$STR_lobster_desc";
@@ -16355,7 +16355,7 @@ class cfgVehicles {
 
   //Freshwater Fish Fillets
   class CarpFilletMeat;
-  class BluegillFilletMeat: CarpFilletMeat {
+  class geb_BluegillFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Bluegill Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16368,7 +16368,7 @@ class cfgVehicles {
       "dz\gear\food\data\carp_fillet_burnt_CO.paa"
     };
   };
-  class BlackbassFilletMeat: CarpFilletMeat {
+  class geb_BlackbassFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Black Bass Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16382,7 +16382,7 @@ class cfgVehicles {
     };
 
   };
-  class CatfishFilletMeat: CarpFilletMeat {
+  class geb_CatfishFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Catfish Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16396,7 +16396,7 @@ class cfgVehicles {
     };
 
   };
-  class LargemouthbassFilletMeat: CarpFilletMeat {
+  class geb_LargemouthbassFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Large Mouth Bass Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16410,14 +16410,14 @@ class cfgVehicles {
     };
 
   };
-  class MinnowFilletMeat: CarpFilletMeat {
+  class geb_MinnowFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Minnow Fillet";
     descriptionShort = "Yum! A fish fillet";
     model = "\dz\gear\food\carp_fillet.p3d";
 
   };
-  class NorthernpikeFilletMeat: CarpFilletMeat {
+  class geb_NorthernpikeFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Northern Pike Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16430,7 +16430,7 @@ class cfgVehicles {
       "dz\gear\food\data\carp_fillet_burnt_CO.paa"
     };
   };
-  class PerchFilletMeat: CarpFilletMeat {
+  class geb_PerchFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Perch Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16444,7 +16444,7 @@ class cfgVehicles {
     };
 
   };
-  class SaugerFilletMeat: CarpFilletMeat {
+  class geb_SaugerFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Sauger Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16458,14 +16458,14 @@ class cfgVehicles {
     };
 
   };
-  class CrayfishFilletMeat: CarpFilletMeat {
+  class geb_CrayfishFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Crayfish Fillet";
     descriptionShort = "Yum! A fish fillet";
     model = "gebsfish\data\food\crayfishtail.p3d";
 
   };
-  class TroutFilletMeat: CarpFilletMeat {
+  class geb_TroutFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Trout Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16478,7 +16478,7 @@ class cfgVehicles {
       "dz\gear\food\data\carp_fillet_burnt_CO.paa"
     };
   };
-  class WhitebassFilletMeat: CarpFilletMeat {
+  class geb_WhitebassFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "White Bass Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16491,7 +16491,7 @@ class cfgVehicles {
       "dz\gear\food\data\carp_fillet_burnt_CO.paa"
     };
   };
-  class BowfinFilletMeat: CarpFilletMeat {
+  class geb_BowfinFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Bowfin Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16504,7 +16504,7 @@ class cfgVehicles {
       "dz\gear\food\data\carp_fillet_burnt_CO.paa"
     };
   };
-  class SlimysculpinFilletMeat: CarpFilletMeat {
+  class geb_SlimysculpinFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Slimy Sculpin Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16520,7 +16520,7 @@ class cfgVehicles {
 
   //Saltwater Fish fillets
   class MackerelFilletMeat;
-  class AngelfishFilletMeat: MackerelFilletMeat {
+  class geb_AngelfishFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Angelfish Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16533,7 +16533,7 @@ class cfgVehicles {
       "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
     };
   };
-  class AsianseabassFilletMeat: MackerelFilletMeat {
+  class geb_AsianseabassFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Asianseabass Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16546,7 +16546,7 @@ class cfgVehicles {
       "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
     };
   };
-  class BluemarlinFilletMeat: MackerelFilletMeat {
+  class geb_BluemarlinFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Bluemarlin Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16559,7 +16559,7 @@ class cfgVehicles {
       "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
     };
   };
-  class BonitaFilletMeat: MackerelFilletMeat {
+  class geb_BonitaFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Bonita Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16572,7 +16572,7 @@ class cfgVehicles {
       "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
     };
   };
-  class CherrysalmonFilletMeat: MackerelFilletMeat {
+  class geb_CherrysalmonFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Cherrysalmon Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16585,7 +16585,7 @@ class cfgVehicles {
       "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
     };
   };
-  class FlatheadmulletFilletMeat: MackerelFilletMeat {
+  class geb_FlatheadmulletFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Flatheadmullet Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16598,7 +16598,7 @@ class cfgVehicles {
       "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
     };
   };
-  class LeopardsharkFilletMeat: MackerelFilletMeat {
+  class geb_LeopardsharkFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Leopardshark Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16611,7 +16611,7 @@ class cfgVehicles {
       "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
     };
   };
-  class PacificcodFilletMeat: MackerelFilletMeat {
+  class geb_PacificcodFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Pacificcod Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16624,7 +16624,7 @@ class cfgVehicles {
       "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
     };
   };
-  class RedheadcichlidFilletMeat: MackerelFilletMeat {
+  class geb_RedheadcichlidFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Redheadcichlid Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16637,7 +16637,7 @@ class cfgVehicles {
       "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
     };
   };
-  class RoughneckrockFilletMeat: MackerelFilletMeat {
+  class geb_RoughneckrockFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Roughneckrock Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16650,7 +16650,7 @@ class cfgVehicles {
       "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
     };
   };
-  class SeverumFilletMeat: MackerelFilletMeat {
+  class geb_SeverumFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Severum Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16663,7 +16663,7 @@ class cfgVehicles {
       "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
     };
   };
-  class ShrimpFilletMeat: MackerelFilletMeat {
+  class geb_ShrimpFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Shrimp Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16676,7 +16676,7 @@ class cfgVehicles {
       "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
     };
   };
-  class BluetangFilletMeat: MackerelFilletMeat {
+  class geb_BluetangFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Blue Tang Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16689,7 +16689,7 @@ class cfgVehicles {
       "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
     };
   };
-  class HairtailfishFilletMeat: MackerelFilletMeat {
+  class geb_HairtailfishFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Hair Tail Fish Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16702,7 +16702,7 @@ class cfgVehicles {
       "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
     };
   };
-  class HumpheadwrasseFilletMeat: MackerelFilletMeat {
+  class geb_HumpheadwrasseFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Humphead Wrasse Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16715,7 +16715,7 @@ class cfgVehicles {
       "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
     };
   };
-  class SiamesetigerfishFilletMeat: MackerelFilletMeat {
+  class geb_SiamesetigerfishFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Siamese Tiger Fish Fillet";
     descriptionShort = "Yum! A fish fillet";
@@ -16730,7 +16730,7 @@ class cfgVehicles {
   };
 
   //Crustaceans Fish Fillets
-  class ClamFilletMeat : MackerelFilletMeat {
+  class geb_ClamFilletMeat : MackerelFilletMeat {
       scope = 2;
       displayName = "Clam Meat";
       descriptionShort = "Yum! A piece of Clam meat!";
@@ -16743,7 +16743,7 @@ class cfgVehicles {
         "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
       };
   };
-  class MusselFilletMeat : MackerelFilletMeat {
+  class geb_MusselFilletMeat : MackerelFilletMeat {
       scope = 2;
       displayName = "Mussel Meat";
       descriptionShort = "Yum! A piece of Mussel meat!";
@@ -16756,7 +16756,7 @@ class cfgVehicles {
         "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
       };
   };
-  class KingcrabFilletMeat : MackerelFilletMeat {
+  class geb_KingcrabFilletMeat : MackerelFilletMeat {
       scope = 2;
       displayName = "King Crab Meat";
       descriptionShort = "Yum! A piece of King Crab meat!";
@@ -16769,7 +16769,7 @@ class cfgVehicles {
         "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
       };
   };
-  class KingcrabLegs : MackerelFilletMeat {
+  class geb_KingcrabLegs : MackerelFilletMeat {
       scope = 2;
       displayName = "King Crab Legs";
       descriptionShort = "Yum! Some King Crab Legs!";
@@ -16782,7 +16782,7 @@ class cfgVehicles {
         "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
       };
   };
-  class JellyfishFilletMeat : MackerelFilletMeat {
+  class geb_JellyfishFilletMeat : MackerelFilletMeat {
       scope = 2;
       displayName = "Jellyfish Fillet";
       descriptionShort = "Yum! A piece of jellyfish!";
@@ -16795,7 +16795,7 @@ class cfgVehicles {
         "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
       };
   };
-  class LobsterFilletMeat : MackerelFilletMeat {
+  class geb_LobsterFilletMeat : MackerelFilletMeat {
       scope = 2;
       displayName = "Lobster Fillet";
       descriptionShort = "Yum! A piece of Lobster!";
@@ -16808,7 +16808,7 @@ class cfgVehicles {
         "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
       };
   };
-  class LobsterTail : MackerelFilletMeat {
+  class geb_LobsterTail : MackerelFilletMeat {
       scope = 2;
       displayName = "Lobster Tail";
       descriptionShort = "Yum! A piece of Lobster!";

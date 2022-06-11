@@ -1,6 +1,6 @@
 //Added so fish cannot be put into cargo, it is simply too large
 
-class Leopardshark extends Edible_Base
+class geb_Leopardshark extends Edible_Base
 {
 	override bool CanBeCookedOnStick()
 	{

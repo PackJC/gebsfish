@@ -24,7 +24,7 @@ class CraftVanillaHookGrassHopperBait extends RecipeBase
 		
 		//INGREDIENTS
 		//ingredient 1
-		InsertIngredient(0,"GrassHopper");//you can insert multiple ingredients this way
+		InsertIngredient(0,"geb_GrassHopper");//you can insert multiple ingredients this way
 
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
@@ -43,7 +43,7 @@ class CraftVanillaHookGrassHopperBait extends RecipeBase
 		//----------------------------------------------------------------------------------------------------------------------
 		
 		//result1
-		AddResult("MetalHookGrassHopperBait");//add results here
+		AddResult("geb_MetalHookGrassHopperBait");//add results here
 
 		m_ResultSetFullQuantity[0] = false;//true = set full quantity, false = do nothing
 		m_ResultSetQuantity[0] = -1;//-1 = do nothing

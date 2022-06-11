@@ -1,7 +1,7 @@
 //Added so fish cannot be put into cargo, it is simply too large
 
 
-class Bluemarlin extends Edible_Base
+class geb_Bluemarlin extends Edible_Base
 {
 	override bool CanBeCookedOnStick()
 	{

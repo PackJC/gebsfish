@@ -24,7 +24,7 @@ class CraftVanillaHookFieldCricketBait extends RecipeBase
 		
 		//INGREDIENTS
 		//ingredient 1
-		InsertIngredient(0,"FieldCricket");//you can insert multiple ingredients this way
+		InsertIngredient(0,"geb_FieldCricket");//you can insert multiple ingredients this way
 
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
@@ -43,7 +43,7 @@ class CraftVanillaHookFieldCricketBait extends RecipeBase
 		//----------------------------------------------------------------------------------------------------------------------
 		
 		//result1
-		AddResult("MetalHookFieldCricketBait");//add results here
+		AddResult("geb_MetalHookFieldCricketBait");//add results here
 
 		m_ResultSetFullQuantity[0] = false;//true = set full quantity, false = do nothing
 		m_ResultSetQuantity[0] = -1;//-1 = do nothing

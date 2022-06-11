@@ -15,18 +15,18 @@ modded class Trap_SmallFish extends TrapSpawnBase
 
 		m_CatchesPond.Clear();
 		m_CatchesPond.Insert("Bitterlings", 1);
-		m_CatchesPond.Insert("Crayfish", 2);
-		m_CatchesPond.Insert("Minnow", 3);
-		m_CatchesPond.Insert("Slimysculpin", 4);
-		m_CatchesPond.Insert("Mussel", 5);
-		m_CatchesPond.Insert("Blackdevilsnail", 6);
+		m_CatchesPond.Insert("geb_Crayfish", 2);
+		m_CatchesPond.Insert("geb_Minnow", 3);
+		m_CatchesPond.Insert("geb_Slimysculpin", 4);
+		m_CatchesPond.Insert("geb_Mussel", 5);
+		m_CatchesPond.Insert("geb_Blackdevilsnail", 6);
 
 		m_CatchesSea.Clear();
 		m_CatchesSea.Insert("Sardines", 1);
-		m_CatchesSea.Insert("Shrimp", 2);
-		m_CatchesSea.Insert("Bloodclam", 3);
-		m_CatchesSea.Insert("Starfish", 4);
-		m_CatchesSea.Insert("Jellyfish", 5);
+		m_CatchesSea.Insert("geb_Shrimp", 2);
+		m_CatchesSea.Insert("geb_Bloodclam", 3);
+		m_CatchesSea.Insert("geb_Starfish", 4);
+		m_CatchesSea.Insert("geb_Jellyfish", 5);
 
 	}
 

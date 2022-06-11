@@ -24,7 +24,7 @@ class CraftBoneRubberWormBait extends RecipeBase
 		
 		//INGREDIENTS
 		//ingredient 1
-		InsertIngredient(0,"RubberWorm");//you can insert multiple ingredients this way
+		InsertIngredient(0,"geb_RubberWorm");//you can insert multiple ingredients this way
 
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
@@ -43,7 +43,7 @@ class CraftBoneRubberWormBait extends RecipeBase
 		//----------------------------------------------------------------------------------------------------------------------
 		
 		//result1
-		AddResult("BoneRubberWormBait");//add results here
+		AddResult("geb_BoneRubberWormBait");//add results here
 
 		m_ResultSetFullQuantity[0] = false;//true = set full quantity, false = do nothing
 		m_ResultSetQuantity[0] = -1;//-1 = do nothing
