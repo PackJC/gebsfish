@@ -72,7 +72,7 @@ class PrepareBloodclam extends PrepareFish
 		//----------------------------------------------------------------------------------------------------------------------
 		ran = Math.RandomFloatInclusive(1.0,1.0);
 		for (int i = 0; i < ran; ++i){
-			AddResult("ClamFilletMeat");//add results here
+			AddResult("geb_ClamFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = true;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
 			m_ResultSetHealth[i] = -1;//-1 = do nothing
