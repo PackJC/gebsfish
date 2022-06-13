@@ -1,4 +1,4 @@
-class CraftMetalFieldCricketBait extends RecipeBase	
+class CraftMetalFieldCricketBait extends RecipeBase
 {	
 	override void Init()
 	{
@@ -43,7 +43,7 @@ class CraftMetalFieldCricketBait extends RecipeBase
 		//----------------------------------------------------------------------------------------------------------------------
 		
 		//result1
-		AddResult("geb_MetalHookBaitFieldCricket");//add results here
+		AddResult("geb_MetalHookFieldCricketBait");//add results here
 
 		m_ResultSetFullQuantity[0] = false;//true = set full quantity, false = do nothing
 		m_ResultSetQuantity[0] = -1;//-1 = do nothing

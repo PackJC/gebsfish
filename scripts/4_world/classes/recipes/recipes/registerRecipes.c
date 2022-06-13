@@ -48,7 +48,9 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareJellyfish);
 		RegisterRecipe(new PrepareBloodclam);
 		RegisterRecipe(new PrepareLobster);
-
+		RegisterRecipe(new PrepareAngelshark);
+		RegisterRecipe(new PrepareGreatwhiteshark);
+		RegisterRecipe(new PrepareYellowfinTuna);
 		/*
 			BAIT RECIPES
 		*/

@@ -15177,7 +15177,7 @@ class cfgVehicles {
   class geb_Siamesetigerfish: Edible_Base {
     scope = 2;
     displayName = "$STR_siamesetigerfish";
-    descriptionShort = "$STR_siamesetigerfish";
+    descriptionShort = "$STR_siamesetigerfish_desc";
     model = "gebsfish\data\food\siamesetigerfish.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -15321,6 +15321,450 @@ class cfgVehicles {
       };
     };
   }
+
+  class geb_Angelshark : Edible_Base {
+      scope = 2;
+      displayName = "$STR_angelshark";
+      descriptionShort = "$STR_angelshark_desc";
+      model = "gebsfish\data\food\angelshark.p3d";
+      debug_ItemCategory = 6;
+      rotationFlags = 17;
+      weight = 2500;
+      itemSize[] = {
+        3,
+        3
+      };
+      stackedUnit = "g";
+      quantityBar = 1;
+      varQuantityInit = 1000;
+      varQuantityMin = 0;
+      varQuantityMax = 1000;
+      isMeleeWeapon = 1;
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 50;
+                  healthLevels[] = {
+
+                    {
+                      1,
+                      {}
+                    },
+
+                    {
+                      0.69999999,
+                      {}
+                    },
+
+                    {
+                      0.5,
+                      {}
+                    },
+
+                    {
+                      0.30000001,
+                      {}
+                    },
+
+                    {
+                      0,
+                      {}
+                    }
+                  };
+              };
+          };
+      };
+      class MeleeModes {
+          class Default {
+              ammo = "MeleeSoft";
+              range = 1;
+          };
+          class Heavy {
+              ammo = "MeleeSoft_Heavy";
+              range = 1;
+          };
+          class Sprint {
+              ammo = "MeleeSoft_Heavy";
+              range = 2.8;
+          };
+      };
+      inventorySlot[] = {
+        "TrapPrey_1"
+      };
+      hiddenSelections[] = {
+        "cs_raw"
+      };
+      hiddenSelectionsTextures[] = {
+        "dz\gear\food\data\mackerel_live_co.paa",
+        "dz\gear\food\data\mackerel_live_co.paa"
+      };
+      hiddenSelectionsMaterials[] = {
+        "dz\gear\food\data\mackerel_live.rvmat",
+        "dz\gear\food\data\mackerel_live.rvmat"
+      };
+      class AnimationSources : FoodAnimationSources {};
+      class Food {
+          class FoodStages {
+              class Raw {
+                  visual_properties[] = {
+                    0,
+                    0,
+                    0
+                  };
+                  nutrition_properties[] = {
+                    1,
+                    69,
+                    172,
+                    70,
+                    1
+                  };
+                  cooking_properties[] = {
+                    0,
+                    0
+                  };
+              };
+              class Rotten {
+                  visual_properties[] = {
+                    -1,
+                    -1,
+                    5
+                  };
+                  nutrition_properties[] = {
+                    10,
+                    25,
+                    25,
+                    1,
+                    0
+                  };
+                  cooking_properties[] = {
+                    0,
+                    0
+                  };
+              };
+          };
+          class FoodStageTransitions : NotCookable {};
+      };
+      class AnimEvents {
+          class SoundWeapon {
+              class openTunaCan {
+                  soundSet = "openTunaCan_SoundSet";
+                  id = 204;
+              };
+              class Eating_TakeFood {
+                  soundSet = "Eating_TakeFood_Soundset";
+                  id = 889;
+              };
+              class Eating_BoxOpen {
+                  soundSet = "Eating_BoxOpen_Soundset";
+                  id = 893;
+              };
+              class Eating_BoxShake {
+                  soundSet = "Eating_BoxShake_Soundset";
+                  id = 894;
+              };
+              class Eating_BoxEnd {
+                  soundSet = "Eating_BoxEnd_Soundset";
+                  id = 895;
+              };
+          };
+      };
+  }
+  class geb_Greatwhiteshark : Edible_Base {
+      scope = 2;
+      displayName = "$STR_greatwhiteshark";
+      descriptionShort = "$STR_greatwhiteshark_desc";
+      model = "gebsfish\data\food\greatwhiteshark.p3d";
+      debug_ItemCategory = 6;
+      rotationFlags = 17;
+      weight = 2500;
+      itemSize[] = {
+        3,
+        3
+      };
+      stackedUnit = "g";
+      quantityBar = 1;
+      varQuantityInit = 1000;
+      varQuantityMin = 0;
+      varQuantityMax = 1000;
+      isMeleeWeapon = 1;
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 50;
+                  healthLevels[] = {
+
+                    {
+                      1,
+                      {}
+                    },
+
+                    {
+                      0.69999999,
+                      {}
+                    },
+
+                    {
+                      0.5,
+                      {}
+                    },
+
+                    {
+                      0.30000001,
+                      {}
+                    },
+
+                    {
+                      0,
+                      {}
+                    }
+                  };
+              };
+          };
+      };
+      class MeleeModes {
+          class Default {
+              ammo = "MeleeSoft";
+              range = 1;
+          };
+          class Heavy {
+              ammo = "MeleeSoft_Heavy";
+              range = 1;
+          };
+          class Sprint {
+              ammo = "MeleeSoft_Heavy";
+              range = 2.8;
+          };
+      };
+      inventorySlot[] = {
+        "TrapPrey_1"
+      };
+      hiddenSelections[] = {
+        "cs_raw"
+      };
+      hiddenSelectionsTextures[] = {
+        "dz\gear\food\data\mackerel_live_co.paa",
+        "dz\gear\food\data\mackerel_live_co.paa"
+      };
+      hiddenSelectionsMaterials[] = {
+        "dz\gear\food\data\mackerel_live.rvmat",
+        "dz\gear\food\data\mackerel_live.rvmat"
+      };
+      class AnimationSources : FoodAnimationSources {};
+      class Food {
+          class FoodStages {
+              class Raw {
+                  visual_properties[] = {
+                    0,
+                    0,
+                    0
+                  };
+                  nutrition_properties[] = {
+                    1,
+                    69,
+                    172,
+                    70,
+                    1
+                  };
+                  cooking_properties[] = {
+                    0,
+                    0
+                  };
+              };
+              class Rotten {
+                  visual_properties[] = {
+                    -1,
+                    -1,
+                    5
+                  };
+                  nutrition_properties[] = {
+                    10,
+                    25,
+                    25,
+                    1,
+                    0
+                  };
+                  cooking_properties[] = {
+                    0,
+                    0
+                  };
+              };
+          };
+          class FoodStageTransitions : NotCookable {};
+      };
+      class AnimEvents {
+          class SoundWeapon {
+              class openTunaCan {
+                  soundSet = "openTunaCan_SoundSet";
+                  id = 204;
+              };
+              class Eating_TakeFood {
+                  soundSet = "Eating_TakeFood_Soundset";
+                  id = 889;
+              };
+              class Eating_BoxOpen {
+                  soundSet = "Eating_BoxOpen_Soundset";
+                  id = 893;
+              };
+              class Eating_BoxShake {
+                  soundSet = "Eating_BoxShake_Soundset";
+                  id = 894;
+              };
+              class Eating_BoxEnd {
+                  soundSet = "Eating_BoxEnd_Soundset";
+                  id = 895;
+              };
+          };
+      };
+  }
+  class geb_Yellowfintuna : Edible_Base {
+      scope = 2;
+      displayName = "$STR_yellowfintuna";
+      descriptionShort = "$STR_yellowfintuna_desc";
+      model = "gebsfish\data\food\yellowfintuna.p3d";
+      debug_ItemCategory = 6;
+      rotationFlags = 17;
+      weight = 2500;
+      itemSize[] = {
+        3,
+        3
+      };
+      stackedUnit = "g";
+      quantityBar = 1;
+      varQuantityInit = 1000;
+      varQuantityMin = 0;
+      varQuantityMax = 1000;
+      isMeleeWeapon = 1;
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 50;
+                  healthLevels[] = {
+
+                    {
+                      1,
+                      {}
+                    },
+
+                    {
+                      0.69999999,
+                      {}
+                    },
+
+                    {
+                      0.5,
+                      {}
+                    },
+
+                    {
+                      0.30000001,
+                      {}
+                    },
+
+                    {
+                      0,
+                      {}
+                    }
+                  };
+              };
+          };
+      };
+      class MeleeModes {
+          class Default {
+              ammo = "MeleeSoft";
+              range = 1;
+          };
+          class Heavy {
+              ammo = "MeleeSoft_Heavy";
+              range = 1;
+          };
+          class Sprint {
+              ammo = "MeleeSoft_Heavy";
+              range = 2.8;
+          };
+      };
+      inventorySlot[] = {
+        "TrapPrey_1"
+      };
+      hiddenSelections[] = {
+        "cs_raw"
+      };
+      hiddenSelectionsTextures[] = {
+        "dz\gear\food\data\mackerel_live_co.paa",
+        "dz\gear\food\data\mackerel_live_co.paa"
+      };
+      hiddenSelectionsMaterials[] = {
+        "dz\gear\food\data\mackerel_live.rvmat",
+        "dz\gear\food\data\mackerel_live.rvmat"
+      };
+      class AnimationSources : FoodAnimationSources {};
+      class Food {
+          class FoodStages {
+              class Raw {
+                  visual_properties[] = {
+                    0,
+                    0,
+                    0
+                  };
+                  nutrition_properties[] = {
+                    1,
+                    69,
+                    172,
+                    70,
+                    1
+                  };
+                  cooking_properties[] = {
+                    0,
+                    0
+                  };
+              };
+              class Rotten {
+                  visual_properties[] = {
+                    -1,
+                    -1,
+                    5
+                  };
+                  nutrition_properties[] = {
+                    10,
+                    25,
+                    25,
+                    1,
+                    0
+                  };
+                  cooking_properties[] = {
+                    0,
+                    0
+                  };
+              };
+          };
+          class FoodStageTransitions : NotCookable {};
+      };
+      class AnimEvents {
+          class SoundWeapon {
+              class openTunaCan {
+                  soundSet = "openTunaCan_SoundSet";
+                  id = 204;
+              };
+              class Eating_TakeFood {
+                  soundSet = "Eating_TakeFood_Soundset";
+                  id = 889;
+              };
+              class Eating_BoxOpen {
+                  soundSet = "Eating_BoxOpen_Soundset";
+                  id = 893;
+              };
+              class Eating_BoxShake {
+                  soundSet = "Eating_BoxShake_Soundset";
+                  id = 894;
+              };
+              class Eating_BoxEnd {
+                  soundSet = "Eating_BoxEnd_Soundset";
+                  id = 895;
+              };
+          };
+      };
+  }
+
+
 
   //Crustaceans Fish
   class geb_Bloodclam : Edible_Base {
@@ -16728,6 +17172,49 @@ class cfgVehicles {
       "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
     };
   };
+
+  class geb_GreatwhitesharkFilletMeat : MackerelFilletMeat {
+      scope = 2;
+      displayName = "Great White Shark Fillet";
+      descriptionShort = "Yum! A Shark fillet!";
+      model = "\dz\gear\food\mackerel_fillet.p3d";
+      hiddenSelectionsTextures[] = {
+        "gebsfish\data\food\siamesetigerfish_fillet_co.paa",
+        "dz\gear\food\data\mackerel_fillet_baked_CO.paa",
+        "dz\gear\food\data\mackerel_fillet_boiled_CO.paa",
+        "dz\gear\food\data\mackerel_fillet_dried_CO.paa",
+        "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
+      };
+  };
+  class geb_AngelsharkFilletMeat : MackerelFilletMeat {
+      scope = 2;
+      displayName = "Angel Shark Fillet";
+      descriptionShort = "Yum! A Shark fillet!";
+      model = "\dz\gear\food\mackerel_fillet.p3d";
+      hiddenSelectionsTextures[] = {
+        "gebsfish\data\food\siamesetigerfish_fillet_co.paa",
+        "dz\gear\food\data\mackerel_fillet_baked_CO.paa",
+        "dz\gear\food\data\mackerel_fillet_boiled_CO.paa",
+        "dz\gear\food\data\mackerel_fillet_dried_CO.paa",
+        "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
+      };
+  };
+  class geb_YellowFinTunaFilletMeat : MackerelFilletMeat {
+      scope = 2;
+      displayName = "Yellow Fin Tuna Fillet";
+      descriptionShort = "Yum! A Tuna fillet!";
+      model = "\dz\gear\food\mackerel_fillet.p3d";
+      hiddenSelectionsTextures[] = {
+        "gebsfish\data\food\siamesetigerfish_fillet_co.paa",
+        "dz\gear\food\data\mackerel_fillet_baked_CO.paa",
+        "dz\gear\food\data\mackerel_fillet_boiled_CO.paa",
+        "dz\gear\food\data\mackerel_fillet_dried_CO.paa",
+        "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
+      };
+  };
+
+
+
 
   //Crustaceans Fish Fillets
   class geb_ClamFilletMeat : MackerelFilletMeat {

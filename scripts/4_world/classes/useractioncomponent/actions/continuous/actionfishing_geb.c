@@ -2,16 +2,12 @@ class FileReader
 {
 	static const string FRESH_CONFIG_PATH = "$profile:gebsfish/Freshwater.cfg";
 	static const string SALT_CONFIG_PATH = "$profile:gebsfish/Saltwater.cfg";
-
-	static const string TRAP_CONFIG_PATH = "$profile:gebsfish/FishTrap.cfg";
-
 	static const string BUG_CONFIG_PATH = "$profile:gebsfish/Bugs.cfg";
 
 	static const string DIRECTORY = "$profile:gebsfish";
 
 	static ref map<string, float> fresh_chance_map = new map<string, float>();
 	static ref map<string, float> salt_chance_map = new map<string, float>();
-	static ref map<string, float> trap_chance_map = new map<string, float>();
 	static ref map<string, float> bug_chance_map = new map<string, float>();
 
 	private static ref FileReader instance;
@@ -41,10 +37,6 @@ class FileReader
 		if (!FileExist(FRESH_CONFIG_PATH))
 		{
 			CreateConfig(FRESH_CONFIG_PATH);
-		}
-		if (!FileExist(TRAP_CONFIG_PATH))
-		{
-			CreateConfig(TRAP_CONFIG_PATH);
 		}
 		if (!FileExist(BUG_CONFIG_PATH))
 		{
@@ -86,20 +78,6 @@ class FileReader
 				fresh_chance_map[fresh_line.Substring(0, tokenIndex2)] = (fresh_line.Substring(tokenIndex2 + 1, lengthIndex2 - 1)).ToFloat();
 			}
 			CloseFile(fresh_file);
-		}
-
-		if (FileExist(TRAP_CONFIG_PATH))
-		{
-			FileHandle trap_file = OpenFile(TRAP_CONFIG_PATH, FileMode.READ);
-			string trap_line;
-			while (FGets(trap_file, trap_line) != -1)
-			{
-				trap_line.Trim(); //Removes remaining whitespaces
-				int tokenIndex3 = trap_line.IndexOf("=");
-				int lengthIndex3 = trap_line.Length() - tokenIndex3;
-				trap_chance_map[trap_line.Substring(0, tokenIndex3)] = (trap_line.Substring(tokenIndex3 + 1, lengthIndex3 - 1)).ToFloat();
-			}
-			CloseFile(trap_file);
 		}
 
 		if (FileExist(BUG_CONFIG_PATH))
@@ -147,6 +125,9 @@ class FileReader
 					FPrintln(f, "geb_STARFISH_CHANCE=25");
 					FPrintln(f, "geb_BLOODCLAM_CHANCE=25");
 					FPrintln(f, "geb_KINGCRAB_CHANCE=25");
+					FPrintln(f, "geb_ANGELSHARK_CHANCE=25");
+					FPrintln(f, "geb_GREATWHITESHARK_CHANCE=25");
+					FPrintln(f, "geb_YELLOWFINTUNA_CHANCE=25");
 					break;
 				case "$profile:gebsfish/Freshwater.cfg":
 					FPrintln(f, "CARP_CHANCE=25");
@@ -161,13 +142,6 @@ class FileReader
 					FPrintln(f, "geb_SAUGER_CHANCE=25");
 					FPrintln(f, "geb_TROUT_CHANCE=25");
 					FPrintln(f, "geb_WHITEBASS_CHANCE=25");
-					FPrintln(f, "geb_BOWFIN_CHANCE=25");
-					FPrintln(f, "geb_SLIMYSCULPIN_CHANCE=25");
-					FPrintln(f, "geb_MUSSEL_CHANCE=25");
-					break;
-				case "$profile:gebsfish/FishTrap.cfg":
-					FPrintln(f, "geb_CRAYFISH_CHANCE=25");
-					FPrintln(f, "geb_MINNOW_CHANCE=25");
 					FPrintln(f, "geb_BOWFIN_CHANCE=25");
 					FPrintln(f, "geb_SLIMYSCULPIN_CHANCE=25");
 					FPrintln(f, "geb_MUSSEL_CHANCE=25");
@@ -211,11 +185,6 @@ class FileReader
 	static map<string, float> GetFreshChanceMap()
 	{
 		return fresh_chance_map;
-	}
-
-	static map<string, float> GetTrapChanceMap()
-	{
-		return trap_chance_map;
 	}
 
 	static map<string, float> GetBugChanceMap()
@@ -269,6 +238,9 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 		float STARFISH_CHANCE = 0;
 		float BLOODCLAM_CHANCE = 0;
 		float KINGCRAB_CHANCE = 0;
+		float ANGELSHARK_CHANCE = 0;
+		float GREATWHITESHARK_CHANCE = 0;
+		float YELLOWFINTUNA_CHANCE = 0;
 
 		//Freshwater Fish Chances
 		float CARP_CHANCE = 0;
@@ -334,6 +306,9 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 		salt_fish_map["geb_Starfish"] = STARFISH_CHANCE;
 		salt_fish_map["geb_Bloodclam"] = BLOODCLAM_CHANCE;
 		salt_fish_map["geb_Kingcrab"] = KINGCRAB_CHANCE;
+		salt_fish_map["geb_Angelshark"] = ANGELSHARK_CHANCE;
+		salt_fish_map["geb_Greatwhiteshark"] = GREATWHITESHARK_CHANCE;
+		salt_fish_map["geb_Yellowfintuna"] = YELLOWFINTUNA_CHANCE;
 
 		if (salt_chance_map.Count() > 0) {
 			salt_fish_map = salt_chance_map;
