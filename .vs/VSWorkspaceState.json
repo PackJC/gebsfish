@@ -1,11 +1,11 @@
 {
   "ExpandedNodes": [
     "",
+    "\\data",
+    "\\data\\food",
     "\\scripts",
     "\\scripts\\4_world",
     "\\scripts\\4_world\\classes",
-    "\\scripts\\4_world\\classes\\recipes",
-    "\\scripts\\4_world\\classes\\recipes\\recipes",
     "\\scripts\\4_world\\classes\\useractioncomponent",
     "\\scripts\\4_world\\classes\\useractioncomponent\\actions",
     "\\scripts\\4_world\\classes\\useractioncomponent\\actions\\continuous",
@@ -13,6 +13,6 @@
     "\\scripts\\4_world\\entities\\itembase",
     "\\scripts\\4_world\\entities\\itembase\\container_base"
   ],
-  "SelectedNode": "\\scripts\\4_world\\classes\\recipes\\recipes\\prepareyellowfintuna.c",
+  "SelectedNode": "\\data\\food\\config.cpp",
   "PreviewInSolutionExplorer": false
 }
