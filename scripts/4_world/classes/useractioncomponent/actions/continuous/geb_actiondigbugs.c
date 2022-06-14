@@ -40,7 +40,7 @@ class ActionDigBugs: ActionContinuousBase
 		auto bug_chance_map = FileReader.GetBugChanceMap();
 
 		if (bug_chance_map.Count() > 0) {
-			insect_map = salt_bug_map;
+			insect_map = bug_chance_map;
 
 		}
 

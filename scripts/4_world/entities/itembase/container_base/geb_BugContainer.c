@@ -7,7 +7,8 @@
   Contributions welcome via github
 
 */
-modded class BambooFishingNet extends Container_Base
+
+modded class geb_BugContainer extends Container_Base
 {
 	override bool IsContainer()
 	{
@@ -28,7 +29,8 @@ modded class BambooFishingNet extends Container_Base
 	override void SetActions()
 	{
 		super.SetActions();
-		AddAction(ActionBambooFishingNet);
+
+		AddAction(ActionDigBugs);
 
 	}
 }

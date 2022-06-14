@@ -15329,10 +15329,10 @@ class cfgVehicles {
       model = "gebsfish\data\food\angelshark.p3d";
       debug_ItemCategory = 6;
       rotationFlags = 17;
-      weight = 2500;
+      weight = 3700;
       itemSize[] = {
-        3,
-        3
+        6,
+        2
       };
       stackedUnit = "g";
       quantityBar = 1;
@@ -15476,10 +15476,10 @@ class cfgVehicles {
       model = "gebsfish\data\food\greatwhiteshark.p3d";
       debug_ItemCategory = 6;
       rotationFlags = 17;
-      weight = 2500;
+      weight = 3700;
       itemSize[] = {
-        3,
-        3
+        6,
+        2
       };
       stackedUnit = "g";
       quantityBar = 1;
@@ -15623,10 +15623,10 @@ class cfgVehicles {
       model = "gebsfish\data\food\yellowfintuna.p3d";
       debug_ItemCategory = 6;
       rotationFlags = 17;
-      weight = 2500;
+      weight = 1700;
       itemSize[] = {
-        3,
-        3
+        5,
+        2
       };
       stackedUnit = "g";
       quantityBar = 1;

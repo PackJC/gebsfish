@@ -1,7 +1,17 @@
+/*
+
+  CREATED BY PACKJC
+  https://github.com/PackJC/gebsfish
+  https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
+  https://discord.com/invite/G8uSGZ8yyf
+  Contributions welcome via github
+
+*/
+
 //Added so fish cannot be put into cargo, it is simply too large
 
 
-class geb_Bluemarlin extends Edible_Base
+class geb_Angelshark extends Edible_Base
 {
 	override bool CanBeCookedOnStick()
 	{
