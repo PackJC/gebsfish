@@ -11,6 +11,6 @@
     "\\scripts\\4_world\\entities\\itembase\\gear",
     "\\scripts\\4_world\\entities\\itembase\\gear\\containers"
   ],
-  "SelectedNode": "\\scripts\\4_world\\classes\\recipes\\recipes\\preparegreatwhiteshark.c",
+  "SelectedNode": "\\scripts\\4_world\\classes\\recipes\\recipes\\registerRecipes.c",
   "PreviewInSolutionExplorer": false
 }
