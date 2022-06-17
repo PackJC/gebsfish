@@ -17179,7 +17179,7 @@ class cfgVehicles {
       descriptionShort = "Yum! A Shark fillet!";
       model = "\dz\gear\food\mackerel_fillet.p3d";
       hiddenSelectionsTextures[] = {
-        "gebsfish\data\food\siamesetigerfish_fillet_co.paa",
+        "gebsfish\data\food\greatwhiteshark_fillet_co.paa",
         "dz\gear\food\data\mackerel_fillet_baked_CO.paa",
         "dz\gear\food\data\mackerel_fillet_boiled_CO.paa",
         "dz\gear\food\data\mackerel_fillet_dried_CO.paa",
@@ -17192,7 +17192,7 @@ class cfgVehicles {
       descriptionShort = "Yum! A Shark fillet!";
       model = "\dz\gear\food\mackerel_fillet.p3d";
       hiddenSelectionsTextures[] = {
-        "gebsfish\data\food\siamesetigerfish_fillet_co.paa",
+        "gebsfish\data\food\angelshark_fillet_co.paa",
         "dz\gear\food\data\mackerel_fillet_baked_CO.paa",
         "dz\gear\food\data\mackerel_fillet_boiled_CO.paa",
         "dz\gear\food\data\mackerel_fillet_dried_CO.paa",
@@ -17205,7 +17205,7 @@ class cfgVehicles {
       descriptionShort = "Yum! A Tuna fillet!";
       model = "\dz\gear\food\mackerel_fillet.p3d";
       hiddenSelectionsTextures[] = {
-        "gebsfish\data\food\siamesetigerfish_fillet_co.paa",
+        "gebsfish\data\food\yellowfintuna_fillet_co.paa",
         "dz\gear\food\data\mackerel_fillet_baked_CO.paa",
         "dz\gear\food\data\mackerel_fillet_boiled_CO.paa",
         "dz\gear\food\data\mackerel_fillet_dried_CO.paa",
