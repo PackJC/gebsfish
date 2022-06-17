@@ -14294,7 +14294,7 @@ class cfgVehicles {
   class geb_Roughneckrock: Edible_Base {
     scope = 2;
     displayName = "$STR_roughneckrock";
-    descriptionShort = "g_roughneckrock_desc";
+    descriptionShort = "$STR_roughneckrock_desc";
     model = "gebsfish\data\food\roughneckrock.p3d";
     debug_ItemCategory = 6;
     rotationFlags = 17;
@@ -16211,7 +16211,7 @@ class cfgVehicles {
   class geb_Starfish : Edible_Base {
       scope = 2;
       displayName = "$STR_starfish";
-      descriptionShort = "g_starfish_desc";
+      descriptionShort = "$STR_starfish_desc";
       model = "gebsfish\data\food\starfish.p3d";
       debug_ItemCategory = 6;
       rotationFlags = 17;
