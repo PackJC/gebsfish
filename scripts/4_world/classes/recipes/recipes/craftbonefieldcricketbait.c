@@ -43,7 +43,7 @@ class CraftBoneFieldCricketBait extends RecipeBase
 		//----------------------------------------------------------------------------------------------------------------------
 		
 		//result1
-		AddResult("BoneFieldCricketBait");//add results here
+		AddResult("geb_BoneFieldCricketBait");//add results here
 
 		m_ResultSetFullQuantity[0] = false;//true = set full quantity, false = do nothing
 		m_ResultSetQuantity[0] = -1;//-1 = do nothing

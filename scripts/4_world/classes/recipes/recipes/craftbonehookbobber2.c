@@ -43,7 +43,7 @@ class CraftBoneHookBobber2 extends RecipeBase
 		//----------------------------------------------------------------------------------------------------------------------
 		
 		//result1
-		AddResult("BoneHookBobber2");
+		AddResult("geb_BoneHookBobber2");
 
 		m_ResultSetFullQuantity[0] = false;//true = set full quantity, false = do nothing
 		m_ResultSetQuantity[0] = -1;//-1 = do nothing

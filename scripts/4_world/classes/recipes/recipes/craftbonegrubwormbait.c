@@ -43,7 +43,7 @@ class CraftBoneGrubWormBait extends RecipeBase
 		//----------------------------------------------------------------------------------------------------------------------
 		
 		//result1
-		AddResult("BoneGrubWormBait");//add results here
+		AddResult("geb_BoneGrubWormBait");//add results here
 
 		m_ResultSetFullQuantity[0] = false;//true = set full quantity, false = do nothing
 		m_ResultSetQuantity[0] = -1;//-1 = do nothing

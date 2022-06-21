@@ -50,7 +50,7 @@ class cfgVehicles {
 	};
   class geb_BlueFishGloves: NBCGloves_ColorBase
 	{
-		displayName="$STR_fishinggloves_orange";
+		displayName="$STR_fishinggloves_blue";
 		descriptionShort="$STR_fishinggloves_desc";
 		scope=2;
 		hiddenSelectionsTextures[]=
@@ -178,107 +178,20 @@ class cfgVehicles {
   */
 
   class Container_Base;
-  class geb_YellowTackle : Container_Base
-  {
-      scope = 2;
-      displayName = "Yellow Tackle Box";
-      descriptionShort = "$STR_tackle_desc";
-      model = "gebsfish\data\food\geb_yellowtackle.p3d";
-      rotationFlags = 8;
-      weight = 140;
-      itemSize[] = {
-        3,
-        2
-      };
-      itemsCargoSize[] = {
-        9,
-        1
-      };
-      canBeDigged = 1;
-      absorbency = 0;
-      isMeleeWeapon = 1;
-      allowOwnedCargoManipulation = 1;
-      randomQuantity = 2;
-      repairableWithKits[] = { 5,2 };
-      repairCosts[] = { 30,25 };
-      lootTag[] =
-      {
-          "Hunting",
-          "Work",
-          "Camping"
-      };
-      hiddenSelections[] =
-      {
-          "zbytek"
-      };
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 80;
-                  healthLevels[] = {
-
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimEvents {
-          class SoundWeapon {
-              class pickUpItem_Light {
-                  soundSet = "pickUpCourierBag_Light_SoundSet";
-                  id = 796;
-              };
-              class pickUpItem {
-                  soundSet = "pickUpCourierBag_SoundSet";
-                  id = 797;
-              };
-          };
-      };
-  };
   class geb_RedTackle : Container_Base
   {
       scope = 2;
       displayName = "Red Tackle Box";
       descriptionShort = "$STR_tackle_desc";
-      model = "gebsfish\data\food\geb_redtackle.p3d";
+      model = "gebsfish\data\food\geb_RedTackle.p3d";
+      hiddenSelections[] =
+      {
+          "Camo"
+      };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_redtackle.paa"
+      };
       rotationFlags = 8;
       weight = 140;
       itemSize[] = {
@@ -301,10 +214,6 @@ class cfgVehicles {
           "Hunting",
           "Work",
           "Camping"
-      };
-      hiddenSelections[] =
-      {
-          "zbytek"
       };
       class DamageSystem {
           class GlobalHealth {
@@ -368,1241 +277,201 @@ class cfgVehicles {
           };
       };
   };
-  class geb_BlueTackle : Container_Base
+  class geb_YellowTackle : geb_RedTackle
   {
-      inventorySlot = "tacklebox";
+      scope = 2;
+      displayName = "Yellow Tackle Box";
+      descriptionShort = "$STR_tackle_desc";
+      hiddenSelections[] =
+      {
+          "Camo"
+      };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_yellowtackle.paa"
+      };
+  };
+  class geb_BlueTackle : geb_RedTackle
+  {
       scope = 2;
       displayName = "Blue Tackle Box";
       descriptionShort = "$STR_tackle_desc";
-      model = "gebsfish\data\food\geb_bluetackle.p3d";
-      rotationFlags = 8;
-      weight = 140;
-      itemSize[] = {
-        3,
-        2
-      };
-      itemsCargoSize[] = {
-        9,
-        1
-      };
-      canBeDigged = 1;
-      absorbency = 0;
-      isMeleeWeapon = 1;
-      allowOwnedCargoManipulation = 1;
-      randomQuantity = 2;
-      repairableWithKits[] = { 5,2 };
-      repairCosts[] = { 30,25 };
-      lootTag[] =
-      {
-          "Hunting",
-          "Work",
-          "Camping"
-      };
       hiddenSelections[] =
       {
-          "zbytek"
+          "Camo"
       };
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 80;
-                  healthLevels[] = {
-
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimEvents {
-          class SoundWeapon {
-              class pickUpItem_Light {
-                  soundSet = "pickUpCourierBag_Light_SoundSet";
-                  id = 796;
-              };
-              class pickUpItem {
-                  soundSet = "pickUpCourierBag_SoundSet";
-                  id = 797;
-              };
-          };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_bluetackle.paa"
       };
   };
-  class geb_OrangeTackle : Container_Base
+  class geb_OrangeTackle : geb_RedTackle
   {
       scope = 2;
       displayName = "Orange Tackle Box";
       descriptionShort = "$STR_tackle_desc";
-      model = "gebsfish\data\food\geb_orangetackle.p3d";
-      rotationFlags = 8;
-      weight = 140;
-      itemSize[] = {
-        3,
-        2
-      };
-      itemsCargoSize[] = {
-        9,
-        1
-      };
-      canBeDigged = 1;
-      absorbency = 0;
-      isMeleeWeapon = 1;
-      allowOwnedCargoManipulation = 1;
-      randomQuantity = 2;
-      repairableWithKits[] = { 5,2 };
-      repairCosts[] = { 30,25 };
-      lootTag[] =
-      {
-          "Hunting",
-          "Work",
-          "Camping"
-      };
       hiddenSelections[] =
       {
-          "zbytek"
+          "Camo"
       };
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 80;
-                  healthLevels[] = {
-
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimEvents {
-          class SoundWeapon {
-              class pickUpItem_Light {
-                  soundSet = "pickUpCourierBag_Light_SoundSet";
-                  id = 796;
-              };
-              class pickUpItem {
-                  soundSet = "pickUpCourierBag_SoundSet";
-                  id = 797;
-              };
-          };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_orangetackle.paa"
       };
   };
-  class geb_BrownTackle : Container_Base
+  class geb_BrownTackle : geb_RedTackle
   {
       scope = 2;
       displayName = "Brown Tackle Box";
       descriptionShort = "$STR_tackle_desc";
-      model = "gebsfish\data\food\geb_browntackle.p3d";
-      rotationFlags = 8;
-      weight = 140;
-      itemSize[] = {
-        3,
-        2
-      };
-      itemsCargoSize[] = {
-        9,
-        1
-      };
-      canBeDigged = 1;
-      absorbency = 0;
-      isMeleeWeapon = 1;
-      allowOwnedCargoManipulation = 1;
-      randomQuantity = 2;
-      repairableWithKits[] = { 5,2 };
-      repairCosts[] = { 30,25 };
-      lootTag[] =
-      {
-          "Hunting",
-          "Work",
-          "Camping"
-      };
       hiddenSelections[] =
       {
-          "zbytek"
+          "Camo"
       };
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 80;
-                  healthLevels[] = {
-
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimEvents {
-          class SoundWeapon {
-              class pickUpItem_Light {
-                  soundSet = "pickUpCourierBag_Light_SoundSet";
-                  id = 796;
-              };
-              class pickUpItem {
-                  soundSet = "pickUpCourierBag_SoundSet";
-                  id = 797;
-              };
-          };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_browntackle.paa"
       };
   };
-  class geb_PurpleTackle : Container_Base
+  class geb_PurpleTackle : geb_RedTackle
   {
       scope = 2;
       displayName = "Purple Tackle Box";
       descriptionShort = "$STR_tackle_desc";
-      model = "gebsfish\data\food\geb_purpletackle.p3d";
-      rotationFlags = 8;
-      weight = 140;
-      itemSize[] = {
-        3,
-        2
-      };
-      itemsCargoSize[] = {
-        9,
-        1
-      };
-      canBeDigged = 1;
-      absorbency = 0;
-      isMeleeWeapon = 1;
-      allowOwnedCargoManipulation = 1;
-      randomQuantity = 2;
-      repairableWithKits[] = { 5,2 };
-      repairCosts[] = { 30,25 };
-      lootTag[] =
-      {
-          "Hunting",
-          "Work",
-          "Camping"
-      };
       hiddenSelections[] =
       {
-          "zbytek"
+          "Camo"
       };
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 80;
-                  healthLevels[] = {
-
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimEvents {
-          class SoundWeapon {
-              class pickUpItem_Light {
-                  soundSet = "pickUpCourierBag_Light_SoundSet";
-                  id = 796;
-              };
-              class pickUpItem {
-                  soundSet = "pickUpCourierBag_SoundSet";
-                  id = 797;
-              };
-          };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_purpletackle.paa"
       };
   };
-  class geb_PinkTackle : Container_Base
+  class geb_PinkTackle : geb_RedTackle
   {
       scope = 2;
       displayName = "Pink Tackle Box";
       descriptionShort = "$STR_tackle_desc";
-      model = "gebsfish\data\food\geb_pinktackle.p3d";
-      rotationFlags = 8;
-      weight = 140;
-      itemSize[] = {
-        3,
-        2
-      };
-      itemsCargoSize[] = {
-        9,
-        1
-      };
-      canBeDigged = 1;
-      absorbency = 0;
-      isMeleeWeapon = 1;
-      allowOwnedCargoManipulation = 1;
-      randomQuantity = 2;
-      repairableWithKits[] = { 5,2 };
-      repairCosts[] = { 30,25 };
-      lootTag[] =
-      {
-          "Hunting",
-          "Work",
-          "Camping"
-      };
       hiddenSelections[] =
       {
-          "zbytek"
+          "Camo"
       };
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 80;
-                  healthLevels[] = {
-
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimEvents {
-          class SoundWeapon {
-              class pickUpItem_Light {
-                  soundSet = "pickUpCourierBag_Light_SoundSet";
-                  id = 796;
-              };
-              class pickUpItem {
-                  soundSet = "pickUpCourierBag_SoundSet";
-                  id = 797;
-              };
-          };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_pinktackle.paa"
       };
   };
-  class geb_LimeTackle : Container_Base
+  class geb_LimeTackle : geb_RedTackle
   {
       scope = 2;
       displayName = "Lime Tackle Box";
       descriptionShort = "$STR_tackle_desc";
-      model = "gebsfish\data\food\geb_limetackle.p3d";
-      rotationFlags = 8;
-      weight = 140;
-      itemSize[] = {
-        3,
-        2
-      };
-      itemsCargoSize[] = {
-        9,
-        1
-      };
-      canBeDigged = 1;
-      absorbency = 0;
-      isMeleeWeapon = 1;
-      allowOwnedCargoManipulation = 1;
-      randomQuantity = 2;
-      repairableWithKits[] = { 5,2 };
-      repairCosts[] = { 30,25 };
-      lootTag[] =
-      {
-          "Hunting",
-          "Work",
-          "Camping"
-      };
       hiddenSelections[] =
       {
-          "zbytek"
+          "Camo"
       };
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 80;
-                  healthLevels[] = {
-
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimEvents {
-          class SoundWeapon {
-              class pickUpItem_Light {
-                  soundSet = "pickUpCourierBag_Light_SoundSet";
-                  id = 796;
-              };
-              class pickUpItem {
-                  soundSet = "pickUpCourierBag_SoundSet";
-                  id = 797;
-              };
-          };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_limetackle.paa"
       };
   };
-  class geb_LightBlueTackle : Container_Base
+  class geb_LightBlueTackle : geb_RedTackle
   {
       scope = 2;
       displayName = "Light Blue Tackle Box";
       descriptionShort = "$STR_tackle_desc";
-      model = "gebsfish\data\food\geb_lightbluetackle.p3d";
-      rotationFlags = 8;
-      weight = 140;
-      itemSize[] = {
-        3,
-        2
-      };
-      itemsCargoSize[] = {
-        9,
-        1
-      };
-      canBeDigged = 1;
-      absorbency = 0;
-      isMeleeWeapon = 1;
-      allowOwnedCargoManipulation = 1;
-      randomQuantity = 2;
-      repairableWithKits[] = { 5,2 };
-      repairCosts[] = { 30,25 };
-      lootTag[] =
-      {
-          "Hunting",
-          "Work",
-          "Camping"
-      };
       hiddenSelections[] =
       {
-          "zbytek"
+          "Camo"
       };
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 80;
-                  healthLevels[] = {
-
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimEvents {
-          class SoundWeapon {
-              class pickUpItem_Light {
-                  soundSet = "pickUpCourierBag_Light_SoundSet";
-                  id = 796;
-              };
-              class pickUpItem {
-                  soundSet = "pickUpCourierBag_SoundSet";
-                  id = 797;
-              };
-          };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_lightbluetackle.paa"
       };
   };
-  class geb_GreenTackle : Container_Base
+  class geb_GreenTackle : geb_RedTackle
   {
       scope = 2;
       displayName = "Green Tackle Box";
       descriptionShort = "$STR_tackle_desc";
-      model = "gebsfish\data\food\geb_greentackle.p3d";
-      rotationFlags = 8;
-      weight = 140;
-      itemSize[] = {
-        3,
-        2
-      };
-      itemsCargoSize[] = {
-        9,
-        1
-      };
-      canBeDigged = 1;
-      absorbency = 0;
-      isMeleeWeapon = 1;
-      allowOwnedCargoManipulation = 1;
-      randomQuantity = 2;
-      repairableWithKits[] = { 5,2 };
-      repairCosts[] = { 30,25 };
-      lootTag[] =
-      {
-          "Hunting",
-          "Work",
-          "Camping"
-      };
       hiddenSelections[] =
       {
-          "zbytek"
+          "Camo"
       };
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 80;
-                  healthLevels[] = {
-
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimEvents {
-          class SoundWeapon {
-              class pickUpItem_Light {
-                  soundSet = "pickUpCourierBag_Light_SoundSet";
-                  id = 796;
-              };
-              class pickUpItem {
-                  soundSet = "pickUpCourierBag_SoundSet";
-                  id = 797;
-              };
-          };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_greentackle.paa"
       };
   };
-  class geb_CamoTackle : Container_Base
+  class geb_CamoTackle : geb_RedTackle
   {
       scope = 2;
       displayName = "Camo Tackle Box";
       descriptionShort = "$STR_tackle_desc";
-      model = "gebsfish\data\food\geb_camotackle.p3d";
-      rotationFlags = 8;
-      weight = 140;
-      itemSize[] = {
-        3,
-        2
-      };
-      itemsCargoSize[] = {
-        9,
-        1
-      };
-      canBeDigged = 1;
-      absorbency = 0;
-      isMeleeWeapon = 1;
-      allowOwnedCargoManipulation = 1;
-      randomQuantity = 2;
-      repairableWithKits[] = { 5,2 };
-      repairCosts[] = { 30,25 };
-      lootTag[] =
-      {
-          "Hunting",
-          "Work",
-          "Camping"
-      };
       hiddenSelections[] =
       {
-          "zbytek"
+          "Camo"
       };
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 80;
-                  healthLevels[] = {
-
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimEvents {
-          class SoundWeapon {
-              class pickUpItem_Light {
-                  soundSet = "pickUpCourierBag_Light_SoundSet";
-                  id = 796;
-              };
-              class pickUpItem {
-                  soundSet = "pickUpCourierBag_SoundSet";
-                  id = 797;
-              };
-          };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_camotackle.paa"
       };
   };
 
-  class geb_FunYellowTackle : Container_Base
+  class geb_FunYellowTackle : geb_RedTackle
   {
       scope = 2;
       displayName = "Fun Yellow Tackle Box";
       descriptionShort = "$STR_tackle_desc";
-      model = "gebsfish\data\food\geb_funyellowtackle.p3d";
-      rotationFlags = 8;
-      weight = 140;
-      itemSize[] = {
-        3,
-        2
-      };
-      itemsCargoSize[] = {
-        9,
-        1
-      };
-      canBeDigged = 1;
-      absorbency = 0;
-      isMeleeWeapon = 1;
-      allowOwnedCargoManipulation = 1;
-      randomQuantity = 2;
-      repairableWithKits[] = { 5,2 };
-      repairCosts[] = { 30,25 };
-      lootTag[] =
-      {
-          "Hunting",
-          "Work",
-          "Camping"
-      };
       hiddenSelections[] =
       {
-          "zbytek"
+          "Camo"
       };
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 80;
-                  healthLevels[] = {
-
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimEvents {
-          class SoundWeapon {
-              class pickUpItem_Light {
-                  soundSet = "pickUpCourierBag_Light_SoundSet";
-                  id = 796;
-              };
-              class pickUpItem {
-                  soundSet = "pickUpCourierBag_SoundSet";
-                  id = 797;
-              };
-          };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_funyellowtackle.paa"
       };
   };
-  class geb_FunRedTackle : Container_Base
+  class geb_FunRedTackle : geb_RedTackle
   {
       scope = 2;
       displayName = "Fun Red Tackle Box";
       descriptionShort = "$STR_tackle_desc";
-      model = "gebsfish\data\food\geb_funredtackle.p3d";
-      rotationFlags = 8;
-      weight = 140;
-      itemSize[] = {
-        3,
-        2
-      };
-      itemsCargoSize[] = {
-        9,
-        1
-      };
-      canBeDigged = 1;
-      absorbency = 0;
-      isMeleeWeapon = 1;
-      allowOwnedCargoManipulation = 1;
-      randomQuantity = 2;
-      repairableWithKits[] = { 5,2 };
-      repairCosts[] = { 30,25 };
-      lootTag[] =
-      {
-          "Hunting",
-          "Work",
-          "Camping"
-      };
       hiddenSelections[] =
       {
-          "zbytek"
+          "Camo"
       };
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 80;
-                  healthLevels[] = {
-
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimEvents {
-          class SoundWeapon {
-              class pickUpItem_Light {
-                  soundSet = "pickUpCourierBag_Light_SoundSet";
-                  id = 796;
-              };
-              class pickUpItem {
-                  soundSet = "pickUpCourierBag_SoundSet";
-                  id = 797;
-              };
-          };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_funredtackle.paa"
       };
   };
-  class geb_FunPurpleTackle : Container_Base
+  class geb_FunPurpleTackle : geb_RedTackle
   {
       scope = 2;
       displayName = "Fun Purple Tackle Box";
       descriptionShort = "$STR_tackle_desc";
-      model = "gebsfish\data\food\geb_funpurpletackle.p3d";
-      rotationFlags = 8;
-      weight = 140;
-      itemSize[] = {
-        3,
-        2
-      };
-      itemsCargoSize[] = {
-        9,
-        1
-      };
-      canBeDigged = 1;
-      absorbency = 0;
-      isMeleeWeapon = 1;
-      allowOwnedCargoManipulation = 1;
-      randomQuantity = 2;
-      repairableWithKits[] = { 5,2 };
-      repairCosts[] = { 30,25 };
-      lootTag[] =
-      {
-          "Hunting",
-          "Work",
-          "Camping"
-      };
       hiddenSelections[] =
       {
-          "zbytek"
+          "Camo"
       };
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 80;
-                  healthLevels[] = {
-
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimEvents {
-          class SoundWeapon {
-              class pickUpItem_Light {
-                  soundSet = "pickUpCourierBag_Light_SoundSet";
-                  id = 796;
-              };
-              class pickUpItem {
-                  soundSet = "pickUpCourierBag_SoundSet";
-                  id = 797;
-              };
-          };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_funpurpletackle.paa"
       };
   };
-  class geb_FunGreenTackle : Container_Base
+  class geb_FunGreenTackle : geb_RedTackle
   {
       scope = 2;
       displayName = "Fun Green Tackle Box";
       descriptionShort = "$STR_tackle_desc";
-      model = "gebsfish\data\food\geb_fungreentackle.p3d";
-      rotationFlags = 8;
-      weight = 140;
-      itemSize[] = {
-        3,
-        2
-      };
-      itemsCargoSize[] = {
-        9,
-        1
-      };
-      canBeDigged = 1;
-      absorbency = 0;
-      isMeleeWeapon = 1;
-      allowOwnedCargoManipulation = 1;
-      randomQuantity = 2;
-      repairableWithKits[] = { 5,2 };
-      repairCosts[] = { 30,25 };
-      lootTag[] =
-      {
-          "Hunting",
-          "Work",
-          "Camping"
-      };
       hiddenSelections[] =
       {
-          "zbytek"
+          "Camo"
       };
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 80;
-                  healthLevels[] = {
-
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\containers\data\FirsAidKit_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimEvents {
-          class SoundWeapon {
-              class pickUpItem_Light {
-                  soundSet = "pickUpCourierBag_Light_SoundSet";
-                  id = 796;
-              };
-              class pickUpItem {
-                  soundSet = "pickUpCourierBag_SoundSet";
-                  id = 797;
-              };
-          };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_fungreentackle.paa"
       };
   };
 
@@ -8358,7 +7227,7 @@ class cfgVehicles {
       scope = 2;
       displayName = "$STR_spinnerbait1";
       descriptionShort = "$STR_spinnerbait_desc";
-      model = "gebsfish\data\food\geb_spinnerbait1.p3d";
+      model = "gebsfish\data\food\geb_SpinnerBait1.p3d";
       weight = 15;
       absorbency = 0.80000001;
       itemSize[] = {
@@ -8433,241 +7302,46 @@ class cfgVehicles {
           };
       };
   };
-  class geb_SpinnerBait2 : Inventory_Base {
+  class geb_SpinnerBait2 : geb_SpinnerBait1
+  {
       scope = 2;
       displayName = "$STR_spinnerbait2";
       descriptionShort = "$STR_spinnerbait_desc";
-      model = "gebsfish\data\food\geb_spinnerbait2.p3d";
-      weight = 15;
-      absorbency = 0.80000001;
-      itemSize[] = {
-        1,
-        1
+      hiddenSelections[] =
+      {
+          "Camo"
       };
-      inventorySlot[] = {
-        "Hook"
-      };
-      hiddenSelections[] = {
-        "zbytek"
-      };
-      hiddenSelectionsTextures[] = {
-        "gebsfish\data\food\geb_spinnerbait2.paa";
-      };
-      rotationFlags = 17;
-      hookType = "SpinnerBait2";
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 30;
-                  healthLevels[] = {
-
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\consumables\data\bait.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\consumables\data\bait.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\consumables\data\bait_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\consumables\data\bait_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\consumables\data\bait_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimationSources {
-          class cover {
-              source = "user";
-              animPeriod = 0.5;
-              initPhase = 1;
-          };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_spinnerbait2.paa"
       };
   };
-  class geb_SpinnerBait3 : Inventory_Base {
+  class geb_SpinnerBait3 : geb_SpinnerBait1
+  {
       scope = 2;
       displayName = "$STR_spinnerbait3";
       descriptionShort = "$STR_spinnerbait_desc";
-      model = "gebsfish\data\food\geb_spinnerbait3.p3d";
-      weight = 15;
-      absorbency = 0.80000001;
-      itemSize[] = {
-        1,
-        1
+      hiddenSelections[] =
+      {
+          "Camo"
       };
-      inventorySlot[] = {
-        "Hook"
-      };
-      hiddenSelections[] = {
-        "zbytek"
-      };
-      hiddenSelectionsTextures[] = {
-        "gebsfish\data\food\geb_spinnerbait3.paa";
-      };
-      rotationFlags = 17;
-      hookType = "SpinnerBait3";
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 30;
-                  healthLevels[] = {
-
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\consumables\data\bait.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\consumables\data\bait.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\consumables\data\bait_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\consumables\data\bait_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\consumables\data\bait_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimationSources {
-          class cover {
-              source = "user";
-              animPeriod = 0.5;
-              initPhase = 1;
-          };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_spinnerbait3.paa"
       };
   };
-  class geb_SpinnerBait4 : Inventory_Base {
+  class geb_SpinnerBait4 : geb_SpinnerBait1
+  {
       scope = 2;
       displayName = "$STR_spinnerbait4";
       descriptionShort = "$STR_spinnerbait_desc";
-      model = "gebsfish\data\food\geb_spinnerbait4.p3d";
-      weight = 15;
-      absorbency = 0.80000001;
-      itemSize[] = {
-        1,
-        1
+      hiddenSelections[] =
+      {
+          "Camo"
       };
-      inventorySlot[] = {
-        "Hook"
-      };
-      hiddenSelections[] = {
-        "zbytek"
-      };
-      hiddenSelectionsTextures[] = {
-        "gebsfish\data\food\geb_spinnerbait4.paa";
-      };
-      rotationFlags = 17;
-      hookType = "SpinnerBait4";
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 30;
-                  healthLevels[] = {
-
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\consumables\data\bait.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\consumables\data\bait.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\consumables\data\bait_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\consumables\data\bait_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\consumables\data\bait_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimationSources {
-          class cover {
-              source = "user";
-              animPeriod = 0.5;
-              initPhase = 1;
-          };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_spinnerbait4.paa"
       };
   };
 
@@ -9263,1346 +7937,76 @@ class cfgVehicles {
 			};
 		};
 	};
-  class geb_OrangeFishKnife: HuntingKnife
-	{
-		scope=2;
-        displayName = "$STR_orange_fishknife";
-        descriptionShort = "$STR_fishingknife_desc";
-        model="gebsfish\data\food\geb_orangefishknife.p3d";
-		inventorySlot[]=
-		{
-			"Knife"
-		};
-		repairableWithKits[]={4};
-		repairCosts[]={10};
-		rotationFlags=17;
-		RestrainUnlockType=1;
-		canSkinBodies=1;
-		weight=200;
-		itemSize[]={1,3};
-		lootTag[]=
-		{
-			"Hunting",
-			"Camping"
-		};
-		lootCategory="Tools";
-		itemInfo[]=
-		{
-			"Knife"
-		};
-		openItemSpillRange[]={10,20};
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints=1000;
-					healthLevels[]=
-					{
-						
-						{
-							1,
-							
-							{
-								"DZ\weapons\melee\blade\data\Hunting_knife.rvmat"
-							}
-						},
-						
-						{
-							0.69999999,
-							
-							{
-								"DZ\weapons\melee\blade\data\Hunting_knife.rvmat"
-							}
-						},
-						
-						{
-							0.5,
-							
-							{
-								"DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"
-							}
-						},
-						
-						{
-							0.30000001,
-							
-							{
-								"DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"
-							}
-						},
-						
-						{
-							0,
-							
-							{
-								"DZ\weapons\melee\blade\data\Hunting_knife_destruct.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-		isMeleeWeapon=1;
-		suicideAnim="onehanded";
-		class MeleeModes
-		{
-			class Default
-			{
-				ammo="MeleeKnife";
-				range=1.2;
-			};
-			class Heavy
-			{
-				ammo="MeleeKnife_Heavy";
-				range=1.2;
-			};
-			class Sprint
-			{
-				ammo="MeleeKnife_Heavy";
-				range=3.3;
-			};
-		};
-		class AnimEvents
-		{
-			class SoundWeapon
-			{
-				class animalSkinning_in
-				{
-					soundSet="animalSkinning_in_SoundSet";
-					id=516;
-				};
-				class animalSkinning
-				{
-					soundSet="animalSkinning_SoundSet";
-					id=517;
-				};
-				class animalSkinning_out
-				{
-					soundSet="animalSkinning_out_SoundSet";
-					id=518;
-				};
-				class CutTies_end
-				{
-					soundSet="CutTies_end_SoundSet";
-					id=519;
-				};
-				class CutTies_loop
-				{
-					soundSet="CutTies_loop_SoundSet";
-					id=520;
-				};
-				class shaving_knife_clean
-				{
-					soundSet="shaving_knife_clean_SoundSet";
-					id=600;
-				};
-				class shaving_knife1
-				{
-					soundSet="shaving_knife1_SoundSet";
-					id=601;
-				};
-				class shaving_knife2
-				{
-					soundSet="shaving_knife2_SoundSet";
-					id=602;
-				};
-				class shaving_knife3
-				{
-					soundSet="shaving_knife3_SoundSet";
-					id=603;
-				};
-				class shaving_knife4
-				{
-					soundSet="shaving_knife4_SoundSet";
-					id=604;
-				};
-				class shaving_knife5
-				{
-					soundSet="shaving_knife5_SoundSet";
-					id=605;
-				};
-				class shaving_knife6
-				{
-					soundSet="shaving_knife6_SoundSet";
-					id=606;
-				};
-				class shaving_knife7
-				{
-					soundSet="shaving_knife7_SoundSet";
-					id=607;
-				};
-				class shaving_knife8
-				{
-					soundSet="shaving_knife8_SoundSet";
-					id=608;
-				};
-				class shaving_knife9
-				{
-					soundSet="shaving_knife9_SoundSet";
-					id=609;
-				};
-				class shaving_knife10
-				{
-					soundSet="shaving_knife10_SoundSet";
-					id=610;
-				};
-				class shaving_knife11
-				{
-					soundSet="shaving_knife11_SoundSet";
-					id=611;
-				};
-				class shaving_knife12
-				{
-					soundSet="shaving_knife12_SoundSet";
-					id=612;
-				};
-				class shaving_knife13
-				{
-					soundSet="shaving_knife13_SoundSet";
-					id=613;
-				};
-				class shaving_knife14
-				{
-					soundSet="shaving_knife14_SoundSet";
-					id=614;
-				};
-				class shaving_knife15
-				{
-					soundSet="shaving_knife15_SoundSet";
-					id=615;
-				};
-				class shaving_knife16
-				{
-					soundSet="shaving_knife16_SoundSet";
-					id=616;
-				};
-				class shaving_knife17
-				{
-					soundSet="shaving_knife17_SoundSet";
-					id=617;
-				};
-				class shaving_knife18
-				{
-					soundSet="shaving_knife18_SoundSet";
-					id=618;
-				};
-				class shaving_knife19
-				{
-					soundSet="shaving_knife19_SoundSet";
-					id=619;
-				};
-				class shaving_knife20
-				{
-					soundSet="shaving_knife20_SoundSet";
-					id=620;
-				};
-				class shaving_knife21
-				{
-					soundSet="shaving_knife21_SoundSet";
-					id=621;
-				};
-				class pickup_light
-				{
-					soundSet="hatchet_pickup_light_SoundSet";
-					id=796;
-				};
-				class pickup
-				{
-					soundSet="hatchet_pickup_SoundSet";
-					id=797;
-				};
-				class drop
-				{
-					soundset="woodaxe_drop_SoundSet";
-					id=898;
-				};
-				class FirefighterAxe_loop_SoundSet
-				{
-					soundSet="FirefighterAxe_loop_SoundSet";
-					id=1121;
-				};
-				class FirefighterAxe_end_SoundSet
-				{
-					soundSet="FirefighterAxe_end_SoundSet";
-					id=1122;
-				};
-			};
-		};
-	};
-  class geb_GreenFishKnife : HuntingKnife
-    {
-        scope = 2;
-        displayName = "$STR_green_fishknife";
-        descriptionShort = "$STR_fishingknife_desc";
-        model = "gebsfish\data\food\geb_greenfishknife.p3d";
-        inventorySlot[] =
-        {
-            "Knife"
-        };
-        repairableWithKits[] = { 4 };
-        repairCosts[] = { 10 };
-        rotationFlags = 17;
-        RestrainUnlockType = 1;
-        canSkinBodies = 1;
-        weight = 200;
-        itemSize[] = { 1,3 };
-        lootTag[] =
-        {
-            "Hunting",
-            "Camping"
-        };
-        lootCategory = "Tools";
-        itemInfo[] =
-        {
-            "Knife"
-        };
-        openItemSpillRange[] = { 10,20 };
-        class DamageSystem
-        {
-            class GlobalHealth
-            {
-                class Health
-                {
-                    hitpoints = 1000;
-                    healthLevels[] =
-                    {
-
-                        {
-                            1,
-
-                            {
-                                "DZ\weapons\melee\blade\data\Hunting_knife.rvmat"
-                            }
-                        },
-
-                        {
-                            0.69999999,
-
-                            {
-                                "DZ\weapons\melee\blade\data\Hunting_knife.rvmat"
-                            }
-                        },
-
-                        {
-                            0.5,
-
-                            {
-                                "DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"
-                            }
-                        },
-
-                        {
-                            0.30000001,
-
-                            {
-                                "DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"
-                            }
-                        },
-
-                        {
-                            0,
-
-                            {
-                                "DZ\weapons\melee\blade\data\Hunting_knife_destruct.rvmat"
-                            }
-                        }
-                    };
-                };
-            };
-        };
-        isMeleeWeapon = 1;
-        suicideAnim = "onehanded";
-        class MeleeModes
-        {
-            class Default
-            {
-                ammo = "MeleeKnife";
-                range = 1.2;
-            };
-            class Heavy
-            {
-                ammo = "MeleeKnife_Heavy";
-                range = 1.2;
-            };
-            class Sprint
-            {
-                ammo = "MeleeKnife_Heavy";
-                range = 3.3;
-            };
-        };
-        class AnimEvents
-        {
-            class SoundWeapon
-            {
-                class animalSkinning_in
-                {
-                    soundSet = "animalSkinning_in_SoundSet";
-                    id = 516;
-                };
-                class animalSkinning
-                {
-                    soundSet = "animalSkinning_SoundSet";
-                    id = 517;
-                };
-                class animalSkinning_out
-                {
-                    soundSet = "animalSkinning_out_SoundSet";
-                    id = 518;
-                };
-                class CutTies_end
-                {
-                    soundSet = "CutTies_end_SoundSet";
-                    id = 519;
-                };
-                class CutTies_loop
-                {
-                    soundSet = "CutTies_loop_SoundSet";
-                    id = 520;
-                };
-                class shaving_knife_clean
-                {
-                    soundSet = "shaving_knife_clean_SoundSet";
-                    id = 600;
-                };
-                class shaving_knife1
-                {
-                    soundSet = "shaving_knife1_SoundSet";
-                    id = 601;
-                };
-                class shaving_knife2
-                {
-                    soundSet = "shaving_knife2_SoundSet";
-                    id = 602;
-                };
-                class shaving_knife3
-                {
-                    soundSet = "shaving_knife3_SoundSet";
-                    id = 603;
-                };
-                class shaving_knife4
-                {
-                    soundSet = "shaving_knife4_SoundSet";
-                    id = 604;
-                };
-                class shaving_knife5
-                {
-                    soundSet = "shaving_knife5_SoundSet";
-                    id = 605;
-                };
-                class shaving_knife6
-                {
-                    soundSet = "shaving_knife6_SoundSet";
-                    id = 606;
-                };
-                class shaving_knife7
-                {
-                    soundSet = "shaving_knife7_SoundSet";
-                    id = 607;
-                };
-                class shaving_knife8
-                {
-                    soundSet = "shaving_knife8_SoundSet";
-                    id = 608;
-                };
-                class shaving_knife9
-                {
-                    soundSet = "shaving_knife9_SoundSet";
-                    id = 609;
-                };
-                class shaving_knife10
-                {
-                    soundSet = "shaving_knife10_SoundSet";
-                    id = 610;
-                };
-                class shaving_knife11
-                {
-                    soundSet = "shaving_knife11_SoundSet";
-                    id = 611;
-                };
-                class shaving_knife12
-                {
-                    soundSet = "shaving_knife12_SoundSet";
-                    id = 612;
-                };
-                class shaving_knife13
-                {
-                    soundSet = "shaving_knife13_SoundSet";
-                    id = 613;
-                };
-                class shaving_knife14
-                {
-                    soundSet = "shaving_knife14_SoundSet";
-                    id = 614;
-                };
-                class shaving_knife15
-                {
-                    soundSet = "shaving_knife15_SoundSet";
-                    id = 615;
-                };
-                class shaving_knife16
-                {
-                    soundSet = "shaving_knife16_SoundSet";
-                    id = 616;
-                };
-                class shaving_knife17
-                {
-                    soundSet = "shaving_knife17_SoundSet";
-                    id = 617;
-                };
-                class shaving_knife18
-                {
-                    soundSet = "shaving_knife18_SoundSet";
-                    id = 618;
-                };
-                class shaving_knife19
-                {
-                    soundSet = "shaving_knife19_SoundSet";
-                    id = 619;
-                };
-                class shaving_knife20
-                {
-                    soundSet = "shaving_knife20_SoundSet";
-                    id = 620;
-                };
-                class shaving_knife21
-                {
-                    soundSet = "shaving_knife21_SoundSet";
-                    id = 621;
-                };
-                class pickup_light
-                {
-                    soundSet = "hatchet_pickup_light_SoundSet";
-                    id = 796;
-                };
-                class pickup
-                {
-                    soundSet = "hatchet_pickup_SoundSet";
-                    id = 797;
-                };
-                class drop
-                {
-                    soundset = "woodaxe_drop_SoundSet";
-                    id = 898;
-                };
-                class FirefighterAxe_loop_SoundSet
-                {
-                    soundSet = "FirefighterAxe_loop_SoundSet";
-                    id = 1121;
-                };
-                class FirefighterAxe_end_SoundSet
-                {
-                    soundSet = "FirefighterAxe_end_SoundSet";
-                    id = 1122;
-                };
-            };
-        };
-    };
-  class geb_YellowFishKnife : HuntingKnife
-    {
-        scope = 2;
-        displayName = "$STR_yellow_fishknife";
-        descriptionShort = "$STR_fishingknife_desc";
-        model = "gebsfish\data\food\geb_yellowfishknife.p3d";
-        inventorySlot[] =
-        {
-            "Knife"
-        };
-        repairableWithKits[] = { 4 };
-        repairCosts[] = { 10 };
-        rotationFlags = 17;
-        RestrainUnlockType = 1;
-        canSkinBodies = 1;
-        weight = 200;
-        itemSize[] = { 1,3 };
-        lootTag[] =
-        {
-            "Hunting",
-            "Camping"
-        };
-        lootCategory = "Tools";
-        itemInfo[] =
-        {
-            "Knife"
-        };
-        openItemSpillRange[] = { 10,20 };
-        class DamageSystem
-        {
-            class GlobalHealth
-            {
-                class Health
-                {
-                    hitpoints = 1000;
-                    healthLevels[] =
-                    {
-
-                        {
-                            1,
-
-                            {
-                                "DZ\weapons\melee\blade\data\Hunting_knife.rvmat"
-                            }
-                        },
-
-                        {
-                            0.69999999,
-
-                            {
-                                "DZ\weapons\melee\blade\data\Hunting_knife.rvmat"
-                            }
-                        },
-
-                        {
-                            0.5,
-
-                            {
-                                "DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"
-                            }
-                        },
-
-                        {
-                            0.30000001,
-
-                            {
-                                "DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"
-                            }
-                        },
-
-                        {
-                            0,
-
-                            {
-                                "DZ\weapons\melee\blade\data\Hunting_knife_destruct.rvmat"
-                            }
-                        }
-                    };
-                };
-            };
-        };
-        isMeleeWeapon = 1;
-        suicideAnim = "onehanded";
-        class MeleeModes
-        {
-            class Default
-            {
-                ammo = "MeleeKnife";
-                range = 1.2;
-            };
-            class Heavy
-            {
-                ammo = "MeleeKnife_Heavy";
-                range = 1.2;
-            };
-            class Sprint
-            {
-                ammo = "MeleeKnife_Heavy";
-                range = 3.3;
-            };
-        };
-        class AnimEvents
-        {
-            class SoundWeapon
-            {
-                class animalSkinning_in
-                {
-                    soundSet = "animalSkinning_in_SoundSet";
-                    id = 516;
-                };
-                class animalSkinning
-                {
-                    soundSet = "animalSkinning_SoundSet";
-                    id = 517;
-                };
-                class animalSkinning_out
-                {
-                    soundSet = "animalSkinning_out_SoundSet";
-                    id = 518;
-                };
-                class CutTies_end
-                {
-                    soundSet = "CutTies_end_SoundSet";
-                    id = 519;
-                };
-                class CutTies_loop
-                {
-                    soundSet = "CutTies_loop_SoundSet";
-                    id = 520;
-                };
-                class shaving_knife_clean
-                {
-                    soundSet = "shaving_knife_clean_SoundSet";
-                    id = 600;
-                };
-                class shaving_knife1
-                {
-                    soundSet = "shaving_knife1_SoundSet";
-                    id = 601;
-                };
-                class shaving_knife2
-                {
-                    soundSet = "shaving_knife2_SoundSet";
-                    id = 602;
-                };
-                class shaving_knife3
-                {
-                    soundSet = "shaving_knife3_SoundSet";
-                    id = 603;
-                };
-                class shaving_knife4
-                {
-                    soundSet = "shaving_knife4_SoundSet";
-                    id = 604;
-                };
-                class shaving_knife5
-                {
-                    soundSet = "shaving_knife5_SoundSet";
-                    id = 605;
-                };
-                class shaving_knife6
-                {
-                    soundSet = "shaving_knife6_SoundSet";
-                    id = 606;
-                };
-                class shaving_knife7
-                {
-                    soundSet = "shaving_knife7_SoundSet";
-                    id = 607;
-                };
-                class shaving_knife8
-                {
-                    soundSet = "shaving_knife8_SoundSet";
-                    id = 608;
-                };
-                class shaving_knife9
-                {
-                    soundSet = "shaving_knife9_SoundSet";
-                    id = 609;
-                };
-                class shaving_knife10
-                {
-                    soundSet = "shaving_knife10_SoundSet";
-                    id = 610;
-                };
-                class shaving_knife11
-                {
-                    soundSet = "shaving_knife11_SoundSet";
-                    id = 611;
-                };
-                class shaving_knife12
-                {
-                    soundSet = "shaving_knife12_SoundSet";
-                    id = 612;
-                };
-                class shaving_knife13
-                {
-                    soundSet = "shaving_knife13_SoundSet";
-                    id = 613;
-                };
-                class shaving_knife14
-                {
-                    soundSet = "shaving_knife14_SoundSet";
-                    id = 614;
-                };
-                class shaving_knife15
-                {
-                    soundSet = "shaving_knife15_SoundSet";
-                    id = 615;
-                };
-                class shaving_knife16
-                {
-                    soundSet = "shaving_knife16_SoundSet";
-                    id = 616;
-                };
-                class shaving_knife17
-                {
-                    soundSet = "shaving_knife17_SoundSet";
-                    id = 617;
-                };
-                class shaving_knife18
-                {
-                    soundSet = "shaving_knife18_SoundSet";
-                    id = 618;
-                };
-                class shaving_knife19
-                {
-                    soundSet = "shaving_knife19_SoundSet";
-                    id = 619;
-                };
-                class shaving_knife20
-                {
-                    soundSet = "shaving_knife20_SoundSet";
-                    id = 620;
-                };
-                class shaving_knife21
-                {
-                    soundSet = "shaving_knife21_SoundSet";
-                    id = 621;
-                };
-                class pickup_light
-                {
-                    soundSet = "hatchet_pickup_light_SoundSet";
-                    id = 796;
-                };
-                class pickup
-                {
-                    soundSet = "hatchet_pickup_SoundSet";
-                    id = 797;
-                };
-                class drop
-                {
-                    soundset = "woodaxe_drop_SoundSet";
-                    id = 898;
-                };
-                class FirefighterAxe_loop_SoundSet
-                {
-                    soundSet = "FirefighterAxe_loop_SoundSet";
-                    id = 1121;
-                };
-                class FirefighterAxe_end_SoundSet
-                {
-                    soundSet = "FirefighterAxe_end_SoundSet";
-                    id = 1122;
-                };
-            };
-        };
-    };
-  class geb_RedFishKnife : HuntingKnife
-    {
-        scope = 2;
-        displayName = "$STR_red_fishknife";
-        descriptionShort = "$STR_fishingknife_desc";
-        model = "gebsfish\data\food\geb_redfishknife.p3d";
-        inventorySlot[] =
-        {
-            "Knife"
-        };
-        repairableWithKits[] = { 4 };
-        repairCosts[] = { 10 };
-        rotationFlags = 17;
-        RestrainUnlockType = 1;
-        canSkinBodies = 1;
-        weight = 200;
-        itemSize[] = { 1,3 };
-        lootTag[] =
-        {
-            "Hunting",
-            "Camping"
-        };
-        lootCategory = "Tools";
-        itemInfo[] =
-        {
-            "Knife"
-        };
-        openItemSpillRange[] = { 10,20 };
-        class DamageSystem
-        {
-            class GlobalHealth
-            {
-                class Health
-                {
-                    hitpoints = 1000;
-                    healthLevels[] =
-                    {
-
-                        {
-                            1,
-
-                            {
-                                "DZ\weapons\melee\blade\data\Hunting_knife.rvmat"
-                            }
-                        },
-
-                        {
-                            0.69999999,
-
-                            {
-                                "DZ\weapons\melee\blade\data\Hunting_knife.rvmat"
-                            }
-                        },
-
-                        {
-                            0.5,
-
-                            {
-                                "DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"
-                            }
-                        },
-
-                        {
-                            0.30000001,
-
-                            {
-                                "DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"
-                            }
-                        },
-
-                        {
-                            0,
-
-                            {
-                                "DZ\weapons\melee\blade\data\Hunting_knife_destruct.rvmat"
-                            }
-                        }
-                    };
-                };
-            };
-        };
-        isMeleeWeapon = 1;
-        suicideAnim = "onehanded";
-        class MeleeModes
-        {
-            class Default
-            {
-                ammo = "MeleeKnife";
-                range = 1.2;
-            };
-            class Heavy
-            {
-                ammo = "MeleeKnife_Heavy";
-                range = 1.2;
-            };
-            class Sprint
-            {
-                ammo = "MeleeKnife_Heavy";
-                range = 3.3;
-            };
-        };
-        class AnimEvents
-        {
-            class SoundWeapon
-            {
-                class animalSkinning_in
-                {
-                    soundSet = "animalSkinning_in_SoundSet";
-                    id = 516;
-                };
-                class animalSkinning
-                {
-                    soundSet = "animalSkinning_SoundSet";
-                    id = 517;
-                };
-                class animalSkinning_out
-                {
-                    soundSet = "animalSkinning_out_SoundSet";
-                    id = 518;
-                };
-                class CutTies_end
-                {
-                    soundSet = "CutTies_end_SoundSet";
-                    id = 519;
-                };
-                class CutTies_loop
-                {
-                    soundSet = "CutTies_loop_SoundSet";
-                    id = 520;
-                };
-                class shaving_knife_clean
-                {
-                    soundSet = "shaving_knife_clean_SoundSet";
-                    id = 600;
-                };
-                class shaving_knife1
-                {
-                    soundSet = "shaving_knife1_SoundSet";
-                    id = 601;
-                };
-                class shaving_knife2
-                {
-                    soundSet = "shaving_knife2_SoundSet";
-                    id = 602;
-                };
-                class shaving_knife3
-                {
-                    soundSet = "shaving_knife3_SoundSet";
-                    id = 603;
-                };
-                class shaving_knife4
-                {
-                    soundSet = "shaving_knife4_SoundSet";
-                    id = 604;
-                };
-                class shaving_knife5
-                {
-                    soundSet = "shaving_knife5_SoundSet";
-                    id = 605;
-                };
-                class shaving_knife6
-                {
-                    soundSet = "shaving_knife6_SoundSet";
-                    id = 606;
-                };
-                class shaving_knife7
-                {
-                    soundSet = "shaving_knife7_SoundSet";
-                    id = 607;
-                };
-                class shaving_knife8
-                {
-                    soundSet = "shaving_knife8_SoundSet";
-                    id = 608;
-                };
-                class shaving_knife9
-                {
-                    soundSet = "shaving_knife9_SoundSet";
-                    id = 609;
-                };
-                class shaving_knife10
-                {
-                    soundSet = "shaving_knife10_SoundSet";
-                    id = 610;
-                };
-                class shaving_knife11
-                {
-                    soundSet = "shaving_knife11_SoundSet";
-                    id = 611;
-                };
-                class shaving_knife12
-                {
-                    soundSet = "shaving_knife12_SoundSet";
-                    id = 612;
-                };
-                class shaving_knife13
-                {
-                    soundSet = "shaving_knife13_SoundSet";
-                    id = 613;
-                };
-                class shaving_knife14
-                {
-                    soundSet = "shaving_knife14_SoundSet";
-                    id = 614;
-                };
-                class shaving_knife15
-                {
-                    soundSet = "shaving_knife15_SoundSet";
-                    id = 615;
-                };
-                class shaving_knife16
-                {
-                    soundSet = "shaving_knife16_SoundSet";
-                    id = 616;
-                };
-                class shaving_knife17
-                {
-                    soundSet = "shaving_knife17_SoundSet";
-                    id = 617;
-                };
-                class shaving_knife18
-                {
-                    soundSet = "shaving_knife18_SoundSet";
-                    id = 618;
-                };
-                class shaving_knife19
-                {
-                    soundSet = "shaving_knife19_SoundSet";
-                    id = 619;
-                };
-                class shaving_knife20
-                {
-                    soundSet = "shaving_knife20_SoundSet";
-                    id = 620;
-                };
-                class shaving_knife21
-                {
-                    soundSet = "shaving_knife21_SoundSet";
-                    id = 621;
-                };
-                class pickup_light
-                {
-                    soundSet = "hatchet_pickup_light_SoundSet";
-                    id = 796;
-                };
-                class pickup
-                {
-                    soundSet = "hatchet_pickup_SoundSet";
-                    id = 797;
-                };
-                class drop
-                {
-                    soundset = "woodaxe_drop_SoundSet";
-                    id = 898;
-                };
-                class FirefighterAxe_loop_SoundSet
-                {
-                    soundSet = "FirefighterAxe_loop_SoundSet";
-                    id = 1121;
-                };
-                class FirefighterAxe_end_SoundSet
-                {
-                    soundSet = "FirefighterAxe_end_SoundSet";
-                    id = 1122;
-                };
-            };
-        };
-    };
-  class geb_PurpleFishKnife : HuntingKnife
-    {
-        scope = 2;
-        displayName = "$STR_purple_fishknife";
-        descriptionShort = "$STR_fishingknife_desc";
-        model = "gebsfish\data\food\geb_purplefishknife.p3d";
-        inventorySlot[] =
-        {
-            "Knife"
-        };
-        repairableWithKits[] = { 4 };
-        repairCosts[] = { 10 };
-        rotationFlags = 17;
-        RestrainUnlockType = 1;
-        canSkinBodies = 1;
-        weight = 200;
-        itemSize[] = { 1,3 };
-        lootTag[] =
-        {
-            "Hunting",
-            "Camping"
-        };
-        lootCategory = "Tools";
-        itemInfo[] =
-        {
-            "Knife"
-        };
-        openItemSpillRange[] = { 10,20 };
-        class DamageSystem
-        {
-            class GlobalHealth
-            {
-                class Health
-                {
-                    hitpoints = 1000;
-                    healthLevels[] =
-                    {
-
-                        {
-                            1,
-
-                            {
-                                "DZ\weapons\melee\blade\data\Hunting_knife.rvmat"
-                            }
-                        },
-
-                        {
-                            0.69999999,
-
-                            {
-                                "DZ\weapons\melee\blade\data\Hunting_knife.rvmat"
-                            }
-                        },
-
-                        {
-                            0.5,
-
-                            {
-                                "DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"
-                            }
-                        },
-
-                        {
-                            0.30000001,
-
-                            {
-                                "DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"
-                            }
-                        },
-
-                        {
-                            0,
-
-                            {
-                                "DZ\weapons\melee\blade\data\Hunting_knife_destruct.rvmat"
-                            }
-                        }
-                    };
-                };
-            };
-        };
-        isMeleeWeapon = 1;
-        suicideAnim = "onehanded";
-        class MeleeModes
-        {
-            class Default
-            {
-                ammo = "MeleeKnife";
-                range = 1.2;
-            };
-            class Heavy
-            {
-                ammo = "MeleeKnife_Heavy";
-                range = 1.2;
-            };
-            class Sprint
-            {
-                ammo = "MeleeKnife_Heavy";
-                range = 3.3;
-            };
-        };
-        class AnimEvents
-        {
-            class SoundWeapon
-            {
-                class animalSkinning_in
-                {
-                    soundSet = "animalSkinning_in_SoundSet";
-                    id = 516;
-                };
-                class animalSkinning
-                {
-                    soundSet = "animalSkinning_SoundSet";
-                    id = 517;
-                };
-                class animalSkinning_out
-                {
-                    soundSet = "animalSkinning_out_SoundSet";
-                    id = 518;
-                };
-                class CutTies_end
-                {
-                    soundSet = "CutTies_end_SoundSet";
-                    id = 519;
-                };
-                class CutTies_loop
-                {
-                    soundSet = "CutTies_loop_SoundSet";
-                    id = 520;
-                };
-                class shaving_knife_clean
-                {
-                    soundSet = "shaving_knife_clean_SoundSet";
-                    id = 600;
-                };
-                class shaving_knife1
-                {
-                    soundSet = "shaving_knife1_SoundSet";
-                    id = 601;
-                };
-                class shaving_knife2
-                {
-                    soundSet = "shaving_knife2_SoundSet";
-                    id = 602;
-                };
-                class shaving_knife3
-                {
-                    soundSet = "shaving_knife3_SoundSet";
-                    id = 603;
-                };
-                class shaving_knife4
-                {
-                    soundSet = "shaving_knife4_SoundSet";
-                    id = 604;
-                };
-                class shaving_knife5
-                {
-                    soundSet = "shaving_knife5_SoundSet";
-                    id = 605;
-                };
-                class shaving_knife6
-                {
-                    soundSet = "shaving_knife6_SoundSet";
-                    id = 606;
-                };
-                class shaving_knife7
-                {
-                    soundSet = "shaving_knife7_SoundSet";
-                    id = 607;
-                };
-                class shaving_knife8
-                {
-                    soundSet = "shaving_knife8_SoundSet";
-                    id = 608;
-                };
-                class shaving_knife9
-                {
-                    soundSet = "shaving_knife9_SoundSet";
-                    id = 609;
-                };
-                class shaving_knife10
-                {
-                    soundSet = "shaving_knife10_SoundSet";
-                    id = 610;
-                };
-                class shaving_knife11
-                {
-                    soundSet = "shaving_knife11_SoundSet";
-                    id = 611;
-                };
-                class shaving_knife12
-                {
-                    soundSet = "shaving_knife12_SoundSet";
-                    id = 612;
-                };
-                class shaving_knife13
-                {
-                    soundSet = "shaving_knife13_SoundSet";
-                    id = 613;
-                };
-                class shaving_knife14
-                {
-                    soundSet = "shaving_knife14_SoundSet";
-                    id = 614;
-                };
-                class shaving_knife15
-                {
-                    soundSet = "shaving_knife15_SoundSet";
-                    id = 615;
-                };
-                class shaving_knife16
-                {
-                    soundSet = "shaving_knife16_SoundSet";
-                    id = 616;
-                };
-                class shaving_knife17
-                {
-                    soundSet = "shaving_knife17_SoundSet";
-                    id = 617;
-                };
-                class shaving_knife18
-                {
-                    soundSet = "shaving_knife18_SoundSet";
-                    id = 618;
-                };
-                class shaving_knife19
-                {
-                    soundSet = "shaving_knife19_SoundSet";
-                    id = 619;
-                };
-                class shaving_knife20
-                {
-                    soundSet = "shaving_knife20_SoundSet";
-                    id = 620;
-                };
-                class shaving_knife21
-                {
-                    soundSet = "shaving_knife21_SoundSet";
-                    id = 621;
-                };
-                class pickup_light
-                {
-                    soundSet = "hatchet_pickup_light_SoundSet";
-                    id = 796;
-                };
-                class pickup
-                {
-                    soundSet = "hatchet_pickup_SoundSet";
-                    id = 797;
-                };
-                class drop
-                {
-                    soundset = "woodaxe_drop_SoundSet";
-                    id = 898;
-                };
-                class FirefighterAxe_loop_SoundSet
-                {
-                    soundSet = "FirefighterAxe_loop_SoundSet";
-                    id = 1121;
-                };
-                class FirefighterAxe_end_SoundSet
-                {
-                    soundSet = "FirefighterAxe_end_SoundSet";
-                    id = 1122;
-                };
-            };
-        };
-    };
+  class geb_OrangeFishKnife : geb_BlueFishKnife
+  {
+      scope = 2;
+      displayName = "$STR_orange_fishknife";
+      descriptionShort = "$STR_fishingknife_desc";
+      hiddenSelections[] =
+      {
+          "Camo"
+      };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_orangefishknife.paa"
+      };
+  };
+  class geb_GreenFishKnife : geb_BlueFishKnife
+  {
+      scope = 2;
+      displayName = "$STR_green_fishknife";
+      descriptionShort = "$STR_fishingknife_desc";
+      hiddenSelections[] =
+      {
+          "Camo"
+      };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_greenfishknife.paa"
+      };
+  };
+  class geb_YellowFishKnife : geb_BlueFishKnife
+  {
+      scope = 2;
+      displayName = "$STR_yellow_fishknife";
+      descriptionShort = "$STR_fishingknife_desc";
+      hiddenSelections[] =
+      {
+          "Camo"
+      };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_yellowfishknife.paa"
+      };
+  };
+  class geb_RedFishKnife : geb_BlueFishKnife
+  {
+      scope = 2;
+      displayName = "$STR_red_fishknife";
+      descriptionShort = "$STR_fishingknife_desc";
+      hiddenSelections[] =
+      {
+          "Camo"
+      };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_redfishknife.paa"
+      };
+  };
+  class geb_PurpleFishKnife : geb_BlueFishKnife
+  {
+      scope = 2;
+      displayName = "$STR_purple_fishknife";
+      descriptionShort = "$STR_fishingknife_desc";
+      hiddenSelections[] =
+      {
+          "Camo"
+      };
+      hiddenSelectionsTextures[] =
+      {
+          "gebsfish\data\food\geb_purplefishknife.paa"
+      };
+  };
 
   class FishingRod_Base_New;
   class FishingRod : FishingRod_Base_New
