@@ -1,16 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\scripts",
-    "\\scripts\\4_world",
-    "\\scripts\\4_world\\classes",
-    "\\scripts\\4_world\\classes\\recipes",
-    "\\scripts\\4_world\\classes\\recipes\\recipes",
-    "\\scripts\\4_world\\entities",
-    "\\scripts\\4_world\\entities\\itembase",
-    "\\scripts\\4_world\\entities\\itembase\\gear",
-    "\\scripts\\4_world\\entities\\itembase\\gear\\containers"
+    "\\data"
   ],
-  "SelectedNode": "\\scripts\\4_world\\classes\\recipes\\recipes\\craftvanillahookminnowbait.c",
+  "SelectedNode": "\\config.cpp",
   "PreviewInSolutionExplorer": false
 }

@@ -162,7 +162,7 @@ class FileReader
 
 	static string BetterTrim(string line)
 	{
-		line.Replace("	", ""); // Replace Tabs("\t" or "	") with nothing.
+		line.Replace("	", ""); // Replace Tabs("/t" or "	") with nothing.
 		line.Replace(";", "");
 		line.Trim(); //Removes remaining whitespaces
 
