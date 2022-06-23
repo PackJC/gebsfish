@@ -43,7 +43,7 @@ class CraftVanillaHookGrassHopperBait extends RecipeBase
 		//----------------------------------------------------------------------------------------------------------------------
 		
 		//result1
-		AddResult("geb_MetalHookGrassHopperBait");//add results here
+		AddResult("geb_MetalGrassHopperBait");//add results here
 
 		m_ResultSetFullQuantity[0] = false;//true = set full quantity, false = do nothing
 		m_ResultSetQuantity[0] = -1;//-1 = do nothing
