@@ -155,6 +155,7 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 			rndSaltFish = Math.RandomFloatInclusive(0.0, salt_sum);
 			rndFreshFish = Math.RandomFloatInclusive(0.0, fresh_sum);
 
+			//Added equal past s_value in last arg
 			foreach (auto s_key, auto s_value: salt_fish_map) {
 				if (rndSaltFish <= s_value && s_value > 0) {
 					selected_salt_fish = s_key;
