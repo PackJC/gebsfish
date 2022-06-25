@@ -1803,6 +1803,19 @@ class cfgVehicles {
   */
 
   //Metal Hooks
+  class geb_metalhook_baited_worm : Inventory_Base {
+        model = "\gebsfish\data\tackle\geb_metalhook_baited_worm.p3d";
+    }
+  class geb_metalhook_baited_grasshopper : Inventory_Base {
+        model = "\gebsfish\data\tackle\geb_metalhook_baited_grasshopper.p3d";
+    };
+  class geb_metalhook_baited_fieldcricket : Inventory_Base {
+        model = "\gebsfish\data\tackle\geb_metalhook_baited_fieldcricket.p3d";
+    };
+  class geb_metalhook_baited_minnow : Inventory_Base {
+        model = "\gebsfish\data\tackle\geb_metalhook_baited_minnow.p3d";
+    };
+
   class geb_MetalHook : Inventory_Base {
         scope = 2;
         displayName = "$STR_metalhook";
@@ -2567,7 +2580,7 @@ class cfgVehicles {
       scope = 2;
       displayName = "Metal Hook with Rubber Worm";
       descriptionShort = "A bait to catch marine life!";
-      model = "\gebsfish\data\tackle\geb_metalhook_baited_rubberworm.p3d";
+      model = "\gebsfish\data\tackle\geb_metalhook_baited_worm.p3d";
       weight = 15;
       absorbency = 0.80000001;
       itemSize[] = {
@@ -2646,7 +2659,7 @@ class cfgVehicles {
       scope = 2;
       displayName = "Metal Hook with Grub Worm";
       descriptionShort = "A bait to catch marine life!";
-      model = "\gebsfish\data\tackle\geb_metalhook_baited_grubworm.p3d";
+      model = "\gebsfish\data\tackle\geb_metalhook_baited_worm.p3d";
       weight = 15;
       absorbency = 0.80000001;
       itemSize[] = {
@@ -2721,7 +2734,7 @@ class cfgVehicles {
           };
       };
   };
-  class geb_MetalGrassHopperBait : Inventory_Base {
+  class geb_MetalGrassHopperBait : geb_metalhook_baited_grasshopper {
       scope = 2;
       displayName = "Metal Hook with Grasshopper";
       descriptionShort = "A bait to catch marine life!";
@@ -2800,7 +2813,7 @@ class cfgVehicles {
           };
       };
   };
-  class geb_MetalFieldCricketBait : Inventory_Base {
+  class geb_MetalFieldCricketBait : geb_metalhook_baited_fieldcricket {
       scope = 2;
       displayName = "Metal Hook with Field Cricket";
       descriptionShort = "A bait to catch marine life!";
@@ -2958,7 +2971,7 @@ class cfgVehicles {
           };
       };
   };
-  class geb_MetalMinnowBait : Inventory_Base {
+  class geb_MetalMinnowBait : geb_metalhook_baited_minnow {
       scope = 2;
       displayName = "Metal Hook with Minnow";
       descriptionShort = "A bait to catch marine life!";
@@ -4768,11 +4781,11 @@ class cfgVehicles {
 
   };
 
-  class geb_BoneRubberWormBait : Inventory_Base {
+  class geb_BoneRubberWormBait : geb_metalhook_baited_worm {
       scope = 2;
       displayName = "Bone Hook with Rubber Worm";
       descriptionShort = "$STR_CfgVehicles_Bait1";
-      model = "\gebsfish\data\tackle\geb_bonehook_baited_rubberworm.p3d";
+      model = "\gebsfish\data\tackle\geb_metalhook_baited_worm.p3d";
       weight = 15;
       absorbency = 0.80000001;
       itemSize[] = {
@@ -4851,7 +4864,7 @@ class cfgVehicles {
       scope = 2;
       displayName = "Bone Hook with Grub Worm";
       descriptionShort = "$STR_CfgVehicles_Bait1";
-      model = "\gebsfish\data\tackle\geb_bonehook_baited_grubworm.p3d";
+      model = "\gebsfish\data\tackle\geb_metalhook_baited_worm.p3d";
       weight = 15;
       absorbency = 0.80000001;
       itemSize[] = {
@@ -4926,11 +4939,11 @@ class cfgVehicles {
           };
       };
   };
-  class geb_BoneGrassHopperBait : Inventory_Base {
+  class geb_BoneGrassHopperBait : geb_metalhook_baited_grasshopper {
       scope = 2;
       displayName = "Bone Hook with Grasshopper";
       descriptionShort = "$STR_CfgVehicles_Bait1";
-      model = "\gebsfish\data\tackle\geb_bonehook_baited_grasshopper.p3d";
+      model = "\gebsfish\data\tackle\geb_metalhook_baited_grasshopper.p3d";
       weight = 15;
       absorbency = 0.80000001;
       itemSize[] = {
@@ -5005,11 +5018,11 @@ class cfgVehicles {
           };
       };
   };
-  class geb_BoneFieldCricketBait : Inventory_Base {
+  class geb_BoneFieldCricketBait : geb_metalhook_baited_fieldcricket {
       scope = 2;
       displayName = "Bone Hook with Field Cricket";
       descriptionShort = "$STR_CfgVehicles_Bait1";
-      model = "\gebsfish\data\tackle\geb_bonehook_baited_fieldcricket.p3d";
+      model = "\gebsfish\data\tackle\geb_metalhook_baited_fieldcricket.p3d";
       weight = 15;
       absorbency = 0.80000001;
       itemSize[] = {
@@ -5084,11 +5097,11 @@ class cfgVehicles {
           };
       };
   };
-  class geb_BoneMinnowBait : Inventory_Base {
+  class geb_BoneMinnowBait : geb_metalhook_baited_minnow {
       scope = 2;
       displayName = "Bone Hook with Minnow";
       descriptionShort = "A bait to catch marine life!";
-      model = "\gebsfish\data\tackle\geb_bonehook_baited_minnow.p3d";
+      model = "\gebsfish\data\tackle\geb_metalhook_baited_minnow.p3d";
       weight = 15;
       absorbency = 0.80000001;
       itemSize[] = {

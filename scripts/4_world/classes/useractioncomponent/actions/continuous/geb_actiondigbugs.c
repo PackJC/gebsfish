@@ -143,8 +143,8 @@ class ActionDigBugs: ActionContinuousBase
 
 		ItemBase bugs;
 		bugs = ItemBase.Cast(GetGame().CreateObject(selected_insect, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
-		bugs.SetQuantity(10, false);
-		MiscGameplayFunctions.DealAbsoluteDmg(action_data.m_MainItem, 4);
+		//bugs.SetQuantity(10, false);
+		//MiscGameplayFunctions.DealAbsoluteDmg(action_data.m_MainItem, 4);
 		action_data.m_Player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
 
 	}
