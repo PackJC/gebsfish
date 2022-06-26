@@ -38,7 +38,7 @@ class FileReader
 
 	void LoadFiles()
 	{
-
+		bool newLakeTroutDetected = false;
 		if (!FileExist(SALT_CONFIG_PATH))
 		{
 			MakeDirectory(DIRECTORY);
@@ -52,9 +52,6 @@ class FileReader
 		{
 			CreateConfig(BUG_CONFIG_PATH);
 		}
-
-
-
 
 		if (FileExist(SALT_CONFIG_PATH))
 		{
@@ -72,11 +69,9 @@ class FileReader
 
 			}
 
-			//if saltchancemap doesnt have fish then add line to map
-
 			CloseFile(salt_file);
-		}
 
+		}
 		if (FileExist(FRESH_CONFIG_PATH))
 		{
 			FileHandle fresh_file = OpenFile(FRESH_CONFIG_PATH, FileMode.READ);
@@ -86,11 +81,24 @@ class FileReader
 				fresh_line.Trim(); //Removes remaining whitespaces
 				int tokenIndex2 = fresh_line.IndexOf("=");
 				int lengthIndex2 = fresh_line.Length() - tokenIndex2;
+				string name = salt_line.Substring(0, tokenIndex);
+
 				fresh_chance_map[fresh_line.Substring(0, tokenIndex2)] = (fresh_line.Substring(tokenIndex2 + 1, lengthIndex2 - 1)).ToFloat();
 			}
 			CloseFile(fresh_file);
-		}
+			if (fresh_chance_map.Contains("geb_LAKETROUT_CHANCE")) {
+				newLakeTroutDetected = true;
+			}
+			if (!newLakeTroutDetected) {
+				FileHandle fresh_file1 = OpenFile(FRESH_CONFIG_PATH, FileMode.APPEND);
+				FPrintln(fresh_file1, "geb_LAKETROUT_CHANCE=66");
+				FPrintln(fresh_file1, "geb_BROOKTROUT_CHANCE=66");
+				FPrintln(fresh_file1, "geb_BROWNTROUT_CHANCE=66");
+				FPrintln(fresh_file1, "geb_CUTHROATTROUT_CHANCE=66");
 
+			}
+			CloseFile(fresh_file1);
+		}
 		if (FileExist(BUG_CONFIG_PATH))
 		{
 			FileHandle bug_file = OpenFile(BUG_CONFIG_PATH, FileMode.READ);
@@ -104,6 +112,8 @@ class FileReader
 			}
 			CloseFile(fresh_file);
 		}
+
+
 	}
 
 	// Creates the config file and sets default values.
@@ -148,7 +158,6 @@ class FileReader
 			FPrintln(f, "geb_NORTHERNPIKE_CHANCE=66");
 			FPrintln(f, "geb_PERCH_CHANCE=66");
 			FPrintln(f, "geb_SAUGER_CHANCE=66");
-			FPrintln(f, "geb_TROUT_CHANCE=66");
 
 			FPrintln(f, "geb_TROUT_CHANCE=66");
 			FPrintln(f, "geb_LAKETROUT_CHANCE=66");
