@@ -183,7 +183,7 @@ class cfgVehicles {
   class geb_RedTackle : Container_Base
   {
       scope = 2;
-      displayName = "Red Tackle Box";
+      displayName = "$STR_redtackle";
       descriptionShort = "$STR_tackle_desc";
       model = "gebsfish\data\tackle\geb_RedTackle.p3d";
       hiddenSelections[] =
@@ -282,7 +282,7 @@ class cfgVehicles {
   class geb_YellowTackle : geb_RedTackle
   {
       scope = 2;
-      displayName = "Yellow Tackle Box";
+      displayName = "$STR_yellowtackle";
       descriptionShort = "$STR_tackle_desc";
       hiddenSelections[] =
       {
@@ -297,7 +297,7 @@ class cfgVehicles {
   class geb_BlueTackle : geb_RedTackle
   {
       scope = 2;
-      displayName = "Blue Tackle Box";
+      displayName = "$STR_bluetackle";
       descriptionShort = "$STR_tackle_desc";
       hiddenSelections[] =
       {
@@ -311,7 +311,7 @@ class cfgVehicles {
   class geb_OrangeTackle : geb_RedTackle
   {
       scope = 2;
-      displayName = "Orange Tackle Box";
+      displayName = "$STR_orangetackle";
       descriptionShort = "$STR_tackle_desc";
       hiddenSelections[] =
       {
@@ -325,7 +325,7 @@ class cfgVehicles {
   class geb_BrownTackle : geb_RedTackle
   {
       scope = 2;
-      displayName = "Brown Tackle Box";
+      displayName = "$STR_browntackle";
       descriptionShort = "$STR_tackle_desc";
       hiddenSelections[] =
       {
@@ -339,7 +339,7 @@ class cfgVehicles {
   class geb_PurpleTackle : geb_RedTackle
   {
       scope = 2;
-      displayName = "Purple Tackle Box";
+      displayName = "$STR_purpletackle";
       descriptionShort = "$STR_tackle_desc";
       hiddenSelections[] =
       {
@@ -353,7 +353,7 @@ class cfgVehicles {
   class geb_PinkTackle : geb_RedTackle
   {
       scope = 2;
-      displayName = "Pink Tackle Box";
+      displayName = "$STR_pinktackle";
       descriptionShort = "$STR_tackle_desc";
       hiddenSelections[] =
       {
@@ -367,7 +367,7 @@ class cfgVehicles {
   class geb_LimeTackle : geb_RedTackle
   {
       scope = 2;
-      displayName = "Lime Tackle Box";
+      displayName = "$STR_limetackle";
       descriptionShort = "$STR_tackle_desc";
       hiddenSelections[] =
       {
@@ -381,7 +381,7 @@ class cfgVehicles {
   class geb_LightBlueTackle : geb_RedTackle
   {
       scope = 2;
-      displayName = "Light Blue Tackle Box";
+      displayName = "$STR_lightbluetackle";
       descriptionShort = "$STR_tackle_desc";
       hiddenSelections[] =
       {
@@ -395,7 +395,7 @@ class cfgVehicles {
   class geb_GreenTackle : geb_RedTackle
   {
       scope = 2;
-      displayName = "Green Tackle Box";
+      displayName = "$STR_greentackle";
       descriptionShort = "$STR_tackle_desc";
       hiddenSelections[] =
       {
@@ -409,7 +409,7 @@ class cfgVehicles {
   class geb_CamoTackle : geb_RedTackle
   {
       scope = 2;
-      displayName = "Camo Tackle Box";
+      displayName = "$STR_camotackle";
       descriptionShort = "$STR_tackle_desc";
       hiddenSelections[] =
       {
@@ -423,7 +423,7 @@ class cfgVehicles {
   class geb_FunYellowTackle : geb_RedTackle
   {
       scope = 2;
-      displayName = "Fun Yellow Tackle Box";
+      displayName = "$STR_funyellowtackle";
       descriptionShort = "$STR_tackle_desc";
       hiddenSelections[] =
       {
@@ -437,7 +437,7 @@ class cfgVehicles {
   class geb_FunRedTackle : geb_RedTackle
   {
       scope = 2;
-      displayName = "Fun Red Tackle Box";
+      displayName = "$STR_funredtackle";
       descriptionShort = "$STR_tackle_desc";
       hiddenSelections[] =
       {
@@ -451,7 +451,7 @@ class cfgVehicles {
   class geb_FunPurpleTackle : geb_RedTackle
   {
       scope = 2;
-      displayName = "Fun Purple Tackle Box";
+      displayName = "$STR_funpurpletackle";
       descriptionShort = "$STR_tackle_desc";
       hiddenSelections[] =
       {
@@ -465,7 +465,7 @@ class cfgVehicles {
   class geb_FunGreenTackle : geb_RedTackle
   {
       scope = 2;
-      displayName = "Fun Green Tackle Box";
+      displayName = "$STR_fungreentackle";
       descriptionShort = "$STR_tackle_desc";
       hiddenSelections[] =
       {
@@ -889,7 +889,7 @@ class cfgVehicles {
   };
   class geb_OldGreenTackleBox: Container_Base {
     scope = 2;
-    displayName = "Old Green Tackle Box";
+    displayName = "$STR_oldgreentackle";
     descriptionShort = "$STR_tackle_desc";
     model = "\gebsfish\data\tackle\geb_old_greentackle.p3d";
     hiddenSelections[] = {
@@ -982,7 +982,7 @@ class cfgVehicles {
   };
   class geb_OldRedTackleBox: Container_Base {
     scope = 2;
-    displayName = "Old Red Tackle Box";
+    displayName = "$STR_oldredtackle";
     descriptionShort = "$STR_tackle_desc";
     model = "\gebsfish\data\tackle\geb_old_redtackle.p3d";
     hiddenSelections[] = {
@@ -1075,7 +1075,7 @@ class cfgVehicles {
   };
   class geb_OldBlueTackleBox: Container_Base {
     scope = 2;
-    displayName = "Old Blue Tackle Box";
+    displayName = "$STR_oldbluetackle";
     descriptionShort = "$STR_tackle_desc";
     model = "\gebsfish\data\tackle\geb_old_bluetackle.p3d";
     hiddenSelections[] = {
@@ -1168,7 +1168,7 @@ class cfgVehicles {
   };
   class geb_OldPurpleTackleBox: Container_Base {
     scope = 2;
-    displayName = "Old Purple Tackle Box";
+    displayName = "$STR_oldpurpletackle";
     descriptionShort = "$STR_tackle_desc";
     model = "\gebsfish\data\tackle\geb_old_purpletackle.p3d";
     hiddenSelections[] = {
@@ -5976,7 +5976,7 @@ class cfgVehicles {
    }; 
   class geb_RedFishingRod: FishingRod {
     scope = 2;
-    displayName = "Red Fishing Rod";
+    displayName = "$STR_redrod";
     descriptionShort = "$STR_CfgVehicles_FishingRod1";
     model = "\dz\gear\tools\fishing_rod.p3d";
     debug_ItemCategory = 2;
@@ -5996,7 +5996,7 @@ class cfgVehicles {
   };
   class geb_GreenFishingRod: FishingRod {
     scope = 2;
-    displayName = "Green Fishing Rod";
+    displayName = "$STR_greenrod";
     descriptionShort = "$STR_CfgVehicles_FishingRod1";
     model = "\dz\gear\tools\fishing_rod.p3d";
     debug_ItemCategory = 2;
@@ -6016,7 +6016,7 @@ class cfgVehicles {
   };
   class geb_BlueFishingRod: FishingRod {
     scope = 2;
-    displayName = "Blue Fishing Rod";
+    displayName = "$STR_bluerod";
     descriptionShort = "$STR_CfgVehicles_FishingRod1";
     model = "\dz\gear\tools\fishing_rod.p3d";
     debug_ItemCategory = 2;
@@ -6036,7 +6036,7 @@ class cfgVehicles {
   };
   class geb_PurpleFishingRod: FishingRod {
     scope = 2;
-    displayName = "Purple Fishing Rod";
+    displayName = "$STR_purplerod";
     descriptionShort = "$STR_CfgVehicles_FishingRod1";
     model = "\dz\gear\tools\fishing_rod.p3d";
     debug_ItemCategory = 2;
@@ -6070,7 +6070,7 @@ class cfgVehicles {
       {
           "CatchBugs"
       };
-      weight = 140;
+      weight = 100;
       itemSize[] = {
         1,
         3

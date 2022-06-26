@@ -131,6 +131,7 @@ modded class PluginRecipesManager
 		RegisterRecipe(new CraftVanillaHookBobber4);
 
 		//Metal Hook Baits
+		RegisterRecipe(new CraftMetalHook);
 		RegisterRecipe(new CraftMetalRubberWormBait);
 		RegisterRecipe(new CraftMetalGrubWormBait);
 		RegisterRecipe(new CraftMetalGrassHopperBait);

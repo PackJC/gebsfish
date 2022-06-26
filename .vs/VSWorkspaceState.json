@@ -4,14 +4,13 @@
     "\\scripts",
     "\\scripts\\4_world",
     "\\scripts\\4_world\\classes",
-    "\\scripts\\4_world\\classes\\useractioncomponent",
-    "\\scripts\\4_world\\classes\\useractioncomponent\\actions",
-    "\\scripts\\4_world\\classes\\useractioncomponent\\actions\\continuous",
+    "\\scripts\\4_world\\classes\\recipes",
+    "\\scripts\\4_world\\classes\\recipes\\recipes",
     "\\scripts\\4_world\\entities",
     "\\scripts\\4_world\\entities\\itembase",
-    "\\scripts\\4_world\\entities\\itembase\\trapspawnbase",
-    "\\scripts\\5_mission"
+    "\\scripts\\4_world\\entities\\itembase\\gear",
+    "\\scripts\\4_world\\entities\\itembase\\gear\\containers"
   ],
-  "SelectedNode": "\\scripts\\4_world\\classes\\useractioncomponent\\actions\\continuous\\geb_actiondigbugs.c",
+  "SelectedNode": "\\scripts\\4_world\\classes\\recipes\\recipes\\registerRecipes.c",
   "PreviewInSolutionExplorer": false
 }
