@@ -71,6 +71,9 @@ class FileReader
 				salt_chance_map[salt_line.Substring(0, tokenIndex)] = (salt_line.Substring(tokenIndex + 1, lengthIndex - 1)).ToFloat();
 
 			}
+
+			//if saltchancemap doesnt have fish then add line to map
+
 			CloseFile(salt_file);
 		}
 
@@ -146,6 +149,13 @@ class FileReader
 			FPrintln(f, "geb_PERCH_CHANCE=66");
 			FPrintln(f, "geb_SAUGER_CHANCE=66");
 			FPrintln(f, "geb_TROUT_CHANCE=66");
+
+			FPrintln(f, "geb_TROUT_CHANCE=66");
+			FPrintln(f, "geb_LAKETROUT_CHANCE=66");
+			FPrintln(f, "geb_BROOKTROUT_CHANCE=66");
+			FPrintln(f, "geb_BROWNTROUT_CHANCE=66");
+			FPrintln(f, "geb_CUTHROATTROUT_CHANCE=66");
+
 			FPrintln(f, "geb_WHITEBASS_CHANCE=66");
 			FPrintln(f, "geb_BOWFIN_CHANCE=66");
 			FPrintln(f, "geb_SLIMYSCULPIN_CHANCE=66");

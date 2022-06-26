@@ -29,6 +29,15 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareSauger);
 		RegisterRecipe(new PrepareCrayfish);
 		RegisterRecipe(new PrepareTrout);
+
+		RegisterRecipe(new PrepareBrownTrout);
+		RegisterRecipe(new PrepareBrookTrout);
+		RegisterRecipe(new PrepareLakeTrout);
+		RegisterRecipe(new PrepareCutthroatTrout);
+
+
+
+
 		RegisterRecipe(new PrepareWhitebass);
 		RegisterRecipe(new PrepareBowfin);
 		RegisterRecipe(new PrepareSlimysculpin);

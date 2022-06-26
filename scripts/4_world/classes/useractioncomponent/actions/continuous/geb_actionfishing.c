@@ -59,6 +59,15 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 		float PERCH_CHANCE = 0;
 		float SAUGER_CHANCE = 0;
 		float TROUT_CHANCE = 0;
+
+		float BROWNTROUT_CHANCE = 0;
+		float BROOKTROUT_CHANCE = 0;
+		float LAKETROUT_CHANCE = 0;
+		float CUTTHROATTROUT_CHANCE = 0;
+
+
+
+
 		float WHITEBASS_CHANCE = 0;
 		float BOWFIN_CHANCE = 0;
 		float SLIMYSCULPIN_CHANCE = 0;
@@ -84,6 +93,13 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 		fresh_fish_map["geb_Perch"] = PERCH_CHANCE;
 		fresh_fish_map["geb_Sauger"] = SAUGER_CHANCE;
 		fresh_fish_map["geb_Trout"] = TROUT_CHANCE;
+
+		fresh_fish_map["geb_BrownTrout"] = BROWNTROUT_CHANCE;
+		fresh_fish_map["geb_BrookTrout"] = BROOKTROUT_CHANCE;
+		fresh_fish_map["geb_LakeTrout"] = LAKETROUT_CHANCE;
+		fresh_fish_map["geb_CutthroatTrout"] = CUTTHROATTROUT_CHANCE;
+
+
 		fresh_fish_map["geb_Whitebass"] = WHITEBASS_CHANCE;
 		fresh_fish_map["geb_Bowfin"] = BOWFIN_CHANCE;
 		fresh_fish_map["geb_Slimysculpin"] = SLIMYSCULPIN_CHANCE;

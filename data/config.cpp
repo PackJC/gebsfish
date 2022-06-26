@@ -7691,154 +7691,227 @@ class cfgVehicles {
     };
 
   };
-  class geb_Trout: Edible_Base {
+
+
+
+  class geb_Trout_Base : Edible_Base {
+      scope = 2;
+      model = "\gebsfish\data\fish\geb_Trout_Base.p3d";
+      itemSize[] = {
+        5,
+        2
+      };
+      weight = 1700;
+      debug_ItemCategory = 6;
+      rotationFlags = 17;
+      stackedUnit = "g";
+      quantityBar = 1;
+      varQuantityInit = 1000;
+      varQuantityMin = 0;
+      varQuantityMax = 1000;
+      isMeleeWeapon = 1;
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 50;
+                  healthLevels[] = {
+
+                    {
+                      1,
+                      {}
+                    },
+
+                    {
+                      0.69999999,
+                      {}
+                    },
+
+                    {
+                      0.5,
+                      {}
+                    },
+
+                    {
+                      0.30000001,
+                      {}
+                    },
+
+                    {
+                      0,
+                      {}
+                    }
+                  };
+              };
+          };
+      };
+      class MeleeModes {
+          class Default {
+              ammo = "MeleeSoft";
+              range = 1;
+          };
+          class Heavy {
+              ammo = "MeleeSoft_Heavy";
+              range = 1;
+          };
+          class Sprint {
+              ammo = "MeleeSoft_Heavy";
+              range = 2.8;
+          };
+      };
+      inventorySlot[] = {
+        "TrapPrey_1"
+      };
+
+      class AnimationSources : FoodAnimationSources {};
+      class Food {
+          class FoodStages {
+              class Raw {
+                  visual_properties[] = {
+                    0,
+                    0,
+                    0
+                  };
+                  nutrition_properties[] = {
+                    1,
+                    20,
+                    60,
+                    70,
+                    1
+                  };
+                  cooking_properties[] = {
+                    0,
+                    0
+                  };
+              };
+              class Rotten {
+                  visual_properties[] = {
+                    -1,
+                    -1,
+                    5
+                  };
+                  nutrition_properties[] = {
+                    10,
+                    25,
+                    25,
+                    1,
+                    0
+                  };
+                  cooking_properties[] = {
+                    0,
+                    0
+                  };
+              };
+          };
+          class FoodStageTransitions : NotCookable {};
+      };
+      class AnimEvents {
+          class SoundWeapon {
+              class openTunaCan {
+                  soundSet = "openTunaCan_SoundSet";
+                  id = 204;
+              };
+              class Eating_TakeFood {
+                  soundSet = "Eating_TakeFood_Soundset";
+                  id = 889;
+              };
+              class Eating_BoxOpen {
+                  soundSet = "Eating_BoxOpen_Soundset";
+                  id = 893;
+              };
+              class Eating_BoxShake {
+                  soundSet = "Eating_BoxShake_Soundset";
+                  id = 894;
+              };
+              class Eating_BoxEnd {
+                  soundSet = "Eating_BoxEnd_Soundset";
+                  id = 895;
+              };
+          };
+      };
+
+  };
+  class geb_Trout: geb_Trout_Base {
     scope = 2;
     displayName = "$STR_trout";
     descriptionShort = "$STR_trout_desc";
-    model = "\gebsfish\data\fish\trout.p3d";
     itemSize[] = {
       5,
       2
     };
     weight = 1700;
-    debug_ItemCategory = 6;
-    rotationFlags = 17;
-    stackedUnit = "g";
-    quantityBar = 1;
-    varQuantityInit = 1000;
-    varQuantityMin = 0;
-    varQuantityMax = 1000;
-    isMeleeWeapon = 1;
-    class DamageSystem {
-      class GlobalHealth {
-        class Health {
-          hitpoints = 50;
-          healthLevels[] = {
-
-            {
-              1,
-              {}
-            },
-
-            {
-              0.69999999,
-              {}
-            },
-
-            {
-              0.5,
-              {}
-            },
-
-            {
-              0.30000001,
-              {}
-            },
-
-            {
-              0,
-              {}
-            }
-          };
-        };
-      };
-    };
-    class MeleeModes {
-      class Default {
-        ammo = "MeleeSoft";
-        range = 1;
-      };
-      class Heavy {
-        ammo = "MeleeSoft_Heavy";
-        range = 1;
-      };
-      class Sprint {
-        ammo = "MeleeSoft_Heavy";
-        range = 2.8;
-      };
-    };
-    inventorySlot[] = {
-      "TrapPrey_1"
-    };
     hiddenSelections[] = {
-      "cs_raw"
+      "zbytek"
     };
     hiddenSelectionsTextures[] = {
-      "dz\gear\food\data\carp_live_co.paa",
-      "dz\gear\food\data\carp_live_co.paa"
+        "\gebsfish\data\fish\rainbowtrout.paa";
     };
-    hiddenSelectionsMaterials[] = {
-      "dz\gear\food\data\carp_live.rvmat",
-      "dz\gear\food\data\carp_live.rvmat"
-    };
-    class AnimationSources: FoodAnimationSources {};
-    class Food {
-      class FoodStages {
-        class Raw {
-          visual_properties[] = {
-            0,
-            0,
-            0
-          };
-          nutrition_properties[] = {
-            1,
-            20,
-            60,
-            70,
-            1
-          };
-          cooking_properties[] = {
-            0,
-            0
-          };
-        };
-        class Rotten {
-          visual_properties[] = {
-            -1,
-            -1,
-            5
-          };
-          nutrition_properties[] = {
-            10,
-            25,
-            25,
-            1,
-            0
-          };
-          cooking_properties[] = {
-            0,
-            0
-          };
-        };
-      };
-      class FoodStageTransitions: NotCookable {};
-    };
-    class AnimEvents {
-      class SoundWeapon {
-        class openTunaCan {
-          soundSet = "openTunaCan_SoundSet";
-          id = 204;
-        };
-        class Eating_TakeFood {
-          soundSet = "Eating_TakeFood_Soundset";
-          id = 889;
-        };
-        class Eating_BoxOpen {
-          soundSet = "Eating_BoxOpen_Soundset";
-          id = 893;
-        };
-        class Eating_BoxShake {
-          soundSet = "Eating_BoxShake_Soundset";
-          id = 894;
-        };
-        class Eating_BoxEnd {
-          soundSet = "Eating_BoxEnd_Soundset";
-          id = 895;
-        };
-      };
-    };
-
   };
+  class geb_BrookTrout : geb_Trout_Base {
+      scope = 2;
+      displayName = "$STR_brooktrout";
+      descriptionShort = "$STR_brooktrout_desc";
+      itemSize[] = {
+        5,
+        2
+      };
+      weight = 1700;
+      hiddenSelections[] = {
+        "zbytek"
+      };
+      hiddenSelectionsTextures[] = {
+        "\gebsfish\data\fish\brooktrout.paa";
+      };
+  };
+  class geb_BrownTrout : geb_Trout_Base {
+      scope = 2;
+      displayName = "$STR_browntrout";
+      descriptionShort = "$STR_browntrout_desc";
+      itemSize[] = {
+        5,
+        2
+      };
+      weight = 1700;
+      hiddenSelections[] = {
+        "zbytek"
+      };
+      hiddenSelectionsTextures[] = {
+        "\gebsfish\data\fish\browntrout.paa";
+      };
+  };
+  class geb_CutthroatTrout : geb_Trout_Base {
+      scope = 2;
+      displayName = "$STR_cutthroattrout";
+      descriptionShort = "$STR_cutthroattrout_desc";
+      itemSize[] = {
+        5,
+        2
+      };
+      weight = 1700;
+      hiddenSelections[] = {
+        "zbytek"
+      };
+      hiddenSelectionsTextures[] = {
+        "\gebsfish\data\fish\cutthroattrout.paa";
+      };
+  };
+  class geb_LakeTrout : geb_Trout_Base {
+      scope = 2;
+      displayName = "$STR_laketrout";
+      descriptionShort = "$STR_laketrout_desc";
+      itemSize[] = {
+        5,
+        2
+      };
+      weight = 1700;
+      hiddenSelections[] = {
+        "zbytek"
+      };
+      hiddenSelectionsTextures[] = {
+        "\gebsfish\data\fish\laketrout.paa";
+      };
+  };
+
+
   class geb_Whitebass: Edible_Base {
     scope = 2;
     displayName = "$STR_whitebass";
@@ -12224,7 +12297,7 @@ class cfgVehicles {
   };
   class geb_TroutFilletMeat: CarpFilletMeat {
     scope = 2;
-    displayName = "Trout Fillet";
+    displayName = "Rainbow Trout Fillet";
     descriptionShort = "Yum! A fish fillet";
     model = "\dz\gear\food\carp_fillet.p3d";
     hiddenSelectionsTextures[] = {
@@ -12235,6 +12308,59 @@ class cfgVehicles {
       "dz\gear\food\data\carp_fillet_burnt_CO.paa"
     };
   };
+  class geb_BrownTroutFilletMeat : CarpFilletMeat {
+      scope = 2;
+      displayName = "Brown Trout Fillet";
+      descriptionShort = "Yum! A fish fillet";
+      model = "\dz\gear\food\carp_fillet.p3d";
+      hiddenSelectionsTextures[] = {
+        "\gebsfish\data\fish\browntrout_fillet_co.paa",
+        "dz\gear\food\data\carp_fillet_baked_CO.paa",
+        "dz\gear\food\data\carp_fillet_boiled_CO.paa",
+        "dz\gear\food\data\carp_fillet_dried_CO.paa",
+        "dz\gear\food\data\carp_fillet_burnt_CO.paa"
+      };
+  };
+  class geb_BrookTroutFilletMeat : CarpFilletMeat {
+      scope = 2;
+      displayName = "Brook Trout Fillet";
+      descriptionShort = "Yum! A fish fillet";
+      model = "\dz\gear\food\carp_fillet.p3d";
+      hiddenSelectionsTextures[] = {
+        "\gebsfish\data\fish\brooktrout_fillet_co.paa",
+        "dz\gear\food\data\carp_fillet_baked_CO.paa",
+        "dz\gear\food\data\carp_fillet_boiled_CO.paa",
+        "dz\gear\food\data\carp_fillet_dried_CO.paa",
+        "dz\gear\food\data\carp_fillet_burnt_CO.paa"
+      };
+  };
+  class geb_CutthroatTroutFilletMeat : CarpFilletMeat {
+      scope = 2;
+      displayName = "Cutthroat Trout Fillet";
+      descriptionShort = "Yum! A fish fillet";
+      model = "\dz\gear\food\carp_fillet.p3d";
+      hiddenSelectionsTextures[] = {
+        "\gebsfish\data\fish\cutthroattrout_fillet_co.paa",
+        "dz\gear\food\data\carp_fillet_baked_CO.paa",
+        "dz\gear\food\data\carp_fillet_boiled_CO.paa",
+        "dz\gear\food\data\carp_fillet_dried_CO.paa",
+        "dz\gear\food\data\carp_fillet_burnt_CO.paa"
+      };
+  };
+  class geb_LakeTroutFilletMeat : CarpFilletMeat {
+      scope = 2;
+      displayName = "Lake Trout Fillet";
+      descriptionShort = "Yum! A fish fillet";
+      model = "\dz\gear\food\carp_fillet.p3d";
+      hiddenSelectionsTextures[] = {
+        "\gebsfish\data\fish\laketrout_fillet_co.paa",
+        "dz\gear\food\data\carp_fillet_baked_CO.paa",
+        "dz\gear\food\data\carp_fillet_boiled_CO.paa",
+        "dz\gear\food\data\carp_fillet_dried_CO.paa",
+        "dz\gear\food\data\carp_fillet_burnt_CO.paa"
+      };
+  };
+
   class geb_WhitebassFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "White Bass Fillet";
