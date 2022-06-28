@@ -110,7 +110,7 @@ class FileReader
 				int lengthIndex4 = bug_line.Length() - tokenIndex4;
 				bug_chance_map[fresh_line.Substring(0, tokenIndex4)] = (bug_line.Substring(tokenIndex4 + 1, lengthIndex4 - 1)).ToFloat();
 			}
-			CloseFile(fresh_file);
+			CloseFile(bug_file);
 		}
 
 

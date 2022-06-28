@@ -22,13 +22,13 @@ class ActionDigBugsCB : ActionContinuousBaseCB
 class ActionDigBugs: ActionContinuousBase
 {
 
-	static ref map<string, float> insect_map = new map<string, float>();
-	static float GRASSHOPPER_CHANCE = 50;
-	static float FIELDCRICKET_CHANCE = 50;
-	static float GRUBWORM_CHANCE = 50;
-	static float insect_chance_sum;
-	static string selected_insect = "";
-	static float rndInsect;
+	 ref map<string, float> insect_map = new map<string, float>();
+	 float GRASSHOPPER_CHANCE = 50;
+	 float FIELDCRICKET_CHANCE = 50;
+	 float GRUBWORM_CHANCE = 50;
+	 float insect_chance_sum;
+	 string selected_insect = "";
+	 float rndInsect;
 
 
 	void ActionDigBugs()
@@ -139,12 +139,10 @@ class ActionDigBugs: ActionContinuousBase
 			rndInsect -= _insect_chance;
 		}
 
-
-
 		ItemBase bugs;
 		bugs = ItemBase.Cast(GetGame().CreateObject(selected_insect, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
-		//bugs.SetQuantity(10, false);
-		//MiscGameplayFunctions.DealAbsoluteDmg(action_data.m_MainItem, 4);
+		bugs.SetQuantity(10, false);
+		MiscGameplayFunctions.DealAbsoluteDmg(action_data.m_MainItem, 4);
 		action_data.m_Player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
 
 	}

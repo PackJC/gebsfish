@@ -12,5 +12,6 @@
     "\\scripts\\4_world\\entities\\itembase\\container_base",
     "\\scripts\\5_mission"
   ],
+  "SelectedNode": "\\scripts\\4_world\\classes\\useractioncomponent\\actions\\continuous\\geb_actionbamboofishingnet.c",
   "PreviewInSolutionExplorer": false
 }

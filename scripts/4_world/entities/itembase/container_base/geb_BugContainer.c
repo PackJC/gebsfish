@@ -29,7 +29,6 @@ modded class geb_BugContainer extends Container_Base
 	override void SetActions()
 	{
 		super.SetActions();
-
 		AddAction(ActionDigBugs);
 
 	}
