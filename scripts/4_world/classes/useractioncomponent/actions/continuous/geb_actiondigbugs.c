@@ -19,77 +19,54 @@ class ActionDigBugsCB : ActionContinuousBaseCB
 	}
 };
 
-class ActionDigBugs: ActionContinuousBase
+class ActionDigBugs : ActionContinuousBase
 {
-
-	 ref map<string, float> insect_map = new map<string, float>();
-	 float GRASSHOPPER_CHANCE = 50;
-	 float FIELDCRICKET_CHANCE = 50;
-	 float GRUBWORM_CHANCE = 50;
-	 float insect_chance_sum;
-	 string selected_insect = "";
-	 float rndInsect;
-
-
 	void ActionDigBugs()
 	{
-		insect_map["geb_FieldCricket"] = FIELDCRICKET_CHANCE;
-		insect_map["geb_GrassHopper"] = GRASSHOPPER_CHANCE;
-		insect_map["geb_GrubWorm"] = GRUBWORM_CHANCE;
-
-		auto bug_chance_map = FileReader.GetBugChanceMap();
-
-		if (bug_chance_map.Count() > 0) {
-			insect_map = bug_chance_map;
-
-		}
-
-
 
 		m_CallbackClass = ActionDigBugsCB;
 		m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DIGMANIPULATE;
 		m_FullBody = true;
 		m_StanceMask = DayZPlayerConstants.STANCEMASK_ERECT;
 		m_SpecialtyWeight = UASoftSkillsWeight.ROUGH_MEDIUM;
-		m_Text = "Look for bugs!";
+		m_Text = "Trap using Bug Catcher!";
 	}
-	
-	override void CreateConditionComponents()  
-	{	
+
+	override void CreateConditionComponents()
+	{
 		m_ConditionItem = new CCINonRuined;
 		m_ConditionTarget = new CCTSurface(UAMaxDistances.DEFAULT);
 	}
-	
-	override bool ActionCondition( PlayerBase player, ActionTarget target, ItemBase item )
+
+	override bool ActionCondition(PlayerBase player, ActionTarget target, ItemBase item)
 	{
-		if ( player.IsPlacingLocal() )
+		if (player.IsPlacingLocal())
 			return false;
-		
-		// Check if player is standing on terrain
+
 		vector plr_pos = player.GetPosition();
 		float height = GetGame().SurfaceY(plr_pos[0], plr_pos[2]);
 		height = plr_pos[1] - height;
-		
-		if ( height > 0.4 )
-			return false; // Player is not standing on ground
-		
-		if ( !GetGame().IsDedicatedServer() )
+
+		if (height > 0.4)
+			return false;
+
+		if (!GetGame().IsDedicatedServer())
 		{
-			if ( !player.IsPlacingLocal() )
+			if (!player.IsPlacingLocal())
 			{
-				if ( target )
+				if (target)
 				{
 					string surface_type;
 					vector position;
 					position = target.GetCursorHitPos();
-					GetGame().SurfaceGetType( position[0], position[2], surface_type );					
-					if ( GetGame().IsSurfaceFertile(surface_type) )
+					GetGame().SurfaceGetType(position[0], position[2], surface_type);
+					if (GetGame().IsSurfaceFertile(surface_type))
 					{
 						return true;
 					}
 				}
 			}
-		
+
 			return false;
 		}
 		else
@@ -97,24 +74,24 @@ class ActionDigBugs: ActionContinuousBase
 			return true;
 		}
 	}
-	
-	override bool ActionConditionContinue( ActionData action_data )
+
+	override bool ActionConditionContinue(ActionData action_data)
 	{
 		return true;
 	}
-	
-	override bool SetupAction( PlayerBase player, ActionTarget target, ItemBase item, out ActionData action_data, Param extra_data = NULL )
-	{	
-		if( super.SetupAction( player, target, item, action_data, extra_data ) )
+
+	override bool SetupAction(PlayerBase player, ActionTarget target, ItemBase item, out ActionData action_data, Param extra_data = NULL)
+	{
+		if (super.SetupAction(player, target, item, action_data, extra_data))
 		{
-			if ( item )
+			if (item)
 			{
-				SetDiggingAnimation( item );
+				SetDiggingAnimation(item);
 			}
-			
+
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -123,8 +100,24 @@ class ActionDigBugs: ActionContinuousBase
 		return true;
 	}
 
-	override void OnFinishProgressServer( ActionData action_data )
-	{	
+	override void OnFinishProgressServer(ActionData action_data)
+	{
+		map<string, float> insect_map = new map<string, float>();
+		float insect_chance_sum = 0;
+		string selected_insect = "";
+		float rndInsect = 0;
+
+		insect_map["geb_FieldCricket"] = 50;
+		insect_map["geb_GrassHopper"] = 50;
+		insect_map["geb_GrubWorm"] = 50;
+
+		auto bug_chance_map = FileReader.GetBugChanceMap();
+
+		if (bug_chance_map.Count() > 0) {
+			insect_map = bug_chance_map;
+
+		}
+
 		foreach(auto insect_name, auto insect_chance : insect_map) {
 			insect_chance_sum += insect_chance;
 		}
@@ -139,15 +132,17 @@ class ActionDigBugs: ActionContinuousBase
 			rndInsect -= _insect_chance;
 		}
 
-		ItemBase bugs;
-		bugs = ItemBase.Cast(GetGame().CreateObject(selected_insect, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
+		ItemBase bugs = ItemBase.Cast(GetGame().CreateObject(selected_insect, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
+
+
+
 		bugs.SetQuantity(10, false);
 		MiscGameplayFunctions.DealAbsoluteDmg(action_data.m_MainItem, 4);
 		action_data.m_Player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
 
 	}
-	
-	void SetDiggingAnimation( ItemBase item )
+
+	void SetDiggingAnimation(ItemBase item)
 	{
 		if (item.KindOf("CatchBugs"))
 		{

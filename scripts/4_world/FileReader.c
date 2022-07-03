@@ -108,7 +108,7 @@ class FileReader
 				bug_line.Trim(); //Removes remaining whitespaces
 				int tokenIndex4 = bug_line.IndexOf("=");
 				int lengthIndex4 = bug_line.Length() - tokenIndex4;
-				bug_chance_map[fresh_line.Substring(0, tokenIndex4)] = (bug_line.Substring(tokenIndex4 + 1, lengthIndex4 - 1)).ToFloat();
+				bug_chance_map[bug_line.Substring(0, tokenIndex4)] = (bug_line.Substring(tokenIndex4 + 1, lengthIndex4 - 1)).ToFloat();
 			}
 			CloseFile(bug_file);
 		}
@@ -171,9 +171,9 @@ class FileReader
 			FPrintln(f, "geb_MUSSEL_CHANCE=66");
 			break;
 		case "$profile:gebsfish/Bugs.cfg":
-			FPrintln(f, "geb_FieldCricket=333");
-			FPrintln(f, "geb_GrassHopper=333");
-			FPrintln(f, "geb_GrubWorm=333");
+			FPrintln(f, "geb_FieldCricket=50");
+			FPrintln(f, "geb_GrassHopper=50");
+			FPrintln(f, "geb_GrubWorm=50");
 			break;
 		}
 		CloseFile(f);
@@ -184,7 +184,6 @@ class FileReader
 		line.Replace("	", ""); // Replace Tabs("/t" or "	") with nothing.
 		line.Replace(";", "");
 		line.Trim(); //Removes remaining whitespaces
-
 		bool hasSpaces = true;
 		while (hasSpaces)
 		{

@@ -9,9 +9,10 @@
     "\\scripts\\4_world\\classes\\useractioncomponent\\actions\\continuous",
     "\\scripts\\4_world\\entities",
     "\\scripts\\4_world\\entities\\itembase",
-    "\\scripts\\4_world\\entities\\itembase\\container_base",
+    "\\scripts\\4_world\\entities\\itembase\\gear",
+    "\\scripts\\4_world\\entities\\itembase\\gear\\containers",
     "\\scripts\\5_mission"
   ],
-  "SelectedNode": "\\scripts\\4_world\\classes\\useractioncomponent\\actions\\continuous\\geb_actionbamboofishingnet.c",
+  "SelectedNode": "\\scripts\\4_world\\classes\\useractioncomponent\\actions\\continuous\\geb_actionfishing.c",
   "PreviewInSolutionExplorer": false
 }
