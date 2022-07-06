@@ -5657,7 +5657,7 @@ class cfgVehicles {
 			{
 				class Health
 				{
-					hitpoints=1000;
+					hitpoints=100;
 					healthLevels[]=
 					{
 						
@@ -5904,6 +5904,60 @@ class cfgVehicles {
       {
           "\gebsfish\data\tools\geb_orangefishknife.paa"
       };
+      class DamageSystem
+      {
+          class GlobalHealth
+          {
+              class Health
+              {
+                  hitpoints = 100;
+                  healthLevels[] =
+                  {
+
+                      {
+                          1,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife.rvmat"
+                          }
+                      },
+
+                      {
+                          0.69999999,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife.rvmat"
+                          }
+                      },
+
+                      {
+                          0.5,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"
+                          }
+                      },
+
+                      {
+                          0.30000001,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"
+                          }
+                      },
+
+                      {
+                          0,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife_destruct.rvmat"
+                          }
+                      }
+                  };
+              };
+          };
+      };
+
   };
   class geb_GreenFishKnife : geb_BlueFishKnife
   {
@@ -5918,6 +5972,60 @@ class cfgVehicles {
       {
           "\gebsfish\data\tools\geb_greenfishknife.paa"
       };
+      class DamageSystem
+      {
+          class GlobalHealth
+          {
+              class Health
+              {
+                  hitpoints = 100;
+                  healthLevels[] =
+                  {
+
+                      {
+                          1,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife.rvmat"
+                          }
+                      },
+
+                      {
+                          0.69999999,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife.rvmat"
+                          }
+                      },
+
+                      {
+                          0.5,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"
+                          }
+                      },
+
+                      {
+                          0.30000001,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"
+                          }
+                      },
+
+                      {
+                          0,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife_destruct.rvmat"
+                          }
+                      }
+                  };
+              };
+          };
+      };
+
   };
   class geb_YellowFishKnife : geb_BlueFishKnife
   {
@@ -5932,6 +6040,60 @@ class cfgVehicles {
       {
           "\gebsfish\data\tools\geb_yellowfishknife.paa"
       };
+      class DamageSystem
+      {
+          class GlobalHealth
+          {
+              class Health
+              {
+                  hitpoints = 100;
+                  healthLevels[] =
+                  {
+
+                      {
+                          1,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife.rvmat"
+                          }
+                      },
+
+                      {
+                          0.69999999,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife.rvmat"
+                          }
+                      },
+
+                      {
+                          0.5,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"
+                          }
+                      },
+
+                      {
+                          0.30000001,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"
+                          }
+                      },
+
+                      {
+                          0,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife_destruct.rvmat"
+                          }
+                      }
+                  };
+              };
+          };
+      };
+
   };
   class geb_RedFishKnife : geb_BlueFishKnife
   {
@@ -5946,6 +6108,60 @@ class cfgVehicles {
       {
           "\gebsfish\data\tools\geb_redfishknife.paa"
       };
+      class DamageSystem
+      {
+          class GlobalHealth
+          {
+              class Health
+              {
+                  hitpoints = 100;
+                  healthLevels[] =
+                  {
+
+                      {
+                          1,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife.rvmat"
+                          }
+                      },
+
+                      {
+                          0.69999999,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife.rvmat"
+                          }
+                      },
+
+                      {
+                          0.5,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"
+                          }
+                      },
+
+                      {
+                          0.30000001,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"
+                          }
+                      },
+
+                      {
+                          0,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife_destruct.rvmat"
+                          }
+                      }
+                  };
+              };
+          };
+      };
+
   };
   class geb_PurpleFishKnife : geb_BlueFishKnife
   {
@@ -5960,6 +6176,60 @@ class cfgVehicles {
       {
           "\gebsfish\data\tools\geb_purplefishknife.paa"
       };
+      class DamageSystem
+      {
+          class GlobalHealth
+          {
+              class Health
+              {
+                  hitpoints = 100;
+                  healthLevels[] =
+                  {
+
+                      {
+                          1,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife.rvmat"
+                          }
+                      },
+
+                      {
+                          0.69999999,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife.rvmat"
+                          }
+                      },
+
+                      {
+                          0.5,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"
+                          }
+                      },
+
+                      {
+                          0.30000001,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"
+                          }
+                      },
+
+                      {
+                          0,
+
+                          {
+                              "DZ\weapons\melee\blade\data\Hunting_knife_destruct.rvmat"
+                          }
+                      }
+                  };
+              };
+          };
+      };
+
   };
 
   class FishingRod_Base_New;
@@ -5973,6 +6243,61 @@ class cfgVehicles {
         {
             "\DZ\gear\tools\data\fishing_rod_co.paa"
         };
+
+        class DamageSystem
+        {
+            class GlobalHealth
+            {
+                class Health
+                {
+                    hitpoints = 150;
+                    healthLevels[] =
+                    {
+
+                        {
+                            1,
+
+                            {
+                                "DZ\gear\tools\data\fishing_rod.rvmat"
+                            }
+                        },
+
+                        {
+                            0.69999999,
+
+                            {
+                                "DZ\gear\tools\data\fishing_rod.rvmat"
+                            }
+                        },
+
+                        {
+                            0.5,
+
+                            {
+                                "DZ\gear\tools\data\fishing_rod_damage.rvmat"
+                            }
+                        },
+
+                        {
+                            0.30000001,
+
+                            {
+                                "DZ\gear\tools\data\fishing_rod_damage.rvmat"
+                            }
+                        },
+
+                        {
+                            0,
+
+                            {
+                                "DZ\gear\tools\data\fishing_rod_destruct.rvmat"
+                            }
+                        }
+                    };
+                };
+            };
+        };
+
    }; 
   class geb_RedFishingRod: FishingRod {
     scope = 2;
@@ -5993,6 +6318,60 @@ class cfgVehicles {
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\tools\geb_fishingrod_red.paa";
     };
+    class DamageSystem
+    {
+        class GlobalHealth
+        {
+            class Health
+            {
+                hitpoints = 150;
+                healthLevels[] =
+                {
+
+                    {
+                        1,
+
+                        {
+                            "DZ\gear\tools\data\fishing_rod.rvmat"
+                        }
+                    },
+
+                    {
+                        0.69999999,
+
+                        {
+                            "DZ\gear\tools\data\fishing_rod.rvmat"
+                        }
+                    },
+
+                    {
+                        0.5,
+
+                        {
+                            "DZ\gear\tools\data\fishing_rod_damage.rvmat"
+                        }
+                    },
+
+                    {
+                        0.30000001,
+
+                        {
+                            "DZ\gear\tools\data\fishing_rod_damage.rvmat"
+                        }
+                    },
+
+                    {
+                        0,
+
+                        {
+                            "DZ\gear\tools\data\fishing_rod_destruct.rvmat"
+                        }
+                    }
+                };
+            };
+        };
+    };
+
   };
   class geb_GreenFishingRod: FishingRod {
     scope = 2;
@@ -6013,6 +6392,60 @@ class cfgVehicles {
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\tools\geb_fishingrod_green.paa";
     };
+    class DamageSystem
+    {
+        class GlobalHealth
+        {
+            class Health
+            {
+                hitpoints = 150;
+                healthLevels[] =
+                {
+
+                    {
+                        1,
+
+                        {
+                            "DZ\gear\tools\data\fishing_rod.rvmat"
+                        }
+                    },
+
+                    {
+                        0.69999999,
+
+                        {
+                            "DZ\gear\tools\data\fishing_rod.rvmat"
+                        }
+                    },
+
+                    {
+                        0.5,
+
+                        {
+                            "DZ\gear\tools\data\fishing_rod_damage.rvmat"
+                        }
+                    },
+
+                    {
+                        0.30000001,
+
+                        {
+                            "DZ\gear\tools\data\fishing_rod_damage.rvmat"
+                        }
+                    },
+
+                    {
+                        0,
+
+                        {
+                            "DZ\gear\tools\data\fishing_rod_destruct.rvmat"
+                        }
+                    }
+                };
+            };
+        };
+    };
+
   };
   class geb_BlueFishingRod: FishingRod {
     scope = 2;
@@ -6033,6 +6466,60 @@ class cfgVehicles {
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\tools\geb_fishingrod_blue.paa";
     };
+    class DamageSystem
+    {
+        class GlobalHealth
+        {
+            class Health
+            {
+                hitpoints = 150;
+                healthLevels[] =
+                {
+
+                    {
+                        1,
+
+                        {
+                            "DZ\gear\tools\data\fishing_rod.rvmat"
+                        }
+                    },
+
+                    {
+                        0.69999999,
+
+                        {
+                            "DZ\gear\tools\data\fishing_rod.rvmat"
+                        }
+                    },
+
+                    {
+                        0.5,
+
+                        {
+                            "DZ\gear\tools\data\fishing_rod_damage.rvmat"
+                        }
+                    },
+
+                    {
+                        0.30000001,
+
+                        {
+                            "DZ\gear\tools\data\fishing_rod_damage.rvmat"
+                        }
+                    },
+
+                    {
+                        0,
+
+                        {
+                            "DZ\gear\tools\data\fishing_rod_destruct.rvmat"
+                        }
+                    }
+                };
+            };
+        };
+    };
+
   };
   class geb_PurpleFishingRod: FishingRod {
     scope = 2;
@@ -6053,6 +6540,60 @@ class cfgVehicles {
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\tools\geb_fishingrod_purple.paa";
     };
+    class DamageSystem
+    {
+        class GlobalHealth
+        {
+            class Health
+            {
+                hitpoints = 150;
+                healthLevels[] =
+                {
+
+                    {
+                        1,
+
+                        {
+                            "DZ\gear\tools\data\fishing_rod.rvmat"
+                        }
+                    },
+
+                    {
+                        0.69999999,
+
+                        {
+                            "DZ\gear\tools\data\fishing_rod.rvmat"
+                        }
+                    },
+
+                    {
+                        0.5,
+
+                        {
+                            "DZ\gear\tools\data\fishing_rod_damage.rvmat"
+                        }
+                    },
+
+                    {
+                        0.30000001,
+
+                        {
+                            "DZ\gear\tools\data\fishing_rod_damage.rvmat"
+                        }
+                    },
+
+                    {
+                        0,
+
+                        {
+                            "DZ\gear\tools\data\fishing_rod_destruct.rvmat"
+                        }
+                    }
+                };
+            };
+        };
+    };
+
   };  
   class geb_BambooFishingNet : Container_Base {
       scope = 2;

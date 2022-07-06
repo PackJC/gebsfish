@@ -141,7 +141,6 @@ class FileReader
 			FPrintln(f, "geb_ASIANSEABASS_CHANCE=41");
 			FPrintln(f, "geb_JELLYFISH_CHANCE=41");
 			FPrintln(f, "geb_STARFISH_CHANCE=41");
-			FPrintln(f, "geb_BLOODCLAM_CHANCE=41");
 			FPrintln(f, "geb_KINGCRAB_CHANCE=41");
 			FPrintln(f, "geb_ANGELSHARK_CHANCE=41");
 			FPrintln(f, "geb_GREATWHITESHARK_CHANCE=41");
@@ -168,7 +167,6 @@ class FileReader
 			FPrintln(f, "geb_WHITEBASS_CHANCE=66");
 			FPrintln(f, "geb_BOWFIN_CHANCE=66");
 			FPrintln(f, "geb_SLIMYSCULPIN_CHANCE=66");
-			FPrintln(f, "geb_MUSSEL_CHANCE=66");
 			break;
 		case "$profile:gebsfish/Bugs.cfg":
 			FPrintln(f, "geb_FieldCricket=50");

@@ -41,7 +41,6 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 		float ASIANSEABASS_CHANCE = 0;
 		float JELLYFISH_CHANCE = 0;
 		float STARFISH_CHANCE = 0;
-		float BLOODCLAM_CHANCE = 0;
 		float KINGCRAB_CHANCE = 0;
 		float ANGELSHARK_CHANCE = 0;
 		float GREATWHITESHARK_CHANCE = 0;
@@ -71,7 +70,6 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 		float WHITEBASS_CHANCE = 0;
 		float BOWFIN_CHANCE = 0;
 		float SLIMYSCULPIN_CHANCE = 0;
-		float MUSSEL_CHANCE = 0;
 
 		auto salt_chance_map = FileReader.GetSaltChanceMap();
 		auto fresh_chance_map = FileReader.GetFreshChanceMap();
@@ -103,7 +101,6 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 		fresh_fish_map["geb_Whitebass"] = WHITEBASS_CHANCE;
 		fresh_fish_map["geb_Bowfin"] = BOWFIN_CHANCE;
 		fresh_fish_map["geb_Slimysculpin"] = SLIMYSCULPIN_CHANCE;
-		fresh_fish_map["geb_Mussel"] = MUSSEL_CHANCE;
 
 		//Saltwater Fish Chance
 		salt_fish_map["Mackerel"] = MACKEREL_CHANCE;
@@ -125,7 +122,6 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 		salt_fish_map["geb_Asianseabass"] = ASIANSEABASS_CHANCE;
 		salt_fish_map["geb_Jellyfish"] = JELLYFISH_CHANCE;
 		salt_fish_map["geb_Starfish"] = STARFISH_CHANCE;
-		salt_fish_map["geb_Bloodclam"] = BLOODCLAM_CHANCE;
 		salt_fish_map["geb_Kingcrab"] = KINGCRAB_CHANCE;
 		salt_fish_map["geb_Angelshark"] = ANGELSHARK_CHANCE;
 		salt_fish_map["geb_Greatwhiteshark"] = GREATWHITESHARK_CHANCE;
