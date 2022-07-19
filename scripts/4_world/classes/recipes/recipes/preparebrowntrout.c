@@ -25,7 +25,6 @@ class PrepareBrownTrout extends PrepareFish
 		//INGREDIENTS
 		//ingredient 1
 		InsertIngredient(0, "geb_BrownTrout");//you can insert multiple ingredients this way
-
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
 		m_IngredientAddQuantity[0] = 0;// 0 = do nothing

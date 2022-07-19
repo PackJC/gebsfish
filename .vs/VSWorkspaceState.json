@@ -2,14 +2,13 @@
   "ExpandedNodes": [
     "",
     "\\data",
+    "\\languagecore",
+    "\\scripts",
     "\\scripts\\4_world",
     "\\scripts\\4_world\\classes",
     "\\scripts\\4_world\\classes\\recipes",
-    "\\scripts\\4_world\\classes\\recipes\\recipes",
-    "\\scripts\\4_world\\entities",
-    "\\scripts\\4_world\\entities\\itembase",
-    "\\scripts\\4_world\\entities\\itembase\\trapspawnbase"
+    "\\scripts\\4_world\\classes\\recipes\\recipes"
   ],
-  "SelectedNode": "\\data\\config.cpp",
+  "SelectedNode": "\\scripts\\4_world\\classes\\recipes\\recipes\\craftmetalhookbobber4rubberwormbait.c",
   "PreviewInSolutionExplorer": false
 }
