@@ -162,6 +162,9 @@ modded class PluginRecipesManager
 		RegisterRecipe(new CraftBoneFieldCricketBait);
 		RegisterRecipe(new CraftBoneMinnowBait);
 
+		//Tools
+		RegisterRecipe(new CraftWoodenNet);
+
 	}
 
 };

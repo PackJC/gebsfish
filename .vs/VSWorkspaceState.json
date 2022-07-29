@@ -7,8 +7,9 @@
     "\\scripts\\4_world",
     "\\scripts\\4_world\\classes",
     "\\scripts\\4_world\\classes\\recipes",
-    "\\scripts\\4_world\\classes\\recipes\\recipes"
+    "\\scripts\\4_world\\classes\\recipes\\recipes",
+    "\\scripts\\5_mission"
   ],
-  "SelectedNode": "\\scripts\\4_world\\classes\\recipes\\recipes\\craftmetalhookbobber4rubberwormbait.c",
+  "SelectedNode": "\\scripts\\4_world\\classes\\recipes\\recipes\\registerRecipes.c",
   "PreviewInSolutionExplorer": false
 }
