@@ -147,7 +147,7 @@ class FileReader
 			FPrintln(f, "geb_YELLOWFINTUNA_CHANCE=41");
 			break;
 		case "$profile:gebsfish/Freshwater.cfg":
-			FPrintln(f, "CARP_CHANCE=25");
+			FPrintln(f, "CARP_CHANCE=66");
 			FPrintln(f, "geb_CRAYFISH_CHANCE=66");
 			FPrintln(f, "geb_BLUEGILL_CHANCE=66");
 			FPrintln(f, "geb_BLACKBASS_CHANCE=66");
@@ -157,13 +157,11 @@ class FileReader
 			FPrintln(f, "geb_NORTHERNPIKE_CHANCE=66");
 			FPrintln(f, "geb_PERCH_CHANCE=66");
 			FPrintln(f, "geb_SAUGER_CHANCE=66");
-
 			FPrintln(f, "geb_TROUT_CHANCE=66");
 			FPrintln(f, "geb_LAKETROUT_CHANCE=66");
 			FPrintln(f, "geb_BROOKTROUT_CHANCE=66");
 			FPrintln(f, "geb_BROWNTROUT_CHANCE=66");
 			FPrintln(f, "geb_CUTHROATTROUT_CHANCE=66");
-
 			FPrintln(f, "geb_WHITEBASS_CHANCE=66");
 			FPrintln(f, "geb_BOWFIN_CHANCE=66");
 			FPrintln(f, "geb_SLIMYSCULPIN_CHANCE=66");

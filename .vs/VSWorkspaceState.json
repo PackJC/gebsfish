@@ -1,15 +1,13 @@
 {
   "ExpandedNodes": [
     "",
-    "\\data",
-    "\\languagecore",
     "\\scripts",
     "\\scripts\\4_world",
-    "\\scripts\\4_world\\classes",
-    "\\scripts\\4_world\\classes\\recipes",
-    "\\scripts\\4_world\\classes\\recipes\\recipes",
-    "\\scripts\\5_mission"
+    "\\scripts\\4_world\\classes\\useractioncomponent",
+    "\\scripts\\4_world\\classes\\useractioncomponent\\actions",
+    "\\scripts\\4_world\\classes\\useractioncomponent\\actions\\continuous",
+    "\\scripts\\4_world\\entities\\itembase"
   ],
-  "SelectedNode": "\\scripts\\4_world\\classes\\recipes\\recipes\\registerRecipes.c",
+  "SelectedNode": "\\scripts\\4_world\\FileReader.c",
   "PreviewInSolutionExplorer": false
 }

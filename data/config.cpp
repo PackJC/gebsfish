@@ -2007,7 +2007,6 @@ class cfgVehicles {
           "Hook"
         };
         rotationFlags = 17;
-        hookType = "Hook";
         class DamageSystem {
             class GlobalHealth {
                 class Health {
@@ -2286,6 +2285,8 @@ class cfgVehicles {
     scope = 2;
     displayName = "Metal Hook & Bobber 1 with Worm";
     descriptionShort = "A metal hook with a bobber attached, with a Worm used as bait.";
+    hookType = "geb_MetalHookBobber1";
+
     hiddenSelections[] = {
       "zbytek"
     };
@@ -2297,6 +2298,7 @@ class cfgVehicles {
       scope = 2;
       displayName = "Metal Hook & Bobber 2 with Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Worm used as bait.";
+    hookType = "geb_MetalHookBobber2";
       hiddenSelections[] = {
         "zbytek"
       };
@@ -2308,6 +2310,8 @@ class cfgVehicles {
       scope = 2;
       displayName = "Metal Hook & Bobber 3 with Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Worm used as bait.";
+    hookType = "geb_MetalHookBobber3";
+
       hiddenSelections[] = {
         "zbytek"
       };
@@ -2319,6 +2323,7 @@ class cfgVehicles {
       scope = 2;
       displayName = "Metal Hook & Bobber 4 with Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Worm used as bait.";
+    hookType = "geb_MetalHookBobber4";
       hiddenSelections[] = {
         "zbytek"
       };
@@ -2331,6 +2336,8 @@ class cfgVehicles {
       scope = 2;
       displayName = "Metal Hook & Bobber 1 with Rubber Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Rubber Worm used as bait.";
+    hookType = "geb_MetalHookBobber1";
+
       hiddenSelections[] = {
         "zbytek"
       };
@@ -2342,6 +2349,8 @@ class cfgVehicles {
       scope = 2;
       displayName = "Metal Hook & Bobber 2 with Rubber Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Rubber Worm used as bait.";
+    hookType = "geb_MetalHookBobber2";
+
       hiddenSelections[] = {
         "zbytek"
       };
@@ -2353,6 +2362,7 @@ class cfgVehicles {
       scope = 2;
       displayName = "Metal Hook & Bobber 3 with Rubber Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Rubber Worm used as bait.";
+    hookType = "geb_MetalHookBobber3";
       hiddenSelections[] = {
         "zbytek"
       };
@@ -2364,6 +2374,8 @@ class cfgVehicles {
       scope = 2;
       displayName = "Metal Hook & Bobber 4 with Rubber Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Rubber Worm used as bait.";
+    hookType = "geb_MetalHookBobber4";
+
       hiddenSelections[] = {
         "zbytek"
       };
@@ -2376,6 +2388,8 @@ class cfgVehicles {
       scope = 2;
       displayName = "Metal Hook & Bobber 1 with Grub Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Grub Worm used as bait.";
+    hookType = "geb_MetalHookBobber1";
+
       hiddenSelections[] = {
         "zbytek"
       };
@@ -2387,7 +2401,9 @@ class cfgVehicles {
       scope = 2;
       displayName = "Metal Hook & Bobber 2 with Grub Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Grub Worm used as bait.";
-      hiddenSelections[] = {
+    hookType = "geb_MetalHookBobber2";
+      
+hiddenSelections[] = {
         "zbytek"
       };
       hiddenSelectionsTextures[] = {
@@ -2398,7 +2414,9 @@ class cfgVehicles {
       scope = 2;
       displayName = "Metal Hook & Bobber 3 with Grub Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Grub Worm used as bait.";
-      hiddenSelections[] = {
+        hookType = "geb_MetalHookBobber3";
+      
+        hiddenSelections[] = {
         "zbytek"
       };
       hiddenSelectionsTextures[] = {
@@ -2409,7 +2427,9 @@ class cfgVehicles {
       scope = 2;
       displayName = "Metal Hook & Bobber 4 with Grub Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Grub Worm used as bait.";
-      hiddenSelections[] = {
+    hookType = "geb_MetalHookBobber4";
+
+hiddenSelections[] = {
         "zbytek"
       };
       hiddenSelectionsTextures[] = {
@@ -2421,7 +2441,7 @@ class cfgVehicles {
       scope = 2;
       displayName = "Metal Hook & Bobber 1 with GrassHopper";
       descriptionShort = "A metal hook with a bobber attached, with a GrassHopper used as bait.";
-      hiddenSelections[] = {
+    hiddenSelections[] = {
         "zbytek"
       };
       hiddenSelectionsTextures[] = {
@@ -2434,7 +2454,8 @@ class cfgVehicles {
       scope = 2;
       displayName = "Metal Hook & Bobber 2 with GrassHopper";
       descriptionShort = "A metal hook with a bobber attached, with a GrassHopper used as bait.";
-      hiddenSelections[] = {
+      
+hiddenSelections[] = {
         "zbytek"
       };
       hiddenSelectionsTextures[] = {
@@ -2447,7 +2468,8 @@ class cfgVehicles {
       scope = 2;
       displayName = "Metal Hook & Bobber 3 with GrassHopper";
       descriptionShort = "A metal hook with a bobber attached, with a GrassHopper used as bait.";
-      hiddenSelections[] = {
+      
+        hiddenSelections[] = {
         "zbytek"
       };
       hiddenSelectionsTextures[] = {
@@ -2460,7 +2482,8 @@ class cfgVehicles {
       scope = 2;
       displayName = "Metal Hook & Bobber 4 with GrassHopper";
       descriptionShort = "A metal hook with a bobber attached, with a GrassHopper used as bait.";
-      hiddenSelections[] = {
+      
+hiddenSelections[] = {
         "zbytek"
       };
       hiddenSelectionsTextures[] = {
@@ -2474,6 +2497,7 @@ class cfgVehicles {
       scope = 2;
       displayName = "Metal Hook & Bobber 1 with Minnow";
       descriptionShort = "A metal hook with a bobber attached, with a Minnow used as bait.";
+
       hiddenSelections[] = {
         "zbytek"
       };
