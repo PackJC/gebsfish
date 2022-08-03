@@ -43,61 +43,59 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 				m_ActionDataFishing.m_Bait.AddHealth(-m_ActionDataFishing.FISHING_DAMAGE);
 			}
 
-
-			//Saltwater Calculate Total Weight
-			foreach (auto skey, auto svalue : salt_chance_map) {
-				salt_sum += svalue;
-			}
-			//Freshwater Calculate Total Weight
-			foreach (auto fkey, auto fvalue: fresh_chance_map) {
-				fresh_sum += fvalue;
-			}
-
-
-			rndSaltFish = Math.RandomFloatInclusive(0.0, salt_sum);
-			rndFreshFish = Math.RandomFloatInclusive(0.0, fresh_sum);
-
-
-			//Added equal past s_value in last arg
-			foreach (auto s_key, auto s_value: salt_chance_map) {
-				if (rndSaltFish <= s_value && s_value > 0) {
-					selected_salt_fish = s_key;
-					selected_salt_fish.Replace("_CHANCE", "");
-					break;
-				}
-				rndSaltFish -= s_value;
-			}
-
-
-			foreach (auto f_key, auto f_value: fresh_chance_map) {
-				if (rndFreshFish <= f_value && f_value > 0) {
-					selected_fresh_fish = f_key;
-					selected_fresh_fish.Replace("_CHANCE", "");
-
-					break;
-				}
-				rndFreshFish -= f_value;
-			}
-
-
 			if (rnd > m_ActionDataFishing.FISHING_GARBAGE_CHANCE)
 			{
-				//If Saltwater
+				//Saltwater cast
 				if (m_ActionDataFishing.m_IsSurfaceSea)
 				{
+					//Saltwater Calculate Total Weight
+					foreach (auto skey, auto svalue : salt_chance_map) {
+						salt_sum += svalue;
+					}
+					//Generate Random number for Saltwater
+					rndSaltFish = Math.RandomFloatInclusive(0.0, salt_sum);
+
+					//Generate Random Fish
+					foreach (auto s_key, auto s_value: salt_chance_map) {
+						if (rndSaltFish <= s_value && s_value > 0 && s_key.Length() > 2) {
+							selected_salt_fish = s_key;
+							selected_salt_fish.Replace("_CHANCE", "");
+							break;
+						}
+						rndSaltFish -= s_value;
+					}
+
 					fish = ItemBase.Cast(GetGame().CreateObject(selected_salt_fish, m_ActionDataFishing.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
 				}
-				//If Freshwater
+				//Freshwater cast
 				else
 				{
+					//Freshwater Calculate Total Weight
+					foreach (auto fkey, auto fvalue: fresh_chance_map) {
+						fresh_sum += fvalue;
+					}
+					//Generate Random number for Freshwater
+					rndFreshFish = Math.RandomFloatInclusive(0.0, fresh_sum);
+
+					//Generate Random Fish
+					foreach (auto f_key, auto f_value: fresh_chance_map) {
+						if (rndFreshFish <= f_value && f_value > 0 && f_key.Length() > 2) {
+							selected_fresh_fish = f_key;
+							selected_fresh_fish.Replace("_CHANCE", "");
+
+							break;
+						}
+						rndFreshFish -= f_value;
+					}
+
 					fish = ItemBase.Cast(GetGame().CreateObject(selected_fresh_fish, m_ActionDataFishing.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
 				}
 			}
-			//If you catch junk
+			//Junk catch
 			else
 			{
 				string junk_type = m_JunkTypes.Get(Math.RandomInt(0,m_JunkTypes.Count()));
-				fish = ItemBase.Cast(GetGame().CreateObjectEx("geb_RedFishHat",m_ActionDataFishing.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
+				fish = ItemBase.Cast(GetGame().CreateObjectEx(junk_type,m_ActionDataFishing.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
 				fish.SetHealth("","Health",fish.GetMaxHealth("","Health") * 0.1);
 			}
 			

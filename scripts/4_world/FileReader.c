@@ -13,7 +13,6 @@ class FileReader
 	static const string FRESH_CONFIG_PATH = "$profile:gebsfish/Freshwater.cfg";
 	static const string SALT_CONFIG_PATH = "$profile:gebsfish/Saltwater.cfg";
 	static const string BUG_CONFIG_PATH = "$profile:gebsfish/Bugs.cfg";
-
 	static const string DIRECTORY = "$profile:gebsfish";
 
 	static ref map<string, float> fresh_chance_map = new map<string, float>();
@@ -59,10 +58,8 @@ class FileReader
 			string salt_line;
 			while (FGets(salt_file, salt_line) != -1)
 			{
-				/// <summary>
-				/// Bluegill=30 turns to name=bluegill and value=30
-				/// </summary>
-				salt_line.Trim(); //Removes remaining whitespaces
+				/// geb_Bluegill=30 turns to name=geb+Bluegill and value=30
+				salt_line.Trim();
 				int tokenIndex = salt_line.IndexOf("=");
 				int lengthIndex = salt_line.Length() - tokenIndex;
 				salt_chance_map[salt_line.Substring(0, tokenIndex)] = (salt_line.Substring(tokenIndex + 1, lengthIndex - 1)).ToFloat();

@@ -2,12 +2,7 @@
   "ExpandedNodes": [
     "",
     "\\scripts",
-    "\\scripts\\4_world",
-    "\\scripts\\4_world\\classes\\useractioncomponent",
-    "\\scripts\\4_world\\classes\\useractioncomponent\\actions",
-    "\\scripts\\4_world\\classes\\useractioncomponent\\actions\\continuous",
-    "\\scripts\\4_world\\entities\\itembase"
+    "\\scripts\\4_world"
   ],
-  "SelectedNode": "\\scripts\\4_world\\FileReader.c",
   "PreviewInSolutionExplorer": false
 }
