@@ -102,34 +102,26 @@ class ActionDigBugs : ActionContinuousBase
 
 	override void OnFinishProgressServer(ActionData action_data)
 	{
-		map<string, float> insect_map = new map<string, float>();
-		float insect_chance_sum = 0;
-		string selected_insect = "";
-		float rndInsect = 0;
+		float insect_sum;
+		float rndInsect;
 
-		insect_map["geb_FieldCricket"] = 50;
-		insect_map["geb_GrassHopper"] = 50;
-		insect_map["geb_GrubWorm"] = 50;
+		string selected_insect = "";
 
 		auto bug_chance_map = FileReader.GetBugChanceMap();
 
-		if (bug_chance_map.Count() > 0) {
-			insect_map = bug_chance_map;
-
+		foreach(auto insect_name, auto insect_chance : bug_chance_map) {
+			insect_sum += insect_chance;
 		}
 
-		foreach(auto insect_name, auto insect_chance : insect_map) {
-			insect_chance_sum += insect_chance;
-		}
+		rndInsect = Math.RandomFloatInclusive(0.0, insect_sum);
 
-		rndInsect = Math.RandomFloatInclusive(0.0, insect_chance_sum);
-
-		foreach(auto _insect_name, auto _insect_chance: insect_map) {
-			if (rndInsect <= _insect_chance && _insect_chance > 0) {
-				selected_insect = _insect_name;
+		foreach(auto insect_key, auto insect_value: bug_chance_map) {
+			if (rndInsect <= insect_value && insect_value > 0 && insect_key.Length() > 1) {
+				selected_insect = insect_key;
+				selected_insect.Replace("_CHANCE", "");
 				break;
 			}
-			rndInsect -= _insect_chance;
+			rndInsect -= insect_value;
 		}
 
 		ItemBase bugs = ItemBase.Cast(GetGame().CreateObject(selected_insect, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));

@@ -674,7 +674,7 @@ class cfgVehicles {
     scope = 2;
     displayName = "$STR_bugcontainer";
     descriptionShort = "$STR_bugcontainer_desc";
-    model = "\gebsfish\data\tools\geb_bugcontainer.p3d";
+    model = "\gebsfish\data\tools\geb_bugcontainer.p3d"; 
     hiddenSelections[] = {
       "zbytek"
     };
@@ -3570,6 +3570,7 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "Bone Hook & Bobber 1 with Rubber Worm";
       descriptionShort = "A Bone hook with a bobber attached, with a Rubber Worm used as bait.";
+      hookType = "BoneHookBobber1";
       hiddenSelections[] = {
         "zbytek"
       };
@@ -3631,6 +3632,8 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "Bone Hook & Bobber 2 with Rubber Worm";
       descriptionShort = "A Bone hook with a bobber attached, with a Rubber Worm used as bait.";
+      hookType = "BoneHookBobber2";
+
       hiddenSelections[] = {
         "zbytek"
       };
@@ -3692,6 +3695,8 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "Bone Hook & Bobber 3 with Rubber Worm";
       descriptionShort = "A Bone hook with a bobber attached, with a Rubber Worm used as bait.";
+      hookType = "BoneHookBobber3";
+
       hiddenSelections[] = {
         "zbytek"
       };
@@ -3753,6 +3758,8 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "Bone Hook & Bobber 4 with Rubber Worm";
       descriptionShort = "A Bone hook with a bobber attached, with a Rubber Worm used as bait.";
+      hookType = "BoneHookBobber4";
+
       hiddenSelections[] = {
         "zbytek"
       };
@@ -3815,6 +3822,7 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "Bone Hook & Bobber 1 with Grub Worm";
       descriptionShort = "A Bone hook with a bobber attached, with a Grub Worm used as bait.";
+      hookType = "BoneHookBobber1";
       hiddenSelections[] = {
         "zbytek"
       };
@@ -3876,6 +3884,7 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "Bone Hook & Bobber 2 with Grub Worm";
       descriptionShort = "A Bone hook with a bobber attached, with a Grub Worm used as bait.";
+      hookType = "BoneHookBobber2";
       hiddenSelections[] = {
         "zbytek"
       };
@@ -3937,6 +3946,8 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "Bone Hook & Bobber 3 with Grub Worm";
       descriptionShort = "A Bone hook with a bobber attached, with a Grub Worm used as bait.";
+      hookType = "BoneHookBobber3";
+
       hiddenSelections[] = {
         "zbytek"
       };
@@ -3998,6 +4009,7 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "Bone Hook & Bobber 4 with Grub Worm";
       descriptionShort = "A Bone hook with a bobber attached, with a Grub Worm used as bait.";
+      hookType = "BoneHookBobber4";
       hiddenSelections[] = {
         "zbytek"
       };
@@ -5285,6 +5297,7 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "$STR_spinnerbait2";
       descriptionShort = "$STR_spinnerbait_desc";
+      hookType = "SpinnerBait2";
       hiddenSelections[] =
       {
           "Camo"
@@ -5299,6 +5312,7 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "$STR_spinnerbait3";
       descriptionShort = "$STR_spinnerbait_desc";
+      hookType = "SpinnerBait3";
       hiddenSelections[] =
       {
           "Camo"
@@ -5313,6 +5327,7 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "$STR_spinnerbait4";
       descriptionShort = "$STR_spinnerbait_desc";
+      hookType = "SpinnerBait4";
       hiddenSelections[] =
       {
           "Camo"
@@ -7071,7 +7086,6 @@ hiddenSelections[] = {
         };
       };
     };
-
   };
   class geb_Blackbass: Edible_Base {
     scope = 2;
@@ -7219,7 +7233,6 @@ hiddenSelections[] = {
         };
       };
     };
-
   };
   class geb_Catfish: Edible_Base {
     scope = 2;
@@ -7367,7 +7380,6 @@ hiddenSelections[] = {
         };
       };
     };
-
   };
   class geb_Largemouthbass: Edible_Base {
     scope = 2;
@@ -7515,7 +7527,6 @@ hiddenSelections[] = {
         };
       };
     };
-
   };
   class geb_Minnow: Edible_Base {
     scope = 2;
@@ -7663,7 +7674,6 @@ hiddenSelections[] = {
         };
       };
     };
-
   };
   class geb_Northernpike: Edible_Base {
     scope = 2;
@@ -7958,7 +7968,6 @@ hiddenSelections[] = {
         };
       };
     };
-
   };
   class geb_Sauger: Edible_Base {
     scope = 2;
@@ -8106,7 +8115,6 @@ hiddenSelections[] = {
         };
       };
     };
-
   };
   class geb_Crayfish: Edible_Base {
     scope = 2;
@@ -8254,11 +8262,7 @@ hiddenSelections[] = {
         };
       };
     };
-
   };
-
-
-
   class geb_Trout_Base : Edible_Base {
       scope = 2;
       model = "\gebsfish\data\fish\geb_Trout_Base.p3d";
@@ -8393,7 +8397,6 @@ hiddenSelections[] = {
               };
           };
       };
-
   };
   class geb_Trout: geb_Trout_Base {
     scope = 2;
@@ -8475,8 +8478,6 @@ hiddenSelections[] = {
         "\gebsfish\data\fish\laketrout.paa";
       };
   };
-
-
   class geb_Whitebass: Edible_Base {
     scope = 2;
     displayName = "$STR_whitebass";
@@ -8623,7 +8624,6 @@ hiddenSelections[] = {
         };
       };
     };
-
   };
   class geb_Bowfin: Edible_Base {
     scope = 2;

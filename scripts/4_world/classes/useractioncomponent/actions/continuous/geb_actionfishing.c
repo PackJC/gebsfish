@@ -82,7 +82,6 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 						if (rndFreshFish <= f_value && f_value > 0 && f_key.Length() > 2) {
 							selected_fresh_fish = f_key;
 							selected_fresh_fish.Replace("_CHANCE", "");
-
 							break;
 						}
 						rndFreshFish -= f_value;

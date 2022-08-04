@@ -75,7 +75,8 @@ class FileReader
 			string fresh_line;
 			while (FGets(fresh_file, fresh_line) != -1)
 			{
-				fresh_line.Trim(); //Removes remaining whitespaces
+				/// geb_Bluegill=30 turns to name=geb+Bluegill and value=30
+				fresh_line.Trim();
 				int tokenIndex2 = fresh_line.IndexOf("=");
 				int lengthIndex2 = fresh_line.Length() - tokenIndex2;
 				string name = salt_line.Substring(0, tokenIndex);
@@ -83,18 +84,23 @@ class FileReader
 				fresh_chance_map[fresh_line.Substring(0, tokenIndex2)] = (fresh_line.Substring(tokenIndex2 + 1, lengthIndex2 - 1)).ToFloat();
 			}
 			CloseFile(fresh_file);
+
+
+
 			if (fresh_chance_map.Contains("geb_LAKETROUT_CHANCE")) {
 				newLakeTroutDetected = true;
 			}
 			if (!newLakeTroutDetected) {
-				FileHandle fresh_file1 = OpenFile(FRESH_CONFIG_PATH, FileMode.APPEND);
-				FPrintln(fresh_file1, "geb_LAKETROUT_CHANCE=66");
-				FPrintln(fresh_file1, "geb_BROOKTROUT_CHANCE=66");
-				FPrintln(fresh_file1, "geb_BROWNTROUT_CHANCE=66");
-				FPrintln(fresh_file1, "geb_CUTHROATTROUT_CHANCE=66");
+				FileHandle fresh_file_updater = OpenFile(FRESH_CONFIG_PATH, FileMode.APPEND);
+				FPrintln(fresh_file_updater, "geb_LAKETROUT_CHANCE=66");
 
 			}
-			CloseFile(fresh_file1);
+
+
+
+
+
+			CloseFile(fresh_file_updater);
 		}
 		if (FileExist(BUG_CONFIG_PATH))
 		{
@@ -167,6 +173,7 @@ class FileReader
 			FPrintln(f, "geb_FieldCricket=50");
 			FPrintln(f, "geb_GrassHopper=50");
 			FPrintln(f, "geb_GrubWorm=50");
+			FPrintln(f, "Worm=50");
 			break;
 		}
 		CloseFile(f);

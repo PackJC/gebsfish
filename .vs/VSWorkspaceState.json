@@ -2,7 +2,17 @@
   "ExpandedNodes": [
     "",
     "\\scripts",
-    "\\scripts\\4_world"
+    "\\scripts\\4_world",
+    "\\scripts\\4_world\\classes",
+    "\\scripts\\4_world\\classes\\useractioncomponent",
+    "\\scripts\\4_world\\classes\\useractioncomponent\\actions",
+    "\\scripts\\4_world\\classes\\useractioncomponent\\actions\\continuous",
+    "\\scripts\\4_world\\entities",
+    "\\scripts\\4_world\\entities\\itembase",
+    "\\scripts\\4_world\\entities\\itembase\\gear",
+    "\\scripts\\4_world\\entities\\itembase\\gear\\containers",
+    "\\scripts\\4_world\\entities\\itembase\\trapspawnbase"
   ],
+  "SelectedNode": "\\scripts\\4_world\\FileReader.c",
   "PreviewInSolutionExplorer": false
 }

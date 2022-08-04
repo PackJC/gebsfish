@@ -27,7 +27,7 @@ class ActionBambooFishingNet : ActionContinuousBase
 		m_CallbackClass = ActionBambooFishingNetCB;
 		m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DIGMANIPULATE;
 		m_FullBody = true;
-		m_StanceMask = DayZPlayerConstants.STANCEMASK_ERECT;
+		m_StanceMask = DayZPlayerConstants.STANCEMASK_CROUCH;
 		m_SpecialtyWeight = UASoftSkillsWeight.ROUGH_MEDIUM;
 		m_Text = "Look for minnows!";
 	}
@@ -60,10 +60,7 @@ class ActionBambooFishingNet : ActionContinuousBase
 					string surface_type;
 					vector position;
 					position = target.GetCursorHitPos();
-					
 					GetGame().SurfaceGetType( position[0], position[2], surface_type );
-					//float distance = vector.Distance(plr_pos,position);
-					
 					if (GetGame().SurfaceIsPond(position[0], position[2]) || GetGame().SurfaceIsSea(position[0], position[2]))
 					{
 						return true;
