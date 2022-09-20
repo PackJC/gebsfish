@@ -29,6 +29,7 @@ class cfgVehicles {
   class Hook;
   class Inventory_Base;
   class Worm;
+  class Bottle_Base;
 
   /*
 	
@@ -5696,7 +5697,7 @@ hiddenSelections[] = {
 			{
 				class Health
 				{
-					hitpoints=100;
+					hitpoints=150;
 					healthLevels[]=
 					{
 						
@@ -5949,7 +5950,7 @@ hiddenSelections[] = {
           {
               class Health
               {
-                  hitpoints = 100;
+                  hitpoints = 150;
                   healthLevels[] =
                   {
 
@@ -6017,7 +6018,7 @@ hiddenSelections[] = {
           {
               class Health
               {
-                  hitpoints = 100;
+                  hitpoints = 150;
                   healthLevels[] =
                   {
 
@@ -6085,7 +6086,7 @@ hiddenSelections[] = {
           {
               class Health
               {
-                  hitpoints = 100;
+                  hitpoints = 150;
                   healthLevels[] =
                   {
 
@@ -6153,7 +6154,7 @@ hiddenSelections[] = {
           {
               class Health
               {
-                  hitpoints = 100;
+                  hitpoints = 150;
                   healthLevels[] =
                   {
 
@@ -6221,7 +6222,7 @@ hiddenSelections[] = {
           {
               class Health
               {
-                  hitpoints = 100;
+                  hitpoints = 150;
                   healthLevels[] =
                   {
 

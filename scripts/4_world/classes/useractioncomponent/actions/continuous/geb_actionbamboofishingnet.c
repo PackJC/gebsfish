@@ -15,7 +15,6 @@ class ActionBambooFishingNetCB : ActionContinuousBaseCB
 		float time_spent;
 		time_spent = UATimeSpent.DIG_WORMS;
 		time_spent = time_spent * 1.2;
-		
 		m_ActionData.m_ActionComponent = new CAContinuousTime(time_spent);
 	}
 };
@@ -25,10 +24,9 @@ class ActionBambooFishingNet : ActionContinuousBase
 	void ActionBambooFishingNet()
 	{
 		m_CallbackClass = ActionBambooFishingNetCB;
-		m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DIGMANIPULATE;
-		m_FullBody = true;
+		m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_POKE;
 		m_StanceMask = DayZPlayerConstants.STANCEMASK_CROUCH;
-		m_SpecialtyWeight = UASoftSkillsWeight.ROUGH_MEDIUM;
+		m_FullBody = true;
 		m_Text = "Look for minnows!";
 	}
 	
