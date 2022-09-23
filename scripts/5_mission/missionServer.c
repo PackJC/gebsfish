@@ -7,6 +7,7 @@
   Contributions welcome via github
 
 */
+
 modded class MissionServer
 {	
 	override void OnInit()

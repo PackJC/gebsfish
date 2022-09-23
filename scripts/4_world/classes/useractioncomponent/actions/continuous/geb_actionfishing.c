@@ -86,7 +86,6 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 						}
 						rndFreshFish -= f_value;
 					}
-
 					fish = ItemBase.Cast(GetGame().CreateObject(selected_fresh_fish, m_ActionDataFishing.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
 				}
 			}

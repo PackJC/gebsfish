@@ -1,3 +1,13 @@
+/*
+
+  CREATED BY PACKJC
+  https://github.com/PackJC/gebsfish
+  https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
+  https://discord.com/invite/G8uSGZ8yyf
+  Contributions welcome via github
+
+*/
+
 class CraftVanillaHookBobber4 extends RecipeBase
 {	
 	override void Init()
@@ -20,7 +30,6 @@ class CraftVanillaHookBobber4 extends RecipeBase
 		
 		m_MinQuantityIngredient[1] = -1;//-1 = disable check
 		m_MaxQuantityIngredient[1] = -1;//-1 = disable check
-		//----------------------------------------------------------------------------------------------------------------------
 		
 		//INGREDIENTS
 		//ingredient 1
@@ -40,7 +49,6 @@ class CraftVanillaHookBobber4 extends RecipeBase
 		m_IngredientAddQuantity[1] = 0;// 0 = do nothing
 		m_IngredientDestroy[1] = true;// false = do nothing
 		m_IngredientUseSoftSkills[1] = false;// set 'true' to allow modification of the values by softskills on this ingredient
-		//----------------------------------------------------------------------------------------------------------------------
 		
 		//result1
 		AddResult("geb_MetalHookBobber4");

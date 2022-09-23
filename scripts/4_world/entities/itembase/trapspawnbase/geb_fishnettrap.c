@@ -7,6 +7,7 @@
   Contributions welcome via github
 
 */
+
 modded class Trap_FishNet extends TrapSpawnBase
 {
 

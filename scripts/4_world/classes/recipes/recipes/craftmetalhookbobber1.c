@@ -1,8 +1,18 @@
+/*
+
+  CREATED BY PACKJC
+  https://github.com/PackJC/gebsfish
+  https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
+  https://discord.com/invite/G8uSGZ8yyf
+  Contributions welcome via github
+
+*/
+
 class CraftMetalHookBobber1 extends RecipeBase
 {	
 	override void Init()
 	{
-		m_Name = "Craft Hook and Bobber";
+		m_Name = "Craft Hook and Bobber #1";
 		m_IsInstaRecipe = false;//should this recipe be performed instantly without animation
 		m_AnimationLength = 0.5;//animation length in relative time units
 		m_Specialty = 0.02;// value > 0 for roughness, value < 0 for precision

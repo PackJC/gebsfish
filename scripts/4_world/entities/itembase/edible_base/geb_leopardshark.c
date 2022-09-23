@@ -47,15 +47,34 @@ class geb_Leopardshark extends Edible_Base
 		return false;
 	}
 
-	override bool CanPutInCargo(EntityAI parent)
-	{
-		return false;
-	}
+
+	override bool CanPutInCargo(EntityAI item)
+    {
+        if (!super.CanPutInCargo(item))
+            return false;
+
+        // only handle licenses with special logic
+        if (item.IsKindOf("Transport"))
+        {
+                return true;
+        }
+
+        return false;
+    }
 
 	override bool CanLoadItemIntoCargo(EntityAI item)
-	{
-		return false;
-	}
+    {
+        if (!super.CanLoadItemIntoCargo(item))
+            return false;
+
+        // only handle licenses with special logic
+        if (item.IsKindOf("Transport"))
+        {
+                return true;
+        }
+
+        return false;
+    }
 
 	override bool IsTakeable()
 	{

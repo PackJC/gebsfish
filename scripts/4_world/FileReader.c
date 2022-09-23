@@ -13,11 +13,13 @@ class FileReader
 	static const string FRESH_CONFIG_PATH = "$profile:gebsfish/Freshwater.cfg";
 	static const string SALT_CONFIG_PATH = "$profile:gebsfish/Saltwater.cfg";
 	static const string BUG_CONFIG_PATH = "$profile:gebsfish/Bugs.cfg";
+	static const string FILLET_CONFIG_PATH = "$profile:gebsfish/Fillets.cfg";
 	static const string DIRECTORY = "$profile:gebsfish";
 
 	static ref map<string, float> fresh_chance_map = new map<string, float>();
 	static ref map<string, float> salt_chance_map = new map<string, float>();
 	static ref map<string, float> bug_chance_map = new map<string, float>();
+	static ref map<string, float> fillet_map = new map<string, float>();
 
 	private static ref FileReader instance;
 
@@ -51,6 +53,12 @@ class FileReader
 		{
 			CreateConfig(BUG_CONFIG_PATH);
 		}
+		if (!FileExist(FILLET_CONFIG_PATH))
+		{
+			CreateConfig(FILLET_CONFIG_PATH);
+		}
+
+
 
 		if (FileExist(SALT_CONFIG_PATH))
 		{
@@ -67,7 +75,6 @@ class FileReader
 			}
 
 			CloseFile(salt_file);
-
 		}
 		if (FileExist(FRESH_CONFIG_PATH))
 		{
@@ -86,7 +93,7 @@ class FileReader
 			CloseFile(fresh_file);
 
 
-
+			//This is to force subscribers files to add new fish, if they are added
 			if (fresh_chance_map.Contains("geb_LAKETROUT_CHANCE")) {
 				newLakeTroutDetected = true;
 			}
@@ -95,12 +102,21 @@ class FileReader
 				FPrintln(fresh_file_updater, "geb_LAKETROUT_CHANCE=66");
 
 			}
-
-
-
-
-
 			CloseFile(fresh_file_updater);
+		}
+		if (FileExist(FILLET_CONFIG_PATH))
+		{
+			FileHandle fillet_file = OpenFile(FILLET_CONFIG_PATH, FileMode.READ);
+			string fillet_line;
+			while (FGets(fillet_file, fillet_line) != -1)
+			{
+				/// geb_Bluegill=30 turns to name=geb+Bluegill and value=30
+				fillet_line.Trim();
+				int tokenIndex = fillet_line.IndexOf("=");
+				int lengthIndex = fillet_line.Length() - tokenIndex;
+				fillet_map[fillet_line.Substring(0, tokenIndex)] = (fillet_line.Substring(tokenIndex + 1, lengthIndex - 1)).ToFloat();
+			}
+			CloseFile(fillet_file);
 		}
 		if (FileExist(BUG_CONFIG_PATH))
 		{
@@ -115,7 +131,6 @@ class FileReader
 			}
 			CloseFile(bug_file);
 		}
-
 
 	}
 
@@ -175,6 +190,49 @@ class FileReader
 			FPrintln(f, "geb_GrubWorm=50");
 			FPrintln(f, "Worm=50");
 			break;
+		case "$profile:gebsfish/Fillets.cfg":
+			FPrintln(f, "CARP=2");
+			FPrintln(f, "geb_CRAYFISH=2");
+			FPrintln(f, "geb_BLUEGILL=2");
+			FPrintln(f, "geb_BLACKBASS=2");
+			FPrintln(f, "geb_CATFISH=2");
+			FPrintln(f, "geb_LARGEMOUTHBASS=2");
+			FPrintln(f, "geb_MINNOW=2");
+			FPrintln(f, "geb_NORTHERNPIKE=2");
+			FPrintln(f, "geb_PERCH=2");
+			FPrintln(f, "geb_SAUGER=2");
+			FPrintln(f, "geb_TROUT=2");
+			FPrintln(f, "geb_LAKETROUT=2");
+			FPrintln(f, "geb_BROOKTROUT=2");
+			FPrintln(f, "geb_BROWNTROUT=2");
+			FPrintln(f, "geb_CUTHROATTROUT=2");
+			FPrintln(f, "geb_WHITEBASS=2");
+			FPrintln(f, "geb_BOWFIN_=2");
+			FPrintln(f, "geb_SLIMYSCULPIN=2");
+			FPrintln(f, "MACKEREL=2");
+			FPrintln(f, "geb_ANGELFISH=20");
+			FPrintln(f, "geb_BLUEMARLIN=2");
+			FPrintln(f, "geb_BONITA=2");
+			FPrintln(f, "geb_CHERRYSALMON=2");
+			FPrintln(f, "geb_FLATHEADMULLET=2");
+			FPrintln(f, "geb_LEOPARDSHARK=2");
+			FPrintln(f, "geb_PACIFICCOD=2");
+			FPrintln(f, "geb_REDHEADCICHLID=2");
+			FPrintln(f, "geb_ROUGHNECKROCK=2");
+			FPrintln(f, "geb_SEVERUM=2");
+			FPrintln(f, "geb_SHRIMP=2");
+			FPrintln(f, "geb_BLUETANG=2");
+			FPrintln(f, "geb_HAIRTAILFISH=2");
+			FPrintln(f, "geb_HUMPHEADWRASSE=2");
+			FPrintln(f, "geb_SIAMESETIGERFISH=2");
+			FPrintln(f, "geb_ASIANSEABASS=2");
+			FPrintln(f, "geb_JELLYFISH=2");
+			FPrintln(f, "geb_STARFISH=2");
+			FPrintln(f, "geb_KINGCRAB=2");
+			FPrintln(f, "geb_ANGELSHARK=10");
+			FPrintln(f, "geb_GREATWHITESHARK=2");
+			FPrintln(f, "geb_YELLOWFINTUNA=2");
+			break;
 		}
 		CloseFile(f);
 	}
@@ -211,5 +269,11 @@ class FileReader
 	static map<string, float> GetBugChanceMap()
 	{
 		return bug_chance_map;
+	}
+
+	
+	static map<string, float> GetFilletMap()
+	{
+		return fillet_map;
 	}
 };

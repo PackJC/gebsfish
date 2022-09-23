@@ -1,3 +1,13 @@
+/*
+
+  CREATED BY PACKJC
+  https://github.com/PackJC/gebsfish
+  https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
+  https://discord.com/invite/G8uSGZ8yyf
+  Contributions welcome via github
+
+*/
+
 class CraftMetalHookBobber4FieldCricketBait extends RecipeBase
 {	
 	override void Init()
@@ -11,16 +21,12 @@ class CraftMetalHookBobber4FieldCricketBait extends RecipeBase
 		//conditions
 		m_MinDamageIngredient[0] = -1;//-1 = disable check
 		m_MaxDamageIngredient[0] = 3;//-1 = disable check
-		
 		m_MinQuantityIngredient[0] = 1;//-1 = disable check
 		m_MaxQuantityIngredient[0] = -1;//-1 = disable check
-		
 		m_MinDamageIngredient[1] = -1;//-1 = disable check
 		m_MaxDamageIngredient[1] = 3;//-1 = disable check
-		
 		m_MinQuantityIngredient[1] = -1;//-1 = disable check
 		m_MaxQuantityIngredient[1] = -1;//-1 = disable check
-		//----------------------------------------------------------------------------------------------------------------------
 		
 		//INGREDIENTS
 		//ingredient 1

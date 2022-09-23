@@ -29,7 +29,7 @@ class ActionDigBugs : ActionContinuousBase
 		m_FullBody = true;
 		m_StanceMask = DayZPlayerConstants.STANCEMASK_ERECT;
 		m_SpecialtyWeight = UASoftSkillsWeight.ROUGH_MEDIUM;
-		m_Text = "Trap using Bug Catcher!";
+		m_Text = "Gather bugs!";
 	}
 
 	override void CreateConditionComponents()

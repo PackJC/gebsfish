@@ -29,15 +29,10 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareSauger);
 		RegisterRecipe(new PrepareCrayfish);
 		RegisterRecipe(new PrepareTrout);
-
 		RegisterRecipe(new PrepareBrownTrout);
 		RegisterRecipe(new PrepareBrookTrout);
 		RegisterRecipe(new PrepareLakeTrout);
 		RegisterRecipe(new PrepareCutthroatTrout);
-
-
-
-
 		RegisterRecipe(new PrepareWhitebass);
 		RegisterRecipe(new PrepareBowfin);
 		RegisterRecipe(new PrepareSlimysculpin);
@@ -74,7 +69,7 @@ modded class PluginRecipesManager
 			BAIT RECIPES
 		*/
 
-		//Bobbers
+		//Bone Bobbers
 		RegisterRecipe(new CraftBoneHookBobber1);
 		RegisterRecipe(new CraftBoneHookBobber1WormBait);
 		RegisterRecipe(new CraftBoneHookBobber1RubberWormBait);
@@ -104,6 +99,7 @@ modded class PluginRecipesManager
 		RegisterRecipe(new CraftBoneHookBobber4FieldCricketBait);
 		RegisterRecipe(new CraftBoneHookBobber4MinnowBait);
 
+		//Metal Bobbers
 		RegisterRecipe(new CraftMetalHookBobber1);
 		RegisterRecipe(new CraftMetalHookBobber1WormBait);
 		RegisterRecipe(new CraftMetalHookBobber1RubberWormBait);
@@ -133,7 +129,7 @@ modded class PluginRecipesManager
 		RegisterRecipe(new CraftMetalHookBobber4FieldCricketBait);
 		RegisterRecipe(new CraftMetalHookBobber4MinnowBait);
 
-
+		//Bobbers
 		RegisterRecipe(new CraftVanillaHookBobber1);
 		RegisterRecipe(new CraftVanillaHookBobber2);
 		RegisterRecipe(new CraftVanillaHookBobber3);

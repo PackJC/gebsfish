@@ -49,7 +49,6 @@ class geb_BugContainer : Container_Base
 				return true;
 			};
 		}
-
 		return false;
 	}
 };
@@ -73,7 +72,6 @@ class geb_BambooFishingNet : Container_Base
 				return true;
 			};
 		}
-
 		return false;
 	}
 };
@@ -96,7 +94,6 @@ class geb_MinnowBucket : Container_Base
 				return true;
 			};
 		}
-
 		return false;
 	}
 };

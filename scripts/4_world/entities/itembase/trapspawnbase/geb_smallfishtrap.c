@@ -7,6 +7,7 @@
   Contributions welcome via github
 
 */
+
 modded class Trap_SmallFish extends TrapSpawnBase
 {
 	override void SpawnCatch()
