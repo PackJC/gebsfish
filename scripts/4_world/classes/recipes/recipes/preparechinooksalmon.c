@@ -1,19 +1,13 @@
-class PrepareAsianseabass extends PrepareFish
+class PrepareSockeyesalmon extends PrepareFish
 {
+	int ran;	
 	override void Init()
 	{
-		super.Init();
-		auto geb_Asianseabass_map = FileReader.GetFilletChanceMap();
-
-		Print("Line: 8" + FileReader.GetFilletChanceMap());
-		Print("Line: 9" + geb_Asianseabass_map.GET("geb_ASIANSEABASS");
-		Print("Line: 10" + geb_Asianseabass_map.GET("geb_Asianseabass");
-
-
 		m_Name = "#STR_gutandprepare0";
 		m_IsInstaRecipe = false;//should this recipe be performed instantly without animation
 		m_AnimationLength = 1.5;//animation length in relative time units
 		m_Specialty = 0.02;// value > 0 for roughness, value < 0 for precision
+		
 		
 		//conditions
 		m_MinDamageIngredient[0] = -1;//-1 = disable check
@@ -31,7 +25,7 @@ class PrepareAsianseabass extends PrepareFish
 		
 		//INGREDIENTS
 		//ingredient 1
-		InsertIngredient(0,"geb_Asianseabass");//you can insert multiple ingredients this way
+		InsertIngredient(0,"geb_Sockeyesalmon");//you can insert multiple ingredients this way
 
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
@@ -76,8 +70,9 @@ class PrepareAsianseabass extends PrepareFish
 		m_IngredientDestroy[1] = false;// false = do nothing
 		m_IngredientUseSoftSkills[1] = true;// set 'true' to allow modification of the values by softskills on this ingredient
 		//----------------------------------------------------------------------------------------------------------------------
-		for (float i = 0; i < geb_Asianseabass_map["geb_Asianseabass"]; ++i){
-			AddResult("geb_AsianseabassFilletMeat");//add results here
+		ran = Math.RandomFloatInclusive(2.0,3.0);
+		for (int i = 0; i < ran; ++i){
+			AddResult("geb_SockeyesalmonFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
 			m_ResultSetHealth[i] = -1;//-1 = do nothing

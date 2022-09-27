@@ -39,6 +39,8 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareSlimysculpin);
 		RegisterRecipe(new PrepareMussel);
 		RegisterRecipe(new PrepareBlackdevilsnail);
+		RegisterRecipe(new PrepareSockeyesalmon);
+		RegisterRecipe(new PrepareChinooksalmon);
 
 		//Saltwater Life
 		RegisterRecipe(new PrepareAngelfish);

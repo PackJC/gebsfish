@@ -1,18 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\scripts",
-    "\\scripts\\4_world",
-    "\\scripts\\4_world\\classes",
-    "\\scripts\\4_world\\classes\\useractioncomponent",
-    "\\scripts\\4_world\\classes\\useractioncomponent\\actions",
-    "\\scripts\\4_world\\classes\\useractioncomponent\\actions\\continuous",
-    "\\scripts\\4_world\\entities",
-    "\\scripts\\4_world\\entities\\itembase",
-    "\\scripts\\4_world\\entities\\itembase\\gear",
-    "\\scripts\\4_world\\entities\\itembase\\gear\\containers",
-    "\\scripts\\5_mission"
+    "\\data",
+    "\\data\\clothes",
+    "\\languagecore"
   ],
-  "SelectedNode": "\\scripts\\4_world\\FileReader.c",
+  "SelectedNode": "\\data\\clothes\\Model.cfg",
   "PreviewInSolutionExplorer": false
 }

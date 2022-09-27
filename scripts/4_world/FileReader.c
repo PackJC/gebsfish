@@ -66,7 +66,7 @@ class FileReader
 			string salt_line;
 			while (FGets(salt_file, salt_line) != -1)
 			{
-				/// geb_Bluegill=30 turns to name=geb+Bluegill and value=30
+				//geb_Bluegill=30 = map["bluegill"] = 30
 				salt_line.Trim();
 				int tokenIndex = salt_line.IndexOf("=");
 				int lengthIndex = salt_line.Length() - tokenIndex;
@@ -82,7 +82,7 @@ class FileReader
 			string fresh_line;
 			while (FGets(fresh_file, fresh_line) != -1)
 			{
-				/// geb_Bluegill=30 turns to name=geb+Bluegill and value=30
+				//geb_Bluegill=30 = map["bluegill"] = 30
 				fresh_line.Trim();
 				int tokenIndex2 = fresh_line.IndexOf("=");
 				int lengthIndex2 = fresh_line.Length() - tokenIndex2;
@@ -94,12 +94,13 @@ class FileReader
 
 
 			//This is to force subscribers files to add new fish, if they are added
-			if (fresh_chance_map.Contains("geb_LAKETROUT_CHANCE")) {
+			if (fresh_chance_map.Contains("geb_SOCKEYESALMON_CHANCE")) {
 				newLakeTroutDetected = true;
 			}
 			if (!newLakeTroutDetected) {
 				FileHandle fresh_file_updater = OpenFile(FRESH_CONFIG_PATH, FileMode.APPEND);
-				FPrintln(fresh_file_updater, "geb_LAKETROUT_CHANCE=66");
+				FPrintln(fresh_file_updater, "geb_SOCKEYESALMON_CHANCE=66");
+				FPrintln(fresh_file_updater, "geb_CHINOOKSALMON_CHANCE=66");
 
 			}
 			CloseFile(fresh_file_updater);
@@ -184,6 +185,8 @@ class FileReader
 			FPrintln(f, "geb_WHITEBASS_CHANCE=66");
 			FPrintln(f, "geb_BOWFIN_CHANCE=66");
 			FPrintln(f, "geb_SLIMYSCULPIN_CHANCE=66");
+			FPrintln(f, "geb_CHINOOKSALMON_CHANCE=66");
+			FPrintln(f, "geb_SOCKEYESALMON_CHANCE=66");
 			break;
 		case "$profile:gebsfish/Bugs.cfg":
 			FPrintln(f, "geb_FieldCricket=50");

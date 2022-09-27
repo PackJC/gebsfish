@@ -30,12 +30,129 @@ class cfgVehicles {
   class Inventory_Base;
   class Worm;
   class Bottle_Base;
-
+  class Clothing;
   /*
 	
     CLOTHES
 	
   */
+
+
+  	class Fishingboots_ColorBase: Clothing
+	{
+		displayName="$STR_fishingboots";
+		descriptionShort="$STR_fishingboots_desc";
+		model="\gebsfish\data\clothes\fishingboots_ground.p3d";
+		inventorySlot[]=
+		{
+			"Feet"
+		};
+		itemInfo[]=
+		{
+			"Clothing",
+			"Feet"
+		};
+		itemSize[]={4,2};
+		weight=780;
+		durability=0.34999999;
+		varWetMax=1;
+		heatIsolation=0.2;
+		repairableWithKits[]={3};
+		repairCosts[]={25};
+		soundAttType="Sneakers";
+		hiddenSelections[]=
+		{
+			"camoGround",
+			"camoMale",
+			"camoFemale"
+		};
+		class ClothingTypes
+		{
+			male="\DZ\characters\shoes\fishingboots_m.p3d";
+			female="\DZ\characters\shoes\fishingboots_f.p3d";
+		};
+		class DamageSystem
+		{
+			class GlobalHealth
+			{
+				class Health
+				{
+					hitpoints=80;
+					healthLevels[]=
+					{
+						
+						{
+							1,
+							
+							{
+								"DZ\characters\shoes\data\Sneakers.rvmat"
+							}
+						},
+						
+						{
+							0.69999999,
+							
+							{
+								"DZ\characters\shoes\data\Sneakers.rvmat"
+							}
+						},
+						
+						{
+							0.5,
+							
+							{
+								"DZ\characters\shoes\data\Sneakers_damage.rvmat"
+							}
+						},
+						
+						{
+							0.30000001,
+							
+							{
+								"DZ\characters\shoes\data\Sneakers_damage.rvmat"
+							}
+						},
+						
+						{
+							0,
+							
+							{
+								"DZ\characters\shoes\data\Sneakers_destruct.rvmat"
+							}
+						}
+					};
+				};
+			};
+		};
+		class AnimEvents
+		{
+			class SoundWeapon
+			{
+				class pickUpItem
+				{
+					soundSet="AthleticShoes_pickup_SoundSet";
+					id=797;
+				};
+				class drop
+				{
+					soundset="AthleticShoes_drop_SoundSet";
+					id=898;
+				};
+			};
+		};
+	};
+	class Sneakers_Black: Sneakers_ColorBase
+	{
+		scope=2;
+		visibilityModifier=0.85000002;
+		hiddenSelectionsTextures[]=
+		{
+			"\gebsfish\data\clothes\geb_blackfishingboots.paa",
+			"\gebsfish\data\clothes\geb_blackfishingboots.paa",
+			"\gebsfish\data\clothes\geb_blackfishingboots.paa",
+		};
+	};
+
 
   //Gloves
   class NBCGloves_ColorBase;
@@ -5678,7 +5795,7 @@ hiddenSelections[] = {
 		rotationFlags=17;
 		RestrainUnlockType=1;
 		canSkinBodies=1;
-		weight=200;
+		weight=100;
 		itemSize[]={1,3};
 		lootTag[]=
 		{
@@ -5697,7 +5814,7 @@ hiddenSelections[] = {
 			{
 				class Health
 				{
-					hitpoints=150;
+					hitpoints=200;
 					healthLevels[]=
 					{
 						
@@ -5950,7 +6067,7 @@ hiddenSelections[] = {
           {
               class Health
               {
-                  hitpoints = 150;
+                  hitpoints = 200;
                   healthLevels[] =
                   {
 
@@ -6018,7 +6135,7 @@ hiddenSelections[] = {
           {
               class Health
               {
-                  hitpoints = 150;
+                  hitpoints = 200;
                   healthLevels[] =
                   {
 
@@ -6086,7 +6203,7 @@ hiddenSelections[] = {
           {
               class Health
               {
-                  hitpoints = 150;
+                  hitpoints = 200;
                   healthLevels[] =
                   {
 
@@ -6154,7 +6271,7 @@ hiddenSelections[] = {
           {
               class Health
               {
-                  hitpoints = 150;
+                  hitpoints = 200;
                   healthLevels[] =
                   {
 
@@ -6222,7 +6339,7 @@ hiddenSelections[] = {
           {
               class Health
               {
-                  hitpoints = 150;
+                  hitpoints = 200;
                   healthLevels[] =
                   {
 
@@ -9658,6 +9775,321 @@ hiddenSelections[] = {
       };
     };
   }
+
+
+class geb_Sockeyesalmon: Edible_Base {
+    scope = 2;
+    displayName = "$STR_sockeyesalmon";
+    descriptionShort = "$STR_sockeyesalmon_desc";
+    model = "\gebsfish\data\fish\sockeyesalmon.p3d";
+    debug_ItemCategory = 6;
+    rotationFlags = 17;
+    weight = 1700;
+    itemSize[] = {
+      5,
+      2
+    };
+    stackedUnit = "g";
+    quantityBar = 1;
+    varQuantityInit = 1000;
+    varQuantityMin = 0;
+    varQuantityMax = 1000;
+    isMeleeWeapon = 1;
+    class DamageSystem {
+      class GlobalHealth {
+        class Health {
+          hitpoints = 50;
+          healthLevels[] = {
+
+            {
+              1,
+              {}
+            },
+
+            {
+              0.69999999,
+              {}
+            },
+
+            {
+              0.5,
+              {}
+            },
+
+            {
+              0.30000001,
+              {}
+            },
+
+            {
+              0,
+              {}
+            }
+          };
+        };
+      };
+    };
+    class MeleeModes {
+      class Default {
+        ammo = "MeleeSoft";
+        range = 1;
+      };
+      class Heavy {
+        ammo = "MeleeSoft_Heavy";
+        range = 1;
+      };
+      class Sprint {
+        ammo = "MeleeSoft_Heavy";
+        range = 2.8;
+      };
+    };
+    inventorySlot[] = {
+      "TrapPrey_1"
+    };
+    hiddenSelections[] = {
+      "cs_raw"
+    };
+    hiddenSelectionsTextures[] = {
+      "dz\gear\food\data\mackerel_live_co.paa",
+      "dz\gear\food\data\mackerel_live_co.paa"
+    };
+    hiddenSelectionsMaterials[] = {
+      "dz\gear\food\data\mackerel_live.rvmat",
+      "dz\gear\food\data\mackerel_live.rvmat"
+    };
+    class AnimationSources: FoodAnimationSources {};
+    class Food {
+      class FoodStages {
+        class Raw {
+          visual_properties[] = {
+            0,
+            0,
+            0
+          };
+          nutrition_properties[] = {
+            1,
+            69,
+            172,
+            70,
+            1
+          };
+          cooking_properties[] = {
+            0,
+            0
+          };
+        };
+        class Rotten {
+          visual_properties[] = {
+            -1,
+            -1,
+            5
+          };
+          nutrition_properties[] = {
+            10,
+            25,
+            25,
+            1,
+            0
+          };
+          cooking_properties[] = {
+            0,
+            0
+          };
+        };
+      };
+      class FoodStageTransitions: NotCookable {};
+    };
+    class AnimEvents {
+      class SoundWeapon {
+        class openTunaCan {
+          soundSet = "openTunaCan_SoundSet";
+          id = 204;
+        };
+        class Eating_TakeFood {
+          soundSet = "Eating_TakeFood_Soundset";
+          id = 889;
+        };
+        class Eating_BoxOpen {
+          soundSet = "Eating_BoxOpen_Soundset";
+          id = 893;
+        };
+        class Eating_BoxShake {
+          soundSet = "Eating_BoxShake_Soundset";
+          id = 894;
+        };
+        class Eating_BoxEnd {
+          soundSet = "Eating_BoxEnd_Soundset";
+          id = 895;
+        };
+      };
+    };
+  }
+
+class geb_Chinooksalmon: Edible_Base {
+    scope = 2;
+    displayName = "$STR_chinooksalmon";
+    descriptionShort = "$STR_chinooksalmon_desc";
+    model = "\gebsfish\data\fish\chinooksalmon.p3d";
+    debug_ItemCategory = 6;
+    rotationFlags = 17;
+    weight = 1700;
+    itemSize[] = {
+      5,
+      2
+    };
+    stackedUnit = "g";
+    quantityBar = 1;
+    varQuantityInit = 1000;
+    varQuantityMin = 0;
+    varQuantityMax = 1000;
+    isMeleeWeapon = 1;
+    class DamageSystem {
+      class GlobalHealth {
+        class Health {
+          hitpoints = 50;
+          healthLevels[] = {
+
+            {
+              1,
+              {}
+            },
+
+            {
+              0.69999999,
+              {}
+            },
+
+            {
+              0.5,
+              {}
+            },
+
+            {
+              0.30000001,
+              {}
+            },
+
+            {
+              0,
+              {}
+            }
+          };
+        };
+      };
+    };
+    class MeleeModes {
+      class Default {
+        ammo = "MeleeSoft";
+        range = 1;
+      };
+      class Heavy {
+        ammo = "MeleeSoft_Heavy";
+        range = 1;
+      };
+      class Sprint {
+        ammo = "MeleeSoft_Heavy";
+        range = 2.8;
+      };
+    };
+    inventorySlot[] = {
+      "TrapPrey_1"
+    };
+    hiddenSelections[] = {
+      "cs_raw"
+    };
+    hiddenSelectionsTextures[] = {
+      "dz\gear\food\data\mackerel_live_co.paa",
+      "dz\gear\food\data\mackerel_live_co.paa"
+    };
+    hiddenSelectionsMaterials[] = {
+      "dz\gear\food\data\mackerel_live.rvmat",
+      "dz\gear\food\data\mackerel_live.rvmat"
+    };
+    class AnimationSources: FoodAnimationSources {};
+    class Food {
+      class FoodStages {
+        class Raw {
+          visual_properties[] = {
+            0,
+            0,
+            0
+          };
+          nutrition_properties[] = {
+            1,
+            69,
+            172,
+            70,
+            1
+          };
+          cooking_properties[] = {
+            0,
+            0
+          };
+        };
+        class Rotten {
+          visual_properties[] = {
+            -1,
+            -1,
+            5
+          };
+          nutrition_properties[] = {
+            10,
+            25,
+            25,
+            1,
+            0
+          };
+          cooking_properties[] = {
+            0,
+            0
+          };
+        };
+      };
+      class FoodStageTransitions: NotCookable {};
+    };
+    class AnimEvents {
+      class SoundWeapon {
+        class openTunaCan {
+          soundSet = "openTunaCan_SoundSet";
+          id = 204;
+        };
+        class Eating_TakeFood {
+          soundSet = "Eating_TakeFood_Soundset";
+          id = 889;
+        };
+        class Eating_BoxOpen {
+          soundSet = "Eating_BoxOpen_Soundset";
+          id = 893;
+        };
+        class Eating_BoxShake {
+          soundSet = "Eating_BoxShake_Soundset";
+          id = 894;
+        };
+        class Eating_BoxEnd {
+          soundSet = "Eating_BoxEnd_Soundset";
+          id = 895;
+        };
+      };
+    };
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   class geb_Flatheadmullet: Edible_Base {
     scope = 2;
     displayName = "$STR_flatheadmullet";
@@ -13028,6 +13460,32 @@ hiddenSelections[] = {
     model = "\dz\gear\food\mackerel_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\cherrysalmon_fillet_co.paa",
+      "dz\gear\food\data\mackerel_fillet_baked_CO.paa",
+      "dz\gear\food\data\mackerel_fillet_boiled_CO.paa",
+      "dz\gear\food\data\mackerel_fillet_dried_CO.paa",
+      "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
+    };
+  };
+  class geb_SockeyesalmonFilletMeat: MackerelFilletMeat {
+    scope = 2;
+    displayName = "Sockeye Salmon Fillet";
+    descriptionShort = "Yum! A fish fillet";
+    model = "\dz\gear\food\mackerel_fillet.p3d";
+    hiddenSelectionsTextures[] = {
+      "\gebsfish\data\fish\sockeyesalmon_fillet_co.paa",
+      "dz\gear\food\data\mackerel_fillet_baked_CO.paa",
+      "dz\gear\food\data\mackerel_fillet_boiled_CO.paa",
+      "dz\gear\food\data\mackerel_fillet_dried_CO.paa",
+      "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
+    };
+  };
+  class geb_ChinooksalmonFilletMeat: MackerelFilletMeat {
+    scope = 2;
+    displayName = "Chinook Salmon Fillet";
+    descriptionShort = "Yum! A fish fillet";
+    model = "\dz\gear\food\mackerel_fillet.p3d";
+    hiddenSelectionsTextures[] = {
+      "\gebsfish\data\fish\chinooksalmon_fillet_co.paa",
       "dz\gear\food\data\mackerel_fillet_baked_CO.paa",
       "dz\gear\food\data\mackerel_fillet_boiled_CO.paa",
       "dz\gear\food\data\mackerel_fillet_dried_CO.paa",
