@@ -1,30 +1,24 @@
-/*
-
-  CREATED BY PACKJC
-  https://github.com/PackJC/gebsfish
-  https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
-  https://discord.com/invite/G8uSGZ8yyf
-  Contributions welcome via github
-
-*/
-
 class PrepareBluetang extends PrepareFish
 {
+	int ran;	
 	override void Init()
 	{
-		auto geb_Bluetang_map = FileReader.GetFilletMap();
 		m_Name = "#STR_gutandprepare0";
 		m_IsInstaRecipe = false;//should this recipe be performed instantly without animation
 		m_AnimationLength = 1.5;//animation length in relative time units
 		m_Specialty = 0.02;// value > 0 for roughness, value < 0 for precision
-	
+		
+		
 		//conditions
 		m_MinDamageIngredient[0] = -1;//-1 = disable check
 		m_MaxDamageIngredient[0] = 3;//-1 = disable check
+		
 		m_MinQuantityIngredient[0] = -1;//-1 = disable check
 		m_MaxQuantityIngredient[0] = -1;//-1 = disable check
+		
 		m_MinDamageIngredient[1] = -1;//-1 = disable check
 		m_MaxDamageIngredient[1] = 3;//-1 = disable check
+		
 		m_MinQuantityIngredient[1] = -1;//-1 = disable check
 		m_MaxQuantityIngredient[1] = -1;//-1 = disable check
 		//----------------------------------------------------------------------------------------------------------------------
@@ -76,7 +70,8 @@ class PrepareBluetang extends PrepareFish
 		m_IngredientDestroy[1] = false;// false = do nothing
 		m_IngredientUseSoftSkills[1] = true;// set 'true' to allow modification of the values by softskills on this ingredient
 		//----------------------------------------------------------------------------------------------------------------------
-		for (int i = 0; i < geb_Bluetang_map["geb_Bluetang"]; ++i){
+		ran = Math.RandomFloatInclusive(1.0,2.0);
+		for (int i = 0; i < ran; ++i){
 			AddResult("geb_BluetangFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing

@@ -1,33 +1,27 @@
-/*
-
-  CREATED BY PACKJC
-  https://github.com/PackJC/gebsfish
-  https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
-  https://discord.com/invite/G8uSGZ8yyf
-  Contributions welcome via github
-
-*/
-
-
 class PrepareCatfish extends PrepareFish
 {
+	int ran;	
 	override void Init()
 	{
-		auto geb_Catfish_map = FileReader.GetFilletMap();
 		m_Name = "#STR_gutandprepare0";
 		m_IsInstaRecipe = false;//should this recipe be performed instantly without animation
 		m_AnimationLength = 4;//animation length in relative time units
 		m_Specialty = 0.02;// value > 0 for roughness, value < 0 for precision
 		
+		
 		//conditions
 		m_MinDamageIngredient[0] = -1;//-1 = disable check
 		m_MaxDamageIngredient[0] = 3;//-1 = disable check
+		
 		m_MinQuantityIngredient[0] = -1;//-1 = disable check
 		m_MaxQuantityIngredient[0] = -1;//-1 = disable check
+		
 		m_MinDamageIngredient[1] = -1;//-1 = disable check
 		m_MaxDamageIngredient[1] = 3;//-1 = disable check
+		
 		m_MinQuantityIngredient[1] = -1;//-1 = disable check
 		m_MaxQuantityIngredient[1] = -1;//-1 = disable check
+		//----------------------------------------------------------------------------------------------------------------------
 		
 		//INGREDIENTS
 		//ingredient 1
@@ -75,8 +69,9 @@ class PrepareCatfish extends PrepareFish
 		m_IngredientAddQuantity[1] = 0;// 0 = do nothing
 		m_IngredientDestroy[1] = false;// false = do nothing
 		m_IngredientUseSoftSkills[1] = true;// set 'true' to allow modification of the values by softskills on this ingredient
-		
-		for (int i = 0; i < geb_Catfish_map["geb_Catfish"]; ++i){
+		//----------------------------------------------------------------------------------------------------------------------
+		ran = Math.RandomFloatInclusive(2.0,6.0);
+		for (int i = 0; i < ran; ++i){
 			AddResult("geb_CatfishFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
@@ -87,6 +82,7 @@ class PrepareCatfish extends PrepareFish
 			m_ResultUseSoftSkills[i] = false;// set 'true' to allow modification of the values by softskills on this result
 			m_ResultReplacesIngredient[i] = 0;// value == -1 means do nothing; a value >= 0 means this result will transfer item propertiesvariables, attachments etc.. from an ingredient value
 		}
+		//----------------------------------------------------------------------------------------------------------------------
 	}
 
 	override bool CanDo(ItemBase ingredients[], PlayerBase player)//final check for recipe's validity

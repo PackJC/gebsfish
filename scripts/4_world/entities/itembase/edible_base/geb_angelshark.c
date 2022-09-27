@@ -8,8 +8,6 @@
 
 */
 
-//Added so fish cannot be put into cargo, it is simply too large
-
 
 class geb_Angelshark extends Edible_Base
 {
@@ -33,53 +31,20 @@ class geb_Angelshark extends Edible_Base
 		return true;
 	}
 
-	override bool CanReceiveItemIntoHands(EntityAI item_to_hands)
-	{
-		return false;
-	}
 
 	override bool CanSaveItemInHands(EntityAI item_in_hands)
 	{
 		return false;
 	}
 
-	override bool CanPutIntoHands(EntityAI parent)
-	{
-		return false;
-	}
 
-
-	override bool CanPutInCargo(EntityAI item)
-    {
-        if (!super.CanPutInCargo(item))
-            return false;
-
-        // only handle licenses with special logic
-        if (item.IsKindOf("Transport"))
-        {
-                return true;
-        }
-
-        return false;
-    }
-
-	override bool CanLoadItemIntoCargo(EntityAI item)
-    {
-        if (!super.CanLoadItemIntoCargo(item))
-            return false;
-
-        // only handle licenses with special logic
-        if (item.IsKindOf("Transport"))
-        {
-                return true;
-        }
-
-        return false;
-    }
-
-	override bool IsTakeable()
-	{
-		return false;
-	}
-
+	override bool IsHeavyBehaviour() 
+{
+   return true;
+}
+    
+override bool IsTwoHandedBehaviour() 
+{
+   return true;
+}
 }

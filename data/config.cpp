@@ -9225,8 +9225,8 @@ hiddenSelections[] = {
     rotationFlags = 17;
     weight = 3700;
     itemSize[] = {
-      6,
-      2
+        25,
+        8
     };
     stackedUnit = "g";
     quantityBar = 1;
@@ -9814,8 +9814,8 @@ hiddenSelections[] = {
     rotationFlags = 17;
     weight = 8000;
     itemSize[] = {
-      10,
-      4
+        25,
+        8
     };
     stackedUnit = "g";
     quantityBar = 1;
@@ -11285,8 +11285,8 @@ hiddenSelections[] = {
       rotationFlags = 17;
       weight = 3700;
       itemSize[] = {
-        6,
-        2
+        25,
+        8
       };
       stackedUnit = "g";
       quantityBar = 1;
@@ -11432,8 +11432,8 @@ hiddenSelections[] = {
       rotationFlags = 17;
       weight = 3700;
       itemSize[] = {
-        6,
-        2
+        25,
+        8
       };
       stackedUnit = "g";
       quantityBar = 1;

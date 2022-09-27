@@ -19,9 +19,9 @@ class FileReader
 	static ref map<string, float> fresh_chance_map = new map<string, float>();
 	static ref map<string, float> salt_chance_map = new map<string, float>();
 	static ref map<string, float> bug_chance_map = new map<string, float>();
-	static ref map<string, float> fillet_map = new map<string, float>();
+	static ref map<string, float> fillet_chance_map = new map<string, float>();
 
-	private static ref FileReader instance;
+	static ref FileReader instance;
 
 	void FileReader()
 	{
@@ -110,12 +110,13 @@ class FileReader
 			string fillet_line;
 			while (FGets(fillet_file, fillet_line) != -1)
 			{
-				/// geb_Bluegill=30 turns to name=geb+Bluegill and value=30
 				fillet_line.Trim();
-				int tokenIndex = fillet_line.IndexOf("=");
-				int lengthIndex = fillet_line.Length() - tokenIndex;
-				fillet_map[fillet_line.Substring(0, tokenIndex)] = (fillet_line.Substring(tokenIndex + 1, lengthIndex - 1)).ToFloat();
+				int tokenIndex3 = fillet_line.IndexOf("=");
+				int lengthIndex3 = fillet_line.Length() - tokenIndex3;
+				fillet_chance_map[fillet_line.Substring(0, tokenIndex3)] = (fillet_line.Substring(tokenIndex3 + 1, lengthIndex3 - 1)).ToFloat();
 			}
+
+			Print("THIS WORKS: " + fillet_chance_map.Get("geb_ASIANSEABASS"));
 			CloseFile(fillet_file);
 		}
 		if (FileExist(BUG_CONFIG_PATH))
@@ -270,10 +271,9 @@ class FileReader
 	{
 		return bug_chance_map;
 	}
-
 	
-	static map<string, float> GetFilletMap()
+	static map<string, float> GetFilletChanceMap()
 	{
-		return fillet_map;
+		return fillet_chance_map;
 	}
 };

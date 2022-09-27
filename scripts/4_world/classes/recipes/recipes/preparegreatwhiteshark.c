@@ -83,6 +83,8 @@ class PrepareGreatwhiteshark extends PrepareFish
 			m_ResultUseSoftSkills[i] = false;// set 'true' to allow modification of the values by softskills on this result
 			m_ResultReplacesIngredient[i] = 0;// value == -1 means do nothing; a value >= 0 means this result will transfer item propertiesvariables, attachments etc.. from an ingredient value
 		}
+		AddResult("Bone");
+		AddResult("Bone");
 		//----------------------------------------------------------------------------------------------------------------------
 	}
 

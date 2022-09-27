@@ -1,13 +1,3 @@
-/*
-
-  CREATED BY PACKJC
-  https://github.com/PackJC/gebsfish
-  https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
-  https://discord.com/invite/G8uSGZ8yyf
-  Contributions welcome via github
-
-*/
-
 class PrepareAsianseabass extends PrepareFish
 {
 	override void Init()
@@ -21,12 +11,16 @@ class PrepareAsianseabass extends PrepareFish
 		//conditions
 		m_MinDamageIngredient[0] = -1;//-1 = disable check
 		m_MaxDamageIngredient[0] = 3;//-1 = disable check
+		
 		m_MinQuantityIngredient[0] = -1;//-1 = disable check
 		m_MaxQuantityIngredient[0] = -1;//-1 = disable check
+		
 		m_MinDamageIngredient[1] = -1;//-1 = disable check
 		m_MaxDamageIngredient[1] = 3;//-1 = disable check
+		
 		m_MinQuantityIngredient[1] = -1;//-1 = disable check
 		m_MaxQuantityIngredient[1] = -1;//-1 = disable check
+		//----------------------------------------------------------------------------------------------------------------------
 		
 		//INGREDIENTS
 		//ingredient 1
@@ -39,7 +33,7 @@ class PrepareAsianseabass extends PrepareFish
 		m_IngredientUseSoftSkills[0] = false;// set 'true' to allow modification of the values by softskills on this ingredient
 		
 		//ingredient 2
-		InsertIngredient(1,"Sickle");
+		InsertIngredient(1,"Sickle");//you can insert multiple ingredients this way
 		InsertIngredient(1,"KukriKnife");
 		InsertIngredient(1,"FangeKnife");
 		InsertIngredient(1,"Hacksaw");
@@ -74,8 +68,8 @@ class PrepareAsianseabass extends PrepareFish
 		m_IngredientAddQuantity[1] = 0;// 0 = do nothing
 		m_IngredientDestroy[1] = false;// false = do nothing
 		m_IngredientUseSoftSkills[1] = true;// set 'true' to allow modification of the values by softskills on this ingredient
-
-		for (int i = 0; i <  geb_Asianseabass_map["geb_Asianseabass"]; ++i){
+		//----------------------------------------------------------------------------------------------------------------------
+		for (float i = 0; i < geb_Asianseabass_map["geb_Asianseabass"]; ++i){
 			AddResult("geb_AsianseabassFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
@@ -86,6 +80,7 @@ class PrepareAsianseabass extends PrepareFish
 			m_ResultUseSoftSkills[i] = false;// set 'true' to allow modification of the values by softskills on this result
 			m_ResultReplacesIngredient[i] = 0;// value == -1 means do nothing; a value >= 0 means this result will transfer item propertiesvariables, attachments etc.. from an ingredient value
 		}
+		//----------------------------------------------------------------------------------------------------------------------
 	}
 
 	override bool CanDo(ItemBase ingredients[], PlayerBase player)//final check for recipe's validity
