@@ -141,7 +141,7 @@ class cfgVehicles {
 			};
 		};
 	};
-	class Sneakers_Black: Sneakers_ColorBase
+	class geb_Fishingboots_Black: Fishingboots_ColorBase
 	{
 		scope=2;
 		visibilityModifier=0.85000002;
@@ -2086,7 +2086,55 @@ class cfgVehicles {
       hiddenSelectionsTextures[] = {
        "\gebsfish\data\tackle\geb_metalhookbobber2.paa";
       };
-     
+           class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 30;
+                  healthLevels[] = {
+
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
   };
   class geb_MetalHookBobber3 : geb_MetalHookBobberBase {
       scope = 2;
@@ -2404,7 +2452,55 @@ class cfgVehicles {
     displayName = "Metal Hook & Bobber 1 with Worm";
     descriptionShort = "A metal hook with a bobber attached, with a Worm used as bait.";
     hookType = "geb_MetalHookBobber1";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 10;
+                  healthLevels[] = {
 
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
     hiddenSelections[] = {
       "zbytek"
     };
@@ -2417,6 +2513,55 @@ class cfgVehicles {
       displayName = "Metal Hook & Bobber 2 with Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Worm used as bait.";
     hookType = "geb_MetalHookBobber2";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 10;
+                  healthLevels[] = {
+
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
       hiddenSelections[] = {
         "zbytek"
       };
@@ -2429,7 +2574,55 @@ class cfgVehicles {
       displayName = "Metal Hook & Bobber 3 with Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Worm used as bait.";
     hookType = "geb_MetalHookBobber3";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 10;
+                  healthLevels[] = {
 
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
       hiddenSelections[] = {
         "zbytek"
       };
@@ -2442,6 +2635,55 @@ class cfgVehicles {
       displayName = "Metal Hook & Bobber 4 with Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Worm used as bait.";
     hookType = "geb_MetalHookBobber4";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 10;
+                  healthLevels[] = {
+
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
       hiddenSelections[] = {
         "zbytek"
       };
@@ -2455,7 +2697,55 @@ class cfgVehicles {
       displayName = "Metal Hook & Bobber 1 with Rubber Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Rubber Worm used as bait.";
     hookType = "geb_MetalHookBobber1";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 10;
+                  healthLevels[] = {
 
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
       hiddenSelections[] = {
         "zbytek"
       };
@@ -2468,7 +2758,55 @@ class cfgVehicles {
       displayName = "Metal Hook & Bobber 2 with Rubber Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Rubber Worm used as bait.";
     hookType = "geb_MetalHookBobber2";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 10;
+                  healthLevels[] = {
 
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
       hiddenSelections[] = {
         "zbytek"
       };
@@ -2481,6 +2819,55 @@ class cfgVehicles {
       displayName = "Metal Hook & Bobber 3 with Rubber Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Rubber Worm used as bait.";
     hookType = "geb_MetalHookBobber3";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 10;
+                  healthLevels[] = {
+
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
       hiddenSelections[] = {
         "zbytek"
       };
@@ -2493,7 +2880,55 @@ class cfgVehicles {
       displayName = "Metal Hook & Bobber 4 with Rubber Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Rubber Worm used as bait.";
     hookType = "geb_MetalHookBobber4";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 10;
+                  healthLevels[] = {
 
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
       hiddenSelections[] = {
         "zbytek"
       };
@@ -2507,7 +2942,55 @@ class cfgVehicles {
       displayName = "Metal Hook & Bobber 1 with Grub Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Grub Worm used as bait.";
     hookType = "geb_MetalHookBobber1";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 10;
+                  healthLevels[] = {
 
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
       hiddenSelections[] = {
         "zbytek"
       };
@@ -2520,7 +3003,55 @@ class cfgVehicles {
       displayName = "Metal Hook & Bobber 2 with Grub Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Grub Worm used as bait.";
     hookType = "geb_MetalHookBobber2";
-      
+            class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 10;
+                  healthLevels[] = {
+
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
 hiddenSelections[] = {
         "zbytek"
       };
@@ -2533,7 +3064,55 @@ hiddenSelections[] = {
       displayName = "Metal Hook & Bobber 3 with Grub Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Grub Worm used as bait.";
         hookType = "geb_MetalHookBobber3";
-      
+            class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 10;
+                  healthLevels[] = {
+
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
         hiddenSelections[] = {
         "zbytek"
       };
@@ -2546,7 +3125,55 @@ hiddenSelections[] = {
       displayName = "Metal Hook & Bobber 4 with Grub Worm";
       descriptionShort = "A metal hook with a bobber attached, with a Grub Worm used as bait.";
     hookType = "geb_MetalHookBobber4";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 10;
+                  healthLevels[] = {
 
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
 hiddenSelections[] = {
         "zbytek"
       };
@@ -2565,8 +3192,56 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_metalhookbobber1_baited_grasshopper.paa";
       };
-      hookType = "MetalHookBobber1";
+      hookType = "geb_MetalHookBobber1";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 10;
+                  healthLevels[] = {
 
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
   };
   class geb_MetalHookBobber2GrassHopperBait : geb_MetalHookBobberGrassHopperBaitBase {
       scope = 2;
@@ -2579,8 +3254,56 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_metalhookbobber2_baited_grasshopper.paa";
       };
-      hookType = "MetalHookBobber2";
+      hookType = "geb_MetalHookBobber2";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 10;
+                  healthLevels[] = {
 
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
   };
   class geb_MetalHookBobber3GrassHopperBait : geb_MetalHookBobberGrassHopperBaitBase {
       scope = 2;
@@ -2593,8 +3316,56 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_metalhookbobber3_baited_grasshopper.paa";
       };
-      hookType = "MetalHookBobber3";
+      hookType = "geb_MetalHookBobber3";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 10;
+                  healthLevels[] = {
 
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
   };
   class geb_MetalHookBobber4GrassHopperBait : geb_MetalHookBobberGrassHopperBaitBase {
       scope = 2;
@@ -2607,8 +3378,56 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_metalhookbobber4_baited_grasshopper.paa";
       };
-      hookType = "MetalHookBobber4";
+      hookType = "geb_MetalHookBobber4";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 10;
+                  healthLevels[] = {
 
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
   };
 
   class geb_MetalHookBobber1MinnowBait : geb_MetalHookBobberMinnowBaitBase {
@@ -2622,8 +3441,56 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_metalhookbobber1_baited_minnow.paa";
       };
-      hookType = "MetalHookBobber1";
+      hookType = "geb_MetalHookBobber1";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 10;
+                  healthLevels[] = {
 
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
   };
   class geb_MetalHookBobber2MinnowBait : geb_MetalHookBobberMinnowBaitBase {
       scope = 2;
@@ -2635,8 +3502,56 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_metalhookbobber2_baited_minnow.paa";
       };
-      hookType = "MetalHookBobber2";
+      hookType = "geb_MetalHookBobber2";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 10;
+                  healthLevels[] = {
 
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
   };
   class geb_MetalHookBobber3MinnowBait : geb_MetalHookBobberMinnowBaitBase {
       scope = 2;
@@ -2648,8 +3563,56 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_metalhookbobber3_baited_minnow.paa";
       };
-      hookType = "MetalHookBobber3";
+      hookType = "geb_MetalHookBobber3";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 10;
+                  healthLevels[] = {
 
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
   };
   class geb_MetalHookBobber4MinnowBait : geb_MetalHookBobberMinnowBaitBase {
       scope = 2;
@@ -2661,8 +3624,56 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_metalhookbobber4_baited_minnow.paa";
       };
-      hookType = "MetalHookBobber4";
+      hookType = "geb_MetalHookBobber4";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 10;
+                  healthLevels[] = {
 
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
   };
 
   class geb_MetalHookBobber1FieldCricketBait : geb_MetalHookBobberFieldCricketBaitBase {
@@ -2675,7 +3686,56 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_metalhookbobber1_baited_fieldcricket.paa";
       };
-      hookType = "MetalHookBobber1";
+      hookType = "geb_MetalHookBobber1";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 30;
+                  healthLevels[] = {
+
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
 
   };
   class geb_MetalHookBobber2FieldCricketBait : geb_MetalHookBobberFieldCricketBaitBase {
@@ -2688,7 +3748,7 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_metalhookbobber2_baited_fieldcricket.paa";
       };
-      hookType = "MetalHookBobber2";
+      hookType = "geb_MetalHookBobber2";
 
   };
   class geb_MetalHookBobber3FieldCricketBait : geb_MetalHookBobberFieldCricketBaitBase {
@@ -2701,7 +3761,7 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_metalhookbobber3_baited_fieldcricket.paa";
       };
-      hookType = "MetalHookBobber3";
+      hookType = "geb_MetalHookBobber3";
 
   };
   class geb_MetalHookBobber4FieldCricketBait : geb_MetalHookBobberFieldCricketBaitBase {
@@ -3498,6 +4558,8 @@ hiddenSelections[] = {
               };
           };
       };
+      hookType = "geb_BoneHookBobber1";
+
 
   };
   class geb_BoneHookBobber2WormBait : geb_MetalHookBobberWormBaitBase {
@@ -3559,6 +4621,7 @@ hiddenSelections[] = {
               };
           };
       };
+      hookType = "geb_BoneHookBobber2";
 
   };
   class geb_BoneHookBobber3WormBait : geb_MetalHookBobberWormBaitBase {
@@ -3620,6 +4683,7 @@ hiddenSelections[] = {
               };
           };
       };
+      hookType = "geb_BoneHookBobber3";
 
   };
   class geb_BoneHookBobber4WormBait : geb_MetalHookBobberWormBaitBase {
@@ -3681,6 +4745,7 @@ hiddenSelections[] = {
               };
           };
       };
+      hookType = "geb_BoneHookBobber4";
 
   };
 
@@ -3688,7 +4753,6 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "Bone Hook & Bobber 1 with Rubber Worm";
       descriptionShort = "A Bone hook with a bobber attached, with a Rubber Worm used as bait.";
-      hookType = "BoneHookBobber1";
       hiddenSelections[] = {
         "zbytek"
       };
@@ -3744,14 +4808,15 @@ hiddenSelections[] = {
               };
           };
       };
+      hookType = "geb_BoneHookBobber1";
+
 
   };
   class geb_BoneHookBobber2RubberWormBait : geb_MetalHookBobberWormBaitBase {
       scope = 2;
       displayName = "Bone Hook & Bobber 2 with Rubber Worm";
       descriptionShort = "A Bone hook with a bobber attached, with a Rubber Worm used as bait.";
-      hookType = "BoneHookBobber2";
-
+      hookType = "geb_BoneHookBobber2";
       hiddenSelections[] = {
         "zbytek"
       };
@@ -3807,13 +4872,12 @@ hiddenSelections[] = {
               };
           };
       };
-
   };
   class geb_BoneHookBobber3RubberWormBait : geb_MetalHookBobberWormBaitBase {
       scope = 2;
       displayName = "Bone Hook & Bobber 3 with Rubber Worm";
       descriptionShort = "A Bone hook with a bobber attached, with a Rubber Worm used as bait.";
-      hookType = "BoneHookBobber3";
+      hookType = "geb_BoneHookBobber3";
 
       hiddenSelections[] = {
         "zbytek"
@@ -3876,7 +4940,7 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "Bone Hook & Bobber 4 with Rubber Worm";
       descriptionShort = "A Bone hook with a bobber attached, with a Rubber Worm used as bait.";
-      hookType = "BoneHookBobber4";
+      hookType = "geb_BoneHookBobber4";
 
       hiddenSelections[] = {
         "zbytek"
@@ -3940,7 +5004,7 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "Bone Hook & Bobber 1 with Grub Worm";
       descriptionShort = "A Bone hook with a bobber attached, with a Grub Worm used as bait.";
-      hookType = "BoneHookBobber1";
+      hookType = "geb_BoneHookBobber1";
       hiddenSelections[] = {
         "zbytek"
       };
@@ -4002,7 +5066,7 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "Bone Hook & Bobber 2 with Grub Worm";
       descriptionShort = "A Bone hook with a bobber attached, with a Grub Worm used as bait.";
-      hookType = "BoneHookBobber2";
+      hookType = "geb_BoneHookBobber2";
       hiddenSelections[] = {
         "zbytek"
       };
@@ -4064,7 +5128,7 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "Bone Hook & Bobber 3 with Grub Worm";
       descriptionShort = "A Bone hook with a bobber attached, with a Grub Worm used as bait.";
-      hookType = "BoneHookBobber3";
+      hookType = "geb_BoneHookBobber3";
 
       hiddenSelections[] = {
         "zbytek"
@@ -4127,7 +5191,7 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "Bone Hook & Bobber 4 with Grub Worm";
       descriptionShort = "A Bone hook with a bobber attached, with a Grub Worm used as bait.";
-      hookType = "BoneHookBobber4";
+      hookType = "geb_BoneHookBobber4";
       hiddenSelections[] = {
         "zbytek"
       };
@@ -4196,7 +5260,7 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_bonehookbobber1_baited_grasshopper.paa";
       };
-      hookType = "BoneHookBobber1";
+      hookType = "geb_BoneHookBobber1";
       class DamageSystem {
           class GlobalHealth {
               class Health {
@@ -4259,7 +5323,7 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_bonehookbobber2_baited_grasshopper.paa";
       };
-      hookType = "BoneHookBobber2";
+      hookType = "geb_BoneHookBobber2";
       class DamageSystem {
           class GlobalHealth {
               class Health {
@@ -4322,7 +5386,7 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_bonehookbobber3_baited_grasshopper.paa";
       };
-      hookType = "BoneHookBobber3";
+      hookType = "geb_BoneHookBobber3";
       class DamageSystem {
           class GlobalHealth {
               class Health {
@@ -4384,7 +5448,7 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_bonehookbobber4_baited_grasshopper.paa";
       };
-      hookType = "BoneHookBobber4";
+      hookType = "geb_BoneHookBobber4";
       class DamageSystem {
           class GlobalHealth {
               class Health {
@@ -4447,7 +5511,7 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_bonehookbobber1_baited_minnow.paa";
       };
-      hookType = "BoneHookBobber1";
+      hookType = "geb_BoneHookBobber1";
       class DamageSystem {
           class GlobalHealth {
               class Health {
@@ -4509,7 +5573,7 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_bonehookbobber2_baited_minnow.paa";
       };
-      hookType = "BoneHookBobber2";
+      hookType = "geb_BoneHookBobber2";
       class DamageSystem {
           class GlobalHealth {
               class Health {
@@ -4571,7 +5635,7 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_bonehookbobber3_baited_minnow.paa";
       };
-      hookType = "BoneHookBobber3";
+      hookType = "geb_BoneHookBobber3";
       class DamageSystem {
           class GlobalHealth {
               class Health {
@@ -4633,7 +5697,7 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_bonehookbobber4_baited_minnow.paa";
       };
-      hookType = "BoneHookBobber4";
+      hookType = "geb_BoneHookBobber4";
       class DamageSystem {
           class GlobalHealth {
               class Health {
@@ -4696,7 +5760,7 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_bonehookbobber1_baited_fieldcricket.paa";
       };
-      hookType = "BoneHookBobber1";
+      hookType = "geb_BoneHookBobber1";
       class DamageSystem {
           class GlobalHealth {
               class Health {
@@ -4758,7 +5822,7 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_bonehookbobber2_baited_fieldcricket.paa";
       };
-      hookType = "BoneHookBobber2";
+      hookType = "geb_BoneHookBobber2";
       class DamageSystem {
           class GlobalHealth {
               class Health {
@@ -4820,7 +5884,7 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_bonehookbobber3_baited_fieldcricket.paa";
       };
-      hookType = "BoneHookBobber3";
+      hookType = "geb_BoneHookBobber3";
       class DamageSystem {
           class GlobalHealth {
               class Health {
@@ -4882,7 +5946,7 @@ hiddenSelections[] = {
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\tackle\geb_bonehookbobber4_baited_fieldcricket.paa";
       };
-      hookType = "BoneHookBobber4";
+      hookType = "geb_BoneHookBobber4";
       class DamageSystem {
           class GlobalHealth {
               class Health {

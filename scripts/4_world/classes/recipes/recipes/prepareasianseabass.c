@@ -1,15 +1,8 @@
 class PrepareAsianseabass extends PrepareFish
 {
+	int ran;
 	override void Init()
 	{
-		super.Init();
-		auto geb_Asianseabass_map = FileReader.GetFilletChanceMap();
-
-		Print("Line: 8" + FileReader.GetFilletChanceMap());
-		Print("Line: 9" + geb_Asianseabass_map.GET("geb_ASIANSEABASS");
-		Print("Line: 10" + geb_Asianseabass_map.GET("geb_Asianseabass");
-
-
 		m_Name = "#STR_gutandprepare0";
 		m_IsInstaRecipe = false;//should this recipe be performed instantly without animation
 		m_AnimationLength = 1.5;//animation length in relative time units
@@ -76,7 +69,8 @@ class PrepareAsianseabass extends PrepareFish
 		m_IngredientDestroy[1] = false;// false = do nothing
 		m_IngredientUseSoftSkills[1] = true;// set 'true' to allow modification of the values by softskills on this ingredient
 		//----------------------------------------------------------------------------------------------------------------------
-		for (float i = 0; i < geb_Asianseabass_map["geb_Asianseabass"]; ++i){
+		ran = Math.RandomFloatInclusive(1.0,2.0);
+		for (float i = 0; i < ran; ++i){
 			AddResult("geb_AsianseabassFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
