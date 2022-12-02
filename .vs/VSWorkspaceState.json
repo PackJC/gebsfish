@@ -2,15 +2,16 @@
   "ExpandedNodes": [
     "",
     "\\data",
-    "\\data\\fish",
+    "\\data\\ambientfish",
+    "\\scripts",
     "\\scripts\\4_world",
     "\\scripts\\4_world\\classes",
+    "\\scripts\\4_world\\classes\\recipes\\recipes",
     "\\scripts\\4_world\\classes\\useractioncomponent",
     "\\scripts\\4_world\\classes\\useractioncomponent\\actions",
     "\\scripts\\4_world\\classes\\useractioncomponent\\actions\\continuous",
-    "\\scripts\\4_world\\entities",
-    "\\scripts\\4_world\\entities\\itembase"
+    "\\scripts\\5_mission"
   ],
-  "SelectedNode": "\\data\\tackle",
+  "SelectedNode": "\\scripts\\4_world\\classes\\useractioncomponent\\actionconstructor.c",
   "PreviewInSolutionExplorer": false
 }

@@ -42,10 +42,20 @@ class CfgMods
 		type="mod";
 		dependencies[]=
 		{
-			"World"
+			"Game",
+			"World",
+			"Mission"
 		};
 		class defs
 		{
+			class gameScriptModule
+			{
+				value="";
+				files[]=
+				{
+					"gebsfish\Scripts\3_Game"
+				};
+			};
 			class worldScriptModule
 			{
 				value="";

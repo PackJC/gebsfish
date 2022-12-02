@@ -8,6 +8,11 @@
 
 */
 
+class CfgNonAIVehicles
+{
+	class StaticObject;
+};
+
 class CfgPatches {
   class gebsfish {
     weapons[] = {};
@@ -18,7 +23,6 @@ class CfgPatches {
     };
   };
 };
-
 class cfgVehicles {
 
   //Instantiate Needed Classes
@@ -31,129 +35,30 @@ class cfgVehicles {
   class Worm;
   class Bottle_Base;
   class Clothing;
+  
+  /*
+
+  DYNAMIC FISH
+
+  */
+  class Animal_GallusGallusDomesticusF;
+  class Animal_geb_Ambientfish1: Animal_GallusGallusDomesticusF
+  {
+	scope = 2;
+    model = "gebsfish\data\ambientfish\geb_Ambientfish1.p3d";
+  };
+  class House;
+  class geb_Ambientfish1: House
+  {
+    scope=1;
+    model = "gebsfish\data\ambientfish\geb_Ambientfish1.p3d";
+  };
+
   /*
 	
     CLOTHES
 	
   */
-
-
-  	class Fishingboots_ColorBase: Clothing
-	{
-		displayName="$STR_fishingboots";
-		descriptionShort="$STR_fishingboots_desc";
-		model="\gebsfish\data\clothes\fishingboots_ground.p3d";
-		inventorySlot[]=
-		{
-			"Feet"
-		};
-		itemInfo[]=
-		{
-			"Clothing",
-			"Feet"
-		};
-		itemSize[]={4,2};
-		weight=780;
-		durability=0.34999999;
-		varWetMax=1;
-		heatIsolation=0.2;
-		repairableWithKits[]={3};
-		repairCosts[]={25};
-		soundAttType="Sneakers";
-		hiddenSelections[]=
-		{
-			"camoGround",
-			"camoMale",
-			"camoFemale"
-		};
-		class ClothingTypes
-		{
-			male="\DZ\characters\shoes\fishingboots_m.p3d";
-			female="\DZ\characters\shoes\fishingboots_f.p3d";
-		};
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints=80;
-					healthLevels[]=
-					{
-						
-						{
-							1,
-							
-							{
-								"DZ\characters\shoes\data\Sneakers.rvmat"
-							}
-						},
-						
-						{
-							0.69999999,
-							
-							{
-								"DZ\characters\shoes\data\Sneakers.rvmat"
-							}
-						},
-						
-						{
-							0.5,
-							
-							{
-								"DZ\characters\shoes\data\Sneakers_damage.rvmat"
-							}
-						},
-						
-						{
-							0.30000001,
-							
-							{
-								"DZ\characters\shoes\data\Sneakers_damage.rvmat"
-							}
-						},
-						
-						{
-							0,
-							
-							{
-								"DZ\characters\shoes\data\Sneakers_destruct.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-		class AnimEvents
-		{
-			class SoundWeapon
-			{
-				class pickUpItem
-				{
-					soundSet="AthleticShoes_pickup_SoundSet";
-					id=797;
-				};
-				class drop
-				{
-					soundset="AthleticShoes_drop_SoundSet";
-					id=898;
-				};
-			};
-		};
-	};
-	class geb_Fishingboots_Black: Fishingboots_ColorBase
-	{
-		scope=2;
-		visibilityModifier=0.85000002;
-		hiddenSelectionsTextures[]=
-		{
-			"\gebsfish\data\clothes\geb_blackfishingboots.paa",
-			"\gebsfish\data\clothes\geb_blackfishingboots.paa",
-			"\gebsfish\data\clothes\geb_blackfishingboots.paa",
-		};
-	};
-
-
   //Gloves
   class NBCGloves_ColorBase;
   class geb_OrangeFishGloves: NBCGloves_ColorBase
@@ -3749,7 +3654,55 @@ hiddenSelections[] = {
         "\gebsfish\data\tackle\geb_metalhookbobber2_baited_fieldcricket.paa";
       };
       hookType = "geb_MetalHookBobber2";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 30;
+                  healthLevels[] = {
 
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
   };
   class geb_MetalHookBobber3FieldCricketBait : geb_MetalHookBobberFieldCricketBaitBase {
       scope = 2;
@@ -3762,7 +3715,55 @@ hiddenSelections[] = {
         "\gebsfish\data\tackle\geb_metalhookbobber3_baited_fieldcricket.paa";
       };
       hookType = "geb_MetalHookBobber3";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 30;
+                  healthLevels[] = {
 
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
   };
   class geb_MetalHookBobber4FieldCricketBait : geb_MetalHookBobberFieldCricketBaitBase {
       scope = 2;
@@ -3775,7 +3776,55 @@ hiddenSelections[] = {
         "\gebsfish\data\tackle\geb_metalhookbobber4_baited_fieldcricket.paa";
       };
       hookType = "MetalHookBobber4";
+      class DamageSystem {
+          class GlobalHealth {
+              class Health {
+                  hitpoints = 30;
+                  healthLevels[] = {
 
+                    {
+                      1,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.69999999,
+
+                      {
+                        "DZ\gear\consumables\data\bait.rvmat"
+                      }
+                    },
+
+                    {
+                      0.5,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0.30000001,
+
+                      {
+                        "DZ\gear\consumables\data\bait_damage.rvmat"
+                      }
+                    },
+
+                    {
+                      0,
+
+                      {
+                        "DZ\gear\consumables\data\bait_destruct.rvmat"
+                      }
+                    }
+                  };
+              };
+          };
+      };
   };
 
   class geb_MetalRubberWormBait : Inventory_Base {
@@ -14250,7 +14299,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_BluegillFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Bluegill Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_bluegill_desc";
     model = "\dz\gear\food\carp_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\bluegill_fillet_co.paa",
@@ -14263,7 +14312,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_BlackbassFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Black Bass Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_blackbass_desc";
     model = "\dz\gear\food\carp_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\blackbass_fillet_co.paa",
@@ -14277,7 +14326,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_CatfishFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Catfish Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_catfish_desc";
     model = "\dz\gear\food\carp_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\catfish_fillet_co.paa",
@@ -14291,7 +14340,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_LargemouthbassFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Large Mouth Bass Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_largemouthbass_desc";
     model = "\dz\gear\food\carp_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\largemouthbass_fillet_co.paa",
@@ -14312,7 +14361,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_NorthernpikeFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Northern Pike Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_northernpike_desc";
     model = "\dz\gear\food\carp_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\northernpike_fillet_co.paa",
@@ -14325,7 +14374,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_PerchFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Perch Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_perch_desc";
     model = "\dz\gear\food\carp_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\perch_fillet_co.paa",
@@ -14339,7 +14388,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_SaugerFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Sauger Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_sauger_desc";
     model = "\dz\gear\food\carp_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\sauger_fillet_co.paa",
@@ -14353,14 +14402,14 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_CrayfishFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Crayfish Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_crayfish_desc";
     model = "\gebsfish\data\fish\crayfishtail.p3d";
 
   };
   class geb_TroutFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Rainbow Trout Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_trout_desc";
     model = "\dz\gear\food\carp_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\trout_fillet_co.paa",
@@ -14373,7 +14422,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_BrownTroutFilletMeat : CarpFilletMeat {
       scope = 2;
       displayName = "Brown Trout Fillet";
-      descriptionShort = "Yum! A fish fillet";
+      descriptionShort = "$STR_browntrout_desc";
       model = "\dz\gear\food\carp_fillet.p3d";
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\fish\browntrout_fillet_co.paa",
@@ -14386,7 +14435,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_BrookTroutFilletMeat : CarpFilletMeat {
       scope = 2;
       displayName = "Brook Trout Fillet";
-      descriptionShort = "Yum! A fish fillet";
+      descriptionShort = "$STR_brooktrout_desc";
       model = "\dz\gear\food\carp_fillet.p3d";
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\fish\brooktrout_fillet_co.paa",
@@ -14399,7 +14448,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_CutthroatTroutFilletMeat : CarpFilletMeat {
       scope = 2;
       displayName = "Cutthroat Trout Fillet";
-      descriptionShort = "Yum! A fish fillet";
+      descriptionShort = "$STR_cutthroattrout_desc";
       model = "\dz\gear\food\carp_fillet.p3d";
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\fish\cutthroattrout_fillet_co.paa",
@@ -14412,7 +14461,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_LakeTroutFilletMeat : CarpFilletMeat {
       scope = 2;
       displayName = "Lake Trout Fillet";
-      descriptionShort = "Yum! A fish fillet";
+      descriptionShort = "$STR_laketrout_desc";
       model = "\dz\gear\food\carp_fillet.p3d";
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\fish\laketrout_fillet_co.paa",
@@ -14426,7 +14475,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_WhitebassFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "White Bass Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_whitebass_desc";
     model = "\dz\gear\food\carp_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\whitebass_fillet_co.paa",
@@ -14439,7 +14488,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_BowfinFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Bowfin Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_bowfin_desc";
     model = "\dz\gear\food\carp_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\bowfin_fillet_co.paa",
@@ -14452,7 +14501,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_SlimysculpinFilletMeat: CarpFilletMeat {
     scope = 2;
     displayName = "Slimy Sculpin Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_slimysculpin_desc";
     model = "\dz\gear\food\carp_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\slimysculpin_fillet_co.paa",
@@ -14468,7 +14517,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_AngelfishFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Angelfish Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_angelfish_desc";
     model = "\dz\gear\food\mackerel_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\angelfish_fillet_co.paa",
@@ -14481,7 +14530,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_AsianseabassFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Asianseabass Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_asianseabass_desc";
     model = "\dz\gear\food\mackerel_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\asianseabass_fillet_co.paa",
@@ -14494,7 +14543,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_BluemarlinFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Bluemarlin Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_bluemarlin_desc";
     model = "\dz\gear\food\mackerel_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\bluemarlin_fillet_co.paa",
@@ -14507,7 +14556,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_BonitaFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Bonita Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_bonita_desc";
     model = "\dz\gear\food\mackerel_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\bonita_fillet_co.paa",
@@ -14520,7 +14569,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_CherrysalmonFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Cherrysalmon Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_cherrysalmon_desc";
     model = "\dz\gear\food\mackerel_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\cherrysalmon_fillet_co.paa",
@@ -14533,7 +14582,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_SockeyesalmonFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Sockeye Salmon Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_sockeyesalmon_desc";
     model = "\dz\gear\food\mackerel_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\sockeyesalmon_fillet_co.paa",
@@ -14546,7 +14595,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_ChinooksalmonFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Chinook Salmon Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_chinooksalmon_desc";
     model = "\dz\gear\food\mackerel_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\chinooksalmon_fillet_co.paa",
@@ -14559,7 +14608,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_FlatheadmulletFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Flatheadmullet Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_flatheadmullet_desc";
     model = "\dz\gear\food\mackerel_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\flatheadmullet_fillet_co.paa",
@@ -14572,7 +14621,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_LeopardsharkFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Leopardshark Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_leopardshark_desc";
     model = "\dz\gear\food\mackerel_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\leopardshark_fillet_co.paa",
@@ -14585,7 +14634,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_PacificcodFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Pacificcod Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_pacificcod_desc";
     model = "\dz\gear\food\mackerel_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\pacificcod_fillet_co.paa",
@@ -14598,7 +14647,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_RedheadcichlidFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Redheadcichlid Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_redheadcichlid_desc";
     model = "\dz\gear\food\mackerel_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\redheadcichlid_fillet_co.paa",
@@ -14611,7 +14660,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_RoughneckrockFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Roughneckrock Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_roughneckrock_desc";
     model = "\dz\gear\food\mackerel_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\roughneckrock_fillet_co.paa",
@@ -14624,7 +14673,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_SeverumFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Severum Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_severum_desc";
     model = "\dz\gear\food\mackerel_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\severum_fillet_co.paa",
@@ -14637,7 +14686,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_ShrimpFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Shrimp Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_shrimp_desc";
     model = "\gebsfish\data\fish\shrimptail.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\shrimp_ca.paa",
@@ -14650,7 +14699,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_BluetangFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Blue Tang Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_bluetang_desc";
     model = "\dz\gear\food\mackerel_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\bluetang_fillet_co.paa",
@@ -14663,7 +14712,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_HairtailfishFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Hair Tail Fish Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_hairtailfish_desc";
     model = "\dz\gear\food\mackerel_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\hairtailfish_fillet_co.paa",
@@ -14676,7 +14725,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_HumpheadwrasseFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Humphead Wrasse Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_humpheadwrasse_desc";
     model = "\dz\gear\food\mackerel_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\humpheadwrasse_fillet_co.paa",
@@ -14689,7 +14738,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_SiamesetigerfishFilletMeat: MackerelFilletMeat {
     scope = 2;
     displayName = "Siamese Tiger Fish Fillet";
-    descriptionShort = "Yum! A fish fillet";
+    descriptionShort = "$STR_siamesetigerfish_desc";
     model = "\dz\gear\food\mackerel_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\siamesetigerfish_fillet_co.paa",
@@ -14702,7 +14751,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_GreatwhitesharkFilletMeat : MackerelFilletMeat {
       scope = 2;
       displayName = "Great White Shark Fillet";
-      descriptionShort = "Yum! A Shark fillet!";
+      descriptionShort = "$STR_greatwhiteshark_desc";
       model = "\dz\gear\food\mackerel_fillet.p3d";
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\fish\greatwhiteshark_fillet_co.paa",
@@ -14715,7 +14764,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_AngelsharkFilletMeat : MackerelFilletMeat {
       scope = 2;
       displayName = "Angel Shark Fillet";
-      descriptionShort = "Yum! A Shark fillet!";
+      descriptionShort = "$STR_angelfish_desc";
       model = "\dz\gear\food\mackerel_fillet.p3d";
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\fish\angelshark_fillet_co.paa",
@@ -14728,7 +14777,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_YellowFinTunaFilletMeat : MackerelFilletMeat {
       scope = 2;
       displayName = "Yellow Fin Tuna Fillet";
-      descriptionShort = "Yum! A Tuna fillet!";
+      descriptionShort = "$STR_yellowfintuna_desc";
       model = "\dz\gear\food\mackerel_fillet.p3d";
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\fish\yellowfintuna_fillet_co.paa",
@@ -14743,7 +14792,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_ClamFilletMeat : MackerelFilletMeat {
       scope = 2;
       displayName = "Clam Meat";
-      descriptionShort = "Yum! A piece of Clam meat!";
+      descriptionShort = "$STR_bloodclam_desc";
       model = "\dz\gear\food\mackerel_fillet.p3d";
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\fish\clamfillet.paa",
@@ -14756,7 +14805,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_MusselFilletMeat : MackerelFilletMeat {
       scope = 2;
       displayName = "Mussel Meat";
-      descriptionShort = "Yum! A piece of Mussel meat!";
+      descriptionShort = "$STR_mussel_desc";
       model = "\dz\gear\food\mackerel_fillet.p3d";
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\fish\musselfillet.paa",
@@ -14769,7 +14818,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_KingcrabFilletMeat : MackerelFilletMeat {
       scope = 2;
       displayName = "King Crab Meat";
-      descriptionShort = "Yum! A piece of King Crab meat!";
+      descriptionShort = "$STR_kingcrab_desc";
       model = "\dz\gear\food\mackerel_fillet.p3d";
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\fish\kingcrabfillet.paa",
@@ -14782,7 +14831,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_KingcrabLegs : MackerelFilletMeat {
       scope = 2;
       displayName = "King Crab Legs";
-      descriptionShort = "Yum! Some King Crab Legs!";
+      descriptionShort = "$STR_kingcrab_desc";
       model = "\gebsfish\data\fish\kingcrablegs.p3d";
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\fish\kingcrab.paa",
@@ -14795,7 +14844,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_JellyfishFilletMeat : MackerelFilletMeat {
       scope = 2;
       displayName = "Jellyfish Fillet";
-      descriptionShort = "Yum! A piece of jellyfish!";
+      descriptionShort = "$STR_jellyfish_desc";
       model = "\dz\gear\food\mackerel_fillet.p3d";
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\fish\jellyfishfillet.paa",
@@ -14808,7 +14857,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_LobsterFilletMeat : MackerelFilletMeat {
       scope = 2;
       displayName = "Lobster Fillet";
-      descriptionShort = "Yum! A piece of Lobster!";
+      descriptionShort = "$STR_lobster_desc";
       model = "\dz\gear\food\mackerel_fillet.p3d";
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\fish\lobsterfillet.paa",
@@ -14821,7 +14870,7 @@ class geb_Chinooksalmon: Edible_Base {
   class geb_LobsterTail : MackerelFilletMeat {
       scope = 2;
       displayName = "Lobster Tail";
-      descriptionShort = "Yum! A piece of Lobster!";
+      descriptionShort = "$STR_lobster_desc";
       model = "\gebsfish\data\fish\lobstertail.p3d";
       hiddenSelectionsTextures[] = {
         "\gebsfish\data\fish\shrimptail.paa",

@@ -10,8 +10,11 @@
 
 modded class ActionFishingNewCB : ActionContinuousBaseCB
 {
+	ItemBase geb_AmbientFish2;
+
 	override void HandleFishingResultSuccess()
 	{
+
 		float rndSaltFish;
 		float rndFreshFish;
 		float rnd;
@@ -29,6 +32,7 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 			ItemBase fish;
 			
 			rnd = Math.RandomFloatInclusive(0.0, 1.0);
+
 
 			if (!m_ActionDataFishing.m_Bait)
 				m_ActionDataFishing.InitBait(ItemBase.Cast(m_ActionDataFishing.m_MainItem.FindAttachmentBySlotName("Hook")));
@@ -48,6 +52,7 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 				//Saltwater cast
 				if (m_ActionDataFishing.m_IsSurfaceSea)
 				{
+					//Get position of fishing bobber
 					//Saltwater Calculate Total Weight
 					foreach (auto skey, auto svalue : salt_chance_map) {
 						salt_sum += svalue;
@@ -64,7 +69,6 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 						}
 						rndSaltFish -= s_value;
 					}
-
 					fish = ItemBase.Cast(GetGame().CreateObject(selected_salt_fish, m_ActionDataFishing.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
 				}
 				//Freshwater cast
@@ -87,6 +91,7 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 						rndFreshFish -= f_value;
 					}
 					fish = ItemBase.Cast(GetGame().CreateObject(selected_fresh_fish, m_ActionDataFishing.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
+
 				}
 			}
 			//Junk catch
@@ -99,6 +104,9 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 			
 			if (fish)
 			{
+				//Remove Ambient fish after ''0'' probablyh like a couple minutes
+
+
 				fish.SetWet(0.3);
 				if (fish.HasQuantity())
 				{
@@ -114,3 +122,13 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 		}
 	}
 };
+
+/*
+
+  CREATED BY PACKJC
+  https://github.com/PackJC/gebsfish
+  https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
+  https://discord.com/invite/G8uSGZ8yyf
+  Contributions welcome via github
+
+*/
