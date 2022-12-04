@@ -86,13 +86,15 @@ class FileReader
 
 
 			//This is to force subscribers files to add new fish, if they are added
-			if (fresh_chance_map.Contains("geb_SOCKEYESALMON_CHANCE")) {
+			if (fresh_chance_map.Contains("geb_SMALLMOUTHBASS_CHANCE")) {
 				newLakeTroutDetected = true;
 			}
 			if (!newLakeTroutDetected) {
 				FileHandle fresh_file_updater = OpenFile(FRESH_CONFIG_PATH, FileMode.APPEND);
-				FPrintln(fresh_file_updater, "geb_SOCKEYESALMON_CHANCE=66");
-				FPrintln(fresh_file_updater, "geb_CHINOOKSALMON_CHANCE=66");
+				FPrintln(fresh_file_updater, "geb_SMALLMOUTHBASS_CHANCE=66");
+				FPrintln(fresh_file_updater, "geb_SMALLMOUTHBASS_CHANCE=66");
+				FPrintln(fresh_file_updater, "geb_SUNFISH_CHANCE=66");
+				FPrintln(fresh_file_updater, "geb_WALLEYE_CHANCE=66");
 
 			}
 			CloseFile(fresh_file_updater);
@@ -150,6 +152,9 @@ class FileReader
 			FPrintln(f, "geb_BLACKBASS_CHANCE=66");
 			FPrintln(f, "geb_CATFISH_CHANCE=66");
 			FPrintln(f, "geb_LARGEMOUTHBASS_CHANCE=66");
+			FPrintln(f, "geb_SMALLMOUTHBASS_CHANCE=66");
+			FPrintln(f, "geb_SUNFISH_CHANCE=66");
+			FPrintln(f, "geb_WALLEYE_CHANCE=66");
 			FPrintln(f, "geb_MINNOW_CHANCE=66");
 			FPrintln(f, "geb_NORTHERNPIKE_CHANCE=66");
 			FPrintln(f, "geb_PERCH_CHANCE=66");

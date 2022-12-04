@@ -1320,7 +1320,7 @@ class cfgVehicles {
 							1,
 							
 							{
-								"DZ\gear\tackle\data\"""".rvmat"
+
 							}
 						},
 						
@@ -1328,7 +1328,7 @@ class cfgVehicles {
 							0.69999999,
 							
 							{
-								"DZ\gear\tackle\data\"""".rvmat"
+
 							}
 						},
 						
@@ -1336,7 +1336,7 @@ class cfgVehicles {
 							0.5,
 							
 							{
-								"DZ\gear\tackle\data\""""_damage.rvmat"
+
 							}
 						},
 						
@@ -1344,7 +1344,6 @@ class cfgVehicles {
 							0.30000001,
 							
 							{
-								"DZ\gear\tackle\data\""""_damage.rvmat"
 							}
 						},
 						
@@ -1352,7 +1351,7 @@ class cfgVehicles {
 							0,
 							
 							{
-								"DZ\gear\tackle\data\""""_destruct.rvmat"
+
 							}
 						}
 					};
@@ -1453,7 +1452,7 @@ class cfgVehicles {
                             1,
 
                             {
-                                "DZ\gear\tackle\data\"""".rvmat"
+
                             }
                         },
 
@@ -1461,7 +1460,7 @@ class cfgVehicles {
                             0.69999999,
 
                             {
-                                "DZ\gear\tackle\data\"""".rvmat"
+
                             }
                         },
 
@@ -1469,7 +1468,7 @@ class cfgVehicles {
                             0.5,
 
                             {
-                                "DZ\gear\tackle\data\""""_damage.rvmat"
+
                             }
                         },
 
@@ -1477,7 +1476,7 @@ class cfgVehicles {
                             0.30000001,
 
                             {
-                                "DZ\gear\tackle\data\""""_damage.rvmat"
+
                             }
                         },
 
@@ -1485,7 +1484,6 @@ class cfgVehicles {
                             0,
 
                             {
-                                "DZ\gear\tackle\data\""""_destruct.rvmat"
                             }
                         }
                     };
@@ -1589,7 +1587,6 @@ class cfgVehicles {
 							1,
 							
 							{
-								"DZ\gear\tackle\data\"""".rvmat"
 							}
 						},
 						
@@ -1597,7 +1594,6 @@ class cfgVehicles {
 							0.69999999,
 							
 							{
-								"DZ\gear\tackle\data\"""".rvmat"
 							}
 						},
 						
@@ -1605,7 +1601,6 @@ class cfgVehicles {
 							0.5,
 							
 							{
-								"DZ\gear\tackle\data\""""_damage.rvmat"
 							}
 						},
 						
@@ -1613,7 +1608,6 @@ class cfgVehicles {
 							0.30000001,
 							
 							{
-								"DZ\gear\tackle\data\""""_damage.rvmat"
 							}
 						},
 						
@@ -1621,7 +1615,6 @@ class cfgVehicles {
 							0,
 							
 							{
-								"DZ\gear\tackle\data\""""_destruct.rvmat"
 							}
 						}
 					};
@@ -1721,7 +1714,7 @@ class cfgVehicles {
 							1,
 							
 							{
-								"DZ\gear\tackle\data\"""".rvmat"
+
 							}
 						},
 						
@@ -1729,7 +1722,7 @@ class cfgVehicles {
 							0.69999999,
 							
 							{
-								"DZ\gear\tackle\data\"""".rvmat"
+
 							}
 						},
 						
@@ -1737,7 +1730,6 @@ class cfgVehicles {
 							0.5,
 							
 							{
-								"DZ\gear\tackle\data\""""_damage.rvmat"
 							}
 						},
 						
@@ -1745,7 +1737,6 @@ class cfgVehicles {
 							0.30000001,
 							
 							{
-								"DZ\gear\tackle\data\""""_damage.rvmat"
 							}
 						},
 						
@@ -1753,7 +1744,6 @@ class cfgVehicles {
 							0,
 							
 							{
-								"DZ\gear\tackle\data\""""_destruct.rvmat"
 							}
 						}
 					};
@@ -8182,7 +8172,6 @@ hiddenSelections[] = {
     };
     weight = 1700;
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     stackedUnit = "g";
     quantityBar = 1;
     varQuantityInit = 1000;
@@ -8475,8 +8464,445 @@ hiddenSelections[] = {
       2
     };
     weight = 4000;
+    stackedUnit = "g";
+    quantityBar = 1;
+    varQuantityInit = 1000;
+    varQuantityMin = 0;
+    varQuantityMax = 1000;
+    isMeleeWeapon = 1;
+    class DamageSystem {
+      class GlobalHealth {
+        class Health {
+          hitpoints = 50;
+          healthLevels[] = {
+
+            {
+              1,
+              {}
+            },
+
+            {
+              0.69999999,
+              {}
+            },
+
+            {
+              0.5,
+              {}
+            },
+
+            {
+              0.30000001,
+              {}
+            },
+
+            {
+              0,
+              {}
+            }
+          };
+        };
+      };
+    };
+    class MeleeModes {
+      class Default {
+        ammo = "MeleeSoft";
+        range = 1;
+      };
+      class Heavy {
+        ammo = "MeleeSoft_Heavy";
+        range = 1;
+      };
+      class Sprint {
+        ammo = "MeleeSoft_Heavy";
+        range = 2.8;
+      };
+    };
+    inventorySlot[] = {
+      "TrapPrey_1"
+    };
+    hiddenSelections[] = {
+      "cs_raw"
+    };
+    hiddenSelectionsTextures[] = {
+      "dz\gear\food\data\carp_live_co.paa",
+      "dz\gear\food\data\carp_live_co.paa"
+    };
+    hiddenSelectionsMaterials[] = {
+      "dz\gear\food\data\carp_live.rvmat",
+      "dz\gear\food\data\carp_live.rvmat"
+    };
+    class AnimationSources: FoodAnimationSources {};
+    class Food {
+      class FoodStages {
+        class Raw {
+          visual_properties[] = {
+            0,
+            0,
+            0
+          };
+          nutrition_properties[] = {
+            1,
+            20,
+            60,
+            70,
+            1
+          };
+          cooking_properties[] = {
+            0,
+            0
+          };
+        };
+        class Rotten {
+          visual_properties[] = {
+            -1,
+            -1,
+            5
+          };
+          nutrition_properties[] = {
+            10,
+            25,
+            25,
+            1,
+            0
+          };
+          cooking_properties[] = {
+            0,
+            0
+          };
+        };
+      };
+      class FoodStageTransitions: NotCookable {};
+    };
+    class AnimEvents {
+      class SoundWeapon {
+        class openTunaCan {
+          soundSet = "openTunaCan_SoundSet";
+          id = 204;
+        };
+        class Eating_TakeFood {
+          soundSet = "Eating_TakeFood_Soundset";
+          id = 889;
+        };
+        class Eating_BoxOpen {
+          soundSet = "Eating_BoxOpen_Soundset";
+          id = 893;
+        };
+        class Eating_BoxShake {
+          soundSet = "Eating_BoxShake_Soundset";
+          id = 894;
+        };
+        class Eating_BoxEnd {
+          soundSet = "Eating_BoxEnd_Soundset";
+          id = 895;
+        };
+      };
+    };
+  };
+
+    class geb_Walleye: Edible_Base {
+    scope = 2;
+    displayName = "$STR_walleye";
+    descriptionShort = "$STR_walleye_desc";
+    model = "\gebsfish\data\fish\walleye.p3d";
+    itemSize[] = {
+      4,
+      2
+    };
+    weight = 1700;
     debug_ItemCategory = 6;
-    rotationFlags = 17;
+    stackedUnit = "g";
+    quantityBar = 1;
+    varQuantityInit = 1000;
+    varQuantityMin = 0;
+    varQuantityMax = 1000;
+    isMeleeWeapon = 1;
+    class DamageSystem {
+      class GlobalHealth {
+        class Health {
+          hitpoints = 50;
+          healthLevels[] = {
+
+            {
+              1,
+              {}
+            },
+
+            {
+              0.69999999,
+              {}
+            },
+
+            {
+              0.5,
+              {}
+            },
+
+            {
+              0.30000001,
+              {}
+            },
+
+            {
+              0,
+              {}
+            }
+          };
+        };
+      };
+    };
+    class MeleeModes {
+      class Default {
+        ammo = "MeleeSoft";
+        range = 1;
+      };
+      class Heavy {
+        ammo = "MeleeSoft_Heavy";
+        range = 1;
+      };
+      class Sprint {
+        ammo = "MeleeSoft_Heavy";
+        range = 2.8;
+      };
+    };
+    inventorySlot[] = {
+      "TrapPrey_1"
+    };
+    hiddenSelections[] = {
+      "cs_raw"
+    };
+    hiddenSelectionsTextures[] = {
+      "dz\gear\food\data\carp_live_co.paa",
+      "dz\gear\food\data\carp_live_co.paa"
+    };
+    hiddenSelectionsMaterials[] = {
+      "dz\gear\food\data\carp_live.rvmat",
+      "dz\gear\food\data\carp_live.rvmat"
+    };
+    class AnimationSources: FoodAnimationSources {};
+    class Food {
+      class FoodStages {
+        class Raw {
+          visual_properties[] = {
+            0,
+            0,
+            0
+          };
+          nutrition_properties[] = {
+            1,
+            20,
+            60,
+            70,
+            1
+          };
+          cooking_properties[] = {
+            0,
+            0
+          };
+        };
+        class Rotten {
+          visual_properties[] = {
+            -1,
+            -1,
+            5
+          };
+          nutrition_properties[] = {
+            10,
+            25,
+            25,
+            1,
+            0
+          };
+          cooking_properties[] = {
+            0,
+            0
+          };
+        };
+      };
+      class FoodStageTransitions: NotCookable {};
+    };
+    class AnimEvents {
+      class SoundWeapon {
+        class openTunaCan {
+          soundSet = "openTunaCan_SoundSet";
+          id = 204;
+        };
+        class Eating_TakeFood {
+          soundSet = "Eating_TakeFood_Soundset";
+          id = 889;
+        };
+        class Eating_BoxOpen {
+          soundSet = "Eating_BoxOpen_Soundset";
+          id = 893;
+        };
+        class Eating_BoxShake {
+          soundSet = "Eating_BoxShake_Soundset";
+          id = 894;
+        };
+        class Eating_BoxEnd {
+          soundSet = "Eating_BoxEnd_Soundset";
+          id = 895;
+        };
+      };
+    };
+  };
+    class geb_Sunfish: Edible_Base {
+    scope = 2;
+    displayName = "$STR_sunfish";
+    descriptionShort = "$STR_sunfish_desc";
+    model = "\gebsfish\data\fish\sunfish.p3d";
+    itemSize[] = {
+      3,
+      2
+    };
+    weight = 1700;
+    debug_ItemCategory = 6;
+    stackedUnit = "g";
+    quantityBar = 1;
+    varQuantityInit = 1000;
+    varQuantityMin = 0;
+    varQuantityMax = 1000;
+    isMeleeWeapon = 1;
+    class DamageSystem {
+      class GlobalHealth {
+        class Health {
+          hitpoints = 50;
+          healthLevels[] = {
+
+            {
+              1,
+              {}
+            },
+
+            {
+              0.69999999,
+              {}
+            },
+
+            {
+              0.5,
+              {}
+            },
+
+            {
+              0.30000001,
+              {}
+            },
+
+            {
+              0,
+              {}
+            }
+          };
+        };
+      };
+    };
+    class MeleeModes {
+      class Default {
+        ammo = "MeleeSoft";
+        range = 1;
+      };
+      class Heavy {
+        ammo = "MeleeSoft_Heavy";
+        range = 1;
+      };
+      class Sprint {
+        ammo = "MeleeSoft_Heavy";
+        range = 2.8;
+      };
+    };
+    inventorySlot[] = {
+      "TrapPrey_1"
+    };
+    hiddenSelections[] = {
+      "cs_raw"
+    };
+    hiddenSelectionsTextures[] = {
+      "dz\gear\food\data\carp_live_co.paa",
+      "dz\gear\food\data\carp_live_co.paa"
+    };
+    hiddenSelectionsMaterials[] = {
+      "dz\gear\food\data\carp_live.rvmat",
+      "dz\gear\food\data\carp_live.rvmat"
+    };
+    class AnimationSources: FoodAnimationSources {};
+    class Food {
+      class FoodStages {
+        class Raw {
+          visual_properties[] = {
+            0,
+            0,
+            0
+          };
+          nutrition_properties[] = {
+            1,
+            20,
+            60,
+            70,
+            1
+          };
+          cooking_properties[] = {
+            0,
+            0
+          };
+        };
+        class Rotten {
+          visual_properties[] = {
+            -1,
+            -1,
+            5
+          };
+          nutrition_properties[] = {
+            10,
+            25,
+            25,
+            1,
+            0
+          };
+          cooking_properties[] = {
+            0,
+            0
+          };
+        };
+      };
+      class FoodStageTransitions: NotCookable {};
+    };
+    class AnimEvents {
+      class SoundWeapon {
+        class openTunaCan {
+          soundSet = "openTunaCan_SoundSet";
+          id = 204;
+        };
+        class Eating_TakeFood {
+          soundSet = "Eating_TakeFood_Soundset";
+          id = 889;
+        };
+        class Eating_BoxOpen {
+          soundSet = "Eating_BoxOpen_Soundset";
+          id = 893;
+        };
+        class Eating_BoxShake {
+          soundSet = "Eating_BoxShake_Soundset";
+          id = 894;
+        };
+        class Eating_BoxEnd {
+          soundSet = "Eating_BoxEnd_Soundset";
+          id = 895;
+        };
+      };
+    };
+  };
+  class geb_Smallmouthbass: Edible_Base {
+    scope = 2;
+    displayName = "$STR_smallmouthbass";
+    descriptionShort = "$STR_smallmouthbass_desc";
+    model = "\gebsfish\data\fish\smallmouthbass.p3d";
+    itemSize[] = {
+      5,
+      2
+    };
+    weight = 1700;
+    debug_ItemCategory = 6;
     stackedUnit = "g";
     quantityBar = 1;
     varQuantityInit = 1000;
@@ -8623,7 +9049,6 @@ hiddenSelections[] = {
     };
     weight = 1700;
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     stackedUnit = "g";
     quantityBar = 1;
     varQuantityInit = 1000;
@@ -8917,7 +9342,6 @@ hiddenSelections[] = {
     };
     weight = 4000;
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     stackedUnit = "g";
     quantityBar = 1;
     varQuantityInit = 1000;
@@ -9064,7 +9488,6 @@ hiddenSelections[] = {
     };
     weight = 3000;
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     stackedUnit = "g";
     quantityBar = 1;
     varQuantityInit = 1000;
@@ -9211,7 +9634,6 @@ hiddenSelections[] = {
     };
     weight = 1500;
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     stackedUnit = "g";
     quantityBar = 1;
     varQuantityInit = 1000;
@@ -9358,7 +9780,6 @@ hiddenSelections[] = {
     };
     weight = 200;
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     stackedUnit = "g";
     quantityBar = 1;
     varQuantityInit = 1000;
@@ -9503,7 +9924,6 @@ hiddenSelections[] = {
       };
       weight = 1700;
       debug_ItemCategory = 6;
-      rotationFlags = 17;
       stackedUnit = "g";
       quantityBar = 1;
       varQuantityInit = 1000;
@@ -9633,6 +10053,7 @@ hiddenSelections[] = {
     scope = 2;
     displayName = "$STR_trout";
     descriptionShort = "$STR_trout_desc";
+    model = "\gebsfish\data\fish\rainbowtrout.p3d";
     itemSize[] = {
       5,
       2
@@ -9697,6 +10118,7 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "$STR_laketrout";
       descriptionShort = "$STR_laketrout_desc";
+      model = "\gebsfish\data\fish\laketrout.p3d";
       itemSize[] = {
         5,
         2
@@ -9720,7 +10142,6 @@ hiddenSelections[] = {
     };
     weight = 1700;
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     stackedUnit = "g";
     quantityBar = 1;
     varQuantityInit = 1000;
@@ -9867,7 +10288,6 @@ hiddenSelections[] = {
     };
     weight = 1500;
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     stackedUnit = "g";
     quantityBar = 1;
     varQuantityInit = 1000;
@@ -10014,7 +10434,6 @@ hiddenSelections[] = {
     };
     weight = 300;
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     stackedUnit = "g";
     quantityBar = 1;
     varQuantityInit = 1000;
@@ -10305,7 +10724,7 @@ hiddenSelections[] = {
     descriptionShort = "$STR_asianseabass_desc";
     model = "\gebsfish\data\fish\asianseabass.p3d";
     debug_ItemCategory = 6;
-    rotationFlags = 17;
+    //rotationFlags = 17;
     weight = 1700;
     itemSize[] = {
       5,
@@ -10896,7 +11315,6 @@ class geb_Sockeyesalmon: Edible_Base {
     descriptionShort = "$STR_sockeyesalmon_desc";
     model = "\gebsfish\data\fish\sockeyesalmon.p3d";
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     weight = 1700;
     itemSize[] = {
       5,
@@ -11044,7 +11462,6 @@ class geb_Chinooksalmon: Edible_Base {
     descriptionShort = "$STR_chinooksalmon_desc";
     model = "\gebsfish\data\fish\chinooksalmon.p3d";
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     weight = 1700;
     itemSize[] = {
       5,
@@ -14316,6 +14733,48 @@ class geb_Chinooksalmon: Edible_Base {
     model = "\dz\gear\food\carp_fillet.p3d";
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\fish\blackbass_fillet_co.paa",
+      "dz\gear\food\data\carp_fillet_baked_CO.paa",
+      "dz\gear\food\data\carp_fillet_boiled_CO.paa",
+      "dz\gear\food\data\carp_fillet_dried_CO.paa",
+      "dz\gear\food\data\carp_fillet_burnt_CO.paa"
+    };
+
+  };
+    class geb_SmallmouthbassFilletMeat: CarpFilletMeat {
+    scope = 2;
+    displayName = "Smallmouth Bass Fillet";
+    descriptionShort = "$STR_blackbass_desc";
+    model = "\dz\gear\food\carp_fillet.p3d";
+    hiddenSelectionsTextures[] = {
+      "\gebsfish\data\fish\smallmouthbass_fillet_co.paa",
+      "dz\gear\food\data\carp_fillet_baked_CO.paa",
+      "dz\gear\food\data\carp_fillet_boiled_CO.paa",
+      "dz\gear\food\data\carp_fillet_dried_CO.paa",
+      "dz\gear\food\data\carp_fillet_burnt_CO.paa"
+    };
+
+  };
+    class geb_WalleyeFilletMeat: CarpFilletMeat {
+    scope = 2;
+    displayName = "Walleye Fillet";
+    descriptionShort = "$STR_walleye_desc";
+    model = "\dz\gear\food\carp_fillet.p3d";
+    hiddenSelectionsTextures[] = {
+      "\gebsfish\data\fish\walleye_fillet_co.paa",
+      "dz\gear\food\data\carp_fillet_baked_CO.paa",
+      "dz\gear\food\data\carp_fillet_boiled_CO.paa",
+      "dz\gear\food\data\carp_fillet_dried_CO.paa",
+      "dz\gear\food\data\carp_fillet_burnt_CO.paa"
+    };
+
+  };
+    class geb_SunfishFilletMeat: CarpFilletMeat {
+    scope = 2;
+    displayName = "Sunfish Fillet";
+    descriptionShort = "$STR_blackbass_desc";
+    model = "\dz\gear\food\carp_fillet.p3d";
+    hiddenSelectionsTextures[] = {
+      "\gebsfish\data\fish\sunfish_fillet_co.paa",
       "dz\gear\food\data\carp_fillet_baked_CO.paa",
       "dz\gear\food\data\carp_fillet_boiled_CO.paa",
       "dz\gear\food\data\carp_fillet_dried_CO.paa",

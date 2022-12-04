@@ -23,6 +23,9 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareBlackbass);
 		RegisterRecipe(new PrepareCatfish);
 		RegisterRecipe(new PrepareLargemouthbass);
+		RegisterRecipe(new PrepareSmallmouthbass);
+		RegisterRecipe(new PrepareSunfish);
+		RegisterRecipe(new PrepareWalleye);
 		RegisterRecipe(new PrepareMinnow);
 		RegisterRecipe(new PrepareNorthernpike);
 		RegisterRecipe(new PreparePerch);

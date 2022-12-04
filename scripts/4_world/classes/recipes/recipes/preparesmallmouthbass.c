@@ -1,12 +1,13 @@
-class PrepareAsianseabass extends PrepareFish
+class PrepareSmallmouthbass extends PrepareFish
 {
-	int ran;
+	int ran;	
 	override void Init()
 	{
 		m_Name = "#STR_gutandprepare0";
 		m_IsInstaRecipe = false;//should this recipe be performed instantly without animation
 		m_AnimationLength = 1.5;//animation length in relative time units
 		m_Specialty = 0.02;// value > 0 for roughness, value < 0 for precision
+		
 		
 		//conditions
 		m_MinDamageIngredient[0] = -1;//-1 = disable check
@@ -24,7 +25,7 @@ class PrepareAsianseabass extends PrepareFish
 		
 		//INGREDIENTS
 		//ingredient 1
-		InsertIngredient(0,"geb_Asianseabass");//you can insert multiple ingredients this way
+		InsertIngredient(0,"geb_Smallmouthbass");//you can insert multiple ingredients this way
 
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
@@ -70,8 +71,8 @@ class PrepareAsianseabass extends PrepareFish
 		m_IngredientUseSoftSkills[1] = true;// set 'true' to allow modification of the values by softskills on this ingredient
 		//----------------------------------------------------------------------------------------------------------------------
 		ran = Math.RandomFloatInclusive(1.0,2.0);
-		for (float i = 0; i < ran; ++i){
-			AddResult("geb_AsianseabassFilletMeat");//add results here
+		for (int i = 0; i < ran; ++i){
+			AddResult("geb_SmallmouthbassFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
 			m_ResultSetHealth[i] = -1;//-1 = do nothing
@@ -93,6 +94,5 @@ class PrepareAsianseabass extends PrepareFish
 	{
 		// Adjusts quantity of results to the quantity of the 1st ingredient
 		super.Do(ingredients, player, results, specialty_weight);
-
 	}
 };

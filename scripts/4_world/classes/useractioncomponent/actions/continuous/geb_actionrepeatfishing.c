@@ -43,6 +43,7 @@ modded class CAContinuousRepeatFishing : CAContinuousRepeat
 			FishingActionData fad = FishingActionData.Cast(action_data);
 			if (fad && fad.m_FishingResult != -1)
 			{
+				Particle m_ParticleEfx4 = ParticleManager.GetInstance().PlayOnObject(ParticleList.IMPACT_WATER_SMALL_ENTER , geb_AmbientFish, Vector(0, 0, 0));
 				return UA_FINISHED;
 			}
 			else

@@ -125,7 +125,7 @@ class ActionDigBugs : ActionContinuousBase
 		}
 
 		ItemBase bugs = ItemBase.Cast(GetGame().CreateObject(selected_insect, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
-
+		Particle m_digBugEffect = ParticleManager.GetInstance().PlayOnObject(ParticleList.IMPACT_GRASS_ENTER ,  bugs, Vector(0, 0, 0));
 
 
 		bugs.SetQuantity(10, false);
