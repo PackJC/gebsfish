@@ -2,14 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\data",
-    "\\data\\ambientfish",
-    "\\data\\ambientfish\\old",
-    "\\data\\clothes",
+    "\\languagecore",
     "\\scripts",
     "\\scripts\\4_world",
     "\\scripts\\4_world\\classes",
-    "\\scripts\\4_world\\classes\\recipes",
-    "\\scripts\\4_world\\classes\\recipes\\recipes"
+    "\\scripts\\4_world\\classes\\useractioncomponent",
+    "\\scripts\\4_world\\entities",
+    "\\scripts\\4_world\\entities\\itembase",
+    "\\scripts\\4_world\\entities\\itembase\\trapspawnbase"
   ],
+  "SelectedNode": "\\languagecore",
   "PreviewInSolutionExplorer": false
 }
