@@ -19,10 +19,11 @@ modded class CAContinuousRepeatFishing : CAContinuousRepeat
 	override int Execute( ActionData action_data )
 	{
 		geb_AmbientFish = EntityAI.Cast(GetGame().CreateObject("geb_Ambientfish1", action_data.m_Target.GetCursorHitPos() , false));
-		GetGame().GetCallQueue( CALL_CATEGORY_GAMEPLAY ).CallLater(GetGame().ObjectDelete, 20000, false, geb_AmbientFish);
+		GetGame().GetCallQueue( CALL_CATEGORY_GAMEPLAY ).CallLater(GetGame().ObjectDelete, 15000, false, geb_AmbientFish);
 
 		if ( !action_data.m_Player )
 		{
+
 			return UA_ERROR;
 		}
   

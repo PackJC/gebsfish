@@ -41,25 +41,34 @@ class cfgVehicles {
   DYNAMIC FISH
 
   */
-  class Animal_GallusGallusDomesticusF;
-  class Animal_geb_Ambientfish1: Animal_GallusGallusDomesticusF
-  {
-	scope = 2;
-    model = "gebsfish\data\ambientfish\geb_Ambientfish1.p3d";
-  };
   class House;
   class geb_Ambientfish1: House
   {
     scope=1;
-    model = "gebsfish\data\ambientfish\rotating\geb_Ambientfish1.p3d";
-      class AnimationSources
+    model = "gebsfish\data\ambientfish\geb_Ambientfish1.p3d";
+        class AnimationSources
         {
             class Wheel1
             {
                 source="time";
-                animPeriod=4;
+                animPeriod=55;
+                initPhase=1;
             };
+            class Wheel2
+            {
+                source="time";
+                animPeriod=55;
+                initPhase=1;
+            };
+            class Wheel3
+            {
+                source="time";
+                animPeriod=55;
+                initPhase=1;
+            };
+
         };
+
   };
 
   /*
@@ -7565,7 +7574,6 @@ hiddenSelections[] = {
                 };
             };
         };
-
    }; 
   class geb_RedFishingRod: FishingRod {
     scope = 2;
@@ -7639,7 +7647,6 @@ hiddenSelections[] = {
             };
         };
     };
-
   };
   class geb_GreenFishingRod: FishingRod {
     scope = 2;
@@ -7713,7 +7720,6 @@ hiddenSelections[] = {
             };
         };
     };
-
   };
   class geb_BlueFishingRod: FishingRod {
     scope = 2;
@@ -7787,7 +7793,6 @@ hiddenSelections[] = {
             };
         };
     };
-
   };
   class geb_PurpleFishingRod: FishingRod {
     scope = 2;
@@ -7861,7 +7866,6 @@ hiddenSelections[] = {
             };
         };
     };
-
   };  
   class geb_BambooFishingNet : Container_Base {
       scope = 2;
@@ -8040,7 +8044,6 @@ hiddenSelections[] = {
     hiddenSelectionsTextures[] = {
       "\gebsfish\data\tackle\geb_fishingline_flyfishing.paa";
     };
-
   };
   class Bobber_ColorBase : Inventory_Base {
       scope = 2;
@@ -8102,7 +8105,6 @@ hiddenSelections[] = {
               };
           };
       };
-
   };
   class geb_Bobber1 : Bobber_ColorBase
   {
@@ -8607,8 +8609,7 @@ hiddenSelections[] = {
       };
     };
   };
-
-    class geb_Walleye: Edible_Base {
+  class geb_Walleye: Edible_Base {
     scope = 2;
     displayName = "$STR_walleye";
     descriptionShort = "$STR_walleye_desc";
@@ -8754,7 +8755,8 @@ hiddenSelections[] = {
       };
     };
   };
-    class geb_Sunfish: Edible_Base {
+  class geb_Sunfish: Edible_Base 
+    {
     scope = 2;
     displayName = "$STR_sunfish";
     descriptionShort = "$STR_sunfish_desc";
@@ -10585,7 +10587,6 @@ hiddenSelections[] = {
     descriptionShort = "$STR_angelfish_desc";
     model = "\gebsfish\data\fish\angelfish.p3d";
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     weight = 2500;
     itemSize[] = {
       4,
@@ -10725,7 +10726,7 @@ hiddenSelections[] = {
         };
       };
     };
-  }
+  };
   class geb_Asianseabass: Edible_Base {
     scope = 2;
     displayName = "$STR_asianseabass";
@@ -10872,14 +10873,13 @@ hiddenSelections[] = {
         };
       };
     };
-  }
+  };
   class geb_Bluemarlin: Edible_Base {
     scope = 2;
     displayName = "$STR_bluemarlin";
     descriptionShort = "$STR_bluemarlin_desc";
     model = "\gebsfish\data\fish\bluemarlin.p3d";
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     weight = 3700;
     itemSize[] = {
         25,
@@ -11019,15 +11019,13 @@ hiddenSelections[] = {
         };
       };
     };
-
-  }
+  };
   class geb_Bonita: Edible_Base {
     scope = 2;
     displayName = "$STR_bonita";
     descriptionShort = "$STR_bonita_desc";
     model = "\gebsfish\data\fish\bonita.p3d";
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     weight = 1700;
     itemSize[] = {
       5,
@@ -11167,14 +11165,13 @@ hiddenSelections[] = {
         };
       };
     };
-  }
+  };
   class geb_Cherrysalmon: Edible_Base {
     scope = 2;
     displayName = "$STR_cherrysalmon";
     descriptionShort = "$STR_cherrysalmon_desc";
     model = "\gebsfish\data\fish\cherrysalmon.p3d";
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     weight = 1700;
     itemSize[] = {
       5,
@@ -11314,10 +11311,8 @@ hiddenSelections[] = {
         };
       };
     };
-  }
-
-
-class geb_Sockeyesalmon: Edible_Base {
+  };
+  class geb_Sockeyesalmon: Edible_Base {
     scope = 2;
     displayName = "$STR_sockeyesalmon";
     descriptionShort = "$STR_sockeyesalmon_desc";
@@ -11462,9 +11457,8 @@ class geb_Sockeyesalmon: Edible_Base {
         };
       };
     };
-  }
-
-class geb_Chinooksalmon: Edible_Base {
+  };
+  class geb_Chinooksalmon: Edible_Base {
     scope = 2;
     displayName = "$STR_chinooksalmon";
     descriptionShort = "$STR_chinooksalmon_desc";
@@ -11609,32 +11603,13 @@ class geb_Chinooksalmon: Edible_Base {
         };
       };
     };
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  };
   class geb_Flatheadmullet: Edible_Base {
     scope = 2;
     displayName = "$STR_flatheadmullet";
     descriptionShort = "$STR_flatheadmullet_desc";
     model = "\gebsfish\data\fish\flatheadmullet.p3d";
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     weight = 1000;
     itemSize[] = {
       2,
@@ -11774,14 +11749,13 @@ class geb_Chinooksalmon: Edible_Base {
         };
       };
     };
-  }
+  };
   class geb_Leopardshark: Edible_Base {
     scope = 2;
     displayName = "$STR_leopardshark";
     descriptionShort = "$STR_leopardshark_desc";
     model = "\gebsfish\data\fish\leopardshark.p3d";
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     weight = 8000;
     itemSize[] = {
         25,
@@ -11921,14 +11895,13 @@ class geb_Chinooksalmon: Edible_Base {
         };
       };
     };
-  }
+  };
   class geb_Pacificcod: Edible_Base {
     scope = 2;
     displayName = "$STR_pacificcod";
     descriptionShort = "$STR_pacificcod_desc";
     model = "\gebsfish\data\fish\pacificcod.p3d";
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     weight = 1700;
     itemSize[] = {
       5,
@@ -12068,14 +12041,13 @@ class geb_Chinooksalmon: Edible_Base {
         };
       };
     };
-  }
+  };
   class geb_Redheadcichlid: Edible_Base {
     scope = 2;
     displayName = "$STR_redheadcichlid";
     descriptionShort = "$STR_redheadcichlid_desc";
     model = "\gebsfish\data\fish\redheadcichlid.p3d";
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     weight = 3000;
     itemSize[] = {
       4,
@@ -12215,14 +12187,13 @@ class geb_Chinooksalmon: Edible_Base {
         };
       };
     };
-  }
+  };
   class geb_Roughneckrock: Edible_Base {
     scope = 2;
     displayName = "$STR_roughneckrock";
     descriptionShort = "$STR_roughneckrock_desc";
     model = "\gebsfish\data\fish\roughneckrock.p3d";
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     weight = 3000;
     itemSize[] = {
       4,
@@ -12362,14 +12333,13 @@ class geb_Chinooksalmon: Edible_Base {
         };
       };
     };
-  }
+  };
   class geb_Severum: Edible_Base {
     scope = 2;
     displayName = "$STR_severum";
     descriptionShort = "$STR_severum_desc";
     model = "\gebsfish\data\fish\severum.p3d";
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     weight = 3600;
     itemBehaviour = 0;
     itemSize[] = {
@@ -12510,7 +12480,7 @@ class geb_Chinooksalmon: Edible_Base {
         };
       };
     };
-  }
+  };
   class geb_Shrimp: Edible_Base {
     scope = 2;
     displayName = "$STR_shrimp";
@@ -12657,14 +12627,13 @@ class geb_Chinooksalmon: Edible_Base {
         };
       };
     };
-  }
+  };
   class geb_Bluetang: Edible_Base {
     scope = 2;
     displayName = "$STR_bluetang";
     descriptionShort = "$STR_bluetang_desc";
     model = "\gebsfish\data\fish\bluetang.p3d";
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     weight = 2000;
     itemSize[] = {
       4,
@@ -12804,14 +12773,13 @@ class geb_Chinooksalmon: Edible_Base {
         };
       };
     };
-  }
+  };
   class geb_Hairtailfish: Edible_Base {
     scope = 2;
     displayName = "$STR_hairtailfish";
     descriptionShort = "$STR_hairtailfish_desc";
     model = "\gebsfish\data\fish\hairtailfish.p3d";
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     weight = 800;
     itemSize[] = {
       4,
@@ -12951,14 +12919,13 @@ class geb_Chinooksalmon: Edible_Base {
         };
       };
     };
-  }
+  };
   class geb_Humpheadwrasse: Edible_Base {
     scope = 2;
     displayName = "$STR_humpheadwrasse";
     descriptionShort = "$STR_humpheadwrasse_desc";
     model = "\gebsfish\data\fish\humpheadwrasse.p3d";
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     weight = 3500;
     itemSize[] = {
       5,
@@ -13098,14 +13065,13 @@ class geb_Chinooksalmon: Edible_Base {
         };
       };
     };
-  }
+  };
   class geb_Siamesetigerfish: Edible_Base {
     scope = 2;
     displayName = "$STR_siamesetigerfish";
     descriptionShort = "$STR_siamesetigerfish_desc";
     model = "\gebsfish\data\fish\siamesetigerfish.p3d";
     debug_ItemCategory = 6;
-    rotationFlags = 17;
     weight = 2500;
     itemSize[] = {
       3,
@@ -13245,14 +13211,13 @@ class geb_Chinooksalmon: Edible_Base {
         };
       };
     };
-  }
+  };
   class geb_Angelshark : Edible_Base {
       scope = 2;
       displayName = "$STR_angelshark";
       descriptionShort = "$STR_angelshark_desc";
       model = "\gebsfish\data\fish\angelshark.p3d";
       debug_ItemCategory = 6;
-      rotationFlags = 17;
       weight = 3700;
       itemSize[] = {
         25,
@@ -13392,14 +13357,13 @@ class geb_Chinooksalmon: Edible_Base {
               };
           };
       };
-  }
+  };
   class geb_Greatwhiteshark : Edible_Base {
       scope = 2;
       displayName = "$STR_greatwhiteshark";
       descriptionShort = "$STR_greatwhiteshark_desc";
       model = "\gebsfish\data\fish\greatwhiteshark.p3d";
       debug_ItemCategory = 6;
-      rotationFlags = 17;
       weight = 3700;
       itemSize[] = {
         25,
@@ -13539,14 +13503,13 @@ class geb_Chinooksalmon: Edible_Base {
               };
           };
       };
-  }
+  };
   class geb_Yellowfintuna : Edible_Base {
       scope = 2;
       displayName = "$STR_yellowfintuna";
       descriptionShort = "$STR_yellowfintuna_desc";
       model = "\gebsfish\data\fish\yellowfintuna.p3d";
       debug_ItemCategory = 6;
-      rotationFlags = 17;
       weight = 1700;
       itemSize[] = {
         5,
@@ -13686,7 +13649,7 @@ class geb_Chinooksalmon: Edible_Base {
               };
           };
       };
-  }
+  };
 
   //Crustaceans Fish
   class geb_Bloodclam : Edible_Base {
@@ -13835,7 +13798,7 @@ class geb_Chinooksalmon: Edible_Base {
               };
           };
       };
-  }
+  };
   class geb_Mussel : Edible_Base {
       scope = 2;
       displayName = "$STR_mussel";
@@ -13982,7 +13945,7 @@ class geb_Chinooksalmon: Edible_Base {
               };
           };
       };
-  }
+  };
   class geb_Blackdevilsnail : Edible_Base {
       scope = 2;
       displayName = "$STR_blackdevilsnail";
@@ -14129,7 +14092,7 @@ class geb_Chinooksalmon: Edible_Base {
               };
           };
       };
-  }
+  };
   class geb_Starfish : Edible_Base {
       scope = 2;
       displayName = "$STR_starfish";
@@ -14276,7 +14239,7 @@ class geb_Chinooksalmon: Edible_Base {
               };
           };
       };
-  }
+  };
   class geb_Kingcrab : Edible_Base {
       scope = 2;
       displayName = "$STR_kingcrab";
@@ -14423,7 +14386,7 @@ class geb_Chinooksalmon: Edible_Base {
               };
           };
       };
-  }
+  };
   class geb_Jellyfish : Edible_Base {
       scope = 2;
       displayName = "$STR_jellyfish";
@@ -14570,7 +14533,7 @@ class geb_Chinooksalmon: Edible_Base {
               };
           };
       };
-  }
+  };
   class geb_Lobster : Edible_Base {
       scope = 2;
       displayName = "$STR_lobster";
@@ -14717,7 +14680,7 @@ class geb_Chinooksalmon: Edible_Base {
               };
           };
       };
-  }
+  };
 
   //Freshwater Fish Fillets
   class CarpFilletMeat;
