@@ -85,13 +85,12 @@ class FileReader
 			CloseFile(fresh_file);
 
 
-			//This is to force subscribers files to add new fish, if they are added
+			//This is to force adding new fish, so when server owner updates it should include new fish
 			if (fresh_chance_map.Contains("geb_SMALLMOUTHBASS_CHANCE")) {
 				newLakeTroutDetected = true;
 			}
 			if (!newLakeTroutDetected) {
 				FileHandle fresh_file_updater = OpenFile(FRESH_CONFIG_PATH, FileMode.APPEND);
-				FPrintln(fresh_file_updater, "geb_SMALLMOUTHBASS_CHANCE=66");
 				FPrintln(fresh_file_updater, "geb_SMALLMOUTHBASS_CHANCE=66");
 				FPrintln(fresh_file_updater, "geb_SUNFISH_CHANCE=66");
 				FPrintln(fresh_file_updater, "geb_WALLEYE_CHANCE=66");

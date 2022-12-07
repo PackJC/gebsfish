@@ -14681,7 +14681,24 @@ hiddenSelections[] = {
           };
       };
   };
-
+  class geb_Bluelobster : geb_Lobster {
+      scope = 2;
+      displayName = "$STR_bluelobster";
+      descriptionShort = "$STR_bluelobster_desc";
+      debug_ItemCategory = 6;
+      rotationFlags = 17;
+      weight = 3000;
+      itemSize[] = {
+        3,
+        2
+      };
+      hiddenSelections[] = {
+        "lobster"
+      };
+      hiddenSelectionsTextures[] = {
+      "\gebsfish\data\fish\bluelobster_ca.paa",
+    };
+  };
   //Freshwater Fish Fillets
   class CarpFilletMeat;
   class geb_BluegillFilletMeat: CarpFilletMeat {
@@ -15297,13 +15314,39 @@ hiddenSelections[] = {
         "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
       };
   };
+  class geb_BlueLobsterFilletMeat : MackerelFilletMeat {
+      scope = 2;
+      displayName = "$STR_bluelobster_fillet";
+      descriptionShort = "$STR_bluelobster_desc";
+      model = "\dz\gear\food\mackerel_fillet.p3d";
+      hiddenSelectionsTextures[] = {
+        "\gebsfish\data\fish\bluelobsterfillet.paa",
+        "dz\gear\food\data\mackerel_fillet_baked_CO.paa",
+        "dz\gear\food\data\mackerel_fillet_boiled_CO.paa",
+        "dz\gear\food\data\mackerel_fillet_dried_CO.paa",
+        "dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
+      };
+  };
   class geb_LobsterTail : MackerelFilletMeat {
       scope = 2;
       displayName = "$STR_lobster_tail";
       descriptionShort = "$STR_lobster_desc";
       model = "\gebsfish\data\fish\lobstertail.p3d";
+      itemSize[] = {
+      1,
+      3
+      };
+  };
+    class geb_BlueLobsterTail : MackerelFilletMeat {
+      scope = 2;
+      displayName = "$STR_bluelobster_tail";
+      descriptionShort = "$STR_bluelobster_desc";
+      model = "\gebsfish\data\fish\lobstertail.p3d";
+      hiddenSelections[] = {
+        "shrimp"
+      };
       hiddenSelectionsTextures[] = {
-        "\gebsfish\data\fish\shrimptail.paa",
+        "\gebsfish\data\fish\bluelobstertail.paa",
       };
       itemSize[] = {
       1,

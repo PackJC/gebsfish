@@ -30,6 +30,7 @@ modded class Trap_FishNet extends TrapSpawnBase
 		m_CatchesSea.Insert("geb_Kingcrab", 5);
 		m_CatchesSea.Insert("geb_Jellyfish", 6);
 		m_CatchesSea.Insert("geb_Lobster", 7);
+		m_CatchesSea.Insert("geb_BlueLobster", 7);
 	}
 
 	override bool CanReceiveAttachment(EntityAI attachment, int slotId)
