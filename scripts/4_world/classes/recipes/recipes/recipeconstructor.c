@@ -47,6 +47,8 @@ modded class PluginRecipesManager
 
 		//Saltwater Life
 		RegisterRecipe(new PrepareAngelfish);
+		RegisterRecipe(new PrepareSailfish);
+		RegisterRecipe(new PrepareMahimahi);
 		RegisterRecipe(new PrepareAsianseabass);
 		RegisterRecipe(new PrepareBluemarlin);
 		RegisterRecipe(new PrepareBonita);

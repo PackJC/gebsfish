@@ -37,7 +37,8 @@ class FileReader
 
 	void LoadFiles()
 	{
-		bool newLakeTroutDetected = false;
+		bool newFreshFishDetected = false;
+		bool newSaltFishDetected = false;
 		if (!FileExist(SALT_CONFIG_PATH))
 		{
 			MakeDirectory(DIRECTORY);
@@ -65,8 +66,19 @@ class FileReader
 				salt_chance_map[salt_line.Substring(0, tokenIndex)] = (salt_line.Substring(tokenIndex + 1, lengthIndex - 1)).ToFloat();
 
 			}
-
 			CloseFile(salt_file);
+
+			//This is to force adding new fish, so when server owner updates it should include new fish
+			if (salt_chance_map.Contains("geb_MAHIMAHI_CHANCE")) {
+				newSaltFishDetected = true;
+			}
+			if (!newSaltFishDetected) {
+				FileHandle salt_file_updater = OpenFile(SALT_CONFIG_PATH, FileMode.APPEND);
+				FPrintln(salt_file_updater, "geb_MAHIMAHI_CHANCE=66");
+				FPrintln(salt_file_updater, "geb_SAILFISH_CHANCE=66");
+
+			}
+			CloseFile(salt_file_updater);
 		}
 		if (FileExist(FRESH_CONFIG_PATH))
 		{
@@ -87,9 +99,9 @@ class FileReader
 
 			//This is to force adding new fish, so when server owner updates it should include new fish
 			if (fresh_chance_map.Contains("geb_SMALLMOUTHBASS_CHANCE")) {
-				newLakeTroutDetected = true;
+				newFreshFishDetected = true;
 			}
-			if (!newLakeTroutDetected) {
+			if (!newFreshFishDetected) {
 				FileHandle fresh_file_updater = OpenFile(FRESH_CONFIG_PATH, FileMode.APPEND);
 				FPrintln(fresh_file_updater, "geb_SMALLMOUTHBASS_CHANCE=66");
 				FPrintln(fresh_file_updater, "geb_SUNFISH_CHANCE=66");
@@ -143,6 +155,8 @@ class FileReader
 			FPrintln(f, "geb_ANGELSHARK_CHANCE=41");
 			FPrintln(f, "geb_GREATWHITESHARK_CHANCE=41");
 			FPrintln(f, "geb_YELLOWFINTUNA_CHANCE=41");
+			FPrintln(f, "geb_MAHIMAHI_CHANCE=41");
+			FPrintln(f, "geb_SAILFISH_CHANCE=41");
 			break;
 		case "$profile:gebsfish/Freshwater.cfg":
 			FPrintln(f, "CARP_CHANCE=66");

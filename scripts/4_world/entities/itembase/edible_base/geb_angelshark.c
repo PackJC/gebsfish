@@ -39,12 +39,12 @@ class geb_Angelshark extends Edible_Base
 
 
 	override bool IsHeavyBehaviour() 
-{
-   return true;
-}
+	{
+		return true;
+	}
     
-override bool IsTwoHandedBehaviour() 
-{
-   return true;
-}
+	override bool IsTwoHandedBehaviour() 
+	{
+		return true;
+	}	
 }
