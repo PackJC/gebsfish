@@ -104,7 +104,6 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 			
 			if (fish)
 			{
-				//Remove Ambient fish after ''0'' probablyh like a couple minutes
 
 
 				fish.SetWet(0.3);
@@ -122,13 +121,3 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 		}
 	}
 };
-
-/*
-
-  CREATED BY PACKJC
-  https://github.com/PackJC/gebsfish
-  https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
-  https://discord.com/invite/G8uSGZ8yyf
-  Contributions welcome via github
-
-*/

@@ -11,13 +11,10 @@
 modded class CAContinuousRepeatFishing : CAContinuousRepeat
 {
 	EntityAI geb_AmbientFish;
-	void CAContinuousRepeatFishing( float time_to_complete_action )
-	{
-		m_DefaultTimeToComplete = time_to_complete_action;
-	}
   
 	override int Execute( ActionData action_data )
 	{
+
 		vector fishingLineLocation = action_data.m_Target.GetCursorHitPos();
 		geb_AmbientFish = EntityAI.Cast(GetGame().CreateObject("geb_Ambientfish1", action_data.m_Target.GetCursorHitPos() , false));
 		GetGame().GetCallQueue( CALL_CATEGORY_GAMEPLAY ).CallLater(GetGame().ObjectDelete, 15000, false, geb_AmbientFish);
@@ -55,13 +52,3 @@ modded class CAContinuousRepeatFishing : CAContinuousRepeat
 		}
 	}
  };
-
- /*
-
-  CREATED BY PACKJC
-  https://github.com/PackJC/gebsfish
-  https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
-  https://discord.com/invite/G8uSGZ8yyf
-  Contributions welcome via github
-
-*/

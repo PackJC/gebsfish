@@ -6450,8 +6450,9 @@ hiddenSelections[] = {
           };
       };
   };
+    class Bait;
 
-  class geb_SpinnerBait1 : Inventory_Base {
+  class geb_SpinnerBait1 : Bait {
       scope = 2;
       displayName = "$STR_spinnerbait1";
       descriptionShort = "$STR_spinnerbait_desc";
@@ -6472,7 +6473,7 @@ hiddenSelections[] = {
         "\gebsfish\data\tackle\geb_spinnerbait1.paa";
       };
       rotationFlags = 17;
-      hookType = "SpinnerBait1";
+      hookType = "geb_SpinnerBait1";
       class DamageSystem {
           class GlobalHealth {
               class Health {
@@ -6535,7 +6536,7 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "$STR_spinnerbait2";
       descriptionShort = "$STR_spinnerbait_desc";
-      hookType = "SpinnerBait2";
+      hookType = "geb_SpinnerBait2";
       hiddenSelections[] =
       {
           "Camo"
@@ -6550,7 +6551,7 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "$STR_spinnerbait3";
       descriptionShort = "$STR_spinnerbait_desc";
-      hookType = "SpinnerBait3";
+      hookType = "geb_SpinnerBait3";
       hiddenSelections[] =
       {
           "Camo"
@@ -6565,7 +6566,7 @@ hiddenSelections[] = {
       scope = 2;
       displayName = "$STR_spinnerbait4";
       descriptionShort = "$STR_spinnerbait_desc";
-      hookType = "SpinnerBait4";
+      hookType = "geb_SpinnerBait4";
       hiddenSelections[] =
       {
           "Camo"
@@ -6575,21 +6576,11 @@ hiddenSelections[] = {
           "\gebsfish\data\tackle\geb_spinnerbait4.paa"
       };
   };
-
-  class geb_Lure1 : Inventory_Base {
+  class geb_Lure1 : Bait {
       scope = 2;
       displayName = "$STR_lure1";
       descriptionShort = "$STR_lure1_desc";
       model = "\gebsfish\data\tackle\lure1.p3d";
-      weight = 15;
-      absorbency = 0.80000001;
-      itemSize[] = {
-        1,
-        1
-      };
-      inventorySlot[] = {
-        "Hook"
-      };
       hiddenSelections[] = {
         "zbytek"
       };
@@ -6597,75 +6588,13 @@ hiddenSelections[] = {
         "\gebsfish\data\tackle\lure1.paa";
       };
       rotationFlags = 12;
-      hookType = "Lure1";
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 30;
-                  healthLevels[] = {
-
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\consumables\data\bait.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\consumables\data\bait.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\consumables\data\bait_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\consumables\data\bait_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\consumables\data\bait_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimationSources {
-          class cover {
-              source = "user";
-              animPeriod = 0.5;
-              initPhase = 1;
-          };
-      };
+      hookType = "geb_Lure1";
   };
-  class geb_Lure2 : Inventory_Base {
+  class geb_Lure2 : Bait {
       scope = 2;
       displayName = "$STR_lure2";
       descriptionShort = "$STR_lure2_desc";
       model = "\gebsfish\data\tackle\lure2.p3d";
-      weight = 15;
-      absorbency = 0.80000001;
-      itemSize[] = {
-        1,
-        1
-      };
       inventorySlot[] = {
         "Hook"
       };
@@ -6676,75 +6605,13 @@ hiddenSelections[] = {
         "\gebsfish\data\tackle\lure2.paa";
       };
       rotationFlags = 12;
-      hookType = "Lure2";
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 30;
-                  healthLevels[] = {
-
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\consumables\data\bait.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\consumables\data\bait.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\consumables\data\bait_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\consumables\data\bait_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\consumables\data\bait_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimationSources {
-          class cover {
-              source = "user";
-              animPeriod = 0.5;
-              initPhase = 1;
-          };
-      };
+      hookType = "geb_Lure2";
   };
-  class geb_Lure3 : Inventory_Base {
+  class geb_Lure3 : Bait {
       scope = 2;
       displayName = "$STR_lure3";
       descriptionShort = "$STR_lure3_desc";
       model = "\gebsfish\data\tackle\lure3.p3d";
-      weight = 15;
-      absorbency = 0.80000001;
-      itemSize[] = {
-        1,
-        1
-      };
       inventorySlot[] = {
         "Hook"
       };
@@ -6755,75 +6622,14 @@ hiddenSelections[] = {
         "\gebsfish\data\tackle\lure3.paa";
       };
       rotationFlags = 12;
-      hookType = "Lure3";
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 30;
-                  healthLevels[] = {
+      hookType = "geb_Lure3";
 
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\consumables\data\bait.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\consumables\data\bait.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\consumables\data\bait_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\consumables\data\bait_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\consumables\data\bait_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimationSources {
-          class cover {
-              source = "user";
-              animPeriod = 0.5;
-              initPhase = 1;
-          };
-      };
   };
-  class geb_Lure4 : Inventory_Base {
+  class geb_Lure4 : Bait {
       scope = 2;
       displayName = "$STR_lure4";
       descriptionShort = "$STR_lure4_desc";
       model = "\gebsfish\data\tackle\lure4.p3d";
-      weight = 15;
-      absorbency = 0.80000001;
-      itemSize[] = {
-        1,
-        1
-      };
       inventorySlot[] = {
         "Hook"
       };
@@ -6834,63 +6640,8 @@ hiddenSelections[] = {
         "\gebsfish\data\tackle\lure3.paa";
       };
       rotationFlags = 12;
-      hookType = "Lure4";
-      class DamageSystem {
-          class GlobalHealth {
-              class Health {
-                  hitpoints = 30;
-                  healthLevels[] = {
+      hookType = "geb_Lure4";
 
-                    {
-                      1,
-
-                      {
-                        "DZ\gear\consumables\data\bait.rvmat"
-                      }
-                    },
-
-                    {
-                      0.69999999,
-
-                      {
-                        "DZ\gear\consumables\data\bait.rvmat"
-                      }
-                    },
-
-                    {
-                      0.5,
-
-                      {
-                        "DZ\gear\consumables\data\bait_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0.30000001,
-
-                      {
-                        "DZ\gear\consumables\data\bait_damage.rvmat"
-                      }
-                    },
-
-                    {
-                      0,
-
-                      {
-                        "DZ\gear\consumables\data\bait_destruct.rvmat"
-                      }
-                    }
-                  };
-              };
-          };
-      };
-      class AnimationSources {
-          class cover {
-              source = "user";
-              animPeriod = 0.5;
-              initPhase = 1;
-          };
-      };
   };
 
   /* 
@@ -7234,7 +6985,6 @@ hiddenSelections[] = {
               };
           };
       };
-
   };
   class geb_GreenFishKnife : geb_BlueFishKnife
   {
@@ -7302,7 +7052,6 @@ hiddenSelections[] = {
               };
           };
       };
-
   };
   class geb_YellowFishKnife : geb_BlueFishKnife
   {
@@ -7370,7 +7119,6 @@ hiddenSelections[] = {
               };
           };
       };
-
   };
   class geb_RedFishKnife : geb_BlueFishKnife
   {
@@ -7438,7 +7186,6 @@ hiddenSelections[] = {
               };
           };
       };
-
   };
   class geb_PurpleFishKnife : geb_BlueFishKnife
   {
@@ -7506,18 +7253,30 @@ hiddenSelections[] = {
               };
           };
       };
-
   };
 
   class FishingRod_Base_New;
   class FishingRod : FishingRod_Base_New
     {
-
-		inventorySlot[]=
+        //Issue with this, don't update until I figure this out
+		inventorySlot[] +=
 		{
 			"Shoulder",
-			"Melee"
+			"Melee",
+			"fishingpole",
+			"fishingrod1",
+			"fishingrod2",
+			"fishingrod3",
+			"fishingrod4",
+			"fishingrod5",
+			"fishingrod6",
+			"fishingrod7",
+			"fishingrod8",
+			"fishingrod9",
+			"fishingrod10"
 		};
+
+
         hiddenSelections[] =
         {
             "zbytek"
@@ -7526,7 +7285,6 @@ hiddenSelections[] = {
         {
             "\DZ\gear\tools\data\fishing_rod_co.paa"
         };
-
         class DamageSystem
         {
             class GlobalHealth
@@ -7536,42 +7294,32 @@ hiddenSelections[] = {
                     hitpoints = 150;
                     healthLevels[] =
                     {
-
                         {
                             1,
-
                             {
                                 "DZ\gear\tools\data\fishing_rod.rvmat"
                             }
                         },
-
                         {
                             0.69999999,
-
                             {
                                 "DZ\gear\tools\data\fishing_rod.rvmat"
                             }
                         },
-
                         {
                             0.5,
-
                             {
                                 "DZ\gear\tools\data\fishing_rod_damage.rvmat"
                             }
                         },
-
                         {
                             0.30000001,
-
                             {
                                 "DZ\gear\tools\data\fishing_rod_damage.rvmat"
                             }
                         },
-
                         {
                             0,
-
                             {
                                 "DZ\gear\tools\data\fishing_rod_destruct.rvmat"
                             }
@@ -7609,42 +7357,32 @@ hiddenSelections[] = {
                 hitpoints = 150;
                 healthLevels[] =
                 {
-
                     {
                         1,
-
                         {
                             "DZ\gear\tools\data\fishing_rod.rvmat"
                         }
                     },
-
                     {
                         0.69999999,
-
                         {
                             "DZ\gear\tools\data\fishing_rod.rvmat"
                         }
                     },
-
                     {
                         0.5,
-
                         {
                             "DZ\gear\tools\data\fishing_rod_damage.rvmat"
                         }
                     },
-
                     {
                         0.30000001,
-
                         {
                             "DZ\gear\tools\data\fishing_rod_damage.rvmat"
                         }
                     },
-
                     {
                         0,
-
                         {
                             "DZ\gear\tools\data\fishing_rod_destruct.rvmat"
                         }
@@ -7682,42 +7420,32 @@ hiddenSelections[] = {
                 hitpoints = 150;
                 healthLevels[] =
                 {
-
                     {
                         1,
-
                         {
                             "DZ\gear\tools\data\fishing_rod.rvmat"
                         }
                     },
-
                     {
                         0.69999999,
-
                         {
                             "DZ\gear\tools\data\fishing_rod.rvmat"
                         }
                     },
-
                     {
                         0.5,
-
                         {
                             "DZ\gear\tools\data\fishing_rod_damage.rvmat"
                         }
                     },
-
                     {
                         0.30000001,
-
                         {
                             "DZ\gear\tools\data\fishing_rod_damage.rvmat"
                         }
                     },
-
                     {
                         0,
-
                         {
                             "DZ\gear\tools\data\fishing_rod_destruct.rvmat"
                         }
@@ -7755,42 +7483,32 @@ hiddenSelections[] = {
                 hitpoints = 150;
                 healthLevels[] =
                 {
-
                     {
                         1,
-
                         {
                             "DZ\gear\tools\data\fishing_rod.rvmat"
                         }
                     },
-
                     {
                         0.69999999,
-
                         {
                             "DZ\gear\tools\data\fishing_rod.rvmat"
                         }
                     },
-
                     {
                         0.5,
-
                         {
                             "DZ\gear\tools\data\fishing_rod_damage.rvmat"
                         }
                     },
-
                     {
                         0.30000001,
-
                         {
                             "DZ\gear\tools\data\fishing_rod_damage.rvmat"
                         }
                     },
-
                     {
                         0,
-
                         {
                             "DZ\gear\tools\data\fishing_rod_destruct.rvmat"
                         }
@@ -7828,42 +7546,32 @@ hiddenSelections[] = {
                 hitpoints = 150;
                 healthLevels[] =
                 {
-
                     {
                         1,
-
                         {
                             "DZ\gear\tools\data\fishing_rod.rvmat"
                         }
                     },
-
                     {
                         0.69999999,
-
                         {
                             "DZ\gear\tools\data\fishing_rod.rvmat"
                         }
                     },
-
                     {
                         0.5,
-
                         {
                             "DZ\gear\tools\data\fishing_rod_damage.rvmat"
                         }
                     },
-
                     {
                         0.30000001,
-
                         {
                             "DZ\gear\tools\data\fishing_rod_damage.rvmat"
                         }
                     },
-
                     {
                         0,
-
                         {
                             "DZ\gear\tools\data\fishing_rod_destruct.rvmat"
                         }
@@ -7873,6 +7581,7 @@ hiddenSelections[] = {
         };
     };
   };  
+
   class geb_BambooFishingNet : Container_Base {
       scope = 2;
       rotationFlags = 17;
@@ -15304,7 +15013,7 @@ hiddenSelections[] = {
     descriptionShort = "$STR_sailfish_desc";
     model = "\dz\gear\food\mackerel_fillet.p3d";
     hiddenSelectionsTextures[] = {
-      "\gebsfish\data\fish\sailfish_fillet_co.paa",
+      "\gebsfish\data\fish\bluemarlin_fillet_co.paa",
       "dz\gear\food\data\mackerel_fillet_baked_CO.paa",
       "dz\gear\food\data\mackerel_fillet_boiled_CO.paa",
       "dz\gear\food\data\mackerel_fillet_dried_CO.paa",
