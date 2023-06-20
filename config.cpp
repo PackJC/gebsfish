@@ -31,7 +31,7 @@ class CfgMods
 		logoSmall = "gebsfish\data\logo.paa";				// icon next to mod name when description is not expanded
 		logo = "gebsfish\data\logo.paa";						// logo below game menu
 		logoHover = "gebsfish\data\logo_hover.paa";			// logo hovered
-		overview = "DayZ Fish Expansion"
+		overview = "DayZ Fish Expansion";
 		action="";
 		name="gebsfish";
 		credits="Geb & DayZ Modding Community";
