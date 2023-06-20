@@ -1223,8 +1223,8 @@ class cfgVehicles
 
 	class geb_MetalHookBobber1WormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 1 with Worm";
-		descriptionShort = "A metal hook with a bobber attached, with a Worm used as bait.";
+		displayName			= "$STR_metalhookbobber1wormbait";
+		descriptionShort	= "$STR_metalhookbobberwormbait_desc";
 		hookType = "geb_MetalHookBobber1";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1245,8 +1245,8 @@ class cfgVehicles
 	};
 	class geb_MetalHookBobber2WormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 2 with Worm";
-		descriptionShort = "A metal hook with a bobber attached, with a Worm used as bait.";
+		displayName			= "$STR_metalhookbobber2wormbait";
+		descriptionShort	= "$STR_metalhookbobberwormbait_desc";
 		hookType = "geb_MetalHookBobber2";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1267,8 +1267,8 @@ class cfgVehicles
 	};
 	class geb_MetalHookBobber3WormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 3 with Worm";
-		descriptionShort = "A metal hook with a bobber attached, with a Worm used as bait.";
+		displayName			= "$STR_metalhookbobber3wormbait";
+		descriptionShort	= "$STR_metalhookbobberwormbait_desc";
 		hookType = "geb_MetalHookBobber3";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1289,8 +1289,8 @@ class cfgVehicles
 	};
 	class geb_MetalHookBobber4WormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 4 with Worm";
-		descriptionShort = "A metal hook with a bobber attached, with a Worm used as bait.";
+		displayName			= "$STR_metalhookbobber4wormbait";
+		descriptionShort	= "$STR_metalhookbobberwormbait_desc";
 		hookType = "geb_MetalHookBobber4";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1312,8 +1312,8 @@ class cfgVehicles
 
 	class geb_MetalHookBobber1RubberWormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 1 with Rubber Worm";
-		descriptionShort = "A metal hook with a bobber attached, with a Rubber Worm used as bait.";
+		displayName			= "$STR_metalhookbobber1rubberwormbait";
+		descriptionShort	= "$STR_metalhookbobberrubberwormbait_desc";
 		hookType = "geb_MetalHookBobber1";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1334,8 +1334,8 @@ class cfgVehicles
 	};
 	class geb_MetalHookBobber2RubberWormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 2 with Rubber Worm";
-		descriptionShort = "A metal hook with a bobber attached, with a Rubber Worm used as bait.";
+		displayName			= "$STR_metalhookbobber2rubberwormbait";
+		descriptionShort	= "$STR_metalhookbobberrubberwormbait_desc";
 		hookType = "geb_MetalHookBobber2";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1356,8 +1356,8 @@ class cfgVehicles
 	};
 	class geb_MetalHookBobber3RubberWormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 3 with Rubber Worm";
-		descriptionShort = "A metal hook with a bobber attached, with a Rubber Worm used as bait.";
+		displayName			= "$STR_metalhookbobber3rubberwormbait";
+		descriptionShort	= "$STR_metalhookbobberrubberwormbait_desc";
 		hookType = "geb_MetalHookBobber3";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1378,8 +1378,8 @@ class cfgVehicles
 	};
 	class geb_MetalHookBobber4RubberWormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 4 with Rubber Worm";
-		descriptionShort = "A metal hook with a bobber attached, with a Rubber Worm used as bait.";
+		displayName			= "$STR_metalhookbobber4rubberwormbait";
+		descriptionShort	= "$STR_metalhookbobberrubberwormbait_desc";
 		hookType = "geb_MetalHookBobber4";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1401,8 +1401,8 @@ class cfgVehicles
 
 	class geb_MetalHookBobber1GrubWormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 1 with Grub Worm";
-		descriptionShort = "A metal hook with a bobber attached, with a Grub Worm used as bait.";
+		displayName			= "$STR_metalhookbobber1grubwormbait";
+		descriptionShort	= "$STR_metalhookbobbergrubwormbait_desc";
 		hookType = "geb_MetalHookBobber1";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1423,8 +1423,8 @@ class cfgVehicles
 	};
 	class geb_MetalHookBobber2GrubWormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 2 with Grub Worm";
-		descriptionShort = "A metal hook with a bobber attached, with a Grub Worm used as bait.";
+		displayName			= "$STR_metalhookbobber2grubwormbait";
+		descriptionShort	= "$STR_metalhookbobbergrubwormbait_desc";
 		hookType = "geb_MetalHookBobber2";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1445,8 +1445,8 @@ class cfgVehicles
 	};
 	class geb_MetalHookBobber3GrubWormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 3 with Grub Worm";
-		descriptionShort = "A metal hook with a bobber attached, with a Grub Worm used as bait.";
+		displayName			= "$STR_metalhookbobber3grubwormbait";
+		descriptionShort	= "$STR_metalhookbobbergrubwormbait_desc";
 		hookType = "geb_MetalHookBobber3";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1467,8 +1467,8 @@ class cfgVehicles
 	};
 	class geb_MetalHookBobber4GrubWormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 4 with Grub Worm";
-		descriptionShort = "A metal hook with a bobber attached, with a Grub Worm used as bait.";
+		displayName			= "$STR_metalhookbobber4grubwormbait";
+		descriptionShort	= "$STR_metalhookbobbergrubwormbait_desc";
 		hookType = "geb_MetalHookBobber4";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1490,8 +1490,8 @@ class cfgVehicles
 
 	class geb_MetalHookBobber1GrassHopperBait: geb_MetalHookBobberGrassHopperBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 1 with GrassHopper";
-		descriptionShort = "A metal hook with a bobber attached, with a GrassHopper used as bait.";
+		displayName			= "$STR_metalhookbobber1grasshopperbait";
+		descriptionShort	= "$STR_metalhookbobbergrasshopperbait_desc";
 		hookType = "geb_MetalHookBobber1";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1512,8 +1512,8 @@ class cfgVehicles
 	};
 	class geb_MetalHookBobber2GrassHopperBait: geb_MetalHookBobberGrassHopperBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 2 with GrassHopper";
-		descriptionShort = "A metal hook with a bobber attached, with a GrassHopper used as bait.";
+		displayName			= "$STR_metalhookbobber2grasshopperbait";
+		descriptionShort	= "$STR_metalhookbobbergrasshopperbait_desc";
 		hookType = "geb_MetalHookBobber2";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1534,8 +1534,8 @@ class cfgVehicles
 	};
 	class geb_MetalHookBobber3GrassHopperBait: geb_MetalHookBobberGrassHopperBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 3 with GrassHopper";
-		descriptionShort = "A metal hook with a bobber attached, with a GrassHopper used as bait.";
+		displayName			= "$STR_metalhookbobber3grasshopperbait";
+		descriptionShort	= "$STR_metalhookbobbergrasshopperbait_desc";
 		hookType = "geb_MetalHookBobber3";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1552,12 +1552,12 @@ class cfgVehicles
 			};
 		};
 		hiddenSelections[] = {"zbytek"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_metalhookbobber3_baited_grasshopper.paa";};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_metalhookbobber3_baited_grasshopper.paa"};
 	};
 	class geb_MetalHookBobber4GrassHopperBait: geb_MetalHookBobberGrassHopperBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 4 with GrassHopper";
-		descriptionShort = "A metal hook with a bobber attached, with a GrassHopper used as bait.";
+		displayName			= "$STR_metalhookbobber4grasshopperbait";
+		descriptionShort	= "$STR_metalhookbobbergrasshopperbait_desc";
 		hookType = "geb_MetalHookBobber4";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1579,8 +1579,8 @@ class cfgVehicles
 
 	class geb_MetalHookBobber1MinnowBait: geb_MetalHookBobberMinnowBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 1 with Minnow";
-		descriptionShort = "A metal hook with a bobber attached, with a Minnow used as bait.";
+		displayName			= "$STR_metalhookbobber1minnowbait";
+		descriptionShort	= "$STR_metalhookbobberminnowbait_desc";
 		hookType = "geb_MetalHookBobber1";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1601,8 +1601,8 @@ class cfgVehicles
 	};
 	class geb_MetalHookBobber2MinnowBait: geb_MetalHookBobberMinnowBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 2 with Minnow";
-		descriptionShort = "A metal hook with a bobber attached, with a Minnow used as bait.";
+		displayName			= "$STR_metalhookbobber2minnowbait";
+		descriptionShort	= "$STR_metalhookbobberminnowbait_desc";
 		hookType = "geb_MetalHookBobber2";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1623,8 +1623,8 @@ class cfgVehicles
 	};
 	class geb_MetalHookBobber3MinnowBait: geb_MetalHookBobberMinnowBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 3 with Minnow";
-		descriptionShort = "A metal hook with a bobber attached, with a Minnow used as bait.";
+		displayName			= "$STR_metalhookbobber3minnowbait";
+		descriptionShort	= "$STR_metalhookbobberminnowbait_desc";
 		hookType = "geb_MetalHookBobber3";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1645,8 +1645,8 @@ class cfgVehicles
 	};
 	class geb_MetalHookBobber4MinnowBait: geb_MetalHookBobberMinnowBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 4 with Minnow";
-		descriptionShort = "A metal hook with a bobber attached, with a Minnow used as bait.";
+		displayName			= "$STR_metalhookbobber4minnowbait";
+		descriptionShort	= "$STR_metalhookbobberminnowbait_desc";
 		hookType = "geb_MetalHookBobber4";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1668,8 +1668,8 @@ class cfgVehicles
 
 	class geb_MetalHookBobber1FieldCricketBait: geb_MetalHookBobberFieldCricketBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 1 with FieldCricket";
-		descriptionShort = "A metal hook with a bobber attached, with a FieldCricket used as bait.";
+		displayName			= "$STR_metalhookbobber1fieldcricketbait";
+		descriptionShort	= "$STR_metalhookbobberfieldcricketbait_desc";
 		hookType = "geb_MetalHookBobber1";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1690,8 +1690,8 @@ class cfgVehicles
 	};
 	class geb_MetalHookBobber2FieldCricketBait: geb_MetalHookBobberFieldCricketBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 2 with FieldCricket";
-		descriptionShort = "A metal hook with a bobber attached, with a FieldCricket used as bait.";
+		displayName			= "$STR_metalhookbobber2fieldcricketbait";
+		descriptionShort	= "$STR_metalhookbobberfieldcricketbait_desc";
 		hookType = "geb_MetalHookBobber2";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1712,8 +1712,8 @@ class cfgVehicles
 	};
 	class geb_MetalHookBobber3FieldCricketBait: geb_MetalHookBobberFieldCricketBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 3 with FieldCricket";
-		descriptionShort = "A metal hook with a bobber attached, with a FieldCricket used as bait.";
+		displayName			= "$STR_metalhookbobber3fieldcricketbait";
+		descriptionShort	= "$STR_metalhookbobberfieldcricketbait_desc";
 		hookType = "geb_MetalHookBobber3";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1734,8 +1734,8 @@ class cfgVehicles
 	};
 	class geb_MetalHookBobber4FieldCricketBait: geb_MetalHookBobberFieldCricketBaitBase {
 		scope = 2;
-		displayName = "Metal Hook & Bobber 4 with FieldCricket";
-		descriptionShort = "A metal hook with a bobber attached, with a FieldCricket used as bait.";
+		displayName			= "$STR_metalhookbobber4fieldcricketbait";
+		descriptionShort	= "$STR_metalhookbobberfieldcricketbait_desc";
 		hookType = "MetalHookBobber4";
 		class DamageSystem {
 			class GlobalHealth {
@@ -1757,8 +1757,8 @@ class cfgVehicles
 
 	class geb_MetalRubberWormBait: Inventory_Base {
 		scope = 2;
-		displayName = "Metal Hook with Rubber Worm";
-		descriptionShort = "A bait to catch marine life!";
+		displayName			= "$STR_metalhookrubberwormbait";
+		descriptionShort	= "$STR_metalhookrubberwormbait_desc";
 		model = "\gebsfish\data\tackle\geb_metalhook_baited_worm.p3d";
 		weight = 15;
 		absorbency = 0.8;
@@ -1792,8 +1792,8 @@ class cfgVehicles
 	};
 	class geb_MetalGrubWormBait: Inventory_Base {
 		scope = 2;
-		displayName = "Metal Hook with Grub Worm";
-		descriptionShort = "A bait to catch marine life!";
+		displayName			= "$STR_metalhookgrubwormbait";
+		descriptionShort	= "$STR_metalhookgrubwormbait_desc";
 		model = "\gebsfish\data\tackle\geb_metalhook_baited_worm.p3d";
 		weight = 15;
 		absorbency = 0.8;
@@ -1827,8 +1827,8 @@ class cfgVehicles
 	};
 	class geb_MetalGrassHopperBait: geb_metalhook_baited_grasshopper {
 		scope = 2;
-		displayName = "Metal Hook with Grasshopper";
-		descriptionShort = "A bait to catch marine life!";
+		displayName			= "$STR_metalhookgrasshopperbait";
+		descriptionShort	= "$STR_metalhookgrasshopperbait_desc";
 		model = "\gebsfish\data\tackle\geb_metalhook_baited_grasshopper.p3d";
 		weight = 15;
 		absorbency = 0.8;
@@ -1862,8 +1862,8 @@ class cfgVehicles
 	};
 	class geb_MetalFieldCricketBait: geb_metalhook_baited_fieldcricket {
 		scope = 2;
-		displayName = "Metal Hook with Field Cricket";
-		descriptionShort = "A bait to catch marine life!";
+		displayName			= "$STR_metalhookfieldcricketbait";
+		descriptionShort	= "$STR_metalhookfieldcricketbait_desc";
 		model = "\gebsfish\data\tackle\geb_metalhook_baited_fieldcricket.p3d";
 		weight = 15;
 		absorbency = 0.8;
@@ -1897,8 +1897,8 @@ class cfgVehicles
 	};
 	class geb_MetalWormBait: Inventory_Base {
 		scope = 2;
-		displayName = "Metal Hook with Worm";
-		descriptionShort = "A bait to catch marine life!";
+		displayName			= "$STR_metalhookwormbait";
+		descriptionShort	= "$STR_metalhookwormbait_desc";
 		model = "\gebsfish\data\tackle\geb_metalhook_baited_worm.p3d";
 		weight = 15;
 		absorbency = 0.8;
@@ -1932,8 +1932,8 @@ class cfgVehicles
 	};
 	class geb_MetalMinnowBait: geb_metalhook_baited_minnow {
 		scope = 2;
-		displayName = "Metal Hook with Minnow";
-		descriptionShort = "A bait to catch marine life!";
+		displayName			= "$STR_metalhookminnowbait";
+		descriptionShort	= "$STR_metalhookminnowbait_desc";
 		model = "\gebsfish\data\tackle\geb_metalhook_baited_minnow.p3d";
 		weight = 15;
 		absorbency = 0.8;
@@ -2055,8 +2055,8 @@ class cfgVehicles
 
 	class geb_BoneHookBobber1WormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 1 with Worm";
-		descriptionShort = "A Bone hook with a bobber attached, with a Worm used as bait.";
+		displayName			= "$STR_bonehookbobber1wormbait";
+		descriptionShort	= "$STR_hookbobber_desc";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber1_baited_worm.paa"};
 		class DamageSystem {
@@ -2077,8 +2077,8 @@ class cfgVehicles
 	};
 	class geb_BoneHookBobber2WormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 2 with Worm";
-		descriptionShort = "A Bone hook with a bobber attached, with a Worm used as bait.";
+		displayName			= "$STR_bonehookbobber2wormbait";
+		descriptionShort	= "$STR_hookbobber_desc";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber2_baited_worm.paa"};
 		class DamageSystem {
@@ -2099,8 +2099,8 @@ class cfgVehicles
 	};
 	class geb_BoneHookBobber3WormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 3 with Worm";
-		descriptionShort = "A Bone hook with a bobber attached, with a Worm used as bait.";
+		displayName			= "$STR_bonehookbobber3wormbait";
+		descriptionShort	= "$STR_hookbobber_desc";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber3_baited_worm.paa"};
 		class DamageSystem {
@@ -2121,8 +2121,8 @@ class cfgVehicles
 	};
 	class geb_BoneHookBobber4WormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 4 with Worm";
-		descriptionShort = "A Bone hook with a bobber attached, with a Worm used as bait.";
+		displayName			= "$STR_bonehookbobber4wormbait";
+		descriptionShort	= "$STR_hookbobber_desc";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber4_baited_worm.paa"};
 		class DamageSystem {
@@ -2144,8 +2144,8 @@ class cfgVehicles
 
 	class geb_BoneHookBobber1RubberWormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 1 with Rubber Worm";
-		descriptionShort = "A Bone hook with a bobber attached, with a Rubber Worm used as bait.";
+		displayName			= "$STR_bonehookbobber1rubberwormbait";
+		descriptionShort	= "$STR_bonehookbobberrubberwormbait_desc";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber1_baited_rubberworm.paa"};
 		class DamageSystem {
@@ -2166,8 +2166,8 @@ class cfgVehicles
 	};
 	class geb_BoneHookBobber2RubberWormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 2 with Rubber Worm";
-		descriptionShort = "A Bone hook with a bobber attached, with a Rubber Worm used as bait.";
+		displayName			= "$STR_bonehookbobber2rubberwormbait";
+		descriptionShort	= "$STR_bonehookbobberrubberwormbait_desc";
 		hookType = "geb_BoneHookBobber2";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber2_baited_rubberworm.paa"};
@@ -2188,8 +2188,8 @@ class cfgVehicles
 	};
 	class geb_BoneHookBobber3RubberWormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 3 with Rubber Worm";
-		descriptionShort = "A Bone hook with a bobber attached, with a Rubber Worm used as bait.";
+		displayName			= "$STR_bonehookbobber3rubberwormbait";
+		descriptionShort	= "$STR_bonehookbobberrubberwormbait_desc";
 		hookType = "geb_BoneHookBobber3";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber3_baited_rubberworm.paa"};
@@ -2210,8 +2210,8 @@ class cfgVehicles
 	};
 	class geb_BoneHookBobber4RubberWormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 4 with Rubber Worm";
-		descriptionShort = "A Bone hook with a bobber attached, with a Rubber Worm used as bait.";
+		displayName			= "$STR_bonehookbobber4rubberwormbait";
+		descriptionShort	= "$STR_bonehookbobberrubberwormbait_desc";
 		hookType = "geb_BoneHookBobber4";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber4_baited_rubberworm.paa"};
@@ -2233,8 +2233,8 @@ class cfgVehicles
 
 	class geb_BoneHookBobber1GrubWormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 1 with Grub Worm";
-		descriptionShort = "A Bone hook with a bobber attached, with a Grub Worm used as bait.";
+		displayName			= "$STR_bonehookbobber1grubwormbait";
+		descriptionShort	= "$STR_bonehookbobbergrubwormbait_desc";
 		hookType = "geb_BoneHookBobber1";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber1_baited_grubworm.paa"};
@@ -2255,8 +2255,8 @@ class cfgVehicles
 	};
 	class geb_BoneHookBobber2GrubWormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 2 with Grub Worm";
-		descriptionShort = "A Bone hook with a bobber attached, with a Grub Worm used as bait.";
+		displayName			= "$STR_bonehookbobber2grubwormbait";
+		descriptionShort	= "$STR_bonehookbobbergrubwormbait_desc";
 		hookType = "geb_BoneHookBobber2";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber2_baited_grubworm.paa"};
@@ -2278,8 +2278,8 @@ class cfgVehicles
 	};
 	class geb_BoneHookBobber3GrubWormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 3 with Grub Worm";
-		descriptionShort = "A Bone hook with a bobber attached, with a Grub Worm used as bait.";
+		displayName			= "$STR_bonehookbobber3grubwormbait";
+		descriptionShort	= "$STR_bonehookbobbergrubwormbait_desc";
 		hookType = "geb_BoneHookBobber3";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber3_baited_grubworm.paa"};
@@ -2300,8 +2300,8 @@ class cfgVehicles
 	};
 	class geb_BoneHookBobber4GrubWormBait: geb_MetalHookBobberWormBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 4 with Grub Worm";
-		descriptionShort = "A Bone hook with a bobber attached, with a Grub Worm used as bait.";
+		displayName			= "$STR_bonehookbobber4grubwormbait";
+		descriptionShort	= "$STR_bonehookbobbergrubwormbait_desc";
 		hookType = "geb_BoneHookBobber4";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber4_baited_grubworm.paa"};
@@ -2323,8 +2323,8 @@ class cfgVehicles
 
 	class geb_BoneHookBobber1GrassHopperBait: geb_MetalHookBobberGrassHopperBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 1 with GrassHopper";
-		descriptionShort = "A Bone hook with a bobber attached, with a GrassHopper used as bait.";
+		displayName			= "$STR_bonehookbobber1grasshopperbait";
+		descriptionShort	= "$STR_bonehookbobbergrasshopperbait_desc";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber1_baited_grasshopper.paa"};
 		hookType = "geb_BoneHookBobber1";
@@ -2345,8 +2345,8 @@ class cfgVehicles
 	};
 	class geb_BoneHookBobber2GrassHopperBait: geb_MetalHookBobberGrassHopperBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 2 with GrassHopper";
-		descriptionShort = "A Bone hook with a bobber attached, with a GrassHopper used as bait.";
+		displayName			= "$STR_bonehookbobber2grasshopperbait";
+		descriptionShort	= "$STR_bonehookbobbergrasshopperbait_desc";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber2_baited_grasshopper.paa"};
 		hookType = "geb_BoneHookBobber2";
@@ -2367,8 +2367,8 @@ class cfgVehicles
 	};
 	class geb_BoneHookBobber3GrassHopperBait: geb_MetalHookBobberGrassHopperBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 3 with GrassHopper";
-		descriptionShort = "A Bone hook with a bobber attached, with a GrassHopper used as bait.";
+		displayName			= "$STR_bonehookbobber3grasshopperbait";
+		descriptionShort	= "$STR_bonehookbobbergrasshopperbait_desc";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber3_baited_grasshopper.paa"};
 		hookType = "geb_BoneHookBobber3";
@@ -2389,8 +2389,8 @@ class cfgVehicles
 	};
 	class geb_BoneHookBobber4GrassHopperBait: geb_MetalHookBobberGrassHopperBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 4 with GrassHopper";
-		descriptionShort = "A Bone hook with a bobber attached, with a GrassHopper used as bait.";
+		displayName			= "$STR_bonehookbobber4grasshopperbait";
+		descriptionShort	= "$STR_bonehookbobbergrasshopperbait_desc";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber4_baited_grasshopper.paa"};
 		hookType = "geb_BoneHookBobber4";
@@ -2412,8 +2412,8 @@ class cfgVehicles
 
 	class geb_BoneHookBobber1MinnowBait: geb_MetalHookBobberMinnowBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 1 with Minnow";
-		descriptionShort = "A Bone hook with a bobber attached, with a Minnow used as bait.";
+		displayName			= "$STR_bonehookbobber1minnowbait";
+		descriptionShort	= "$STR_bonehookbobberminnowbait_desc";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber1_baited_minnow.paa"};
 		hookType = "geb_BoneHookBobber1";
@@ -2435,8 +2435,8 @@ class cfgVehicles
 	};
 	class geb_BoneHookBobber2MinnowBait: geb_MetalHookBobberMinnowBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 2 with Minnow";
-		descriptionShort = "A Bone hook with a bobber attached, with a Minnow used as bait.";
+		displayName			= "$STR_bonehookbobber2minnowbait";
+		descriptionShort	= "$STR_bonehookbobberminnowbait_desc";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber2_baited_minnow.paa"};
 		hookType = "geb_BoneHookBobber2";
@@ -2457,8 +2457,8 @@ class cfgVehicles
 	};
 	class geb_BoneHookBobber3MinnowBait: geb_MetalHookBobberMinnowBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 3 with Minnow";
-		descriptionShort = "A Bone hook with a bobber attached, with a Minnow used as bait.";
+		displayName			= "$STR_bonehookbobber3minnowbait";
+		descriptionShort	= "$STR_bonehookbobberminnowbait_desc";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber3_baited_minnow.paa"};
 		hookType = "geb_BoneHookBobber3";
@@ -2479,8 +2479,8 @@ class cfgVehicles
 	};
 	class geb_BoneHookBobber4MinnowBait: geb_MetalHookBobberMinnowBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 4 with Minnow";
-		descriptionShort = "A Bone hook with a bobber attached, with a Minnow used as bait.";
+		displayName			= "$STR_bonehookbobber4minnowbait";
+		descriptionShort	= "$STR_bonehookbobberminnowbait_desc";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber4_baited_minnow.paa"};
 		hookType = "geb_BoneHookBobber4";
@@ -2502,8 +2502,8 @@ class cfgVehicles
 
 	class geb_BoneHookBobber1FieldCricketBait: geb_MetalHookBobberFieldCricketBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 1 with FieldCricket";
-		descriptionShort = "A Bone hook with a bobber attached, with a FieldCricket used as bait.";
+		displayName			= "$STR_bonehookbobber1fieldcricketbait";
+		descriptionShort	= "$STR_bonehookbobberfieldcricketbait_desc";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber1_baited_fieldcricket.paa"};
 		hookType = "geb_BoneHookBobber1";
@@ -2524,8 +2524,8 @@ class cfgVehicles
 	};
 	class geb_BoneHookBobber2FieldCricketBait: geb_MetalHookBobberFieldCricketBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 2 with FieldCricket";
-		descriptionShort = "A Bone hook with a bobber attached, with a FieldCricket used as bait.";
+		displayName			= "$STR_bonehookbobber2fieldcricketbait";
+		descriptionShort	= "$STR_bonehookbobberfieldcricketbait_desc";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber2_baited_fieldcricket.paa"};
 		hookType = "geb_BoneHookBobber2";
@@ -2546,8 +2546,8 @@ class cfgVehicles
 	};
 	class geb_BoneHookBobber3FieldCricketBait: geb_MetalHookBobberFieldCricketBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 3 with FieldCricket";
-		descriptionShort = "A Bone hook with a bobber attached, with a FieldCricket used as bait.";
+		displayName			= "$STR_bonehookbobber3fieldcricketbait";
+		descriptionShort	= "$STR_bonehookbobberfieldcricketbait_desc";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber3_baited_fieldcricket.paa"};
 		hookType = "geb_BoneHookBobber3";
@@ -2568,8 +2568,8 @@ class cfgVehicles
 	};
 	class geb_BoneHookBobber4FieldCricketBait: geb_MetalHookBobberFieldCricketBaitBase {
 		scope = 2;
-		displayName = "Bone Hook & Bobber 4 with FieldCricket";
-		descriptionShort = "A Bone hook with a bobber attached, with a FieldCricket used as bait.";
+		displayName			= "$STR_bonehookbobber4fieldcricketbait";
+		descriptionShort	= "$STR_bonehookbobberfieldcricketbait_desc";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_bonehookbobber4_baited_fieldcricket.paa"};
 		hookType = "geb_BoneHookBobber4";
@@ -2591,7 +2591,7 @@ class cfgVehicles
 
 	class geb_BoneRubberWormBait: geb_metalhook_baited_worm {
 		scope = 2;
-		displayName = "Bone Hook with Rubber Worm";
+		displayName			= "$STR_bonehookrubberwormbait";
 		descriptionShort = "$STR_CfgVehicles_Bait1";
 		model = "\gebsfish\data\tackle\geb_metalhook_baited_worm.p3d";
 		weight = 15;
@@ -2626,7 +2626,7 @@ class cfgVehicles
 	};
 	class geb_BoneGrubWormBait: Inventory_Base {
 		scope = 2;
-		displayName = "Bone Hook with Grub Worm";
+		displayName			= "$STR_bonehookgrubwormbait";
 		descriptionShort = "$STR_CfgVehicles_Bait1";
 		model = "\gebsfish\data\tackle\geb_metalhook_baited_worm.p3d";
 		weight = 15;
@@ -2661,7 +2661,7 @@ class cfgVehicles
 	};
 	class geb_BoneGrassHopperBait: geb_metalhook_baited_grasshopper {
 		scope = 2;
-		displayName = "Bone Hook with Grasshopper";
+		displayName			= "$STR_bonehookgrasshopperbait";
 		descriptionShort = "$STR_CfgVehicles_Bait1";
 		model = "\gebsfish\data\tackle\geb_metalhook_baited_grasshopper.p3d";
 		weight = 15;
@@ -2696,7 +2696,7 @@ class cfgVehicles
 	};
 	class geb_BoneFieldCricketBait: geb_metalhook_baited_fieldcricket {
 		scope = 2;
-		displayName = "Bone Hook with Field Cricket";
+		displayName			= "$STR_bonehookfieldcricketbait";
 		descriptionShort = "$STR_CfgVehicles_Bait1";
 		model = "\gebsfish\data\tackle\geb_metalhook_baited_fieldcricket.p3d";
 		weight = 15;
@@ -2731,7 +2731,7 @@ class cfgVehicles
 	};
 	class geb_BoneMinnowBait: geb_metalhook_baited_minnow {
 		scope = 2;
-		displayName = "Bone Hook with Minnow";
+		displayName			= "$STR_bonehookminnowbait";
 		descriptionShort = "A bait to catch marine life!";
 		model = "\gebsfish\data\tackle\geb_metalhook_baited_minnow.p3d";
 		weight = 15;
@@ -7362,7 +7362,7 @@ class cfgVehicles
 	};
 	class geb_CutthroatTroutFilletMeat: CarpFilletMeat {
 		scope = 2;
-		displayName = "$STR_cutthroattrout_fillet";
+		displayName = "$STR_cuthroattrout_fillet";
 		descriptionShort = "$STR_cutthroattrout_desc";
 		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
@@ -7681,14 +7681,14 @@ class cfgVehicles
 	};
 	class geb_LobsterTail : MackerelFilletMeat {
 		scope = 2;
-		displayName = "Lobster Tail";
+		displayName = "$STR_lobster_tail";
 		descriptionShort = "$STR_lobster_desc";
 		model = "\gebsfish\data\fish\lobstertail.p3d";
 		itemSize[] = {1,3};
 	};
 	class geb_BlueLobsterTail : MackerelFilletMeat {
 		scope = 2;
-		displayName = "Blue Lobster Tail";
+		displayName = "$STR_bluelobster_tail";
 		descriptionShort = "$STR_bluelobster_desc";
 		model = "\gebsfish\data\fish\lobstertail.p3d";
 		hiddenSelections[] = {"shrimp"};
