@@ -2,7 +2,7 @@
 
 To add more fish to the original game. Freshwater, saltwater, and other aquatic life. This mod is meant to create more immersion, and add more to the ecosystem to the base game. We do not want the fish to make it easier to survive, so the percentage of catching, time to prepare, amount of fish fillets gathered, and fish weight are considered. 
 
-This mod currently adds 39 unique fish, 20 tackle boxes, 2 Bug Catchers, Fishing Hook crafting framework, 4 Spinners, 4 Lures, 6 knives, 3 insects, 1 rubber bait, 2 fishing gloves, 4 fish themed hats, 4 fish themed tshirts, and 4 fishing rods to the game, which brings the total to 39 in game fish. That's a lot of variety.
+This mod currently adds 55 unique fish, new tackle boxes, bug and minnow catcher, 4 Spinners, 4 Lures, 6 knives, 3 insect fish bait, 1 rubber bait, 2 fishing gloves, 4 fish themed hats, 4 fish themed tshirts, and 4 fishing rods to the game. That's a lot of variety.
 
 https://discord.gg/G8uSGZ8yyf
 
@@ -11,3 +11,12 @@ English, Czech, German, Russian, Polish, Hungarian, Italian, Spanish, French, Ch
 
 
 ### Copyright PackJC 2022
+
+### Credits, Contributors, and Friends
+
+lothsun#0001,
+iiiii#5677
+Gramps#4914,
+NekoSensei,
+Doriiiiija,
+Echo#4343,
