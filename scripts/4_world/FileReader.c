@@ -15,6 +15,9 @@ class FileReader
 	static const string BUG_CONFIG_PATH = "$profile:gebsfish/Bugs.cfg";
 	static const string DIRECTORY = "$profile:gebsfish";
 
+	static const string FISHINGTIME_CONFIG_PATH = "$profile:gebsfish/FishingTime.cfg";
+	static ref float fishingtime_float = new float();
+
 	static ref map<string, float> fresh_chance_map = new map<string, float>();
 	static ref map<string, float> salt_chance_map = new map<string, float>();
 	static ref map<string, float> bug_chance_map = new map<string, float>();
@@ -39,8 +42,11 @@ class FileReader
 	{
 		bool newFreshFishDetected = false;
 		bool newSaltFishDetected = false;
+
+		//Checking if files don't exist first
 		if (!FileExist(SALT_CONFIG_PATH))
 		{
+			//If user doesn't have salt config, they probably need to make a directory; ie new install
 			MakeDirectory(DIRECTORY);
 			CreateConfig(SALT_CONFIG_PATH);
 		}
@@ -52,7 +58,12 @@ class FileReader
 		{
 			CreateConfig(BUG_CONFIG_PATH);
 		}
+		if (!FileExist(FISHINGTIME_CONFIG_PATH))
+		{
+			CreateConfig(FISHINGTIME_CONFIG_PATH);
+		}
 
+		//If file exists, open it and read files
 		if (FileExist(SALT_CONFIG_PATH))
 		{
 			FileHandle salt_file = OpenFile(SALT_CONFIG_PATH, FileMode.READ);
@@ -123,7 +134,16 @@ class FileReader
 			}
 			CloseFile(bug_file);
 		}
-
+		if (FileExist(FISHINGTIME_CONFIG_PATH))
+		{
+			FileHandle fishingtime_file = OpenFile(FISHINGTIME_CONFIG_PATH, FileMode.READ);
+			float fishingtime_line;
+			while (FGets(fishingtime_file, fishingtime_line) != -1)
+			{
+				fishingtime_float = fishingtime_line;
+			}
+			CloseFile(fishingtime_file);
+		}
 	}
 
 	// Creates the config file and sets default values.
@@ -189,6 +209,9 @@ class FileReader
 			FPrintln(f, "geb_GrubWorm=50");
 			FPrintln(f, "Worm=50");
 			break;
+		case "$profile:gebsfish/FishingTime.cfg":
+			FPrintln(f, "3.0");
+			break;
 		}
 		CloseFile(f);
 	}
@@ -227,4 +250,8 @@ class FileReader
 		return bug_chance_map;
 	}
 
+	static float GetFishingTimeFloat()
+	{
+		return fishingtime_float;
+	}
 };
