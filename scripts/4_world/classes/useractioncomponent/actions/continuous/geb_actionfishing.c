@@ -11,12 +11,12 @@
 modded class ActionFishingNewCB : ActionContinuousBaseCB
 {
 	ItemBase geb_AmbientFish2;
-	
+	float fishingtime_float = FileReader.GetFishingTimeFloat();
+
 	  override void CreateActionComponent()
 	  {
-		  	auto fishingtime = FileReader.GetFishingTime();
 			EnableStateChangeCallback();
-			m_ActionData.m_ActionComponent = new CAContinuousRepeatFishing(fishingtime);
+			m_ActionData.m_ActionComponent = new CAContinuousRepeatFishing(fishingtime_float);
 	  }
 
 	override void HandleFishingResultSuccess()
