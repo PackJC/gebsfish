@@ -10,13 +10,15 @@
 
 modded class ActionFishingNewCB : ActionContinuousBaseCB
 {
-	ItemBase geb_AmbientFish2;
-	float fishingtime_float = FileReader.GetFishingTimeFloat();
-
+	static ref map<string, float> fishing_time_map = FileReader.GetFishingTimeMap();
 	  override void CreateActionComponent()
 	  {
-			EnableStateChangeCallback();
-			m_ActionData.m_ActionComponent = new CAContinuousRepeatFishing(fishingtime_float);
+
+		  EnableStateChangeCallback();
+		  Print("Map:" + fishing_time_map);
+		  Print("Value:" + fishing_time_map.Get("FishingTime"));
+		  float fishing_time = fishing_time_map.Get("FishingTime");
+		  m_ActionData.m_ActionComponent = new CAContinuousRepeatFishing(fishing_time);
 	  }
 
 	override void HandleFishingResultSuccess()

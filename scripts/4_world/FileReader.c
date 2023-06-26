@@ -16,7 +16,7 @@ class FileReader
 	static const string DIRECTORY = "$profile:gebsfish";
 
 	static const string FISHINGTIME_CONFIG_PATH = "$profile:gebsfish/FishingTime.cfg";
-	static float fishingtime_float = 3.0;
+	static ref map<string, float> fishing_time_map = new map<string, float>();
 
 	static ref map<string, float> fresh_chance_map = new map<string, float>();
 	static ref map<string, float> salt_chance_map = new map<string, float>();
@@ -140,7 +140,12 @@ class FileReader
 			string fishingtime_line;
 			while (FGets(fishingtime_file, fishingtime_line) != -1)
 			{
-				fishingtime_float = fishingtime_line.ToFloat();
+				Print("Line: " + fishingtime_line);
+				fishingtime_line.Trim(); 
+				int tokenIndex5 = fishingtime_line.IndexOf("=");
+				int lengthIndex5 = fishingtime_line.Length() - tokenIndex5;
+				//FishingTime : 30
+				fishing_time_map[fishingtime_line.Substring(0, tokenIndex5)] = (fishingtime_line.Substring(tokenIndex5 + 1, lengthIndex5 - 1)).ToFloat();
 			}
 			CloseFile(fishingtime_file);
 		}
@@ -210,7 +215,7 @@ class FileReader
 			FPrintln(f, "Worm=50");
 			break;
 		case "$profile:gebsfish/FishingTime.cfg":
-			FPrintln(f, "10.0");
+			FPrintln(f, "FishingTime=30");
 			break;
 		}
 		CloseFile(f);
@@ -250,8 +255,8 @@ class FileReader
 		return bug_chance_map;
 	}
 
-	static float GetFishingTimeFloat()
+	static map<string, float> GetFishingTimeMap()
 	{
-		return fishingtime_float;
+		return fishing_time_map;
 	}
 };
