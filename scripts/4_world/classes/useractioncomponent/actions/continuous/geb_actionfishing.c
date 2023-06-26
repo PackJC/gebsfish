@@ -11,6 +11,9 @@
 modded class ActionFishingNewCB : ActionContinuousBaseCB
 {
 	static ref map<string, float> fishing_time_map = FileReader.GetFishingTimeMap();
+	static ref map<string, float> salt_chance_map = FileReader.GetSaltChanceMap();
+	static ref map<string, float> fresh_chance_map = FileReader.GetFreshChanceMap();
+
 	  override void CreateActionComponent()
 	  {
 
@@ -33,19 +36,15 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 		string selected_salt_fish = "";
 		string selected_fresh_fish = "";
 
-		auto salt_chance_map = FileReader.GetSaltChanceMap();
-		auto fresh_chance_map = FileReader.GetFreshChanceMap();
 
 		if (!GetGame().IsMultiplayer() || GetGame().IsServer())
 		{
 			ItemBase fish;
-			
 			rnd = Math.RandomFloatInclusive(0.0, 1.0);
 
-
-			if (!m_ActionDataFishing.m_Bait)
+			if (!m_ActionDataFishing.m_Bait){
 				m_ActionDataFishing.InitBait(ItemBase.Cast(m_ActionDataFishing.m_MainItem.FindAttachmentBySlotName("Hook")));
-			
+			}
 			if (!m_ActionDataFishing.IsBaitEmptyHook())
 			{
 				m_ActionDataFishing.m_Bait.AddHealth(-m_ActionDataFishing.FISHING_DAMAGE);
@@ -55,52 +54,47 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 			{
 				m_ActionDataFishing.m_Bait.AddHealth(-m_ActionDataFishing.FISHING_DAMAGE);
 			}
-
 			if (rnd > m_ActionDataFishing.FISHING_GARBAGE_CHANCE)
 			{
 				//Saltwater cast
 				if (m_ActionDataFishing.m_IsSurfaceSea)
 				{
-					//Get position of fishing bobber
-					//Saltwater Calculate Total Weight
+                   //Sum of all fish catch chances
 					foreach (auto skey, auto svalue : salt_chance_map) {
 						salt_sum += svalue;
 					}
-					//Generate Random number for Saltwater
+                    //Generate Random number based on sum of all fish catch chances
 					rndSaltFish = Math.RandomFloatInclusive(0.0, salt_sum);
-
 					//Generate Random Fish
 					foreach (auto s_key, auto s_value: salt_chance_map) {
 						if (rndSaltFish <= s_value && s_value > 0 && s_key.Length() > 2) {
-							selected_salt_fish = s_key;
-							selected_salt_fish.Replace("_CHANCE", "");
+							selected_salt_fish = s_key.Replace("_CHANCE", "");
 							break;
 						}
 						rndSaltFish -= s_value;
 					}
+					//Spawn fish
 					fish = ItemBase.Cast(GetGame().CreateObject(selected_salt_fish, m_ActionDataFishing.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
 				}
 				//Freshwater cast
 				else
 				{
-					//Freshwater Calculate Total Weight
+                   //Sum of all fish catch chances
 					foreach (auto fkey, auto fvalue: fresh_chance_map) {
 						fresh_sum += fvalue;
 					}
-					//Generate Random number for Freshwater
+                    //Generate Random number based on sum of all fish catch chances
 					rndFreshFish = Math.RandomFloatInclusive(0.0, fresh_sum);
-
 					//Generate Random Fish
 					foreach (auto f_key, auto f_value: fresh_chance_map) {
 						if (rndFreshFish <= f_value && f_value > 0 && f_key.Length() > 2) {
-							selected_fresh_fish = f_key;
-							selected_fresh_fish.Replace("_CHANCE", "");
-							break;
+							selected_fresh_fish = f_key.Replace("_CHANCE", "");
+=							break;
 						}
 						rndFreshFish -= f_value;
 					}
+					//Spawn fish
 					fish = ItemBase.Cast(GetGame().CreateObject(selected_fresh_fish, m_ActionDataFishing.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
-
 				}
 			}
 			//Junk catch
@@ -113,9 +107,8 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 			
 			if (fish)
 			{
-
-
 				fish.SetWet(0.3);
+				m_ActionDataFishing.m_MainItem.
 				if (fish.HasQuantity())
 				{
 					float coef = Math.RandomFloatInclusive(1.0, 1.0);

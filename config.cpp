@@ -12,9 +12,6 @@ class CfgPatches
 {
 	class gebsfish
 	{
-		units[]={};
-		weapons[]={};
-		requiredVersion=0.1;
 		requiredAddons[]=
 		{
 			"DZ_Data",
@@ -29,7 +26,7 @@ class CfgMods
 		dir="gebsfish";
 		picture = "gebsfish\data\logo.paa";					// picture in expanded description
 		logoSmall = "gebsfish\data\logo.paa";				// icon next to mod name when description is not expanded
-		logo = "gebsfish\data\logo.paa";						// logo below game menu
+		logo = "gebsfish\data\logo.paa";					// logo below game menu
 		logoHover = "gebsfish\data\logo_hover.paa";			// logo hovered
 		overview = "DayZ Fish Expansion";
 		action="";

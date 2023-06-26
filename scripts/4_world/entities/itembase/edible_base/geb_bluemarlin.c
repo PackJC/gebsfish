@@ -30,20 +30,18 @@ class geb_Bluemarlin extends Edible_Base
 		return true;
 	}
 
-
 	override bool CanSaveItemInHands(EntityAI item_in_hands)
 	{
 		return false;
 	}
 
-
 	override bool IsHeavyBehaviour() 
-{
-   return true;
-}
+	{
+		return true;
+	}
     
-override bool IsTwoHandedBehaviour() 
-{
-   return true;
-}
+	override bool IsTwoHandedBehaviour() 
+	{
+	   return true;
+	}
 }

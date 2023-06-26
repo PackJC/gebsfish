@@ -9,9 +9,6 @@ https://discord.gg/G8uSGZ8yyf
 # Supported Languages
 English, Czech, German, Russian, Polish, Hungarian, Italian, Spanish, French, Chinese (Traditional) , Japanese, Portuguese, Chinese (Simplified). If you don't see your language please comment so we can add! :)
 
-
-### Copyright PackJC 2022
-
 ### Credits, Contributors, and Friends
 
 lothsun#0001,
@@ -19,4 +16,6 @@ iiiii#5677
 Gramps#4914,
 NekoSensei,
 Doriiiiija,
-Echo#4343,
+Echo#4343
+
+# Copyright PackJC 2022

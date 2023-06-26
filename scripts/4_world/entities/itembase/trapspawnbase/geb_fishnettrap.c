@@ -40,8 +40,6 @@ modded class Trap_FishNet extends TrapSpawnBase
 
 		return super.CanReceiveAttachment(attachment, slotId);
 	}
-
-
 }
 
 modded class Trap_FishNet extends TrapSpawnBase

@@ -22,7 +22,6 @@ modded class geb_BugContainer extends Container_Base
 		{
 			return false;
 		}
-		
 		return true;
 	}
 
@@ -30,6 +29,5 @@ modded class geb_BugContainer extends Container_Base
 	{
 		super.SetActions();
 		AddAction(ActionDigBugs);
-
 	}
 }

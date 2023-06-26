@@ -8,6 +8,10 @@
 
 */
 
+/*
+	To restrict items in containers
+*/
+
 class geb_WormContainer : Container_Base
 {
 	ref TStringArray ItemArray = { "Worm", "geb_GrubWorm", "geb_RubberWorm" };

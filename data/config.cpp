@@ -15,9 +15,8 @@ class CfgNonAIVehicles
 
 class CfgPatches
 {
-	class gebsfishs { 	//Never Use same name for patch, because conflict message.
-		weapons[] = {};
-		requiredVersion = 0.1;
+	class gebsCfgPatches { 	
+		//Never Use same name for patch, because conflict message.
 		requiredAddons[] = {
 		"DZ_Data",
 		"DZ_Scripts"
@@ -25,7 +24,8 @@ class CfgPatches
 	};
 };
 class cfgVehicles
-{		//Instantiate Needed Classes
+{		
+	//Instantiate Needed Classes
 	class Bait;
 	class Worm;
 	class Hook;

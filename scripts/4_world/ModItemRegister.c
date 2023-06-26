@@ -8,7 +8,6 @@
 
 */
 
-
 modded class ModItemRegisterCallbacks
 {
 
@@ -16,7 +15,6 @@ modded class ModItemRegisterCallbacks
     {
         super.RegisterTwoHanded(pType, pBehavior);
         
-
           //Saltwater Fish
           pType.AddItemInHandsProfileIK("geb_Asianseabass", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
           pType.AddItemInHandsProfileIK("geb_Greatwhiteshark", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");

@@ -14,8 +14,8 @@ class FileReader
 	static const string SALT_CONFIG_PATH = "$profile:gebsfish/Saltwater.cfg";
 	static const string BUG_CONFIG_PATH = "$profile:gebsfish/Bugs.cfg";
 	static const string DIRECTORY = "$profile:gebsfish";
-
 	static const string FISHINGTIME_CONFIG_PATH = "$profile:gebsfish/FishingTime.cfg";
+	
 	static ref map<string, float> fishing_time_map = new map<string, float>();
 
 	static ref map<string, float> fresh_chance_map = new map<string, float>();

@@ -28,11 +28,10 @@ modded class Trap_SmallFish extends TrapSpawnBase
 		m_CatchesSea.Insert("geb_Bloodclam", 3);
 		m_CatchesSea.Insert("geb_Starfish", 4);
 		m_CatchesSea.Insert("geb_Jellyfish", 5);
-
 	}
 
 
-		override bool CanReceiveAttachment(EntityAI attachment, int slotId)
+	override bool CanReceiveAttachment(EntityAI attachment, int slotId)
 	{
 		if (!attachment.IsInherited(Worm))
 			return false;

@@ -21,7 +21,6 @@ modded class geb_BambooFishingNet extends Container_Base
 		{
 			return false;
 		}
-		
 		return true;
 	}
 
@@ -29,6 +28,5 @@ modded class geb_BambooFishingNet extends Container_Base
 	{
 		super.SetActions();
 		AddAction(ActionBambooFishingNet);
-
 	}
 }
