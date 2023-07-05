@@ -10,22 +10,24 @@
 
 modded class ActionFishingNewCB : ActionContinuousBaseCB
 {
-	static ref map<string, float> fishing_time_map = FileReader.GetFishingTimeMap();
-	static ref map<string, float> salt_chance_map = FileReader.GetSaltChanceMap();
-	static ref map<string, float> fresh_chance_map = FileReader.GetFreshChanceMap();
 
 	  override void CreateActionComponent()
 	  {
-
+		  super.CreateActionComponent();
+		  auto fishing_time_map = FileReader.GetFishingTimeMap();
 		  EnableStateChangeCallback();
 		  Print("Map:" + fishing_time_map);
 		  Print("Value:" + fishing_time_map.Get("FishingTime"));
 		  float fishing_time = fishing_time_map.Get("FishingTime");
-		  m_ActionData.m_ActionComponent = new CAContinuousRepeatFishing(fishing_time);
+		  Print("Float:" + fishing_time+0.0);
+		  m_ActionData.m_ActionComponent = new CAContinuousRepeatFishing(fishing_time+0.0);
 	  }
 
 	override void HandleFishingResultSuccess()
 	{
+		auto salt_chance_map = FileReader.GetSaltChanceMap();
+		auto fresh_chance_map = FileReader.GetFreshChanceMap();
+
 
 		float rndSaltFish;
 		float rndFreshFish;
@@ -68,7 +70,8 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 					//Generate Random Fish
 					foreach (auto s_key, auto s_value: salt_chance_map) {
 						if (rndSaltFish <= s_value && s_value > 0 && s_key.Length() > 2) {
-							selected_salt_fish = s_key.Replace("_CHANCE", "");
+							selected_salt_fish = s_key;
+							selected_salt_fish.Replace("_CHANCE", "");
 							break;
 						}
 						rndSaltFish -= s_value;
@@ -88,8 +91,9 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 					//Generate Random Fish
 					foreach (auto f_key, auto f_value: fresh_chance_map) {
 						if (rndFreshFish <= f_value && f_value > 0 && f_key.Length() > 2) {
-							selected_fresh_fish = f_key.Replace("_CHANCE", "");
-=							break;
+							selected_fresh_fish = f_key;
+							selected_fresh_fish.Replace("_CHANCE", "");
+							break;
 						}
 						rndFreshFish -= f_value;
 					}
@@ -108,7 +112,6 @@ modded class ActionFishingNewCB : ActionContinuousBaseCB
 			if (fish)
 			{
 				fish.SetWet(0.3);
-				m_ActionDataFishing.m_MainItem.
 				if (fish.HasQuantity())
 				{
 					float coef = Math.RandomFloatInclusive(1.0, 1.0);

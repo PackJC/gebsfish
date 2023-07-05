@@ -215,7 +215,7 @@ class FileReader
 			FPrintln(f, "Worm=50");
 			break;
 		case "$profile:gebsfish/FishingTime.cfg":
-			FPrintln(f, "FishingTime=30");
+			FPrintln(f, "FishingTime=30.0");
 			break;
 		}
 		CloseFile(f);
