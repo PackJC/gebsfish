@@ -11,18 +11,6 @@
 modded class ActionFishingNewCB : ActionContinuousBaseCB
 {
 
-	  override void CreateActionComponent()
-	  {
-		  super.CreateActionComponent();
-		  auto fishing_time_map = FileReader.GetFishingTimeMap();
-		  EnableStateChangeCallback();
-		  Print("Map:" + fishing_time_map);
-		  Print("Value:" + fishing_time_map.Get("FishingTime"));
-		  float fishing_time = fishing_time_map.Get("FishingTime");
-		  Print("Float:" + fishing_time+0.0);
-		  m_ActionData.m_ActionComponent = new CAContinuousRepeatFishing(fishing_time+0.0);
-	  }
-
 	override void HandleFishingResultSuccess()
 	{
 		auto salt_chance_map = FileReader.GetSaltChanceMap();

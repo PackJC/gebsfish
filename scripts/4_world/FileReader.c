@@ -14,9 +14,7 @@ class FileReader
 	static const string SALT_CONFIG_PATH = "$profile:gebsfish/Saltwater.cfg";
 	static const string BUG_CONFIG_PATH = "$profile:gebsfish/Bugs.cfg";
 	static const string DIRECTORY = "$profile:gebsfish";
-	static const string FISHINGTIME_CONFIG_PATH = "$profile:gebsfish/FishingTime.cfg";
 	
-	static ref map<string, float> fishing_time_map = new map<string, float>();
 
 	static ref map<string, float> fresh_chance_map = new map<string, float>();
 	static ref map<string, float> salt_chance_map = new map<string, float>();
@@ -57,10 +55,6 @@ class FileReader
 		if (!FileExist(BUG_CONFIG_PATH))
 		{
 			CreateConfig(BUG_CONFIG_PATH);
-		}
-		if (!FileExist(FISHINGTIME_CONFIG_PATH))
-		{
-			CreateConfig(FISHINGTIME_CONFIG_PATH);
 		}
 
 		//If file exists, open it and read files
@@ -134,21 +128,6 @@ class FileReader
 			}
 			CloseFile(bug_file);
 		}
-		if (FileExist(FISHINGTIME_CONFIG_PATH))
-		{
-			FileHandle fishingtime_file = OpenFile(FISHINGTIME_CONFIG_PATH, FileMode.READ);
-			string fishingtime_line;
-			while (FGets(fishingtime_file, fishingtime_line) != -1)
-			{
-				Print("Line: " + fishingtime_line);
-				fishingtime_line.Trim(); 
-				int tokenIndex5 = fishingtime_line.IndexOf("=");
-				int lengthIndex5 = fishingtime_line.Length() - tokenIndex5;
-				//FishingTime : 30
-				fishing_time_map[fishingtime_line.Substring(0, tokenIndex5)] = (fishingtime_line.Substring(tokenIndex5 + 1, lengthIndex5 - 1)).ToFloat();
-			}
-			CloseFile(fishingtime_file);
-		}
 	}
 
 	// Creates the config file and sets default values.
@@ -214,9 +193,6 @@ class FileReader
 			FPrintln(f, "geb_GrubWorm=50");
 			FPrintln(f, "Worm=50");
 			break;
-		case "$profile:gebsfish/FishingTime.cfg":
-			FPrintln(f, "FishingTime=30.0");
-			break;
 		}
 		CloseFile(f);
 	}
@@ -253,10 +229,5 @@ class FileReader
 	static map<string, float> GetBugChanceMap()
 	{
 		return bug_chance_map;
-	}
-
-	static map<string, float> GetFishingTimeMap()
-	{
-		return fishing_time_map;
 	}
 };
