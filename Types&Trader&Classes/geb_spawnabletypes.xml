@@ -1,0 +1,726 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<spawnabletypes>
+	<damage min="0.0" max="0.9" />
+	<!--Example Damaged Ruined only<damage min="0.9" max="1.0" /> Pristine(100-71) Worn(70-41) Damaged(40-21) BadlyDamaged(20-1) -->
+	<type name="geb_Crayfish" />
+	<type name="geb_CrayfishFilletMeat" />
+	<type name="geb_Northernpike" />
+	<type name="geb_NorthanpikeFilletMeat" />
+	<type name="geb_Largemouthbass" />
+	<type name="geb_LargemouthbassFilletMeat" />
+	<type name="geb_Whitebass" />
+	<type name="geb_WhitebassFilletMeat" />
+	<type name="geb_Blackbass" />
+	<type name="geb_BlackbassFilletMeat" />
+	<type name="geb_Trout" />
+	<type name="geb_TroutFilletMeat" />
+	
+	
+		<type name="geb_BrookTrout" />
+	<type name="geb_BrookTroutFilletMeat" />
+		<type name="geb_BrownTrout" />
+	<type name="geb_BrownTroutFilletMeat" />
+		<type name="geb_LakeTrout" />
+	<type name="geb_LakeTroutFilletMeat" />
+		<type name="geb_CutthroatTrout" />
+	<type name="geb_CutthroatTroutFilletMeat" />
+	
+	
+	<type name="geb_Perch" />
+	<type name="geb_PerchFilletMeat" />
+	<type name="geb_Catfish" />
+	<type name="geb_CatfishFilletMeat" />
+	<type name="geb_Minnow" />
+	<type name="geb_MinnowFilletMeat" />
+	<type name="geb_Bluegill" />
+	<type name="geb_BluegillFilletMeat" />
+	<type name="geb_Sauger" />
+	<type name="geb_SaugerFilletMeat" />
+	<type name="geb_Bowfin" />
+	<type name="geb_BowfinFilletMeat" />
+	<type name="geb_Slimysculpin" />
+	<type name="geb_SlimysculpinFilletMeat" />
+	<type name="geb_Angelfish" />
+	<type name="geb_AngelfishFilletMeat" />
+	<type name="geb_Asianseabass" />
+	<type name="geb_AsianseabassFilletMeat" />
+	<type name="geb_Bluemarlin" />
+	<type name="geb_BluemarlinFilletMeat" />
+	<type name="geb_Bonita" />
+	<type name="geb_BonitaFilletMeat" />
+	<type name="geb_Cherrysalmon" />
+	<type name="geb_CherrysalmonFilletMeat" />
+	<type name="geb_Flatheadmullet" />
+	<type name="geb_FlatheadmulletFilletMeat" />
+	<type name="geb_Leopardshark" />
+	<type name="geb_LeopardsharkFilletMeat" />
+	<type name="geb_Pacificcod" />
+	<type name="geb_PacificcodFilletMeat" />
+	<type name="geb_Redheadcichlid" />
+	<type name="geb_RedheadcichlidFilletMeat" />
+	<type name="geb_Roughneckrock" />
+	<type name="geb_RoughneckrockFilletMeat" />
+	<type name="geb_Severum" />
+	<type name="geb_SeverumFilletMeat" />
+	<type name="geb_Shrimp" />
+	<type name="geb_ShrimpFilletMeat" />
+	<type name="geb_Bluetang" />
+	<type name="geb_BluetangFilletMeat" />
+	<type name="geb_Hairtailfish" />
+	<type name="geb_HairtailfishFilletMeat" />
+	<type name="geb_Humpheadwrasse" />
+	<type name="geb_HumpheadwrasseFilletMeat" />
+	<type name="geb_Siamesetigerfish" />
+	<type name="geb_SiamesetigerfishFilletMeat" />
+		<type name="geb_Greatwhiteshark" />
+	<type name="geb_GreatwhitesharkFilletMeat" />
+	<type name="geb_Angelshark" />
+	<type name="geb_AngelsharkFilletMeat" />
+	<type name="geb_Yellowfintuna" />
+	<type name="geb_YellowfintunaFilletMeat" />
+	<type name="geb_BigGameFishingLine" />
+	<type name="geb_SaltwaterFishingLine" />
+	<type name="geb_FlyFishingLine" />
+	<type name="geb_RedFishingRod" />
+	<type name="geb_BlueFishingRod" />
+	<type name="geb_GreenFishingRod" />
+	<type name="geb_PurpleFishingRod" />
+	<type name="geb_HookBobber1" />
+	<type name="geb_HookBobber2" />
+	<type name="geb_HookBobber3" />
+	<type name="geb_HookBobber4" />
+	<type name="geb_MetalHook" />
+	<type name="geb_HookBobber1Bait" />
+	<type name="geb_HookBobber2Bait" />
+	<type name="geb_HookBobber3Bait" />
+	<type name="geb_HookBobber4Bait" />
+	<type name="geb_MetalRubberWormBait" />
+	<type name="geb_MetalGrubWormBait" />
+	<type name="geb_MetalGrassHopperBait" />
+	<type name="geb_MetalFieldCricketBait" />
+	<type name="geb_MetalWormBait" />
+	<type name="geb_VanillaHookRubberWormBait" />
+	<type name="geb_VanillaHookGrubWormBait" />
+	<type name="geb_VanillaHookGrassHopperBait" />
+	<type name="geb_VanillaHookFieldCricketBait" />
+	<type name="geb_BoneFieldCricketBait" />
+	<type name="geb_BoneGrassHopperBait" />
+	<type name="geb_BoneGrubWormBait" />
+	<type name="geb_BoneRubberWormBait" />
+	<type name="geb_BlueFishKnife" />
+	<type name="geb_OrangeFishKnife" />
+	<type name="geb_GreenFishKnife" />
+	<type name="geb_YellowFishKnife" />
+	<type name="geb_RedFishKnife" />
+	<type name="geb_PurpleFishKnife" />
+	<type name="geb_OldBlueTackleBox">
+		<cargo chance="0.20">
+			<item name="geb_BigGameFishingLine" chance="0.33" />
+			<item name="geb_SaltwaterFishingLine" chance="0.33" />
+			<item name="geb_FlyFishingLine" chance="0.33" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_OldGreenTackleBox">
+		<cargo chance="0.20">
+			<item name="geb_BigGameFishingLine" chance="0.33" />
+			<item name="geb_SaltwaterFishingLine" chance="0.33" />
+			<item name="geb_FlyFishingLine" chance="0.33" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_OldPurpleTackleBox">
+		<cargo chance="0.20">
+			<item name="geb_BigGameFishingLine" chance="0.33" />
+			<item name="geb_SaltwaterFishingLine" chance="0.33" />
+			<item name="geb_FlyFishingLine" chance="0.33" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_OldRedTackleBox">
+		<cargo chance="0.20">
+			<item name="geb_BigGameFishingLine" chance="0.33" />
+			<item name="geb_SaltwaterFishingLine" chance="0.33" />
+			<item name="geb_FlyFishingLine" chance="0.33" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_RedTackle">
+		<cargo chance="0.20">
+			<item name="geb_BigGameFishingLine" chance="0.33" />
+			<item name="geb_SaltwaterFishingLine" chance="0.33" />
+			<item name="geb_FlyFishingLine" chance="0.33" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_PurpleTackle">
+		<cargo chance="0.20">
+			<item name="geb_BigGameFishingLine" chance="0.33" />
+			<item name="geb_SaltwaterFishingLine" chance="0.33" />
+			<item name="geb_FlyFishingLine" chance="0.33" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_PinkTackle">
+		<cargo chance="0.20">
+			<item name="geb_BigGameFishingLine" chance="0.33" />
+			<item name="geb_SaltwaterFishingLine" chance="0.33" />
+			<item name="geb_FlyFishingLine" chance="0.33" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_OrangeTackle">
+		<cargo chance="0.20">
+			<item name="geb_BigGameFishingLine" chance="0.33" />
+			<item name="geb_SaltwaterFishingLine" chance="0.33" />
+			<item name="geb_FlyFishingLine" chance="0.33" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_LimeTackle">
+		<cargo chance="0.20">
+			<item name="geb_BigGameFishingLine" chance="0.33" />
+			<item name="geb_SaltwaterFishingLine" chance="0.33" />
+			<item name="geb_FlyFishingLine" chance="0.33" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_LightBlueTackle">
+		<cargo chance="0.20">
+			<item name="geb_BigGameFishingLine" chance="0.33" />
+			<item name="geb_SaltwaterFishingLine" chance="0.33" />
+			<item name="geb_FlyFishingLine" chance="0.33" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_GreenTackle">
+		<cargo chance="0.20">
+			<item name="geb_BigGameFishingLine" chance="0.33" />
+			<item name="geb_SaltwaterFishingLine" chance="0.33" />
+			<item name="geb_FlyFishingLine" chance="0.33" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_BrownTackle">
+		<cargo chance="0.20">
+			<item name="geb_BigGameFishingLine" chance="0.33" />
+			<item name="geb_SaltwaterFishingLine" chance="0.33" />
+			<item name="geb_FlyFishingLine" chance="0.33" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_CamoTackle">
+		<cargo chance="0.20">
+			<item name="geb_BigGameFishingLine" chance="0.33" />
+			<item name="geb_SaltwaterFishingLine" chance="0.33" />
+			<item name="geb_FlyFishingLine" chance="0.33" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_BlueTackle">
+		<cargo chance="0.20">
+			<item name="geb_BigGameFishingLine" chance="0.33" />
+			<item name="geb_SaltwaterFishingLine" chance="0.33" />
+			<item name="geb_FlyFishingLine" chance="0.33" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_FunPurpleTackle">
+		<cargo chance="0.20">
+			<item name="geb_BigGameFishingLine" chance="0.33" />
+			<item name="geb_SaltwaterFishingLine" chance="0.33" />
+			<item name="geb_FlyFishingLine" chance="0.33" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_FunYellowTackle">
+		<cargo chance="0.20">
+			<item name="geb_BigGameFishingLine" chance="0.33" />
+			<item name="geb_SaltwaterFishingLine" chance="0.33" />
+			<item name="geb_FlyFishingLine" chance="0.33" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_FunGreenTackle">
+		<cargo chance="0.20">
+			<item name="geb_BigGameFishingLine" chance="0.33" />
+			<item name="geb_SaltwaterFishingLine" chance="0.33" />
+			<item name="geb_FlyFishingLine" chance="0.33" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_FunRedTackle">
+		<cargo chance="0.20">
+			<item name="geb_BigGameFishingLine" chance="0.33" />
+			<item name="geb_SaltwaterFishingLine" chance="0.33" />
+			<item name="geb_FlyFishingLine" chance="0.33" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_SmallTackle">
+		<cargo chance="0.20">
+			<item name="geb_BigGameFishingLine" chance="0.33" />
+			<item name="geb_SaltwaterFishingLine" chance="0.33" />
+			<item name="geb_FlyFishingLine" chance="0.33" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_HookBobber1" chance="0.16" />
+			<item name="geb_HookBobber2" chance="0.16" />
+			<item name="geb_HookBobber3" chance="0.16" />
+			<item name="geb_HookBobber4" chance="0.16" />
+			<item name="geb_MetalHook" chance="0.16" />
+			<item name="geb_Hook" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_WormContainer">
+		<cargo chance="0.20">
+			<item name="geb_Worm" chance="1.00" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_Worm" chance="1.00" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_Worm" chance="1.00" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_Worm" chance="1.00" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_Worm" chance="1.00" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_Worm" chance="1.00" />
+		</cargo>
+	</type>
+	<type name="geb_BugContainer">
+		<cargo chance="0.20">
+			<item name="geb_Worm" chance="0.27" />
+			<item name="geb_GrassHopper" chance="0.26" />
+			<item name="geb_FieldCricket" chance="0.20" />
+			<item name="geb_GrubWorm" chance="0.27" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_Worm" chance="0.27" />
+			<item name="geb_GrassHopper" chance="0.26" />
+			<item name="geb_FieldCricket" chance="0.20" />
+			<item name="geb_GrubWorm" chance="0.27" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_Worm" chance="0.27" />
+			<item name="geb_GrassHopper" chance="0.26" />
+			<item name="geb_FieldCricket" chance="0.20" />
+			<item name="geb_GrubWorm" chance="0.27" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_Worm" chance="0.27" />
+			<item name="geb_GrassHopper" chance="0.26" />
+			<item name="geb_FieldCricket" chance="0.20" />
+			<item name="geb_GrubWorm" chance="0.27" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_Worm" chance="0.27" />
+			<item name="geb_GrassHopper" chance="0.26" />
+			<item name="geb_FieldCricket" chance="0.20" />
+			<item name="geb_GrubWorm" chance="0.27" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_Worm" chance="0.27" />
+			<item name="geb_GrassHopper" chance="0.26" />
+			<item name="geb_FieldCricket" chance="0.20" />
+			<item name="geb_GrubWorm" chance="0.27" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_Worm" chance="0.27" />
+			<item name="geb_GrassHopper" chance="0.26" />
+			<item name="geb_FieldCricket" chance="0.20" />
+			<item name="geb_GrubWorm" chance="0.27" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_Worm" chance="0.27" />
+			<item name="geb_GrassHopper" chance="0.26" />
+			<item name="geb_FieldCricket" chance="0.20" />
+			<item name="geb_GrubWorm" chance="0.27" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_Worm" chance="0.27" />
+			<item name="geb_GrassHopper" chance="0.26" />
+			<item name="geb_FieldCricket" chance="0.20" />
+			<item name="geb_GrubWorm" chance="0.27" />
+		</cargo>
+		<cargo chance="0.20">
+			<item name="geb_Worm" chance="0.27" />
+			<item name="geb_GrassHopper" chance="0.26" />
+			<item name="geb_FieldCricket" chance="0.20" />
+			<item name="geb_GrubWorm" chance="0.27" />
+		</cargo>
+	</type>
+	<type name="geb_GrassHopper" />
+	<type name="geb_FieldCricket" />
+	<type name="geb_GrubWorm" />
+	<type name="geb_RubberWorm" />
+	<type name="geb_BlueFishGloves" />
+	<type name="geb_OrangeFishGloves" />
+	<type name="geb_BlueFishHat" />
+	<type name="geb_GreenFishHat" />
+	<type name="geb_PurpleFishHat" />
+	<type name="geb_RedFishHat" />
+	<type name="geb_GreenFishShirt">
+		<cargo chance="0.20">
+			<item name="geb_BlueFishGloves" chance="0.50" />
+			<item name="geb_OrangeFishGloves" chance="0.50" />
+		</cargo>
+		<cargo chance="0.15">
+			<item name="geb_BlueFishHat" chance="0.25" />
+			<item name="geb_GreenFishHat" chance="0.25" />
+			<item name="geb_PurpleFishHat" chance="0.25" />
+			<item name="geb_RedFishHat" chance="0.25" />
+		</cargo>
+		<cargo chance="0.15">
+			<item name="geb_BlueFishKnife" chance="0.16" />
+			<item name="geb_OrangeFishKnife" chance="0.16" />
+			<item name="geb_GreenFishKnife" chance="0.16" />
+			<item name="geb_YellowFishKnife" chance="0.16" />
+			<item name="geb_RedFishKnife" chance="0.16" />
+			<item name="geb_PurpleFishKnife" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_BlueFishShirt">
+		<cargo chance="0.20">
+			<item name="geb_BlueFishGloves" chance="0.50" />
+			<item name="geb_OrangeFishGloves" chance="0.50" />
+		</cargo>
+		<cargo chance="0.15">
+			<item name="geb_BlueFishHat" chance="0.25" />
+			<item name="geb_GreenFishHat" chance="0.25" />
+			<item name="geb_PurpleFishHat" chance="0.25" />
+			<item name="geb_RedFishHat" chance="0.25" />
+		</cargo>
+		<cargo chance="0.15">
+			<item name="geb_BlueFishKnife" chance="0.16" />
+			<item name="geb_OrangeFishKnife" chance="0.16" />
+			<item name="geb_GreenFishKnife" chance="0.16" />
+			<item name="geb_YellowFishKnife" chance="0.16" />
+			<item name="geb_RedFishKnife" chance="0.16" />
+			<item name="geb_PurpleFishKnife" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_PurpleFishShirt">
+		<cargo chance="0.20">
+			<item name="geb_BlueFishGloves" chance="0.50" />
+			<item name="geb_OrangeFishGloves" chance="0.50" />
+		</cargo>
+		<cargo chance="0.15">
+			<item name="geb_BlueFishHat" chance="0.25" />
+			<item name="geb_GreenFishHat" chance="0.25" />
+			<item name="geb_PurpleFishHat" chance="0.25" />
+			<item name="geb_RedFishHat" chance="0.25" />
+		</cargo>
+		<cargo chance="0.15">
+			<item name="geb_BlueFishKnife" chance="0.16" />
+			<item name="geb_OrangeFishKnife" chance="0.16" />
+			<item name="geb_GreenFishKnife" chance="0.16" />
+			<item name="geb_YellowFishKnife" chance="0.16" />
+			<item name="geb_RedFishKnife" chance="0.16" />
+			<item name="geb_PurpleFishKnife" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_RedFishShirt">
+		<cargo chance="0.20">
+			<item name="geb_BlueFishGloves" chance="0.50" />
+			<item name="geb_OrangeFishGloves" chance="0.50" />
+		</cargo>
+		<cargo chance="0.15">
+			<item name="geb_BlueFishHat" chance="0.25" />
+			<item name="geb_GreenFishHat" chance="0.25" />
+			<item name="geb_PurpleFishHat" chance="0.25" />
+			<item name="geb_RedFishHat" chance="0.25" />
+		</cargo>
+		<cargo chance="0.15">
+			<item name="geb_BlueFishKnife" chance="0.16" />
+			<item name="geb_OrangeFishKnife" chance="0.16" />
+			<item name="geb_GreenFishKnife" chance="0.16" />
+			<item name="geb_YellowFishKnife" chance="0.16" />
+			<item name="geb_RedFishKnife" chance="0.16" />
+			<item name="geb_PurpleFishKnife" chance="0.16" />
+		</cargo>
+	</type>
+	<type name="geb_MinnowBucket" />
+</spawnabletypes>

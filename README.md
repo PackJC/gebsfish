@@ -18,4 +18,4 @@ NekoSensei,
 Doriiiiija,
 Echo#4343
 
-# Copyright PackJC 2022
+# Copyright PackJC 2021-2024

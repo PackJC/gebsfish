@@ -4775,6 +4775,7 @@ class cfgVehicles
 			};
 		};
 	};
+    //20 fresh water fish 11/19/2023
 
 	//Saltwater Fish
 	class geb_Angelfish: Edible_Base {
@@ -6642,6 +6643,7 @@ class cfgVehicles
 			};
 		};
 	};
+    //23 salt water fish 11/19/2023
 
 	//Crustaceans Fish
 	class geb_Bloodclam: Edible_Base {
@@ -7229,7 +7231,7 @@ class cfgVehicles
 		hiddenSelections[] = {"lobster"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\bluelobster_ca.paa"};
 	};
-
+//8 crustaceans 11/19/2023
 	//Freshwater Fish Fillets
 	class geb_BluegillFilletMeat: CarpFilletMeat {
 		scope = 2;
