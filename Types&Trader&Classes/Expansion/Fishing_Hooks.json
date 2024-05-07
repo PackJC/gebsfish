@@ -1,0 +1,74 @@
+{
+  "m_Version": 12,
+  "DisplayName": "Fishing Hooks",
+  "Icon": "Fishing",
+  "Color": "FBFCFEFF",
+  "InitStockPercent": 75.0,
+  "IsExchange": 0,
+  "Items": [
+    {
+      "ClassName": "geb_BoneHookbobber1",
+      "MaxPriceThreshold": 10,
+      "MinPriceThreshold": 4,
+      "SellPricePercent": 20.0,
+      "MaxStockThreshold": 1,
+      "MinStockThreshold": 1,
+      "QuantityPercent": -1,
+      "SpawnAttachments": [],
+      "Variants": [
+        "geb_BoneHookbobber2",
+        "geb_BoneHookbobber3",
+        "geb_BoneHookbobber4"
+      ]
+    },
+    {
+      "ClassName": "geb_MetalHookbobber1",
+      "MaxPriceThreshold": 20,
+      "MinPriceThreshold": 20,
+      "SellPricePercent": 20.0,
+      "MaxStockThreshold": 1,
+      "MinStockThreshold": 1,
+      "QuantityPercent": -1,
+      "SpawnAttachments": [],
+      "Variants": [
+        "geb_MetalHookbobber2",
+        "geb_MetalHookbobber3",
+        "geb_MetalHookbobber4"
+      ]
+    },
+    {
+      "ClassName": "geb_MetalHook",
+      "MaxPriceThreshold": 10,
+      "MinPriceThreshold": 10,
+      "SellPricePercent": 20.0,
+      "MaxStockThreshold": 1,
+      "MinStockThreshold": 1,
+      "QuantityPercent": -1,
+      "SpawnAttachments": [],
+      "Variants": []
+    },
+    {
+      "ClassName": "bonehook",
+      "MaxPriceThreshold": 2,
+      "MinPriceThreshold": 2,
+      "SellPricePercent": 20.0,
+      "MaxStockThreshold": 1,
+      "MinStockThreshold": 1,
+      "QuantityPercent": -1,
+      "SpawnAttachments": [],
+      "Variants": []
+    },
+    {
+      "ClassName": "hook",
+      "MaxPriceThreshold": 10,
+      "MinPriceThreshold": 10,
+      "SellPricePercent": 20.0,
+      "MaxStockThreshold": 1,
+      "MinStockThreshold": 1,
+      "QuantityPercent": -1,
+      "SpawnAttachments": [],
+      "Variants": []
+    }
+  ],
+  "SortByDisplayName": false
+}

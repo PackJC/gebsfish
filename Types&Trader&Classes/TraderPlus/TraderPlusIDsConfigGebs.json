@@ -1,0 +1,23 @@
+{
+    "Version": "2.5",
+    "IDs": [
+        {
+            "Id": 0,
+            "Categories": [
+                "Clothes",
+                "Tackles and Tools",
+                "Fishing Supplies",
+                "Fillets",
+                "Insects",
+                "Rare Catches",
+                "Saltwater Fishes",
+                "Freshwater Fishes"
+            ],
+            "LicencesRequired": [],
+            "CurrenciesAccepted": [
+                "XXX",
+                "XXX"
+            ]
+        }
+    ]
+}
