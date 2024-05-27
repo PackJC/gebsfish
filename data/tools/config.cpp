@@ -30,7 +30,6 @@ class cfgVehicles
 	class Container_Base;
 	class Inventory_Base;
 	class FishingRod_Base_New;
-    class FishingRod;
 
     /*
 
@@ -102,7 +101,6 @@ class cfgVehicles
 	};
 
 	class FishingRod: FishingRod_Base_New {
-		//Issue with this, don't update until I figure this out
 		inventorySlot[] += {
 			"Shoulder",
 			"Melee",

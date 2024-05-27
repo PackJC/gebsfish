@@ -593,6 +593,12 @@ class cfgVehicles
 		inventorySlot[] = {"Rope","Material_FPole_Rope","Material_Shelter_Rope"};
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_fishingline_biggame.paa"};
+		override void SetActions()
+		{
+			super.SetActions();
+  
+			AddAction(ActionRepairRod);
+		}
 	};
 	class geb_SaltwaterFishingLine: Rope {
 		scope = 2;
@@ -606,6 +612,12 @@ class cfgVehicles
 		inventorySlot[] = {"Rope","Material_FPole_Rope","Material_Shelter_Rope"};
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_fishingline_saltwater.paa"};
+		override void SetActions()
+		{
+			super.SetActions();
+  
+			AddAction(ActionRepairRod);
+		}
 	};
 	class geb_FlyFishingLine: Rope {
 		scope = 2;
@@ -619,6 +631,12 @@ class cfgVehicles
 		inventorySlot[] = {"Rope","Material_FPole_Rope","Material_Shelter_Rope"};
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_fishingline_flyfishing.paa"};
+		override void SetActions()
+		{
+			super.SetActions();
+  
+			AddAction(ActionRepairRod);
+		}
 	};
 	class Bobber_ColorBase: Inventory_Base {
 		scope = 0;
