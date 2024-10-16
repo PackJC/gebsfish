@@ -34,7 +34,6 @@
         geb_Redheadcichlid,									 S,		 -1,		 600
         geb_Roughneckrock,									 S,		 -1,		 600
         geb_Severum,										 S,		 -1,		 600
-        geb_Shrimp,										 	 S,		 -1,		 600
         geb_Bluetang,										 S,		 -1,		 600
         geb_Hairtailfish,									 S,		 -1,		 600
         geb_Humpheadwrasse,									 S,		 -1,		 600
@@ -83,7 +82,6 @@
         geb_RedheadcichlidFilletMeat,					     S,		 1200,		 600
         geb_RoughneckrockFilletMeat,					     S,		 1200,		 600
         geb_SeverumFilletMeat,					             S,		 1200,		 600
-        geb_ShrimpFilletMeat,					             S,		 1200,		 600
         geb_BluetangFilletMeat,					             S,		 1200,		 600
         geb_HairtailfishFilletMeat,					         S,		 1200,		 600
         geb_HumpheadwrasseFilletMeat,					     S,		 1200,		 600

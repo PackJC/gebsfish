@@ -62,8 +62,6 @@
 	<type name="geb_RoughneckrockFilletMeat" />
 	<type name="geb_Severum" />
 	<type name="geb_SeverumFilletMeat" />
-	<type name="geb_Shrimp" />
-	<type name="geb_ShrimpFilletMeat" />
 	<type name="geb_Bluetang" />
 	<type name="geb_BluetangFilletMeat" />
 	<type name="geb_Hairtailfish" />

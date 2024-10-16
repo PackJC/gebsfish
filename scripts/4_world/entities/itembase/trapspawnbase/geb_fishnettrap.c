@@ -25,11 +25,10 @@ modded class Trap_FishNet extends TrapSpawnBase
 		m_CatchesSea.Clear();
 		m_CatchesSea.Insert("Mackerel", 1);
 		m_CatchesSea.Insert("geb_Bloodclam", 2);
-		m_CatchesSea.Insert("geb_Shrimp", 3);
-		m_CatchesSea.Insert("geb_Starfish", 4);
-		m_CatchesSea.Insert("geb_Kingcrab", 5);
-		m_CatchesSea.Insert("geb_Jellyfish", 6);
-		m_CatchesSea.Insert("geb_Lobster", 7);
+		m_CatchesSea.Insert("geb_Starfish", 3);
+		m_CatchesSea.Insert("geb_Kingcrab", 4);
+		m_CatchesSea.Insert("geb_Jellyfish", 5);
+		m_CatchesSea.Insert("geb_Lobster", 6);
 		m_CatchesSea.Insert("geb_BlueLobster", 7);
 	}
 

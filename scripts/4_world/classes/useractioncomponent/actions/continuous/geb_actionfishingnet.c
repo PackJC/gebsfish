@@ -103,19 +103,7 @@ class ActionBambooFishingNet : ActionContinuousBase
 	{	
 		ItemBase bugs;
 		Class.CastTo(bugs, GetGame().CreateObjectEx("geb_Minnow", action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
-
-		//bugs.SetQuantity(100, false);
-		//MiscGameplayFunctions.DealAbsoluteDmg(action_data.m_MainItem, 4);
 		action_data.m_Player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
-
-
-
-
-
-
-
-
-
 	}
 	
 	void SetDiggingAnimation( ItemBase item )

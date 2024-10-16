@@ -68,8 +68,6 @@ geb_Roughneckrock
 geb_RoughneckrockFilletMeat
 geb_Severum
 geb_SeverumFilletMeat
-geb_Shrimp
-geb_ShrimpFilletMeat
 geb_Bluetang
 geb_BluetangFilletMeat
 geb_Hairtailfish

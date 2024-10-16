@@ -128,17 +128,6 @@
       "Variants": []
     },
     {
-      "ClassName": "geb_ShrimpFilletMeat",
-      "MaxPriceThreshold": 1200,
-      "MinPriceThreshold": 1200,
-      "SellPricePercent": 100.0,
-      "MaxStockThreshold": 0,
-      "MinStockThreshold": 0,
-      "QuantityPercent": -1,
-      "SpawnAttachments": [],
-      "Variants": []
-    },
-    {
       "ClassName": "geb_BluetangFilletMeat",
       "MaxPriceThreshold": 1200,
       "MinPriceThreshold": 1200,

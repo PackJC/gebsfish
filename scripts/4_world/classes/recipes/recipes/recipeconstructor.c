@@ -59,7 +59,6 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareRedheadcichlid);
 		RegisterRecipe(new PrepareRoughneckrock);
 		RegisterRecipe(new PrepareSeverum);
-		RegisterRecipe(new PrepareShrimp);
 		RegisterRecipe(new PrepareBluetang);
 		RegisterRecipe(new PrepareHairtailfish);
 		RegisterRecipe(new PrepareHumpheadwrasse);

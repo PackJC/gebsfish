@@ -1,17 +1,16 @@
 /*
 
   CREATED BY PACKJC
+  https://smokymountainsoftware.com
   https://github.com/PackJC/gebsfish
   https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
   https://discord.com/invite/G8uSGZ8yyf
-  Contributions welcome via github
+  https://www.smokymountainsoftware.com/Contributions welcome via github
 
 */
 
-/*
-	To restrict items in containers
-*/
 
+//To restrict items in containers
 class geb_WormContainer : Container_Base
 {
 	ref TStringArray ItemArray = { "Worm", "geb_GrubWorm", "geb_RubberWorm" };
@@ -60,7 +59,7 @@ class geb_BugContainer : Container_Base
 
 class geb_BambooFishingNet : Container_Base
 {
-	ref TStringArray ItemArray = { "Worm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm", "geb_RubberWorm", "geb_Minnow", "geb_Shrimp", "geb_Crayfish"};
+	ref TStringArray ItemArray = { "Worm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm", "geb_RubberWorm", "geb_Minnow", "geb_Crayfish"};
 
 	override int GetDamageSystemVersionChange()
 	{
@@ -82,7 +81,7 @@ class geb_BambooFishingNet : Container_Base
 
 class geb_MinnowBucket : Container_Base
 {
-	ref TStringArray ItemArray = { "Worm", "geb_Minnow", "geb_Crayfish", "geb_Shrimp", "geb_GrubWorm", "geb_GrassHopper", "geb_FieldCricket", "geb_RubberWorm" };
+	ref TStringArray ItemArray = { "Worm", "geb_Minnow", "geb_Crayfish", "geb_GrubWorm", "geb_GrassHopper", "geb_FieldCricket", "geb_RubberWorm" };
 
 	override int GetDamageSystemVersionChange()
 	{

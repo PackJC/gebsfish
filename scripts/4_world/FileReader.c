@@ -171,7 +171,6 @@ class FileReader
 			FPrintln(f, "geb_PACIFICCOD_CHANCE=41");
 			FPrintln(f, "geb_REDHEADCICHLID_CHANCE=41");
 			FPrintln(f, "geb_ROUGHNECKROCK_CHANCE=41");
-			FPrintln(f, "geb_SHRIMP_CHANCE=41");
 			FPrintln(f, "geb_BLUETANG_CHANCE=41");
 			FPrintln(f, "geb_HAIRTAILFISH_CHANCE=41");
 			FPrintln(f, "geb_HUMPHEADWRASSE_CHANCE=41");
@@ -253,7 +252,6 @@ class FileReader
 			FPrintln(f, "geb_PACIFICCOD_FILLETS=1,4");
 			FPrintln(f, "geb_REDHEADCICHLID_FILLETS=1,4");
 			FPrintln(f, "geb_ROUGHNECKROCK_FILLETS=1,4");
-			FPrintln(f, "geb_SHRIMP_FILLETS=1,4");
 			FPrintln(f, "geb_BLUETANG_FILLETS=1,4");
 			FPrintln(f, "geb_HAIRTAILFISH_FILLETS=1,4");
 			FPrintln(f, "geb_HUMPHEADWRASSE_FILLETS=1,4");

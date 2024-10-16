@@ -6,7 +6,6 @@ modded class MissionBase
 		if (bank)
 		{			
 			//freshwater fish
-			bank.RegisterYieldItem(new gebCrayfish());
 			bank.RegisterYieldItem(new gebNorthernpike());
 			bank.RegisterYieldItem(new gebLargemouthbass());
 			bank.RegisterYieldItem(new gebSmallmouthbass());
@@ -26,7 +25,10 @@ modded class MissionBase
 			bank.RegisterYieldItem(new gebSauger());
 			bank.RegisterYieldItem(new gebBowfin());
 			bank.RegisterYieldItem(new gebSlimysculpin());
-			
+
+			//freshwater crustacean
+			bank.RegisterYieldItem(new gebCrayfish());
+
 			//saltwater fish
 			bank.RegisterYieldItem(new gebMahimahi());
 			bank.RegisterYieldItem(new gebSailfish());
@@ -41,11 +43,15 @@ modded class MissionBase
 			bank.RegisterYieldItem(new gebRedheadcichlid());
 			bank.RegisterYieldItem(new gebRoughneckrock());
 			bank.RegisterYieldItem(new gebSeverum());
-			bank.RegisterYieldItem(new gebShrimp());
 			bank.RegisterYieldItem(new gebBluetang());
 			bank.RegisterYieldItem(new gebHairtailfish());
 			bank.RegisterYieldItem(new gebHumpheadwrasse());
 			bank.RegisterYieldItem(new gebSiamesetigerfish());
+			bank.RegisterYieldItem(new gebGreatwhiteshark());
+			bank.RegisterYieldItem(new gebAngelshark());
+			bank.RegisterYieldItem(new gebYellowfintuna());
+
+			//saltwater crustacean
 			bank.RegisterYieldItem(new gebBloodclam());
 			bank.RegisterYieldItem(new gebMussel());
 			bank.RegisterYieldItem(new gebBlackdevilsnail());
@@ -54,9 +60,6 @@ modded class MissionBase
 			bank.RegisterYieldItem(new gebJellyfish());
 			bank.RegisterYieldItem(new gebLobster());
 			bank.RegisterYieldItem(new gebBlueLobster());
-			bank.RegisterYieldItem(new gebGreatwhiteshark());
-			bank.RegisterYieldItem(new gebAngelshark());
-			bank.RegisterYieldItem(new gebYellowfintuna());
 		}
 	}
 };

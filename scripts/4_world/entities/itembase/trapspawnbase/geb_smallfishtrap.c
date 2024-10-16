@@ -24,10 +24,9 @@ modded class Trap_SmallFish extends TrapSpawnBase
 
 		m_CatchesSea.Clear();
 		m_CatchesSea.Insert("Sardines", 1);
-		m_CatchesSea.Insert("geb_Shrimp", 2);
-		m_CatchesSea.Insert("geb_Bloodclam", 3);
-		m_CatchesSea.Insert("geb_Starfish", 4);
-		m_CatchesSea.Insert("geb_Jellyfish", 5);
+		m_CatchesSea.Insert("geb_Bloodclam", 2);
+		m_CatchesSea.Insert("geb_Starfish", 3);
+		m_CatchesSea.Insert("geb_Jellyfish", 4);
 	}
 
 

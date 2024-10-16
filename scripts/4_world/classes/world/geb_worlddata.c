@@ -1,3 +1,13 @@
+/*
+
+CREATED BY PACKJC
+  https://github.com/PackJC/gebsfish
+  https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
+  https://discord.com/invite/G8uSGZ8yyf
+  Contributions welcome via github
+
+*/
+
 modded class EnochData
 {
 	override void InitYieldBank()
@@ -39,7 +49,6 @@ modded class EnochData
 		m_YieldBank.RegisterYieldItem(new gebRedheadcichlid(15));
 		m_YieldBank.RegisterYieldItem(new gebRoughneckrock(15));
 		m_YieldBank.RegisterYieldItem(new gebSeverum(15));
-		m_YieldBank.RegisterYieldItem(new gebShrimp(15));
 		m_YieldBank.RegisterYieldItem(new gebBluetang(15));
 		m_YieldBank.RegisterYieldItem(new gebHairtailfish(15));
 		m_YieldBank.RegisterYieldItem(new gebHumpheadwrasse(15));
@@ -100,7 +109,6 @@ modded class SakhalData
 		m_YieldBank.RegisterYieldItem(new gebRedheadcichlid(15));
 		m_YieldBank.RegisterYieldItem(new gebRoughneckrock(15));
 		m_YieldBank.RegisterYieldItem(new gebSeverum(15));
-		m_YieldBank.RegisterYieldItem(new gebShrimp(15));
 		m_YieldBank.RegisterYieldItem(new gebBluetang(15));
 		m_YieldBank.RegisterYieldItem(new gebHairtailfish(15));
 		m_YieldBank.RegisterYieldItem(new gebHumpheadwrasse(15));
@@ -161,7 +169,6 @@ modded class ChernarusPlusData
 		m_YieldBank.RegisterYieldItem(new gebRedheadcichlid(15));
 		m_YieldBank.RegisterYieldItem(new gebRoughneckrock(15));
 		m_YieldBank.RegisterYieldItem(new gebSeverum(15));
-		m_YieldBank.RegisterYieldItem(new gebShrimp(15));
 		m_YieldBank.RegisterYieldItem(new gebBluetang(15));
 		m_YieldBank.RegisterYieldItem(new gebHairtailfish(15));
 		m_YieldBank.RegisterYieldItem(new gebHumpheadwrasse(15));

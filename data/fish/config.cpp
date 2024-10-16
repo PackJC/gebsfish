@@ -548,16 +548,7 @@ class cfgVehicles
 		itemBehaviour = 0;
 		itemSize[] = {5,4};
 	};
-	class geb_Shrimp: geb_SaltFish_Base {
-		scope = 2;
-		displayName = "$STR_shrimp";
-		descriptionShort = "$STR_shrimp_desc";
-		model = "\gebsfish\data\fish\shrimp.p3d";
-		debug_ItemCategory = 6;
-		rotationFlags = 17;
-		weight = 200;
-		itemSize[] = {2,1};
-	};
+
 	class geb_Bluetang: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_bluetang";
@@ -1010,15 +1001,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\severum_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_ShrimpFilletMeat: MackerelFilletMeat {
-		scope = 2;
-		displayName = "$STR_shrimp_fillet";
-		descriptionShort = "$STR_shrimp_desc";
-		model = "\gebsfish\data\fish\shrimptail.p3d";
-		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\shrimp_ca.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
-		};
-	};
+
 	class geb_BluetangFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_bluetang_fillet";
