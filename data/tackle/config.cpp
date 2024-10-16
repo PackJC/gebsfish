@@ -618,7 +618,32 @@ class cfgVehicles
 			HOOKS
 
 	*/
-	class geb_SpinnerBait1: Bait {
+
+	class geb_Lure: Inventory_Base
+	{
+		scope = 0;
+		displayName = "$STR_CfgVehicles_Hook0";
+		descriptionShort = "$STR_CfgVehicles_Hook1";
+		rotationFlags = 12;
+		weight = 1;
+		varWetMax = 0.8;
+		absorbency = 0.8;
+		itemSize[] = {1,1};
+		inventorySlot[] = {"Hook"};
+		hiddenSelections[] = {"hooks","lure"};
+		hookType = "Hook";
+		class Fishing
+		{
+			signalCycleTarget = 4;
+			resultQuantityBaseMod = 0;
+			resultQuantityDispersionMin = 0.2;
+			resultQuantityDispersionMax = 0.3;
+			hookLossChanceMod = 0;
+			baitLossChanceMod = 0;
+		};
+	};
+
+	class geb_SpinnerBait1: geb_Lure {
 		scope = 2;
 		displayName = "$STR_spinnerbait1";
 		descriptionShort = "$STR_spinnerbait_desc";
@@ -677,7 +702,7 @@ class cfgVehicles
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_spinnerbait4.paa"};
 	};
-	class geb_Lure1: Bait {
+	class geb_Lure1: geb_Lure {
 		scope = 2;
 		displayName = "$STR_lure1";
 		descriptionShort = "$STR_lure1_desc";
@@ -687,7 +712,7 @@ class cfgVehicles
 		rotationFlags = 12;
 		hookType = "geb_Lure1";
 	};
-	class geb_Lure2: Bait {
+	class geb_Lure2: geb_Lure {
 		scope = 2;
 		displayName = "$STR_lure2";
 		descriptionShort = "$STR_lure2_desc";
@@ -698,7 +723,7 @@ class cfgVehicles
 		rotationFlags = 12;
 		hookType = "geb_Lure2";
 	};
-	class geb_Lure3: Bait {
+	class geb_Lure3: geb_Lure {
 		scope = 2;
 		displayName = "$STR_lure3";
 		descriptionShort = "$STR_lure3_desc";
@@ -709,7 +734,7 @@ class cfgVehicles
 		rotationFlags = 12;
 		hookType = "geb_Lure3";
 	};
-	class geb_Lure4: Bait {
+	class geb_Lure4: geb_Lure {
 		scope = 2;
 		displayName = "$STR_lure4";
 		descriptionShort = "$STR_lure4_desc";
@@ -724,7 +749,7 @@ class cfgVehicles
 
 
 
-	    /*
+	/*
 
 		ITEMS
 
