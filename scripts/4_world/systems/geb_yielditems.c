@@ -327,6 +327,18 @@ class gebWhitebass : FishYieldItemBase
 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
 	}
 };
+class gebBlackbass : FishYieldItemBase
+{
+	override void Init()
+	{
+		super.Init();
+
+		m_Type = "geb_Blackbass";
+        m_HourlyCycleLengthCoefs = {1,1,1,1,1,1,1,1,1,1,0,0,0/*12h*/,0,0,0,0,1,1,1,1,1,1,1};
+		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+	}
+};
 class gebRainbowTrout : FishYieldItemBase
 {
 	override void Init()

@@ -22,7 +22,7 @@ modded class EnochData
 		m_YieldBank.RegisterYieldItem(new gebSunfish(15));
 		m_YieldBank.RegisterYieldItem(new gebWhitebass(15));
 		m_YieldBank.RegisterYieldItem(new gebBlackbass(15));
-		m_YieldBank.RegisterYieldItem(new gebTrout(15));
+		m_YieldBank.RegisterYieldItem(new gebRainbowTrout(15));
 		m_YieldBank.RegisterYieldItem(new gebBrownTrout(15));
 		m_YieldBank.RegisterYieldItem(new gebBrookTrout(15));
 		m_YieldBank.RegisterYieldItem(new gebLakeTrout(15));
@@ -82,7 +82,7 @@ modded class SakhalData
 		m_YieldBank.RegisterYieldItem(new gebSunfish(15));
 		m_YieldBank.RegisterYieldItem(new gebWhitebass(15));
 		m_YieldBank.RegisterYieldItem(new gebBlackbass(15));
-		m_YieldBank.RegisterYieldItem(new gebTrout(15));
+		m_YieldBank.RegisterYieldItem(new gebRainbowTrout(15));
 		m_YieldBank.RegisterYieldItem(new gebBrownTrout(15));
 		m_YieldBank.RegisterYieldItem(new gebBrookTrout(15));
 		m_YieldBank.RegisterYieldItem(new gebLakeTrout(15));
@@ -142,7 +142,7 @@ modded class ChernarusPlusData
 		m_YieldBank.RegisterYieldItem(new gebSunfish(15));
 		m_YieldBank.RegisterYieldItem(new gebWhitebass(15));
 		m_YieldBank.RegisterYieldItem(new gebBlackbass(15));
-		m_YieldBank.RegisterYieldItem(new gebTrout(15));
+		m_YieldBank.RegisterYieldItem(new gebRainbowTrout(15));
 		m_YieldBank.RegisterYieldItem(new gebBrownTrout(15));
 		m_YieldBank.RegisterYieldItem(new gebBrookTrout(15));
 		m_YieldBank.RegisterYieldItem(new gebLakeTrout(15));

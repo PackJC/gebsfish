@@ -1,5 +1,6 @@
 class PrepareTrout extends PrepareFish
 {
+	int ran;
 	override void Init()
 	{
 
