@@ -619,7 +619,7 @@ class cfgVehicles
 
 	*/
 
-	class geb_Lure: Inventory_Base
+	class geb_Lure: FishingHookBase
 	{
 		scope = 0;
 		displayName = "$STR_CfgVehicles_Hook0";
