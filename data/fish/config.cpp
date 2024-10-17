@@ -33,6 +33,7 @@ class cfgVehicles
 	class MackerelFilletMeat;
 	class FoodAnimationSources;
 
+	//Base classes for fish
 	class geb_FreshFish_Base: Edible_Base {
 		scope = 2;
 		itemSize[] = {5,2};
@@ -269,12 +270,17 @@ class cfgVehicles
 			};
 		};
 	};
-    /*
+    class geb_Trout_Base: geb_FreshFish_Base {
+		scope = 2;
+		model = "\gebsfish\data\fish\geb_Trout_Base.p3d";
+	};
+	
+	/*
 
 		FISH
 
 	*/
-	//Freshwater Fish
+	//19 Freshwater Fish
 	class geb_Bluegill: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_bluegill";
@@ -357,18 +363,6 @@ class cfgVehicles
 		itemSize[] = {4,1};
 		weight = 1500;
 	};
-	class geb_Crayfish: geb_FreshFish_Base {
-		scope = 2;
-		displayName = "$STR_crayfish";
-		descriptionShort = "$STR_crayfish_desc";
-		model = "\gebsfish\data\fish\Crayfish.p3d";
-		itemSize[] = {2,1};
-		weight = 200;
-	};
-	class geb_Trout_Base: geb_FreshFish_Base {
-		scope = 2;
-		model = "\gebsfish\data\fish\geb_Trout_Base.p3d";
-	};
 	class geb_Trout: geb_Trout_Base {
 		scope = 2;
 		displayName = "$STR_trout";
@@ -438,9 +432,8 @@ class cfgVehicles
 		itemSize[] = {2,1};
 		weight = 300;
 	};
-    //20 fresh water fish 11/19/2023
 
-	//Saltwater Fish
+	//22 Saltwater Fish
 	class geb_Angelfish: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_angelfish";
@@ -548,7 +541,6 @@ class cfgVehicles
 		itemBehaviour = 0;
 		itemSize[] = {5,4};
 	};
-
 	class geb_Bluetang: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_bluetang";
@@ -603,9 +595,8 @@ class cfgVehicles
 		descriptionShort = "$STR_yellowfintuna_desc";
 		model = "\gebsfish\data\fish\yellowfintuna.p3d";
 	};
-    //23 salt water fish 11/19/2023
 
-	//Crustaceans Fish
+	//8 Saltwater crustaceans
 	class geb_Bloodclam: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_bloodclam";
@@ -688,7 +679,16 @@ class cfgVehicles
 		hiddenSelections[] = {"lobster"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\bluelobster_ca.paa"};
 	};
-	//8 crustaceans 11/19/2023
+	//1 Freshwater crustacean
+	class geb_Crayfish: geb_FreshFish_Base {
+		scope = 2;
+		displayName = "$STR_crayfish";
+		descriptionShort = "$STR_crayfish_desc";
+		model = "\gebsfish\data\fish\Crayfish.p3d";
+		itemSize[] = {2,1};
+		weight = 200;
+	};
+	
 	//Freshwater Fish Fillets
 	class geb_BluegillFilletMeat: CarpFilletMeat {
 		scope = 2;
@@ -1066,7 +1066,7 @@ class cfgVehicles
 		};
 	};
 
-	//Crustaceans Fish Fillets
+	//Crustacean Fillets
 	class geb_ClamFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_bloodclam_fillet";

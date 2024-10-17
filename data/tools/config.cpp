@@ -99,7 +99,6 @@ class cfgVehicles
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_purplefishknife.paa"};
 	};
-
 	class FishingRod: FishingRod_Base_New {
 		inventorySlot[] += {
 			"Shoulder",
@@ -171,7 +170,6 @@ class cfgVehicles
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_fishingrod_purple.paa"};
 	};	
-
 	class geb_BambooFishingNet : Container_Base {
 		scope = 2;
 		rotationFlags = 17;

@@ -6,9 +6,7 @@
  
     <!-- FRESHWATER CATCHES AND FILLETS --> 	
    <types>
-   
-   
-      	<type name="geb_Smallmouthbass">
+      <type name="geb_Smallmouthbass">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -74,19 +72,6 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
    	<type name="geb_BrownTrout">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
@@ -131,8 +116,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>  
-   
-      	<type name="geb_LakeTrout">
+    <type name="geb_LakeTrout">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -1185,195 +1169,6 @@
         <usage name="Hunting"/>
         <usage name="Village"/>
 	</type>
-	
-	
-	
-	
-    <!-- HOOKS AND BOBBERS -->
-	<type name="geb_MetalHookBobber1">
-        <nominal>10</nominal>
-        <lifetime>7200</lifetime>
-        <restock>0</restock>
-        <min>2</min>
-        <quantmin>-1</quantmin>
-        <quantmax>-1</quantmax>
-        <cost>100</cost>
-        <flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="0" deloot="0"/>
-        <category name="tools"/>
-        <usage name="Coast"/>
-        <usage name="Farm"/>
-        <usage name="Hunting"/>
-        <usage name="Village"/>
-	</type>
-	<type name="geb_MetalHookBobber2">
-        <nominal>10</nominal>
-        <lifetime>7200</lifetime>
-        <restock>0</restock>
-        <min>2</min>
-        <quantmin>-1</quantmin>
-        <quantmax>-1</quantmax>
-        <cost>100</cost>
-        <flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="0" deloot="0"/>
-        <category name="tools"/>
-        <usage name="Coast"/>
-        <usage name="Farm"/>
-        <usage name="Hunting"/>
-        <usage name="Village"/>
-	</type>
-	<type name="geb_MetalHookBobber3">
-        <nominal>10</nominal>
-        <lifetime>7200</lifetime>
-        <restock>0</restock>
-        <min>2</min>
-        <quantmin>-1</quantmin>
-        <quantmax>-1</quantmax>
-        <cost>100</cost>
-        <flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="0" deloot="0"/>
-        <category name="tools"/>
-        <usage name="Coast"/>
-        <usage name="Farm"/>
-        <usage name="Hunting"/>
-        <usage name="Village"/>
-	</type>
-	<type name="geb_MetalHookBobber4">
-        <nominal>10</nominal>
-        <lifetime>7200</lifetime>
-        <restock>0</restock>
-        <min>2</min>
-        <quantmin>-1</quantmin>
-        <quantmax>-1</quantmax>
-        <cost>100</cost>
-        <flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="0" deloot="0"/>
-        <category name="tools"/>
-        <usage name="Coast"/>
-        <usage name="Farm"/>
-        <usage name="Hunting"/>
-        <usage name="Village"/>
-	</type>	
-	<type name="geb_MetalHook">
-        <nominal>10</nominal>
-        <lifetime>7200</lifetime>
-        <restock>0</restock>
-        <min>2</min>
-        <quantmin>-1</quantmin>
-        <quantmax>-1</quantmax>
-        <cost>100</cost>
-        <flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="0" deloot="0"/>
-        <category name="tools"/>
-        <usage name="Coast"/>
-        <usage name="Farm"/>
-        <usage name="Hunting"/>
-        <usage name="Village"/>
-	</type>		
-	
-	
-	
-	
-	<!-- BAITED HOOKS AND BOBBERS -->
-
-	<type name="geb_MetalRubberWormBait">
-		<nominal>0</nominal>
-		<lifetime>14400</lifetime>
-		<restock>0</restock>
-		<min>0</min>
-		<quantmin>-1</quantmin>
-		<quantmax>-1</quantmax>
-		<cost>100</cost>
-		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
-		<category name="tools"/>
-	</type>
-	<type name="geb_MetalGrubWormBait">
-		<nominal>0</nominal>
-		<lifetime>14400</lifetime>
-		<restock>0</restock>
-		<min>0</min>
-		<quantmin>-1</quantmin>
-		<quantmax>-1</quantmax>
-		<cost>100</cost>
-		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
-		<category name="tools"/>
-	</type>	
-	<type name="geb_MetalGrassHopperBait">
-		<nominal>0</nominal>
-		<lifetime>14400</lifetime>
-		<restock>0</restock>
-		<min>0</min>
-		<quantmin>-1</quantmin>
-		<quantmax>-1</quantmax>
-		<cost>100</cost>
-		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
-		<category name="tools"/>
-	</type>
-	<type name="geb_MetalFieldCricketBait">
-		<nominal>0</nominal>
-		<lifetime>14400</lifetime>
-		<restock>0</restock>
-		<min>0</min>
-		<quantmin>-1</quantmin>
-		<quantmax>-1</quantmax>
-		<cost>100</cost>
-		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
-		<category name="tools"/>
-	</type>		
-	<type name="geb_MetalWormBait">
-		<nominal>0</nominal>
-		<lifetime>14400</lifetime>
-		<restock>0</restock>
-		<min>0</min>
-		<quantmin>-1</quantmin>
-		<quantmax>-1</quantmax>
-		<cost>100</cost>
-		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
-		<category name="tools"/>
-	</type>
-	
-	<type name="geb_BoneRubberWormBait">
-		<nominal>0</nominal>
-		<lifetime>14400</lifetime>
-		<restock>0</restock>
-		<min>0</min>
-		<quantmin>-1</quantmin>
-		<quantmax>-1</quantmax>
-		<cost>100</cost>
-		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
-		<category name="tools"/>
-	</type>			
-	<type name="geb_BoneGrubWormBait">
-		<nominal>0</nominal>
-		<lifetime>14400</lifetime>
-		<restock>0</restock>
-		<min>0</min>
-		<quantmin>-1</quantmin>
-		<quantmax>-1</quantmax>
-		<cost>100</cost>
-		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
-		<category name="tools"/>
-	</type>		
-	<type name="geb_BoneGrassHopperBait">
-		<nominal>0</nominal>
-		<lifetime>14400</lifetime>
-		<restock>0</restock>
-		<min>0</min>
-		<quantmin>-1</quantmin>
-		<quantmax>-1</quantmax>
-		<cost>100</cost>
-		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
-		<category name="tools"/>
-	</type>
-	<type name="geb_BoneFieldCricketBait">
-		<nominal>0</nominal>
-		<lifetime>14400</lifetime>
-		<restock>0</restock>
-		<min>0</min>
-		<quantmin>-1</quantmin>
-		<quantmax>-1</quantmax>
-		<cost>100</cost>
-		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
-		<category name="tools"/>
-	</type>				
-	
-	
-
 
     <!-- FISHING KNIVES -->
 	<type name="geb_BlueFishKnife">
