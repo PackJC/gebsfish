@@ -13,11 +13,9 @@ class FileReader
 	static const string FRESH_CONFIG_PATH = "$profile:gebsfish/Freshwater.cfg";
 	static const string SALT_CONFIG_PATH = "$profile:gebsfish/Saltwater.cfg";
 	static const string BUG_CONFIG_PATH = "$profile:gebsfish/Bugs.cfg";
-	static const string FILLETS_CONFIG_PATH = "$profile:gebsfis/Fillets.cfg";
 
 	static const string DIRECTORY = "$profile:gebsfish";
 	
-	static ref map<string, string> fillets_chance_map = new map<string, string>();
 	static ref map<string, float> fresh_chance_map = new map<string, float>();
 	static ref map<string, float> salt_chance_map = new map<string, float>();
 	static ref map<string, float> bug_chance_map = new map<string, float>();
@@ -63,11 +61,6 @@ class FileReader
 		{
 			CreateConfig(BUG_CONFIG_PATH);
 		}
-		if (!FileExist(FILLETS_CONFIG_PATH))
-		{
-			CreateConfig(FILLETS_CONFIG_PATH);
-		}
-
 
 		//If file exists, open it and read files
 		if (FileExist(SALT_CONFIG_PATH))
@@ -137,22 +130,6 @@ class FileReader
 			CloseFile(bug_file);
 		}
 
-		//If file exists, open it and read files
-		if (FileExist(FILLETS_CONFIG_PATH))
-		{
-			FileHandle fillets_file = OpenFile(FILLETS_CONFIG_PATH, FileMode.READ);
-			string fillets_line;
-			while (FGets(fillets_file, fillets_line) != -1)
-			{
-				//geb_Bluegill=30 = map["bluegill"] = 30
-				fillets_line.Trim();
-				int tokenIndexFillet = fillets_line.IndexOf("=");
-				int lengthIndexFillet = fillets_line.Length() - tokenIndexFillet;
-				fillets_chance_map[fillets_line.Substring(0, tokenIndexFillet)] = (fillets_line.Substring(tokenIndexFillet + 1, lengthIndexFillet - 1));
-			}
-
-			CloseFile(fillets_file);
-		}
 	}
 
 	// Creates the config file and sets default values.
@@ -217,56 +194,6 @@ class FileReader
 			FPrintln(f, "geb_GrubWorm=50");
 			FPrintln(f, "Worm=50");
 			break;
-		case "$profile:gebsfish/Fillets.cfg":
-			FPrintln(f, "CARP_FILLETS=1,4");
-			FPrintln(f, "geb_CRAYFISH_FILLETS=1,4");
-			FPrintln(f, "geb_BLUEGILL_FILLETS=1,4");
-			FPrintln(f, "geb_BLACKBASS_FILLETS=1,4");
-			FPrintln(f, "geb_CATFISH_FILLETS=1,4");
-			FPrintln(f, "geb_LARGEMOUTHBASS_FILLETS=1,4");
-			FPrintln(f, "geb_SMALLMOUTHBASS_FILLETS=1,4");
-			FPrintln(f, "geb_SUNFISH_FILLETS=1,4");
-			FPrintln(f, "geb_WALLEYE_FILLETS=1,4");
-			FPrintln(f, "geb_MINNOW_FILLETS=1,4");
-			FPrintln(f, "geb_NORTHERNPIKE_FILLETS=1,4");
-			FPrintln(f, "geb_PERCH_FILLETS=1,4");
-			FPrintln(f, "geb_SAUGER_FILLETS=1,4");
-			FPrintln(f, "geb_TROUT_FILLETS=1,4");
-			FPrintln(f, "geb_LAKETROUT_FILLETS=1,4");
-			FPrintln(f, "geb_BROOKTROUT_FILLETS=1,4");
-			FPrintln(f, "geb_BROWNTROUT_FILLETS=1,4");
-			FPrintln(f, "geb_CUTHROATTROUT_FILLETS=1,4");
-			FPrintln(f, "geb_WHITEBASS_FILLETS=1,4");
-			FPrintln(f, "geb_BOWFIN_FILLETS=1,4");
-			FPrintln(f, "geb_SLIMYSCULPIN_FILLETS=1,4");
-			FPrintln(f, "geb_CHINOOKSALMON_FILLETS=1,4");
-			FPrintln(f, "geb_SOCKEYESALMON_FILLETS=1,4");
-			FPrintln(f, "geb_SEVERUM_FILLETS=1,4");
-			FPrintln(f, "MACKEREL_FILLETS=1,4");
-			FPrintln(f, "geb_ANGELFISH_FILLETS=1,4");
-			FPrintln(f, "geb_BLUEMARLIN_FILLETS=1,4");
-			FPrintln(f, "geb_BONITA_FILLETS=1,4");
-			FPrintln(f, "geb_CHERRYSALMON_FILLETS=1,4");
-			FPrintln(f, "geb_FLATHEADMULLET_FILLETS=1,4");
-			FPrintln(f, "geb_LEOPARDSHARK_FILLETS=1,4");
-			FPrintln(f, "geb_PACIFICCOD_FILLETS=1,4");
-			FPrintln(f, "geb_REDHEADCICHLID_FILLETS=1,4");
-			FPrintln(f, "geb_ROUGHNECKROCK_FILLETS=1,4");
-			FPrintln(f, "geb_BLUETANG_FILLETS=1,4");
-			FPrintln(f, "geb_HAIRTAILFISH_FILLETS=1,4");
-			FPrintln(f, "geb_HUMPHEADWRASSE_FILLETS=1,4");
-			FPrintln(f, "geb_SIAMESETIGERFISH_FILLETS=1,4");
-			FPrintln(f, "geb_ASIANSEABASS_FILLETS=1,4");
-			FPrintln(f, "geb_JELLYFISH_FILLETS=1,4");
-			FPrintln(f, "geb_STARFISH_FILLETS=1,4");
-			FPrintln(f, "geb_KINGCRAB_FILLETS=1,4");
-			FPrintln(f, "geb_ANGELSHARK_FILLETS=1,4");
-			FPrintln(f, "geb_GREATWHITESHARK_FILLETS=1,4");
-			FPrintln(f, "geb_YELLOWFINTUNA_FILLETS=1,4");
-			FPrintln(f, "geb_MAHIMAHI_FILLETS=1,4");
-			FPrintln(f, "geb_SAILFISH_FILLETS=1,4");
-			break;
-
 		}
 		CloseFile(f);
 	}
@@ -305,8 +232,4 @@ class FileReader
 		return bug_chance_map;
 	}
 
-	static map<string, string> GetFilletsChanceMap()
-	{
-		return fillets_chance_map;
-	}
 };

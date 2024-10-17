@@ -3,22 +3,6 @@ class PrepareHumpheadwrasse extends PrepareFish
 	int ran;	
 	override void Init()
 	{
-
-
-
-		auto fillets_chance_map = FileReader.GetFilletsChanceMap();
-		//this returns a string
-		auto parts = fillets_chance_map.Get("geb_Humpheadwrasse");
-		//create an array to hold the two string that will need to be turned into floats
-		array<string> myArray = new array<string>; 
-		//split the string into myArray
-		parts.Split(",", myArray);
-		//turn the strings into floats
-		float lowChance = myArray[0].ToFloat();
-		float highChance = myArray[1].ToFloat();
-		ran = Math.RandomFloatInclusive(lowChance,highChance);
-
-
 		m_Name = "#STR_gutandprepare0";
 		m_IsInstaRecipe = false;//should this recipe be performed instantly without animation
 		m_AnimationLength = 2.1;//animation length in relative time units
@@ -86,6 +70,7 @@ class PrepareHumpheadwrasse extends PrepareFish
 		m_IngredientDestroy[1] = false;// false = do nothing
 		m_IngredientUseSoftSkills[1] = true;// set 'true' to allow modification of the values by softskills on this ingredient
 		//----------------------------------------------------------------------------------------------------------------------
+		ran = Math.RandomFloatInclusive(2.0,4.0);
 		for (int i = 0; i < ran; ++i){
 			AddResult("geb_HumpheadwrasseFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing

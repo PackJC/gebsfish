@@ -14,11 +14,10 @@ modded class PluginRecipesManager
 	{
 		super.RegisterRecipies();
 
-		/*
-			FOOD RECIPES
-		*/
+		//Freshwater crustacean
+		RegisterRecipe(new PrepareCrayfish);
 
-		//Freshwater Life 	
+		//Freshwater fish 	
 		RegisterRecipe(new PrepareBluegill);
 		RegisterRecipe(new PrepareBlackbass);
 		RegisterRecipe(new PrepareCatfish);
@@ -30,7 +29,6 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareNorthernpike);
 		RegisterRecipe(new PreparePerch);
 		RegisterRecipe(new PrepareSauger);
-		RegisterRecipe(new PrepareCrayfish);
 		RegisterRecipe(new PrepareTrout);
 		RegisterRecipe(new PrepareBrownTrout);
 		RegisterRecipe(new PrepareBrookTrout);
@@ -39,13 +37,20 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareWhitebass);
 		RegisterRecipe(new PrepareBowfin);
 		RegisterRecipe(new PrepareSlimysculpin);
-		RegisterRecipe(new PrepareSlimysculpin);
-		RegisterRecipe(new PrepareMussel);
-		RegisterRecipe(new PrepareBlackdevilsnail);
 		RegisterRecipe(new PrepareSockeyesalmon);
 		RegisterRecipe(new PrepareChinooksalmon);
 
-		//Saltwater Life
+		//Saltwater crustacean
+		RegisterRecipe(new PrepareMussel);
+		RegisterRecipe(new PrepareBlackdevilsnail);
+		RegisterRecipe(new PrepareStarfish);
+		RegisterRecipe(new PrepareKingcrab);
+		RegisterRecipe(new PrepareJellyfish);
+		RegisterRecipe(new PrepareBloodclam);
+		RegisterRecipe(new PrepareLobster);
+		RegisterRecipe(new PrepareBlueLobster);
+
+		//Saltwater Fish
 		RegisterRecipe(new PrepareAngelfish);
 		RegisterRecipe(new PrepareSailfish);
 		RegisterRecipe(new PrepareMahimahi);
@@ -63,20 +68,12 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareHairtailfish);
 		RegisterRecipe(new PrepareHumpheadwrasse);
 		RegisterRecipe(new PrepareSiamesetigerfish);
-		RegisterRecipe(new PrepareStarfish);
-		RegisterRecipe(new PrepareKingcrab);
-		RegisterRecipe(new PrepareJellyfish);
-		RegisterRecipe(new PrepareBloodclam);
-		RegisterRecipe(new PrepareLobster);
-		RegisterRecipe(new PrepareBlueLobster);
 		RegisterRecipe(new PrepareAngelshark);
 		RegisterRecipe(new PrepareGreatwhiteshark);
 		RegisterRecipe(new PrepareYellowfintuna);
 		
-
 		//Tools
 		RegisterRecipe(new CraftWoodenNet);
 
 	}
-
 };
