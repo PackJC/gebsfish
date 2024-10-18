@@ -50,7 +50,7 @@ class CfgMods
 				value="";
 				files[]=
 				{
-					"gebsfish\Scripts\3_Game"
+					"gebsfish\scripts\3_Game"
 				};
 			};
 			class worldScriptModule

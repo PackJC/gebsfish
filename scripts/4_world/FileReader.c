@@ -77,13 +77,16 @@ class FileReader
 
 			}
 			//This is to force adding new fish, so when server owner updates it should include new fish
-			if (salt_chance_map.Contains("geb_MAHIMAHI_CHANCE")) {
+			if (salt_chance_map.Contains("geb_BLUELOBSTER_CHANCE")) {
 				newSaltFishDetected = true;
 			}
 			if (!newSaltFishDetected) {
-				FPrintln(salt_file, "geb_MAHIMAHI_CHANCE=66");
-				FPrintln(salt_file, "geb_SAILFISH_CHANCE=66");
-
+			//add new freshwater fish here to update old configs
+				FPrintln(f, "geb_BLOODCLAM_CHANCE=41");
+				FPrintln(f, "geb_MUSSEL_CHANCE=41");
+				FPrintln(f, "geb_BLACKDEVILSNAIL_CHANCE=41");
+				FPrintln(f, "geb_LOBSTER_CHANCE=41");
+				FPrintln(f, "geb_BLUELOBSTER_CHANCE=41");
 			}
 			CloseFile(salt_file);
 		}
@@ -108,9 +111,7 @@ class FileReader
 				newFreshFishDetected = true;
 			}
 			if (!newFreshFishDetected) {
-				FPrintln(fresh_file, "geb_SMALLMOUTHBASS_CHANCE=66");
-				FPrintln(fresh_file, "geb_SUNFISH_CHANCE=66");
-				FPrintln(fresh_file, "geb_WALLEYE_CHANCE=66");
+				//add new freshwater fish here to update old configs
 			}
 			CloseFile(fresh_file);
 		}
@@ -161,6 +162,11 @@ class FileReader
 			FPrintln(f, "geb_YELLOWFINTUNA_CHANCE=41");
 			FPrintln(f, "geb_MAHIMAHI_CHANCE=41");
 			FPrintln(f, "geb_SAILFISH_CHANCE=41");
+			FPrintln(f, "geb_BLOODCLAM_CHANCE=41");
+			FPrintln(f, "geb_MUSSEL_CHANCE=41");
+			FPrintln(f, "geb_BLACKDEVILSNAIL_CHANCE=41");
+			FPrintln(f, "geb_LOBSTER_CHANCE=41");
+			FPrintln(f, "geb_BLUELOBSTER_CHANCE=41");
 			break;
 		case "$profile:gebsfish/Freshwater.cfg":
 			FPrintln(f, "CARP_CHANCE=66");

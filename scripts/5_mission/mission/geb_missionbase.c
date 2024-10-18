@@ -7,68 +7,76 @@
   Contributions welcome via github
 
 */
+
+
 modded class MissionBase
 {    
     override void InitWorldYieldDataDefaults(CatchYieldBank bank)
 	{
         super.InitWorldYieldDataDefaults(bank);
 		if (bank)
-		{			
+		{	
+			FileReader.GetInstance();		
+			auto salt_chance_map = FileReader.GetSaltChanceMap();
+			auto fresh_chance_map = FileReader.GetFreshChanceMap();
+
 			//19 freshwater fish
-			bank.RegisterYieldItem(new gebNorthernpike(18));   // High chance of catching
-			bank.RegisterYieldItem(new gebLargemouthbass(20)); // Very high chance of catching
-			bank.RegisterYieldItem(new gebSmallmouthbass(18)); // High chance of catching
-			bank.RegisterYieldItem(new gebWalleye(16));        // Moderate to high chance of catching
-			bank.RegisterYieldItem(new gebSunfish(14));        // Moderate chance of catching
-			bank.RegisterYieldItem(new gebWhitebass(17));      // High chance of catching
-			bank.RegisterYieldItem(new gebBlackbass(20));      // Very high chance of catching
-			bank.RegisterYieldItem(new gebRainbowTrout(18));   // High chance of catching
-			bank.RegisterYieldItem(new gebBrownTrout(18));     // High chance of catching
-			bank.RegisterYieldItem(new gebBrookTrout(16));     // Moderate to high chance of catching
-			bank.RegisterYieldItem(new gebLakeTrout(17));      // High chance of catching
-			bank.RegisterYieldItem(new gebCutthroatTrout(16)); // Moderate to high chance of catching
-			bank.RegisterYieldItem(new gebPerch(15));          // Moderate chance of catching
-			bank.RegisterYieldItem(new gebCatfish(22));        // Very high chance of catching (nocturnal feeder)
-			bank.RegisterYieldItem(new gebMinnow(25));         // Very high chance of catching (common)
-			bank.RegisterYieldItem(new gebBluegill(23));       // Very high chance of catching (common)
-			bank.RegisterYieldItem(new gebSauger(16));         // Moderate to high chance of catching
-			bank.RegisterYieldItem(new gebBowfin(14));         // Moderate chance of catching
-			bank.RegisterYieldItem(new gebSlimysculpin(13));   // Moderate to lower chance of catching
+			bank.RegisterYieldItem(new gebNorthernpike(Math.Ceil(fresh_chance_map.Get("geb_NORTHERNPIKE_CHANCE"))));
+			bank.RegisterYieldItem(new gebLargemouthbass(Math.Ceil(fresh_chance_map.Get("geb_LARGEMOUTHBASS_CHANCE"))));
+			bank.RegisterYieldItem(new gebSmallmouthbass(Math.Ceil(fresh_chance_map.Get("geb_SMALLMOUTHBASS_CHANCE"))));
+			bank.RegisterYieldItem(new gebWalleye(Math.Ceil(fresh_chance_map.Get("geb_WALLEYE_CHANCE"))));
+			bank.RegisterYieldItem(new gebSunfish(Math.Ceil(fresh_chance_map.Get("geb_SUNFISH_CHANCE"))));
+			bank.RegisterYieldItem(new gebWhitebass(Math.Ceil(fresh_chance_map.Get("geb_WHITEBASS_CHANCE"))));
+			bank.RegisterYieldItem(new gebBlackbass(Math.Ceil(fresh_chance_map.Get("geb_BLACKBASS_CHANCE"))));
+			bank.RegisterYieldItem(new gebRainbowTrout(Math.Ceil(fresh_chance_map.Get("geb_RAINBOWTROUT_CHANCE"))));
+			bank.RegisterYieldItem(new gebBrownTrout(Math.Ceil(fresh_chance_map.Get("geb_BROWNTROUT_CHANCE"))));
+			bank.RegisterYieldItem(new gebBrookTrout(Math.Ceil(fresh_chance_map.Get("geb_BROOKTROUT_CHANCE"))));
+			bank.RegisterYieldItem(new gebLakeTrout(Math.Ceil(fresh_chance_map.Get("geb_LAKETROUT_CHANCE"))));
+			bank.RegisterYieldItem(new gebCutthroatTrout(Math.Ceil(fresh_chance_map.Get("geb_CUTTHROATTROUT_CHANCE"))));
+			bank.RegisterYieldItem(new gebPerch(Math.Ceil(fresh_chance_map.Get("geb_PERCH_CHANCE"))));
+			bank.RegisterYieldItem(new gebCatfish(Math.Ceil(fresh_chance_map.Get("geb_CATFISH_CHANCE"))));
+			bank.RegisterYieldItem(new gebMinnow(Math.Ceil(fresh_chance_map.Get("geb_MINNOW_CHANCE"))));
+			bank.RegisterYieldItem(new gebBluegill(Math.Ceil(fresh_chance_map.Get("geb_BLUEGILL_CHANCE"))));
+			bank.RegisterYieldItem(new gebSauger(Math.Ceil(fresh_chance_map.Get("geb_SAUGER_CHANCE"))));
+			bank.RegisterYieldItem(new gebBowfin(Math.Ceil(fresh_chance_map.Get("geb_BOWFIN_CHANCE"))));
+			bank.RegisterYieldItem(new gebSlimysculpin(Math.Ceil(fresh_chance_map.Get("geb_SLIMYSCULPIN_CHANCE"))));
 
 			//1 freshwater crustacean
-			bank.RegisterYieldItem(new gebCrayfish(20));  // High chance of catching (common species in traps)
+			bank.RegisterYieldItem(new gebCrayfish(Math.Ceil(fresh_chance_map.Get("geb_CRAYFISH_CHANCE"))));
 
 			//20 saltwater fish
-			bank.RegisterYieldItem(new gebMahimahi(20));       // High chance of catching
-			bank.RegisterYieldItem(new gebSailfish(18));       // Moderate to high chance of catching
-			bank.RegisterYieldItem(new gebAngelfish(15));      // Moderate chance of catching
-			bank.RegisterYieldItem(new gebAsianseabass(19));   // High chance of catching
-			bank.RegisterYieldItem(new gebBluemarlin(17));     // Moderate to high chance of catching
-			bank.RegisterYieldItem(new gebBonita(21));         // High chance of catching
-			bank.RegisterYieldItem(new gebCherrysalmon(17));   // Moderate to high chance of catching
-			bank.RegisterYieldItem(new gebFlatheadmullet(16)); // Moderate chance of catching
-			bank.RegisterYieldItem(new gebLeopardshark(18));   // Moderate to high chance of catching
-			bank.RegisterYieldItem(new gebPacificcod(19));     // High chance of catching
-			bank.RegisterYieldItem(new gebRedheadcichlid(16)); // Moderate chance of catching
-			bank.RegisterYieldItem(new gebRoughneckrock(14));  // Moderate chance of catching
-			bank.RegisterYieldItem(new gebSeverum(15));        // Moderate chance of catching
-			bank.RegisterYieldItem(new gebBluetang(16));       // Moderate chance of catching
-			bank.RegisterYieldItem(new gebHairtailfish(17));   // Moderate to high chance of catching
-			bank.RegisterYieldItem(new gebHumpheadwrasse(15)); // Moderate chance of catching
-			bank.RegisterYieldItem(new gebSiamesetigerfish(16)); // Moderate chance of catching
-			bank.RegisterYieldItem(new gebGreatwhiteshark(12)); // Lower chance of catching (rare)
-			bank.RegisterYieldItem(new gebAngelshark(14));     // Moderate chance of catching (night feeder)
-			bank.RegisterYieldItem(new gebYellowfintuna(18));  // Moderate to high chance of catching
 
+			bank.RegisterYieldItem(new gebMahimahi(Math.Ceil(salt_chance_map.Get("geb_MAHIMAHI_CHANCE"))));
+			bank.RegisterYieldItem(new gebSailfish(Math.Ceil(salt_chance_map.Get("geb_SAILFISH_CHANCE"))));
+			bank.RegisterYieldItem(new gebAngelfish(Math.Ceil(salt_chance_map.Get("geb_ANGELFISH_CHANCE"))));
+			bank.RegisterYieldItem(new gebAsianseabass(Math.Ceil(salt_chance_map.Get("geb_ASIANSEABASS_CHANCE"))));
+			bank.RegisterYieldItem(new gebBluemarlin(Math.Ceil(salt_chance_map.Get("geb_BLUEMARLIN_CHANCE"))));
+			bank.RegisterYieldItem(new gebBonita(Math.Ceil(salt_chance_map.Get("geb_BONITA_CHANCE"))));
+			bank.RegisterYieldItem(new gebCherrysalmon(Math.Ceil(salt_chance_map.Get("geb_CHERRYSALMON_CHANCE"))));
+			bank.RegisterYieldItem(new gebFlatheadmullet(Math.Ceil(salt_chance_map.Get("geb_FLATHEADMULLET_CHANCE"))));
+			bank.RegisterYieldItem(new gebLeopardshark(Math.Ceil(salt_chance_map.Get("geb_LEOPARDSHARK_CHANCE"))));
+			bank.RegisterYieldItem(new gebPacificcod(Math.Ceil(salt_chance_map.Get("geb_PACIFICCOD_CHANCE"))));
+			bank.RegisterYieldItem(new gebRedheadcichlid(Math.Ceil(salt_chance_map.Get("geb_REDHEADCICHLID_CHANCE"))));
+			bank.RegisterYieldItem(new gebRoughneckrock(Math.Ceil(salt_chance_map.Get("geb_ROUGHNECKROCK_CHANCE"))));
+			bank.RegisterYieldItem(new gebSeverum(Math.Ceil(salt_chance_map.Get("geb_SEVERUM_CHANCE"))));
+			bank.RegisterYieldItem(new gebBluetang(Math.Ceil(salt_chance_map.Get("geb_BLUETANG_CHANCE"))));
+			bank.RegisterYieldItem(new gebHairtailfish(Math.Ceil(salt_chance_map.Get("geb_HAIRTAILFISH_CHANCE"))));
+			bank.RegisterYieldItem(new gebHumpheadwrasse(Math.Ceil(salt_chance_map.Get("geb_HUMPHEADWRASSE_CHANCE"))));
+			bank.RegisterYieldItem(new gebSiamesetigerfish(Math.Ceil(salt_chance_map.Get("geb_SIAMESETIGERFISH_CHANCE"))));
+			bank.RegisterYieldItem(new gebGreatwhiteshark(Math.Ceil(salt_chance_map.Get("geb_GREATWHITESHARK_CHANCE"))));
+			bank.RegisterYieldItem(new gebAngelshark(Math.Ceil(salt_chance_map.Get("geb_ANGELSHARK_CHANCE"))));
+			bank.RegisterYieldItem(new gebYellowfintuna(Math.Ceil(salt_chance_map.Get("geb_YELLOWFINTUNA_CHANCE"))));
+
+			
 			//8 saltwater crustacean
-			bank.RegisterYieldItem(new gebBloodclam(22));      // High chance of catching (common)
-			bank.RegisterYieldItem(new gebMussel(23));         // Very high chance of catching (common)
-			bank.RegisterYieldItem(new gebBlackdevilsnail(18)); // Moderate to high chance of catching
-			bank.RegisterYieldItem(new gebStarfish(16));       // Moderate chance of catching
-			bank.RegisterYieldItem(new gebKingcrab(15));       // Moderate chance of catching
-			bank.RegisterYieldItem(new gebJellyfish(17));      // Moderate to high chance of catching
-			bank.RegisterYieldItem(new gebLobster(19));        // High chance of catching
-			bank.RegisterYieldItem(new gebBlueLobster(14));    // Lower chance of catching (rare)
+			bank.RegisterYieldItem(new gebBloodclam(Math.Ceil(salt_chance_map.Get("geb_BLOODCLAM_CHANCE"))));
+			bank.RegisterYieldItem(new gebMussel(Math.Ceil(salt_chance_map.Get("geb_MUSSEL_CHANCE"))));
+			bank.RegisterYieldItem(new gebBlackdevilsnail(Math.Ceil(salt_chance_map.Get("geb_BLACKDEVILSNAIL_CHANCE"))));
+			bank.RegisterYieldItem(new gebStarfish(Math.Ceil(salt_chance_map.Get("geb_STARFISH_CHANCE"))));
+			bank.RegisterYieldItem(new gebKingcrab(Math.Ceil(salt_chance_map.Get("geb_KINGCRAB_CHANCE"))));
+			bank.RegisterYieldItem(new gebJellyfish(Math.Ceil(salt_chance_map.Get("geb_JELLYFISH_CHANCE"))));
+			bank.RegisterYieldItem(new gebLobster(Math.Ceil(salt_chance_map.Get("geb_LOBSTER_CHANCE"))));
+			bank.RegisterYieldItem(new gebBlueLobster(Math.Ceil(salt_chance_map.Get("geb_BLUELOBSTER_CHANCE"))));
 		}
 	}
 };
