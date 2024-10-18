@@ -619,7 +619,7 @@ class cfgVehicles
 
 	*/
 
-	class geb_Lure: FishingHookBase
+	class geb_Lure: Inventory_Base
 	{
 		scope = 0;
 		displayName = "$STR_CfgVehicles_Hook0";
@@ -670,13 +670,6 @@ class cfgVehicles
 				};
 			};
 		};
-		class AnimationSources {
-			class cover {
-				source = "user";
-				animPeriod = 0.5;
-				initPhase = 1;
-			};
-		};
 	};
 	class geb_SpinnerBait2: geb_SpinnerBait1 {
 		scope = 2;
@@ -685,6 +678,20 @@ class cfgVehicles
 		hookType = "geb_SpinnerBait2";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_spinnerbait2.paa"};
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 10;
+					healthLevels[] = {
+						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
+						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
+						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
+						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
+						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
+					};
+				};
+			};
+		};
 	};
 	class geb_SpinnerBait3: geb_SpinnerBait1 {
 		scope = 2;
@@ -693,6 +700,20 @@ class cfgVehicles
 		hookType = "geb_SpinnerBait3";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_spinnerbait3.paa"};
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 10;
+					healthLevels[] = {
+						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
+						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
+						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
+						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
+						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
+					};
+				};
+			};
+		};
 	};
 	class geb_SpinnerBait4: geb_SpinnerBait1 {
 		scope = 2;
@@ -701,6 +722,20 @@ class cfgVehicles
 		hookType = "geb_SpinnerBait4";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_spinnerbait4.paa"};
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 10;
+					healthLevels[] = {
+						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
+						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
+						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
+						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
+						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
+					};
+				};
+			};
+		};
 	};
 	class geb_Lure1: geb_Lure {
 		scope = 2;
@@ -711,6 +746,20 @@ class cfgVehicles
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\lure1.paa"};
 		rotationFlags = 12;
 		hookType = "geb_Lure1";
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 10;
+					healthLevels[] = {
+						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
+						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
+						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
+						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
+						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
+					};
+				};
+			};
+		};
 	};
 	class geb_Lure2: geb_Lure {
 		scope = 2;
@@ -722,6 +771,20 @@ class cfgVehicles
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\lure2.paa"};
 		rotationFlags = 12;
 		hookType = "geb_Lure2";
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 10;
+					healthLevels[] = {
+						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
+						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
+						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
+						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
+						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
+					};
+				};
+			};
+		};
 	};
 	class geb_Lure3: geb_Lure {
 		scope = 2;
@@ -733,6 +796,20 @@ class cfgVehicles
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\lure3.paa"};
 		rotationFlags = 12;
 		hookType = "geb_Lure3";
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 10;
+					healthLevels[] = {
+						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
+						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
+						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
+						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
+						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
+					};
+				};
+			};
+		};
 	};
 	class geb_Lure4: geb_Lure {
 		scope = 2;
@@ -743,17 +820,28 @@ class cfgVehicles
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\lure3.paa"};
 		rotationFlags = 12;
-		hookType = "geb_Lure4";
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 10;
+					healthLevels[] = {
+						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
+						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
+						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
+						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
+						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
+					};
+				};
+			};
+		};
 	};
-
-
-
 
 	/*
 
 		ITEMS
 
 	*/
+
 	class geb_BigGameFishingline: Rope {
 		scope = 2;
 		displayName = "$STR_gameline";
@@ -796,5 +884,4 @@ class cfgVehicles
 		}
 		*/
 	};
-
 };

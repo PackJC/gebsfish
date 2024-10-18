@@ -46,6 +46,10 @@
 	<type name="geb_BonitaFilletMeat" />
 	<type name="geb_Cherrysalmon" />
 	<type name="geb_CherrysalmonFilletMeat" />
+	<type name="geb_ChinookSalmon" />
+	<type name="geb_ChinookSalmonFilletMeat" />	
+	<type name="geb_SockeyeSalmon" />
+	<type name="geb_SockeyeSalmonFilletMeat" />
 	<type name="geb_Flatheadmullet" />
 	<type name="geb_FlatheadmulletFilletMeat" />
 	<type name="geb_Leopardshark" />

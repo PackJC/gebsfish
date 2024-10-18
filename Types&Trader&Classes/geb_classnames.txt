@@ -98,6 +98,11 @@ geb_Yellowfintuna
 geb_GreatwhitesharkFilletMeat
 geb_AngelsharkFilletMeat
 geb_YellowfintunaFilletMeat
+geb_ChinookSalmonFilletMeat
+geb_SockeyeSalmonFilletMeat 
+geb_ChinookSalmon
+geb_SockeyeSalmon 
+
 
 ##Item Class Names
 
