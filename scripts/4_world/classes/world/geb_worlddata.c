@@ -13,6 +13,12 @@ modded class WorldData
 	override void InitYieldBank()
 	{
 		super.InitYieldBank();
+
+		if (!m_YieldBank)
+		{
+			Print("Error: m_YieldBank is not initialized!");
+			return;
+		}
 		//19 freshwater fish
 		m_YieldBank.RegisterYieldItem(new gebNorthernpike(18));   // High chance of catching
 		m_YieldBank.RegisterYieldItem(new gebLargemouthbass(20)); // Very high chance of catching
