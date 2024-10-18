@@ -82,11 +82,11 @@ class FileReader
 			}
 			if (!newSaltFishDetected) {
 			//add new freshwater fish here to update old configs
-				FPrintln(f, "geb_BLOODCLAM_CHANCE=41");
-				FPrintln(f, "geb_MUSSEL_CHANCE=41");
-				FPrintln(f, "geb_BLACKDEVILSNAIL_CHANCE=41");
-				FPrintln(f, "geb_LOBSTER_CHANCE=41");
-				FPrintln(f, "geb_BLUELOBSTER_CHANCE=41");
+				FPrintln(salt_file, "geb_BLOODCLAM_CHANCE=41");
+				FPrintln(salt_file, "geb_MUSSEL_CHANCE=41");
+				FPrintln(salt_file, "geb_BLACKDEVILSNAIL_CHANCE=41");
+				FPrintln(salt_file, "geb_LOBSTER_CHANCE=41");
+				FPrintln(salt_file, "geb_BLUELOBSTER_CHANCE=41");
 			}
 			CloseFile(salt_file);
 		}

@@ -45,7 +45,6 @@ modded class MissionBase
 			bank.RegisterYieldItem(new gebCrayfish(Math.Ceil(fresh_chance_map.Get("geb_CRAYFISH_CHANCE"))));
 
 			//20 saltwater fish
-
 			bank.RegisterYieldItem(new gebMahimahi(Math.Ceil(salt_chance_map.Get("geb_MAHIMAHI_CHANCE"))));
 			bank.RegisterYieldItem(new gebSailfish(Math.Ceil(salt_chance_map.Get("geb_SAILFISH_CHANCE"))));
 			bank.RegisterYieldItem(new gebAngelfish(Math.Ceil(salt_chance_map.Get("geb_ANGELFISH_CHANCE"))));
