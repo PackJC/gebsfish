@@ -30,6 +30,7 @@ class cfgVehicles
 	class Container_Base;
 	class Inventory_Base;
 	class FishingRod_Base_New;
+	class FishingRod_Base;
 
     /*
 
@@ -99,8 +100,8 @@ class cfgVehicles
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_purplefishknife.paa"};
 	};
-	class FishingRod: FishingRod_Base_New {
-		inventorySlot[] += {
+    class FishingRod_Base_New : FishingRod_Base {
+	inventorySlot[] += {
 			"Shoulder",
 			"Melee",
 			"fishingpole",
@@ -116,54 +117,35 @@ class cfgVehicles
 			"fishingrod10"
 		};
 	}; 
-    class geb_FishingRod_Base: FishingRod {
-        scope = 2;
-		displayName = "Modded Fishing Rod Base";
-		descriptionShort = "Modded Fishing Rod Base Class";
-		model = "\dz\gear\tools\fishing_rod.p3d";
-		debug_ItemCategory = 2;
-		rotationFlags = 12;
-		weight = 910;
-		itemSize[] = {2,5};
-		absorbency = 0;
-		hiddenSelections[] = {"zbytek"};
-		class DamageSystem {
-			class GlobalHealth {
-				class Health {
-					hitpoints = 150;
-					healthLevels[] = {
-						{1,{"DZ\gear\tools\data\fishing_rod.rvmat"}},
-						{0.7,{"DZ\gear\tools\data\fishing_rod.rvmat"}},
-						{0.5,{"DZ\gear\tools\data\fishing_rod_damage.rvmat"}},
-						{0.3,{"DZ\gear\tools\data\fishing_rod_damage.rvmat"}},
-						{0,{"DZ\gear\tools\data\fishing_rod_destruct.rvmat"}}
-					};
-				};
-			};
-		};
+	class FishingRod : FishingRod_Base_New
+    {
+        repairableWithKits[]={5};
+        repairCosts[]={30, 25};
+        hiddenSelections[]={"zbytek"};
+        hiddenSelectionsTextures[]={"\DZ\gear\tools\data\fishing_rod_co.paa"};
     };
-	class geb_RedFishingRod: geb_FishingRod_Base {
+	class geb_RedFishingRod: FishingRod {
 		scope = 2;
 		displayName = "$STR_redrod";
 		descriptionShort = "$STR_CfgVehicles_FishingRod1";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_fishingrod_red.paa"};
 	};
-	class geb_GreenFishingRod: geb_FishingRod_Base {
+	class geb_GreenFishingRod: FishingRod {
 		scope = 2;
 		displayName = "$STR_greenrod";
 		descriptionShort = "$STR_CfgVehicles_FishingRod1";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_fishingrod_green.paa"};
 	};
-	class geb_BlueFishingRod: geb_FishingRod_Base {
+	class geb_BlueFishingRod: FishingRod {
 		scope = 2;
 		displayName = "$STR_bluerod";
 		descriptionShort = "$STR_CfgVehicles_FishingRod1";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_fishingrod_blue.paa"};
 	};
-	class geb_PurpleFishingRod: geb_FishingRod_Base {
+	class geb_PurpleFishingRod: FishingRod {
 		scope = 2;
 		displayName = "$STR_purplerod";
 		descriptionShort = "$STR_CfgVehicles_FishingRod1";

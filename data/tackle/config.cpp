@@ -619,28 +619,9 @@ class cfgVehicles
 
 	*/
 
-	class geb_Lure: Inventory_Base
+	class geb_Lure: Jig
 	{
-		scope = 0;
-		displayName = "$STR_CfgVehicles_Hook0";
-		descriptionShort = "$STR_CfgVehicles_Hook1";
-		rotationFlags = 12;
-		weight = 1;
-		varWetMax = 0.8;
-		absorbency = 0.8;
-		itemSize[] = {1,1};
-		inventorySlot[] = {"Hook"};
-		hiddenSelections[] = {"hooks","lure"};
-		hookType = "Hook";
-		class Fishing
-		{
-			signalCycleTarget = 4;
-			resultQuantityBaseMod = 0;
-			resultQuantityDispersionMin = 0.2;
-			resultQuantityDispersionMax = 0.3;
-			hookLossChanceMod = 0;
-			baitLossChanceMod = 0;
-		};
+
 	};
 
 	class geb_SpinnerBait1: geb_Lure {
