@@ -7,6 +7,8 @@
   Contributions welcome via github
 
 */
+
+/*
 class geb_Lure:  FishingHookBase {};
 
 class geb_SpinnerBait1:  geb_Lure {};
@@ -17,3 +19,4 @@ class geb_Lure1:  geb_Lure {};
 class geb_Lure2:  geb_Lure {};
 class geb_Lure3:  geb_Lure {};
 class geb_Lure4:  geb_Lure {};
+*/
