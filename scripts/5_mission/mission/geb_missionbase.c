@@ -16,11 +16,27 @@ modded class MissionBase
         super.InitWorldYieldDataDefaults(bank);
 		if (bank)
 		{	
-			FileReader.GetInstance();		
 			auto salt_chance_map = FileReader.GetSaltChanceMap();
 			auto fresh_chance_map = FileReader.GetFreshChanceMap();
 
-			//19 freshwater fish
+			bank.ClearAllRegisteredItems();
+		
+			//fishy junk
+			bank.RegisterYieldItem(new YieldItemJunk(1,"Wellies_Brown"));
+			bank.RegisterYieldItem(new YieldItemJunk(1,"Wellies_Grey"));
+			bank.RegisterYieldItem(new YieldItemJunk(1,"Wellies_Green"));
+			bank.RegisterYieldItem(new YieldItemJunk(1,"Wellies_Black"));
+			bank.RegisterYieldItem(new YieldItemJunkEmpty(1,"Pot"));
+		
+			//non-fishies
+			bank.RegisterYieldItem(new YieldItemDeadRabbit(4));
+			bank.RegisterYieldItem(new YieldItemDeadRooster(1));
+			bank.RegisterYieldItem(new YieldItemDeadChicken_White(1));
+			bank.RegisterYieldItem(new YieldItemDeadChicken_Spotted(1));
+			bank.RegisterYieldItem(new YieldItemDeadChicken_Brown(1));
+			bank.RegisterYieldItem(new YieldItemDeadFox(2));
+
+			//20 freshwater fish
 			bank.RegisterYieldItem(new gebNorthernpike(Math.Ceil(fresh_chance_map.Get("geb_NORTHERNPIKE_CHANCE"))));
 			bank.RegisterYieldItem(new gebLargemouthbass(Math.Ceil(fresh_chance_map.Get("geb_LARGEMOUTHBASS_CHANCE"))));
 			bank.RegisterYieldItem(new gebSmallmouthbass(Math.Ceil(fresh_chance_map.Get("geb_SMALLMOUTHBASS_CHANCE"))));
@@ -28,7 +44,7 @@ modded class MissionBase
 			bank.RegisterYieldItem(new gebSunfish(Math.Ceil(fresh_chance_map.Get("geb_SUNFISH_CHANCE"))));
 			bank.RegisterYieldItem(new gebWhitebass(Math.Ceil(fresh_chance_map.Get("geb_WHITEBASS_CHANCE"))));
 			bank.RegisterYieldItem(new gebBlackbass(Math.Ceil(fresh_chance_map.Get("geb_BLACKBASS_CHANCE"))));
-			bank.RegisterYieldItem(new gebRainbowTrout(Math.Ceil(fresh_chance_map.Get("geb_RAINBOWTROUT_CHANCE"))));
+			bank.RegisterYieldItem(new gebRainbowTrout(Math.Ceil(fresh_chance_map.Get("geb_TROUT_CHANCE"))));
 			bank.RegisterYieldItem(new gebBrownTrout(Math.Ceil(fresh_chance_map.Get("geb_BROWNTROUT_CHANCE"))));
 			bank.RegisterYieldItem(new gebBrookTrout(Math.Ceil(fresh_chance_map.Get("geb_BROOKTROUT_CHANCE"))));
 			bank.RegisterYieldItem(new gebLakeTrout(Math.Ceil(fresh_chance_map.Get("geb_LAKETROUT_CHANCE"))));
@@ -40,11 +56,12 @@ modded class MissionBase
 			bank.RegisterYieldItem(new gebSauger(Math.Ceil(fresh_chance_map.Get("geb_SAUGER_CHANCE"))));
 			bank.RegisterYieldItem(new gebBowfin(Math.Ceil(fresh_chance_map.Get("geb_BOWFIN_CHANCE"))));
 			bank.RegisterYieldItem(new gebSlimysculpin(Math.Ceil(fresh_chance_map.Get("geb_SLIMYSCULPIN_CHANCE"))));
+			bank.RegisterYieldItem(new gebSeverum(Math.Ceil(fresh_chance_map.Get("geb_SEVERUM_CHANCE"))));
 
 			//1 freshwater crustacean
 			bank.RegisterYieldItem(new gebCrayfish(Math.Ceil(fresh_chance_map.Get("geb_CRAYFISH_CHANCE"))));
 
-			//20 saltwater fish
+			//21 saltwater fish
 			bank.RegisterYieldItem(new gebMahimahi(Math.Ceil(salt_chance_map.Get("geb_MAHIMAHI_CHANCE"))));
 			bank.RegisterYieldItem(new gebSailfish(Math.Ceil(salt_chance_map.Get("geb_SAILFISH_CHANCE"))));
 			bank.RegisterYieldItem(new gebAngelfish(Math.Ceil(salt_chance_map.Get("geb_ANGELFISH_CHANCE"))));
@@ -52,12 +69,13 @@ modded class MissionBase
 			bank.RegisterYieldItem(new gebBluemarlin(Math.Ceil(salt_chance_map.Get("geb_BLUEMARLIN_CHANCE"))));
 			bank.RegisterYieldItem(new gebBonita(Math.Ceil(salt_chance_map.Get("geb_BONITA_CHANCE"))));
 			bank.RegisterYieldItem(new gebCherrysalmon(Math.Ceil(salt_chance_map.Get("geb_CHERRYSALMON_CHANCE"))));
+			bank.RegisterYieldItem(new gebChinooksalmon(Math.Ceil(fresh_chance_map.Get("geb_CHINOOKSALMON_CHANCE"))));
+			bank.RegisterYieldItem(new gebSockeyesalmon(Math.Ceil(fresh_chance_map.Get("geb_SOCKEYESALMON_CHANCE"))));
 			bank.RegisterYieldItem(new gebFlatheadmullet(Math.Ceil(salt_chance_map.Get("geb_FLATHEADMULLET_CHANCE"))));
 			bank.RegisterYieldItem(new gebLeopardshark(Math.Ceil(salt_chance_map.Get("geb_LEOPARDSHARK_CHANCE"))));
 			bank.RegisterYieldItem(new gebPacificcod(Math.Ceil(salt_chance_map.Get("geb_PACIFICCOD_CHANCE"))));
 			bank.RegisterYieldItem(new gebRedheadcichlid(Math.Ceil(salt_chance_map.Get("geb_REDHEADCICHLID_CHANCE"))));
 			bank.RegisterYieldItem(new gebRoughneckrock(Math.Ceil(salt_chance_map.Get("geb_ROUGHNECKROCK_CHANCE"))));
-			bank.RegisterYieldItem(new gebSeverum(Math.Ceil(salt_chance_map.Get("geb_SEVERUM_CHANCE"))));
 			bank.RegisterYieldItem(new gebBluetang(Math.Ceil(salt_chance_map.Get("geb_BLUETANG_CHANCE"))));
 			bank.RegisterYieldItem(new gebHairtailfish(Math.Ceil(salt_chance_map.Get("geb_HAIRTAILFISH_CHANCE"))));
 			bank.RegisterYieldItem(new gebHumpheadwrasse(Math.Ceil(salt_chance_map.Get("geb_HUMPHEADWRASSE_CHANCE"))));

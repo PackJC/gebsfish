@@ -16,7 +16,7 @@ class gebMahimahi : FishYieldItemBase
         super.Init();
         m_Type = "geb_Mahimahi";
         // Feeds during warm daylight hours (9 AM - 6 PM)
-        m_HourlyCycleLengthCoefs = {0/*1AM*/, 0/*2AM*/, 0/*3AM*/, 0/*4AM*/, 0/*5AM*/, 0/*6AM*/, 0/*7AM*/, 0/*8AM*/, 1/*9AM*/, 1/*10AM*/, 1/*11AM*/, 1/*12PM*/, 1/*1PM*/, 1/*2PM*/, 1/*3PM*/, 1/*4PM*/, 1/*5PM*/, 1/*6PM*/, 0/*7PM*/, 0/*8PM*/, 0/*9PM*/, 0/*10PM*/, 0/*11PM*/, 0/*12AM*/};
+        m_HourlyCycleLengthCoefs = {0/*1AM*/, 0/*2AM*/, 0/*3AM*/, 0/*4AM*/, 0/*5AM*/, 0/*6AM*/, 0/*7AM*/, 0/*8AM*/, 1/*9AM*/, 1/*10AM*/, 1/*11AM*/, 1/*12PM*/, 1/*1PM*/, 1/*2PM*/, 1/*3PM*/, 1/*4PM*/, 1/*5PM*/, 1/*6PM*/, 0/*7PM*/, 0/*8PM*/, 0/*9PM*/, 0/*10PM*/, 0/*11PM*/, 0/*12AM*/};   
         m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
         m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
     }
@@ -100,6 +100,32 @@ class gebCherrysalmon : FishYieldItemBase
     }
 };
 
+class gebChinooksalmon : FishYieldItemBase
+{
+    override void Init()
+    {
+        super.Init();
+        m_Type = "geb_Chinooksalmon";
+        // Feeds early morning and late evening (1 AM - 10 AM, 6 PM - 12 AM)
+        m_HourlyCycleLengthCoefs = {1/*1AM*/, 1/*2AM*/, 1/*3AM*/, 1/*4AM*/, 1/*5AM*/, 1/*6AM*/, 1/*7AM*/, 1/*8AM*/, 1/*9AM*/, 1/*10AM*/, 0/*11AM*/, 0/*12PM*/, 0/*1PM*/, 0/*2PM*/, 0/*3PM*/, 0/*4PM*/, 0/*5PM*/, 1/*6PM*/, 1/*7PM*/, 1/*8PM*/, 1/*9PM*/, 1/*10PM*/, 1/*11PM*/, 1/*12AM*/};
+        m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+        m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+    }
+};
+
+class gebSockeyesalmon : FishYieldItemBase
+{
+    override void Init()
+    {
+        super.Init();
+        m_Type = "geb_Sockeyesalmon";
+        // Feeds early morning and late evening (1 AM - 10 AM, 6 PM - 12 AM)
+        m_HourlyCycleLengthCoefs = {1/*1AM*/, 1/*2AM*/, 1/*3AM*/, 1/*4AM*/, 1/*5AM*/, 1/*6AM*/, 1/*7AM*/, 1/*8AM*/, 1/*9AM*/, 1/*10AM*/, 0/*11AM*/, 0/*12PM*/, 0/*1PM*/, 0/*2PM*/, 0/*3PM*/, 0/*4PM*/, 0/*5PM*/, 1/*6PM*/, 1/*7PM*/, 1/*8PM*/, 1/*9PM*/, 1/*10PM*/, 1/*11PM*/, 1/*12AM*/};
+        m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+        m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+    }
+};
+                                           
 class gebFlatheadmullet : FishYieldItemBase
 {
     override void Init()
@@ -118,7 +144,7 @@ class gebRedheadcichlid : FishYieldItemBase
     override void Init()
     {
         super.Init();
-        m_Type = "geb_Flatheadmullet";
+        m_Type = "geb_Redheadcichlid";
         // Feeds early morning and late evening (1 AM - 10 AM, 6 PM - 12 AM)
         m_HourlyCycleLengthCoefs = {1/*1AM*/, 1/*2AM*/, 1/*3AM*/, 1/*4AM*/, 1/*5AM*/, 1/*6AM*/, 1/*7AM*/, 1/*8AM*/, 1/*9AM*/, 1/*10AM*/, 0/*11AM*/, 0/*12PM*/, 0/*1PM*/, 0/*2PM*/, 0/*3PM*/, 0/*4PM*/, 0/*5PM*/, 1/*6PM*/, 1/*7PM*/, 1/*8PM*/, 1/*9PM*/, 1/*10PM*/, 1/*11PM*/, 1/*12AM*/};
         m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
@@ -131,20 +157,7 @@ class gebRoughneckrock : FishYieldItemBase
     override void Init()
     {
         super.Init();
-        m_Type = "geb_Flatheadmullet";
-        // Feeds early morning and late evening (1 AM - 10 AM, 6 PM - 12 AM)
-        m_HourlyCycleLengthCoefs = {1/*1AM*/, 1/*2AM*/, 1/*3AM*/, 1/*4AM*/, 1/*5AM*/, 1/*6AM*/, 1/*7AM*/, 1/*8AM*/, 1/*9AM*/, 1/*10AM*/, 0/*11AM*/, 0/*12PM*/, 0/*1PM*/, 0/*2PM*/, 0/*3PM*/, 0/*4PM*/, 0/*5PM*/, 1/*6PM*/, 1/*7PM*/, 1/*8PM*/, 1/*9PM*/, 1/*10PM*/, 1/*11PM*/, 1/*12AM*/};
-        m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
-        m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
-    }
-};
-
-class gebSeverum : FishYieldItemBase
-{
-    override void Init()
-    {
-        super.Init();
-        m_Type = "geb_Flatheadmullet";
+        m_Type = "geb_Roughneckrock";
         // Feeds early morning and late evening (1 AM - 10 AM, 6 PM - 12 AM)
         m_HourlyCycleLengthCoefs = {1/*1AM*/, 1/*2AM*/, 1/*3AM*/, 1/*4AM*/, 1/*5AM*/, 1/*6AM*/, 1/*7AM*/, 1/*8AM*/, 1/*9AM*/, 1/*10AM*/, 0/*11AM*/, 0/*12PM*/, 0/*1PM*/, 0/*2PM*/, 0/*3PM*/, 0/*4PM*/, 0/*5PM*/, 1/*6PM*/, 1/*7PM*/, 1/*8PM*/, 1/*9PM*/, 1/*10PM*/, 1/*11PM*/, 1/*12AM*/};
         m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
@@ -157,7 +170,7 @@ class gebBluetang : FishYieldItemBase
     override void Init()
     {
         super.Init();
-        m_Type = "geb_Flatheadmullet";
+        m_Type = "geb_Bluetang";
         // Feeds early morning and late evening (1 AM - 10 AM, 6 PM - 12 AM)
         m_HourlyCycleLengthCoefs = {1/*1AM*/, 1/*2AM*/, 1/*3AM*/, 1/*4AM*/, 1/*5AM*/, 1/*6AM*/, 1/*7AM*/, 1/*8AM*/, 1/*9AM*/, 1/*10AM*/, 0/*11AM*/, 0/*12PM*/, 0/*1PM*/, 0/*2PM*/, 0/*3PM*/, 0/*4PM*/, 0/*5PM*/, 1/*6PM*/, 1/*7PM*/, 1/*8PM*/, 1/*9PM*/, 1/*10PM*/, 1/*11PM*/, 1/*12AM*/};
         m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
@@ -170,7 +183,7 @@ class gebHairtailfish : FishYieldItemBase
     override void Init()
     {
         super.Init();
-        m_Type = "geb_Flatheadmullet";
+        m_Type = "geb_Hairtailfish";
         // Feeds early morning and late evening (1 AM - 10 AM, 6 PM - 12 AM)
         m_HourlyCycleLengthCoefs = {1/*1AM*/, 1/*2AM*/, 1/*3AM*/, 1/*4AM*/, 1/*5AM*/, 1/*6AM*/, 1/*7AM*/, 1/*8AM*/, 1/*9AM*/, 1/*10AM*/, 0/*11AM*/, 0/*12PM*/, 0/*1PM*/, 0/*2PM*/, 0/*3PM*/, 0/*4PM*/, 0/*5PM*/, 1/*6PM*/, 1/*7PM*/, 1/*8PM*/, 1/*9PM*/, 1/*10PM*/, 1/*11PM*/, 1/*12AM*/};
         m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
@@ -183,7 +196,7 @@ class gebHumpheadwrasse : FishYieldItemBase
     override void Init()
     {
         super.Init();
-        m_Type = "geb_Flatheadmullet";
+        m_Type = "geb_Humpheadwrasse";
         // Feeds early morning and late evening (1 AM - 10 AM, 6 PM - 12 AM)
         m_HourlyCycleLengthCoefs = {1/*1AM*/, 1/*2AM*/, 1/*3AM*/, 1/*4AM*/, 1/*5AM*/, 1/*6AM*/, 1/*7AM*/, 1/*8AM*/, 1/*9AM*/, 1/*10AM*/, 0/*11AM*/, 0/*12PM*/, 0/*1PM*/, 0/*2PM*/, 0/*3PM*/, 0/*4PM*/, 0/*5PM*/, 1/*6PM*/, 1/*7PM*/, 1/*8PM*/, 1/*9PM*/, 1/*10PM*/, 1/*11PM*/, 1/*12AM*/};
         m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
@@ -196,7 +209,7 @@ class gebSiamesetigerfish : FishYieldItemBase
     override void Init()
     {
         super.Init();
-        m_Type = "geb_Flatheadmullet";
+        m_Type = "geb_Siamesetigerfish";
         // Feeds early morning and late evening (1 AM - 10 AM, 6 PM - 12 AM)
         m_HourlyCycleLengthCoefs = {1/*1AM*/, 1/*2AM*/, 1/*3AM*/, 1/*4AM*/, 1/*5AM*/, 1/*6AM*/, 1/*7AM*/, 1/*8AM*/, 1/*9AM*/, 1/*10AM*/, 0/*11AM*/, 0/*12PM*/, 0/*1PM*/, 0/*2PM*/, 0/*3PM*/, 0/*4PM*/, 0/*5PM*/, 1/*6PM*/, 1/*7PM*/, 1/*8PM*/, 1/*9PM*/, 1/*10PM*/, 1/*11PM*/, 1/*12AM*/};
         m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
@@ -268,7 +281,6 @@ class gebYellowfintuna : FishYieldItemBase
         m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
     }
 };
-
 
 //Freshwater
 class gebNorthernpike : FishYieldItemBase
@@ -342,6 +354,19 @@ class gebWhitebass : FishYieldItemBase
     {
         super.Init();
         m_Type = "geb_Whitebass";
+        // Feeds early morning and late evening (1 AM - 10 AM, 6 PM - 12 AM)
+        m_HourlyCycleLengthCoefs = {1/*1AM*/, 1/*2AM*/, 1/*3AM*/, 1/*4AM*/, 1/*5AM*/, 1/*6AM*/, 1/*7AM*/, 1/*8AM*/, 1/*9AM*/, 1/*10AM*/, 0/*11AM*/, 0/*12PM*/, 0/*1PM*/, 0/*2PM*/, 0/*3PM*/, 0/*4PM*/, 0/*5PM*/, 1/*6PM*/, 1/*7PM*/, 1/*8PM*/, 1/*9PM*/, 1/*10PM*/, 1/*11PM*/, 1/*12AM*/};
+        m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+        m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+    }
+};
+
+class gebSeverum : FishYieldItemBase
+{
+    override void Init()
+    {
+        super.Init();
+        m_Type = "geb_Severum";
         // Feeds early morning and late evening (1 AM - 10 AM, 6 PM - 12 AM)
         m_HourlyCycleLengthCoefs = {1/*1AM*/, 1/*2AM*/, 1/*3AM*/, 1/*4AM*/, 1/*5AM*/, 1/*6AM*/, 1/*7AM*/, 1/*8AM*/, 1/*9AM*/, 1/*10AM*/, 0/*11AM*/, 0/*12PM*/, 0/*1PM*/, 0/*2PM*/, 0/*3PM*/, 0/*4PM*/, 0/*5PM*/, 1/*6PM*/, 1/*7PM*/, 1/*8PM*/, 1/*9PM*/, 1/*10PM*/, 1/*11PM*/, 1/*12AM*/};
         m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
