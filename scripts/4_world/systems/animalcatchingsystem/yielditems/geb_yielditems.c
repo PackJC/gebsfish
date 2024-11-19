@@ -7,7 +7,7 @@
   Contributions welcome via github
 
 */
-class YieldItemMackerel : FishYieldItemBase
+modded class YieldItemMackerel : FishYieldItemBase
 {
 	override void Init()
 	{
@@ -21,7 +21,7 @@ class YieldItemMackerel : FishYieldItemBase
 	}
 }
 
-class YieldItemCarp : FishYieldItemBase
+modded class YieldItemCarp : FishYieldItemBase
 {
 	override void Init()
 	{
@@ -35,7 +35,7 @@ class YieldItemCarp : FishYieldItemBase
 	}
 }
 
-class YieldItemSardines : FishYieldItemBase
+modded class YieldItemSardines : FishYieldItemBase
 {
 	override void Init()
 	{
@@ -49,7 +49,7 @@ class YieldItemSardines : FishYieldItemBase
 	}
 }
 
-class YieldItemBitterlings : FishYieldItemBase
+modded class YieldItemBitterlings : FishYieldItemBase
 {
 	override void Init()
 	{
@@ -66,7 +66,7 @@ class YieldItemBitterlings : FishYieldItemBase
 //---------//
 //cool new fish//
 //---------//
-class YieldItemWalleyePollock : FishYieldItemBase
+modded class YieldItemWalleyePollock : FishYieldItemBase
 {
 	override void Init()
 	{
@@ -80,7 +80,7 @@ class YieldItemWalleyePollock : FishYieldItemBase
 	}
 }
 
-class YieldItemSteelheadTrout : FishYieldItemBase
+modded class YieldItemSteelheadTrout : FishYieldItemBase
 {
 	override void Init()
 	{
@@ -94,7 +94,7 @@ class YieldItemSteelheadTrout : FishYieldItemBase
 	}
 }
 
-class YieldItemShrimp : FishYieldItemBase
+modded class YieldItemShrimp : FishYieldItemBase
 {
 	override void Init()
 	{
