@@ -2,7 +2,7 @@
 
   CREATED BY PACKJC
   https://github.com/PackJC/gebsfish
-  https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
+  https://steamcommunity.com/sharedfiles/filedetails/?id=2757109117
   https://discord.com/invite/G8uSGZ8yyf
   Contributions welcome via github
 
@@ -82,11 +82,11 @@ class FileReader
 			}
 			if (!newSaltFishDetected) {
 			//add new freshwater fish here to update old configs
-				FPrintln(salt_file, "geb_BLOODCLAM_CHANCE=41");
-				FPrintln(salt_file, "geb_MUSSEL_CHANCE=41");
-				FPrintln(salt_file, "geb_BLACKDEVILSNAIL_CHANCE=41");
-				FPrintln(salt_file, "geb_LOBSTER_CHANCE=41");
-				FPrintln(salt_file, "geb_BLUELOBSTER_CHANCE=41");
+				FPrintln(salt_file, "geb_BLOODCLAM_CHANCE=10");
+				FPrintln(salt_file, "geb_MUSSEL_CHANCE=10");
+				FPrintln(salt_file, "geb_BLACKDEVILSNAIL_CHANCE=10");
+				FPrintln(salt_file, "geb_LOBSTER_CHANCE=10");
+				FPrintln(salt_file, "geb_BLUELOBSTER_CHANCE=10");
 			}
 			CloseFile(salt_file);
 		}
@@ -139,66 +139,66 @@ class FileReader
 		FileHandle f = OpenFile(CONFIG_PATH, FileMode.WRITE);
 		switch (CONFIG_PATH) {
 		case "$profile:gebsfish/Saltwater.cfg":
-			FPrintln(f, "MACKEREL_CHANCE=41");
-			FPrintln(f, "geb_ANGELFISH_CHANCE=41");
-			FPrintln(f, "geb_BLUEMARLIN_CHANCE=41");
-			FPrintln(f, "geb_BONITA_CHANCE=41");
-			FPrintln(f, "geb_CHERRYSALMON_CHANCE=41");
-			FPrintln(f, "geb_FLATHEADMULLET_CHANCE=41");
-			FPrintln(f, "geb_LEOPARDSHARK_CHANCE=41");
-			FPrintln(f, "geb_PACIFICCOD_CHANCE=41");
-			FPrintln(f, "geb_REDHEADCICHLID_CHANCE=41");
-			FPrintln(f, "geb_ROUGHNECKROCK_CHANCE=41");
-			FPrintln(f, "geb_BLUETANG_CHANCE=41");
-			FPrintln(f, "geb_HAIRTAILFISH_CHANCE=41");
-			FPrintln(f, "geb_HUMPHEADWRASSE_CHANCE=41");
-			FPrintln(f, "geb_SIAMESETIGERFISH_CHANCE=41");
-			FPrintln(f, "geb_ASIANSEABASS_CHANCE=41");
-			FPrintln(f, "geb_JELLYFISH_CHANCE=41");
-			FPrintln(f, "geb_STARFISH_CHANCE=41");
-			FPrintln(f, "geb_KINGCRAB_CHANCE=41");
-			FPrintln(f, "geb_ANGELSHARK_CHANCE=41");
-			FPrintln(f, "geb_GREATWHITESHARK_CHANCE=41");
-			FPrintln(f, "geb_YELLOWFINTUNA_CHANCE=41");
-			FPrintln(f, "geb_MAHIMAHI_CHANCE=41");
-			FPrintln(f, "geb_SAILFISH_CHANCE=41");
-			FPrintln(f, "geb_BLOODCLAM_CHANCE=41");
-			FPrintln(f, "geb_MUSSEL_CHANCE=41");
-			FPrintln(f, "geb_BLACKDEVILSNAIL_CHANCE=41");
-			FPrintln(f, "geb_LOBSTER_CHANCE=41");
-			FPrintln(f, "geb_BLUELOBSTER_CHANCE=41");
+			FPrintln(f, "geb_ANGELFISH_CHANCE=10");
+			FPrintln(f, "geb_BLUEMARLIN_CHANCE=10");
+			FPrintln(f, "geb_BONITA_CHANCE=10");
+			FPrintln(f, "geb_CHERRYSALMON_CHANCE=10");
+			FPrintln(f, "geb_FLATHEADMULLET_CHANCE=10");
+			FPrintln(f, "geb_LEOPARDSHARK_CHANCE=10");
+			FPrintln(f, "geb_PACIFICCOD_CHANCE=10");
+			FPrintln(f, "geb_REDHEADCICHLID_CHANCE=10");
+			FPrintln(f, "geb_ROUGHNECKROCK_CHANCE=10");
+			FPrintln(f, "geb_BLUETANG_CHANCE=10");
+			FPrintln(f, "geb_HAIRTAILFISH_CHANCE=10");
+			FPrintln(f, "geb_HUMPHEADWRASSE_CHANCE=10");
+			FPrintln(f, "geb_SIAMESETIGERFISH_CHANCE=10");
+			FPrintln(f, "geb_ASIANSEABASS_CHANCE=10");
+			FPrintln(f, "geb_ANGELSHARK_CHANCE=10");
+			FPrintln(f, "geb_GREATWHITESHARK_CHANCE=10");
+			FPrintln(f, "geb_YELLOWFINTUNA_CHANCE=10");
+			FPrintln(f, "geb_MAHIMAHI_CHANCE=10");
+			FPrintln(f, "geb_SAILFISH_CHANCE=10");
+			FPrintln(f, "geb_CHINOOKSALMON_CHANCE=10");
+			FPrintln(f, "geb_SOCKEYESALMON_CHANCE=10");
+
+
+			FPrintln(f, "geb_JELLYFISH_CHANCE=10");
+			FPrintln(f, "geb_STARFISH_CHANCE=10");
+			FPrintln(f, "geb_KINGCRAB_CHANCE=10");
+			FPrintln(f, "geb_BLOODCLAM_CHANCE=10");
+			FPrintln(f, "geb_MUSSEL_CHANCE=10");
+			FPrintln(f, "geb_BLACKDEVILSNAIL_CHANCE=10");
+			FPrintln(f, "geb_LOBSTER_CHANCE=10");
+			FPrintln(f, "geb_BLUELOBSTER_CHANCE=10");
 			break;
 		case "$profile:gebsfish/Freshwater.cfg":
-			FPrintln(f, "CARP_CHANCE=66");
-			FPrintln(f, "geb_CRAYFISH_CHANCE=66");
-			FPrintln(f, "geb_BLUEGILL_CHANCE=66");
-			FPrintln(f, "geb_BLACKBASS_CHANCE=66");
-			FPrintln(f, "geb_CATFISH_CHANCE=66");
-			FPrintln(f, "geb_LARGEMOUTHBASS_CHANCE=66");
-			FPrintln(f, "geb_SMALLMOUTHBASS_CHANCE=66");
-			FPrintln(f, "geb_SUNFISH_CHANCE=66");
-			FPrintln(f, "geb_WALLEYE_CHANCE=66");
-			FPrintln(f, "geb_MINNOW_CHANCE=66");
-			FPrintln(f, "geb_NORTHERNPIKE_CHANCE=66");
-			FPrintln(f, "geb_PERCH_CHANCE=66");
-			FPrintln(f, "geb_SAUGER_CHANCE=66");
-			FPrintln(f, "geb_TROUT_CHANCE=66");
-			FPrintln(f, "geb_LAKETROUT_CHANCE=66");
-			FPrintln(f, "geb_BROOKTROUT_CHANCE=66");
-			FPrintln(f, "geb_BROWNTROUT_CHANCE=66");
-			FPrintln(f, "geb_CUTHROATTROUT_CHANCE=66");
-			FPrintln(f, "geb_WHITEBASS_CHANCE=66");
-			FPrintln(f, "geb_BOWFIN_CHANCE=66");
-			FPrintln(f, "geb_SLIMYSCULPIN_CHANCE=66");
-			FPrintln(f, "geb_CHINOOKSALMON_CHANCE=66");
-			FPrintln(f, "geb_SOCKEYESALMON_CHANCE=66");
-			FPrintln(f, "geb_SEVERUM_CHANCE=41");
+			FPrintln(f, "geb_CRAYFISH_CHANCE=10");
+			FPrintln(f, "geb_BLUEGILL_CHANCE=10");
+			FPrintln(f, "geb_BLACKBASS_CHANCE=10");
+			FPrintln(f, "geb_CATFISH_CHANCE=10");
+			FPrintln(f, "geb_LARGEMOUTHBASS_CHANCE=10");
+			FPrintln(f, "geb_SMALLMOUTHBASS_CHANCE=10");
+			FPrintln(f, "geb_SUNFISH_CHANCE=10");
+			FPrintln(f, "geb_WALLEYE_CHANCE=10");
+			FPrintln(f, "geb_MINNOW_CHANCE=10");
+			FPrintln(f, "geb_NORTHERNPIKE_CHANCE=10");
+			FPrintln(f, "geb_PERCH_CHANCE=10");
+			FPrintln(f, "geb_SAUGER_CHANCE=10");
+			FPrintln(f, "geb_TROUT_CHANCE=10");
+			FPrintln(f, "geb_LAKETROUT_CHANCE=10");
+			FPrintln(f, "geb_BROOKTROUT_CHANCE=10");
+			FPrintln(f, "geb_BROWNTROUT_CHANCE=10");
+			FPrintln(f, "geb_CUTHROATTROUT_CHANCE=10");
+			FPrintln(f, "geb_WHITEBASS_CHANCE=10");
+			FPrintln(f, "geb_BOWFIN_CHANCE=10");
+			FPrintln(f, "geb_SLIMYSCULPIN_CHANCE=10");
+			FPrintln(f, "geb_SEVERUM_CHANCE=10");
 			break;
 		case "$profile:gebsfish/Bugs.cfg":
-			FPrintln(f, "geb_FieldCricket=50");
-			FPrintln(f, "geb_GrassHopper=50");
-			FPrintln(f, "geb_GrubWorm=50");
-			FPrintln(f, "Worm=50");
+			FPrintln(f, "geb_FieldCricket=10");
+			FPrintln(f, "geb_GrassHopper=10");
+			FPrintln(f, "geb_GrubWorm=10");
+			FPrintln(f, "Worm=10");
 			break;
 		}
 		CloseFile(f);

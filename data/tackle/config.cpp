@@ -26,11 +26,7 @@ class CfgPatches
 class cfgVehicles
 {		
 		//Instantiate Needed Classes
-	class Bait;
-	class Worm;
-	class Hook;
 	class Rope;
-	class Jig;
 	class NotCookable;
 	class Edible_Base;
 	class WaterBottle;
