@@ -31,7 +31,7 @@ class CfgMods
 		overview = "DayZ Fish Expansion";
 		action="";
 		name="gebsfish";
-		credits="Geb & DayZ Modding Community";
+		creditsJson = "gebsfish/Scripts/Credits.json";
 		author="Geb";
 		authorID="0";
 		version="1.26";
