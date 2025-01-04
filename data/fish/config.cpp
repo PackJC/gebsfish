@@ -338,6 +338,13 @@ class cfgVehicles
 		itemSize[] = {1,1};
 		weight = 300;
 		rotationFlags = 17;
+		inventorySlot[]=
+		{
+			"Trap_Bait",
+			"Bait",
+			"Trap_Bait_1",
+			"Trap_Bait_2"
+		};
 	};
 	class geb_Northernpike: geb_FreshFish_Base {
 		scope = 2;
@@ -1049,8 +1056,8 @@ class cfgVehicles
 	};
 	class geb_AngelsharkFilletMeat: MackerelFilletMeat {
 		scope = 2;
-		displayName = "$STR_angelfish_fillet";
-		descriptionShort = "$STR_angelfish_desc";
+		displayName = "$STR_angelshark_fillet";
+		descriptionShort = "$STR_angelshark_desc";
 		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\angelshark_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"

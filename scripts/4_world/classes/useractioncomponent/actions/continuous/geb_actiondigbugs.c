@@ -100,37 +100,77 @@ class ActionDigBugs : ActionContinuousBase
 		return true;
 	}
 
-	override void OnFinishProgressServer(ActionData action_data)
-	{
-		float insect_sum;
-		float rndInsect;
+	// override void OnFinishProgressServer(ActionData action_data)
+	// {
+	// 	float insect_sum;
+	// 	float rndInsect;
 
-		string selected_insect = "";
+	// 	string selected_insect = "";
 
-		auto bug_chance_map = FileReader.GetBugChanceMap();
+	// 	auto bug_chance_map = FileReader.GetBugChanceMap();
 
-		foreach(auto insect_name, auto insect_chance : bug_chance_map) {
-			insect_sum += insect_chance;
+	// 	foreach(auto insect_name, auto insect_chance : bug_chance_map) {
+	// 		insect_sum += insect_chance;
+	// 	}
+
+	// 	rndInsect = Math.RandomFloatInclusive(0.0, insect_sum);
+
+	// 	foreach(auto insect_key, auto insect_value: bug_chance_map) {
+	// 		if (rndInsect <= insect_value && insect_value > 0 && insect_key.Length() > 1) {
+	// 			selected_insect = insect_key;
+	// 			selected_insect.Replace("_CHANCE", "");
+	// 			break;
+	// 		}
+	// 		rndInsect -= insect_value;
+	// 	}
+
+	// 	ItemBase bugs = ItemBase.Cast(GetGame().CreateObject(selected_insect, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
+
+
+	// 	bugs.SetQuantity(10, false);
+	// 	MiscGameplayFunctions.DealAbsoluteDmg(action_data.m_MainItem, 4);
+	// 	action_data.m_Player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
+
+	// }
+
+	override void OnFinishProgressServer(ActionData action_data){
+		float bugSum = 0.0;
+		float rndBug = 0.0;
+		string selectedBug = "";
+
+		// Calculate the total spawn chance for all bugs
+		foreach (BugEntry bug1 : m_gebsConfig.Bugs)
+		{
+			bugSum += bug1.CatchChance;
 		}
 
-		rndInsect = Math.RandomFloatInclusive(0.0, insect_sum);
+		// Generate a random value within the total spawn chance
+		rndBug = Math.RandomFloatInclusive(0.0, bugSum);
 
-		foreach(auto insect_key, auto insect_value: bug_chance_map) {
-			if (rndInsect <= insect_value && insect_value > 0 && insect_key.Length() > 1) {
-				selected_insect = insect_key;
-				selected_insect.Replace("_CHANCE", "");
+		// Select a bug based on the random value
+		foreach (BugEntry bug : m_gebsConfig.Bugs)
+		{
+			if (rndBug <= bug.CatchChance && bug.CatchChance > 0)
+			{
+				selectedBug = bug.Classname;
 				break;
 			}
-			rndInsect -= insect_value;
+			rndBug -= bug.CatchChance;
 		}
 
-		ItemBase bugs = ItemBase.Cast(GetGame().CreateObject(selected_insect, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
+		// Spawn the selected bug if one was found
+		if (selectedBug != "")
+		{
+			ItemBase bugs = ItemBase.Cast(GetGame().CreateObject(selectedBug, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
+			if (bugs)
+			{
+				bugs.SetQuantity(10, false);
+			}
+		}
 
-
-		bugs.SetQuantity(10, false);
+		// Apply damage to the main item and update player's specialty weight
 		MiscGameplayFunctions.DealAbsoluteDmg(action_data.m_MainItem, 4);
 		action_data.m_Player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
-
 	}
 
 	void SetDiggingAnimation(ItemBase item)

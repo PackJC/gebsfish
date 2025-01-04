@@ -27,6 +27,8 @@ class cfgVehicles
 {		
 		//Instantiate Needed Classes
 	class Rope;
+	class Jig;
+	class Worm;
 	class NotCookable;
 	class Edible_Base;
 	class WaterBottle;
@@ -612,13 +614,13 @@ class cfgVehicles
 
 	/*
 
-			LURES & SPINNERS 
+			HOOKS
 
 	*/
+
 	class geb_Lure: Jig
 	{
 	};
-
 	class geb_SpinnerBait1: geb_Lure {
 		scope = 2;
 		displayName = "$STR_spinnerbait1";
@@ -811,4 +813,5 @@ class cfgVehicles
 			};
 		};
 	};
+
 };
