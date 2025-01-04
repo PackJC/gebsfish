@@ -1,6 +1,4 @@
-
 ## Fish Classes
-
 geb_Crayfish
 geb_CrayfishFilletMeat
 geb_Northernpike
@@ -105,13 +103,11 @@ geb_SockeyeSalmon
 
 
 ##Item Class Names
-
 geb_BigGameFishingLine
 geb_SaltwaterFishingLine
 geb_FlyFishingLine
 
 ## Knives
-
 geb_BlueFishKnife
 geb_OrangeFishKnife
 geb_GreenFishKnife
@@ -130,12 +126,10 @@ geb_Lure3
 geb_Lure4
 
 ## Tackles
-
 geb_OldRedTackle
 geb_OldPurpleTackle
 geb_OldGreenTackle
 geb_OldBlueTackle
-
 geb_YellowTackle
 geb_RedTackle
 geb_PurpleTackle
@@ -147,17 +141,14 @@ geb_GreenTackle
 geb_BrownTackle
 geb_CamoTackle
 geb_BlueTackle
-
 geb_FunPurpleTackle
 geb_FunYellowTackle
 geb_FunGreenTackle
 geb_FunRedTackle
-
 geb_SmallTackle
 geb_WormContainer
 
 ## Tools
-
 geb_BugContainer
 geb_MinnowBucket
 geb_BambooFishingNet
@@ -183,6 +174,3 @@ geb_RedFishShirt
 geb_GreenFishShirt
 geb_BlueFishShirt
 geb_PurpleFishShirt
-
-
-
