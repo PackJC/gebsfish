@@ -190,7 +190,7 @@ class gebsfishConfig{
         GrubWorm.CatchChance = 0.75;
 
         BugEntry Worm = new BugEntry();
-        Worm.Classname = "geb_Worm";
+        Worm.Classname = "Worm";
         Worm.CatchChance = 0.25;
 
         Bugs.Insert(FieldCricket);
