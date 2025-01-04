@@ -99,6 +99,64 @@ class cfgVehicles
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_purplefishknife.paa"};
 	};
    
+
+	/*
+		FISHING RODS
+	*/
+
+	class FishingRod_Base_New : FishingRod_Base {
+		inventorySlot[] += {
+			"Shoulder",
+			"Melee",
+			"fishingpole",
+			"fishingrod1",
+			"fishingrod2",
+			"fishingrod3",
+			"fishingrod4",
+			"fishingrod5",
+			"fishingrod6",
+			"fishingrod7",
+			"fishingrod8",
+			"fishingrod9",
+			"fishingrod10"
+		};
+	}; 
+	class FishingRod : FishingRod_Base_New
+	{
+		repairableWithKits[]={5};
+		repairCosts[]={30, 25};
+		hiddenSelections[]={"zbytek"};
+		hiddenSelectionsTextures[]={"\DZ\gear\tools\data\fishing_rod_co.paa"};
+	};
+	class geb_RedFishingRod: FishingRod {
+		scope = 2;
+		displayName = "$STR_redrod";
+		descriptionShort = "$STR_CfgVehicles_FishingRod1";
+		hiddenSelections[] = {"zbytek"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_fishingrod_red.paa"};
+	};
+	class geb_GreenFishingRod: FishingRod {
+		scope = 2;
+		displayName = "$STR_greenrod";
+		descriptionShort = "$STR_CfgVehicles_FishingRod1";
+		hiddenSelections[] = {"zbytek"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_fishingrod_green.paa"};
+	};
+	class geb_BlueFishingRod: FishingRod {
+		scope = 2;
+		displayName = "$STR_bluerod";
+		descriptionShort = "$STR_CfgVehicles_FishingRod1";
+		hiddenSelections[] = {"zbytek"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_fishingrod_blue.paa"};
+	};
+	class geb_PurpleFishingRod: FishingRod {
+		scope = 2;
+		displayName = "$STR_purplerod";
+		descriptionShort = "$STR_CfgVehicles_FishingRod1";
+		hiddenSelections[] = {"zbytek"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_fishingrod_purple.paa"};
+	};	
+
 	class geb_BambooFishingNet : Container_Base {
 		scope = 2;
 		rotationFlags = 17;
@@ -144,4 +202,7 @@ class cfgVehicles
 			};
 		};
 	};
+
+
+	
 };
