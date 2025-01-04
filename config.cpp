@@ -43,6 +43,11 @@ class CfgMods
 			"World",
 			"Mission"
 		};
+		defines[]=
+		{
+			"Gebsfish",
+			"GEBSFISH"
+		};
 		class defs
 		{
 			class gameScriptModule
@@ -71,4 +76,26 @@ class CfgMods
 			};
 		};
 	};
+};
+
+class CfgSoundSets {
+    class PredatorWarning_SoundSet {
+        soundShaders[] = { "PredatorWarning_SoundShader" };
+        volumeFactor = 1.0;
+        spatial = 1;
+        doppler = 0;
+        loop = 0;
+    };
+};
+
+class CfgSoundShaders {
+    class PredatorWarning_SoundShader {
+        samples[] = { 
+			{ "gebsfish\data\sounds\predator.ogg", 1 },
+			{ "gebsfish\data\sounds\loon-wail-3x.ogg", 1 } ,
+			{ "gebsfish\data\sounds\loon-short-warning.ogg", 1 } 
+			
+		};
+        volume = 1.0;
+    };
 };

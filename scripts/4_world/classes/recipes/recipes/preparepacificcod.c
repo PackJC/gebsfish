@@ -3,24 +3,7 @@ class PreparePacificcod extends PrepareFish
 	int ran;	
 	override void Init()
 	{
-		m_Name = "#STR_gutandprepare0";
-		m_IsInstaRecipe = false;//should this recipe be performed instantly without animation
-		m_AnimationLength = 1;//animation length in relative time units
-		m_Specialty = 0.02;// value > 0 for roughness, value < 0 for precision
-		
-		
-		//conditions
-		m_MinDamageIngredient[0] = -1;//-1 = disable check
-		m_MaxDamageIngredient[0] = 3;//-1 = disable check
-		
-		m_MinQuantityIngredient[0] = -1;//-1 = disable check
-		m_MaxQuantityIngredient[0] = -1;//-1 = disable check
-		
-		m_MinDamageIngredient[1] = -1;//-1 = disable check
-		m_MaxDamageIngredient[1] = 3;//-1 = disable check
-		
-		m_MinQuantityIngredient[1] = -1;//-1 = disable check
-		m_MaxQuantityIngredient[1] = -1;//-1 = disable check
+		super.Init();
 		//----------------------------------------------------------------------------------------------------------------------
 		
 		//INGREDIENTS
@@ -31,47 +14,13 @@ class PreparePacificcod extends PrepareFish
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
 		m_IngredientAddQuantity[0] = 0;// 0 = do nothing
 		m_IngredientDestroy[0] = true;//true = destroy, false = do nothing
-		m_IngredientUseSoftSkills[0] = false;// set 'true' to allow modification of the values by softskills on this ingredient
+
+
 		
-		//ingredient 2
-		InsertIngredient(1,"Sickle");//you can insert multiple ingredients this way
-		InsertIngredient(1,"KukriKnife");
-		InsertIngredient(1,"FangeKnife");
-		InsertIngredient(1,"Hacksaw");
-		InsertIngredient(1,"HandSaw");
-		InsertIngredient(1,"KitchenKnife");
-		InsertIngredient(1,"SteakKnife");
-		InsertIngredient(1,"StoneKnife");
-		InsertIngredient(1,"Cleaver");
-		InsertIngredient(1,"CombatKnife");
-		InsertIngredient(1,"HuntingKnife");
-		InsertIngredient(1,"Machete");
-		InsertIngredient(1,"CrudeMachete");
-		InsertIngredient(1,"OrientalMachete");
-		InsertIngredient(1,"WoodAxe");
-		InsertIngredient(1,"Hatchet");
-		InsertIngredient(1,"FirefighterAxe");
-		InsertIngredient(1,"Sword");
-		InsertIngredient(1,"AK_Bayonet");
-		InsertIngredient(1,"M9A1_Bayonet");
-		InsertIngredient(1,"Mosin_Bayonet");
-		InsertIngredient(1,"SKS_Bayonet");
-		InsertIngredient(1,"BoneKnife");
-		InsertIngredient(1,"geb_BlueFishKnife");
-		InsertIngredient(1,"geb_OrangeFishKnife");
-		InsertIngredient(1,"geb_GreenFishKnife");
-		InsertIngredient(1,"geb_YellowFishKnife");
-		InsertIngredient(1,"geb_RedFishKnife");
-		InsertIngredient(1,"geb_PurpleFishKnife");
-		
-		m_IngredientAddHealth[1] = -12;// 0 = do nothing
-		m_IngredientSetHealth[1] = -1; // -1 = do nothing
-		m_IngredientAddQuantity[1] = 0;// 0 = do nothing
-		m_IngredientDestroy[1] = false;// false = do nothing
-		m_IngredientUseSoftSkills[1] = true;// set 'true' to allow modification of the values by softskills on this ingredient
+		m_IngredientAddHealth[1] = -4;// 0 = do nothing // damages health of knife/tool from the fillet action
 		//----------------------------------------------------------------------------------------------------------------------
-		ran = Math.RandomFloatInclusive(1.0,2.0);
-		for (int i = 0; i < 2; ++i){
+		ran = Math.RandomFloatInclusive(m_gebsConfig.PacificCod.MeatMin,m_gebsConfig.PacificCod.MeatMax);
+		for (int i = 0; i < ran; ++i){
 			AddResult("geb_PacificcodFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
@@ -83,6 +32,7 @@ class PreparePacificcod extends PrepareFish
 			m_ResultReplacesIngredient[i] = 0;// value == -1 means do nothing; a value >= 0 means this result will transfer item propertiesvariables, attachments etc.. from an ingredient value
 		}
 		//----------------------------------------------------------------------------------------------------------------------
+		
 	}
 
 	override bool CanDo(ItemBase ingredients[], PlayerBase player)//final check for recipe's validity

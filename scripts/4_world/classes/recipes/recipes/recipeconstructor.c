@@ -29,7 +29,7 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareNorthernpike);
 		RegisterRecipe(new PreparePerch);
 		RegisterRecipe(new PrepareSauger);
-		RegisterRecipe(new PrepareTrout);
+		RegisterRecipe(new PrepareRainbowTrout);
 		RegisterRecipe(new PrepareBrownTrout);
 		RegisterRecipe(new PrepareBrookTrout);
 		RegisterRecipe(new PrepareLakeTrout);
