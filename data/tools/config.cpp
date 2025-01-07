@@ -119,6 +119,7 @@ class cfgVehicles
 	}; 
 	class FishingRod : FishingRod_Base_New
     {
+		inventorySlot[]+={"Shoulder", "Melee", "fishingpole", "fishingrod1", "fishingrod2", "fishingrod3", "fishingrod4", "fishingrod5", "fishingrod6", "fishingrod7", "fishingrod8", "fishingrod9", "fishingrod10"};
         repairableWithKits[]={5};
         repairCosts[]={30, 25};
         hiddenSelections[]={"zbytek"};
