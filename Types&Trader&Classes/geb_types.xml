@@ -29,8 +29,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<types>
-      <type name="geb_ChinookSalmon">
+	<type name="geb_ChinookSalmon">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -1103,57 +1102,7 @@
 		<cost>100</cost>
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
-	</type>	     
-	
-	
-
-	<!--- FISHING LINE -->
-	<type name="geb_BigGameFishingLine">
-        <nominal>8</nominal>
-        <lifetime>7200</lifetime>
-        <restock>0</restock>
-        <min>3</min>
-        <quantmin>-1</quantmin>
-        <quantmax>-1</quantmax>
-        <cost>100</cost>
-        <flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="0" deloot="0"/>
-        <category name="tools"/>
-        <usage name="Coast"/>
-        <usage name="Farm"/>
-        <usage name="Hunting"/>
-        <usage name="Village"/>
 	</type>
-	<type name="geb_SaltwaterFishingLine">
-        <nominal>8</nominal>
-        <lifetime>7200</lifetime>
-        <restock>0</restock>
-        <min>3</min>
-        <quantmin>-1</quantmin>
-        <quantmax>-1</quantmax>
-        <cost>100</cost>
-        <flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="0" deloot="0"/>
-        <category name="tools"/>
-        <usage name="Coast"/>
-        <usage name="Farm"/>
-        <usage name="Hunting"/>
-        <usage name="Village"/>
-	</type>
-	<type name="geb_FlyFishingLine">
-        <nominal>8</nominal>
-        <lifetime>7200</lifetime>
-        <restock>0</restock>
-        <min>3</min>
-        <quantmin>-1</quantmin>
-        <quantmax>-1</quantmax>
-        <cost>100</cost>
-        <flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="0" deloot="0"/>
-        <category name="tools"/>
-        <usage name="Coast"/>
-        <usage name="Farm"/>
-        <usage name="Hunting"/>
-        <usage name="Village"/>
-	</type>
-	
 	
 	<!-- FISHING RODS -->
 	<type name="geb_RedFishingRod">

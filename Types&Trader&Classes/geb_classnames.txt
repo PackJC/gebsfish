@@ -101,12 +101,6 @@ geb_SockeyeSalmonFilletMeat
 geb_ChinookSalmon
 geb_SockeyeSalmon 
 
-
-##Item Class Names
-geb_BigGameFishingLine
-geb_SaltwaterFishingLine
-geb_FlyFishingLine
-
 ## Knives
 geb_BlueFishKnife
 geb_OrangeFishKnife

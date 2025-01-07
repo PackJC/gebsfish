@@ -7,20 +7,6 @@
   "IsExchange": 0,
   "Items": [
     {
-      "ClassName": "geb_BigGameFishingline",
-      "MaxPriceThreshold": 50,
-      "MinPriceThreshold": 50,
-      "SellPricePercent": 20.0,
-      "MaxStockThreshold": 1,
-      "MinStockThreshold": 1,
-      "QuantityPercent": -1,
-      "SpawnAttachments": [],
-      "Variants": [
-        "geb_SaltwaterFishingline",
-        "geb_FlyFishingline"
-      ]
-    },
-    {
       "ClassName": "geb_BambooFishingNet",
       "MaxPriceThreshold": 200,
       "MinPriceThreshold": 200,

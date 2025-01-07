@@ -101,11 +101,6 @@
 		geb_AngelsharkFilletMeat,					     	 S,		 1200,		 600
 		geb_YellowfintunaFilletMeat,					     S,		 1200,		 600
 
-	<Category> Fishing Lines
-        geb_Biggamefishingline,				                 *,		 250,	     125
-        geb_Saltwaterfishingline,				             *,		 250,	     125
-        geb_Flyfishingline,				                     *,		 250,	     125
-
 	<Category> Fishing Rods
         geb_RedFishingRod,				                     *,		 600,	     300
         geb_BlueFishingRod,				                     *,		 600,	     300
