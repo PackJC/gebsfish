@@ -37,7 +37,7 @@ class cfgVehicles
 
 	*/
     class geb_FishKnife_Base: HuntingKnife{
-        scope=2;
+        scope=0;
 		displayName="Fish Knife Base";
 		descriptionShort="Fish Knife Base Class";
 		model="\gebsfish\data\tools\geb_bluefishknife.p3d";
