@@ -35,7 +35,7 @@ class cfgVehicles
 
 	//Base classes for fish
 	class geb_FreshFish_Base: Edible_Base {
-		scope = 2;
+		scope = 0;
 		itemSize[] = {5,2};
 		weight = 1700;
 		debug_ItemCategory = 6;
@@ -114,7 +114,7 @@ class cfgVehicles
 	};
 
 	class geb_SaltFish_Base: Edible_Base {
-		scope = 2;
+		scope = 0;
 		itemSize[] = {5,2};
 		weight = 1700;
 		debug_ItemCategory = 6;
@@ -193,7 +193,7 @@ class cfgVehicles
 	};
 
 	class geb_LargeFish_Base: Edible_Base {
-		scope = 2;
+		scope = 0;
 		debug_ItemCategory = 6;
 		weight = 3700;
 		itemSize[] = {25,8};
@@ -271,7 +271,7 @@ class cfgVehicles
 		};
 	};
     class geb_Trout_Base: geb_FreshFish_Base {
-		scope = 2;
+		scope = 0;
 		model = "\gebsfish\data\fish\geb_Trout_Base.p3d";
 	};
 	

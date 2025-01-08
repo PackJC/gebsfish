@@ -114,14 +114,6 @@
       ]
     },
     {
-      "CategoryName": "Fishing Lines",
-      "Products": [
-        "geb_Biggamefishingline,1,-1,1,250,125",
-        "geb_Saltwaterfishingline,1,-1,1,250,125",
-        "geb_Flyfishingline,1,-1,1,250,125"
-      ]
-    },
-    {
       "CategoryName": "Fishing Rods",
       "Products": [
         "geb_RedFishingRod,1,-1,1,600,300",
