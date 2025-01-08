@@ -62,7 +62,7 @@ modded class MissionBase{
 				//Print("[gebsfish] missionbase load");
 				GetGebSettingsConfig();
 
-				//bank.ClearAllRegisteredItems();
+				bank.ClearAllRegisteredItems();
 				//Initialize yield data
 				Print("[gebsfish] [INIT] Initializing yield data.");
 				//start loading fish data
