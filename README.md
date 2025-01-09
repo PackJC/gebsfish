@@ -2,7 +2,6 @@
 
 [![GebsFish Discord](https://i.imgur.com/4IyA522.png)](https://discord.gg/G8uSGZ8yyf)
 
-
 # Mod Information
 This mod currently adds 41 new fish, 9 crustaceans, 6 knives, 8 lures/baits, 21 tackle boxes, 7 tools, 4 insect baits, 10 clothing items.
 
