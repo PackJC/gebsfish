@@ -279,3 +279,15 @@ class GebsFishData : WorldData {
         Print("[gebsfish] [InitYieldBank] Initialization of yield data complete.");
 	}
 }
+
+modded class EnochData : GebsFishData {
+
+}
+
+modded class SakhalData : GebsFishData {
+
+}
+
+modded class ChernarusPlusData : GebsFishData {
+
+}
