@@ -16,5 +16,17 @@ modded class PlayerBase extends ManBase
                 PlaySoundSet(soundEffect, soundSetName, 0, 0); // Play the sound on the client
             }
         }
+
+        switch(rpc_type)
+        {
+            case RPC_GEBSCONFIG_SYNC: // this case is for grabbing fishing config from the server
+            {
+                Param1<gebsfishConfig> configParams;
+                if(!ctx.Read(configParams))
+                    return;
+                SetGebsfishConfig(configParams.param1);
+                break;
+            }
+        }
     }
 }
