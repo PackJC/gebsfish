@@ -93,7 +93,7 @@ class gebsfishConfig {
                     return;
                 }
             }
-        }
+        
         Print("[gebsfish] [JSON] Generating settings file.");
         //Save config file version to file
         ConfigVersion = CONFIG_VERSION;
@@ -217,6 +217,7 @@ class gebsfishConfig {
 
         //Save it
         Save();
+        }
     }
     void Save(){
         if (!FileExist(ModFolder)){
