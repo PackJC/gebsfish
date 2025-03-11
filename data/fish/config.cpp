@@ -295,10 +295,10 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\blackbass.p3d";
 		rotationFlags = 17;
 	};
-	class geb_Catfish: geb_FreshFish_Base {
+	class geb_FlatheadCatfish: geb_FreshFish_Base {
 		scope = 2;
-		displayName = "$STR_catfish";
-		descriptionShort = "$STR_catfish_desc";
+		displayName = "$STR_flatheadcatfish";
+		descriptionShort = "$STR_flatheadcatfish_desc";
 		model = "\gebsfish\data\fish\catfish.p3d";
 		itemSize[] = {7,2};
 		weight = 4000;
@@ -330,10 +330,10 @@ class cfgVehicles
 		descriptionShort = "$STR_largemouthbass_desc";
 		model = "\gebsfish\data\fish\largemouthbass.p3d";
 	};
-	class geb_Minnow: geb_FreshFish_Base {
+	class geb_FatheadMinnow: geb_FreshFish_Base {
 		scope = 2;
-		displayName = "$STR_minnow";
-		descriptionShort = "$STR_minnow_desc";
+		displayName = "$STR_fatheadminnow";
+		descriptionShort = "$STR_fatheadminnow_desc";
 		model = "\gebsfish\data\fish\minnow.p3d";
 		itemSize[] = {1,1};
 		weight = 300;
@@ -354,10 +354,10 @@ class cfgVehicles
 		itemSize[] = {6,2};
 		weight = 4000;
 	};
-	class geb_Perch: geb_FreshFish_Base {
+	class geb_YellowPerch: geb_FreshFish_Base {
 		scope = 2;
-		displayName = "$STR_perch";
-		descriptionShort = "$STR_perch_desc";
+		displayName = "$STR_yellowperch";
+		descriptionShort = "$STR_yellowperch_desc";
 		model = "\gebsfish\data\fish\perch.p3d";
 		itemSize[] = {4,3};
 		weight = 3000;
@@ -370,10 +370,10 @@ class cfgVehicles
 		itemSize[] = {4,1};
 		weight = 1500;
 	};
-	class geb_Trout: geb_Trout_Base {
+	class geb_RainbowTrout: geb_Trout_Base {
 		scope = 2;
-		displayName = "$STR_trout";
-		descriptionShort = "$STR_trout_desc";
+		displayName = "$STR_rainbowtrout";
+		descriptionShort = "$STR_rainbowtrout_desc";
 		model = "\gebsfish\data\fish\rainbowtrout.p3d";
 		itemSize[] = {5,2};
 		weight = 1700;
@@ -742,10 +742,10 @@ class cfgVehicles
 			"\gebsfish\data\fish\sunfish_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_CatfishFilletMeat: CarpFilletMeat {
+	class geb_FlatheadCatfishFilletMeat: CarpFilletMeat {
 		scope = 2;
-		displayName = "$STR_catfish_fillet";
-		descriptionShort = "$STR_catfish_desc";
+		displayName = "$STR_flatheadcatfish_fillet";
+		descriptionShort = "$STR_flatheadcatfish_desc";
 		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\catfish_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
@@ -760,10 +760,10 @@ class cfgVehicles
 			"\gebsfish\data\fish\largemouthbass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_MinnowFilletMeat: CarpFilletMeat {
+	class geb_FatheadMinnowFilletMeat: CarpFilletMeat {
 		scope = 2;
-		displayName = "$STR_minnow_fillet";
-		descriptionShort = "$STR_minnow_desc";
+		displayName = "$STR_fatheadminnow_fillet";
+		descriptionShort = "$STR_fatheadminnow_desc";
 		model = "\dz\gear\food\carp_fillet.p3d";
 	};
 	class geb_NorthernpikeFilletMeat: CarpFilletMeat {
@@ -775,10 +775,10 @@ class cfgVehicles
 			"\gebsfish\data\fish\northernpike_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_PerchFilletMeat: CarpFilletMeat {
+	class geb_YellowPerchFilletMeat: CarpFilletMeat {
 		scope = 2;
-		displayName = "$STR_perch_fillet";
-		descriptionShort = "$STR_perch_desc";
+		displayName = "$STR_yellowperch_fillet";
+		descriptionShort = "$STR_yellowperch_desc";
 		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\perch_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
@@ -799,10 +799,10 @@ class cfgVehicles
 		descriptionShort = "$STR_crayfish_desc";
 		model = "\gebsfish\data\fish\crayfishtail.p3d";
 	};
-	class geb_TroutFilletMeat: CarpFilletMeat {
+	class geb_RainbowTroutFilletMeat: CarpFilletMeat {
 		scope = 2;
-		displayName = "$STR_trout_fillet";
-		descriptionShort = "$STR_trout_desc";
+		displayName = "$STR_rainbowtrout_fillet";
+		descriptionShort = "$STR_rainbowtrout_desc";
 		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\trout_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
