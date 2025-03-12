@@ -9,7 +9,7 @@ class PrepareCatfish extends PrepareFish
 		
 		//INGREDIENTS
 		//ingredient 1
-		InsertIngredient(0,"geb_Catfish");//you can insert multiple ingredients this way
+		InsertIngredient(0,"geb_FlatheadCatfish");//you can insert multiple ingredients this way
 
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
@@ -22,7 +22,7 @@ class PrepareCatfish extends PrepareFish
 		//----------------------------------------------------------------------------------------------------------------------
 		ran = Math.RandomFloatInclusive(m_gebsConfig.Catfish.MeatMin,m_gebsConfig.Catfish.MeatMax);
 		for (int i = 0; i < ran; ++i){
-			AddResult("geb_CatfishFilletMeat");//add results here
+			AddResult("geb_FlatheadCatfishFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
 			m_ResultSetHealth[i] = -1;//-1 = do nothing
