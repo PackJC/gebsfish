@@ -1,16 +1,10 @@
-// Define RPC constant for predator sound
-const int RPC_PLAY_PREDATOR_SOUND = 2757509117; // Unique ID for the predator sound RPC
-
-class gebsfishConfig{
-
+class gebsfishConfig {
+    
     //Define Config Version
     static const string CONFIG_VERSION = "0.1";
 
-    // Define RPC constant for predator sound
-    const int RPC_PLAY_PREDATOR_SOUND = 2757509117; // Unique ID for the predator sound RPC
-
     //config location
-    private const static string ModFolder = "$profile:\\gebsfish\\";
+    private const static string ModFolder = "$profile:\\Gebs\\";
     private const static string SettingsConfigFile = "fishingsettings.json";
     private const static string FileName = "fishingsettings";
     private const static string FileType = ".json";
@@ -84,7 +78,7 @@ class gebsfishConfig{
     ref ContainerJunkConf ContainerJunk;
 
     void Load(){
-        if (GetGame().IsDedicatedServer()){
+        if (GetGame().IsDedicatedServer() || GetGame().IsClient()){
             if (FileExist(ModFolder + SettingsConfigFile)){
                 //If config exists, load file
                 JsonFileLoader<gebsfishConfig>.JsonLoadFile(ModFolder + SettingsConfigFile, this);
@@ -99,6 +93,7 @@ class gebsfishConfig{
                     return;
                 }
             }
+        
         Print("[gebsfish] [JSON] Generating settings file.");
         //Save config file version to file
         ConfigVersion = CONFIG_VERSION;
@@ -224,7 +219,6 @@ class gebsfishConfig{
         Save();
         }
     }
-
     void Save(){
         if (!FileExist(ModFolder)){
             //if config folder doesn't exist, create it.
@@ -240,7 +234,7 @@ class gebsfishConfig{
 class GenSetConf {
     string DebugInfo = "Turns debug mode on to print extra logs to the script.log file";
     bool DebugLogs = 0;
-    string FishQualityInfo = "Sets the base value for the fish quanity bar";
+    string FishQualityInfo = "Sets the base value for the fish quantity bar";
     float FishQuality = 1;
     
 };
@@ -1095,7 +1089,7 @@ class ContainerJunkConf {
 };
 
 //Save config data
-ref gebsfishConfig m_gebsConfig;
+protected ref gebsfishConfig m_gebsConfig;
 // Helper function to return config data storage object
 static gebsfishConfig GetGebSettingsConfig(){
     if (!m_gebsConfig){
@@ -1109,6 +1103,12 @@ static gebsfishConfig GetGebSettingsConfig(){
         }
     }
     return m_gebsConfig;
+}
+
+static void SetGebsfishConfig(gebsfishConfig config)
+{
+    Print("Gebs fishing config Settings Received From Server");
+    m_gebsConfig = config;
 }
 //Prevent double printing in log file since it loads the yield data twice
 bool gebsMissionLoaded = false;
