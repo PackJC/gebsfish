@@ -88,16 +88,16 @@
                 "geb_SunfishFilletMeat,1,-1,-1,-1,800",
                 "geb_WhitebassFilletMeat,1,-1,-1,-1,800",
                 "geb_BlackbassFilletMeat,1,-1,-1,-1,800",
-                "geb_TroutFilletMeat,1,-1,-1,-1,800",
+                "geb_RainbowTroutFilletMeat,1,-1,-1,-1,800",
                 "geb_BrownTroutFilletMeat,1,-1,-1,-1,800",
                 "geb_BrookTroutFilletMeat,1,-1,-1,-1,800",
                 "geb_LakeTroutFilletMeat,1,-1,-1,-1,800",
                 "geb_CutthroatTroutFilletMeat,1,-1,-1,-1,800",
                 "geb_MahimahiFilletMeat,1,-1,-1,-1,800",
                 "geb_SailfishFilletMeat,1,-1,-1,-1,800",
-                "geb_PerchFilletMeat,1,-1,-1,-1,800",
-                "geb_CatfishFilletMeat,1,-1,-1,-1,800",
-                "geb_MinnowFilletMeat,1,-1,-1,-1,800",
+                "geb_YellowPerchFilletMeat,1,-1,-1,-1,800",
+                "geb_FlatheadCatfishFilletMeat,1,-1,-1,-1,800",
+                "geb_FatheadMinnowFilletMeat,1,-1,-1,-1,800",
                 "geb_BluegillFilletMeat,1,-1,-1,-1,800",
                 "geb_SaugerFilletMeat,1,-1,-1,-1,800",
                 "geb_BowfinFilletMeat,1,-1,-1,-1,800",
@@ -187,8 +187,8 @@
                 "geb_Largemouthbass,1,-1,-1,-1,500",
                 "geb_Smallmouthbass,1,-1,-1,-1,500",
                 "geb_Bluegill,1,-1,-1,-1,500",
-                "geb_Trout,1,-1,-1,-1,500",
-                "geb_Perch,1,-1,-1,-1,500",
+                "geb_RainbowTrout,1,-1,-1,-1,500",
+                "geb_YellowPerch,1,-1,-1,-1,500",
                 "geb_Sauger,1,-1,-1,-1,500",
                 "geb_Sauger,1,-1,-1,-1,500",
                 "geb_BrownTrout,1,-1,-1,-1,500",
@@ -204,7 +204,7 @@
                 "geb_Chinooksalmon,1,-1,-1,-1,500",
                 "geb_Sockeyesalmon,1,-1,-1,-1,500",
                 "geb_Sunfish,1,-1,-1,-1,500",
-                "geb_Catfish,1,-1,-1,-1,500"
+                "geb_FlatheadCatfish,1,-1,-1,-1,500"
             ]
         }
     ]
