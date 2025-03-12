@@ -279,3 +279,22 @@ class GebsFishData : WorldData {
         Print("[gebsfish] [InitYieldBank] Initialization of yield data complete.");
 	}
 }
+
+modded class SakhalData {
+    override void InitYieldBank() {
+		GetDayZGame().GetYieldDataInitInvoker().Invoke(m_YieldBank);
+    }
+}
+
+modded class EnochData {
+    override void InitYieldBank() {
+		GetDayZGame().GetYieldDataInitInvoker().Invoke(m_YieldBank);
+    }
+}
+
+modded class ChernarusPlusData {
+    override void InitYieldBank() {
+		GetDayZGame().GetYieldDataInitInvoker().Invoke(m_YieldBank);
+    }
+}
+
