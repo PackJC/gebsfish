@@ -100,39 +100,6 @@ class ActionDigBugs : ActionContinuousBase
 		return true;
 	}
 
-	// override void OnFinishProgressServer(ActionData action_data)
-	// {
-	// 	float insect_sum;
-	// 	float rndInsect;
-
-	// 	string selected_insect = "";
-
-	// 	auto bug_chance_map = FileReader.GetBugChanceMap();
-
-	// 	foreach(auto insect_name, auto insect_chance : bug_chance_map) {
-	// 		insect_sum += insect_chance;
-	// 	}
-
-	// 	rndInsect = Math.RandomFloatInclusive(0.0, insect_sum);
-
-	// 	foreach(auto insect_key, auto insect_value: bug_chance_map) {
-	// 		if (rndInsect <= insect_value && insect_value > 0 && insect_key.Length() > 1) {
-	// 			selected_insect = insect_key;
-	// 			selected_insect.Replace("_CHANCE", "");
-	// 			break;
-	// 		}
-	// 		rndInsect -= insect_value;
-	// 	}
-
-	// 	ItemBase bugs = ItemBase.Cast(GetGame().CreateObject(selected_insect, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
-
-
-	// 	bugs.SetQuantity(10, false);
-	// 	MiscGameplayFunctions.DealAbsoluteDmg(action_data.m_MainItem, 4);
-	// 	action_data.m_Player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
-
-	// }
-
 	override void OnFinishProgressServer(ActionData action_data){
 		float bugSum = 0.0;
 		float rndBug = 0.0;

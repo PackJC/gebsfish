@@ -12,7 +12,7 @@ modded class PlayerBase extends ManBase
             {
                 string soundSetName = data.param1;
                 EffectSound soundEffect;
-                Print("[PredatorSpawn] Received RPC to play sound: " + soundSetName);
+                Print("[gebsfish] [PredatorSpawn] Received RPC to play sound: " + soundSetName);
                 PlaySoundSet(soundEffect, soundSetName, 0, 0); // Play the sound on the client
             }
         }
@@ -27,6 +27,7 @@ modded class PlayerBase extends ManBase
                 SetGebsfishConfig(configParams.param1);
                 break;
             }
+            Print("[gebsfish] Received config data from server");
         }
     }
 }

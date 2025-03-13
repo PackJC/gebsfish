@@ -7,8 +7,5 @@ modded class YieldItemBase {
 
     override void Init(){
         GetGebSettingsConfig();
-        // Print("[gebsfish] [DEBUG]");
-        // Print(m_gebsConfig.Carp.CatchTimes);
-        // Print("[gebsfish] [DEBUG]");
     }
 }
