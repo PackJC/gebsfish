@@ -563,7 +563,7 @@ class gebRainbowTrout : FishYieldItemBase
         // autoptr TFloatArray gebCycle = m_gebsConfig.RainbowTrout.BiteSpeed;
         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
 		m_QualityBase = m_gebsConfig.GeneralSettings.FishQuality;
-		m_Type = "geb_Trout";
+		m_Type = "geb_RainbowTrout";
 		m_EnviroMask = m_gebsConfig.RainbowTrout.Environment;
 		m_MethodMask = m_gebsConfig.RainbowTrout.CatchMethod;
     }
@@ -638,7 +638,7 @@ class gebPerch : FishYieldItemBase
         // autoptr TFloatArray gebCycle = m_gebsConfig.Perch.BiteSpeed;
         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
 		m_QualityBase = m_gebsConfig.GeneralSettings.FishQuality;
-		m_Type = "geb_Perch";
+		m_Type = "geb_YellowPerch";
 		m_EnviroMask = m_gebsConfig.Perch.Environment;
 		m_MethodMask = m_gebsConfig.Perch.CatchMethod;
     }
@@ -653,7 +653,7 @@ class gebCatfish : FishYieldItemBase
         // autoptr TFloatArray gebCycle = m_gebsConfig.Catfish.BiteSpeed;
         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
 		m_QualityBase = m_gebsConfig.GeneralSettings.FishQuality;
-		m_Type = "geb_Catfish";
+		m_Type = "geb_FlatheadCatfish";
 		m_EnviroMask = m_gebsConfig.Catfish.Environment;
 		m_MethodMask = m_gebsConfig.Catfish.CatchMethod;
     }
@@ -668,7 +668,7 @@ class gebMinnow : FishYieldItemBase
         // autoptr TFloatArray gebCycle = m_gebsConfig.Minnow.BiteSpeed;
         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
 		m_QualityBase = m_gebsConfig.GeneralSettings.FishQuality;
-		m_Type = "geb_Minnow";
+		m_Type = "geb_FatheadMinnow";
 		m_EnviroMask = m_gebsConfig.Minnow.Environment;
 		m_MethodMask = m_gebsConfig.Minnow.CatchMethod;
     }

@@ -8,7 +8,7 @@ class PrepareRainbowTrout extends PrepareFish
 		
 		//INGREDIENTS
 		//ingredient 1
-		InsertIngredient(0,"geb_Trout");//you can insert multiple ingredients this way
+		InsertIngredient(0,"geb_RainbowTrout");//you can insert multiple ingredients this way
 
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
@@ -21,7 +21,7 @@ class PrepareRainbowTrout extends PrepareFish
 		//----------------------------------------------------------------------------------------------------------------------
 		ran = Math.RandomFloatInclusive(m_gebsConfig.RainbowTrout.MeatMin,m_gebsConfig.RainbowTrout.MeatMax);
 		for (int i = 0; i < ran; ++i){
-			AddResult("geb_TroutFilletMeat");//add results here
+			AddResult("geb_RainbowTroutFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
 			m_ResultSetHealth[i] = -1;//-1 = do nothing

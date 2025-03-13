@@ -18,7 +18,7 @@
       "Variants": []
     },
     {
-      "ClassName": "geb_CatfishFilletMeat",
+      "ClassName": "geb_FlatheadCatfishFilletMeat",
       "MaxPriceThreshold": 250,
       "MinPriceThreshold": 250,
       "SellPricePercent": 100.0,
@@ -29,7 +29,7 @@
       "Variants": []
     },
     {
-      "ClassName": "geb_PerchFilletMeat",
+      "ClassName": "geb_YellowPerchFilletMeat",
       "MaxPriceThreshold": 350,
       "MinPriceThreshold": 350,
       "SellPricePercent": 100.0,
@@ -84,7 +84,7 @@
       "Variants": []
     },
     {
-      "ClassName": "geb_TroutFilletMeat",
+      "ClassName": "geb_RainbowTroutFilletMeat",
       "MaxPriceThreshold": 350,
       "MinPriceThreshold": 350,
       "SellPricePercent": 100.0,

@@ -15,4 +15,3 @@ modded class ChernarusPlusData {
 		GetDayZGame().GetYieldDataInitInvoker().Invoke(m_YieldBank);
     }
 }
- 
