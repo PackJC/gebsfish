@@ -11,47 +11,6 @@
 
 modded class MissionBase{
 
-	// override void InitialiseWorldData()
-	// {
-	// 	string worldName = "empty";
-	// 	GetGame().GetWorldName(worldName);
-	// 	worldName.ToLower();
-		
-	// 	switch (worldName)
-	// 	{
-	// 		case "chernarusplus": 
-	// 			m_WorldData = new ChernarusPlusData();
-	// 			m_WorldData = new GebsFishData();
-	// 			m_DynamicMusicPlayerRegistry = new DynamicMusicPlayerRegistryChernarus();
-	// 			break;
-
-	// 		case "enoch":
-	// 			m_WorldData = new EnochData();
-	// 			m_WorldData = new GebsFishData();
-	// 			m_DynamicMusicPlayerRegistry = new DynamicMusicPlayerRegistryEnoch();
-	// 			break;
-
-	// 		case "sakhal":
-	// 			m_WorldData = new SakhalData();
-	// 			m_WorldData = new GebsFishData();
-	// 			m_DynamicMusicPlayerRegistry = new DynamicMusicPlayerRegistrySakhal();
-	// 			break;
-			
-	// 		#ifdef PLATFORM_CONSOLE
-	// 		case "mainmenuscenexbox":
-	// 			m_WorldData = new MainMenuWorldData();
-	// 			m_DynamicMusicPlayerRegistry = new DynamicMusicPlayerRegistry();
-	// 			break
-	// 		#endif
-
-	// 		default:
-	// 			m_WorldData = new ChernarusPlusData();
-	// 			m_WorldData = new GebsFishData();
-	// 			m_DynamicMusicPlayerRegistry = new DynamicMusicPlayerRegistry();
-	// 			break;
-	// 	}
-	// }   
-
     override void InitWorldYieldDataDefaults(CatchYieldBank bank){
         super.InitWorldYieldDataDefaults(bank);
 		
@@ -326,11 +285,9 @@ modded class MissionBase{
 
 				Print("[gebsfish] [INIT] Initialization of yield data complete.");
 
-				// Print("[gebsfish] [DUMPSTACK] Start MisionBase Dump");
-				// DumpStack();
-				// Print("[gebsfish] [DUMPSTACK] End MisionBase Dump");
 			}
 			gebsMissionLoaded = true;
 		}
 	}
+
 };
