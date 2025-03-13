@@ -34,7 +34,7 @@ class CfgMods
 		creditsJson = "gebsfish/Scripts/Credits.json";
 		author="Geb";
 		authorID="0";
-		version="1.26";
+		version="3.1";
 		extra=0;
 		type="mod";
 		dependencies[]=
