@@ -6,7 +6,6 @@ modded class MissionServer
 		if(m_gebsConfig){
 			Print("[gebsfish] Gebsfish V3.0 Loaded Successfully!");
 		}
-		
 	}
 
 	override void InvokeOnConnect(PlayerBase player, PlayerIdentity identity) {
@@ -31,7 +30,6 @@ modded class MissionServer
 				Print("[gebsfish] [DEBUG] [YieldMapOutput] Yield Item Type: " + yItem.GetType());
 				Print("[gebsfish] [DEBUG] [YieldMapOutput] Yield Item Name: " + GetDisplayNameFromTypeName(yItem.GetType()));
 			}
-
 			Print("[gebsfish] [DEBUG] [YieldMapOutput] End YieldMapAll Dump");
 		}
 	}
