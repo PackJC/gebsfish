@@ -4,7 +4,7 @@ modded class MissionServer
 	{		
 		super.OnInit();
 		if(m_gebsConfig){
-			Print("[gebsfish] Gebsfish V3.0 Loaded Successfully!");
+			Print("[gebsfish] Gebsfish V3.2 Loaded Successfully!");
 		}
 	}
 
