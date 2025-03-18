@@ -8,11 +8,17 @@ modded class MissionServer
 		}
 	}
 
-	override void InvokeOnConnect(PlayerBase player, PlayerIdentity identity) {
-		super.InvokeOnConnect(player, identity);
-		auto configParams = new Param1<gebsfishConfig>(GetGebSettingsConfig());
-		Print("[gebsfish] Sending Geb's Fishing config to Player: " + identity.GetName() + " RPC: " + RPC_GEBSCONFIG_SYNC);
-		GetGame().RPCSingleParam(player, RPC_GEBSCONFIG_SYNC, configParams, true, identity);
+	override void OnClientPrepareEvent(PlayerIdentity identity, out bool useDB, out vector pos, out float yaw, out int preloadTimeout) {
+		super.OnClientPrepareEvent(identity, useDB, pos, yaw, preloadTimeout);
+
+		if(identity){
+			//if identity is valid, send config to player. 
+			auto configParams = new Param1<gebsfishConfig>(GetGebSettingsConfig());
+			Print("[gebsfish] Sending Geb's Fishing config to Player: " + identity.GetName() + " RPC: " + RPC_GEBSCONFIG_SYNC);
+			PlayerBase player = PlayerBase.Cast(identity.GetPlayer())
+			GetGame().RPCSingleParam(player, RPC_GEBSCONFIG_SYNC, configParams, true, identity);
+		}
+		
 	}
 
 	override void OnGameplayDataHandlerLoad() {
