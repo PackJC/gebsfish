@@ -1107,7 +1107,7 @@ static gebsfishConfig GetGebSettingsConfig(){
 
 static void SetGebsfishConfig(gebsfishConfig config)
 {
-    Print("Gebs fishing config Settings Received From Server");
+    Print("[gebsfish] Set config settings from server.");
     m_gebsConfig = config;
 }
 //Prevent double printing in log file since it loads the yield data twice
