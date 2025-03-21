@@ -17,17 +17,5 @@ modded class PlayerBase extends ManBase
             }
         }
 
-        switch(rpc_type)
-        {
-            case RPC_GEBSCONFIG_SYNC: // this case is for grabbing fishing config from the server
-            {
-                Param1<gebsfishConfig> configParams;
-                if(!ctx.Read(configParams))
-                    return;
-                SetGebsfishConfig(configParams.param1);
-                break;
-            }
-            Print("[gebsfish] Received config data from server");
-        }
     }
 }

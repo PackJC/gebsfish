@@ -78,7 +78,7 @@ class gebsfishConfig {
     ref ContainerJunkConf ContainerJunk;
 
     void Load(){
-        if (GetGame().IsDedicatedServer() || GetGame().IsClient()){
+        if (GetGame().IsDedicatedServer()){
             if (FileExist(ModFolder + SettingsConfigFile)){
                 //If config exists, load file
                 JsonFileLoader<gebsfishConfig>.JsonLoadFile(ModFolder + SettingsConfigFile, this);
