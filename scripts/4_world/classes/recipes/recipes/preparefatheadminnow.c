@@ -1,6 +1,6 @@
-class PreparePerch extends PrepareFish
-{	
-	int ran;
+class PrepareFatheadMinnow extends PrepareFish
+{
+	int ran;	
 	override void Init()
 	{
 		super.Init();
@@ -8,7 +8,7 @@ class PreparePerch extends PrepareFish
 		
 		//INGREDIENTS
 		//ingredient 1
-		InsertIngredient(0,"geb_YellowPerch");//you can insert multiple ingredients this way
+		InsertIngredient(0,"geb_FatheadMinnow");//you can insert multiple ingredients this way
 
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
@@ -19,9 +19,9 @@ class PreparePerch extends PrepareFish
 		
 		m_IngredientAddHealth[1] = -4;// 0 = do nothing // damages health of knife/tool from the fillet action
 		//----------------------------------------------------------------------------------------------------------------------
-		ran = Math.RandomFloatInclusive(m_gebsConfig.Perch.MeatMin,m_gebsConfig.Perch.MeatMax);
+		ran = Math.RandomFloatInclusive(m_gebsConfig.Minnow.MeatMin,m_gebsConfig.Minnow.MeatMax);
 		for (int i = 0; i < ran; ++i){
-			AddResult("geb_YellowPerchFilletMeat");//add results here
+			AddResult("geb_FatheadMinnowFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
 			m_ResultSetHealth[i] = -1;//-1 = do nothing
