@@ -4,9 +4,8 @@ modded class MissionServer
 	{		
 		super.OnInit();
 		if(m_gebsConfig){
-			Print("[gebsfish] Gebsfish V3.1 Loaded Successfully!");
+			Print("[gebsfish] Gebsfish V3.2 Loaded Successfully!");
 		}
-		
 	}
 
 	override void OnClientPrepareEvent(PlayerIdentity identity, out bool useDB, out vector pos, out float yaw, out int preloadTimeout) {
@@ -90,7 +89,6 @@ modded class MissionServer
 				Print("[gebsfish] [DEBUG] [YieldMapOutput] Yield Item " + i + " Catch Method: " + gebDebugCatchMethod);
 				Print("[gebsfish] [DEBUG] [YieldMapOutput] Yield Item " + i + " Catch Environment: " + gebDebugCatchEnviro);
 			}
-
 			Print("[gebsfish] [DEBUG] [YieldMapOutput] End YieldMapAll Dump");
 		}
 	}

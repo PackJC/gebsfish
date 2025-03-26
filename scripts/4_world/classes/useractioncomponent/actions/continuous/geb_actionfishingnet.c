@@ -102,7 +102,7 @@ class ActionBambooFishingNet : ActionContinuousBase
 	override void OnFinishProgressServer( ActionData action_data )
 	{	
 		ItemBase bugs;
-		Class.CastTo(bugs, GetGame().CreateObjectEx("geb_Minnow", action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
+		Class.CastTo(bugs, GetGame().CreateObjectEx("geb_FatheadMinnow", action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
 		action_data.m_Player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
 	}
 	

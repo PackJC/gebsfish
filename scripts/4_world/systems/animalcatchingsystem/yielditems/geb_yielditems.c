@@ -629,7 +629,7 @@ class gebCutthroatTrout : FishYieldItemBase
     }
 };
 
-class gebPerch : FishYieldItemBase
+class gebYellowPerch : FishYieldItemBase
 {
     override void Init()
     {
@@ -639,12 +639,12 @@ class gebPerch : FishYieldItemBase
         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
 		m_QualityBase = m_gebsConfig.GeneralSettings.FishQuality;
 		m_Type = "geb_YellowPerch";
-		m_EnviroMask = m_gebsConfig.Perch.Environment;
-		m_MethodMask = m_gebsConfig.Perch.CatchMethod;
+		m_EnviroMask = m_gebsConfig.YellowPerch.Environment;
+		m_MethodMask = m_gebsConfig.YellowPerch.CatchMethod;
     }
 };
 
-class gebCatfish : FishYieldItemBase
+class gebFlatheadCatfish : FishYieldItemBase
 {
     override void Init()
     {
@@ -654,12 +654,12 @@ class gebCatfish : FishYieldItemBase
         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
 		m_QualityBase = m_gebsConfig.GeneralSettings.FishQuality;
 		m_Type = "geb_FlatheadCatfish";
-		m_EnviroMask = m_gebsConfig.Catfish.Environment;
-		m_MethodMask = m_gebsConfig.Catfish.CatchMethod;
+		m_EnviroMask = m_gebsConfig.FlatheadCatfish.Environment;
+		m_MethodMask = m_gebsConfig.FlatheadCatfish.CatchMethod;
     }
 };
 
-class gebMinnow : FishYieldItemBase
+class gebFatheadMinnow : FishYieldItemBase
 {
     override void Init()
     {
@@ -669,8 +669,8 @@ class gebMinnow : FishYieldItemBase
         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
 		m_QualityBase = m_gebsConfig.GeneralSettings.FishQuality;
 		m_Type = "geb_FatheadMinnow";
-		m_EnviroMask = m_gebsConfig.Minnow.Environment;
-		m_MethodMask = m_gebsConfig.Minnow.CatchMethod;
+		m_EnviroMask = m_gebsConfig.FatheadMinnow.Environment;
+		m_MethodMask = m_gebsConfig.FatheadMinnow.CatchMethod;
     }
 };
 

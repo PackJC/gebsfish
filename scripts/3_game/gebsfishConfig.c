@@ -1,7 +1,7 @@
 class gebsfishConfig {
     
     //Define Config Version
-    static const string CONFIG_VERSION = "0.1";
+    static const string CONFIG_VERSION = "0.2";
 
     //config location
     private const static string ModFolder = "$profile:\\Gebs\\";
@@ -35,9 +35,9 @@ class gebsfishConfig {
     ref BrookTroutConf BrookTrout;
     ref LakeTroutConf LakeTrout;
     ref CutthroatTroutConf CutthroatTrout;
-    ref PerchConf Perch;
-    ref CatfishConf Catfish;
-    ref MinnowConf Minnow;
+    ref YellowPerchConf YellowPerch;
+    ref FlatheadCatfishConf FlatheadCatfish;
+    ref FatheadMinnowConf FatheadMinnow;
     ref BluegillConf Bluegill;
     ref SaugerConf Sauger;
     ref BowfinConf Bowfin;
@@ -126,9 +126,9 @@ class gebsfishConfig {
         BrookTrout = new BrookTroutConf;
         LakeTrout = new LakeTroutConf;
         CutthroatTrout = new CutthroatTroutConf;
-        Perch = new PerchConf;
-        Catfish = new CatfishConf;
-        Minnow = new MinnowConf;
+        YellowPerch = new YellowPerchConf;
+        FlatheadCatfish = new FlatheadCatfishConf;
+        FatheadMinnow = new FatheadMinnowConf;
         Bluegill = new BluegillConf;
         Sauger = new SaugerConf;
         Bowfin = new BowfinConf;
@@ -549,7 +549,7 @@ class CutthroatTroutConf {
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
 
-class PerchConf {
+class YellowPerchConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -563,7 +563,7 @@ class PerchConf {
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
 
-class CatfishConf {
+class FlatheadCatfishConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -577,7 +577,7 @@ class CatfishConf {
     // autoptr TFloatArray BiteSpeed = {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1};  
 };
 
-class MinnowConf {
+class FatheadMinnowConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
