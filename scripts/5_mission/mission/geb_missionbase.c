@@ -104,15 +104,15 @@ modded class MissionBase{
 					Print("[gebsfish] Cutthroat Trout are catchable.");
 				}
 				if (m_gebsConfig.Perch.CatchProbability != 0){
-					bank.RegisterYieldItem(new gebPerch(m_gebsConfig.Perch.CatchProbability));
+					bank.RegisterYieldItem(new gebYellowPerch(m_gebsConfig.YellowPerch.CatchProbability));
 					Print("[gebsfish] Perch are catchable.");
 				}
-				if (m_gebsConfig.Catfish.CatchProbability != 0){
-					bank.RegisterYieldItem(new gebCatfish(m_gebsConfig.Catfish.CatchProbability));
+				if (m_gebsConfig.FlatheadCatfish.CatchProbability != 0){
+					bank.RegisterYieldItem(new gebCatfish(m_gebsConfig.FlatheadCatfish.CatchProbability));
 					Print("[gebsfish] Catfish are catchable.");
 				}
-				if (m_gebsConfig.Minnow.CatchProbability != 0){
-					bank.RegisterYieldItem(new gebMinnow(m_gebsConfig.Minnow.CatchProbability));
+				if (m_gebsConfig.FatheadMinnow.CatchProbability != 0){
+					bank.RegisterYieldItem(new gebMinnow(m_gebsConfig.FatheadMinnow.CatchProbability));
 					Print("[gebsfish] Minnow are catchable.");
 				}
 				if (m_gebsConfig.Bluegill.CatchProbability != 0){
@@ -139,8 +139,8 @@ modded class MissionBase{
 					bank.RegisterYieldItem(new gebCrayfish(m_gebsConfig.Crayfish.CatchProbability));
 					Print("[gebsfish] Crayfish are catchable.");
 				}
-				if (m_gebsConfig.Mahimahi.CatchProbability != 0) {
-					bank.RegisterYieldItem(new gebMahimahi(m_gebsConfig.Mahimahi.CatchProbability));
+				if (m_gebsConfig.MahiMahi.CatchProbability != 0) {
+					bank.RegisterYieldItem(new gebMahimahi(m_gebsConfig.MahiMahi.CatchProbability));
 					Print("[gebsfish] Mahimahi are catchable.");
 				}
 				if (m_gebsConfig.Sailfish.CatchProbability != 0) {
@@ -155,8 +155,8 @@ modded class MissionBase{
 					bank.RegisterYieldItem(new gebAsianseabass(m_gebsConfig.AsianSeaBass.CatchProbability));
 					Print("[gebsfish] Asian Sea Bass are catchable.");
 				}
-				if (m_gebsConfig.BlueMarlin.CatchProbability != 0) {
-					bank.RegisterYieldItem(new gebBluemarlin(m_gebsConfig.BlueMarlin.CatchProbability));
+				if (m_gebsConfig.AtlanticBlueMarlin.CatchProbability != 0) {
+					bank.RegisterYieldItem(new gebBluemarlin(m_gebsConfig.AtlanticBlueMarlin.CatchProbability));
 					Print("[gebsfish] Blue Marlin are catchable.");
 				}
 				if (m_gebsConfig.Bonita.CatchProbability != 0) {
@@ -199,8 +199,8 @@ modded class MissionBase{
 					bank.RegisterYieldItem(new gebBluetang(m_gebsConfig.BlueTang.CatchProbability));
 					Print("[gebsfish] Blue Tang are catchable.");
 				}
-				if (m_gebsConfig.HairtailFish.CatchProbability != 0) {
-					bank.RegisterYieldItem(new gebHairtailfish(m_gebsConfig.HairtailFish.CatchProbability));
+				if (m_gebsConfig.LargeHeadHairtailFish.CatchProbability != 0) {
+					bank.RegisterYieldItem(new gebHairtailfish(m_gebsConfig.LargeHeadHairtailFish.CatchProbability));
 					Print("[gebsfish] Hairtail Fish are catchable.");
 				}
 				if (m_gebsConfig.HumpheadWrasse.CatchProbability != 0) {
@@ -243,8 +243,8 @@ modded class MissionBase{
 					bank.RegisterYieldItem(new gebKingcrab(m_gebsConfig.KingCrab.CatchProbability));
 					Print("[gebsfish] King Crab are catchable.");
 				}
-				if (m_gebsConfig.Jellyfish.CatchProbability != 0) {
-					bank.RegisterYieldItem(new gebJellyfish(m_gebsConfig.Jellyfish.CatchProbability));
+				if (m_gebsConfig.BlueJellyfish.CatchProbability != 0) {
+					bank.RegisterYieldItem(new gebJellyfish(m_gebsConfig.BlueJellyfish.CatchProbability));
 					Print("[gebsfish] Jellyfish are catchable.");
 				}
 				if (m_gebsConfig.Lobster.CatchProbability != 0) {

@@ -1,4 +1,4 @@
-class PrepareSailfish extends PrepareFish
+class PrepareAtlanticSailfish extends PrepareFish
 {
 	int ran;	
 	override void Init()
@@ -8,7 +8,7 @@ class PrepareSailfish extends PrepareFish
 		
 		//INGREDIENTS
 		//ingredient 1
-		InsertIngredient(0,"geb_Sailfish");//you can insert multiple ingredients this way
+		InsertIngredient(0,"geb_AtlanticSailfish");//you can insert multiple ingredients this way
 
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
@@ -21,7 +21,7 @@ class PrepareSailfish extends PrepareFish
 		//----------------------------------------------------------------------------------------------------------------------
 		ran = Math.RandomFloatInclusive(m_gebsConfig.Sailfish.MeatMin,m_gebsConfig.Sailfish.MeatMax);
 		for (int i = 0; i < ran; ++i){
-			AddResult("geb_SailfishFilletMeat");//add results here
+			AddResult("geb_AtlanticSailfishFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
 			m_ResultSetHealth[i] = -1;//-1 = do nothing

@@ -1,4 +1,4 @@
-class PrepareMahimahi extends PrepareFish
+class PrepareMahiMahi extends PrepareFish
 {
 	int ran;	
 	override void Init()
@@ -8,7 +8,7 @@ class PrepareMahimahi extends PrepareFish
 		
 		//INGREDIENTS
 		//ingredient 1
-		InsertIngredient(0,"geb_Mahimahi");//you can insert multiple ingredients this way
+		InsertIngredient(0,"geb_MahiMahi");//you can insert multiple ingredients this way
 
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
@@ -21,7 +21,7 @@ class PrepareMahimahi extends PrepareFish
 		//----------------------------------------------------------------------------------------------------------------------
 		ran = Math.RandomFloatInclusive(m_gebsConfig.Mahimahi.MeatMin,m_gebsConfig.Mahimahi.MeatMax);
 		for (int i = 0; i < ran; ++i){
-			AddResult("geb_MahimahiFilletMeat");//add results here
+			AddResult("geb_MahiMahiFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
 			m_ResultSetHealth[i] = -1;//-1 = do nothing

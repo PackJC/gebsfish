@@ -59,42 +59,42 @@ class cfgVehicles
     };
 	class geb_BlueFishKnife: geb_FishKnife_Base {
 		scope=2;
-		displayName="$STR_blue_fishknife";
+		displayName="$STR_tools_bluefishknife";
 		descriptionShort="$STR_fishingknife_desc";
         hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_bluefishknife.paa"};
 	};
 	class geb_OrangeFishKnife: geb_FishKnife_Base {
 		scope = 2;
-		displayName = "$STR_orange_fishknife";
+		displayName = "$STR_tools_orangefishknife";
 		descriptionShort = "$STR_fishingknife_desc";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_orangefishknife.paa"};
 	};
 	class geb_GreenFishKnife: geb_FishKnife_Base {
 		scope = 2;
-		displayName = "$STR_green_fishknife";
+		displayName = "$STR_tools_greenfishknife";
 		descriptionShort = "$STR_fishingknife_desc";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_greenfishknife.paa"};
 	};
 	class geb_YellowFishKnife: geb_FishKnife_Base {
 		scope = 2;
-		displayName = "$STR_yellow_fishknife";
+		displayName = "$STR_tools_yellowfishknife";
 		descriptionShort = "$STR_fishingknife_desc";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_yellowfishknife.paa"};
 	};
 	class geb_RedFishKnife: geb_FishKnife_Base {
 		scope = 2;
-		displayName = "$STR_red_fishknife";
+		displayName = "$STR_tools_redfishknife";
 		descriptionShort = "$STR_fishingknife_desc";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_redfishknife.paa"};
 	};
 	class geb_PurpleFishKnife: geb_FishKnife_Base {
 		scope = 2;
-		displayName = "$STR_purple_fishknife";
+		displayName = "$STR_tools_purplefishknife";
 		descriptionShort = "$STR_fishingknife_desc";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_purplefishknife.paa"};
@@ -127,28 +127,28 @@ class cfgVehicles
     };
 	class geb_RedFishingRod: FishingRod {
 		scope = 2;
-		displayName = "$STR_redrod";
+		displayName = "$STR_tools_redrod";
 		descriptionShort = "$STR_CfgVehicles_FishingRod1";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_fishingrod_red.paa"};
 	};
 	class geb_GreenFishingRod: FishingRod {
 		scope = 2;
-		displayName = "$STR_greenrod";
+		displayName = "$STR_tools_greenrod";
 		descriptionShort = "$STR_CfgVehicles_FishingRod1";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_fishingrod_green.paa"};
 	};
 	class geb_BlueFishingRod: FishingRod {
 		scope = 2;
-		displayName = "$STR_bluerod";
+		displayName = "$STR_tools_bluerod";
 		descriptionShort = "$STR_CfgVehicles_FishingRod1";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_fishingrod_blue.paa"};
 	};
 	class geb_PurpleFishingRod: FishingRod {
 		scope = 2;
-		displayName = "$STR_purplerod";
+		displayName = "$STR_tools_purplerod";
 		descriptionShort = "$STR_CfgVehicles_FishingRod1";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_fishingrod_purple.paa"};
@@ -156,7 +156,7 @@ class cfgVehicles
 	class geb_BambooFishingNet : Container_Base {
 		scope = 2;
 		rotationFlags = 17;
-		displayName = "$STR_fishingnet";
+		displayName = "$STR_tools_fishingnet";
 		descriptionShort = "$STR_fishingnet_desc";
 		model = "\gebsfish\data\tools\geb_fishingnet.p3d";
 		hiddenSelections[] = {"zbytek"};

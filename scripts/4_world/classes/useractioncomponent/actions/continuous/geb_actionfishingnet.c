@@ -27,7 +27,7 @@ class ActionBambooFishingNet : ActionContinuousBase
 		m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_POKE;
 		m_StanceMask = DayZPlayerConstants.STANCEMASK_CROUCH;
 		m_FullBody = true;
-		m_Text = "#STR_gatherminnows";
+		m_Text = "#STR_action_gatherminnows";
 	}
 	
 	override void CreateConditionComponents()  

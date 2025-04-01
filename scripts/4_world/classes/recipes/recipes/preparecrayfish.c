@@ -21,7 +21,7 @@ class PrepareCrayfish extends PrepareFish
 		//----------------------------------------------------------------------------------------------------------------------
 		ran = Math.RandomFloatInclusive(m_gebsConfig.Crayfish.MeatMin,m_gebsConfig.Crayfish.MeatMax);
 		for (int i = 0; i < ran; ++i){
-			AddResult("geb_CrayfishFilletMeat");//add results here
+			AddResult("geb_CrayfishTailMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
 			m_ResultSetHealth[i] = -1;//-1 = do nothing

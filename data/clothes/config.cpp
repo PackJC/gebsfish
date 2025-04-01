@@ -39,8 +39,8 @@ class cfgVehicles
 	*/
 	//Gloves
 	class geb_OrangeFishGloves: NBCGloves_ColorBase {
-		displayName="$STR_fishinggloves_orange";
-		descriptionShort="$STR_fishinggloves_desc";
+		displayName="$STR_clothes_orangefishinggloves";
+		descriptionShort="$STR_clothes_orangefishinggloves_desc";
 		scope=2;
 		hiddenSelectionsTextures[]=	{
 			"\gebsfish\data\clothes\geb_orangefishgloves.paa",
@@ -49,8 +49,8 @@ class cfgVehicles
 		};
 	};
 	class geb_BlueFishGloves: NBCGloves_ColorBase {
-		displayName="$STR_fishinggloves_blue";
-		descriptionShort="$STR_fishinggloves_desc";
+		displayName="$STR_clothes_bluefishinggloves";
+		descriptionShort="$STR_clothes_bluefishinggloves_desc";
 		scope=2;
 		hiddenSelectionsTextures[]=
 		{
@@ -62,8 +62,8 @@ class cfgVehicles
 
 	//Hats
 	class geb_BlueFishHat: BaseballCap_ColorBase {
-		displayName="$STR_fishing_hat_blue";
-		descriptionShort="$STR_fishing_hat_desc";
+		displayName="$STR_clothes_bluefishinghat";
+		descriptionShort="$STR_clothes_bluefishinghat_desc";
 		scope=2;
 		visibilityModifier=0.94999999;
 		hiddenSelectionsTextures[]=
@@ -74,8 +74,8 @@ class cfgVehicles
 		};
 	};
 	class geb_RedFishHat: BaseballCap_ColorBase {
-		displayName="$STR_fishing_hat_red";
-		descriptionShort="$STR_fishing_hat_desc";
+		displayName="$STR_clothes_redfishinghat";
+		descriptionShort="$STR_clothes_redfishinghat_desc";
 		scope=2;
 		visibilityModifier=0.94999999;
 		hiddenSelectionsTextures[]=
@@ -87,8 +87,8 @@ class cfgVehicles
 	};	
 	class geb_GreenFishHat: BaseballCap_ColorBase {
 		scope=2;
-		displayName="$STR_fishing_hat_green";
-		descriptionShort="$STR_fishing_hat_desc";
+		displayName="$STR_clothes_greenfishinghat";
+		descriptionShort="$STR_clothes_greenfishinghat_desc";
 		visibilityModifier=0.94999999;
 		hiddenSelectionsTextures[]=
 		{
@@ -98,8 +98,8 @@ class cfgVehicles
 		};
 	};	
 	class geb_PurpleFishHat: BaseballCap_ColorBase {
-		displayName="$STR_fishing_hat_purple";
-		descriptionShort="$STR_fishing_hat_desc";
+		displayName="$STR_clothes_purplefishinghat";
+		descriptionShort="$STR_clothes_purplefishinghat_desc";
 		scope=2;
 		visibilityModifier=0.94999999;
 		hiddenSelectionsTextures[]=
@@ -112,8 +112,8 @@ class cfgVehicles
 
 	//Shirts
 	class geb_RedFishShirt: TShirt_ColorBase {
-		displayName = "$STR_fishing_shirt_red";
-		descriptionShort = "$STR_fishing_shirt_desc";
+		displayName="$STR_clothes_redfishingshirt";
+		descriptionShort="$STR_clothes_redfishingshirt_desc";
 		scope = 2;
 		visibilityModifier = 0.94999999;
 		hiddenSelectionsTextures[] =
@@ -124,8 +124,8 @@ class cfgVehicles
 		};
 	};
 	class geb_GreenFishShirt: TShirt_ColorBase {
-		displayName = "$STR_fishing_shirt_green";
-		descriptionShort = "$STR_fishing_shirt_desc";
+		displayName="$STR_clothes_greenfishingshirt";
+		descriptionShort="$STR_clothes_greenfishingshirt_desc";
 		scope = 2;
 		visibilityModifier = 0.94999999;
 		hiddenSelectionsTextures[] =
@@ -136,8 +136,8 @@ class cfgVehicles
 		};
 	};
 	class geb_BlueFishShirt: TShirt_ColorBase {
-		displayName = "$STR_fishing_shirt_blue";
-		descriptionShort = "$STR_fishing_shirt_desc";
+		displayName="$STR_clothes_bluefishingshirt";
+		descriptionShort="$STR_clothes_bluefishingshirt_desc";
 		scope = 2;
 		visibilityModifier = 0.94999999;
 		hiddenSelectionsTextures[] =
@@ -148,8 +148,8 @@ class cfgVehicles
 		};
 	};
 	class geb_PurpleFishShirt: TShirt_ColorBase {
-		displayName = "$STR_fishing_shirt_purple";
-		descriptionShort = "$STR_fishing_shirt_desc";
+		displayName="$STR_clothes_purplefishingshirt";
+		descriptionShort="$STR_clothes_purplefishingshirt_desc";
 		scope = 2;
 		visibilityModifier = 0.94999999;
 		hiddenSelectionsTextures[] =

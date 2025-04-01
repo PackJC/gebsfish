@@ -29,7 +29,7 @@ class ActionDigBugs : ActionContinuousBase
 		m_FullBody = true;
 		m_StanceMask = DayZPlayerConstants.STANCEMASK_ERECT;
 		m_SpecialtyWeight = UASoftSkillsWeight.ROUGH_MEDIUM;
-		m_Text = "#STR_digbugs";
+		m_Text = "#STR_action_digbugs";
 	}
 
 	override void CreateConditionComponents()

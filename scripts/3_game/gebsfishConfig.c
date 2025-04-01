@@ -44,11 +44,11 @@ class gebsfishConfig {
     ref SlimySculpinConf SlimySculpin;
     ref SeverumConf Severum;
     ref CrayfishConf Crayfish;
-    ref MahimahiConf Mahimahi;
-    ref SailfishConf Sailfish;
+    ref MahiMahiConf MahiMahi;
+    ref AtlanticSailfishConf AtlanticSailfish;
     ref AngelfishConf Angelfish;
     ref AsianSeaBassConf AsianSeaBass;
-    ref BlueMarlinConf BlueMarlin;
+    ref AtlanticBlueMarlinConf AtlanticBlueMarlin;
     ref BonitaConf Bonita;
     ref CherrySalmonConf CherrySalmon;
     ref ChinookSalmonConf ChinookSalmon;
@@ -59,7 +59,7 @@ class gebsfishConfig {
     ref RedheadCichlidConf RedheadCichlid;
     ref RoughneckRockConf RoughneckRock;
     ref BlueTangConf BlueTang;
-    ref HairtailFishConf HairtailFish;
+    ref LargeHeadHairtailFishConf LargeHeadHairtailFish;
     ref HumpheadWrasseConf HumpheadWrasse;
     ref SiameseTigerfishConf SiameseTigerfish;
     ref GreatWhiteSharkConf GreatWhiteShark;
@@ -70,7 +70,7 @@ class gebsfishConfig {
     ref BlackDevilSnailConf BlackDevilSnail;
     ref StarfishConf Starfish;
     ref KingCrabConf KingCrab;
-    ref JellyfishConf Jellyfish;
+    ref BlueJellyfishConf BlueJellyfish;
     ref LobsterConf Lobster;
     ref BlueLobsterConf BlueLobster;
 
@@ -135,11 +135,11 @@ class gebsfishConfig {
         SlimySculpin = new SlimySculpinConf;
         Severum = new SeverumConf;
         Crayfish = new CrayfishConf;
-        Mahimahi = new MahimahiConf;
-        Sailfish = new SailfishConf;
+        MahiMahi = new MahiMahiConf;
+        AtlanticSailfish = new AtlanticSailfishConf;
         Angelfish = new AngelfishConf;
         AsianSeaBass = new AsianSeaBassConf;
-        BlueMarlin = new BlueMarlinConf;
+        AtlanticBlueMarlin = new AtlanticBlueMarlinConf;
         Bonita = new BonitaConf;
         CherrySalmon = new CherrySalmonConf;
         ChinookSalmon = new ChinookSalmonConf;
@@ -150,7 +150,7 @@ class gebsfishConfig {
         RedheadCichlid = new RedheadCichlidConf;
         RoughneckRock = new RoughneckRockConf;
         BlueTang = new BlueTangConf;
-        HairtailFish = new HairtailFishConf;
+        LargeHeadHairtailFish = new LargeHeadHairtailFishConf;
         HumpheadWrasse = new HumpheadWrasseConf;
         SiameseTigerfish = new SiameseTigerfishConf;
         GreatWhiteShark = new GreatWhiteSharkConf;
@@ -675,7 +675,7 @@ class CrayfishConf {
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
 
-class MahimahiConf {
+class MahiMahiConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -689,7 +689,7 @@ class MahimahiConf {
     // autoptr TFloatArray BiteSpeed = {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0};  
 };
 
-class SailfishConf {
+class AtlanticSailfishConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -731,7 +731,7 @@ class AsianSeaBassConf {
     // autoptr TFloatArray BiteSpeed = {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0};  
 };
 
-class BlueMarlinConf {
+class AtlanticBlueMarlinConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -885,7 +885,7 @@ class BlueTangConf {
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
 
-class HairtailFishConf {
+class LargeHeadHairtailFishConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1036,7 +1036,7 @@ class KingCrabConf {
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};  
 };
-class JellyfishConf {
+class BlueJellyfishConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";

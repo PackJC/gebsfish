@@ -1,4 +1,4 @@
-class PrepareJellyfish extends PrepareFish
+class PrepareBlueJellyfish extends PrepareFish
 {
 	int ran;	
 	override void Init()
@@ -8,7 +8,7 @@ class PrepareJellyfish extends PrepareFish
 		
 		//INGREDIENTS
 		//ingredient 1
-		InsertIngredient(0,"geb_Jellyfish");//you can insert multiple ingredients this way
+		InsertIngredient(0,"geb_BlueJellyfish");//you can insert multiple ingredients this way
 
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
@@ -21,7 +21,7 @@ class PrepareJellyfish extends PrepareFish
 		//----------------------------------------------------------------------------------------------------------------------
 		ran = Math.RandomFloatInclusive(m_gebsConfig.Jellyfish.MeatMin,m_gebsConfig.Jellyfish.MeatMax);
 		for (int i = 0; i < ran; ++i){
-			AddResult("geb_JellyfishFilletMeat");//add results here
+			AddResult("geb_BlueJellyfishFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
 			m_ResultSetHealth[i] = -1;//-1 = do nothing
