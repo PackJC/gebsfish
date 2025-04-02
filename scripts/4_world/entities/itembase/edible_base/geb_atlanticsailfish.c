@@ -9,7 +9,7 @@
 */
 
 //Fish will be unable to be ran with, has to be held with two hands
-class geb_AtlanticSailfish extends Edible_Base
+class geb_AtlanticSailFish extends Edible_Base
 {
 	override bool CanBeCookedOnStick()
 	{

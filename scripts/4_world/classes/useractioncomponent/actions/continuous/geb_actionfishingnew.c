@@ -103,19 +103,19 @@ modded class ActionFishingNew: ActionContinuousBase {
 			if(m_gebsConfig.PredatorSettings.PredatorWarningMessageEnable){
 				//Send message to the player in green
 				if(m_gebsConfig.PredatorSettings.PredatorWarningMessageGreen){
-					player.MessageFriendly("Your activities have attracted some company...");
+					player.MessageFriendly(Widget.TranslateString("#STR_action_predatorspawn"));
 				}
 				//Send message to the player in grey
 				if(m_gebsConfig.PredatorSettings.PredatorWarningMessageGrey){
-					player.MessageStatus("Your activities have attracted some company...");
+					player.MessageStatus(Widget.TranslateString("#STR_action_predatorspawn"));
 				}
 				//Send message to the player in red
 				if(m_gebsConfig.PredatorSettings.PredatorWarningMessageRed){
-					player.MessageImportant("Your activities have attracted some company...");
+					player.MessageImportant(Widget.TranslateString("#STR_action_predatorspawn"));
 				}
 				//Send message to the player in yellow
 				if(m_gebsConfig.PredatorSettings.PredatorWarningMessageYellow){
-					player.MessageAction("Your activities have attracted some company...");
+					player.MessageAction(Widget.TranslateString("#STR_action_predatorspawn"));
 				}
 			}
 		}

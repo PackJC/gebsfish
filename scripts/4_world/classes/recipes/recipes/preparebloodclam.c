@@ -1,28 +1,20 @@
-class PrepareBloodclam extends PrepareFish
-{
+class PrepareBloodClam extends PrepareFish {
 	int ran;	
-	override void Init()
-	{
-		
+	override void Init(){
 		super.Init();
-		//----------------------------------------------------------------------------------------------------------------------
-		
-		//INGREDIENTS
-		//ingredient 1
-		InsertIngredient(0,"geb_Bloodclam");//you can insert multiple ingredients this way
-
+		//INGREDIENTS-----------------------------------------------------------------------------------------------------------
+		//Ingredient 1
+		InsertIngredient(0,"geb_BloodClam");//you can insert multiple ingredients this way
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
 		m_IngredientAddQuantity[0] = 0;// 0 = do nothing
 		m_IngredientDestroy[0] = true;//true = destroy, false = do nothing
-
-
-		
 		m_IngredientAddHealth[1] = -4;// 0 = do nothing // damages health of knife/tool from the fillet action
-		//----------------------------------------------------------------------------------------------------------------------
+		//RESULTS----------------------------------------------------------------------------------------------------------------
+		//Result 1
 		ran = Math.RandomFloatInclusive(m_gebsConfig.BloodClam.MeatMin,m_gebsConfig.BloodClam.MeatMax);
 		for (int i = 0; i < ran; ++i){
-			AddResult("geb_ClamFilletMeat");//add results here
+			AddResult("geb_BloodClamFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
 			m_ResultSetHealth[i] = -1;//-1 = do nothing
@@ -32,17 +24,17 @@ class PrepareBloodclam extends PrepareFish
 			m_ResultUseSoftSkills[i] = false;// set 'true' to allow modification of the values by softskills on this result
 			m_ResultReplacesIngredient[i] = 0;// value == -1 means do nothing; a value >= 0 means this result will transfer item propertiesvariables, attachments etc.. from an ingredient value
 		}
-		
 	}
 
-	override bool CanDo(ItemBase ingredients[], PlayerBase player)//final check for recipe's validity
+	//Final check for recipe's validity
+	override bool CanDo(ItemBase ingredients[], PlayerBase player)
 	{
 		return true;
 	}
 
-	override void Do(ItemBase ingredients[], PlayerBase player,array<ItemBase> results, float specialty_weight)//gets called upon recipe's completion
-	{
-		// Adjusts quantity of results to the quantity of the 1st ingredient
+	//Called upon recipe's completion
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight){
+		//Adjusts quantity of results to the quantity of the 1st ingredient
 		super.Do(ingredients, player, results, specialty_weight);
 	}
 };

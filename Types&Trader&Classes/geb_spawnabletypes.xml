@@ -2,16 +2,16 @@
 <spawnabletypes>
 	<damage min="0.0" max="0.9" />
 	<!--Example Damaged Ruined only<damage min="0.9" max="1.0" /> Pristine(100-71) Worn(70-41) Damaged(40-21) BadlyDamaged(20-1) -->
-	<type name="geb_Crayfish" />
-	<type name="geb_CrayfishFilletMeat" />
-	<type name="geb_Northernpike" />
-	<type name="geb_NorthanpikeFilletMeat" />
-	<type name="geb_Largemouthbass" />
-	<type name="geb_LargemouthbassFilletMeat" />
-	<type name="geb_Whitebass" />
-	<type name="geb_WhitebassFilletMeat" />
-	<type name="geb_Blackbass" />
-	<type name="geb_BlackbassFilletMeat" />
+	<type name="geb_CrayFish" />
+	<type name="geb_CrayFishTailMeat" />
+	<type name="geb_NorthernPike" />
+	<type name="geb_NorthernPikeFilletMeat" />
+	<type name="geb_LargeMouthBass" />
+	<type name="geb_LargeMouthBassFilletMeat" />
+	<type name="geb_WhiteBass" />
+	<type name="geb_WhiteBassFilletMeat" />
+	<type name="geb_BlackBass" />
+	<type name="geb_BlackBassFilletMeat" />
 	<type name="geb_RainbowTrout" />
 	<type name="geb_RainbowTroutFilletMeat" />
 	<type name="geb_BrookTrout" />
@@ -20,62 +20,62 @@
 	<type name="geb_BrownTroutFilletMeat" />
 	<type name="geb_LakeTrout" />
 	<type name="geb_LakeTroutFilletMeat" />
-	<type name="geb_CutthroatTrout" />
-	<type name="geb_CutthroatTroutFilletMeat" />
+	<type name="geb_CutThroatTrout" />
+	<type name="geb_CutThroatTroutFilletMeat" />
 	<type name="geb_YellowPerch" />
 	<type name="geb_YellowPerchFilletMeat" />
-	<type name="geb_FlatheadCatfish" />
-	<type name="geb_FlatheadCatfishFilletMeat" />
-	<type name="geb_FatheadMinnow" />
-	<type name="geb_FatheadMinnowFilletMeat" />
-	<type name="geb_Bluegill" />
-	<type name="geb_BluegillFilletMeat" />
+	<type name="geb_FlatHeadCatFish" />
+	<type name="geb_FlatHeadCatFishFilletMeat" />
+	<type name="geb_FatHeadMinnow" />
+	<type name="geb_FatHeadMinnowFilletMeat" />
+	<type name="geb_BlueGill" />
+	<type name="geb_BlueGillFilletMeat" />
 	<type name="geb_Sauger" />
 	<type name="geb_SaugerFilletMeat" />
-	<type name="geb_Bowfin" />
-	<type name="geb_BowfinFilletMeat" />
-	<type name="geb_Slimysculpin" />
-	<type name="geb_SlimysculpinFilletMeat" />
-	<type name="geb_Angelfish" />
-	<type name="geb_AngelfishFilletMeat" />
-	<type name="geb_Asianseabass" />
-	<type name="geb_AsianseabassFilletMeat" />
-	<type name="geb_Bluemarlin" />
-	<type name="geb_BluemarlinFilletMeat" />
+	<type name="geb_BowFin" />
+	<type name="geb_BowFinFilletMeat" />
+	<type name="geb_SlimySculpin" />
+	<type name="geb_SlimySculpinFilletMeat" />
+	<type name="geb_AngelFish" />
+	<type name="geb_AngelFishFilletMeat" />
+	<type name="geb_AsianSeaBass" />
+	<type name="geb_AsianSeaBassFilletMeat" />
+	<type name="geb_AtlanticBlueMarlin" />
+	<type name="geb_AtlanticBlueMarlinFilletMeat" />
 	<type name="geb_Bonita" />
 	<type name="geb_BonitaFilletMeat" />
-	<type name="geb_Cherrysalmon" />
-	<type name="geb_CherrysalmonFilletMeat" />
+	<type name="geb_CherrySalmon" />
+	<type name="geb_CherrySalmonFilletMeat" />
 	<type name="geb_ChinookSalmon" />
 	<type name="geb_ChinookSalmonFilletMeat" />	
-	<type name="geb_SockeyeSalmon" />
-	<type name="geb_SockeyeSalmonFilletMeat" />
-	<type name="geb_Flatheadmullet" />
-	<type name="geb_FlatheadmulletFilletMeat" />
-	<type name="geb_Leopardshark" />
-	<type name="geb_LeopardsharkFilletMeat" />
-	<type name="geb_Pacificcod" />
-	<type name="geb_PacificcodFilletMeat" />
-	<type name="geb_Redheadcichlid" />
-	<type name="geb_RedheadcichlidFilletMeat" />
-	<type name="geb_Roughneckrock" />
-	<type name="geb_RoughneckrockFilletMeat" />
+	<type name="geb_SockEyeSalmon" />
+	<type name="geb_SockEyeSalmonFilletMeat" />
+	<type name="geb_FlatHeadMullet" />
+	<type name="geb_FlatHeadMulletFilletMeat" />
+	<type name="geb_LeopardShark" />
+	<type name="geb_LeopardSharkFilletMeat" />
+	<type name="geb_PacificCod" />
+	<type name="geb_PacificCodFilletMeat" />
+	<type name="geb_RedHeadCichlid" />
+	<type name="geb_RedHeadCichlidFilletMeat" />
+	<type name="geb_RoughNeckRock" />
+	<type name="geb_RoughNeckRockFilletMeat" />
 	<type name="geb_Severum" />
 	<type name="geb_SeverumFilletMeat" />
-	<type name="geb_Bluetang" />
-	<type name="geb_BluetangFilletMeat" />
-	<type name="geb_Hairtailfish" />
-	<type name="geb_HairtailfishFilletMeat" />
-	<type name="geb_Humpheadwrasse" />
-	<type name="geb_HumpheadwrasseFilletMeat" />
-	<type name="geb_Siamesetigerfish" />
-	<type name="geb_SiamesetigerfishFilletMeat" />
-	<type name="geb_Greatwhiteshark" />
-	<type name="geb_GreatwhitesharkFilletMeat" />
-	<type name="geb_Angelshark" />
-	<type name="geb_AngelsharkFilletMeat" />
-	<type name="geb_Yellowfintuna" />
-	<type name="geb_YellowfintunaFilletMeat" />
+	<type name="geb_BlueTang" />
+	<type name="geb_BlueTangFilletMeat" />
+	<type name="geb_LargeHeadHairTailFish" />
+	<type name="geb_LargeHeadHairTailFishFilletMeat" />
+	<type name="geb_HumpHeadWrasse" />
+	<type name="geb_HumpHeadWrasseFilletMeat" />
+	<type name="geb_SiameseTigerFish" />
+	<type name="geb_SiameseTigerFishFilletMeat" />
+	<type name="geb_GreatWhiteShark" />
+	<type name="geb_GreatWhiteSharkFilletMeat" />
+	<type name="geb_AngelShark" />
+	<type name="geb_AngelSharkFilletMeat" />
+	<type name="geb_YellowFinTuna" />
+	<type name="geb_YellowFinTunaFilletMeat" />
 	<type name="geb_RedFishingRod" />
 	<type name="geb_BlueFishingRod" />
 	<type name="geb_GreenFishingRod" />
@@ -94,7 +94,7 @@
 	<type name="geb_YellowFishKnife" />
 	<type name="geb_RedFishKnife" />
 	<type name="geb_PurpleFishKnife" />
-	<type name="geb_OldBlueTackleBox">
+	<type name="geb_OldBlueTackle">
 		<cargo chance="0.20">
 			<item name="geb_Lure1" chance="0.33" />
 			<item name="geb_Lure2" chance="0.33" />
@@ -106,7 +106,7 @@
 			<item name="geb_SpinnerBait4" chance="0.33" />
 		</cargo>
 	</type>
-	<type name="geb_OldGreenTackleBox">
+	<type name="geb_OldGreenTackle">
 		<cargo chance="0.20">
 			<item name="geb_Lure1" chance="0.33" />
 			<item name="geb_Lure2" chance="0.33" />
@@ -118,7 +118,7 @@
 			<item name="geb_SpinnerBait4" chance="0.33" />
 		</cargo>
 	</type>
-	<type name="geb_OldPurpleTackleBox">
+	<type name="geb_OldPurpleTackle">
 		<cargo chance="0.20">
 			<item name="geb_Lure1" chance="0.33" />
 			<item name="geb_Lure2" chance="0.33" />
@@ -130,7 +130,7 @@
 			<item name="geb_SpinnerBait4" chance="0.33" />
 		</cargo>
 	</type>
-	<type name="geb_OldRedTackleBox">
+	<type name="geb_OldRedTackle">
 		<cargo chance="0.20">
 			<item name="geb_Lure1" chance="0.33" />
 			<item name="geb_Lure2" chance="0.33" />

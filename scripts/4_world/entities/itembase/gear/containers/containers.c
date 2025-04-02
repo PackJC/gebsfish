@@ -127,7 +127,7 @@ class geb_SmallTackle : Container_Base
 	}
 };
 
-class geb_OldRedTackleBox : Container_Base
+class geb_OldRedTackle : Container_Base
 {
 	ref TStringArray ItemArray = { "geb_Lure1", "geb_Lure2","geb_Lure3","geb_Lure4","geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook", 
 		"geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
@@ -153,35 +153,7 @@ class geb_OldRedTackleBox : Container_Base
 	}
 };
 
-class geb_OldGreenTackleBox : Container_Base
-{
-	ref TStringArray ItemArray = { "geb_Lure1", "geb_Lure2","geb_Lure3","geb_Lure4","geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook", 
-		"geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
-		"geb_BlueFishKnife", "geb_OrangeFishKnife", "geb_GreenFishKnife", "geb_YellowFishKnife", "geb_PurpleFishKnife", "geb_RedFishKnife" 
-	};
-
-	override int GetDamageSystemVersionChange()
-	{
-		return 110;
-	}
-
-	override bool CanReceiveItemIntoCargo(EntityAI item)
-	{
-		for (int i = 0; i < ItemArray.Count(); i++)
-		{
-			if (item.IsKindOf(ItemArray.Get(i)))
-			{
-				return true;
-			};
-		}
-
-		return false;
-	}
-};
-
-
-
-class geb_OldBlueTackleBox : Container_Base
+class geb_OldGreenTackle : Container_Base
 {
 	ref TStringArray ItemArray = { "geb_Lure1", "geb_Lure2","geb_Lure3","geb_Lure4","geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook", 
 		"geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
@@ -208,7 +180,8 @@ class geb_OldBlueTackleBox : Container_Base
 };
 
 
-class geb_OldPurpleTackleBox : Container_Base
+
+class geb_OldBlueTackle : Container_Base
 {
 	ref TStringArray ItemArray = { "geb_Lure1", "geb_Lure2","geb_Lure3","geb_Lure4","geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook", 
 		"geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
@@ -235,7 +208,7 @@ class geb_OldPurpleTackleBox : Container_Base
 };
 
 
-class geb_YellowTackleBox : Container_Base
+class geb_OldPurpleTackle : Container_Base
 {
 	ref TStringArray ItemArray = { "geb_Lure1", "geb_Lure2","geb_Lure3","geb_Lure4","geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook", 
 		"geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
@@ -261,7 +234,8 @@ class geb_YellowTackleBox : Container_Base
 	}
 };
 
-class geb_RedTackleBox : Container_Base
+
+class geb_YellowTackle : Container_Base
 {
 	ref TStringArray ItemArray = { "geb_Lure1", "geb_Lure2","geb_Lure3","geb_Lure4","geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook", 
 		"geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
@@ -287,7 +261,7 @@ class geb_RedTackleBox : Container_Base
 	}
 };
 
-class geb_PurpleTackleBox : Container_Base
+class geb_RedTackle : Container_Base
 {
 	ref TStringArray ItemArray = { "geb_Lure1", "geb_Lure2","geb_Lure3","geb_Lure4","geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook", 
 		"geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
@@ -313,7 +287,7 @@ class geb_PurpleTackleBox : Container_Base
 	}
 };
 
-class geb_PinkTackleBox : Container_Base
+class geb_PurpleTackle : Container_Base
 {
 	ref TStringArray ItemArray = { "geb_Lure1", "geb_Lure2","geb_Lure3","geb_Lure4","geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook", 
 		"geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
@@ -339,7 +313,7 @@ class geb_PinkTackleBox : Container_Base
 	}
 };
 
-class geb_OrangeTackleBox : Container_Base
+class geb_PinkTackle : Container_Base
 {
 	ref TStringArray ItemArray = { "geb_Lure1", "geb_Lure2","geb_Lure3","geb_Lure4","geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook", 
 		"geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
@@ -365,7 +339,7 @@ class geb_OrangeTackleBox : Container_Base
 	}
 };
 
-class geb_LimeTackleBox : Container_Base
+class geb_OrangeTackle : Container_Base
 {
 	ref TStringArray ItemArray = { "geb_Lure1", "geb_Lure2","geb_Lure3","geb_Lure4","geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook", 
 		"geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
@@ -391,7 +365,7 @@ class geb_LimeTackleBox : Container_Base
 	}
 };
 
-class geb_LightBlueTackleBox : Container_Base
+class geb_LimeTackle : Container_Base
 {
 	ref TStringArray ItemArray = { "geb_Lure1", "geb_Lure2","geb_Lure3","geb_Lure4","geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook", 
 		"geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
@@ -417,7 +391,7 @@ class geb_LightBlueTackleBox : Container_Base
 	}
 };
 
-class geb_GreenTackleBox : Container_Base
+class geb_LightBlueTackle : Container_Base
 {
 	ref TStringArray ItemArray = { "geb_Lure1", "geb_Lure2","geb_Lure3","geb_Lure4","geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook", 
 		"geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
@@ -443,7 +417,7 @@ class geb_GreenTackleBox : Container_Base
 	}
 };
 
-class geb_FunYellowTackleBox : Container_Base
+class geb_GreenTackle : Container_Base
 {
 	ref TStringArray ItemArray = { "geb_Lure1", "geb_Lure2","geb_Lure3","geb_Lure4","geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook", 
 		"geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
@@ -469,7 +443,7 @@ class geb_FunYellowTackleBox : Container_Base
 	}
 };
 
-class geb_FunRedTackleBox : Container_Base
+class geb_FunYellowTackle : Container_Base
 {
 	ref TStringArray ItemArray = { "geb_Lure1", "geb_Lure2","geb_Lure3","geb_Lure4","geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook", 
 		"geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
@@ -495,7 +469,7 @@ class geb_FunRedTackleBox : Container_Base
 	}
 };
 
-class geb_FunPurpleTackleBox : Container_Base
+class geb_FunRedTackle : Container_Base
 {
 	ref TStringArray ItemArray = { "geb_Lure1", "geb_Lure2","geb_Lure3","geb_Lure4","geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook", 
 		"geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
@@ -521,7 +495,7 @@ class geb_FunPurpleTackleBox : Container_Base
 	}
 };
 
-class geb_FunGreenTackleBox : Container_Base
+class geb_FunPurpleTackle : Container_Base
 {
 	ref TStringArray ItemArray = { "geb_Lure1", "geb_Lure2","geb_Lure3","geb_Lure4","geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook", 
 		"geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
@@ -547,7 +521,7 @@ class geb_FunGreenTackleBox : Container_Base
 	}
 };
 
-class geb_CamoTackleBox : Container_Base
+class geb_FunGreenTackle : Container_Base
 {
 	ref TStringArray ItemArray = { "geb_Lure1", "geb_Lure2","geb_Lure3","geb_Lure4","geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook", 
 		"geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
@@ -573,7 +547,7 @@ class geb_CamoTackleBox : Container_Base
 	}
 };
 
-class geb_BrownTackleBox : Container_Base
+class geb_CamoTackle : Container_Base
 {
 	ref TStringArray ItemArray = { "geb_Lure1", "geb_Lure2","geb_Lure3","geb_Lure4","geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook", 
 		"geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
@@ -599,7 +573,33 @@ class geb_BrownTackleBox : Container_Base
 	}
 };
 
-class geb_BlueTackleBox : Container_Base
+class geb_BrownTackle : Container_Base
+{
+	ref TStringArray ItemArray = { "geb_Lure1", "geb_Lure2","geb_Lure3","geb_Lure4","geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook", 
+		"geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
+		"geb_BlueFishKnife", "geb_OrangeFishKnife", "geb_GreenFishKnife", "geb_YellowFishKnife", "geb_PurpleFishKnife", "geb_RedFishKnife" 
+	};
+
+	override int GetDamageSystemVersionChange()
+	{
+		return 110;
+	}
+
+	override bool CanReceiveItemIntoCargo(EntityAI item)
+	{
+		for (int i = 0; i < ItemArray.Count(); i++)
+		{
+			if (item.IsKindOf(ItemArray.Get(i)))
+			{
+				return true;
+			};
+		}
+
+		return false;
+	}
+};
+
+class geb_BlueTackle : Container_Base
 {
 	ref TStringArray ItemArray = { "geb_Lure1", "geb_Lure2","geb_Lure3","geb_Lure4","geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook", 
 		"geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",

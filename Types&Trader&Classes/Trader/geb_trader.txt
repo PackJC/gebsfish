@@ -2,104 +2,104 @@
 		Sardines,					                    	 S,		 -1,		 500
 		Carp,						                     	 S,		 -1,		 600
 		Mackerel,											 S,		 -1,		 600		
-        geb_Crayfish,										 S,		 -1,		 600
-        geb_Northernpike,									 S,		 -1,		 600
-        geb_Largemouthbass,									 S,		 -1,		 600       
-		geb_Smallmouthbass,									 S,		 -1,		 600
-		geb_Sunfish,										 S,		 -1,		 600
-		geb_Walleye,										 S,		 -1,		 600
-		geb_Sailfish,										 S,		 -1,		 600
-		geb_Mahimahi,										 S,		 -1,		 600
-        geb_Whitebass,										 S,		 -1,		 600
-        geb_Blackbass,										 S,		 -1,		 600
-        geb_RainbowTrout,										 	 S,		 -1,		 600
+        geb_CrayFish,										 S,		 -1,		 600
+        geb_NorthernPike,									 S,		 -1,		 600
+        geb_LargeMouthBass,									 S,		 -1,		 600       
+		geb_SmallMouthBass,									 S,		 -1,		 600
+		geb_SunFish,										 S,		 -1,		 600
+		geb_WallEye,										 S,		 -1,		 600
+		geb_AtlanticSailFish,								 S,		 -1,		 600
+		geb_MahiMahi,										 S,		 -1,		 600
+        geb_WhiteBass,										 S,		 -1,		 600
+        geb_BlackBass,										 S,		 -1,		 600
+        geb_RainbowTrout,					    		 	 S,		 -1,		 600
         geb_LakeTrout,									 	 S,		 -1,		 600
         geb_BrownTrout,									 	 S,		 -1,		 600
         geb_BrookTrout,									 	 S,		 -1,		 600
-        geb_CutthroatTrout,								 	 S,		 -1,		 600
-        geb_YellowPerch,										 	 S,		 -1,		 600
-        geb_FlatheadCatfish,										 S,		 -1,		 600
-        geb_FatheadMinnow,										 	 S,		 -1,		 600
-        geb_Bluegill,										 S,		 -1,		 600
+        geb_CutThroatTrout,								 	 S,		 -1,		 600
+        geb_YellowPerch,					    		 	 S,		 -1,		 600
+        geb_FlatHeadCatFish,								 S,		 -1,		 600
+        geb_FatHeadMinnow,								 	 S,		 -1,		 600
+        geb_BlueGill,										 S,		 -1,		 600
         geb_Sauger,										 	 S,		 -1,		 600
-        geb_Bowfin,										 	 S,		 -1,		 600
-        geb_Slimysculpin,									 S,		 -1,		 600
-        geb_Angelfish,										 S,		 -1,		 600
-        geb_Asianseabass,									 S,		 -1,		 600
+        geb_BowFin,										 	 S,		 -1,		 600
+        geb_SlimySculpin,									 S,		 -1,		 600
+        geb_AngelFish,										 S,		 -1,		 600
+        geb_AsianSeaBass,									 S,		 -1,		 600
         geb_Bonita,										 	 S,		 -1,		 600
-        geb_Cherrysalmon,									 S,		 -1,		 600
-        geb_Flatheadmullet,									 S,		 -1,		 600
-        geb_Leopardshark,									 S,		 -1,		 600
-        geb_Pacificcod,										 S,		 -1,		 600
-        geb_Redheadcichlid,									 S,		 -1,		 600
-        geb_Roughneckrock,									 S,		 -1,		 600
+        geb_CherrySalmon,									 S,		 -1,		 600
+        geb_FlatHeadMullet,									 S,		 -1,		 600
+        geb_LeopardShark,									 S,		 -1,		 600
+        geb_PacificCod,										 S,		 -1,		 600
+        geb_RedHeadCichlid,									 S,		 -1,		 600
+        geb_RoughNeckRock,									 S,		 -1,		 600
         geb_Severum,										 S,		 -1,		 600
-        geb_Bluetang,										 S,		 -1,		 600
-        geb_Hairtailfish,									 S,		 -1,		 600
-        geb_Humpheadwrasse,									 S,		 -1,		 600
-        geb_Siamesetigerfish,								 S,		 -1,		 600
-        geb_Bloodclam,								 		 S,		 -1,		 600
+        geb_BlueTang,										 S,		 -1,		 600
+        geb_LargeHeadHairTailFish,							 S,		 -1,		 600
+        geb_HumpHeadWrasse,									 S,		 -1,		 600
+        geb_SiameseTigerFish,								 S,		 -1,		 600
+        geb_BloodClam,								 		 S,		 -1,		 600
         geb_Mussel,								 			 S,		 -1,		 600
-        geb_Blackdevilsnail,								 S,		 -1,		 600
-		geb_Starfish,								 		 S,		 -1,		 600
-		geb_Kingcrab,										 S,		 -1,		 600
-        geb_Jellyfish,								 		 S,		 -1,		 600
+        geb_BlackDevilSnail,								 S,		 -1,		 600
+		geb_StarFish,								 		 S,		 -1,		 600
+		geb_KingCrab,										 S,		 -1,		 600
+        geb_BlueJellyFish,									 S,		 -1,		 600
         geb_Lobster,								 		 S,		 -1,		 600
 		geb_BlueLobster,								 	 S,		 -1,	 	 600
-        geb_Greatwhiteshark,								 S,		 -1,		 600
-		geb_Angelshark,								 		 S,		 -1,		 600
-		geb_Yellowfintuna,								 	 S,		 -1,		 600
+        geb_GreatWhiteShark,								 S,		 -1,		 600
+		geb_AngelShark,								 		 S,		 -1,		 600
+		geb_YellowFinTuna,								 	 S,		 -1,		 600
 
-	<Category> Fish Meat                                                             //Fish not buyable stops exploting by buying then selling at higher price fillets
-		geb_CrayfishFilletMeat,					             S,		 1200,		 600
-        geb_NorthernpikeFilletMeat,					         S,		 1200,		 600
-        geb_LargemouthbassFilletMeat,				         S,		 1200,		 600
-		geb_SmallmouthbassFilletMeat,				         S,		 1200,		 600
-		geb_WalleyeFilletMeat,				         		 S,		 1200,		 600
-		geb_SunfishFilletMeat,				         		 S,		 1200,		 600
-        geb_WhitebassFilletMeat,					         S,		 1200,		 600
-        geb_BlackbassFilletMeat,					         S,		 1200,		 600
-        geb_RainbowTroutFilletMeat,					             S,		 1200,		 600
+	<Category> Fish Meat                                                             
+		geb_CrayFishFilletMeat,					             S,		 1200,		 600
+        geb_NorthernPikeFilletMeat,					         S,		 1200,		 600
+        geb_LargeMouthBassFilletMeat,				         S,		 1200,		 600
+		geb_SmallMouthBassFilletMeat,				         S,		 1200,		 600
+		geb_WallEyeFilletMeat,				         		 S,		 1200,		 600
+		geb_SunFishFilletMeat,				         		 S,		 1200,		 600
+        geb_WhiteBassFilletMeat,					         S,		 1200,		 600
+        geb_BlackBassFilletMeat,					         S,		 1200,		 600
+        geb_RainbowTroutFilletMeat,					         S,		 1200,		 600
         geb_BrownTroutFilletMeat,					         S,		 1200,		 600
         geb_BrookTroutFilletMeat,					         S,		 1200,		 600
-        geb_CutthroatTroutFilletMeat,					     S,		 1200,		 600
+        geb_CutThroatTroutFilletMeat,					     S,		 1200,		 600
         geb_LakeTroutFilletMeat,					         S,		 1200,		 600
-        geb_YellowPerchFilletMeat,					             S,		 1200,		 600
-        geb_FlatheadCatfishFilletMeat,					             S,		 1200,		 600
-        geb_FatheadMinnowFilletMeat,					             S,		 1200,		 600
-        geb_BluegillFilletMeat,					             S,		 1200,		 600
+        geb_YellowPerchFilletMeat,					         S,		 1200,		 600
+        geb_FlatHeadCatFishFilletMeat,					     S,		 1200,		 600
+        geb_FatHeadMinnowFilletMeat,					     S,		 1200,		 600
+        geb_BlueGillFilletMeat,					             S,		 1200,		 600
         geb_SaugerFilletMeat,					             S,		 1200,		 600
-        geb_BowfinFilletMeat,					             S,		 1200,		 600
-        geb_SlimysculpinFilletMeat,					         S,		 1200,		 600
-        geb_AngelfishFilletMeat,					         S,		 1200,		 600
-        geb_AsianseabassFilletMeat,					         S,		 1200,		 600
-        geb_BluemarlinFilletMeat,					         S,		 1200,		 600
+        geb_BowFinFilletMeat,					             S,		 1200,		 600
+        geb_SlimySculpinFilletMeat,					         S,		 1200,		 600
+        geb_AngelFishFilletMeat,					         S,		 1200,		 600
+        geb_AsianSeaBassFilletMeat,					         S,		 1200,		 600
+        geb_AtlanticBlueMarlinFilletMeat,			         S,		 1200,		 600
         geb_BonitaFilletMeat,					             S,		 1200,		 600
-        geb_CherrysalmonFilletMeat,					         S,		 1200,		 600
-        geb_FlatheadmulletFilletMeat,					     S,		 1200,		 600
-        geb_LeopardsharkFilletMeat,					         S,		 1200,		 600
-        geb_PacificcodFilletMeat,					         S,		 1200,		 600
-        geb_RedheadcichlidFilletMeat,					     S,		 1200,		 600
-        geb_RoughneckrockFilletMeat,					     S,		 1200,		 600
+        geb_CherrySalmonFilletMeat,					         S,		 1200,		 600
+        geb_FlatHeadMulletFilletMeat,					     S,		 1200,		 600
+        geb_LeopardSharkFilletMeat,					         S,		 1200,		 600
+        geb_PacificCodFilletMeat,					         S,		 1200,		 600
+        geb_RedHeadCichlidFilletMeat,					     S,		 1200,		 600
+        geb_RoughNeckRockFilletMeat,					     S,		 1200,		 600
         geb_SeverumFilletMeat,					             S,		 1200,		 600
-        geb_BluetangFilletMeat,					             S,		 1200,		 600
-        geb_HairtailfishFilletMeat,					         S,		 1200,		 600
-        geb_HumpheadwrasseFilletMeat,					     S,		 1200,		 600
-        geb_SiamesetigerfishFilletMeat,					     S,		 1200,		 600
-        geb_SailfishFilletMeat,					    		 S,		 1200,		 600
-        geb_MahimahiFilletMeat,					    		 S,		 1200,		 600
-        geb_ClamFilletMeat,					     			 S,		 1200,		 600
+        geb_BlueTangFilletMeat,					             S,		 1200,		 600
+        geb_LargeHeadHairTailFishFilletMeat,		         S,		 1200,		 600
+        geb_HumpHeadWrasseFilletMeat,					     S,		 1200,		 600
+        geb_SiameseTigerFishFilletMeat,					     S,		 1200,		 600
+        geb_AtlanticSailFishFilletMeat,			    		 S,		 1200,		 600
+        geb_MahiMahiFilletMeat,					    		 S,		 1200,		 600
+        geb_BloodClamFilletMeat,			     			 S,		 1200,		 600
         geb_MusselFilletMeat,					     		 S,		 1200,		 600
-        geb_KingcrabLegs,					     			 S,		 1200,		 600
-		geb_KingcrabFilletMeat,					     		 S,		 1200,		 600
-        geb_JellyfishFilletMeat,					     	 S,		 1200,		 600
+        geb_KingCrabLegs,					     			 S,		 1200,		 600
+		geb_KingCrabFilletMeat,					     		 S,		 1200,		 600
+        geb_BlueJellyFishFilletMeat,				     	 S,		 1200,		 600
         geb_LobsterTail,					     			 S,		 1200,		 600
 		geb_LobsterFilletMeat,					     		 S,		 1200,		 600
 		geb_BlueLobsterTail,					     		 S,		 1200,		 600
 		geb_BlueLobsterFilletMeat,					     	 S,		 1200,		 600
-        geb_GreatwhitesharkFilletMeat,					     S,		 1200,		 600
-		geb_AngelsharkFilletMeat,					     	 S,		 1200,		 600
-		geb_YellowfintunaFilletMeat,					     S,		 1200,		 600
+        geb_GreatWhiteSharkFilletMeat,					     S,		 1200,		 600
+		geb_AngelSharkFilletMeat,					     	 S,		 1200,		 600
+		geb_YellowFinTunaFilletMeat,					     S,		 1200,		 600
 
 	<Category> Fishing Rods
         geb_RedFishingRod,				                     *,		 600,	     300
@@ -143,16 +143,14 @@
         geb_FunYellowTackle,				                 *,		 50,	     25
         geb_FunGreenTackle,				                     *,		 50,	     25
         geb_FunRedTackle,				                     *,		 50,	     25
- 
-	<Category> Fishing Tackleboxes //Removed due to issues but added back 10/17/2024
-          geb_BlueTackleBox,				                 *,		 350,	     175
-          geb_RedTackleBox,				                     *,		 350,	     175
-          geb_PurpleTackleBox,				                 *,		 350,	     175
-		  geb_SmallTackle,				                 	 *,		 350,	     175
-		  geb_WormContainer,				               	 *,		 350,	     175
-		  geb_BugContainer,   				                 *,		 350,	     175
-          geb_MinnowBucket,   				                 *,		 350,	     175
-		  geb_BambooFishingNet,   				             *,		 350,	     175
+        geb_BlueTackle,				                         *,		 350,	     175
+        geb_RedTackle,				                         *,		 350,	     175
+        geb_PurpleTackle,				                     *,		 350,	     175
+		geb_SmallTackle,				                 	 *,		 350,	     175
+		geb_WormContainer,				               	     *,		 350,	     175
+		geb_BugContainer,   				                 *,		 350,	     175
+        geb_MinnowBucket,   				                 *,		 350,	     175
+		geb_BambooFishingNet,   				             *,		 350,	     175
 
     <Category> Clothes
         geb_BlueFishHat,   				                 	 *,		 350,	     175

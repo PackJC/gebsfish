@@ -7,7 +7,7 @@
     <!-- FRESHWATER CATCHES AND FILLETS --> 	
 	
 	<types>
-      <type name="geb_SockeyeSalmon">
+      <type name="geb_SockEyeSalmon">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -17,18 +17,18 @@
 		<cost>100</cost>
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
-	</type>
-	<type name="geb_SockeyeSalmonFilletMeat">
-		<nominal>0</nominal>
-		<lifetime>14400</lifetime>
-		<restock>0</restock>
-		<min>0</min>
-		<quantmin>10</quantmin>
-		<quantmax>100</quantmax>
-		<cost>100</cost>
-		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
-		<category name="food"/>
-	</type>
+		</type>
+		<type name="geb_SockEyeSalmonFilletMeat">
+			<nominal>0</nominal>
+			<lifetime>14400</lifetime>
+			<restock>0</restock>
+			<min>0</min>
+			<quantmin>10</quantmin>
+			<quantmax>100</quantmax>
+			<cost>100</cost>
+			<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
+			<category name="food"/>
+		</type>
 	<type name="geb_ChinookSalmon">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
@@ -51,8 +51,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-   <types>
-      <type name="geb_Smallmouthbass">
+	<type name="geb_SmallMouthBass">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -63,7 +62,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_SmallmouthbassFilletMeat">
+	<type name="geb_SmallMouthBassFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -74,7 +73,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-      	<type name="geb_Sunfish">
+      	<type name="geb_SunFish">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -85,7 +84,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_SunfishFilletMeat">
+	<type name="geb_SunFishFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -96,7 +95,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-      	<type name="geb_Walleye">
+      	<type name="geb_WallEye">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -107,7 +106,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_WalleyeFilletMeat">
+	<type name="geb_WallEyeFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -185,7 +184,7 @@
 		<category name="food"/>
 	</type>
    
-      	<type name="geb_CutthroatTrout">
+      	<type name="geb_CutThroatTrout">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -196,7 +195,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_CutthroatTroutFilletMeat">
+	<type name="geb_CutThroatTroutFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -207,7 +206,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Crayfish">
+	<type name="geb_CrayFish">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -218,7 +217,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_CrayfishFilletMeat">
+	<type name="geb_CrayFishTailMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -229,7 +228,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Northernpike">
+	<type name="geb_NorthernPike">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -240,7 +239,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_NorthernpikeFilletMeat">
+	<type name="geb_NorthernPikeFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -251,7 +250,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Largemouthbass">
+	<type name="geb_LargeMouthBass">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -262,7 +261,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_LargemouthbassFilletMeat">
+	<type name="geb_LargeMouthBassFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -273,7 +272,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Whitebass">
+	<type name="geb_WhiteBass">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -284,7 +283,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_WhitebassFilletMeat">
+	<type name="geb_WhiteBassFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -295,7 +294,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Blackbass">
+	<type name="geb_BlackBass">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -306,7 +305,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_BlackbassFilletMeat">
+	<type name="geb_BlackBassFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -361,7 +360,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_FlatheadCatfish">
+	<type name="geb_FlatHeadCatFish">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -372,7 +371,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_FlatheadCatfishFilletMeat">
+	<type name="geb_FlatHeadCatFishFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -383,7 +382,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_FatheadMinnow">
+	<type name="geb_FatHeadMinnow">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -394,7 +393,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_FatheadMinnowFilletMeat">
+	<type name="geb_FatHeadMinnowFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -405,7 +404,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Bluegill">
+	<type name="geb_BlueGill">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -416,7 +415,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_BluegillFilletMeat">
+	<type name="geb_BlueGillFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -449,7 +448,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Bowfin">
+	<type name="geb_BowFin">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -460,7 +459,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_BowfinFilletMeat">
+	<type name="geb_BowFinFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -493,7 +492,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Blackdevilsnail">
+	<type name="geb_BlackDevilSnail">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -509,7 +508,7 @@
 
 	
 	<!-- SALTWATER CATCHES AND FILLETS -->
-	<type name="geb_Slimysculpin">
+	<type name="geb_SlimySculpin">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -520,7 +519,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_SlimysculpinFilletMeat">
+	<type name="geb_SlimySculpinFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -531,7 +530,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Angelfish">
+	<type name="geb_AngelFish">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -542,7 +541,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_AngelfishFilletMeat">
+	<type name="geb_AngelFishFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -553,7 +552,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Asianseabass">
+	<type name="geb_AsianSeaBass">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -564,7 +563,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_AsianseabassFilletMeat">
+	<type name="geb_AsianSeaBassFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -575,7 +574,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Bluemarlin">
+	<type name="geb_AtlanticBlueMarlin">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -586,7 +585,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_BluemarlinFilletMeat">
+	<type name="geb_AtlanticBlueMarlinFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -619,7 +618,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Cherrysalmon">
+	<type name="geb_CherrySalmon">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -630,7 +629,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_CherrysalmonFilletMeat">
+	<type name="geb_CherrySalmonFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -641,7 +640,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Flatheadmullet">
+	<type name="geb_FlatHeadmullet">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -652,7 +651,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_FlatheadmulletFilletMeat">
+	<type name="geb_FlatHeadMulletFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -663,7 +662,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Leopardshark">
+	<type name="geb_LeopardShark">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -674,7 +673,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_LeopardsharkFilletMeat">
+	<type name="geb_LeopardSharkFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -685,7 +684,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Pacificcod">
+	<type name="geb_PacificCod">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -696,7 +695,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_PacificcodFilletMeat">
+	<type name="geb_PacificCodFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -707,7 +706,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Redheadcichlid">
+	<type name="geb_RedHeadCichlid">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -718,7 +717,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_RedheadcichlidFilletMeat">
+	<type name="geb_RedHeadCichlidFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -729,7 +728,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Roughneckrock">
+	<type name="geb_RoughNeckRock">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -740,7 +739,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_RoughneckrockFilletMeat">
+	<type name="geb_RoughNeckRockFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -773,7 +772,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Bluetang">
+	<type name="geb_BlueTang">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -784,7 +783,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_BluetangFilletMeat">
+	<type name="geb_BlueTangFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -795,7 +794,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Hairtailfish">
+	<type name="geb_LargeHeadHairTailFish">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -806,7 +805,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_HairtailfishFilletMeat">
+	<type name="geb_LargeHeadHairTailFishFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -817,7 +816,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Humpheadwrasse">
+	<type name="geb_HumpHeadWrasse">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -828,7 +827,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_HumpheadwrasseFilletMeat">
+	<type name="geb_HumpHeadWrasseFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -839,7 +838,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Siamesetigerfish">
+	<type name="geb_SiameseTigerFish">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -850,7 +849,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_SiamesetigerfishFilletMeat">
+	<type name="geb_SiameseTigerFishFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -861,7 +860,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-		<type name="geb_Mahimahi">
+		<type name="geb_MahiMahi">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -872,7 +871,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_MahimahiFilletMeat">
+	<type name="geb_MahiMahiFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -883,7 +882,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-		<type name="geb_Sailfish">
+		<type name="geb_AtlanticSailFish">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -894,7 +893,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_SailfishFilletMeat">
+	<type name="geb_AtlanticSailFishFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -905,7 +904,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Starfish">
+	<type name="geb_StarFish">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -916,7 +915,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-		<type name="geb_Kingcrab">
+		<type name="geb_KingCrab">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -927,7 +926,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_KingcrabLegs">
+	<type name="geb_KingCrabLegs">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -938,7 +937,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_KingcrabFilletMeat">
+	<type name="geb_KingCrabFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -949,7 +948,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>		
-	<type name="geb_Jellyfish">
+	<type name="geb_BlueJellyFish">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -960,7 +959,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_JellyfishFilletMeat">
+	<type name="geb_BlueJellyFishFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -1037,7 +1036,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>	
-	<type name="geb_Greatwhiteshark">
+	<type name="geb_GreatWhiteShark">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -1048,7 +1047,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-		<type name="geb_GreatwhitesharkFilletMeat">
+		<type name="geb_GreatWhiteSharkFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -1059,7 +1058,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Angelshark">
+	<type name="geb_AngelShark">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -1070,7 +1069,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_AngelsharkFilletMeat">
+	<type name="geb_AngelSharkFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -1081,7 +1080,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>	
-	<type name="geb_Yellowfintuna">
+	<type name="geb_YellowFinTuna">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -1092,7 +1091,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_YellowfintunaFilletMeat">
+	<type name="geb_YellowFinTunaFilletMeat">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -1263,7 +1262,7 @@
 	
 
 	<!-- OLD TACKLE BOXES -->
-	<type name="geb_OldRedTackleBox">
+	<type name="geb_OldRedTackle">
         <nominal>0</nominal>
         <lifetime>7200</lifetime>
         <restock>0</restock>
@@ -1278,7 +1277,7 @@
         <usage name="Hunting"/>
         <usage name="Village"/>
 	</type>
-	<type name="geb_OldPurpleTackleBox">
+	<type name="geb_OldPurpleTackle">
         <nominal>0</nominal>
         <lifetime>7200</lifetime>
         <restock>0</restock>
@@ -1293,7 +1292,7 @@
         <usage name="Hunting"/>
         <usage name="Village"/>
 	</type>
-	<type name="geb_OldGreenTackleBox">
+	<type name="geb_OldGreenTackle">
         <nominal>0</nominal>
         <lifetime>7200</lifetime>
         <restock>0</restock>
@@ -1308,7 +1307,7 @@
         <usage name="Hunting"/>
         <usage name="Village"/>
 	</type>
-	<type name="geb_OldBlueTackleBox">
+	<type name="geb_OldBlueTackle">
         <nominal>0</nominal>
         <lifetime>7200</lifetime>
         <restock>0</restock>

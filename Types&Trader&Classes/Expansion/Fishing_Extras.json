@@ -35,7 +35,7 @@
       ]
     },
     {
-      "ClassName": "geb_OldGreenTackleBox",
+      "ClassName": "geb_OldGreenTackle",
       "MaxPriceThreshold": 350,
       "MinPriceThreshold": 350,
       "SellPricePercent": 20.0,

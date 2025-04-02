@@ -3,8 +3,7 @@ modded class PrepareFish {
 		super.Init();
         GetGebSettingsConfig();
 		//----------------------------------------------------------------------------------------------------------------------
-		
-		//ingredient 2
+		//Ingredient 2
 		InsertIngredient(1,"geb_BlueFishKnife");
 		InsertIngredient(1,"geb_OrangeFishKnife");
 		InsertIngredient(1,"geb_GreenFishKnife");
@@ -13,7 +12,7 @@ modded class PrepareFish {
 		InsertIngredient(1,"geb_PurpleFishKnife");
     }
 
-    //gets called upon recipe's completion
+    //Called upon recipe's completion
     override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight){
 		// Adjusts quantity of results to the quantity of the 1st ingredient
 		super.Do(ingredients, player, results, specialty_weight);
@@ -66,19 +65,19 @@ modded class PrepareFish {
 			if(m_gebsConfig.PredatorSettings.PredatorWarningMessageEnable){
 				//Send message to the player in green
 				if(m_gebsConfig.PredatorSettings.PredatorWarningMessageGreen){
-					player.MessageFriendly(Widget.TranslateString("#STR_PREDATORSPAWN"));
+					player.MessageFriendly(Widget.TranslateString("#STR_action_predatorspawn"));
 				}
 				//Send message to the player in grey
 				if(m_gebsConfig.PredatorSettings.PredatorWarningMessageGrey){
-					player.MessageStatus(Widget.TranslateString("#STR_PREDATORSPAWN"));
+					player.MessageStatus(Widget.TranslateString("#STR_action_predatorspawn"));
 				}
 				//Send message to the player in red
 				if(m_gebsConfig.PredatorSettings.PredatorWarningMessageRed){
-					player.MessageImportant(Widget.TranslateString("#STR_PREDATORSPAWN"));
+					player.MessageImportant(Widget.TranslateString("#STR_action_predatorspawn"));
 				}
 				//Send message to the player in yellow
 				if(m_gebsConfig.PredatorSettings.PredatorWarningMessageYellow){
-					player.MessageAction(Widget.TranslateString("#STR_PREDATORSPAWN"));
+					player.MessageAction(Widget.TranslateString("#STR_action_predatorspawn"));
 				}
 			}
 		}
@@ -133,7 +132,6 @@ modded class PrepareFish {
 		Object predator = GetGame().CreateObject(classname, position, false, true);
 		if (predator)
 		{
-
 			if(m_gebsConfig.GeneralSettings.DebugLogs){
                 Print("[gebsfish] [DEBUG] [Predator] Spawned " + classname + " at " + position.ToString());
             }
@@ -171,10 +169,7 @@ modded class PrepareFish {
                             #endif
 						}
 					}
-
 				}
-
-
 				soundPlayed = true; // Mark the sound as played
 			}
 		}

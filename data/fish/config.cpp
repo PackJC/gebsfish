@@ -281,21 +281,21 @@ class cfgVehicles
 
 	*/
 	//19 Freshwater Fish
-	class geb_Bluegill: geb_FreshFish_Base {
+	class geb_BlueGill: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_bluegill";
 		descriptionShort = "$STR_fish_bluegill_desc";
 		model = "\gebsfish\data\fish\bluegill.p3d";
 		itemSize[] = {3,2};
 	};
-	class geb_Blackbass: geb_FreshFish_Base {
+	class geb_BlackBass: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_blackbass";
 		descriptionShort = "$STR_fish_blackbass_desc";
 		model = "\gebsfish\data\fish\blackbass.p3d";
 		rotationFlags = 17;
 	};
-	class geb_FlatheadCatfish: geb_FreshFish_Base {
+	class geb_FlatHeadCatFish: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_flatheadcatfish";
 		descriptionShort = "$STR_fish_flatheadcatfish_desc";
@@ -303,34 +303,34 @@ class cfgVehicles
 		itemSize[] = {7,2};
 		weight = 4000;
 	};
-	class geb_Walleye: geb_FreshFish_Base {
+	class geb_WallEye: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_walleye";
 		descriptionShort = "$STR_fish_walleye_desc";
 		model = "\gebsfish\data\fish\walleye.p3d";
 		itemSize[] = {4,2};
 	};
-	class geb_Sunfish: geb_FreshFish_Base {
+	class geb_SunFish: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_sunfish";
 		descriptionShort = "$STR_fish_sunfish_desc";
 		model = "\gebsfish\data\fish\sunfish.p3d";
 		itemSize[] = {3,2};
 	};
-	class geb_Smallmouthbass: geb_FreshFish_Base {
+	class geb_SmallMouthBass: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_smallmouthbass";
 		descriptionShort = "$STR_fish_smallmouthbass_desc";
 		model = "\gebsfish\data\fish\smallmouthbass.p3d";
 		itemSize[] = {3,2};
 	};
-	class geb_Largemouthbass: geb_FreshFish_Base {
+	class geb_LargeMouthBass: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_largemouthbass";
 		descriptionShort = "$STR_fish_largemouthbass_desc";
 		model = "\gebsfish\data\fish\largemouthbass.p3d";
 	};
-	class geb_FatheadMinnow: geb_FreshFish_Base {
+	class geb_FatHeadMinnow: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_fatheadminnow";
 		descriptionShort = "$STR_fish_fatheadminnow_desc";
@@ -346,7 +346,7 @@ class cfgVehicles
 			"Trap_Bait_2"
 		};
 	};
-	class geb_Northernpike: geb_FreshFish_Base {
+	class geb_NorthernPike: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_northernpike";
 		descriptionShort = "$STR_fish_northernpike_desc";
@@ -398,7 +398,7 @@ class cfgVehicles
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\browntrout.paa"};
 	};
-	class geb_CutthroatTrout: geb_Trout_Base {
+	class geb_CutThroatTrout: geb_Trout_Base {
 		scope = 2;
 		displayName = "$STR_fish_cutthroattrout";
 		descriptionShort = "$STR_fish_cutthroattrout_desc";
@@ -417,13 +417,13 @@ class cfgVehicles
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\laketrout.paa"};
 	};
-	class geb_Whitebass: geb_FreshFish_Base {
+	class geb_WhiteBass: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_whitebass";
 		descriptionShort = "$STR_fish_whitebass_desc";
 		model = "\gebsfish\data\fish\whitebass.p3d";
 	};
-	class geb_Bowfin: geb_FreshFish_Base {
+	class geb_BowFin: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_bowfin";
 		descriptionShort = "$STR_fish_bowfin_desc";
@@ -431,7 +431,7 @@ class cfgVehicles
 		itemSize[] = {4,2};
 		weight = 1500;
 	};
-	class geb_Slimysculpin: geb_FreshFish_Base {
+	class geb_SlimySculpin: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_slimysculpin";
 		descriptionShort = "$STR_fish_slimysculpin_desc";
@@ -441,7 +441,7 @@ class cfgVehicles
 	};
 
 	//22 Saltwater Fish
-	class geb_Angelfish: geb_SaltFish_Base {
+	class geb_AngelFish: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_angelfish";
 		descriptionShort = "$STR_fish_angelfish_desc";
@@ -449,19 +449,19 @@ class cfgVehicles
 		weight = 2500;
 		itemSize[] = {4,3};
 	};
-	class geb_Asianseabass: geb_SaltFish_Base {
+	class geb_AsianSeaBass: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_asianseabass";
 		descriptionShort = "$STR_fish_asianseabass_desc";
 		model = "\gebsfish\data\fish\asianseabass.p3d";
 	};
-	class geb_Atlanticbluemarlin: geb_LargeFish_Base {
+	class geb_AtlanticBlueMarlin: geb_LargeFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_atlanticbluemarlin";
 		descriptionShort = "$STR_fish_atlanticbluemarlin_desc";
 		model = "\gebsfish\data\fish\bluemarlin.p3d";
 	};
-	class geb_Atlanticsailfish: geb_LargeFish_Base {
+	class geb_AtlanticSailFish: geb_LargeFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_atlanticsailfish";
 		descriptionShort = "$STR_fish_atlanticsailfish_desc";
@@ -481,25 +481,25 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_bonita_desc";
 		model = "\gebsfish\data\fish\bonita.p3d";
 	};
-	class geb_Cherrysalmon: geb_SaltFish_Base {
+	class geb_CherrySalmon: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_cherrysalmon";
 		descriptionShort = "$STR_fish_cherrysalmon_desc";
 		model = "\gebsfish\data\fish\cherrysalmon.p3d";
 	};
-	class geb_Sockeyesalmon: geb_SaltFish_Base {
+	class geb_SockEyeSalmon: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_sockeyesalmon";
 		descriptionShort = "$STR_fish_sockeyesalmon_desc";
 		model = "\gebsfish\data\fish\sockeyesalmon.p3d";
 	};
-	class geb_Chinooksalmon: geb_SaltFish_Base {
+	class geb_ChinookSalmon: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_chinooksalmon";
 		descriptionShort = "$STR_fish_chinooksalmon_desc";
 		model = "\gebsfish\data\fish\chinooksalmon.p3d";
 	};
-	class geb_Flatheadmullet: geb_SaltFish_Base {
+	class geb_FlatHeadMullet: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_flatheadmullet";
 		descriptionShort = "$STR_fish_flatheadmullet_desc";
@@ -507,20 +507,20 @@ class cfgVehicles
 		weight = 1000;
 		itemSize[] = {2,1};
 	};
-	class geb_Leopardshark: geb_LargeFish_Base {
+	class geb_LeopardShark: geb_LargeFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_leopardshark";
 		descriptionShort = "$STR_fish_leopardshark_desc";
 		model = "\gebsfish\data\fish\leopardshark.p3d";
 		weight = 8000;
 	};
-	class geb_Pacificcod: geb_SaltFish_Base {
+	class geb_PacificCod: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_pacificcod";
 		descriptionShort = "$STR_fish_pacificcod_desc";
 		model = "\gebsfish\data\fish\pacificcod.p3d";
 	};
-	class geb_Redheadcichlid: geb_SaltFish_Base {
+	class geb_RedHeadCichlid: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_redheadcichlid";
 		descriptionShort = "$STR_fish_redheadcichlid_desc";
@@ -528,7 +528,7 @@ class cfgVehicles
 		weight = 3000;
 		itemSize[] = {4,3};
 	};
-	class geb_Roughneckrock: geb_SaltFish_Base {
+	class geb_RoughNeckRock: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_roughneckrock";
 		descriptionShort = "$STR_fish_roughneckrock_desc";
@@ -548,7 +548,7 @@ class cfgVehicles
 		itemBehaviour = 0;
 		itemSize[] = {5,4};
 	};
-	class geb_Bluetang: geb_SaltFish_Base {
+	class geb_BlueTang: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_bluetang";
 		descriptionShort = "$STR_fish_bluetang_desc";
@@ -557,7 +557,7 @@ class cfgVehicles
 		weight = 2000;
 		itemSize[] = {4,3};
 	};
-	class geb_LargeHeadhairtailfish: geb_SaltFish_Base {
+	class geb_LargeHeadHairTailFish: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_largeheadhairtailfish";
 		descriptionShort = "$STR_fish_largeheadhairtailfish_desc";
@@ -566,7 +566,7 @@ class cfgVehicles
 		weight = 800;
 		itemSize[] = {4,1};
 	};
-	class geb_Humpheadwrasse: geb_SaltFish_Base {
+	class geb_HumpHeadWrasse: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_humpheadwrasse";
 		descriptionShort = "$STR_fish_humpheadwrasse_desc";
@@ -575,7 +575,7 @@ class cfgVehicles
 		weight = 3500;
 		itemSize[] = {5,4};
 	};
-	class geb_Siamesetigerfish: geb_SaltFish_Base {
+	class geb_SiameseTigerFish: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_siamesetigerfish";
 		descriptionShort = "$STR_fish_siamesetigerfish_desc";
@@ -584,19 +584,19 @@ class cfgVehicles
 		weight = 2500;
 		itemSize[] = {3,3};
 	};
-	class geb_Angelshark: geb_LargeFish_Base {
+	class geb_AngelShark: geb_LargeFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_angelshark";
 		descriptionShort = "$STR_fish_angelshark_desc";
 		model = "\gebsfish\data\fish\angelshark.p3d";
 	};
-	class geb_Greatwhiteshark: geb_LargeFish_Base {
+	class geb_GreatWhiteShark: geb_LargeFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_greatwhiteshark";
 		descriptionShort = "$STR_fish_greatwhiteshark_desc";
 		model = "\gebsfish\data\fish\greatwhiteshark.p3d";
 	};
-	class geb_Yellowfintuna: geb_SaltFish_Base {
+	class geb_YellowFinTuna: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_yellowfintuna";
 		descriptionShort = "$STR_fish_yellowfintuna_desc";
@@ -604,7 +604,7 @@ class cfgVehicles
 	};
 
 	//8 Saltwater crustaceans
-	class geb_Bloodclam: geb_SaltFish_Base {
+	class geb_BloodClam: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_bloodclam";
 		descriptionShort = "$STR_fish_bloodclam_desc";
@@ -625,7 +625,7 @@ class cfgVehicles
 		weight = 100;
 		itemSize[] = {1,1};
 	};
-	class geb_Blackdevilsnail: geb_SaltFish_Base {
+	class geb_BlackDevilSnail: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_blackdevilsnail";
 		descriptionShort = "$STR_fish_blackdevilsnail_desc";
@@ -635,7 +635,7 @@ class cfgVehicles
 		weight = 100;
 		itemSize[] = {1,1};
 	};
-	class geb_Starfish: geb_SaltFish_Base {
+	class geb_StarFish: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_starfish";
 		descriptionShort = "$STR_fish_starfish_desc";
@@ -645,7 +645,7 @@ class cfgVehicles
 		weight = 2500;
 		itemSize[] = {2,2};
 	};
-	class geb_Kingcrab: geb_SaltFish_Base {
+	class geb_KingCrab: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_kingcrab";
 		descriptionShort = "$STR_fish_kingcrab_desc";
@@ -655,7 +655,7 @@ class cfgVehicles
 		weight = 3000;
 		itemSize[] = {3,3};
 	};
-	class geb_Bluejellyfish: geb_SaltFish_Base {
+	class geb_BlueJellyFish: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_bluejellyfish";
 		descriptionShort = "$STR_fish_bluejellyfish_desc";
@@ -675,7 +675,7 @@ class cfgVehicles
 		weight = 3000;
 		itemSize[] = {3,2};
 	};
-	class geb_Bluelobster: geb_Lobster {
+	class geb_BlueLobster: geb_Lobster {
 		scope = 2;
 		displayName = "$STR_fish_bluelobster";
 		descriptionShort = "$STR_bluelobster_desc";
@@ -687,7 +687,7 @@ class cfgVehicles
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\bluelobster_ca.paa"};
 	};
 	//1 Freshwater crustacean
-	class geb_Crayfish: geb_FreshFish_Base {
+	class geb_CrayFish: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_crayfish";
 		descriptionShort = "$STR_fish_crayfish_desc";
@@ -697,7 +697,7 @@ class cfgVehicles
 	};
 	
 	//Freshwater Fish Fillets
-	class geb_BluegillFilletMeat: CarpFilletMeat {
+	class geb_BlueGillFilletMeat: CarpFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_bluegill_fillet";
 		descriptionShort = "$STR_fish_bluegill_desc";
@@ -706,7 +706,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\bluegill_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_BlackbassFilletMeat: CarpFilletMeat {
+	class geb_BlackBassFilletMeat: CarpFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_blackbass_fillet";
 		descriptionShort = "$STR_fish_blackbass_desc";
@@ -715,7 +715,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\blackbass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_SmallmouthbassFilletMeat: CarpFilletMeat {
+	class geb_SmallMouthBassFilletMeat: CarpFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_Smallmouthbass_fillet";
 		descriptionShort = "$STR_fish_Smallmouthbass_desc";
@@ -724,7 +724,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\smallmouthbass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_WalleyeFilletMeat: CarpFilletMeat {
+	class geb_WallEyeFilletMeat: CarpFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_walleye_fillet";
 		descriptionShort = "$STR_fish_walleye_desc";
@@ -733,7 +733,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\walleye_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_SunfishFilletMeat: CarpFilletMeat {
+	class geb_SunFishFilletMeat: CarpFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_sunfish_fillet";
 		descriptionShort = "$STR_fish_sunfish_desc";
@@ -742,7 +742,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\sunfish_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_FlatheadCatfishFilletMeat: CarpFilletMeat {
+	class geb_FlatHeadCatFishFilletMeat: CarpFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_flatheadcatfish_fillet";
 		descriptionShort = "$STR_fish_flatheadcatfish_desc";
@@ -751,7 +751,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\catfish_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_LargemouthbassFilletMeat: CarpFilletMeat {
+	class geb_LargeMouthBassFilletMeat: CarpFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_largemouthbass_fillet";
 		descriptionShort = "$STR_fish_largemouthbass_desc";
@@ -760,13 +760,13 @@ class cfgVehicles
 			"\gebsfish\data\fish\largemouthbass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_FatheadMinnowFilletMeat: CarpFilletMeat {
+	class geb_FatHeadMinnowFilletMeat: CarpFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_fatheadminnow_fillet";
 		descriptionShort = "$STR_fish_fatheadminnow_desc";
 		model = "\dz\gear\food\carp_fillet.p3d";
 	};
-	class geb_NorthernpikeFilletMeat: CarpFilletMeat {
+	class geb_NorthernPikeFilletMeat: CarpFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_northernpike_fillet";
 		descriptionShort = "$STR_fish_northernpike_desc";
@@ -793,7 +793,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\sauger_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_CrayfishTailMeat: CarpFilletMeat {
+	class geb_CrayFishTailMeat: CarpFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_crayfish_tail";
 		descriptionShort = "$STR_crayfish_desc";
@@ -826,7 +826,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\brooktrout_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_CutthroatTroutFilletMeat: CarpFilletMeat {
+	class geb_CutThroatTroutFilletMeat: CarpFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_cuthroattrout_fillet";
 		descriptionShort = "$STR_fish_cutthroattrout_desc";
@@ -844,7 +844,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\laketrout_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_WhitebassFilletMeat: CarpFilletMeat {
+	class geb_WhiteBassFilletMeat: CarpFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_whitebass_fillet";
 		descriptionShort = "$STR_fish_whitebass_desc";
@@ -853,7 +853,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\whitebass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_BowfinFilletMeat: CarpFilletMeat {
+	class geb_BowFinFilletMeat: CarpFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_bowfin_fillet";
 		descriptionShort = "$STR_fish_bowfin_desc";
@@ -862,7 +862,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\bowfin_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_SlimysculpinFilletMeat: CarpFilletMeat {
+	class geb_SlimySculpinFilletMeat: CarpFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_slimysculpin_fillet";
 		descriptionShort = "$STR_fish_slimysculpin_desc";
@@ -873,7 +873,7 @@ class cfgVehicles
 	};
 
 	//Saltwater Fish fillets
-	class geb_AngelfishFilletMeat: MackerelFilletMeat {
+	class geb_AngelFishFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_angelfish_fillet";
 		descriptionShort = "$STR_fish_angelfish_desc";
@@ -882,7 +882,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\angelfish_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_AsianseabassFilletMeat: MackerelFilletMeat {
+	class geb_AsianSeaBassFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_asianseabass_fillet";
 		descriptionShort = "$STR_fish_asianseabass_desc";
@@ -891,7 +891,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\asianseabass_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_AtlanticbluemarlinFilletMeat: MackerelFilletMeat {
+	class geb_AtlanticBlueMarlinFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_atlanticbluemarlin_fillet";
 		descriptionShort = "$STR_fish_atlanticbluemarlin_desc";
@@ -900,7 +900,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\bluemarlin_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_SailfishFilletMeat: MackerelFilletMeat {
+	class geb_SailFishFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_sailfish_fillet";
 		descriptionShort = "$STR_fish_sailfish_desc";
@@ -927,7 +927,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\bonita_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_CherrysalmonFilletMeat: MackerelFilletMeat {
+	class geb_CherrySalmonFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_cherrysalmon_fillet";
 		descriptionShort = "$STR_fish_cherrysalmon_desc";
@@ -936,7 +936,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\cherrysalmon_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_SockeyesalmonFilletMeat: MackerelFilletMeat {
+	class geb_SockEyeSalmonFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_sockeyesalmon_fillet";
 		descriptionShort = "$STR_fish_sockeyesalmon_desc";
@@ -945,7 +945,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\sockeyesalmon_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_ChinooksalmonFilletMeat: MackerelFilletMeat {
+	class geb_ChinookSalmonFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_chinooksalmon_fillet";
 		descriptionShort = "$STR_fish_chinooksalmon_desc";
@@ -954,7 +954,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\chinooksalmon_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_FlatheadmulletFilletMeat: MackerelFilletMeat {
+	class geb_FlatHeadMulletFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_flatheadmullet_fillet";
 		descriptionShort = "$STR_fish_flatheadmullet_desc";
@@ -963,7 +963,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\flatheadmullet_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_LeopardsharkFilletMeat: MackerelFilletMeat {
+	class geb_LeopardSharkFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_leopardshark_fillet";
 		descriptionShort = "$STR_fish_leopardshark_desc";
@@ -972,7 +972,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\leopardshark_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_PacificcodFilletMeat: MackerelFilletMeat {
+	class geb_PacificCodFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_pacificcod_fillet";
 		descriptionShort = "$STR_fish_pacificcod_desc";
@@ -981,7 +981,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\pacificcod_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_RedheadcichlidFilletMeat: MackerelFilletMeat {
+	class geb_RedHeadCichlidFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_redheadcichlid_fillet";
 		descriptionShort = "$STR_fish_redheadcichlid_desc";
@@ -990,7 +990,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\redheadcichlid_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_RoughneckrockFilletMeat: MackerelFilletMeat {
+	class geb_RoughNeckRockFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_roughneckrock_fillet";
 		descriptionShort = "$STR_fish_roughneckrock_desc";
@@ -1009,7 +1009,7 @@ class cfgVehicles
 		};
 	};
 
-	class geb_BluetangFilletMeat: MackerelFilletMeat {
+	class geb_BlueTangFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_bluetang_fillet";
 		descriptionShort = "$STR_fish_bluetang_desc";
@@ -1018,7 +1018,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\bluetang_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_LargeHeadHairtailfishFilletMeat: MackerelFilletMeat {
+	class geb_LargeHeadHairTailFishFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_largeheadhairtailfish_fillet";
 		descriptionShort = "$STR_fish_largeheadhairtailfish_desc";
@@ -1027,7 +1027,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\hairtailfish_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_HumpheadwrasseFilletMeat: MackerelFilletMeat {
+	class geb_HumpHeadWrasseFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_humpheadwrasse_fillet";
 		descriptionShort = "$STR_fish_humpheadwrasse_desc";
@@ -1036,7 +1036,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\humpheadwrasse_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_SiamesetigerfishFilletMeat: MackerelFilletMeat {
+	class geb_SiameseTigerFishFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_siamesetigerfish_fillet";
 		descriptionShort = "$STR_fish_siamesetigerfish_desc";
@@ -1045,7 +1045,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\siamesetigerfish_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_GreatwhitesharkFilletMeat: MackerelFilletMeat {
+	class geb_GreatWhiteSharkFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_greatwhiteshark_fillet";
 		descriptionShort = "$STR_fish_greatwhiteshark_desc";
@@ -1054,7 +1054,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\greatwhiteshark_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_AngelsharkFilletMeat: MackerelFilletMeat {
+	class geb_AngelSharkFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_angelshark_fillet";
 		descriptionShort = "$STR_fish_angelshark_desc";
@@ -1074,7 +1074,7 @@ class cfgVehicles
 	};
 
 	//Crustacean Fillets
-	class geb_ClamFilletMeat: MackerelFilletMeat {
+	class geb_BloodClamFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_bloodclam_fillet";
 		descriptionShort = "$STR_fish_bloodclam_desc";
@@ -1092,7 +1092,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\musselfillet.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_KingcrabFilletMeat: MackerelFilletMeat {
+	class geb_KingCrabFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_kingcrab_fillet";
 		descriptionShort = "$STR_fish_kingcrab_desc";
@@ -1101,7 +1101,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\kingcrabfillet.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_KingcrabLegs: MackerelFilletMeat {
+	class geb_KingCrabLegs: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_kingcrab_legs";
 		descriptionShort = "$STR_fish_kingcrab_desc";
@@ -1110,7 +1110,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\kingcrab.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_BluejellyfishFilletMeat: MackerelFilletMeat {
+	class geb_BlueJellyFishFilletMeat: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_bluejellyfish_fillet";
 		descriptionShort = "$STR_fish_bluejellyfish_desc";

@@ -45,6 +45,8 @@ The default currently is 0.25 for the predator to spawn, if you wish to make thi
 - My close friends for motivation during this project
 - The DayZ Modding Community <3 
 - Doriiiiija, Echo#4343, Gramps#4914, iiiii42
+- https://www.allaboutbirds.org/guide/Common_Loon/sounds
+- https://search.macaulaylibrary.org/catalog?taxonCode=comloo&mediaType=audio&sort=rating_rank_desc
 
 # Usage & Terms
 This item is NOT authorized (strictly forbidden) for any of these conditions:

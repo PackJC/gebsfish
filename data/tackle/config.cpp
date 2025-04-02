@@ -398,7 +398,7 @@ class cfgVehicles
 			};
 		};
 	};
-	class geb_OldGreenTackleBox: Container_Base {
+	class geb_OldGreenTackle: Container_Base {
 		scope = 2;
 		displayName = "$STR_tools_oldgreentackle";
 		descriptionShort = "$STR_tools_tackle_desc";
@@ -442,7 +442,7 @@ class cfgVehicles
 			};
 		};
 	};
-	class geb_OldRedTackleBox: Container_Base {
+	class geb_OldRedTackle: Container_Base {
 		scope = 2;
 		displayName = "$STR_tools_oldredtackle";
 		descriptionShort = "$STR_tools_tackle_desc";
@@ -486,7 +486,7 @@ class cfgVehicles
 			};
 		};
 	};
-	class geb_OldBlueTackleBox: Container_Base {
+	class geb_OldBlueTackle: Container_Base {
 		scope = 2;
 		displayName = "$STR_tools_oldbluetackle";
 		descriptionShort = "$STR_tools_tackle_desc";
@@ -530,7 +530,7 @@ class cfgVehicles
 			};
 		};
 	};
-	class geb_OldPurpleTackleBox: Container_Base {
+	class geb_OldPurpleTackle: Container_Base {
 		scope = 2;
 		displayName = "$STR_tools_oldpurpletackle";
 		descriptionShort = "$STR_tools_tackle_desc";

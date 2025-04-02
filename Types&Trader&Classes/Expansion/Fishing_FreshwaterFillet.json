@@ -18,7 +18,7 @@
       "Variants": []
     },
     {
-      "ClassName": "geb_FlatheadCatfishFilletMeat",
+      "ClassName": "geb_FlatHeadCatFishFilletMeat",
       "MaxPriceThreshold": 250,
       "MinPriceThreshold": 250,
       "SellPricePercent": 100.0,
@@ -51,7 +51,7 @@
       "Variants": []
     },
     {
-      "ClassName": "geb_CutthroatTroutFilletMeat",
+      "ClassName": "geb_CutThroatTroutFilletMeat",
       "MaxPriceThreshold": 500,
       "MinPriceThreshold": 500,
       "SellPricePercent": 100.0,
@@ -95,7 +95,7 @@
       "Variants": []
     },
     {
-      "ClassName": "geb_BlackbassFilletMeat",
+      "ClassName": "geb_BlackBassFilletMeat",
       "MaxPriceThreshold": 250,
       "MinPriceThreshold": 250,
       "SellPricePercent": 100.0,
@@ -106,7 +106,7 @@
       "Variants": []
     },
     {
-      "ClassName": "geb_WhitebassFilletMeat",
+      "ClassName": "geb_WhiteBassFilletMeat",
       "MaxPriceThreshold": 500,
       "MinPriceThreshold": 500,
       "SellPricePercent": 100.0,
@@ -117,7 +117,7 @@
       "Variants": []
     },
     {
-      "ClassName": "geb_SunfishFilletMeat",
+      "ClassName": "geb_SunFishFilletMeat",
       "MaxPriceThreshold": 350,
       "MinPriceThreshold": 350,
       "SellPricePercent": 100.0,
@@ -128,7 +128,7 @@
       "Variants": []
     },
     {
-      "ClassName": "geb_WalleyeFilletMeat",
+      "ClassName": "geb_WallEyeFilletMeat",
       "MaxPriceThreshold": 350,
       "MinPriceThreshold": 350,
       "SellPricePercent": 100.0,
@@ -139,7 +139,7 @@
       "Variants": []
     },
     {
-      "ClassName": "geb_SmallmouthbassFilletMeat",
+      "ClassName": "geb_SmallMouthBassFilletMeat",
       "MaxPriceThreshold": 250,
       "MinPriceThreshold": 250,
       "SellPricePercent": 100.0,
@@ -150,7 +150,7 @@
       "Variants": []
     },
     {
-      "ClassName": "geb_LargemouthbassFilletMeat",
+      "ClassName": "geb_LargeMouthBassFilletMeat",
       "MaxPriceThreshold": 500,
       "MinPriceThreshold": 500,
       "SellPricePercent": 100.0,
@@ -161,7 +161,7 @@
       "Variants": []
     },
     {
-      "ClassName": "geb_NorthernpikeFilletMeat",
+      "ClassName": "geb_NorthernPikeFilletMeat",
       "MaxPriceThreshold": 350,
       "MinPriceThreshold": 350,
       "SellPricePercent": 100.0,
@@ -172,9 +172,20 @@
       "Variants": []
     },
     {
-      "ClassName": "geb_ClamFilletMeat",
+      "ClassName": "geb_BloodClamFilletMeat",
       "MaxPriceThreshold": 700,
       "MinPriceThreshold": 700,
+      "SellPricePercent": 100.0,
+      "MaxStockThreshold": 0,
+      "MinStockThreshold": 0,
+      "QuantityPercent": -1,
+      "SpawnAttachments": [],
+      "Variants": []
+    },
+    {
+      "ClassName": "geb_CrayFishTailMeat",
+      "MaxPriceThreshold": 400,
+      "MinPriceThreshold": 400,
       "SellPricePercent": 100.0,
       "MaxStockThreshold": 0,
       "MinStockThreshold": 0,

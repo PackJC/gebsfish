@@ -1,26 +1,18 @@
-class PrepareKingcrab extends PrepareFish
-{
+class PrepareKingCrab extends PrepareFish {
 	int ran;	
-	override void Init()
-	{
+	override void Init(){
 		super.Init();
-		//----------------------------------------------------------------------------------------------------------------------
-		
-		//INGREDIENTS
-		//ingredient 1
-		InsertIngredient(0,"geb_Kingcrab");//you can insert multiple ingredients this way
-
+		//INGREDIENTS-----------------------------------------------------------------------------------------------------------
+		//Ingredient 1
+		InsertIngredient(0,"geb_KingCrab");//you can insert multiple ingredients this way
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
 		m_IngredientAddQuantity[0] = 0;// 0 = do nothing
 		m_IngredientDestroy[0] = true;//true = destroy, false = do nothing
-
-
-		
 		m_IngredientAddHealth[1] = -4;// 0 = do nothing // damages health of knife/tool from the fillet action
-		//----------------------------------------------------------------------------------------------------------------------
-
-		AddResult("geb_KingcrabFilletMeat");//add results here
+		//RESULTS----------------------------------------------------------------------------------------------------------------
+		//Result 1
+		AddResult("geb_KingCrabFilletMeat");//add results here
 		m_ResultSetFullQuantity[0] = false;//true = set full quantity, false = do nothing
 		m_ResultSetQuantity[0] = -1;//-1 = do nothing
 		m_ResultSetHealth[0] = -1;//-1 = do nothing
@@ -29,10 +21,10 @@ class PrepareKingcrab extends PrepareFish
 		m_ResultToInventory[0] = -2;//(value) == -2 spawn result on the ground;(value) == -1 place anywhere in the players inventory, (value) >= 0 means switch position with ingredient number(value)
 		m_ResultUseSoftSkills[0] = false;// set 'true' to allow modification of the values by softskills on this result
 		m_ResultReplacesIngredient[0] = 0;// value == -1 means do nothing; a value >= 0 means this result will transfer item propertiesvariables, attachments etc.. from an ingredient value
-
+		//Result 2
 		ran = Math.RandomFloatInclusive(m_gebsConfig.KingCrab.MeatMin,m_gebsConfig.KingCrab.MeatMax);
 		for (int i = 1; i < ran; ++i){
-			AddResult("geb_KingcrabLegs");//add results here
+			AddResult("geb_KingCrabLegs");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
 			m_ResultSetHealth[i] = -1;//-1 = do nothing
@@ -42,18 +34,18 @@ class PrepareKingcrab extends PrepareFish
 			m_ResultUseSoftSkills[i] = false;// set 'true' to allow modification of the values by softskills on this result
 			m_ResultReplacesIngredient[i] = 0;// value == -1 means do nothing; a value >= 0 means this result will transfer item propertiesvariables, attachments etc.. from an ingredient value
 		}
-		//----------------------------------------------------------------------------------------------------------------------
-		
 	}
 
-	override bool CanDo(ItemBase ingredients[], PlayerBase player)//final check for recipe's validity
+	//Final check for recipe's validity
+	override bool CanDo(ItemBase ingredients[], PlayerBase player)
 	{
 		return true;
 	}
 
-	override void Do(ItemBase ingredients[], PlayerBase player,array<ItemBase> results, float specialty_weight)//gets called upon recipe's completion
+	//Called upon recipe's completion
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight)
 	{
-		// Adjusts quantity of results to the quantity of the 1st ingredient
+		//Adjusts quantity of results to the quantity of the 1st ingredient
 		super.Do(ingredients, player, results, specialty_weight);
 	}
 };

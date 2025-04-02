@@ -2,21 +2,15 @@ modded class PrepareSteelheadTrout extends PrepareFish {
 	int ran;	
 	override void Init(){
 		super.Init();
-		//----------------------------------------------------------------------------------------------------------------------
-		
-		//INGREDIENTS
-		//ingredient 1
+		//INGREDIENTS-----------------------------------------------------------------------------------------------------------
+		//Ingredient 1
 		InsertIngredient(0,"SteelheadTrout");//you can insert multiple ingredients this way
-
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
 		m_IngredientAddQuantity[0] = 0;// 0 = do nothing
 		m_IngredientDestroy[0] = true;//true = destroy, false = do nothing
-
-
-		
 		m_IngredientAddHealth[1] = -4;// 0 = do nothing // damages health of knife/tool from the fillet action
-
+		//RESULT----------------------------------------------------------------------------------------------------------------
         AddResult("RedCaviar");						// add results here
 		m_ResultSetFullQuantity[0] = false;			// true = set full quantity, false = do nothing
 		m_ResultSetQuantity[0] = -1;				// -1 = do nothing
@@ -25,8 +19,6 @@ modded class PrepareSteelheadTrout extends PrepareFish {
 		m_ResultInheritsColor[0] = -1;				// (value) == -1 means do nothing; a (value) >= 0 means this result classname will be a composite of the name provided in AddResult method and config value "color" of ingredient (value)
 		m_ResultToInventory[0] = -2;				// (value) == -2 spawn result on the ground;(value) == -1 place anywhere in the players inventory, (value) >= 0 means switch position with ingredient number(value)
 		m_ResultReplacesIngredient[0] = 0;          // (value) == -1 means do nothing; a value >= 0 means this result will transfer item propertiesvariables, attachments etc.. from an ingredient value
-	
-
 		//----------------------------------------------------------------------------------------------------------------------
 		ran = Math.RandomFloatInclusive(m_gebsConfig.SteelheadTrout.MeatMin,m_gebsConfig.SteelheadTrout.MeatMax);
 		for (int i = 1; i <= ran; ++i){
@@ -40,16 +32,15 @@ modded class PrepareSteelheadTrout extends PrepareFish {
 			m_ResultUseSoftSkills[i] = false;// set 'true' to allow modification of the values by softskills on this result
 			m_ResultReplacesIngredient[i] = 0;// value == -1 means do nothing; a value >= 0 means this result will transfer item propertiesvariables, attachments etc.. from an ingredient value
 		}
-		//----------------------------------------------------------------------------------------------------------------------
 	}
 
-	//final check for recipe's validity
+	//Final check for recipe's validity
 	override bool CanDo(ItemBase ingredients[], PlayerBase player){
 		return true;
 	}
 
-	//gets called upon recipe's completion
-	override void Do(ItemBase ingredients[], PlayerBase player,array<ItemBase> results, float specialty_weight){
+	//Called upon recipe's completion
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight){
 		// Adjusts quantity of results to the quantity of the 1st ingredient
 		super.Do(ingredients, player, results, specialty_weight);
 	}

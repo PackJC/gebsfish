@@ -15,62 +15,62 @@ modded class PluginRecipesManager
 		super.RegisterRecipies();
 
 		//Freshwater crustacean
-		RegisterRecipe(new PrepareCrayfish);
+		RegisterRecipe(new PrepareCrayFish);
 
 		//Freshwater fish 	
-		RegisterRecipe(new PrepareBluegill);
-		RegisterRecipe(new PrepareBlackbass);
-		RegisterRecipe(new PrepareCatfish);
-		RegisterRecipe(new PrepareLargemouthbass);
-		RegisterRecipe(new PrepareSmallmouthbass);
-		RegisterRecipe(new PrepareSunfish);
-		RegisterRecipe(new PrepareWalleye);
-		RegisterRecipe(new PrepareMinnow);
-		RegisterRecipe(new PrepareNorthernpike);
-		RegisterRecipe(new PreparePerch);
+		RegisterRecipe(new PrepareBlueGill);
+		RegisterRecipe(new PrepareBlackBass);
+		RegisterRecipe(new PrepareFlatHeadCatFish);
+		RegisterRecipe(new PrepareLargeMouthBass);
+		RegisterRecipe(new PrepareSmallBouthBass);
+		RegisterRecipe(new PrepareSunFish);
+		RegisterRecipe(new PrepareWallEye);
+		RegisterRecipe(new PrepareFatHeadMinnow);
+		RegisterRecipe(new PrepareNorthernPike);
+		RegisterRecipe(new PrepareYellowPerch);
 		RegisterRecipe(new PrepareSauger);
 		RegisterRecipe(new PrepareRainbowTrout);
 		RegisterRecipe(new PrepareBrownTrout);
 		RegisterRecipe(new PrepareBrookTrout);
 		RegisterRecipe(new PrepareLakeTrout);
-		RegisterRecipe(new PrepareCutthroatTrout);
-		RegisterRecipe(new PrepareWhitebass);
-		RegisterRecipe(new PrepareBowfin);
-		RegisterRecipe(new PrepareSlimysculpin);
-		RegisterRecipe(new PrepareSockeyesalmon);
-		RegisterRecipe(new PrepareChinooksalmon);
+		RegisterRecipe(new PrepareCutThroatTrout);
+		RegisterRecipe(new PrepareWhiteBass);
+		RegisterRecipe(new PrepareBowFin);
+		RegisterRecipe(new PrepareSlimySculpin);
+		RegisterRecipe(new PrepareSockEyeSalmon);
+		RegisterRecipe(new PrepareChinookSalmon);
 
 		//Saltwater crustacean
 		RegisterRecipe(new PrepareMussel);
-		RegisterRecipe(new PrepareBlackdevilsnail);
-		RegisterRecipe(new PrepareStarfish);
-		RegisterRecipe(new PrepareKingcrab);
-		RegisterRecipe(new PrepareJellyfish);
-		RegisterRecipe(new PrepareBloodclam);
+		RegisterRecipe(new PrepareBlackDevilSnail);
+		RegisterRecipe(new PrepareStarFish);
+		RegisterRecipe(new PrepareKingCrab);
+		RegisterRecipe(new PrepareBlueJellyFish);
+		RegisterRecipe(new PrepareBloodClam);
 		RegisterRecipe(new PrepareLobster);
 		RegisterRecipe(new PrepareBlueLobster);
 
 		//Saltwater Fish
-		RegisterRecipe(new PrepareAngelfish);
-		RegisterRecipe(new PrepareSailfish);
-		RegisterRecipe(new PrepareMahimahi);
-		RegisterRecipe(new PrepareAsianseabass);
-		RegisterRecipe(new PrepareBluemarlin);
+		RegisterRecipe(new PrepareAngelFish);
+		RegisterRecipe(new PrepareAtlanticSailFish);
+		RegisterRecipe(new PrepareMahiMahi);
+		RegisterRecipe(new PrepareAsianSeaBass);
+		RegisterRecipe(new PrepareAtlanticBlueMarlin);
 		RegisterRecipe(new PrepareBonita);
-		RegisterRecipe(new PrepareCherrysalmon);
-		RegisterRecipe(new PrepareFlatheadmullet);
-		RegisterRecipe(new PrepareLeopardshark);
-		RegisterRecipe(new PreparePacificcod);
-		RegisterRecipe(new PrepareRedheadcichlid);
-		RegisterRecipe(new PrepareRoughneckrock);
+		RegisterRecipe(new PrepareCherrySalmon);
+		RegisterRecipe(new PrepareFlatHeadMullet);
+		RegisterRecipe(new PrepareLeopardShark);
+		RegisterRecipe(new PreparePacificCod);
+		RegisterRecipe(new PrepareRedHeadCichlid);
+		RegisterRecipe(new PrepareRoughNeckRock);
 		RegisterRecipe(new PrepareSeverum);
-		RegisterRecipe(new PrepareBluetang);
-		RegisterRecipe(new PrepareHairtailfish);
-		RegisterRecipe(new PrepareHumpheadwrasse);
-		RegisterRecipe(new PrepareSiamesetigerfish);
-		RegisterRecipe(new PrepareAngelshark);
-		RegisterRecipe(new PrepareGreatwhiteshark);
-		RegisterRecipe(new PrepareYellowfintuna);
+		RegisterRecipe(new PrepareBlueTang);
+		RegisterRecipe(new PrepareHairTailFish);
+		RegisterRecipe(new PrepareHumpHeadWrasse);
+		RegisterRecipe(new PrepareSiameseTigerFish);
+		RegisterRecipe(new PrepareAngelShark);
+		RegisterRecipe(new PrepareGreatWhiteShark);
+		RegisterRecipe(new PrepareYellowFinTuna);
 		
 		//Tools
 		RegisterRecipe(new CraftWoodenNet);
