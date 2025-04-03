@@ -22,7 +22,7 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareBlackBass);
 		RegisterRecipe(new PrepareFlatHeadCatFish);
 		RegisterRecipe(new PrepareLargeMouthBass);
-		RegisterRecipe(new PrepareSmallBouthBass);
+		RegisterRecipe(new PrepareSmallMouthBass);
 		RegisterRecipe(new PrepareSunFish);
 		RegisterRecipe(new PrepareWallEye);
 		RegisterRecipe(new PrepareFatHeadMinnow);
@@ -65,7 +65,7 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareRoughNeckRock);
 		RegisterRecipe(new PrepareSeverum);
 		RegisterRecipe(new PrepareBlueTang);
-		RegisterRecipe(new PrepareHairTailFish);
+		RegisterRecipe(new PrepareLargeHeadHairTailFish);
 		RegisterRecipe(new PrepareHumpHeadWrasse);
 		RegisterRecipe(new PrepareSiameseTigerFish);
 		RegisterRecipe(new PrepareAngelShark);

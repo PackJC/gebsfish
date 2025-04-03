@@ -53,7 +53,7 @@ class gebsfishConfig {
     ref CherrySalmonConf CherrySalmon;
     ref ChinookSalmonConf ChinookSalmon;
     ref SockEyeSalmonConf SockEyeSalmon;
-    ref FlatheadMulletConf FlatheadMullet;
+    ref FlatHeadMulletConf FlatHeadMullet;
     ref LeopardSharkConf LeopardShark;
     ref PacificCodConf PacificCod;
     ref RedHeadCichlidConf RedHeadCichlid;
@@ -61,14 +61,14 @@ class gebsfishConfig {
     ref BlueTangConf BlueTang;
     ref LargeHeadHairTailFishConf LargeHeadHairTailFish;
     ref HumpHeadWrasseConf HumpHeadWrasse;
-    ref SiameseTigerfishConf SiameseTigerfish;
+    ref SiameseTigerFishConf SiameseTigerFish;
     ref GreatWhiteSharkConf GreatWhiteShark;
     ref AngelSharkConf AngelShark;
     ref YellowFinTunaConf YellowFinTuna;
     ref BloodClamConf BloodClam;
     ref MusselConf Mussel;
     ref BlackDevilSnailConf BlackDevilSnail;
-    ref StarfishConf Starfish;
+    ref StarFishConf StarFish;
     ref KingCrabConf KingCrab;
     ref BlueJellyFishConf BlueJellyFish;
     ref LobsterConf Lobster;
@@ -151,8 +151,8 @@ class gebsfishConfig {
         RoughNeckRock = new RoughNeckRockConf;
         BlueTang = new BlueTangConf;
         LargeHeadHairTailFish = new LargeHeadHairTailFishConf;
-        HumpheadWrasse = new HumpheadWrasseConf;
-        SiameseTigerfish = new SiameseTigerfishConf;
+        HumpHeadWrasse = new HumpHeadWrasseConf;
+        SiameseTigerFish = new SiameseTigerFishConf;
         GreatWhiteShark = new GreatWhiteSharkConf;
         AngelShark = new AngelSharkConf;
         YellowFinTuna = new YellowFinTunaConf;

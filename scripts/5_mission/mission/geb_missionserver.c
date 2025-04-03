@@ -6,6 +6,9 @@ modded class MissionServer
 		if(m_gebsConfig){
 			Print("[gebsfish] Gebsfish V3.2 Loaded Successfully!");
 		}
+
+		gebsfishTypes fishTypesGenerator = new gebsfishTypes();
+    	fishTypesGenerator.GenerateTypesXML();
 	}
 
 	override void OnClientPrepareEvent(PlayerIdentity identity, out bool useDB, out vector pos, out float yaw, out int preloadTimeout) {
@@ -15,7 +18,7 @@ modded class MissionServer
 			//if identity is valid, send config to player. 
 			auto configParams = new Param1<gebsfishConfig>(GetGebSettingsConfig());
 			Print("[gebsfish] Sending Geb's Fishing config to Player: " + identity.GetName() + " RPC: " + RPC_GEBSCONFIG_SYNC);
-			PlayerBase player = PlayerBase.Cast(identity.GetPlayer())
+			PlayerBase player = PlayerBase.Cast(identity.GetPlayer());
 			GetGame().RPCSingleParam(player, RPC_GEBSCONFIG_SYNC, configParams, true, identity);
 		}
 		
