@@ -112,7 +112,7 @@ modded class MissionBase{
 					Print("[gebsfish] Catfish are catchable.");
 				}
 				if (m_gebsConfig.FatHeadMinnow.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldMinnow(m_gebsConfig.FatHeadMinnow.CatchProbability));
+					bank.RegisterYieldItem(new geb_YieldFatHeadMinnow(m_gebsConfig.FatHeadMinnow.CatchProbability));
 					Print("[gebsfish] Minnow are catchable.");
 				}
 				if (m_gebsConfig.BlueGill.CatchProbability != 0){
@@ -143,8 +143,8 @@ modded class MissionBase{
 					bank.RegisterYieldItem(new geb_YieldMahiMahi(m_gebsConfig.MahiMahi.CatchProbability));
 					Print("[gebsfish] Mahimahi are catchable.");
 				}
-				if (m_gebsConfig.SailFish.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldSailFish(m_gebsConfig.SailFish.CatchProbability));
+				if (m_gebsConfig.AtlanticSailFish.CatchProbability != 0) {
+					bank.RegisterYieldItem(new geb_YieldAtlanticSailFish(m_gebsConfig.AtlanticSailFish.CatchProbability));
 					Print("[gebsfish] Sailfish are catchable.");
 				}
 				if (m_gebsConfig.AngelFish.CatchProbability != 0) {
@@ -196,7 +196,7 @@ modded class MissionBase{
 					Print("[gebsfish] Roughneck Rock are catchable.");
 				}
 				if (m_gebsConfig.BlueTang.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldBluetang(m_gebsConfig.BlueTang.CatchProbability));
+					bank.RegisterYieldItem(new geb_YieldBlueTang(m_gebsConfig.BlueTang.CatchProbability));
 					Print("[gebsfish] Blue Tang are catchable.");
 				}
 				if (m_gebsConfig.LargeHeadHairTailFish.CatchProbability != 0) {
@@ -244,7 +244,7 @@ modded class MissionBase{
 					Print("[gebsfish] King Crab are catchable.");
 				}
 				if (m_gebsConfig.BlueJellyFish.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldJellyFish(m_gebsConfig.BlueJellyFish.CatchProbability));
+					bank.RegisterYieldItem(new geb_YieldBlueJellyFish(m_gebsConfig.BlueJellyFish.CatchProbability));
 					Print("[gebsfish] Blue Jellyfish are catchable.");
 				}
 				if (m_gebsConfig.Lobster.CatchProbability != 0) {

@@ -61,7 +61,7 @@ class gebsfishConfig {
     ref BlueTangConf BlueTang;
     ref LargeHeadHairTailFishConf LargeHeadHairTailFish;
     ref HumpHeadWrasseConf HumpHeadWrasse;
-    ref SiameseTigerfishConf SiameseTigerfish;
+    ref SiameseTigerFishConf SiameseTigerFish;
     ref GreatWhiteSharkConf GreatWhiteShark;
     ref AngelSharkConf AngelShark;
     ref YellowFinTunaConf YellowFinTuna;
@@ -152,7 +152,7 @@ class gebsfishConfig {
         BlueTang = new BlueTangConf;
         LargeHeadHairTailFish = new LargeHeadHairTailFishConf;
         HumpHeadWrasse = new HumpHeadWrasseConf;
-        SiameseTigerfish = new SiameseTigerfishConf;
+        SiameseTigerFish = new SiameseTigerFishConf;
         GreatWhiteShark = new GreatWhiteSharkConf;
         AngelShark = new AngelSharkConf;
         YellowFinTuna = new YellowFinTunaConf;
