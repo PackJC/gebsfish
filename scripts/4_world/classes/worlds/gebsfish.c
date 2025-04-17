@@ -35,3 +35,13 @@ modded class NamalskData {
 }
 
 #endif
+
+#ifdef TemScriptsMod
+
+modded class LuxData {
+    override void InitYieldBank() {
+		    GetDayZGame().GetYieldDataInitInvoker().Invoke(m_YieldBank);
+    }
+}
+
+#endif
