@@ -212,6 +212,32 @@ class gebsfishConfig {
         Predators.Insert(Wolf);
         Predators.Insert(Bear);
 
+        JunkEntry Wellies_Brown = new JunkEntry();
+        Wellies_Brown.Classname = "Wellies_Brown";
+        Wellies_Brown.CatchProbability = 5;
+
+        JunkEntry Wellies_Grey = new JunkEntry();
+        Wellies_Grey.Classname = "Wellies_Grey";
+        Wellies_Grey.CatchProbability = 5;
+
+        JunkEntry Wellies_Green = new JunkEntry();
+        Wellies_Green.Classname = "Wellies_Green";
+        Wellies_Green.CatchProbability = 5;
+
+        JunkEntry Wellies_Black = new JunkEntry();
+        Wellies_Black.Classname = "Wellies_Black";
+        Wellies_Black.CatchProbability = 5;
+
+        Junk.Insert(Wellies_Brown);
+        Junk.Insert(Wellies_Grey);
+        Junk.Insert(Wellies_Green);
+        Junk.Insert(Wellies_Black);
+
+        ContainerJunkEntry Pot = new ContainerJunkEntry();
+        Pot.Classname = "Pot";
+        Pot.CatchProbability = 5;
+
+        ContainerJunk.Insert(Pot);
 
         //Save it
         Save();
@@ -1082,32 +1108,12 @@ class JunkEntry {
     int CatchProbability;
 };
 
-JunkEntry Wellies_Brown = new JunkEntry();
-Wellies_Brown.Classname = "Wellies_Brown";
-Wellies_Brown.CatchProbability = 5;
-
-JunkEntry Wellies_Grey = new JunkEntry();
-Wellies_Grey.Classname = "Wellies_Grey";
-Wellies_Grey.CatchProbability = 5;
-
-JunkEntry Wellies_Green = new JunkEntry();
-Wellies_Green.Classname = "Wellies_Green";
-Wellies_Green.CatchProbability = 5;
-
-JunkEntry Wellies_Black = new JunkEntry();
-Wellies_Black.Classname = "Wellies_Black";
-Wellies_Black.CatchProbability = 5;
-
-class ConatainerJunkEntry {
+class ContainerJunkEntry {
     string ClassnameInfo = "Any classname for a junk item that's a liquid container.";
     string Classname;
     string CatchProbInfo = "Catch probability for this junk item. Typically a scale of 0-25, with 0 being no chance.";
     int CatchProbability;
 };
-
-ContainerJunkEntry Pot = new ContainerJunkEntry();
-Pot.Classname = "Pot";
-Pot.CatchProbability = 5;
 
 //Save config data
 protected ref gebsfishConfig m_gebsConfig;

@@ -101,21 +101,22 @@ modded class ActionFishingNew: ActionContinuousBase {
 
             //Send message to the player
 			if(m_gebsConfig.PredatorSettings.PredatorWarningMessageEnable){
+				string pred_message = Widget.TranslateString("#STR_action_predatorspawn")
 				//Send message to the player in green
 				if(m_gebsConfig.PredatorSettings.PredatorWarningMessageGreen){
-					player.MessageFriendly(Widget.TranslateString("#STR_action_predatorspawn"));
+					player.MessageFriendly(pred_message);
 				}
 				//Send message to the player in grey
 				if(m_gebsConfig.PredatorSettings.PredatorWarningMessageGrey){
-					player.MessageStatus(Widget.TranslateString("#STR_action_predatorspawn"));
+					player.MessageStatus(pred_message);
 				}
 				//Send message to the player in red
 				if(m_gebsConfig.PredatorSettings.PredatorWarningMessageRed){
-					player.MessageImportant(Widget.TranslateString("#STR_action_predatorspawn"));
+					player.MessageImportant(pred_message);
 				}
 				//Send message to the player in yellow
 				if(m_gebsConfig.PredatorSettings.PredatorWarningMessageYellow){
-					player.MessageAction(Widget.TranslateString("#STR_action_predatorspawn"));
+					player.MessageAction(pred_message);
 				}
 			}
 		}
@@ -157,14 +158,47 @@ modded class ActionFishingNew: ActionContinuousBase {
 		return null;
 	}
 
-    vector GenerateSpawnPosition(vector center, float minRadius, float maxRadius){
-        float angle = Math.RandomFloat(0, 360);
-        float distance = Math.RandomFloat(minRadius, maxRadius);
-        float xOffset = Math.Cos(angle) * distance;
-        float zOffset = Math.Sin(angle) * distance;
+    vector GenerateSpawnPosition(vector center, float minRadius, float maxRadius)
+	{
+		vector spawnPos;
+		float angle;
+		float distance;
+		float xOffset;
+		float zOffset;
 
-        return Vector(center[0] + xOffset, center[1], center[2] + zOffset);
-    }
+		int attempts = 0;
+		const int maxAttempts = 20; // Prevent infinite loop
+
+		// First random spawn
+		angle = Math.RandomFloat(0, 360);
+		distance = Math.RandomFloat(minRadius, maxRadius);
+		xOffset = Math.Cos(angle) * distance;
+		zOffset = Math.Sin(angle) * distance;
+
+		spawnPos = Vector(center[0] + xOffset, center[1], center[2] + zOffset);
+
+		// Now keep regenerating if it's on water
+		while ((GetGame().SurfaceIsSea(spawnPos[0], spawnPos[2]) || GetGame().SurfaceIsPond(spawnPos[0], spawnPos[2])) && attempts < maxAttempts)
+		{
+			angle = Math.RandomFloat(0, 360);
+			distance = Math.RandomFloat(minRadius, maxRadius);
+			xOffset = Math.Cos(angle) * distance;
+			zOffset = Math.Sin(angle) * distance;
+
+			spawnPos = Vector(center[0] + xOffset, center[1], center[2] + zOffset);
+
+			attempts++;
+		}
+
+		if(m_gebsConfig.GeneralSettings.DebugLogs){
+			if (attempts >= maxAttempts)
+			{
+				Print("[gebsfish] [DEBUG] [Predator] Warning: Max attempts reached while trying to find a land spawn position.");
+			}
+		}
+
+		return spawnPos;
+	}
 
     void SpawnPredator(string classname, vector position, PlayerBase triggeringPlayer, out bool soundPlayed){
 		Object predator = GetGame().CreateObject(classname, position, false, true);

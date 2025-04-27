@@ -277,8 +277,8 @@ modded class MissionBase{
 				// 	bank.RegisterYieldItem(new YieldItemJunkEmpty(1,junk));
 				// }
 				
-				for (int i = 0; i < m_gebsConfig.ContainerJunk.Count(); i++){
-					ContainerJunkEntry containerjunkItem = m_gebsConfig.Junk[i];
+				for (int i1 = 0; i1 < m_gebsConfig.ContainerJunk.Count(); i1++){
+					ContainerJunkEntry containerjunkItem = m_gebsConfig.ContainerJunk[i1];
 					bank.RegisterYieldItem(new YieldItemJunkEmpty(containerjunkItem.CatchProbability, containerjunkItem.Classname));
 				}
 
