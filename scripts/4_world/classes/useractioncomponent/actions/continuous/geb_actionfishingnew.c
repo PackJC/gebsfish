@@ -70,7 +70,7 @@ modded class ActionFishingNew: ActionContinuousBase {
 		}
 
 		// Global spawn chance check
-		if (Math.RandomFloat(0, 1) > m_gebsConfig.PredatorSettings.PredatorSpawnChancePreparing)
+		if (Math.RandomFloat(0, 1) > m_gebsConfig.PredatorSettings.PredatorSpawnChanceFishing)
 		{
 			if(m_gebsConfig.GeneralSettings.DebugLogs){
                 Print("[gebsfish] [DEBUG] [Predator] Global spawn chance failed.");
