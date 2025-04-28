@@ -180,6 +180,9 @@ modded class ActionFishingNew: ActionContinuousBase {
 		// Now keep regenerating if it's on water
 		while ((GetGame().SurfaceIsSea(spawnPos[0], spawnPos[2]) || GetGame().SurfaceIsPond(spawnPos[0], spawnPos[2])) && attempts < maxAttempts)
 		{
+			if(m_gebsConfig.GeneralSettings.DebugLogs){
+                Print("[gebsfish] [DEBUG] [Predator] Surface selected was over water. Picking new spawn location.");
+            }
 			angle = Math.RandomFloat(0, 360);
 			distance = Math.RandomFloat(minRadius, maxRadius);
 			xOffset = Math.Cos(angle) * distance;
