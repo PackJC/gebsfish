@@ -262,16 +262,27 @@ modded class MissionBase{
 				//start loading junk data
 				Print("[gebsfish] [JUNK] Adding junk to yield data.");
 
-				foreach(string junk: m_gebsConfig.Junk.Classnames){
-					Print("[gebsfish] " + junk + " is catchable as junk.");
-					bank.RegisterYieldItem(new YieldItemJunk(1,junk));
+				// foreach(string junk: m_gebsConfig.Junk.Classnames){
+				// 	Print("[gebsfish] " + junk + " is catchable as junk.");
+				// 	bank.RegisterYieldItem(new YieldItemJunk(1,junk));
+				// }
+
+				for (int i = 0; i < m_gebsConfig.Junk.Count(); i++){
+					JunkEntry junkItem = m_gebsConfig.Junk[i];
+					bank.RegisterYieldItem(new YieldItemJunk(junkItem.CatchProbability, junkItem.Classname));
 				}
 
-				foreach(string containerjunk: m_gebsConfig.ContainerJunk.Classnames){
-					Print("[gebsfish] " + containerjunk + " is catchable as junk.");
-					bank.RegisterYieldItem(new YieldItemJunkEmpty(1,junk));
-				}
+				// foreach(string containerjunk: m_gebsConfig.ContainerJunk.Classnames){
+				// 	Print("[gebsfish] " + containerjunk + " is catchable as junk.");
+				// 	bank.RegisterYieldItem(new YieldItemJunkEmpty(1,junk));
+				// }
 				
+				for (int i1 = 0; i1 < m_gebsConfig.ContainerJunk.Count(); i1++){
+					ContainerJunkEntry containerjunkItem = m_gebsConfig.ContainerJunk[i1];
+					bank.RegisterYieldItem(new YieldItemJunkEmpty(containerjunkItem.CatchProbability, containerjunkItem.Classname));
+				}
+
+
 				//finished loading junk data
 				Print("[gebsfish] [JUNK] Loading junk complete.");
 			
