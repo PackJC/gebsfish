@@ -714,7 +714,7 @@ class cfgVehicles
 	class geb_BlueLobster: geb_Lobster {
 		scope = 2;
 		displayName = "$STR_fish_bluelobster";
-		descriptionShort = "$STR_bluelobster_desc";
+		descriptionShort = "$STR_fish_bluelobster_desc";
 		debug_ItemCategory = 6;
 		rotationFlags = 17;
 		weight = 3000;
@@ -832,7 +832,7 @@ class cfgVehicles
 	class geb_CrayFishTailMeat: CarpFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_crayfish_tail";
-		descriptionShort = "$STR_crayfish_desc";
+		descriptionShort = "$STR_fish_crayfish_desc";
 		model = "\gebsfish\data\fish\crayfishtail.p3d";
 	};
 	class geb_RainbowTroutFilletMeat: CarpFilletMeat {
