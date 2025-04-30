@@ -8,4 +8,8 @@ modded class YieldItemBase {
     override void Init(){
         GetGebSettingsConfig();
     }
+
+    int GebGetCatchProbability() {
+        return m_BaseWeight;
+    }
 }

@@ -101,7 +101,7 @@ modded class ActionFishingNew: ActionContinuousBase {
 
             //Send message to the player
 			if(m_gebsConfig.PredatorSettings.PredatorWarningMessageEnable){
-				string pred_message = Widget.TranslateString("#STR_action_predatorspawn")
+				string pred_message = Widget.TranslateString("#STR_action_predatorspawn");
 				//Send message to the player in green
 				if(m_gebsConfig.PredatorSettings.PredatorWarningMessageGreen){
 					player.MessageFriendly(pred_message);

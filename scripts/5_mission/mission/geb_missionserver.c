@@ -86,9 +86,11 @@ modded class MissionServer
 						gebDebugCatchMethod = "Catch Method Unknown or Out of Range";
 						break;
 				}
+				
 				Print("[gebsfish] [DEBUG] [YieldMapOutput] Yield Item " + i + " : " + yItem);
 				Print("[gebsfish] [DEBUG] [YieldMapOutput] Yield Item " + i + " Type: " + yItem.GetType());
 				Print("[gebsfish] [DEBUG] [YieldMapOutput] Yield Item " + i + " Name: " + GetDisplayNameFromTypeName(yItem.GetType()));
+				Print("[gebsfish] [DEBUG] [YieldMapOutput] Yield Item " + i + " Catch Probability Weight: " + yItem.GebGetCatchProbability().ToString());
 				Print("[gebsfish] [DEBUG] [YieldMapOutput] Yield Item " + i + " Catch Method: " + gebDebugCatchMethod);
 				Print("[gebsfish] [DEBUG] [YieldMapOutput] Yield Item " + i + " Catch Environment: " + gebDebugCatchEnviro);
 			}
