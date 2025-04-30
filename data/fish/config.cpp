@@ -936,10 +936,10 @@ class cfgVehicles
 			"\gebsfish\data\fish\bluemarlin_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_SailFishFilletMeat: MackerelFilletMeat {
+	class geb_AtlanticSailFishFilletMeat: MackerelFilletMeat {
 		scope = 2;
-		displayName = "$STR_fish_sailfish_fillet";
-		descriptionShort = "$STR_fish_sailfish_desc";
+		displayName = "$STR_fish_atlanticsailfish_fillet";
+		descriptionShort = "$STR_fish_atlanticsailfish_desc";
 		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\bluemarlin_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
