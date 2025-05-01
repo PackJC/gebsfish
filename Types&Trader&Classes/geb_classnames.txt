@@ -27,8 +27,8 @@ geb_CutThroatTrout
 geb_CutThroatTroutFilletMeat
 geb_MahiMahi
 geb_MahiMahiFilletMeat
-geb_SailFish
-geb_SailFishFilletMeat
+geb_AtlanticSailFish
+geb_AtlanticSailFishFishFilletMeat
 geb_YellowPerch
 geb_YellowPerchFilletMeat
 geb_FlatHeadCatFish
