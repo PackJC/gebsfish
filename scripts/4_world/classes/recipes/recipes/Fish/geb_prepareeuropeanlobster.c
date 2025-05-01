@@ -1,10 +1,10 @@
-class PrepareBlueLobster extends PrepareFish{
+class PrepareEuropeanLobster extends PrepareFish{
 	int ran;	
 	override void Init(){
 		super.Init();
 		//INGREDIENTS-----------------------------------------------------------------------------------------------------------
 		//Ingredient 1
-		InsertIngredient(0,"geb_BlueLobster");//you can insert multiple ingredients this way
+		InsertIngredient(0,"geb_EuropeanLobster");//you can insert multiple ingredients this way
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
 		m_IngredientAddQuantity[0] = 0;// 0 = do nothing
@@ -12,7 +12,7 @@ class PrepareBlueLobster extends PrepareFish{
 		m_IngredientAddHealth[1] = -4;// 0 = do nothing // damages health of knife/tool from the fillet action
 		//RESULTS----------------------------------------------------------------------------------------------------------------
 		//Result 1
-		AddResult("geb_BlueLobsterTail");//add results here
+		AddResult("geb_EuropeanLobsterTail");//add results here
 		m_ResultSetFullQuantity[0] = false;//true = set full quantity, false = do nothing
 		m_ResultSetQuantity[0] = -1;//-1 = do nothing
 		m_ResultSetHealth[0] = -1;//-1 = do nothing
@@ -22,9 +22,9 @@ class PrepareBlueLobster extends PrepareFish{
 		m_ResultUseSoftSkills[0] = false;// set 'true' to allow modification of the values by softskills on this result
 		m_ResultReplacesIngredient[0] = 0;// value == -1 means do nothing; a value >= 0 means this result will transfer item propertiesvariables, attachments etc.. from an ingredient value
 		//Result 2
-		ran = Math.RandomFloatInclusive(m_gebsConfig.BlueLobster.MeatMin,m_gebsConfig.BlueLobster.MeatMax);
+		ran = Math.RandomFloatInclusive(m_gebsConfig.EuropeanLobster.MeatMin,m_gebsConfig.EuropeanLobster.MeatMax);
 		for (int i = 1; i < ran; ++i){
-			AddResult("geb_BlueLobsterFilletMeat");//add results here
+			AddResult("geb_BlueLobsterClaw");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
 			m_ResultSetHealth[i] = -1;//-1 = do nothing

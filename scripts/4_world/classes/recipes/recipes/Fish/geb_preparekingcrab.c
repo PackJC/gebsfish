@@ -1,10 +1,10 @@
-class PrepareCrayFish extends PrepareFish {
+class PrepareKingCrab extends PrepareFish {
 	int ran;	
 	override void Init(){
 		super.Init();
 		//INGREDIENTS-----------------------------------------------------------------------------------------------------------
 		//Ingredient 1
-		InsertIngredient(0,"geb_CrayFish");//you can insert multiple ingredients this way
+		InsertIngredient(0,"geb_KingCrab");//you can insert multiple ingredients this way
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
 		m_IngredientAddQuantity[0] = 0;// 0 = do nothing
@@ -12,9 +12,9 @@ class PrepareCrayFish extends PrepareFish {
 		m_IngredientAddHealth[1] = -4;// 0 = do nothing // damages health of knife/tool from the fillet action
 		//RESULTS----------------------------------------------------------------------------------------------------------------
 		//Result 1
-		ran = Math.RandomFloatInclusive(m_gebsConfig.CrayFish.MeatMin,m_gebsConfig.CrayFish.MeatMax);
-		for (int i = 0; i < ran; ++i){
-			AddResult("geb_CrayFishTailMeat");//add results here
+		ran = Math.RandomFloatInclusive(m_gebsConfig.KingCrab.MeatMin,m_gebsConfig.KingCrab.MeatMax);
+		for (int i = 1; i < ran; ++i){
+			AddResult("geb_KingCrabLegs");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
 			m_ResultSetHealth[i] = -1;//-1 = do nothing
@@ -27,12 +27,14 @@ class PrepareCrayFish extends PrepareFish {
 	}
 
 	//Final check for recipe's validity
-	override bool CanDo(ItemBase ingredients[], PlayerBase player){
+	override bool CanDo(ItemBase ingredients[], PlayerBase player)
+	{
 		return true;
 	}
 
 	//Called upon recipe's completion
-	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight){
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight)
+	{
 		//Adjusts quantity of results to the quantity of the 1st ingredient
 		super.Do(ingredients, player, results, specialty_weight);
 	}

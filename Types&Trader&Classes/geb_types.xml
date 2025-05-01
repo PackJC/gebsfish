@@ -206,7 +206,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_CrayFish">
+	<type name="geb_SignalCrayFish">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -217,7 +217,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_CrayFishTailMeat">
+	<type name="geb_EuropeanCrayFish">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -481,7 +481,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_MusselFilletMeat">
+	<type name="geb_BlackDevilSnail">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -491,8 +491,8 @@
 		<cost>100</cost>
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
-	</type>
-	<type name="geb_BlackDevilSnail">
+	</type>	     
+	<type name="geb_BloodClam">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -937,7 +937,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_KingCrabFilletMeat">
+	<type name="geb_SnowCrab">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -947,7 +947,19 @@
 		<cost>100</cost>
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
-	</type>		
+	</type>
+	<type name="geb_SnowCrabLegs">
+		<nominal>0</nominal>
+		<lifetime>14400</lifetime>
+		<restock>0</restock>
+		<min>0</min>
+		<quantmin>10</quantmin>
+		<quantmax>100</quantmax>
+		<cost>100</cost>
+		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
+		<category name="food"/>
+	</type>
+	
 	<type name="geb_BlueJellyFish">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
@@ -970,7 +982,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_Lobster">
+	<type name="geb_AmericanLobster">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -981,18 +993,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_LobsterTail">
-		<nominal>0</nominal>
-		<lifetime>14400</lifetime>
-		<restock>0</restock>
-		<min>0</min>
-		<quantmin>10</quantmin>
-		<quantmax>100</quantmax>
-		<cost>100</cost>
-		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
-		<category name="food"/>
-	</type>
-	<type name="geb_LobsterFilletMeat">
+	<type name="geb_AmericanLobsterTail">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -1003,7 +1004,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>	
-	<type name="geb_BlueLobster">
+	<type name="geb_AmericanLobsterClaw">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -1014,7 +1015,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_BlueLobsterTail">
+	<type name="geb_EuropeanLobster">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -1025,7 +1026,7 @@
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
 	</type>
-	<type name="geb_BlueLobsterFilletMeat">
+	<type name="geb_EuropeanLobsterTail">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>
 		<restock>0</restock>
@@ -1035,7 +1036,18 @@
 		<cost>100</cost>
 		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
 		<category name="food"/>
-	</type>	
+	</type>
+	<type name="geb_EuropeanLobsterClaw">
+		<nominal>0</nominal>
+		<lifetime>14400</lifetime>
+		<restock>0</restock>
+		<min>0</min>
+		<quantmin>10</quantmin>
+		<quantmax>100</quantmax>
+		<cost>100</cost>
+		<flags count_in_cargo="0" count_in_hoarder="0" count_in_map="1" count_in_player="0" crafted="1" deloot="0"/>
+		<category name="food"/>
+	</type>
 	<type name="geb_GreatWhiteShark">
 		<nominal>0</nominal>
 		<lifetime>14400</lifetime>

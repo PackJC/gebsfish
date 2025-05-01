@@ -735,7 +735,7 @@ class geb_YieldSlimySculpin : FishYieldItemBase
 };
 
 //Fishtraps
-class geb_YieldCrayFish : FishYieldItemBase
+class geb_YieldSignalCrayFish : FishYieldItemBase
 {
     override void Init()
     {
@@ -744,9 +744,24 @@ class geb_YieldCrayFish : FishYieldItemBase
         // autoptr TFloatArray gebCycle = m_gebsConfig.Crayfish.BiteSpeed;
         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
 		m_QualityBase = m_gebsConfig.GeneralSettings.FishQuality;
-		m_Type = "geb_CrayFish";
-		m_EnviroMask = m_gebsConfig.CrayFish.Environment;
-		m_MethodMask = m_gebsConfig.CrayFish.CatchMethod;
+		m_Type = "geb_SignalCrayFish";
+		m_EnviroMask = m_gebsConfig.SignalCrayFish.Environment;
+		m_MethodMask = m_gebsConfig.SignalCrayFish.CatchMethod;
+    }
+};
+
+class geb_YieldEuropeanCrayFish : FishYieldItemBase
+{
+    override void Init()
+    {
+        super.Init();
+		
+        // autoptr TFloatArray gebCycle = m_gebsConfig.Crayfish.BiteSpeed;
+        // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+		m_QualityBase = m_gebsConfig.GeneralSettings.FishQuality;
+		m_Type = "geb_EuropeanCrayFish";
+		m_EnviroMask = m_gebsConfig.EuropeanCrayFish.Environment;
+		m_MethodMask = m_gebsConfig.EuropeanCrayFish.CatchMethod;
     }
 };
 
@@ -825,6 +840,21 @@ class geb_YieldKingCrab : FishYieldItemBase
     }
 };
 
+class geb_YieldSnowCrab : FishYieldItemBase
+{
+    override void Init()
+    {
+        super.Init();
+		
+        // autoptr TFloatArray gebCycle = m_gebsConfig.KingCrab.BiteSpeed;
+        // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+		m_QualityBase = m_gebsConfig.GeneralSettings.FishQuality;
+		m_Type = "geb_SnowCrab";
+		m_EnviroMask = m_gebsConfig.SnowCrab.Environment;
+		m_MethodMask = m_gebsConfig.SnowCrab.CatchMethod;
+    }
+};
+
 class geb_YieldBlueJellyFish : FishYieldItemBase
 {
     override void Init()
@@ -840,7 +870,7 @@ class geb_YieldBlueJellyFish : FishYieldItemBase
     }
 };
 
-class geb_YieldLobster : FishYieldItemBase
+class geb_YieldAmericanLobster : FishYieldItemBase
 {
     override void Init()
     {
@@ -849,13 +879,13 @@ class geb_YieldLobster : FishYieldItemBase
         // autoptr TFloatArray gebCycle = m_gebsConfig.Lobster.BiteSpeed;
         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
 		m_QualityBase = m_gebsConfig.GeneralSettings.FishQuality;
-		m_Type = "geb_Lobster";
-		m_EnviroMask = m_gebsConfig.Lobster.Environment;
-		m_MethodMask = m_gebsConfig.Lobster.CatchMethod;
+		m_Type = "geb_AmericanLobster";
+		m_EnviroMask = m_gebsConfig.AmericanLobster.Environment;
+		m_MethodMask = m_gebsConfig.AmericanLobster.CatchMethod;
     }
 };
 
-class geb_YieldBlueLobster : FishYieldItemBase
+class geb_YieldEuropeanLobster : FishYieldItemBase
 {
     override void Init()
     {
@@ -864,8 +894,8 @@ class geb_YieldBlueLobster : FishYieldItemBase
         // autoptr TFloatArray gebCycle = m_gebsConfig.BlueLobster.BiteSpeed;
         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
 		m_QualityBase = m_gebsConfig.GeneralSettings.FishQuality;
-		m_Type = "geb_BlueLobster";
-		m_EnviroMask = m_gebsConfig.BlueLobster.Environment;
-		m_MethodMask = m_gebsConfig.BlueLobster.CatchMethod;
+		m_Type = "geb_EuropeanLobster";
+		m_EnviroMask = m_gebsConfig.EuropeanLobster.Environment;
+		m_MethodMask = m_gebsConfig.EuropeanLobster.CatchMethod;
     }
 };
