@@ -9,6 +9,7 @@
 		geb_SunFish,										 S,		 -1,		 600
 		geb_WallEye,										 S,		 -1,		 600
 		geb_AtlanticSailFish,								 S,		 -1,		 600
+		geb_AtlanticBlueMarlin,								 S,		 -1,		 600
 		geb_MahiMahi,										 S,		 -1,		 600
         geb_WhiteBass,										 S,		 -1,		 600
         geb_BlackBass,										 S,		 -1,		 600
