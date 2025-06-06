@@ -740,7 +740,6 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_europeancrayfish_desc";
 		model = "\gebsfish\data\fish\Crayfish.p3d";
 		itemSize[] = {1,2};
-		itemSize[] = {1,2};
 		weight = 200;
 	};
 	class  geb_SignalCrayFish: geb_FreshFish_Base {
@@ -1162,7 +1161,7 @@ class cfgVehicles
 		displayName = "$STR_fish_europeanlobster_tail";
 		descriptionShort = "$STR_fish_europeanlobster_desc";
 		model = "\gebsfish\data\fish\europeanlobstertail.p3d";
-		hiddenSelections[] = {"shrimp"};
+		hiddenSelections[] = {"lobster"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\bluelobstertail.paa"};
 		itemSize[] = {1,3};
 	};	
@@ -1178,9 +1177,10 @@ class cfgVehicles
 		displayName = "$STR_fish_europeanlobster_claw";
 		descriptionShort = "$STR_fish_europeanlobster_desc";
 		model = "\gebsfish\data\fish\europeanlobsterclaw.p3d";
-		hiddenSelections[] = {"shrimp"};
+		hiddenSelections[] = {"lobster"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\bluelobstertail.paa"};
 		itemSize[] = {1,3};
+
 	};
 };
 	
