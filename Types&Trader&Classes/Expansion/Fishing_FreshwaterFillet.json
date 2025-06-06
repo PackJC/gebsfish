@@ -170,39 +170,6 @@
       "QuantityPercent": -1,
       "SpawnAttachments": [],
       "Variants": []
-    },
-    {
-      "ClassName": "geb_BloodClamFilletMeat",
-      "MaxPriceThreshold": 700,
-      "MinPriceThreshold": 700,
-      "SellPricePercent": 100.0,
-      "MaxStockThreshold": 0,
-      "MinStockThreshold": 0,
-      "QuantityPercent": -1,
-      "SpawnAttachments": [],
-      "Variants": []
-    },
-    {
-      "ClassName": "geb_CrayFishTailMeat",
-      "MaxPriceThreshold": 400,
-      "MinPriceThreshold": 400,
-      "SellPricePercent": 100.0,
-      "MaxStockThreshold": 0,
-      "MinStockThreshold": 0,
-      "QuantityPercent": -1,
-      "SpawnAttachments": [],
-      "Variants": []
-    },
-    {
-      "ClassName": "geb_MusselFilletMeat",
-      "MaxPriceThreshold": 400,
-      "MinPriceThreshold": 400,
-      "SellPricePercent": 100.0,
-      "MaxStockThreshold": 0,
-      "MinStockThreshold": 0,
-      "QuantityPercent": -1,
-      "SpawnAttachments": [],
-      "Variants": []
     }
   ],
   "SortByDisplayName": false

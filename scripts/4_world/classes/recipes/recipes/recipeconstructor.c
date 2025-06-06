@@ -45,10 +45,11 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareBlackDevilSnail);
 		RegisterRecipe(new PrepareStarFish);
 		RegisterRecipe(new PrepareKingCrab);
+		RegisterRecipe(new PrepareSnowCrab);
 		RegisterRecipe(new PrepareBlueJellyFish);
 		RegisterRecipe(new PrepareBloodClam);
-		RegisterRecipe(new PrepareLobster);
-		RegisterRecipe(new PrepareBlueLobster);
+		RegisterRecipe(new PrepareAmericanLobster);
+		RegisterRecipe(new PrepareEuropeanLobster);
 
 		//Saltwater Fish
 		RegisterRecipe(new PrepareAngelFish);
