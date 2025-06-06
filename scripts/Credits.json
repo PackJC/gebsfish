@@ -7,12 +7,16 @@
                 "SectionLines": ["Geb/Pack-JC"]
             },
             {
-                "SectionName": "Bug Fixes/Additions/New Config System",
-                "SectionLines": ["lothsun"]
+                "SectionName": "Code Contributions",
+                "SectionLines": ["lothsun", "DannyDoomno1", "Gramps#4914"]
             },
             {
-                "SectionName": "Other Contributions",
-                "SectionLines": ["Echo#4343" , "Doriiiiija" , "NekoSensei", "Gramps#4914" , "iiiii#5677"]
+                "SectionName": "Translation Updates",
+                "SectionLines": ["NekoSensei" , "iiiii#5677"]
+            },
+            {
+                "SectionName": "Community Files Updates",
+                "SectionLines": ["Echo#4343" , "TunaBomber", "Doriiiiija"]
             }
         ]
     }]
