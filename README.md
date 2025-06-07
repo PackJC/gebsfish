@@ -44,7 +44,12 @@ The default currently is 0.25 for the predator to spawn, if you wish to make thi
 - cadnav.com for models and textures of fish
 - My close friends for motivation during this project
 - The DayZ Modding Community <3 
-- Doriiiiija, Echo#4343, Gramps#4914, iiiii42
+- TunaBomber for helping update community files and supplying the excel sheet for traders
+- NekoSensei and iiiii42 for helping with initial translation support
+- Doriiiiija and Echo4343 for help with community files
+- Gramps#4914 for code compatibility help in the early days of the mod 
+- DannyDoomno1 for help with the proper way to send config data to the client from the server
+- The DayZ community for reporting bugs through the life of the mod
 - https://www.allaboutbirds.org/guide/Common_Loon/sounds
 - https://search.macaulaylibrary.org/catalog?taxonCode=comloo&mediaType=audio&sort=rating_rank_desc
 

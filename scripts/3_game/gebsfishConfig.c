@@ -74,7 +74,7 @@ class gebsfishConfig {
     ref SnowCrabConf SnowCrab;
     ref BlueJellyFishConf BlueJellyFish;
     ref AmericanLobsterConf AmericanLobster;
-    ref EuropeanLobsterConf EuropeanBlueLobster;
+    ref EuropeanLobsterConf EuropeanLobster;
 
     ref array<ref JunkEntry> Junk;
     ref array<ref ContainerJunkEntry> ContainerJunk;
