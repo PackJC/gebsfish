@@ -2,8 +2,19 @@
 <spawnabletypes>
 	<damage min="0.0" max="0.9" />
 	<!--Example Damaged Ruined only<damage min="0.9" max="1.0" /> Pristine(100-71) Worn(70-41) Damaged(40-21) BadlyDamaged(20-1) -->
-	<type name="geb_CrayFish" />
-	<type name="geb_CrayFishTailMeat" />
+	<type name="geb_KingCrab" />
+	<type name="geb_SnowCrab" />
+	<type name="geb_AmericanLobster" />
+	<type name="geb_EuropeanLobster" />
+	<type name="geb_Mussel" />
+	<type name="geb_BloodClam" />
+	<type name="geb_BlackDevilSnail" />
+	<type name="geb_SignalCrayFish" />
+	<type name="geb_EuropeanCrayFish" />
+	<type name="geb_EuropeanLobsterTail" />
+	<type name="geb_EuropeanLobsterClaw" />
+	<type name="geb_AmericanLobsterTail" />
+	<type name="geb_AmericanLobsterClaw" />
 	<type name="geb_NorthernPike" />
 	<type name="geb_NorthernPikeFilletMeat" />
 	<type name="geb_LargeMouthBass" />

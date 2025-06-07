@@ -6,6 +6,7 @@ modded class YieldItemBase {
 	}
 
     override void Init(){
+        super.Init(); 
         GetGebSettingsConfig();
     }
 

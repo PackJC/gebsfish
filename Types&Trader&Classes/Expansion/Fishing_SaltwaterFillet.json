@@ -214,9 +214,53 @@
       "QuantityPercent": -1,
       "SpawnAttachments": [],
       "Variants": []
-    },
+    },    
     {
-      "ClassName": "geb_KingCrabFilletMeat",
+      "ClassName": "geb_SnowCrabLegs",
+      "MaxPriceThreshold": 1200,
+      "MinPriceThreshold": 1200,
+      "SellPricePercent": 100.0,
+      "MaxStockThreshold": 0,
+      "MinStockThreshold": 0,
+      "QuantityPercent": -1,
+      "SpawnAttachments": [],
+      "Variants": []
+    },    
+    {
+      "ClassName": "geb_AmericanLobsterTail",
+      "MaxPriceThreshold": 1200,
+      "MinPriceThreshold": 1200,
+      "SellPricePercent": 100.0,
+      "MaxStockThreshold": 0,
+      "MinStockThreshold": 0,
+      "QuantityPercent": -1,
+      "SpawnAttachments": [],
+      "Variants": []
+    },  
+    {
+      "ClassName": "geb_AmericanLobsterClaw",
+      "MaxPriceThreshold": 1200,
+      "MinPriceThreshold": 1200,
+      "SellPricePercent": 100.0,
+      "MaxStockThreshold": 0,
+      "MinStockThreshold": 0,
+      "QuantityPercent": -1,
+      "SpawnAttachments": [],
+      "Variants": []
+    },   
+    {
+      "ClassName": "geb_EuropeanLobsterTail",
+      "MaxPriceThreshold": 1200,
+      "MinPriceThreshold": 1200,
+      "SellPricePercent": 100.0,
+      "MaxStockThreshold": 0,
+      "MinStockThreshold": 0,
+      "QuantityPercent": -1,
+      "SpawnAttachments": [],
+      "Variants": []
+    },  
+    {
+      "ClassName": "geb_EuropeanLobsterClaw",
       "MaxPriceThreshold": 1200,
       "MinPriceThreshold": 1200,
       "SellPricePercent": 100.0,

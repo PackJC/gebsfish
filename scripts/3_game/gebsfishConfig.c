@@ -1,7 +1,7 @@
 class gebsfishConfig {
     
     //Define Config Version
-    static const string CONFIG_VERSION = "0.3";
+    static const string CONFIG_VERSION = "0.4";
 
     //config location
     private const static string ModFolder = "$profile:\\Gebs\\";
@@ -43,7 +43,8 @@ class gebsfishConfig {
     ref BowFinConf BowFin;
     ref SlimySculpinConf SlimySculpin;
     ref SeverumConf Severum;
-    ref CrayFishConf CrayFish;
+    ref SignalCrayFishConf SignalCrayFish;
+    ref EuropeanCrayFishConf EuropeanCrayFish;
     ref MahiMahiConf MahiMahi;
     ref AtlanticSailFishConf AtlanticSailFish;
     ref AngelFishConf AngelFish;
@@ -70,9 +71,10 @@ class gebsfishConfig {
     ref BlackDevilSnailConf BlackDevilSnail;
     ref StarFishConf StarFish;
     ref KingCrabConf KingCrab;
+    ref SnowCrabConf SnowCrab;
     ref BlueJellyFishConf BlueJellyFish;
-    ref LobsterConf Lobster;
-    ref BlueLobsterConf BlueLobster;
+    ref AmericanLobsterConf AmericanLobster;
+    ref EuropeanLobsterConf EuropeanLobster;
 
     ref array<ref JunkEntry> Junk;
     ref array<ref ContainerJunkEntry> ContainerJunk;
@@ -134,7 +136,8 @@ class gebsfishConfig {
         BowFin = new BowFinConf;
         SlimySculpin = new SlimySculpinConf;
         Severum = new SeverumConf;
-        CrayFish = new CrayFishConf;
+        SignalCrayFish = new SignalCrayFishConf;
+        EuropeanCrayFish = new EuropeanCrayFishConf;
         MahiMahi = new MahiMahiConf;
         AtlanticSailFish = new AtlanticSailFishConf;
         AngelFish = new AngelFishConf;
@@ -161,9 +164,10 @@ class gebsfishConfig {
         BlackDevilSnail = new BlackDevilSnailConf;
         StarFish = new StarFishConf;
         KingCrab = new KingCrabConf;
+        SnowCrab = new SnowCrabConf;
         BlueJellyFish = new BlueJellyFishConf;
-        Lobster = new LobsterConf;
-        BlueLobster = new BlueLobsterConf;
+        AmericanLobster = new AmericanLobsterConf;
+        EuropeanLobster = new EuropeanLobsterConf;
 
         Junk = new array<ref JunkEntry>();
         ContainerJunk = new array<ref ContainerJunkEntry>();
@@ -684,7 +688,21 @@ class SeverumConf {
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
 
-class CrayFishConf {
+class SignalCrayFishConf {
+    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
+    int Environment = 1;
+    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
+    int CatchMethod = 4;
+    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
+    float MeatMin = 1;
+    float MeatMax = 2;
+    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
+    int CatchProbability = 15;
+    // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
+    // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
+};
+
+class EuropeanCrayFishConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1059,6 +1077,19 @@ class KingCrabConf {
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};  
 };
+class SnowCrabConf {
+    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
+    int Environment = 2;
+    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
+    int CatchMethod = 4;
+    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
+    float MeatMin = 1;
+    float MeatMax = 2;
+    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
+    int CatchProbability = 15;
+    // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
+    // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};  
+};
 class BlueJellyFishConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
@@ -1072,7 +1103,7 @@ class BlueJellyFishConf {
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};  
 };
-class LobsterConf {
+class AmericanLobsterConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1085,7 +1116,7 @@ class LobsterConf {
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};  
 };
-class BlueLobsterConf {
+class EuropeanLobsterConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";

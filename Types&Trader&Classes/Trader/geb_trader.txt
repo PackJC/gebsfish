@@ -2,13 +2,15 @@
 		Sardines,					                    	 S,		 -1,		 500
 		Carp,						                     	 S,		 -1,		 600
 		Mackerel,											 S,		 -1,		 600		
-        geb_CrayFish,										 S,		 -1,		 600
+        geb_SignalCrayFish,									 S,		 -1,		 600
+        geb_EuropeanCrayFish,								 S,		 -1,		 600
         geb_NorthernPike,									 S,		 -1,		 600
         geb_LargeMouthBass,									 S,		 -1,		 600       
 		geb_SmallMouthBass,									 S,		 -1,		 600
 		geb_SunFish,										 S,		 -1,		 600
 		geb_WallEye,										 S,		 -1,		 600
 		geb_AtlanticSailFish,								 S,		 -1,		 600
+		geb_AtlanticBlueMarlin,								 S,		 -1,		 600
 		geb_MahiMahi,										 S,		 -1,		 600
         geb_WhiteBass,										 S,		 -1,		 600
         geb_BlackBass,										 S,		 -1,		 600
@@ -43,15 +45,15 @@
         geb_BlackDevilSnail,								 S,		 -1,		 600
 		geb_StarFish,								 		 S,		 -1,		 600
 		geb_KingCrab,										 S,		 -1,		 600
+		geb_SnowCrab,										 S,		 -1,		 600
         geb_BlueJellyFish,									 S,		 -1,		 600
-        geb_Lobster,								 		 S,		 -1,		 600
-		geb_BlueLobster,								 	 S,		 -1,	 	 600
+        geb_AmericanLobster,						 		 S,		 -1,		 600
+		geb_EuropeanLobster,							 	 S,		 -1,	 	 600
         geb_GreatWhiteShark,								 S,		 -1,		 600
 		geb_AngelShark,								 		 S,		 -1,		 600
 		geb_YellowFinTuna,								 	 S,		 -1,		 600
 
 	<Category> Fish Meat                                                             
-		geb_CrayFishFilletMeat,					             S,		 1200,		 600
         geb_NorthernPikeFilletMeat,					         S,		 1200,		 600
         geb_LargeMouthBassFilletMeat,				         S,		 1200,		 600
 		geb_SmallMouthBassFilletMeat,				         S,		 1200,		 600
@@ -88,15 +90,13 @@
         geb_SiameseTigerFishFilletMeat,					     S,		 1200,		 600
         geb_AtlanticSailFishFilletMeat,			    		 S,		 1200,		 600
         geb_MahiMahiFilletMeat,					    		 S,		 1200,		 600
-        geb_BloodClamFilletMeat,			     			 S,		 1200,		 600
-        geb_MusselFilletMeat,					     		 S,		 1200,		 600
         geb_KingCrabLegs,					     			 S,		 1200,		 600
-		geb_KingCrabFilletMeat,					     		 S,		 1200,		 600
+        geb_SnowCrabLegs,					     			 S,		 1200,		 600
         geb_BlueJellyFishFilletMeat,				     	 S,		 1200,		 600
-        geb_LobsterTail,					     			 S,		 1200,		 600
-		geb_LobsterFilletMeat,					     		 S,		 1200,		 600
-		geb_BlueLobsterTail,					     		 S,		 1200,		 600
-		geb_BlueLobsterFilletMeat,					     	 S,		 1200,		 600
+        geb_AmericanLobsterTail,			     			 S,		 1200,		 600
+		geb_AmericanLobsterClaw,				     		 S,		 1200,		 600
+		geb_EuropeanLobsterTail,				     		 S,		 1200,		 600
+		geb_EuropeanLobsterClaw,					     	 S,		 1200,		 600
         geb_GreatWhiteSharkFilletMeat,					     S,		 1200,		 600
 		geb_AngelSharkFilletMeat,					     	 S,		 1200,		 600
 		geb_YellowFinTunaFilletMeat,					     S,		 1200,		 600
