@@ -59,7 +59,7 @@ class geb_BugContainer : Container_Base
 
 class geb_BambooFishingNet : Container_Base
 {
-	ref TStringArray ItemArray = { "Worm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm", "geb_RubberWorm", "geb_Minnow", "geb_Crayfish"};
+	ref TStringArray ItemArray = { "Worm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm", "geb_RubberWorm", "geb_Minnow", "geb_SignalCrayfish", "geb_EuropeanCrayfish"};
 
 	override int GetDamageSystemVersionChange()
 	{
