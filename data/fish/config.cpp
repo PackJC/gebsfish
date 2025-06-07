@@ -424,6 +424,7 @@ class cfgVehicles
 		weight = 1700;
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\brooktrout.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\brooktrout.rvmat"};
 	};
 	class geb_BrownTrout: geb_Trout_Base {
 		scope = 2;
@@ -433,6 +434,7 @@ class cfgVehicles
 		weight = 1700;
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\browntrout.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\browntrout.rvmat"};
 	};
 	class geb_CutThroatTrout: geb_Trout_Base {
 		scope = 2;
@@ -442,6 +444,7 @@ class cfgVehicles
 		weight = 1700;
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\cutthroattrout.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\cutthroattrout.rvmat"};
 	};
 	class geb_LakeTrout: geb_Trout_Base {
 		scope = 2;
@@ -452,6 +455,7 @@ class cfgVehicles
 		weight = 1700;
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\laketrout.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\laketrout.rvmat"};
 	};
 	class geb_WhiteBass: geb_FreshFish_Base {
 		scope = 2;
@@ -650,7 +654,6 @@ class cfgVehicles
 		weight = 100;
 		itemSize[] = {1,1};
 	};
-	//will need to inherfit from shrimp
 	class geb_Mussel: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_mussel";
@@ -710,7 +713,7 @@ class cfgVehicles
 		weight = 3000;
 		itemSize[] = {3,2};
 		hiddenSelections[] = {"lobster"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\bluelobster_ca.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobster_ca.paa"};
 	};
 	class geb_KingCrab: geb_SaltFish_Base {
 		scope = 2;
@@ -733,8 +736,7 @@ class cfgVehicles
 		itemSize[] = {3,3};
 	};
 	//Freshwater crustaceans
-	//will need to reference shrimp
-	class  geb_EuropeanCrayFish: geb_FreshFish_Base {
+	class  geb_EuropeanCrayFish: Shrimp {
 		scope = 2;
 		displayName = "$STR_fish_europeancrayfish";
 		descriptionShort = "$STR_fish_europeancrayfish_desc";
@@ -742,7 +744,7 @@ class cfgVehicles
 		itemSize[] = {1,2};
 		weight = 200;
 	};
-	class  geb_SignalCrayFish: geb_FreshFish_Base {
+	class  geb_SignalCrayFish: Shrimp {
 		scope = 2;
 		displayName = "$STR_fish_signalcrayfish";
 		descriptionShort = "$STR_fish_signalcrayfish_desc";
@@ -864,6 +866,7 @@ class cfgVehicles
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\browntrout_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
+
 	};
 	class geb_BrookTroutFilletMeat: CarpFilletMeat {
 		scope = 2;
@@ -873,6 +876,7 @@ class cfgVehicles
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\brooktrout_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
+
 	};
 	class geb_CutThroatTroutFilletMeat: CarpFilletMeat {
 		scope = 2;
@@ -882,6 +886,7 @@ class cfgVehicles
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\cutthroattrout_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
+
 	};
 	class geb_LakeTroutFilletMeat: CarpFilletMeat {
 		scope = 2;
@@ -1153,32 +1158,32 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_fish_americanlobster_tail";
 		descriptionShort = "$STR_fish_americanlobster_desc";
-		model = "\gebsfish\data\fish\americanlobstertail.p3d";
+		model = "\gebsfish\data\fish\lobstertail.p3d";
 		itemSize[] = {1,3};
 	};
 	class geb_EuropeanLobsterTail : MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_europeanlobster_tail";
 		descriptionShort = "$STR_fish_europeanlobster_desc";
-		model = "\gebsfish\data\fish\europeanlobstertail.p3d";
+		model = "\gebsfish\data\fish\lobstertail.p3d";
 		hiddenSelections[] = {"lobster"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\bluelobstertail.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobstertail.paa"};
 		itemSize[] = {1,3};
 	};	
 	class geb_AmericanLobsterClaw : MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_americanlobster_claw";
 		descriptionShort = "$STR_fish_americanlobster_desc";
-		model = "\gebsfish\data\fish\americanlobsterclaw.p3d";
+		model = "\gebsfish\data\fish\lobsterclaw.p3d";
 		itemSize[] = {1,3};
 	};
 	class geb_EuropeanLobsterClaw : MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_europeanlobster_claw";
 		descriptionShort = "$STR_fish_europeanlobster_desc";
-		model = "\gebsfish\data\fish\europeanlobsterclaw.p3d";
+		model = "\gebsfish\data\fish\lobsterclaw.p3d";
 		hiddenSelections[] = {"lobster"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\bluelobstertail.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobstertail.paa"};
 		itemSize[] = {1,3};
 
 	};
