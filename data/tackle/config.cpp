@@ -25,7 +25,7 @@ class CfgPatches
 };
 class cfgVehicles
 {		
-		//Instantiate Needed Classes
+	//Instantiate Needed Classes
 	class Rope;
 	class Jig;
 	class Worm;
@@ -813,5 +813,4 @@ class cfgVehicles
 			};
 		};
 	};
-
 };
