@@ -27,6 +27,7 @@ class cfgVehicles
 {		
 	//Instantiate Needed Classes
 	class Carp;
+	class Shrimp;
 	class NotCookable;
 	class Edible_Base;
 	class CarpFilletMeat;
