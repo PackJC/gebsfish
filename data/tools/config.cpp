@@ -30,12 +30,30 @@ class cfgVehicles
 	class Container_Base;
 	class Inventory_Base;
 	class FishingRod_Base;
+	class ItemBase;
 
     /*
 
 		TOOLS
 
 	*/
+	class FishingRodRepairKit : ItemBase
+	{
+		scope = 2;
+		displayName = "$STR_tools_fishingrodrepairkit";
+		descriptionShort = "$STR_tools_fishingrodrepairkit_desc";
+		model="\gebsfish\data\tools\fishingline_biggame.p3d";
+		itemSize[] = {2,2};
+		weight = 250;
+		absorbency = 0.1;
+		repairableWithKits[] = {};
+		repairCosts[] = {};
+		varQuantityInit = 4;
+		varQuantityMin = 0;
+		varQuantityMax = 4;
+		quantityBar = 1;
+		inventorySlot[] = {};
+	};
     class geb_FishKnife_Base: HuntingKnife{
         scope=0;
 		displayName="Fish Knife Base";
