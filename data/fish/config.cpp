@@ -299,7 +299,7 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_fish_flatheadcatfish";
 		descriptionShort = "$STR_fish_flatheadcatfish_desc";
-		model = "\gebsfish\data\fish\catfish.p3d";
+		model = "\gebsfish\data\fish\flatheadcatfish.p3d";
 		itemSize[] = {7,2};
 		weight = 4000;
 	};
@@ -415,6 +415,7 @@ class cfgVehicles
 		weight = 1700;
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\rainbowtrout.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\rainbowtrout.rvmat"};
 	};
 	class geb_BrookTrout: geb_Trout_Base {
 		scope = 2;
@@ -804,7 +805,7 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_flatheadcatfish_desc";
 		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\catfish_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
+			"\gebsfish\data\fish\flatheadcatfish_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
 	class geb_LargeMouthBassFilletMeat: CarpFilletMeat {

@@ -45,7 +45,7 @@ class cfgVehicles
 		scope = 2;
 		displayName = "Tackle Base";
 		descriptionShort = "Tackle Base Class";
-		model = "gebsfish\data\tackle\geb_RedTackle.p3d";
+		model = "gebsfish\data\tackle\newtackle.p3d";
 		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\geb_redtackle.paa"};
 		hiddenSelections[] = {"Camo"};
 		rotationFlags = 8;
@@ -87,12 +87,10 @@ class cfgVehicles
 			};
 		};
 	};
-
 	class geb_RedTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_redtackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		model = "gebsfish\data\tackle\geb_RedTackle.p3d";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\geb_redtackle.paa"};
 	};
@@ -286,9 +284,9 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_tools_bugcontainer";
 		descriptionShort = "$STR_tools_bugcontainer_desc";
-		model = "\gebsfish\data\tools\geb_bugcontainer.p3d"; 
+		model = "\gebsfish\data\tools\bugcontainer.p3d"; 
 		hiddenSelections[] = {"zbytek"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\geb_bugcontainer.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\bugcontainer.paa"};
 		itemInfo[] = {"CatchBugs"};
 		rotationFlags = 12;
 		weight = 140;
@@ -331,7 +329,7 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_tools_minnowcontainer";
 		descriptionShort = "$STR_tools_minnowcontainer_desc";
-		model = "\gebsfish\data\tackle\geb_minnowbucket.p3d";
+		model = "\gebsfish\data\tackle\minnowbucket.p3d";
 		debug_ItemCategory = 6;
 		weight = 25;
 		itemSize[] = {3,3};
@@ -398,12 +396,12 @@ class cfgVehicles
 			};
 		};
 	};
-	class geb_OldGreenTackle: Container_Base {
+	class geb_OldTackleBase: Container_Base {
 		scope = 2;
 		displayName = "$STR_tools_oldgreentackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		model = "\gebsfish\data\tackle\geb_old_greentackle.p3d";
-		hiddenSelections[] = {"zbytek"};
+		model = "\gebsfish\data\tackle\oldtackle.p3d";
+		hiddenSelections[] = {"tackle"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_old_greentackle.paa"};
 		rotationFlags = 17;
 		weight = 140;
@@ -442,139 +440,30 @@ class cfgVehicles
 			};
 		};
 	};
-	class geb_OldRedTackle: Container_Base {
+	class geb_OldGreenTackle: geb_OldTackleBase {
+		scope = 2;
+		displayName = "$STR_tools_oldgreentackle";
+		descriptionShort = "$STR_tools_tackle_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\oldgreentackle.paa"};
+	};
+	class geb_OldRedTackle: geb_OldTackleBase {
 		scope = 2;
 		displayName = "$STR_tools_oldredtackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		model = "\gebsfish\data\tackle\geb_old_redtackle.p3d";
-		hiddenSelections[] = {"zbytek"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_old_redtackle.paa"};
-		rotationFlags = 17;
-		weight = 140;
-		itemSize[] = {3,2};
-		itemsCargoSize[] = {3,2};
-		allowOwnedCargoManipulation = 1;
-		randomQuantity = 2;
-		canBeDigged = 1;
-		repairableWithKits[] = {2};
-		repairCosts[] = {25};
-		isMeleeWeapon = 1;
-		class DamageSystem {
-			class GlobalHealth {
-				class Health {
-					hitpoints = 80;
-					healthLevels[] = {
-						{1,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.7,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.5,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0.3,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0,{"DZ\gear\containers\data\FirsAidKit_destruct.rvmat"}}
-					};
-				};
-			};
-		};
-		class AnimEvents {
-			class SoundWeapon {
-				class pickUpItem_Light {
-					soundSet = "pickUpCourierBag_Light_SoundSet";
-					id = 796;
-				};
-				class pickUpItem {
-					soundSet = "pickUpCourierBag_SoundSet";
-					id = 797;
-				};
-			};
-		};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\oldredtackle.paa"};
 	};
-	class geb_OldBlueTackle: Container_Base {
+	class geb_OldBlueTackle: geb_OldTackleBase {
 		scope = 2;
 		displayName = "$STR_tools_oldbluetackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		model = "\gebsfish\data\tackle\geb_old_bluetackle.p3d";
-		hiddenSelections[] = {"zbytek"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_old_bluetackle.paa"};
-		rotationFlags = 17;
-		weight = 140;
-		itemSize[] = {3,2};
-		itemsCargoSize[] = {3,2};
-		allowOwnedCargoManipulation = 1;
-		randomQuantity = 2;
-		canBeDigged = 1;
-		repairableWithKits[] = {2};
-		repairCosts[] = {25};
-		isMeleeWeapon = 1;
-		class DamageSystem {
-			class GlobalHealth {
-				class Health {
-					hitpoints = 80;
-					healthLevels[] = {
-						{1,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.7,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.5,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0.3,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0,{"DZ\gear\containers\data\FirsAidKit_destruct.rvmat"}}
-					};
-				};
-			};
-		};
-		class AnimEvents {
-			class SoundWeapon {
-				class pickUpItem_Light {
-					soundSet = "pickUpCourierBag_Light_SoundSet";
-					id = 796;
-				};
-				class pickUpItem {
-					soundSet = "pickUpCourierBag_SoundSet";
-					id = 797;
-				};
-			};
-		};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\oldbluetackle.paa"};
 	};
-	class geb_OldPurpleTackle: Container_Base {
+	class geb_OldPurpleTackle: geb_OldTackleBase {
 		scope = 2;
 		displayName = "$STR_tools_oldpurpletackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		model = "\gebsfish\data\tackle\geb_old_purpletackle.p3d";
-		hiddenSelections[] = {"zbytek"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_old_purpletackle.paa"};
-		rotationFlags = 17;
-		weight = 140;
-		itemSize[] = {3,2};
-		itemsCargoSize[] = {3,2};
-		allowOwnedCargoManipulation = 1;
-		randomQuantity = 2;
-		canBeDigged = 1;
-		repairableWithKits[] = {2};
-		repairCosts[] = {25};
-		isMeleeWeapon = 1;
-		class DamageSystem {
-			class GlobalHealth {
-				class Health {
-					hitpoints = 80;
-					healthLevels[] = {
-						{1,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.7,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.5,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0.3,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0,{"DZ\gear\containers\data\FirsAidKit_destruct.rvmat"}}
-					};
-				};
-			};
-		};
-		class AnimEvents {
-			class SoundWeapon {
-				class pickUpItem_Light {
-					soundSet = "pickUpCourierBag_Light_SoundSet";
-					id = 796;
-				};
-				class pickUpItem {
-					soundSet = "pickUpCourierBag_SoundSet";
-					id = 797;
-				};
-			};
-		};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\oldpurpletackle.paa"};
 	};
-
 
 	/*
 
@@ -625,13 +514,13 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_tools_spinnerbait1";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
-		model = "\gebsfish\data\tackle\geb_SpinnerBait1.p3d";
+		model = "\gebsfish\data\tackle\spinnerbait.p3d";
 		weight = 15;
 		absorbency = 0.8;
 		itemSize[] = {1,1};
 		inventorySlot[] = {"Hook"};
-		hiddenSelections[] = {"zbytek"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_spinnerbait1.paa"};
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinnerbait1.paa"};
 		rotationFlags = 17;
 		hookType = "geb_SpinnerBait1";
 		class DamageSystem {
@@ -655,7 +544,7 @@ class cfgVehicles
 		descriptionShort = "$STR_tools_spinnerbait_desc";
 		hookType = "geb_SpinnerBait2";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_spinnerbait2.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinnerbait2.paa"};
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
@@ -677,7 +566,7 @@ class cfgVehicles
 		descriptionShort = "$STR_tools_spinnerbait_desc";
 		hookType = "geb_SpinnerBait3";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_spinnerbait3.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinnerbait3.paa"};
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
@@ -699,7 +588,7 @@ class cfgVehicles
 		descriptionShort = "$STR_tools_spinnerbait_desc";
 		hookType = "geb_SpinnerBait4";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_spinnerbait4.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinnerbait4.paa"};
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
