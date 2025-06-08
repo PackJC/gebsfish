@@ -12,7 +12,7 @@ class PrepareBlackBass extends PrepareFish {
 		m_IngredientAddHealth[1] = -4;// 0 = do nothing // damages health of knife/tool from the fillet action
 		//RESULTS----------------------------------------------------------------------------------------------------------------
 		//Result 1
-		ran = Math.RandomFloatInclusive(m_gebsConfig.BlackBass.MeatMin,m_gebsConfig.BlackBass.MeatMax);
+		ran = Math.RandomInt(m_gebsConfig.BlackBass.MeatMin,m_gebsConfig.BlackBass.MeatMax);
 		for (int i = 0; i < ran; ++i){
 			AddResult("geb_BlackBassFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing

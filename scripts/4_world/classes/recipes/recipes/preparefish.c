@@ -1,15 +1,16 @@
 modded class PrepareFish {
     override void Init() {
 		super.Init();
+		m_RecipeUID = DayZPlayerConstants.CMD_ACTIONFB_ANIMALSKINNING;
         GetGebSettingsConfig();
 		//----------------------------------------------------------------------------------------------------------------------
 		//Ingredient 2
-		InsertIngredient(1,"geb_BlueFishKnife");
-		InsertIngredient(1,"geb_OrangeFishKnife");
-		InsertIngredient(1,"geb_GreenFishKnife");
-		InsertIngredient(1,"geb_YellowFishKnife");
-		InsertIngredient(1,"geb_RedFishKnife");
-		InsertIngredient(1,"geb_PurpleFishKnife");
+		InsertIngredient(1,"geb_BlueFishKnife",DayZPlayerConstants.CMD_ACTIONFB_ANIMALSKINNING);
+		InsertIngredient(1,"geb_OrangeFishKnife",DayZPlayerConstants.CMD_ACTIONFB_ANIMALSKINNING);
+		InsertIngredient(1,"geb_GreenFishKnife",DayZPlayerConstants.CMD_ACTIONFB_ANIMALSKINNING);
+		InsertIngredient(1,"geb_YellowFishKnife",DayZPlayerConstants.CMD_ACTIONFB_ANIMALSKINNING);
+		InsertIngredient(1,"geb_RedFishKnife",DayZPlayerConstants.CMD_ACTIONFB_ANIMALSKINNING);
+		InsertIngredient(1,"geb_PurpleFishKnife",DayZPlayerConstants.CMD_ACTIONFB_ANIMALSKINNING);
     }
 
     //Called upon recipe's completion

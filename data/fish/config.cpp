@@ -705,7 +705,7 @@ class cfgVehicles
 		weight = 3000;
 		itemSize[] = {3,2};
 	};	
-	class geb_EuropeanLobster: geb_Lobster {
+	class geb_EuropeanLobster: geb_AmericanLobster {
 		scope = 2;
 		displayName = "$STR_fish_bluelobster";
 		descriptionShort = "$STR_fish_bluelobster_desc";

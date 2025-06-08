@@ -11,7 +11,7 @@ modded class PrepareCarp extends PrepareFish {
 		m_IngredientDestroy[0] = true;//true = destroy, false = do nothing
 		m_IngredientAddHealth[1] = -4;// 0 = do nothing // damages health of knife/tool from the fillet action
 		//----------------------------------------------------------------------------------------------------------------------
-		ran = Math.RandomFloatInclusive(m_gebsConfig.Carp.MeatMin,m_gebsConfig.Carp.MeatMax);
+		ran = Math.RandomInt(m_gebsConfig.Carp.MeatMin,m_gebsConfig.Carp.MeatMax);
 		for (int i = 0; i < ran; ++i){
 			AddResult("CarpFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
