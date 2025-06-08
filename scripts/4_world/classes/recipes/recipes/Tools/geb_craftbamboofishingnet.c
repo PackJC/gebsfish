@@ -1,4 +1,4 @@
-class CraftWoodenNet extends RecipeBase
+class CraftBambooFishingNet extends RecipeBase
 {	
 	override void Init()
 	{
