@@ -12,7 +12,7 @@ class PrepareBrookTrout extends PrepareFish {
 		m_IngredientAddHealth[1] = -4;// 0 = do nothing // damages health of knife/tool from the fillet action
 		//RESULTS----------------------------------------------------------------------------------------------------------------
 		//Result 1
-		ran = Math.RandomFloatInclusive(m_gebsConfig.BrookTrout.MeatMin,m_gebsConfig.BrookTrout.MeatMax);
+		ran = Math.RandomInt(m_gebsConfig.BrookTrout.MeatMin,m_gebsConfig.BrookTrout.MeatMax);
 		for (int i = 0; i < ran; ++i){
 			AddResult("geb_BrookTroutFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing

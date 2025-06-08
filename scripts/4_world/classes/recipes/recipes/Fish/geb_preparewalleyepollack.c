@@ -11,7 +11,7 @@ modded class PrepareWalleyePollock extends PrepareFish {
 		m_IngredientDestroy[0] = true;//true = destroy, false = do nothing
 		m_IngredientAddHealth[1] = -4;// 0 = do nothing // damages health of knife/tool from the fillet action
 		//RESULT----------------------------------------------------------------------------------------------------------------
-		ran = Math.RandomFloatInclusive(m_gebsConfig.WalleyePollock.MeatMin,m_gebsConfig.WalleyePollock.MeatMax);
+		ran = Math.RandomInt(m_gebsConfig.WalleyePollock.MeatMin,m_gebsConfig.WalleyePollock.MeatMax);
 		for (int i = 0; i < ran; ++i){
 			AddResult("WalleyePollockFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing

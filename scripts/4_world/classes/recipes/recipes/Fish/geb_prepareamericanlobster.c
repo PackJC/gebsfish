@@ -22,7 +22,7 @@ class PrepareAmericanLobster extends PrepareFish {
 		m_ResultUseSoftSkills[0] = false;// set 'true' to allow modification of the values by softskills on this result
 		m_ResultReplacesIngredient[0] = 0;// value == -1 means do nothing; a value >= 0 means this result will transfer item propertiesvariables, attachments etc.. from an ingredient value
 		//Result 2
-		ran = Math.RandomFloatInclusive(m_gebsConfig.AmericanLobster.MeatMin,m_gebsConfig.AmericanLobster.MeatMax);
+		ran = Math.RandomInt(m_gebsConfig.AmericanLobster.MeatMin,m_gebsConfig.AmericanLobster.MeatMax);
 		for (int i = 1; i < ran; ++i){
 			AddResult("geb_AmericanLobsterClaw");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing

@@ -12,7 +12,7 @@ class PrepareKingCrab extends PrepareFish {
 		m_IngredientAddHealth[1] = -4;// 0 = do nothing // damages health of knife/tool from the fillet action
 		//RESULTS----------------------------------------------------------------------------------------------------------------
 		//Result 1
-		ran = Math.RandomFloatInclusive(m_gebsConfig.KingCrab.MeatMin,m_gebsConfig.KingCrab.MeatMax);
+		ran = Math.RandomInt(m_gebsConfig.KingCrab.MeatMin,m_gebsConfig.KingCrab.MeatMax);
 		for (int i = 1; i < ran; ++i){
 			AddResult("geb_KingCrabLegs");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
