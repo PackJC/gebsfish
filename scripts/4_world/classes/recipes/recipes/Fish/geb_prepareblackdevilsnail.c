@@ -12,7 +12,7 @@ class PrepareBlackDevilSnail extends PrepareFish {
 		m_IngredientAddHealth[1] = -4;// 0 = do nothing // damages health of knife/tool from the fillet action
 		//RESULTS----------------------------------------------------------------------------------------------------------------
 		//Result 1
-		ran = Math.RandomFloatInclusive(m_gebsConfig.BlackDevilSnail.BoneMin,m_gebsConfig.BlackDevilSnail.BoneMax);
+		ran = Math.RandomInt(m_gebsConfig.BlackDevilSnail.BoneMin,m_gebsConfig.BlackDevilSnail.BoneMax);
 		for (int i = 0; i < ran; ++i){
 			AddResult("Bone");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing

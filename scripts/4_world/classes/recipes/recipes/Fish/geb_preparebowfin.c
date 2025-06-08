@@ -12,7 +12,7 @@ class PrepareBowFin extends PrepareFish {
 		m_IngredientAddHealth[1] = -4;// 0 = do nothing // damages health of knife/tool from the fillet action
 		//RESULTS----------------------------------------------------------------------------------------------------------------
 		//Result 1
-		ran = Math.RandomFloatInclusive(m_gebsConfig.BowFin.MeatMin,m_gebsConfig.BowFin.MeatMax);
+		ran = Math.RandomInt(m_gebsConfig.BowFin.MeatMin,m_gebsConfig.BowFin.MeatMax);
 		for (int i = 0; i < ran; ++i){
 			AddResult("geb_BowFinFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing

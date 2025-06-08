@@ -20,7 +20,7 @@ modded class PrepareSteelheadTrout extends PrepareFish {
 		m_ResultToInventory[0] = -2;				// (value) == -2 spawn result on the ground;(value) == -1 place anywhere in the players inventory, (value) >= 0 means switch position with ingredient number(value)
 		m_ResultReplacesIngredient[0] = 0;          // (value) == -1 means do nothing; a value >= 0 means this result will transfer item propertiesvariables, attachments etc.. from an ingredient value
 		//----------------------------------------------------------------------------------------------------------------------
-		ran = Math.RandomFloatInclusive(m_gebsConfig.SteelheadTrout.MeatMin,m_gebsConfig.SteelheadTrout.MeatMax);
+		ran = Math.RandomInt(m_gebsConfig.SteelheadTrout.MeatMin,m_gebsConfig.SteelheadTrout.MeatMax);
 		for (int i = 1; i <= ran; ++i){
 			AddResult("SteelheadTroutFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing

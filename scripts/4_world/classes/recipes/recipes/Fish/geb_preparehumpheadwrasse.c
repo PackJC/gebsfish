@@ -12,7 +12,7 @@ class PrepareHumpHeadWrasse extends PrepareFish {
 		m_IngredientAddHealth[1] = -4;// 0 = do nothing // damages health of knife/tool from the fillet action
 		//RESULTS----------------------------------------------------------------------------------------------------------------
 		//Result 1
-		ran = Math.RandomFloatInclusive(m_gebsConfig.HumpHeadWrasse.MeatMin,m_gebsConfig.HumpHeadWrasse.MeatMax);
+		ran = Math.RandomInt(m_gebsConfig.HumpHeadWrasse.MeatMin,m_gebsConfig.HumpHeadWrasse.MeatMax);
 		for (int i = 0; i < ran; ++i){
 			AddResult("geb_HumpHeadWrasseFilletMeat");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
