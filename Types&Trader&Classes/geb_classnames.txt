@@ -1,6 +1,6 @@
 ## Fish Classes
-geb_CrayFish
-geb_CrayFishTailMeat
+geb_SignalCrayFish
+geb_EuropeanCrayFish
 geb_NorthernPike
 geb_NorthernPikeFilletMeat
 geb_LargeMouthBass
