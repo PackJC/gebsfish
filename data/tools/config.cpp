@@ -136,6 +136,7 @@ class cfgVehicles
 		displayName="Fish Knife Base";
 		descriptionShort="Fish Knife Base Class";
 		model="\gebsfish\data\tools\fishknife.p3d";
+    	hiddenSelections[] = {"Camo"};
         weight=100;
         class DamageSystem {
 			class GlobalHealth {

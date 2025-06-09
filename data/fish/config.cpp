@@ -698,8 +698,9 @@ class cfgVehicles
 	};
 	class geb_AmericanLobster: geb_SaltFish_Base {
 		scope = 2;
-		displayName = "$STR_fish_lobster";
-		descriptionShort = "$STR_fish_lobster_desc";
+		displayName = "$STR_fish_americanlobster";
+		descriptionShort = "$STR_fish_americanlobster_desc";
+		hiddenSelections[] = {"lobster"};
 		model = "\gebsfish\data\fish\lobster.p3d";
 		debug_ItemCategory = 6;
 		rotationFlags = 17;
@@ -708,8 +709,8 @@ class cfgVehicles
 	};	
 	class geb_EuropeanLobster: geb_AmericanLobster {
 		scope = 2;
-		displayName = "$STR_fish_bluelobster";
-		descriptionShort = "$STR_fish_bluelobster_desc";
+		displayName = "$STR_fish_europeanlobster";
+		descriptionShort = "$STR_fish_europeanlobster_desc";
 		debug_ItemCategory = 6;
 		rotationFlags = 17;
 		weight = 3000;
@@ -1177,7 +1178,7 @@ class cfgVehicles
 		displayName = "$STR_fish_americanlobster_claw";
 		descriptionShort = "$STR_fish_americanlobster_desc";
 		model = "\gebsfish\data\fish\lobsterclaw.p3d";
-		itemSize[] = {1,3};
+		itemSize[] = {2,2};
 	};
 	class geb_EuropeanLobsterClaw : MackerelFilletMeat {
 		scope = 2;
@@ -1186,7 +1187,7 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\lobsterclaw.p3d";
 		hiddenSelections[] = {"lobster"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobstertail.paa"};
-		itemSize[] = {1,3};
+		itemSize[] = {2,2};
 
 	};
 };

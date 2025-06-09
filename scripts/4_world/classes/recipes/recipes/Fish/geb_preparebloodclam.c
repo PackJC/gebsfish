@@ -1,10 +1,10 @@
-class PrepareMussel extends PrepareFish {
+class PrepareBloodClam extends PrepareFish {
 	int ran;	
-	override void Init(){
+	override void Init() {
 		super.Init();
 		//INGREDIENTS-----------------------------------------------------------------------------------------------------------
 		//Ingredient 1
-		InsertIngredient(0,"geb_Mussel");//you can insert multiple ingredients this way
+		InsertIngredient(0,"geb_BloodClam");//you can insert multiple ingredients this way
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
 		m_IngredientAddQuantity[0] = 0;// 0 = do nothing
@@ -12,7 +12,7 @@ class PrepareMussel extends PrepareFish {
 		m_IngredientAddHealth[1] = -4;// 0 = do nothing // damages health of knife/tool from the fillet action
 		//RESULTS----------------------------------------------------------------------------------------------------------------
 		//Result 1
-		ran = Math.RandomInt(m_gebsConfig.Mussel.BoneMin,m_gebsConfig.Mussel.BoneMax);
+		ran = Math.RandomInt(m_gebsConfig.BloodClam.BoneMin,m_gebsConfig.BloodClam.BoneMax);
 		for (int i = 0; i < ran; ++i){
 			AddResult("Bone");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
@@ -33,7 +33,7 @@ class PrepareMussel extends PrepareFish {
 
 	//Called upon recipe's completion
 	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight){
-		// Adjusts quantity of results to the quantity of the 1st ingredient
+		//Adjusts quantity of results to the quantity of the 1st ingredient
 		super.Do(ingredients, player, results, specialty_weight);
 	}
 };
