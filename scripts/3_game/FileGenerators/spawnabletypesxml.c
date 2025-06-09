@@ -19,10 +19,12 @@ class gebsfishSpawnableTypes {
                 int start = firstLine.IndexOf("<!-- Version: ");
                 if (start != -1)
                 {
-                    int end = firstLine.IndexOf("-->", start);
+                    string tail = firstLine.Substring(start, firstLine.Length() - start);
+                    int end = tail.IndexOf("-->");
                     if (end != -1)
                     {
-                        string existingVersion = firstLine.Substring(start + 12, end - (start + 12)).Trim();
+                        // Skip "<!-- Version: " which is 14 characters
+                        string existingVersion = tail.Substring(14, end - 14).Trim();
                         if (existingVersion == version)
                         {
                             Print("[gebsfish] [SPAWNABLETYPES] spawnable types XML already at version " + version + ", skipping generation.");
@@ -98,14 +100,14 @@ class gebsfishSpawnableTypes {
         {
             FPrint(file, "    <type name=\"" + tackle + "\">\n");
             FPrint(file, "        <cargo chance=\"0.20\">\n");
-            FPrint(file, "            <item name=\"geb_Lure1\" chance=\"0.33\">\n");
-            FPrint(file, "            <item name=\"geb_Lure2\" chance=\"0.33\">\n");
-            FPrint(file, "            <item name=\"geb_Lure3\" chance=\"0.33\">\n");
-            FPrint(file, "            <item name=\"geb_Lure4\" chance=\"0.33\">\n");
-            FPrint(file, "            <item name=\"geb_SpinnerBait1\" chance=\"0.33\">\n");
-            FPrint(file, "            <item name=\"geb_SpinnerBait2\" chance=\"0.33\">\n");
-            FPrint(file, "            <item name=\"geb_SpinnerBait3\" chance=\"0.33\">\n");
-            FPrint(file, "            <item name=\"geb_SpinnerBait4\" chance=\"0.33\">\n");
+            FPrint(file, "            <item name=\"geb_Lure1\" chance=\"0.33\" />\n");
+            FPrint(file, "            <item name=\"geb_Lure2\" chance=\"0.33\" />\n");
+            FPrint(file, "            <item name=\"geb_Lure3\" chance=\"0.33\" />\n");
+            FPrint(file, "            <item name=\"geb_Lure4\" chance=\"0.33\" />\n");
+            FPrint(file, "            <item name=\"geb_SpinnerBait1\" chance=\"0.33\" />\n");
+            FPrint(file, "            <item name=\"geb_SpinnerBait2\" chance=\"0.33\" />\n");
+            FPrint(file, "            <item name=\"geb_SpinnerBait3\" chance=\"0.33\" />\n");
+            FPrint(file, "            <item name=\"geb_SpinnerBait4\" chance=\"0.33\" />\n");
             FPrint(file, "        </cargo>\n");
             FPrint(file, "    </type>\n");
         }
@@ -121,22 +123,22 @@ class gebsfishSpawnableTypes {
         {
             FPrint(file, "    <type name=\"" + clothing + "\">\n");
             FPrint(file, "        <cargo chance=\"0.15\">\n");
-            FPrint(file, "            <item name=\"geb_BlueFishKnife\" chance=\"0.16\">\n");
-            FPrint(file, "            <item name=\"geb_OrangeFishKnife\" chance=\"0.16\">\n");
-            FPrint(file, "            <item name=\"geb_GreenFishKnife\" chance=\"0.16\">\n");
-            FPrint(file, "            <item name=\"geb_YellowFishKnife\" chance=\"0.16\">\n");
-            FPrint(file, "            <item name=\"geb_RedFishKnife\" chance=\"0.16\">\n");
-            FPrint(file, "            <item name=\"geb_PurpleFishKnife\" chance=\"0.16\">\n");
+            FPrint(file, "            <item name=\"geb_BlueFishKnife\" chance=\"0.16\" />\n");
+            FPrint(file, "            <item name=\"geb_OrangeFishKnife\" chance=\"0.16\" />\n");
+            FPrint(file, "            <item name=\"geb_GreenFishKnife\" chance=\"0.16\" />\n");
+            FPrint(file, "            <item name=\"geb_YellowFishKnife\" chance=\"0.16\" />\n");
+            FPrint(file, "            <item name=\"geb_RedFishKnife\" chance=\"0.16\" />\n");
+            FPrint(file, "            <item name=\"geb_PurpleFishKnife\" chance=\"0.16\" />\n");
             FPrint(file, "        </cargo>\n");
             FPrint(file, "        <cargo chance=\"0.15\">\n");
-            FPrint(file, "            <item name=\"geb_BlueFishHat\" chance=\"0.25\">\n");
-            FPrint(file, "            <item name=\"geb_GreenFishHat\" chance=\"0.25\">\n");
-            FPrint(file, "            <item name=\"geb_PurpleFishHat\" chance=\"0.25\">\n");
-            FPrint(file, "            <item name=\"geb_RedFishHat\" chance=\"0.25\">\n");
+            FPrint(file, "            <item name=\"geb_BlueFishHat\" chance=\"0.25\" />\n");
+            FPrint(file, "            <item name=\"geb_GreenFishHat\" chance=\"0.25\" />\n");
+            FPrint(file, "            <item name=\"geb_PurpleFishHat\" chance=\"0.25\" />\n");
+            FPrint(file, "            <item name=\"geb_RedFishHat\" chance=\"0.25\" />\n");
             FPrint(file, "        </cargo>\n");
             FPrint(file, "        <cargo chance=\"0.20\">\n");
-            FPrint(file, "            <item name=\"geb_BlueFishGloves\" chance=\"0.50\">\n");
-            FPrint(file, "            <item name=\"geb_OrangeFishGloves\" chance=\"0.50\">\n");
+            FPrint(file, "            <item name=\"geb_BlueFishGloves\" chance=\"0.50\" />\n");
+            FPrint(file, "            <item name=\"geb_OrangeFishGloves\" chance=\"0.50\" />\n");
             FPrint(file, "        </cargo>\n");
             FPrint(file, "    </type>\n"); 
         }

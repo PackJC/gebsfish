@@ -19,10 +19,12 @@ class gebsfishTypes {
                 int start = firstLine.IndexOf("<!-- Version: ");
                 if (start != -1)
                 {
-                    int end = firstLine.IndexOf("-->", start);
+                    string tail = firstLine.Substring(start, firstLine.Length() - start);
+                    int end = tail.IndexOf("-->");
                     if (end != -1)
                     {
-                        string existingVersion = firstLine.Substring(start + 12, end - (start + 12)).Trim();
+                        // Skip "<!-- Version: " which is 14 characters
+                        string existingVersion = tail.Substring(14, end - 14).Trim();
                         if (existingVersion == version)
                         {
                             Print("[gebsfish] [TYPES] types XML already at version " + version + ", skipping generation.");
@@ -33,7 +35,6 @@ class gebsfishTypes {
                 }
                 CloseFile(readFile);
             }
-            // Delete outdated file if version mismatched or not found
             DeleteFile(filePath);
             Print("[gebsfish] [TYPES] Deleted existing types XML for regeneration.");
         }
@@ -54,9 +55,10 @@ class gebsfishTypes {
         }
 
         // Write XML header with version
-        FPrint(file, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        FPrint(file, "<!-- Version: " + version + " -->\n");
-        FPrint(file, "<types>\n");
+        FPrint(file, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        FPrint(file, "<!-- Version: " + version + " -->");
+        FPrint(file, "<types>");
+
 
         // Fish Items
         ref array<string> fishItems = new array<string>;

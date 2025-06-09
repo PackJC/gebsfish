@@ -9,6 +9,8 @@ modded class MissionServer
 
 		gebsfishTypes fishTypesGenerator = new gebsfishTypes();
     	fishTypesGenerator.GenerateTypesXML();
+		gebsfishSpawnableTypes fishSpawnableTypesGenerator = new gebsfishSpawnableTypes();
+    	fishSpawnableTypesGenerator.GenerateSpawnableTypesXML();
 	}
 
 	override void OnClientPrepareEvent(PlayerIdentity identity, out bool useDB, out vector pos, out float yaw, out int preloadTimeout) {
