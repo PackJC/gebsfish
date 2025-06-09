@@ -74,7 +74,8 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareYellowFinTuna);
 		
 		//Tools
-		RegisterRecipe(new CraftWoodenNet);
+		RegisterRecipe(new CraftBambooFishingNet);
+		RegisterRecipe(new RepairFishingPole);
 
 	}
 };

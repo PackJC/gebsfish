@@ -37,23 +37,100 @@ class cfgVehicles
 		TOOLS
 
 	*/
-	class FishingRodRepairKit : ItemBase
+
+	class FishingRodRepairKit: Inventory_Base
 	{
 		scope = 2;
 		displayName = "$STR_tools_fishingrodrepairkit";
 		descriptionShort = "$STR_tools_fishingrodrepairkit_desc";
 		model="\gebsfish\data\tools\fishingline_biggame.p3d";
-		itemSize[] = {2,2};
-		weight = 250;
-		absorbency = 0.1;
-		repairableWithKits[] = {};
-		repairCosts[] = {};
+		debug_ItemCategory=2;
+		animClass="Knife";
+		rotationFlags=17;
+		stackedUnit="percentage";
 		varQuantityInit = 4;
 		varQuantityMin = 0;
 		varQuantityMax = 4;
 		quantityBar = 1;
-		inventorySlot[] = {};
+		weight=150;
+		weightPerQuantityUnit=0;
+		itemSize[]={2,2};
+		fragility=0.0099999998;
+		repairKitType=1;
+		soundImpactType="wood";
+		class DamageSystem
+		{
+			class GlobalHealth
+			{
+				class Health
+				{
+					hitpoints=100;
+					healthLevels[]=
+					{
+						
+						{
+							1,
+							
+							{
+								"DZ\gear\tools\data\cleaning_kit_wood.rvmat"
+							}
+						},
+						
+						{
+							0.69999999,
+							
+							{
+								"DZ\gear\tools\data\cleaning_kit_wood.rvmat"
+							}
+						},
+						
+						{
+							0.5,
+							
+							{
+								"DZ\gear\tools\data\cleaning_kit_wood_damage.rvmat"
+							}
+						},
+						
+						{
+							0.30000001,
+							
+							{
+								"DZ\gear\tools\data\cleaning_kit_wood_damage.rvmat"
+							}
+						},
+						
+						{
+							0,
+							
+							{
+								"DZ\gear\tools\data\cleaning_kit_wood_destruct.rvmat"
+							}
+						}
+					};
+				};
+			};
+		};
+		class MeleeModes
+		{
+			class Default
+			{
+				ammo="MeleeFistLight";
+				range=1;
+			};
+			class Heavy
+			{
+				ammo="MeleeFistHeavy";
+				range=1;
+			};
+			class Sprint
+			{
+				ammo="MeleeFistHeavy";
+				range=2.8;
+			};
+		};
 	};
+
     class geb_FishKnife_Base: HuntingKnife{
         scope=0;
 		displayName="Fish Knife Base";
