@@ -1,9 +1,42 @@
 class gebsfishTypes {
     void GenerateTypesXML()
     {
+        // Define current XML version
+        string version = "1.0";
+
         // Define the custom directory inside profiles
         string directoryPath = "$profile:Gebs/extras/mpmissions/";
         string filePath = directoryPath + "gebsfish-types.xml";
+
+        // Version check: if file exists, read its version
+        if (FileExist(filePath))
+        {
+            FileHandle readFile = OpenFile(filePath, FileMode.READ);
+            if (readFile)
+            {
+                string firstLine;
+                FGets(readFile, firstLine);
+                int start = firstLine.IndexOf("<!-- Version: ");
+                if (start != -1)
+                {
+                    int end = firstLine.IndexOf("-->", start);
+                    if (end != -1)
+                    {
+                        string existingVersion = firstLine.Substring(start + 12, end - (start + 12)).Trim();
+                        if (existingVersion == version)
+                        {
+                            Print("[gebsfish] [TYPES] types XML already at version " + version + ", skipping generation.");
+                            CloseFile(readFile);
+                            return;
+                        }
+                    }
+                }
+                CloseFile(readFile);
+            }
+            // Delete outdated file if version mismatched or not found
+            DeleteFile(filePath);
+            Print("[gebsfish] [TYPES] Deleted existing types XML for regeneration.");
+        }
 
         // Ensure the directory exists
         if (!FileExist(directoryPath))
@@ -20,8 +53,9 @@ class gebsfishTypes {
             return;
         }
 
-        // Start XML structure
+        // Write XML header with version
         FPrint(file, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        FPrint(file, "<!-- Version: " + version + " -->\n");
         FPrint(file, "<types>\n");
 
         // Fish Items
