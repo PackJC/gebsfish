@@ -41,13 +41,13 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareChinookSalmon);
 
 		//Saltwater crustacean
-		// RegisterRecipe(new PrepareMussel);
-		// RegisterRecipe(new PrepareBlackDevilSnail);
+		RegisterRecipe(new PrepareMussel);
+		RegisterRecipe(new PrepareBlackDevilSnail);
 		RegisterRecipe(new PrepareStarFish);
 		RegisterRecipe(new PrepareKingCrab);
 		RegisterRecipe(new PrepareSnowCrab);
 		RegisterRecipe(new PrepareBlueJellyFish);
-		// RegisterRecipe(new PrepareBloodClam);
+		RegisterRecipe(new PrepareBloodClam);
 		RegisterRecipe(new PrepareAmericanLobster);
 		RegisterRecipe(new PrepareEuropeanLobster);
 
@@ -74,7 +74,8 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareYellowFinTuna);
 		
 		//Tools
-		RegisterRecipe(new CraftWoodenNet);
+		RegisterRecipe(new CraftBambooFishingNet);
+		RegisterRecipe(new RepairFishingPole);
 
 	}
 };

@@ -1,0 +1,1 @@
+class FishingRodRepairKit: Inventory_Base {};
