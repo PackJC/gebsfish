@@ -492,6 +492,9 @@ class cfgVehicles
 		descriptionShort = "$STR_tools_grubworm_desc";
 		model = "\dz\gear\food\bait_worm.p3d";
 		rotationFlags = 17;
+		hiddenSelections[] = {"cs_raw"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\grubworm_ca.paa"};
+
 	};
 	class geb_RubberWorm: Worm {
 		scope = 2;
@@ -499,6 +502,9 @@ class cfgVehicles
 		descriptionShort = "$STR_tools_rubberworm_desc";
 		model = "\dz\gear\food\bait_worm.p3d";
 		rotationFlags = 17;
+		hiddenSelections[] = {"cs_raw"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\rubberworm_ca.paa"};
+
 	};
 
 	/*

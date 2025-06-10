@@ -701,6 +701,7 @@ class cfgVehicles
 		displayName = "$STR_fish_americanlobster";
 		descriptionShort = "$STR_fish_americanlobster_desc";
 		hiddenSelections[] = {"lobster"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\lobster_ca.paa"};
 		model = "\gebsfish\data\fish\lobster.p3d";
 		debug_ItemCategory = 6;
 		rotationFlags = 17;
@@ -1162,6 +1163,8 @@ class cfgVehicles
 		displayName = "$STR_fish_americanlobster_tail";
 		descriptionShort = "$STR_fish_americanlobster_desc";
 		model = "\gebsfish\data\fish\lobstertail.p3d";
+		hiddenSelections[] = {"lobster"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\lobstertail_ca.paa"};
 		itemSize[] = {1,3};
 	};
 	class geb_EuropeanLobsterTail : MackerelFilletMeat {
@@ -1170,7 +1173,7 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_europeanlobster_desc";
 		model = "\gebsfish\data\fish\lobstertail.p3d";
 		hiddenSelections[] = {"lobster"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobstertail.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobstertail_ca.paa"};
 		itemSize[] = {1,3};
 	};	
 	class geb_AmericanLobsterClaw : MackerelFilletMeat {
