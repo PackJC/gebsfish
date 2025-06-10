@@ -575,7 +575,6 @@ class cfgVehicles
 		displayName = "$STR_fish_roughneckrock";
 		descriptionShort = "$STR_fish_roughneckrock_desc";
 		model = "\gebsfish\data\fish\roughneckrock.p3d";
-		debug_ItemCategory = 6;
 		weight = 3000;
 		itemSize[] = {4,3};
 		
@@ -585,7 +584,6 @@ class cfgVehicles
 		displayName = "$STR_fish_severum";
 		descriptionShort = "$STR_fish_severum_desc";
 		model = "\gebsfish\data\fish\severum.p3d";
-		debug_ItemCategory = 6;
 		weight = 3600;
 		itemBehaviour = 0;
 		itemSize[] = {5,4};
@@ -595,7 +593,6 @@ class cfgVehicles
 		displayName = "$STR_fish_bluetang";
 		descriptionShort = "$STR_fish_bluetang_desc";
 		model = "\gebsfish\data\fish\bluetang.p3d";
-		debug_ItemCategory = 6;
 		weight = 2000;
 		itemSize[] = {4,3};
 	};
@@ -604,7 +601,6 @@ class cfgVehicles
 		displayName = "$STR_fish_largeheadhairtailfish";
 		descriptionShort = "$STR_fish_largeheadhairtailfish_desc";
 		model = "\gebsfish\data\fish\hairtailfish.p3d";
-		debug_ItemCategory = 6;
 		weight = 800;
 		itemSize[] = {4,1};
 	};
@@ -613,7 +609,6 @@ class cfgVehicles
 		displayName = "$STR_fish_humpheadwrasse";
 		descriptionShort = "$STR_fish_humpheadwrasse_desc";
 		model = "\gebsfish\data\fish\humpheadwrasse.p3d";
-		debug_ItemCategory = 6;
 		weight = 3500;
 		itemSize[] = {5,4};
 	};
@@ -622,7 +617,6 @@ class cfgVehicles
 		displayName = "$STR_fish_siamesetigerfish";
 		descriptionShort = "$STR_fish_siamesetigerfish_desc";
 		model = "\gebsfish\data\fish\siamesetigerfish.p3d";
-		debug_ItemCategory = 6;
 		weight = 2500;
 		itemSize[] = {3,3};
 	};
@@ -651,7 +645,6 @@ class cfgVehicles
 		displayName = "$STR_fish_bloodclam";
 		descriptionShort = "$STR_fish_bloodclam_desc";
 		model = "\gebsfish\data\fish\bloodclam.p3d";
-		debug_ItemCategory = 6;
 		rotationFlags = 17;
 		weight = 100;
 		itemSize[] = {1,1};
@@ -661,7 +654,6 @@ class cfgVehicles
 		displayName = "$STR_fish_mussel";
 		descriptionShort = "$STR_fish_mussel_desc";
 		model = "\gebsfish\data\fish\mussel.p3d";
-		debug_ItemCategory = 6;
 		rotationFlags = 17;
 		weight = 100;
 		itemSize[] = {1,1};
@@ -671,7 +663,6 @@ class cfgVehicles
 		displayName = "$STR_fish_blackdevilsnail";
 		descriptionShort = "$STR_fish_blackdevilsnail_desc";
 		model = "\gebsfish\data\fish\blackdevilsnail.p3d";
-		debug_ItemCategory = 6;
 		rotationFlags = 17;
 		weight = 100;
 		itemSize[] = {1,1};
@@ -681,7 +672,6 @@ class cfgVehicles
 		displayName = "$STR_fish_starfish";
 		descriptionShort = "$STR_fish_starfish_desc";
 		model = "\gebsfish\data\fish\starfish.p3d";
-		debug_ItemCategory = 6;
 		rotationFlags = 17;
 		weight = 2500;
 		itemSize[] = {2,2};
@@ -691,7 +681,6 @@ class cfgVehicles
 		displayName = "$STR_fish_bluejellyfish";
 		descriptionShort = "$STR_fish_bluejellyfish_desc";
 		model = "\gebsfish\data\fish\jellyfish.p3d";
-		debug_ItemCategory = 6;
 		rotationFlags = 17;
 		weight = 500;
 		itemSize[] = {2,2};
@@ -701,30 +690,30 @@ class cfgVehicles
 		displayName = "$STR_fish_americanlobster";
 		descriptionShort = "$STR_fish_americanlobster_desc";
 		hiddenSelections[] = {"lobster"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\lobster_ca.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\americanlobster_ca.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\americanlobster.rvmat"};
 		model = "\gebsfish\data\fish\lobster.p3d";
-		debug_ItemCategory = 6;
 		rotationFlags = 17;
 		weight = 3000;
 		itemSize[] = {3,2};
 	};	
-	class geb_EuropeanLobster: geb_AmericanLobster {
+	class geb_EuropeanLobster: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_europeanlobster";
 		descriptionShort = "$STR_fish_europeanlobster_desc";
-		debug_ItemCategory = 6;
+		hiddenSelections[] = {"lobster"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobster_ca.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\europeanlobster.rvmat"};
+		model = "\gebsfish\data\fish\lobster.p3d";
 		rotationFlags = 17;
 		weight = 3000;
 		itemSize[] = {3,2};
-		hiddenSelections[] = {"lobster"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobster_ca.paa"};
 	};
 	class geb_KingCrab: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_kingcrab";
 		descriptionShort = "$STR_fish_kingcrab_desc";
 		model = "\gebsfish\data\fish\kingcrab.p3d";
-		debug_ItemCategory = 6;
 		rotationFlags = 17;
 		weight = 3000;
 		itemSize[] = {3,3};
@@ -734,7 +723,6 @@ class cfgVehicles
 		displayName = "$STR_fish_snowcrab";
 		descriptionShort = "$STR_fish_snowcrab_desc";
 		model = "\gebsfish\data\fish\snowcrab.p3d";
-		debug_ItemCategory = 6;
 		rotationFlags = 17;
 		weight = 3000;
 		itemSize[] = {3,3};
@@ -1130,7 +1118,7 @@ class cfgVehicles
 		};
 	};
 
-	//Crustacean Fillets
+	//Crustacean Fillets/Legs/Claws
 	class geb_KingCrabLegs: MackerelFilletMeat {
 		scope = 2;
 		displayName = "$STR_fish_kingcrab_legs";
@@ -1164,7 +1152,8 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_americanlobster_desc";
 		model = "\gebsfish\data\fish\lobstertail.p3d";
 		hiddenSelections[] = {"lobster"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\lobstertail_ca.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\americanlobsterclaw_ca.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\americanlobsterclaw.rvmat"};
 		itemSize[] = {1,3};
 	};
 	class geb_EuropeanLobsterTail : MackerelFilletMeat {
@@ -1174,6 +1163,7 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\lobstertail.p3d";
 		hiddenSelections[] = {"lobster"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobstertail_ca.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\europeanlobstertail.rvmat"};
 		itemSize[] = {1,3};
 	};	
 	class geb_AmericanLobsterClaw : MackerelFilletMeat {
@@ -1181,6 +1171,9 @@ class cfgVehicles
 		displayName = "$STR_fish_americanlobster_claw";
 		descriptionShort = "$STR_fish_americanlobster_desc";
 		model = "\gebsfish\data\fish\lobsterclaw.p3d";
+		hiddenSelections[] = {"lobster"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\americanlobsterclaw_ca.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\americanlobsterclaw.rvmat"};
 		itemSize[] = {2,2};
 	};
 	class geb_EuropeanLobsterClaw : MackerelFilletMeat {
@@ -1190,6 +1183,7 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\lobsterclaw.p3d";
 		hiddenSelections[] = {"lobster"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobsterclaw_ca.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\europeanlobsterclaw.rvmat"};
 		itemSize[] = {2,2};
 
 	};
