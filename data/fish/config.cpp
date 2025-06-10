@@ -1189,7 +1189,7 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_europeanlobster_desc";
 		model = "\gebsfish\data\fish\lobsterclaw.p3d";
 		hiddenSelections[] = {"lobster"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobstertail.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobsterclaw_ca.paa"};
 		itemSize[] = {2,2};
 
 	};
