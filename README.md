@@ -68,3 +68,5 @@ Use a Collection if you want to include this mod on your server for your users.
 You are hereby given monetization approval under the conditions that you follow the DayZ Server Monetization agreement and have obtained permission from Bohemia. Read more here https://www.bohemia.net/monetization
 
 # Copyright © Smoky Mountain Software 2022-2025
+Attribution-NonCommercial-NoDerivatives 4.0 International
+
