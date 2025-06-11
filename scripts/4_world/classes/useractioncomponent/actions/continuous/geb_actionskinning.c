@@ -1,5 +1,3 @@
-/*
-
 modded class ActionSkinningCB
 {
     override void CreateActionComponent()
@@ -19,6 +17,3 @@ modded class ActionSkinningCB
         m_ActionData.m_ActionComponent = new CAContinuousTime(time_spent);
     }
 }
-
-*/
-

@@ -56,7 +56,7 @@ class Stage4
 };
 class Stage5
 {
-	texture="dz\gear\food\data\carp_live_smdi.paa";
+	texture="gebsfish\data\fish\largemouthbass_smdi.paa";
 	uvSource="tex";
 	class uvTransform
 	{
