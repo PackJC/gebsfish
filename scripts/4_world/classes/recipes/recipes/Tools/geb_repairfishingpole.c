@@ -4,7 +4,7 @@ class RepairFishingPole : RecipeBase
 	{
 		m_Name = "#repair";
 		m_IsInstaRecipe = false;//should this recipe be performed instantly without animation
-		m_AnimationLength = 1.5;//animation length in relative time units
+		m_AnimationLength = 2.5;//animation length in relative time units
 		m_Specialty = -0.02;// value > 0 for roughness, value < 0 for precision
 		
 		
@@ -28,7 +28,7 @@ class RepairFishingPole : RecipeBase
 		
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
-		m_IngredientAddQuantity[0] = 0;// 0 = do nothing
+		m_IngredientAddQuantity[0] = -1;
 		m_IngredientDestroy[0] = false;//true = destroy, false = do nothing
 		m_IngredientUseSoftSkills[0] = true;// set 'true' to allow modification of the values by softskills on this ingredient
 		

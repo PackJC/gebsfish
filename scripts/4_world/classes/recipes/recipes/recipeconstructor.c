@@ -14,10 +14,7 @@ modded class PluginRecipesManager
 	{
 		super.RegisterRecipies();
 
-		//Freshwater crustacean
-		// RegisterRecipe(new PrepareCrayFish);
-
-		//Freshwater fish 	
+		//Freshwater Fish 	
 		RegisterRecipe(new PrepareBlueGill);
 		RegisterRecipe(new PrepareBlackBass);
 		RegisterRecipe(new PrepareFlatHeadCatFish);
@@ -40,13 +37,12 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareSockEyeSalmon);
 		RegisterRecipe(new PrepareChinookSalmon);
 
-		//Saltwater crustacean
+		//Saltwater Crustaceans
 		RegisterRecipe(new PrepareMussel);
 		RegisterRecipe(new PrepareBlackDevilSnail);
 		RegisterRecipe(new PrepareStarFish);
 		RegisterRecipe(new PrepareKingCrab);
 		RegisterRecipe(new PrepareSnowCrab);
-		RegisterRecipe(new PrepareBlueJellyFish);
 		RegisterRecipe(new PrepareBloodClam);
 		RegisterRecipe(new PrepareAmericanLobster);
 		RegisterRecipe(new PrepareEuropeanLobster);
@@ -72,7 +68,8 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareAngelShark);
 		RegisterRecipe(new PrepareGreatWhiteShark);
 		RegisterRecipe(new PrepareYellowFinTuna);
-		
+		RegisterRecipe(new PrepareBlueJellyFish);
+
 		//Tools
 		RegisterRecipe(new CraftBambooFishingNet);
 		RegisterRecipe(new RepairFishingPole);

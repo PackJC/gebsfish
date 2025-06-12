@@ -50,13 +50,15 @@ class cfgVehicles
 		stackedUnit="percentage";
 		varQuantityInit = 4;
 		varQuantityMin = 0;
+		quantityBarColor = "Default";
+		destroyOnEmpty = 1;  // Kit is deleted when empty
 		varQuantityMax = 4;
 		quantityBar = 1;
 		weight=150;
 		weightPerQuantityUnit=0;
 		itemSize[]={2,2};
 		fragility=0.0099999998;
-		repairKitType=1;
+		repairKitType=33;
 		soundImpactType="wood";
 		class DamageSystem
 		{
@@ -226,9 +228,9 @@ class cfgVehicles
 	class FishingRod : FishingRod_Base_New
     {
 		inventorySlot[]+={"Shoulder", "Melee", "fishingpole", "fishingrod1", "fishingrod2", "fishingrod3", "fishingrod4", "fishingrod5", "fishingrod6", "fishingrod7", "fishingrod8", "fishingrod9", "fishingrod10"};
-        repairableWithKits[]={5};
-        repairCosts[]={30, 25};
         hiddenSelections[]={"zbytek"};
+		repairableWithKits[] = {33};  // Use the same repairKitType as above
+		repairCosts[] = {0.1};          // 10% quantity used per full repair
         hiddenSelectionsTextures[]={"\DZ\gear\tools\data\fishing_rod_co.paa"};
     };
 	class geb_RedFishingRod: FishingRod {
