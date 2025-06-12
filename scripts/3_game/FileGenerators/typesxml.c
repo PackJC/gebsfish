@@ -43,6 +43,7 @@ class gebsfishTypes {
         if (!FileExist(directoryPath))
         {
             MakeDirectory("$profile:Gebs");
+            MakeDirectory("$profile:Gebs/extras/");
             MakeDirectory(directoryPath);
         }
 
