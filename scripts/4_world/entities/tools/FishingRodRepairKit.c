@@ -1,1 +1,1 @@
-class FishingRodRepairKit: Inventory_Base {};
+class geb_FishingRodRepairKit: Inventory_Base {};

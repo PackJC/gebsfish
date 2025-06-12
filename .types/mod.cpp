@@ -4,7 +4,7 @@
 		credits="Geb";
 		author="Geb";
 		authorID="0";
-		version="3.2";
+		version="3.3";
 		picture = "gebsfish/data/logo.paa";							// picture in expanded description
 		logoSmall = "gebsfish/data/logo.paa";						// icon next to mod name when description is not expanded
 		logo = "gebsfish/data/logo.paa";							// logo below game menu

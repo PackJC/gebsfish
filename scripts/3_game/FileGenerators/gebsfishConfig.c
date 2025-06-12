@@ -1,7 +1,7 @@
 class gebsfishConfig {
     
     //Define Config Version
-    static const string CONFIG_VERSION = "0.5";
+    static const string CONFIG_VERSION = "3.3";
 
     //config location
     private const static string ModFolder = "$profile:\\Gebs\\";

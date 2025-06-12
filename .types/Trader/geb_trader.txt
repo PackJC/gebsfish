@@ -120,6 +120,7 @@
 		geb_FieldCricket,								 	 *,		 50,		 25
 		geb_GrubWorm,								 		 *,		 50,		 25
 		geb_RubberWorm,								 		 *,		 50,		 25
+		geb_FishingRodRepairKit,							 *,		 50,		 25
         
     <Category> Tackle and Knifes  
         geb_BlueFishKnife,				                 	 *,		 350,	     175

@@ -149,6 +149,7 @@ geb_RedFishingRod
 geb_BlueFishingRod
 geb_GreenFishingRod
 geb_PurpleFishingRod
+geb_FishingRodRepairKit
 
 ## Insects / Baits
 geb_GrassHopper

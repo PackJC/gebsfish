@@ -2,7 +2,7 @@ class gebsfishTypes {
     void GenerateTypesXML()
     {
         // Define current XML version
-        string version = "1.0";
+        string version = "3.3";
 
         // Define the custom directory inside profiles
         string directoryPath = "$profile:Gebs/extras/mpmissions/";
@@ -155,7 +155,8 @@ class gebsfishTypes {
         fishItems.Insert("geb_AmericanLobsterClaw");
         fishItems.Insert("geb_EuropeanLobster");
         fishItems.Insert("geb_EuropeanLobsterTail");
-        fishItems.Insert("geb_EuropeanLobsterClaw");        fishItems.Insert("geb_GreatWhiteShark");
+        fishItems.Insert("geb_EuropeanLobsterClaw");        
+        fishItems.Insert("geb_GreatWhiteShark");
         fishItems.Insert("geb_GreatWhiteSharkFilletMeat");
         fishItems.Insert("geb_AngelShark");
         fishItems.Insert("geb_AngelSharkFilletMeat");
@@ -234,6 +235,7 @@ class gebsfishTypes {
         gearItems.Insert(new Param3<string, int, int>("geb_GreenFishShirt", 3, 1));
         gearItems.Insert(new Param3<string, int, int>("geb_BlueFishShirt", 3, 1));
         gearItems.Insert(new Param3<string, int, int>("geb_PurpleFishShirt", 3, 1));
+        gearItems.Insert(new Param3<string, int, int>("geb_FishingRodRepairKit", 3, 1));
 
         FPrint(file, "    <!-- Gear Items -->\n");
         foreach (Param3<string, int, int> gear : gearItems)

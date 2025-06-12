@@ -95,6 +95,7 @@
 	<type name="geb_Lure2" />
 	<type name="geb_Lure3" />
 	<type name="geb_Lure4" />
+	<type name="geb_FishingRodRepairKit" />
 	<type name="geb_SpinnerBait1" />
 	<type name="geb_SpinnerBait2" />
 	<type name="geb_SpinnerBait3" />
