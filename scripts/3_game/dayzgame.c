@@ -10,7 +10,7 @@ modded class DayZGame {
             if(!ctx.Read(configParams))
             return;
             SetGebsfishConfig(configParams.param1);
-            Print("[gebsfish] Client received config data 3.3 from the server.");
+            Print("[gebsfish] Client received config data " + VERSION_GEBSFISH + " from the server.");
         }
     }
 }
