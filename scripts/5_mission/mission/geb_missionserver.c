@@ -4,7 +4,7 @@ modded class MissionServer
 	{		
 		super.OnInit();
 		if(m_gebsConfig){
-			Print("[gebsfish] Gebsfish V3.3 Loaded Successfully!");
+			Print("[gebsfish] Gebsfish V" + VERSION_GEBSFISH + " Loaded Successfully!");
 		}
 
 		gebsfishTypes fishTypesGenerator = new gebsfishTypes();
@@ -19,7 +19,7 @@ modded class MissionServer
 		if(identity){
 			//if identity is valid, send config to player. 
 			auto configParams = new Param1<gebsfishConfig>(GetGebSettingsConfig());
-			Print("[gebsfish] Sending Geb's Fishing config 3.3 to Player: " + identity.GetName() + " RPC: " + RPC_GEBSCONFIG_SYNC);
+			Print("[gebsfish] Sending Geb's Fishing config " + VERSION_GEBSFISH + " to Player: " + identity.GetName() + " RPC: " + RPC_GEBSCONFIG_SYNC);
 			PlayerBase player = PlayerBase.Cast(identity.GetPlayer());
 			GetGame().RPCSingleParam(player, RPC_GEBSCONFIG_SYNC, configParams, true, identity);
 		}
