@@ -2,7 +2,7 @@ class gebsfishTypes {
     void GenerateTypesXML()
     {
         // Define current XML version
-        string version = "3.3";
+        string version = VERSION_GEBSFISH;
 
         // Define the custom directory inside profiles
         string directoryPath = "$profile:Gebs/extras/mpmissions/";
