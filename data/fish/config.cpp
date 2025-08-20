@@ -730,17 +730,19 @@ class cfgVehicles
 	//Freshwater crustaceans
 	class  geb_EuropeanCrayFish: Shrimp {
 		scope = 2;
+		rotationFlags = 34;
 		displayName = "$STR_fish_europeancrayfish";
 		descriptionShort = "$STR_fish_europeancrayfish_desc";
-		model = "\gebsfish\data\fish\Crayfish.p3d";
+		model = "\gebsfish\data\fish\europeancrayfish.p3d";
 		itemSize[] = {1,2};
 		weight = 200;
 	};
 	class  geb_SignalCrayFish: Shrimp {
 		scope = 2;
+		rotationFlags = 34;
 		displayName = "$STR_fish_signalcrayfish";
 		descriptionShort = "$STR_fish_signalcrayfish_desc";
-		model = "\gebsfish\data\fish\Crayfish.p3d";
+		model = "\gebsfish\data\fish\signalcrayfish.p3d";
 		itemSize[] = {1,2};
 		weight = 200;
 	};

@@ -23,8 +23,8 @@ class PrepareEuropeanLobster extends PrepareFish{
 		m_ResultReplacesIngredient[0] = 0;// value == -1 means do nothing; a value >= 0 means this result will transfer item propertiesvariables, attachments etc.. from an ingredient value
 		//Result 2
 		ran = Math.RandomInt(m_gebsConfig.EuropeanLobster.MeatMin,m_gebsConfig.EuropeanLobster.MeatMax);
-		for (int i = 0; i < ran; ++i){
-			AddResult("geb_BlueLobsterClaw");//add results here
+		for (int i = 1; i < ran; ++i){
+			AddResult("geb_EuropeanLobsterClaw");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
 			m_ResultSetHealth[i] = -1;//-1 = do nothing
