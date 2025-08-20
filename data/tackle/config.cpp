@@ -503,8 +503,7 @@ class cfgVehicles
 		model = "\dz\gear\food\bait_worm.p3d";
 		rotationFlags = 17;
 		hiddenSelections[] = {"cs_raw"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\rubberworm_ca.paa"};
-
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\rubberworm_ca.paa","\gebsfish\data\tackle\rubberworm_ca.paa","\gebsfish\data\tackle\rubberworm_ca.paa"};
 	};
 
 	/*

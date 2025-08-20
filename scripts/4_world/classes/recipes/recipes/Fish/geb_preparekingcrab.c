@@ -13,7 +13,7 @@ class PrepareKingCrab extends PrepareFish {
 		//RESULTS----------------------------------------------------------------------------------------------------------------
 		//Result 1
 		ran = Math.RandomInt(m_gebsConfig.KingCrab.MeatMin,m_gebsConfig.KingCrab.MeatMax);
-		for (int i = 1; i < ran; ++i){
+		for (int i = 0; i < ran; ++i){
 			AddResult("geb_KingCrabLegs");//add results here
 			m_ResultSetFullQuantity[i] = false;//true = set full quantity, false = do nothing
 			m_ResultSetQuantity[i] = -1;//-1 = do nothing
