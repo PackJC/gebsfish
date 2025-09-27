@@ -1,72 +1,122 @@
-![Alt text](https://i.imgur.com/3rhti8A.gif)
 
-[![GebsFish Discord](https://i.imgur.com/4IyA522.png)](https://discord.gg/G8uSGZ8yyf)
+<h1 align="center">
+  <br>
+  <img src="https://raw.githubusercontent.com/PackJC/gebsfish/readme-update/.github/logo.png" alt="Gebsfish" width="300">
+  <br>
+  Gebsfish
+  <br>
+</h1>
 
-# Mod Information
-This mod currently adds 41 new fish, 9 crustaceans, 6 knives, 8 lures/baits, 21 tackle boxes, 7 tools, 4 insect baits, 10 clothing items.
+<h4 align="center">A minimal Markdown Editor desktop app built on top of .</h4>
 
-This mod is meant to create more immersion, and add more to the ecosystem to the base game. We do not want the fish to make it easier to survive, so the percentage of catching, time to prepare, amount of fish fillets gathered, and fish weight are considered. 
+<p align="center">
+  <a href="https://badge.fury.io/js/electron-markdownify">
+    <img src="https://badge.fury.io/js/electron-markdownify.svg"
+         alt="Gitter">
+  </a>
+  <a href="https://gitter.im/amitmerchant1990/electron-markdownify"><img src="https://badges.gitter.im/amitmerchant1990/electron-markdownify.svg"></a>
+  <a href="https://saythanks.io/to/bullredeyes@gmail.com">
+      <img src="https://img.shields.io/badge/SayThanks.io-%E2%98%BC-1EAEDB.svg">
+  </a>
+  <a href="https://www.paypal.me/AmitMerchant">
+    <img src="https://img.shields.io/badge/$-donate-ff69b4.svg?maxAge=2592000&amp;style=flat">
+  </a>
+</p>
 
-# Features
+<p align="center">
+  <a href="#key-features">Key Features</a> •
+  <a href="#how-to-use">How To Use</a> •
+  <a href="#download">Download</a> •
+  <a href="#credits">Credits</a> •
+  <a href="#related">Related</a> •
+  <a href="#license">License</a>
+</p>
 
-- We allow very detailed configuration to fishing. The config is created in the your server $profile/gebsfish/fishingsettings.json. 
+![screenshot](https://raw.githubusercontent.com/amitmerchant1990/electron-markdownify/master/app/img/markdownify.gif)
+
+## Key Features
+
+* LivePreview - Make changes, See changes
+  - Instantly see what your Markdown documents look like in HTML as you create them.
+* Sync Scrolling
+  - While you type, LivePreview will automatically scroll to the current location you're editing.
+* GitHub Flavored Markdown  
+* Syntax highlighting
+* [KaTeX](https://khan.github.io/KaTeX/) Support
+* Dark/Light mode
+* Toolbar for basic Markdown formatting
+* Supports multiple cursors
+* Save the Markdown preview as PDF
+* Emoji support in preview :tada:
+* App will keep alive in tray for quick usage
+* Full screen mode
+  - Write distraction free.
+* Cross platform
+  - Windows, macOS and Linux ready.
+
+## How To Use
+
+To clone and run this application, you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
+
+```bash
+# Clone this repository
+$ git clone https://github.com/amitmerchant1990/electron-markdownify
+
+# Go into the repository
+$ cd electron-markdownify
+
+# Install dependencies
+$ npm install
+
+# Run the app
+$ npm start
+```
+
+> **Note**
+> If you're using Linux Bash for Windows, [see this guide](https://www.howtogeek.com/261575/how-to-run-graphical-linux-desktop-applications-from-windows-10s-bash-shell/) or use `node` from the command prompt.
 
 
-- You can define where a fish is caught, salt, fresh or both types of water. How a fish is caught, fish traps or fishing rod. The range of fillets you may get from gutting a fish. The probability of catching said fish as well. If you have any issues with your config please join the discord for troubleshooting. 
+## Download
 
+You can [download](https://github.com/amitmerchant1990/electron-markdownify/releases/tag/v1.2.0) the latest installable version of Markdownify for Windows, macOS and Linux.
 
-- Predators of your choosing has a chance of spawning around the player when fishing or gutting a fish. This is defined in the config as well. You may disable, decrease or increase the chance of this happening. You may also change the predator that spawns on the player.
+## Emailware
 
+Markdownify is an [emailware](https://en.wiktionary.org/wiki/emailware). Meaning, if you liked using this app or it has helped you in any way, I'd like you send me an email at <bullredeyes@gmail.com> about anything you'd want to say about this software. I'd really appreciate it!
 
-- Junk being caught is also now configurable. You can choose which junk classes you'd like to add in the config. Liquid containers can be added in the section below junk - detailed in the config.
+## Credits
 
+This software uses the following open source packages:
 
-- CFTools logging is used to help debug issues.
+- [Electron](http://electron.atom.io/)
+- [Node.js](https://nodejs.org/)
+- [Marked - a markdown parser](https://github.com/chjj/marked)
+- [showdown](http://showdownjs.github.io/showdown/)
+- [CodeMirror](http://codemirror.net/)
+- Emojis are taken from [here](https://github.com/arvida/emoji-cheat-sheet.com)
+- [highlight.js](https://highlightjs.org/)
 
-# Supported Languages
-- English, Czech, German, Russian, Polish, Hungarian, Italian, Spanish, French, Chinese (Traditional) , Japanese, Portuguese, Chinese (Simplified). 
+## Related
 
+[Try Web version of Markdownify](https://notepad.js.org/markdown-editor/)
 
-Although supported languages are listed, we are in a constant need for updating and adding new translations. If you are native speaker to any langauge and would like to contribute please let us know in the discord.
+## Support
 
-# Classnames, Types, Spawntypes, Trader Files
-Included within @gebsfish, look in @gebsfish/Types&Trader&Classes/
+If you like this project and think it has helped in any way, consider buying me a coffee!
 
-# Adjust Fishing Chances
-In the config under Catch Probability is where you define the chance of catching a fish. We recommend 0-25. If you wish to disable a fish being caught, set it to 0.
+<a href="https://buymeacoffee.com/amitmerchant" target="_blank"><img src="app/img/bmc-button.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
 
+## You may also like...
 
-# Adjust Predator Chances
-The default currently is 0.25 for the predator to spawn, if you wish to make this more rare, try setting it to 0.05.
+- [Pomolectron](https://github.com/amitmerchant1990/pomolectron) - A pomodoro app
+- [Correo](https://github.com/amitmerchant1990/correo) - A menubar/taskbar Gmail App for Windows and macOS
 
-#  Contributors and Credits
-- Lothsun for features, updates, and helping the direction of this mod! 
-- cadnav.com for models and textures of fish
-- My close friends for motivation during this project
-- The DayZ Modding Community <3 
-- TunaBomber for helping update community files and supplying the excel sheet for traders
-- NekoSensei and iiiii42 for helping with initial translation support
-- Doriiiiija and Echo4343 for help with community files
-- Gramps#4914 for code compatibility help in the early days of the mod 
-- DannyDoomno1 for help with the proper way to send config data to the client from the server
-- The DayZ community for reporting bugs through the life of the mod
-- https://www.allaboutbirds.org/guide/Common_Loon/sounds
-- https://search.macaulaylibrary.org/catalog?taxonCode=comloo&mediaType=audio&sort=rating_rank_desc
+## License
 
-# Usage & Terms
-This item is NOT authorized (strictly forbidden) for any of these conditions:
-- posting on Steam, except under the Steam account Cole.
-- hosting on any download server other than gebsfish current workshop download.
-- hosting on any launcher for distribution other than gebsfish  current workshop download.
-- to be packaged in any form other than gebsfish current workshop download.
-- to create derivative works.
+MIT
 
-# PERMISSION IS NOT GRANTED FOR THIS MOD TO BE INCLUDED IN A "SERVER PACK" or "MOD PACK" DO NOT EVEN ASK TO REPACK. NO. NOT ALLOWED.
-Use a Collection if you want to include this mod on your server for your users. 
+---
 
-# Monetization
-You are hereby given monetization approval under the conditions that you follow the DayZ Server Monetization agreement and have obtained permission from Bohemia. Read more here https://www.bohemia.net/monetization
-
-# Copyright © Smoky Mountain Software 2022-2025
-Attribution-NonCommercial-NoDerivatives 4.0 International
-
+> [amitmerchant.com](https://www.amitmerchant.com) &nbsp;&middot;&nbsp;
+> GitHub [@amitmerchant1990](https://github.com/amitmerchant1990) &nbsp;&middot;&nbsp;
+> Twitter [@amit_merchant](https://twitter.com/amit_merchant)
