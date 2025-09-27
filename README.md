@@ -1,122 +1,124 @@
-
 <h1 align="center">
   <br>
-  <img src="https://raw.githubusercontent.com/PackJC/gebsfish/readme-update/.github/logo.png" alt="Gebsfish" width="300">
+  <img src=".github/logo.png" alt="Gebsfish" width="500"/>
   <br>
-  Gebsfish
+  <a href="https://discord.gg/G8uSGZ8yyf" style="width:250"><img src="https://i.imgur.com/4IyA522.png" alt="Join Our Discord" width="250" style="margin-left:9%"/></a><img src="https://i.imgur.com/3rhti8A.gif" alt="Like & Favorite" width="500" style="margin-left:-10%"/>
   <br>
 </h1>
 
-<h4 align="center">A minimal Markdown Editor desktop app built on top of .</h4>
+<h3 align="center">The Ultimate Fishing Expansion for DayZ</h3>
 
 <p align="center">
-  <a href="https://badge.fury.io/js/electron-markdownify">
-    <img src="https://badge.fury.io/js/electron-markdownify.svg"
-         alt="Gitter">
-  </a>
-  <a href="https://gitter.im/amitmerchant1990/electron-markdownify"><img src="https://badges.gitter.im/amitmerchant1990/electron-markdownify.svg"></a>
-  <a href="https://saythanks.io/to/bullredeyes@gmail.com">
-      <img src="https://img.shields.io/badge/SayThanks.io-%E2%98%BC-1EAEDB.svg">
-  </a>
-  <a href="https://www.paypal.me/AmitMerchant">
-    <img src="https://img.shields.io/badge/$-donate-ff69b4.svg?maxAge=2592000&amp;style=flat">
-  </a>
+  <img alt="Mode Version" src="https://img.shields.io/badge/Mod-v3.3.0-blue?style=for-the-badge">
+  <img alt="DayZ Version" src="https://img.shields.io/badge/DayZ-v1.28-teal?style=for-the-badge">
+  <img alt="Workshop Subscribers" src="https://img.shields.io/badge/Workshop Subs-892K-purple?style=for-the-badge">
 </p>
 
 <p align="center">
   <a href="#key-features">Key Features</a> •
-  <a href="#how-to-use">How To Use</a> •
-  <a href="#download">Download</a> •
+  <a href="#configuration-examples">Configuration Examples</a> •
   <a href="#credits">Credits</a> •
-  <a href="#related">Related</a> •
-  <a href="#license">License</a>
+  <a href="#license">License & Terms</a> •
+  <a href='CHANGELOG.md'>Change Log</a>
 </p>
 
-![screenshot](https://raw.githubusercontent.com/amitmerchant1990/electron-markdownify/master/app/img/markdownify.gif)
+<!-- ![screenshot](https://raw.githubusercontent.com/amitmerchant1990/electron-markdownify/master/app/img/markdownify.gif) -->
+
+## Information
+
+Gebsfish completely overhauls DayZ’s fishing system into a deep, rewarding, and fully customizable experience.
+Built from the ground up for modded servers, it adds dozens of new fish species, dynamic environmental systems, and powerful configuration tools for server owners. 
 
 ## Key Features
 
-* LivePreview - Make changes, See changes
-  - Instantly see what your Markdown documents look like in HTML as you create them.
-* Sync Scrolling
-  - While you type, LivePreview will automatically scroll to the current location you're editing.
-* GitHub Flavored Markdown  
-* Syntax highlighting
-* [KaTeX](https://khan.github.io/KaTeX/) Support
-* Dark/Light mode
-* Toolbar for basic Markdown formatting
-* Supports multiple cursors
-* Save the Markdown preview as PDF
-* Emoji support in preview :tada:
-* App will keep alive in tray for quick usage
-* Full screen mode
-  - Write distraction free.
-* Cross platform
-  - Windows, macOS and Linux ready.
+* Brings the total catchable underwater creatures to 59.
+* New tools, bait, storage containers, and clothing.
+* Fully featured logging system for dialing in your configs to your servers needs.
+* Extensive config system allows complete customizabiility to fit your server:
+  - Full configuration of fish (water, rarity, type of fishing, meat yield).
+  - Full configuration of junk (rarity, item).
+  - Full configuration of the predator spawn system.
+* Fully compatible with custom maps; If you have issues with the map you use working, make a ticket and we will issue a hotfix for that map if needed.
+* Extensive config system allows complete customizabiility to fit your server:
+  - English
+  - Czech
+  - German
+  - Russian
+  - Polish
+  - Hungarian
+  - Italian
+  - Spanish
+  - French
+  - Chinese (Traditional and Simplified)
+  - Japanese
+  - Portugese
+  > **Note**
+  > Although supported languages are listed above, we cannot verify complete accuracy. If you are a native speaker and notice anything wrong, please reach out to us in the discord via a ticket to assist us in getting proper translations. 
 
-## How To Use
 
-To clone and run this application, you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
 
-```bash
-# Clone this repository
-$ git clone https://github.com/amitmerchant1990/electron-markdownify
 
-# Go into the repository
-$ cd electron-markdownify
 
-# Install dependencies
-$ npm install
+## Configuration Examples
 
-# Run the app
-$ npm start
+All configuration options are located in the Gebs folder located in your servers profiles folder. Some example from the configs are below. 
+
+Fish:
+
+```json
+"Mackerel": {
+        "EnvironmentInfo": "1 - pond, 2 - sea, 3 - both",
+        "Environment": 2,
+        "CatchMethodInfo": "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap",
+        "CatchMethod": 3,
+        "MeatInfo": "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.",
+        "MeatMin": 1,
+        "MeatMax": 2,
+        "CatchProbInfo": "0-25; 0 means no chance to catch fish, 25 means high chance",
+        "CatchProbability": 15
+    },
 ```
-
-> **Note**
-> If you're using Linux Bash for Windows, [see this guide](https://www.howtogeek.com/261575/how-to-run-graphical-linux-desktop-applications-from-windows-10s-bash-shell/) or use `node` from the command prompt.
-
-
-## Download
-
-You can [download](https://github.com/amitmerchant1990/electron-markdownify/releases/tag/v1.2.0) the latest installable version of Markdownify for Windows, macOS and Linux.
-
-## Emailware
-
-Markdownify is an [emailware](https://en.wiktionary.org/wiki/emailware). Meaning, if you liked using this app or it has helped you in any way, I'd like you send me an email at <bullredeyes@gmail.com> about anything you'd want to say about this software. I'd really appreciate it!
 
 ## Credits
 
-This software uses the following open source packages:
+- Lothsun for features, updates, and helping the direction of this mod! 
+- My close friends for motivation during this project
+- TunaBomber for helping update community files and supplying the excel sheet for traders
+- NekoSensei and iiiii42 for helping with initial translation support
+- Doriiiiija and Echo4343 for help with community files
+- Gramps#4914 for code compatibility help in the early days of the mod 
+- DannyDoomno1 for help with the proper way to send config data to the client from the server
+- NekoSensei and the team/players at the Le Murmure des Sans-Ames Server
+- The DayZ community for reporting bugs and inspiration throughout the life of the mod
+- [CadNav](https://cadnav.com) for models and textures of fish.
+- [All About the Birds & Macaulay Library](https://www.allaboutbirds.org/guide/Common_Loon/sounds) For the loon call recording used in the mod.
 
-- [Electron](http://electron.atom.io/)
-- [Node.js](https://nodejs.org/)
-- [Marked - a markdown parser](https://github.com/chjj/marked)
-- [showdown](http://showdownjs.github.io/showdown/)
-- [CodeMirror](http://codemirror.net/)
-- Emojis are taken from [here](https://github.com/arvida/emoji-cheat-sheet.com)
-- [highlight.js](https://highlightjs.org/)
-
-## Related
-
-[Try Web version of Markdownify](https://notepad.js.org/markdown-editor/)
 
 ## Support
 
-If you like this project and think it has helped in any way, consider buying me a coffee!
+If you like this project and think it has improved your server in any way, consider contributing! We are always looking for help with ideas, new models, and any monetary support that can help improve the mod. Open a ticket in the discord to discuss how you can contribute. 
 
-<a href="https://buymeacoffee.com/amitmerchant" target="_blank"><img src="app/img/bmc-button.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
 
-## You may also like...
+<!-- ## You may also like...
 
-- [Pomolectron](https://github.com/amitmerchant1990/pomolectron) - A pomodoro app
-- [Correo](https://github.com/amitmerchant1990/correo) - A menubar/taskbar Gmail App for Windows and macOS
+- Future Use -->
 
 ## License
 
-MIT
+[Attribution-NonCommercial-NoDerivatives 4.0 International](https://github.com/PackJC/gebsfish/blob/master/LICENSE)
 
----
+## Usage & Terms
+This item is NOT authorized (strictly forbidden) for any of these conditions:
+- posting on Steam, except under the Steam account Cole.
+- hosting on any download server other than gebsfish current workshop download.
+- hosting on any launcher for distribution other than gebsfish  current workshop download.
+- to be packaged in any form other than gebsfish current workshop download.
+- to create derivative works.
 
-> [amitmerchant.com](https://www.amitmerchant.com) &nbsp;&middot;&nbsp;
-> GitHub [@amitmerchant1990](https://github.com/amitmerchant1990) &nbsp;&middot;&nbsp;
-> Twitter [@amit_merchant](https://twitter.com/amit_merchant)
+## PERMISSION IS NOT GRANTED FOR THIS MOD TO BE INCLUDED IN A "SERVER PACK" or "MOD PACK" DO NOT EVEN ASK TO REPACK. NO. NOT ALLOWED.
+Use a Collection if you want to include this mod on your server for your users. 
+
+## Monetization
+You are hereby given monetization approval under the conditions that you follow the DayZ Server Monetization agreement and have obtained permission from Bohemia. Read more here https://www.bohemia.net/monetization
+
+### Copyright © Smoky Mountain Software 2022-2025
