@@ -27,7 +27,7 @@ class gebsfishTypes {
                         string existingVersion = tail.Substring(14, end - 14).Trim();
                         if (existingVersion == version)
                         {
-                            Print("[gebsfish] [TYPES] types XML already at version " + version + ", skipping generation.");
+                            GebsfishLogger.Info("Types XML already at version " + version + ", skipping regeneration.", "Types");
                             CloseFile(readFile);
                             return;
                         }
@@ -36,7 +36,7 @@ class gebsfishTypes {
                 CloseFile(readFile);
             }
             DeleteFile(filePath);
-            Print("[gebsfish] [TYPES] Deleted existing types XML for regeneration.");
+            GebsfishLogger.Info("Deleted existing types XML for regeneration.", "Types");
         }
 
         // Ensure the directory exists
@@ -51,7 +51,7 @@ class gebsfishTypes {
         FileHandle file = OpenFile(filePath, FileMode.WRITE);
         if (!file)
         {
-            Print("[gebsfish] [TYPES] Error: Could not create gebsfish-types.xml in profiles/Gebs/extras/mpmissions!");
+            GebsfishLogger.Error("Could not create gebsfidh-types.xml in $profiles/Gebs/extras/mpmissions!", "Types");
             return;
         }
 
@@ -261,6 +261,6 @@ class gebsfishTypes {
         FPrint(file, "</types>");
 
         CloseFile(file);
-        Print("[gebsfish] [TYPES] gebsfish-types.xml successfully generated in profiles/Gebs/extras/mpmissions/.");
+        GebsfishLogger.Info("gebsfish-types.xml successfully generated in $profiles/Gebs/extras/mpmissions/.", "Types");
     }
 }

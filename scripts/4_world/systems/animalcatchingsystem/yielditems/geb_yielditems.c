@@ -8,7 +8,7 @@
 
 */
 
-modded class YieldItemMackerel : FishYieldItemBase
+class geb_YieldMackerel : FishYieldItemBase
 {
 	override void Init()
 	{
@@ -23,7 +23,7 @@ modded class YieldItemMackerel : FishYieldItemBase
 	}
 }
 
-modded class YieldItemCarp : FishYieldItemBase
+class geb_YieldCarp : FishYieldItemBase
 {
 	override void Init()
 	{
@@ -38,7 +38,7 @@ modded class YieldItemCarp : FishYieldItemBase
 	}
 }
 
-modded class YieldItemSardines : FishYieldItemBase
+class geb_YieldSardines : FishYieldItemBase
 {
 	override void Init()
 	{
@@ -53,7 +53,7 @@ modded class YieldItemSardines : FishYieldItemBase
 	}
 }
 
-modded class YieldItemBitterlings : FishYieldItemBase
+class geb_YieldBitterlings : FishYieldItemBase
 {
 	override void Init()
 	{
@@ -71,7 +71,7 @@ modded class YieldItemBitterlings : FishYieldItemBase
 //---------//
 //cool new fish//
 //---------//
-modded class YieldItemWalleyePollock : FishYieldItemBase
+class geb_YieldWalleyePollock : FishYieldItemBase
 {
 	override void Init()
 	{
@@ -86,7 +86,7 @@ modded class YieldItemWalleyePollock : FishYieldItemBase
 	}
 }
 
-modded class YieldItemSteelheadTrout : FishYieldItemBase
+class geb_YieldSteelheadTrout : FishYieldItemBase
 {
 	override void Init()
 	{
@@ -101,7 +101,7 @@ modded class YieldItemSteelheadTrout : FishYieldItemBase
 	}
 }
 
-modded class YieldItemShrimp : FishYieldItemBase
+class geb_YieldShrimp : FishYieldItemBase
 {
 	override void Init()
 	{
@@ -899,3 +899,899 @@ class geb_YieldEuropeanLobster : FishYieldItemBase
 		m_MethodMask = m_gebsConfig.EuropeanLobster.CatchMethod;
     }
 };
+
+
+
+//Testing
+
+// class geb_YieldMackerel : FishYieldItemBase
+// {
+// 	override void Init()
+// 	{
+// 		super.Init();
+
+// 		// autoptr TFloatArray gebCycle = m_gebsConfig.Mackerel.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "Mackerel";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+// 	}
+// }
+
+// class geb_YieldCarp : FishYieldItemBase
+// {
+// 	override void Init()
+// 	{
+// 		super.Init();
+        
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Carp.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "Carp";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+// 	}
+// }
+
+// class geb_YieldSardines : FishYieldItemBase
+// {
+// 	override void Init()
+// 	{
+// 		super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Sardines.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "Sardines";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_FISHTRAP_SMALL;
+// 	}
+// }
+
+// class geb_YieldBitterlings : FishYieldItemBase
+// {
+// 	override void Init()
+// 	{
+// 		super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Bitterlings.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "Bitterlings";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_FISHTRAP_SMALL;
+// 	}
+// }
+
+// //---------//
+// //cool new fish//
+// //---------//
+// class geb_YieldWalleyePollock : FishYieldItemBase
+// {
+// 	override void Init()
+// 	{
+// 		super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.WalleyePollock.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "WalleyePollock";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+// 	}
+// }
+
+// class geb_YieldSteelheadTrout : FishYieldItemBase
+// {
+// 	override void Init()
+// 	{
+// 		super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.SteelheadTrout.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "SteelheadTrout";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+// 	}
+// }
+
+// class geb_YieldShrimp : FishYieldItemBase
+// {
+// 	override void Init()
+// 	{
+// 		super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Shrimp.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "Shrimp";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_FISHTRAP_SMALL;
+// 	}
+// }
+
+
+// //Saltwater
+// class geb_YieldMahiMahi : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Mahimahi.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_MahiMahi";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldAtlanticSailFish : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Sailfish.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_AtlanticSailFish";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldAngelFish : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Angelfish.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_AngelFish";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldAsianSeaBass : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.AsianSeaBass.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_AsianSeaBass";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldAtlanticBlueMarlin : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.BlueMarlin.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_AtlanticBlueMarlin";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldBonita : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Bonita.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_Bonita";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldCherrySalmon : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.CherrySalmon.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_CherrySalmon";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldChinookSalmon : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.ChinookSalmon.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_ChinookSalmon";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldSockEyeSalmon : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.SockeyeSalmon.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_SockEyeSalmon";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+                                           
+// class geb_YieldFlatHeadMullet : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.FlatheadMullet.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_FlatHeadMullet";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldRedHeadCichlid : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.RedheadCichlid.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_RedHeadCichlid";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldRoughNeckRock : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.RoughneckRock.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_RoughNeckRock";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldBlueTang : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.BlueTang.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_BlueTang";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldLargeHeadHairTailFish : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.HairtailFish.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_LargeHeadHairTailFish";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldHumpHeadWrasse : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.HumpheadWrasse.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_HumpHeadWrasse";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldSiameseTigerFish : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.SiameseTigerfish.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_SiameseTigerFish";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldLeopardShark : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.LeopardShark.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_LeopardShark";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldPacificCod : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.PacificCod.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_PacificCod";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldGreatWhiteShark : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.GreatWhiteShark.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_GreatWhiteShark";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldAngelShark : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.AngelShark.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_AngelShark";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldYellowFinTuna : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.YellowfinTuna.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_YellowFinTuna";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_SEA;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// //Freshwater
+// class geb_YieldNorthernPike : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.NorthernPike.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_NorthernPike";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldLargeMouthBass : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.LargemouthBass.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_LargeMouthBass";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldSmallMouthBass : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.SmallmouthBass.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_SmallMouthBass";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldWallEye : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Walleye.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_WallEye";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldSunFish : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Sunfish.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_SunFish";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldWhiteBass : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.WhiteBass.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_WhiteBass";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldSeverum : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Severum.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_Severum";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldBlackBass : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.BlackBass.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_BlackBass";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldRainbowTrout : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.RainbowTrout.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_RainbowTrout";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldBrownTrout : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.BrownTrout.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_BrownTrout";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldBrookTrout : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.BrookTrout.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_BrookTrout";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldLakeTrout : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.LakeTrout.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_LakeTrout";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldCutThroatTrout : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.CutthroatTrout.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_CutThroatTrout";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldYellowPerch : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Perch.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_YellowPerch";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldFlatHeadCatFish : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Catfish.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_FlatHeadCatFish";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldFatHeadMinnow : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Minnow.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_FatHeadMinnow";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldBlueGill : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Bluegill.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_BlueGill";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldSauger : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Sauger.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_Sauger";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldBowFin : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Bowfin.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_BowFin";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// class geb_YieldSlimySculpin : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.SlimySculpin.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_SlimySculpin";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_ROD;
+//     }
+// };
+
+// //Fishtraps
+// class geb_YieldSignalCrayFish : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Crayfish.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_SignalCrayFish";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_FISHTRAP_SMALL;
+//     }
+// };
+
+// class geb_YieldEuropeanCrayFish : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Crayfish.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_EuropeanCrayFish";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_FISHTRAP_LARGE;
+//     }
+// };
+
+// class geb_YieldBloodClam : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.BloodClam.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_BloodClam";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_FISHTRAP_SMALL;
+//     }
+// };
+
+// class geb_YieldMussel : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Mussel.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_Mussel";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_FISHTRAP_SMALL;
+//     }
+// };
+
+// class geb_YieldBlackDevilSnail : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.BlackDevilSnail.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_BlackDevilSnail";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_FISHTRAP_SMALL;
+//     }
+// };
+
+// class geb_YieldStarFish : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Starfish.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_StarFish";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_FISHTRAP_SMALL;
+//     }
+// };
+
+// class geb_YieldKingCrab : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.KingCrab.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_KingCrab";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_FISHTRAP_LARGE;
+//     }
+// };
+
+// class geb_YieldSnowCrab : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.KingCrab.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_SnowCrab";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_FISHTRAP_LARGE;
+//     }
+// };
+
+// class geb_YieldBlueJellyFish : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Jellyfish.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_BlueJellyFish";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_FISHTRAP_LARGE;
+//     }
+// };
+
+// class geb_YieldAmericanLobster : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.Lobster.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_AmericanLobster";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_FISHTRAP_LARGE;
+//     }
+// };
+
+// class geb_YieldEuropeanLobster : FishYieldItemBase
+// {
+//     override void Init()
+//     {
+//         super.Init();
+		
+//         // autoptr TFloatArray gebCycle = m_gebsConfig.BlueLobster.BiteSpeed;
+//         // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+// 		m_QualityBase = 1;
+// 		m_Type = "geb_EuropeanLobster";
+// 		m_EnviroMask = AnimalCatchingConstants.MASK_ENVIRO_POND;
+// 		m_MethodMask = AnimalCatchingConstants.MASK_METHOD_FISHTRAP_LARGE;
+//     }
+// };

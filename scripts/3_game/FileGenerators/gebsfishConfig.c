@@ -84,19 +84,21 @@ class gebsfishConfig {
             if (FileExist(ModFolder + SettingsConfigFile)){
                 //If config exists, load file
                 JsonFileLoader<gebsfishConfig>.JsonLoadFile(ModFolder + SettingsConfigFile, this);
-                Print("[gebsfish] [JSON] Found settings file; Loading gebsfish settings.");
+                GebsfishLogger.Info("Found settings file; Loading gebsfish settings from file.", "JSON");
+                
                 // If version mismatch, backup old version of json before replacing it
                 if (ConfigVersion != CONFIG_VERSION){
                     JsonFileLoader<gebsfishConfig>.JsonSaveFile(ModFolder + FileName + "_old" + FileType, this);
-                    Print("[gebsfish] [JSON] New config version found for mod; Backing up old file and saving as " + ModFolder + FileName + "_old" + FileType + " and generating new config file.");
+                    
+                    GebsfishLogger.Info("New config version found for mod; Backing up old file and saving as " + ModFolder + FileName + "_old" + FileType + " and generating new config file.", "JSON");
                 }
                 else {
                     // Config exists and version matches, stop here.
                     return;
                 }
             }
-        
-        Print("[gebsfish] [JSON] Generating settings file.");
+        GebsfishLogger.Info("Generating settings file.", "JSON");
+
         //Save config file version to file
         ConfigVersion = CONFIG_VERSION;
         //Save general settings to file
@@ -254,14 +256,15 @@ class gebsfishConfig {
         }
         //Save JSON Config
         JsonFileLoader<gebsfishConfig>.JsonSaveFile(ModFolder + SettingsConfigFile, this);
-        Print("[gebsfish] [JSON] Settigns file generation complete!");
+        GebsfishLogger.Info("Settings file generation complete", "JSON");
+
     }
 }
 
 //general settings config data
 class GenSetConf {
     string DebugInfo = "Turns debug mode on to print extra logs to the script.log file";
-    bool DebugLogs = 0;
+    int DebugLogs = 0;
     string FishQualityInfo = "Sets the base value for the fish quantity bar";
     float FishQuality = 1;
     
@@ -1143,8 +1146,8 @@ protected ref gebsfishConfig m_gebsConfig;
 // Helper function to return config data storage object
 static gebsfishConfig GetGebSettingsConfig(){
     if (!m_gebsConfig){
-        Print("[gebsfish] Initializing gebsfish.");
-        Print("[gebsfish] Loading JSON config file. ");
+        GebsfishLogger.Info("Initializing gebsfish.", "JSON");
+        GebsfishLogger.Info("Loading JSON config file.", "JSON");
         m_gebsConfig = new gebsfishConfig;
 
         //Only load JSON config on the server
@@ -1157,7 +1160,7 @@ static gebsfishConfig GetGebSettingsConfig(){
 
 static void SetGebsfishConfig(gebsfishConfig config)
 {
-    Print("[gebsfish] Set config settings from server.");
+    GebsfishLogger.Info("Setting config settings from server config file.", "JSON");
     m_gebsConfig = config;
 }
 //Prevent double printing in log file since it loads the yield data twice

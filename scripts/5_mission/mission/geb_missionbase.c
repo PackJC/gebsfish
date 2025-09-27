@@ -9,281 +9,153 @@
 */
 
 
-modded class MissionBase{
+modded class MissionBase{ //Original
 
     override void InitWorldYieldDataDefaults(CatchYieldBank bank){
         super.InitWorldYieldDataDefaults(bank);
 		
 		if (bank)
 		{	
-			
-			if(gebsMissionLoaded == true) {
-				//Print("[gebsfish] missionbase load");
+
 				GetGebSettingsConfig();
 
 				bank.ClearAllRegisteredItems();
 				//Initialize yield data
-				Print("[gebsfish] [INIT] Initializing yield data.");
+				GebsfishLogger.Info("Initializing yield data.", "MissionBase");
+
 				//start loading fish data
-				Print("[gebsfish] [FISH] Adding fish to yield data");
+				GebsfishLogger.Info("Adding fish to the yield data.", "MissionBase");
+
 				//fishies
-				if (m_gebsConfig.Carp.CatchProbability != 0){
-					bank.RegisterYieldItem(new YieldItemCarp(m_gebsConfig.Carp.CatchProbability));
-					Print("[gebsfish] Carp are catchable.");
-				}
-				if (m_gebsConfig.Mackerel.CatchProbability != 0){
-					bank.RegisterYieldItem(new YieldItemMackerel(m_gebsConfig.Mackerel.CatchProbability));
-					Print("[gebsfish] Mackerel are catchable.");
-				}
-				if (m_gebsConfig.Sardines.CatchProbability != 0){
-					bank.RegisterYieldItem(new YieldItemSardines(m_gebsConfig.Sardines.CatchProbability));
-					Print("[gebsfish] Sardines are catchable.");
-				}
-				if (m_gebsConfig.Bitterlings.CatchProbability != 0){
-					bank.RegisterYieldItem(new YieldItemBitterlings(m_gebsConfig.Bitterlings.CatchProbability));
-					Print("[gebsfish] Bitterlings are catchable.");
-				}
-				if (m_gebsConfig.WalleyePollock.CatchProbability != 0){
-					bank.RegisterYieldItem(new YieldItemWalleyePollock(m_gebsConfig.WalleyePollock.CatchProbability));
-					Print("[gebsfish] Pollock are catchable.");
-				}
-				if (m_gebsConfig.SteelheadTrout.CatchProbability != 0){
-					bank.RegisterYieldItem(new YieldItemSteelheadTrout(m_gebsConfig.SteelheadTrout.CatchProbability));
-					Print("[gebsfish] Steelhead Trout are catchable.");
-				}
-				if (m_gebsConfig.Shrimp.CatchProbability != 0){
-					bank.RegisterYieldItem(new YieldItemShrimp(m_gebsConfig.Shrimp.CatchProbability));
-					Print("[gebsfish] Shrimp are catchable.");
-				}
-				if (m_gebsConfig.NorthernPike.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldNorthernPike(m_gebsConfig.NorthernPike.CatchProbability));
-					Print("[gebsfish] Northern Pike are catchable.");
-				}
-				if (m_gebsConfig.LargeMouthBass.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldLargeMouthBass(m_gebsConfig.LargeMouthBass.CatchProbability));
-					Print("[gebsfish] Largemouth Bass are catchable.");
-				}
-				if (m_gebsConfig.SmallMouthBass.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldSmallMouthBass(m_gebsConfig.SmallMouthBass.CatchProbability));
-					Print("[gebsfish] Smallmouth Bass are catchable.");
-				}
-				if (m_gebsConfig.WallEye.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldWallEye(m_gebsConfig.WallEye.CatchProbability));
-					Print("[gebsfish] Walleye are catchable.");
-				}
-				if (m_gebsConfig.SunFish.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldSunFish(m_gebsConfig.SunFish.CatchProbability));
-					Print("[gebsfish] Sunfish are catchable.");
-				}
-				if (m_gebsConfig.WhiteBass.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldWhiteBass(m_gebsConfig.WhiteBass.CatchProbability));
-					Print("[gebsfish] White Bass are catchable.");
-				}
-				if (m_gebsConfig.BlackBass.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldBlackBass(m_gebsConfig.BlackBass.CatchProbability));
-					Print("[gebsfish] Black Bass are catchable.");
-				}
-				if (m_gebsConfig.RainbowTrout.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldRainbowTrout(m_gebsConfig.RainbowTrout.CatchProbability));
-					Print("[gebsfish] Rainbow Trout are catchable.");
-				}
-				if (m_gebsConfig.BrownTrout.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldBrownTrout(m_gebsConfig.BrownTrout.CatchProbability));
-					Print("[gebsfish] Brown Trout are catchable.");
-				}
-				if (m_gebsConfig.BrookTrout.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldBrookTrout(m_gebsConfig.BrookTrout.CatchProbability));
-					Print("[gebsfish] Brook Trout are catchable.");
-				}
-				if (m_gebsConfig.LakeTrout.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldLakeTrout(m_gebsConfig.LakeTrout.CatchProbability));
-					Print("[gebsfish] Lake Trout are catchable.");
-				}
-				if (m_gebsConfig.CutThroatTrout.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldCutThroatTrout(m_gebsConfig.CutThroatTrout.CatchProbability));
-					Print("[gebsfish] Cutthroat Trout are catchable.");
-				}
-				if (m_gebsConfig.YellowPerch.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldYellowPerch(m_gebsConfig.YellowPerch.CatchProbability));
-					Print("[gebsfish] Perch are catchable.");
-				}
-				if (m_gebsConfig.FlatHeadCatFish.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldFlatHeadCatFish(m_gebsConfig.FlatHeadCatFish.CatchProbability));
-					Print("[gebsfish] Flathead Catfish are catchable.");
-				}
-				if (m_gebsConfig.FatHeadMinnow.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldFatHeadMinnow(m_gebsConfig.FatHeadMinnow.CatchProbability));
-					Print("[gebsfish] Minnow are catchable.");
-				}
-				if (m_gebsConfig.BlueGill.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldBlueGill(m_gebsConfig.BlueGill.CatchProbability));
-					Print("[gebsfish] Bluegill are catchable.");
-				}
-				if (m_gebsConfig.Sauger.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldSauger(m_gebsConfig.Sauger.CatchProbability));
-					Print("[gebsfish] Sauger are catchable.");
-				}
-				if (m_gebsConfig.BowFin.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldBowFin(m_gebsConfig.BowFin.CatchProbability));
-					Print("[gebsfish] Bowfin are catchable.");
-				}
-				if (m_gebsConfig.SlimySculpin.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldSlimySculpin(m_gebsConfig.SlimySculpin.CatchProbability));
-					Print("[gebsfish] Slimy Sculpin are catchable.");
-				}
-				if (m_gebsConfig.Severum.CatchProbability != 0){
-					bank.RegisterYieldItem(new geb_YieldSeverum(m_gebsConfig.Severum.CatchProbability));
-					Print("[gebsfish] Severum are catchable.");
-				}
-				if (m_gebsConfig.SignalCrayFish.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldSignalCrayFish(m_gebsConfig.SignalCrayFish.CatchProbability));
-					Print("[gebsfish] Signal Crayfish are catchable.");
-				}
-				if (m_gebsConfig.EuropeanCrayFish.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldEuropeanCrayFish(m_gebsConfig.EuropeanCrayFish.CatchProbability));
-					Print("[gebsfish] European Crayfish are catchable.");
-				}
-				if (m_gebsConfig.MahiMahi.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldMahiMahi(m_gebsConfig.MahiMahi.CatchProbability));
-					Print("[gebsfish] Mahi Mahi are catchable.");
-				}
-				if (m_gebsConfig.AtlanticSailFish.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldAtlanticSailFish(m_gebsConfig.AtlanticSailFish.CatchProbability));
-					Print("[gebsfish] Atlantic Sailfish are catchable.");
-				}
-				if (m_gebsConfig.AngelFish.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldAngelFish(m_gebsConfig.AngelFish.CatchProbability));
-					Print("[gebsfish] Angelfish are catchable.");
-				}
-				if (m_gebsConfig.AsianSeaBass.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldAsianSeaBass(m_gebsConfig.AsianSeaBass.CatchProbability));
-					Print("[gebsfish] Asian Sea Bass are catchable.");
-				}
-				if (m_gebsConfig.AtlanticBlueMarlin.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldAtlanticBlueMarlin(m_gebsConfig.AtlanticBlueMarlin.CatchProbability));
-					Print("[gebsfish] Atlantic Blue Marlin are catchable.");
-				}
-				if (m_gebsConfig.Bonita.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldBonita(m_gebsConfig.Bonita.CatchProbability));
-					Print("[gebsfish] Bonita are catchable.");
-				}
-				if (m_gebsConfig.CherrySalmon.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldCherrySalmon(m_gebsConfig.CherrySalmon.CatchProbability));
-					Print("[gebsfish] Cherry Salmon are catchable.");
-				}
-				if (m_gebsConfig.ChinookSalmon.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldChinookSalmon(m_gebsConfig.ChinookSalmon.CatchProbability));
-					Print("[gebsfish] Chinook Salmon are catchable.");
-				}
-				if (m_gebsConfig.SockEyeSalmon.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldSockEyeSalmon(m_gebsConfig.SockEyeSalmon.CatchProbability));
-					Print("[gebsfish] Sockeye Salmon are catchable.");
-				}
-				if (m_gebsConfig.FlatHeadMullet.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldFlatHeadMullet(m_gebsConfig.FlatHeadMullet.CatchProbability));
-					Print("[gebsfish] Flathead Mullet are catchable.");
-				}
-				if (m_gebsConfig.LeopardShark.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldLeopardShark(m_gebsConfig.LeopardShark.CatchProbability));
-					Print("[gebsfish] Leopard Shark are catchable.");
-				}
-				if (m_gebsConfig.PacificCod.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldPacificCod(m_gebsConfig.PacificCod.CatchProbability));
-					Print("[gebsfish] Pacific Cod are catchable.");
-				}
-				if (m_gebsConfig.RedHeadCichlid.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldRedHeadCichlid(m_gebsConfig.RedHeadCichlid.CatchProbability));
-					Print("[gebsfish] Redhead Cichlid are catchable.");
-				}
-				if (m_gebsConfig.RoughNeckRock.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldRoughNeckRock(m_gebsConfig.RoughNeckRock.CatchProbability));
-					Print("[gebsfish] Roughneck Rock are catchable.");
-				}
-				if (m_gebsConfig.BlueTang.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldBlueTang(m_gebsConfig.BlueTang.CatchProbability));
-					Print("[gebsfish] Blue Tang are catchable.");
-				}
-				if (m_gebsConfig.LargeHeadHairTailFish.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldLargeHeadHairTailFish(m_gebsConfig.LargeHeadHairTailFish.CatchProbability));
-					Print("[gebsfish] Largehead Hairtail Fish are catchable.");
-				}
-				if (m_gebsConfig.HumpHeadWrasse.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldHumpHeadWrasse(m_gebsConfig.HumpHeadWrasse.CatchProbability));
-					Print("[gebsfish] Humphead Wrasse are catchable.");
-				}
-				if (m_gebsConfig.SiameseTigerFish.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldSiameseTigerFish(m_gebsConfig.SiameseTigerFish.CatchProbability));
-					Print("[gebsfish] Siamese Tiger fish are catchable.");
-				}
-				if (m_gebsConfig.GreatWhiteShark.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldGreatWhiteShark(m_gebsConfig.GreatWhiteShark.CatchProbability));
-					Print("[gebsfish] Great White Shark are catchable.");
-				}
-				if (m_gebsConfig.AngelShark.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldAngelShark(m_gebsConfig.AngelShark.CatchProbability));
-					Print("[gebsfish] Angel Shark are catchable.");
-				}
-				if (m_gebsConfig.YellowFinTuna.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldYellowFinTuna(m_gebsConfig.YellowFinTuna.CatchProbability));
-					Print("[gebsfish] Yellowfin Tuna are catchable.");
-				}
-				if (m_gebsConfig.BloodClam.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldBloodClam(m_gebsConfig.BloodClam.CatchProbability));
-					Print("[gebsfish] Blood Clam are catchable.");
-				}
-				if (m_gebsConfig.Mussel.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldMussel(m_gebsConfig.Mussel.CatchProbability));
-					Print("[gebsfish] Mussel are catchable.");
-				}
-				if (m_gebsConfig.BlackDevilSnail.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldBlackDevilSnail(m_gebsConfig.BlackDevilSnail.CatchProbability));
-					Print("[gebsfish] Black Devil Snail are catchable.");
-				}
-				if (m_gebsConfig.StarFish.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldStarFish(m_gebsConfig.StarFish.CatchProbability));
-					Print("[gebsfish] Starfish are catchable.");
-				}
-				if (m_gebsConfig.KingCrab.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldKingCrab(m_gebsConfig.KingCrab.CatchProbability));
-					Print("[gebsfish] King Crab are catchable.");
-				}
-				if (m_gebsConfig.SnowCrab.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldSnowCrab(m_gebsConfig.SnowCrab.CatchProbability));
-					Print("[gebsfish] Snow Crab are catchable.");
-				}
-				if (m_gebsConfig.BlueJellyFish.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldBlueJellyFish(m_gebsConfig.BlueJellyFish.CatchProbability));
-					Print("[gebsfish] Blue Jellyfish are catchable.");
-				}
-				if (m_gebsConfig.AmericanLobster.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldAmericanLobster(m_gebsConfig.AmericanLobster.CatchProbability));
-					Print("[gebsfish] American Lobster are catchable.");
-				}
-				if (m_gebsConfig.EuropeanLobster.CatchProbability != 0) {
-					bank.RegisterYieldItem(new geb_YieldEuropeanLobster(m_gebsConfig.EuropeanLobster.CatchProbability));
-					Print("[gebsfish] European Lobster are catchable.");
-				}
+				bank.RegisterYieldItem(new geb_YieldCarp(m_gebsConfig.Carp.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldMackerel(m_gebsConfig.Mackerel.CatchProbability));
+
+
+				bank.RegisterYieldItem(new geb_YieldSardines(m_gebsConfig.Sardines.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldBitterlings(m_gebsConfig.Bitterlings.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldWalleyePollock(m_gebsConfig.WalleyePollock.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldSteelheadTrout(m_gebsConfig.SteelheadTrout.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldShrimp(m_gebsConfig.Shrimp.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldNorthernPike(m_gebsConfig.NorthernPike.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldLargeMouthBass(m_gebsConfig.LargeMouthBass.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldSmallMouthBass(m_gebsConfig.SmallMouthBass.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldWallEye(m_gebsConfig.WallEye.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldSunFish(m_gebsConfig.SunFish.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldWhiteBass(m_gebsConfig.WhiteBass.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldBlackBass(m_gebsConfig.BlackBass.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldRainbowTrout(m_gebsConfig.RainbowTrout.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldBrownTrout(m_gebsConfig.BrownTrout.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldBrookTrout(m_gebsConfig.BrookTrout.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldLakeTrout(m_gebsConfig.LakeTrout.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldCutThroatTrout(m_gebsConfig.CutThroatTrout.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldYellowPerch(m_gebsConfig.YellowPerch.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldFlatHeadCatFish(m_gebsConfig.FlatHeadCatFish.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldFatHeadMinnow(m_gebsConfig.FatHeadMinnow.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldBlueGill(m_gebsConfig.BlueGill.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldSauger(m_gebsConfig.Sauger.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldBowFin(m_gebsConfig.BowFin.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldSlimySculpin(m_gebsConfig.SlimySculpin.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldSeverum(m_gebsConfig.Severum.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldSignalCrayFish(m_gebsConfig.SignalCrayFish.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldEuropeanCrayFish(m_gebsConfig.EuropeanCrayFish.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldMahiMahi(m_gebsConfig.MahiMahi.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldAtlanticSailFish(m_gebsConfig.AtlanticSailFish.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldAngelFish(m_gebsConfig.AngelFish.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldAsianSeaBass(m_gebsConfig.AsianSeaBass.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldAtlanticBlueMarlin(m_gebsConfig.AtlanticBlueMarlin.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldBonita(m_gebsConfig.Bonita.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldCherrySalmon(m_gebsConfig.CherrySalmon.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldChinookSalmon(m_gebsConfig.ChinookSalmon.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldSockEyeSalmon(m_gebsConfig.SockEyeSalmon.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldFlatHeadMullet(m_gebsConfig.FlatHeadMullet.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldLeopardShark(m_gebsConfig.LeopardShark.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldPacificCod(m_gebsConfig.PacificCod.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldRedHeadCichlid(m_gebsConfig.RedHeadCichlid.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldRoughNeckRock(m_gebsConfig.RoughNeckRock.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldBlueTang(m_gebsConfig.BlueTang.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldLargeHeadHairTailFish(m_gebsConfig.LargeHeadHairTailFish.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldHumpHeadWrasse(m_gebsConfig.HumpHeadWrasse.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldSiameseTigerFish(m_gebsConfig.SiameseTigerFish.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldGreatWhiteShark(m_gebsConfig.GreatWhiteShark.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldAngelShark(m_gebsConfig.AngelShark.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldYellowFinTuna(m_gebsConfig.YellowFinTuna.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldBloodClam(m_gebsConfig.BloodClam.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldMussel(m_gebsConfig.Mussel.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldBlackDevilSnail(m_gebsConfig.BlackDevilSnail.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldStarFish(m_gebsConfig.StarFish.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldKingCrab(m_gebsConfig.KingCrab.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldSnowCrab(m_gebsConfig.SnowCrab.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldBlueJellyFish(m_gebsConfig.BlueJellyFish.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldAmericanLobster(m_gebsConfig.AmericanLobster.CatchProbability));
+
+				bank.RegisterYieldItem(new geb_YieldEuropeanLobster(m_gebsConfig.EuropeanLobster.CatchProbability));
 				
 				//finished loading fish data
-				Print("[gebsfish] [FISH] Loading fish complete.");
+				GebsfishLogger.Info("Registering fish complete.", "MissionBase");
 
 				//start loading junk data
-				Print("[gebsfish] [JUNK] Adding junk to yield data.");
-
-				// foreach(string junk: m_gebsConfig.Junk.Classnames){
-				// 	Print("[gebsfish] " + junk + " is catchable as junk.");
-				// 	bank.RegisterYieldItem(new YieldItemJunk(1,junk));
-				// }
+				GebsfishLogger.Info("Adding junk to the yield data.", "MissionBase");
 
 				for (int i = 0; i < m_gebsConfig.Junk.Count(); i++){
 					JunkEntry junkItem = m_gebsConfig.Junk[i];
 					bank.RegisterYieldItem(new YieldItemJunk(junkItem.CatchProbability, junkItem.Classname));
 				}
-
-				// foreach(string containerjunk: m_gebsConfig.ContainerJunk.Classnames){
-				// 	Print("[gebsfish] " + containerjunk + " is catchable as junk.");
-				// 	bank.RegisterYieldItem(new YieldItemJunkEmpty(1,junk));
-				// }
 				
 				for (int i1 = 0; i1 < m_gebsConfig.ContainerJunk.Count(); i1++){
 					ContainerJunkEntry containerjunkItem = m_gebsConfig.ContainerJunk[i1];
@@ -292,7 +164,7 @@ modded class MissionBase{
 
 
 				//finished loading junk data
-				Print("[gebsfish] [JUNK] Loading junk complete.");
+				GebsfishLogger.Info("Registering junk items complete.", "MissionBase");
 			
 				//load animal yeilds for traps (snare)
 				bank.RegisterYieldItem(new YieldItemDeadRabbit(4));
@@ -302,11 +174,181 @@ modded class MissionBase{
 				bank.RegisterYieldItem(new YieldItemDeadChicken_Brown(1));
 				bank.RegisterYieldItem(new YieldItemDeadFox(2));
 
-				Print("[gebsfish] [INIT] Initialization of yield data complete.");
-
-			}
-			gebsMissionLoaded = true;
+				GebsfishLogger.Info("Initialization of yield data complete.", "MissionBase");
+			
 		}
 	}
 
-};
+}; 
+
+
+// modded class MissionBase{
+
+//     override void InitWorldYieldDataDefaults(CatchYieldBank bank){
+//         super.InitWorldYieldDataDefaults(bank);
+		
+// 		if (bank)
+// 		{	
+// 			GetGebSettingsConfig();
+
+// 			bank.ClearAllRegisteredItems();
+// 			//Initialize yield data
+// 			GebsfishLogger.Info("Initializing yield data.", "MissionBase");
+
+// 			//start loading fish data
+// 			GebsfishLogger.Info("Adding fish to the yield data.", "MissionBase");
+
+// 			//fishies
+
+// 				bank.RegisterYieldItem(new geb_YieldCarp(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldMackerel(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldSardines(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldBitterlings(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldWalleyePollock(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldSteelheadTrout(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldShrimp(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldNorthernPike(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldLargeMouthBass(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldSmallMouthBass(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldWallEye(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldSunFish(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldWhiteBass(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldBlackBass(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldRainbowTrout(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldBrownTrout(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldBrookTrout(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldLakeTrout(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldCutThroatTrout(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldYellowPerch(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldFlatHeadCatFish(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldFatHeadMinnow(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldBlueGill(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldSauger(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldBowFin(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldSlimySculpin(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldSeverum(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldSignalCrayFish(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldEuropeanCrayFish(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldMahiMahi(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldAtlanticSailFish(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldAngelFish(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldAsianSeaBass(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldAtlanticBlueMarlin(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldBonita(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldCherrySalmon(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldChinookSalmon(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldSockEyeSalmon(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldFlatHeadMullet(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldLeopardShark(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldPacificCod(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldRedHeadCichlid(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldRoughNeckRock(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldBlueTang(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldLargeHeadHairTailFish(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldHumpHeadWrasse(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldSiameseTigerFish(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldGreatWhiteShark(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldAngelShark(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldYellowFinTuna(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldBloodClam(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldMussel(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldBlackDevilSnail(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldStarFish(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldKingCrab(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldSnowCrab(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldBlueJellyFish(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldAmericanLobster(15));
+
+// 				bank.RegisterYieldItem(new geb_YieldEuropeanLobster(15));
+
+			
+// 			//finished loading fish data
+// 			GebsfishLogger.Info("Registering fish coimplete.", "MissionBase");
+
+// 			//start loading junk data
+// 			GebsfishLogger.Info("Adding junk to the yield data.", "MissionBase");
+
+// 			// for (int i = 0; i < m_gebsConfig.Junk.Count(); i++){
+// 			// 	JunkEntry junkItem = m_gebsConfig.Junk[i];
+// 			// 	bank.RegisterYieldItem(new YieldItemJunk(junkItem.CatchProbability, junkItem.Classname));
+// 			// }
+			
+// 			// for (int i1 = 0; i1 < m_gebsConfig.ContainerJunk.Count(); i1++){
+// 			// 	ContainerJunkEntry containerjunkItem = m_gebsConfig.ContainerJunk[i1];
+// 			// 	bank.RegisterYieldItem(new YieldItemJunkEmpty(containerjunkItem.CatchProbability, containerjunkItem.Classname));
+// 			// }
+
+
+// 			//finished loading junk data
+// 			GebsfishLogger.Info("Registering junk items complete.", "MissionBase");
+		
+// 			//load animal yeilds for traps (snare)
+// 			bank.RegisterYieldItem(new YieldItemDeadRabbit(4));
+// 			bank.RegisterYieldItem(new YieldItemDeadRooster(1));
+// 			bank.RegisterYieldItem(new YieldItemDeadChicken_White(1));
+// 			bank.RegisterYieldItem(new YieldItemDeadChicken_Spotted(1));
+// 			bank.RegisterYieldItem(new YieldItemDeadChicken_Brown(1));
+// 			bank.RegisterYieldItem(new YieldItemDeadFox(2));
+
+// 			GebsfishLogger.Info("Initialization of yield data complete.", "MissionBase");
+// 		}
+// 	}
+
+// };

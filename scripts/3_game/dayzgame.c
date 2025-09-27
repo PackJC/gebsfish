@@ -4,13 +4,13 @@ modded class DayZGame {
 	{
         super.OnRPC(sender, target, rpc_type, ctx);
 
-        if (rpc_type == RPC_GEBSCONFIG_SYNC)
+        if (rpc_type == GebsfishRPC.CONFIGSYNC)
         {
             Param1<gebsfishConfig> configParams;
             if(!ctx.Read(configParams))
             return;
             SetGebsfishConfig(configParams.param1);
-            Print("[gebsfish] Client received config data " + VERSION_GEBSFISH + " from the server.");
+            GebsfishLogger.Info("Client received config data " + VERSION_GEBSFISH + " from the server.", "RPC");
         }
     }
 }
