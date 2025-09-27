@@ -12,7 +12,7 @@ GameProjectClass {
 		} 
 		FileSystemPathClass {  
             Name "SteamDir"
-            Directory "C:/Program Files (x86)/Steam/steamapps/common/DayZ"
+            Directory "G:\SteamLibrary\steamapps\common\DayZ"
          }
 	 }
 	imageSets {
