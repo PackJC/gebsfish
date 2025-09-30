@@ -265,7 +265,7 @@ class cfgVehicles
 		scope = 2;
 		rotationFlags = 17;
 		displayName = "$STR_tools_fishingnet";
-		descriptionShort = "$STR_fishingnet_desc";
+		descriptionShort = "$STR_tools_fishingnet_desc";
 		model = "\gebsfish\data\tools\bamboofishingnet.p3d";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\bamboofishingnet.paa"};
