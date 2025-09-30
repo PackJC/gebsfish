@@ -625,6 +625,7 @@ class cfgVehicles
 		displayName = "$STR_fish_angelshark";
 		descriptionShort = "$STR_fish_angelshark_desc";
 		model = "\gebsfish\data\fish\angelshark.p3d";
+		rotationFlags = 4;
 	};
 	class geb_GreatWhiteShark: geb_LargeFish_Base {
 		scope = 2;

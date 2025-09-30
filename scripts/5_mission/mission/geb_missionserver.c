@@ -4,7 +4,7 @@ modded class MissionServer
 	{		
 		super.OnInit();
 		if(m_gebsConfig){
-			Print("[gebsfish] Gebsfish V" + VERSION_GEBSFISH + " Loaded Successfully!");
+			GebsfishLogger.Info("Version " + VERSION_GEBSFISH + " loaded successfully!", "MissionServer Init");
 		}
 
 		gebsfishTypes fishTypesGenerator = new gebsfishTypes();
@@ -19,9 +19,9 @@ modded class MissionServer
 		if(identity){
 			//if identity is valid, send config to player. 
 			auto configParams = new Param1<gebsfishConfig>(GetGebSettingsConfig());
-			Print("[gebsfish] Sending Geb's Fishing config " + VERSION_GEBSFISH + " to Player: " + identity.GetName() + " RPC: " + RPC_GEBSCONFIG_SYNC);
+			GebsfishLogger.Info("Sending Geb's Fishing config " + VERSION_GEBSFISH + " to Player: " + identity.GetName() + " RPC: " + GebsfishRPC.CONFIGSYNC, "RPC");
 			PlayerBase player = PlayerBase.Cast(identity.GetPlayer());
-			GetGame().RPCSingleParam(player, RPC_GEBSCONFIG_SYNC, configParams, true, identity);
+			GetGame().RPCSingleParam(player, GebsfishRPC.CONFIGSYNC, configParams, true, identity);
 		}
 		
 	}
@@ -31,8 +31,8 @@ modded class MissionServer
 
 		YieldsMap mGeb_YieldsMapAll;
 		mGeb_YieldsMapAll = GetGame().GetMission().GetWorldData().GetCatchYieldBank().GetYieldsMap();
-		if(m_gebsConfig.GeneralSettings.DebugLogs){
-			Print("[gebsfish] [DEBUG] [YieldMapOutput] Start YieldMapAll Dump");
+		if(m_gebsConfig.GeneralSettings.DebugLogs == ELEVATED_DEBUG){
+			GebsfishLogger.Debug("Start Dump:","YieldMap");
 			YieldItemBase yItem;
 			int count = mGeb_YieldsMapAll.Count();
 			for (int i = 0; i < count; i++){
@@ -88,15 +88,18 @@ modded class MissionServer
 						gebDebugCatchMethod = "Catch Method Unknown or Out of Range";
 						break;
 				}
-				
-				Print("[gebsfish] [DEBUG] [YieldMapOutput] Yield Item " + i + " : " + yItem);
-				Print("[gebsfish] [DEBUG] [YieldMapOutput] Yield Item " + i + " Type: " + yItem.GetType());
-				Print("[gebsfish] [DEBUG] [YieldMapOutput] Yield Item " + i + " Name: " + GetDisplayNameFromTypeName(yItem.GetType()));
-				Print("[gebsfish] [DEBUG] [YieldMapOutput] Yield Item " + i + " Catch Probability Weight: " + yItem.GebGetCatchProbability().ToString());
-				Print("[gebsfish] [DEBUG] [YieldMapOutput] Yield Item " + i + " Catch Method: " + gebDebugCatchMethod);
-				Print("[gebsfish] [DEBUG] [YieldMapOutput] Yield Item " + i + " Catch Environment: " + gebDebugCatchEnviro);
+
+				// GebsfishLogger.Debug("Yield Item " + i + " : " + yItem,"YieldMap");
+				// GebsfishLogger.Debug("Yield Item " + i + " Type: " + yItem.GetType(),"YieldMap");
+				// GebsfishLogger.Debug("Yield Item " + i + " Name: " + GetDisplayNameFromTypeName(yItem.GetType()),"YieldMap");
+				// GebsfishLogger.Debug("Yield Item " + i + " Catch Probability Weight: " + yItem.GebGetCatchProbability().ToString(),"YieldMap");
+				// GebsfishLogger.Debug("Yield Item " + i + " Catch Method: " + gebDebugCatchMethod,"YieldMap");
+				// GebsfishLogger.Debug("Yield Item " + i + " Catch Environment: " + gebDebugCatchEnviro,"YieldMap");
+
+				GebsfishLogger.Debug( "Item " + i + " " + yItem + ", Type: " + yItem.GetType() + ", Name: " + GetDisplayNameFromTypeName(yItem.GetType()) + ", Catch Probability Weight: " + yItem.GebGetCatchProbability().ToString() + ", Catch Method: " + gebDebugCatchMethod + ", Catch Environment: " + gebDebugCatchEnviro, "YieldMapItem");
+
 			}
-			Print("[gebsfish] [DEBUG] [YieldMapOutput] End YieldMapAll Dump");
+			GebsfishLogger.Debug("End Dump","YieldMap");
 		}
 	}
 

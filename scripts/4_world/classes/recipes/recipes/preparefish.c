@@ -28,7 +28,7 @@ modded class PrepareFish {
 		if (!m_gebsConfig.PredatorSettings.PredatorSpawnEnabled)
 		{
 			if(m_gebsConfig.GeneralSettings.DebugLogs){
-                Print("[gebsfish] [DEBUG] [Predator] Predator spawning is disabled.");
+				GebsfishLogger.Debug("Predator spawning is disabled in the config file.", "PredatorSpawnPrepare");
             }
 			return;
 		}
@@ -37,14 +37,14 @@ modded class PrepareFish {
 		if (Math.RandomFloat(0, 1) > m_gebsConfig.PredatorSettings.PredatorSpawnChancePreparing)
 		{
 			if(m_gebsConfig.GeneralSettings.DebugLogs){
-                Print("[gebsfish] [DEBUG] [Predator] Global spawn chance failed.");
+				GebsfishLogger.Debug("Global spawn chance for predator failed.", "PredatorSpawnPrepare");
             }
 			return;
 		}
 
 		vector playerPosition = player.GetPosition();
 		if(m_gebsConfig.GeneralSettings.DebugLogs){
-            Print("[gebsfish] [DEBUG] [Predator] Global spawn chance passed. Selecting predator to spawn.");
+			GebsfishLogger.Debug("Global Spawn chance for predator succeeded. Selecting predator from config to spawn.", "PredatorSpawnPrepare");
         }
 
 		PredatorEntry selectedPredator = GetRandomPredatorEntry();
@@ -52,7 +52,7 @@ modded class PrepareFish {
 		{
 			int count = Math.RandomInt(selectedPredator.MinCount, selectedPredator.MaxCount + 1);
 			if(m_gebsConfig.GeneralSettings.DebugLogs){
-                Print("[gebsfish] [DEBUG] [Predator] Spawning " + count + " " + selectedPredator.Classname + " around player.");
+				GebsfishLogger.Debug("Spawning " + count + " " + selectedPredator.Classname + " around player.", "PredatorSpawnPrepare");
             }
 
             bool soundPlayed = false; // Initialize sound flag
@@ -85,7 +85,7 @@ modded class PrepareFish {
 		else
 		{
 			if(m_gebsConfig.GeneralSettings.DebugLogs){
-                Print("[gebsfish] [DEBUG] [Predator] No predator was selected to spawn.");
+				GebsfishLogger.Debug("No predator was selected to spawn.", "PredatorSpawnPrepare");
             }
 		}
 	}
@@ -100,7 +100,7 @@ modded class PrepareFish {
 		if (totalWeight == 0)
 		{
 			if(m_gebsConfig.GeneralSettings.DebugLogs){
-                Print("[gebsfish] [DEBUG] [Predator] No predators have valid spawn chances.");
+				GebsfishLogger.Debug("No predators have a valid spawn chance.", "PredatorSpawnPrepare");
             }
 			return null;
 		}
@@ -134,7 +134,7 @@ modded class PrepareFish {
 		if (predator)
 		{
 			if(m_gebsConfig.GeneralSettings.DebugLogs){
-                Print("[gebsfish] [DEBUG] [Predator] Spawned " + classname + " at " + position.ToString());
+				GebsfishLogger.Debug("Spawned " + classname + " at " + position.ToString() + ".", "PredatorSpawnPrepare");;
             }
 
 			#ifdef ExtraLogs
@@ -158,9 +158,9 @@ modded class PrepareFish {
 						float distance = vector.Distance(triggeringPlayer.GetPosition(), nearbyPlayer.GetPosition());
 						if (distance <= m_gebsConfig.PredatorSettings.PredatorWarningSoundRadius) {    // Distance from triggering player
 							Param1<string> rpcData = new Param1<string>("PredatorWarning_SoundSet");
-							nearbyPlayer.RPCSingleParam(RPC_PLAY_PREDATOR_SOUND, rpcData, true, nearbyPlayer.GetIdentity());
+							nearbyPlayer.RPCSingleParam(GebsfishRPC.PLAYPREDATORSOUND, rpcData, true, nearbyPlayer.GetIdentity());
 							if(m_gebsConfig.GeneralSettings.DebugLogs){
-								Print("[gebsfish] [DEBUG] [Predator] Sent RPC to play sound for player within 50 meters of " + triggeringPlayer.GetIdentity().GetName() + ": " + nearbyPlayer.GetIdentity().GetName());
+								GebsfishLogger.Debug("Sent RPC to play sound for players within " + m_gebsConfig.PredatorSettings.PredatorWarningSoundRadius + " meters of " + triggeringPlayer.GetIdentity().GetName() + ": " + nearbyPlayer.GetIdentity().GetName() + ".", "PredatorSpawnPrepareRPC");
 							}
 							#ifdef ExtraLogs
                                 if(m_gebsConfig.CFToolsLogging.PredatorSounds) {
@@ -177,7 +177,7 @@ modded class PrepareFish {
 		else
 		{
 			if(m_gebsConfig.GeneralSettings.DebugLogs){
-                Print("[gebsfish] [DEBUG] [Predator] Failed to spawn " + classname);
+				GebsfishLogger.Debug("Failed to spawn " + classname + ".", "PredatorSpawnPrepare");
             }
 		}
 	}

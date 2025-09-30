@@ -27,17 +27,20 @@ class gebsfishSpawnableTypes {
                         string existingVersion = tail.Substring(14, end - 14).Trim();
                         if (existingVersion == version)
                         {
-                            Print("[gebsfish] [SPAWNABLETYPES] spawnable types XML already at version " + version + ", skipping generation.");
+                            GebsfishLogger.Info("Spawnable types XML already at version " + version + ", Skipping regeneration.", "SpawnableTypes");
+                            
                             CloseFile(readFile);
                             return;
                         }
                     }
                 }
                 CloseFile(readFile);
-            }
+            } else {
             // Delete outdated file if version mismatched or not found
             DeleteFile(filePath);
-            Print("[gebsfish] [SPAWNABLETYPES] Deleted existing spawnabletypes XML for regeneration.");
+            GebsfishLogger.Info("Deleted existing spawnable types XML for regeneration.", "SpawnableTypes");
+            
+            }
         }
 
         // Ensure the directory exists
@@ -52,7 +55,8 @@ class gebsfishSpawnableTypes {
         FileHandle file = OpenFile(filePath, FileMode.WRITE);
         if (!file)
         {
-            Print("[gebsfish] [SPAWNABLETYPES] Error: Could not create gebsfish-spawnabletypes.xml in profiles/Gebs/extras/mpmissions!");
+            GebsfishLogger.Error("Could not create gebsfish-spawnabletypes.xml in $profiles/Gebs/extras/mpmissions!", "SpawnableTypes");
+            
             return;
         }
 
@@ -291,6 +295,7 @@ class gebsfishSpawnableTypes {
         FPrint(file, "</spawnabletypes>");
 
         CloseFile(file);
-        Print("[gebsfish] [TYPES] gebsfish-spawnabletypes.xml successfully generated in profiles/Gebs/extras/mpmissions/.");
+        GebsfishLogger.Info("gebsfish-spawnabletypes.xml successfully generated in $profiles/Gebs/extras/mpmissions/.", "SpawnableTypes");
+    
     }
 }
