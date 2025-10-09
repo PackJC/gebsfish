@@ -331,57 +331,14 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_largemouthbass_desc";
 		model = "\gebsfish\data\fish\largemouthbass.p3d";
 	};
-	class geb_FatHeadMinnow: geb_FreshFish_Base {
+	class geb_FatHeadMinnow: Shrimp {
 		scope = 2;
 		displayName = "$STR_fish_fatheadminnow";
 		descriptionShort = "$STR_fish_fatheadminnow_desc";
 		model = "\gebsfish\data\fish\minnow.p3d";
-		itemSize[] = {1,1};
-		weight = 300;
 		rotationFlags = 17;
-		inventorySlot[]=
-		{
-			"Trap_Bait",
-			"Bait",
-			"Trap_Bait_1",
-			"Trap_Bait_2"
-		};
-		class AnimationSources: FoodAnimationSources
-		{
-			class Bait_Hooked
-			{
-				source="user";
-				animPeriod=0.0099999998;
-				initPhase=1;
-			};
-			class Bait_Unhooked
-			{
-				source="user";
-				animPeriod=0.0099999998;
-				initPhase=0;
-			};
-		};
-		soundImpactType="organic";
-		class Fishing
-		{
-			signalCycleTargetAdjustment=-12;
-			signalCycleTargetEndAdjustment=-20;
-			signalDurationMin=1.2;
-			signalDurationMax=1.6;
-			resultQuantityBaseMod=0;
-			resultQuantityDispersionMin=0;
-			resultQuantityDispersionMax=0;
-			hookLossChanceMod=0;
-			baitLossChanceMod=0;
-		};
-		class Trapping
-		{
-			baitTypes[]={1,2};
-			baitTypeChances[]={0.75,0.050000001};
-			resultQuantityBaseMod=0;
-			resultQuantityDispersionMin=0;
-			resultQuantityDispersionMax=0;
-		};
+		weight = 100;
+		itemSize[] = {1,1};
 	};
 	class geb_NorthernPike: geb_FreshFish_Base {
 		scope = 2;
@@ -641,7 +598,7 @@ class cfgVehicles
 	};
 
 	//8 Saltwater crustaceans
-	class geb_BloodClam: geb_SaltFish_Base {
+	class geb_BloodClam: Shrimp {
 		scope = 2;
 		displayName = "$STR_fish_bloodclam";
 		descriptionShort = "$STR_fish_bloodclam_desc";
@@ -650,7 +607,7 @@ class cfgVehicles
 		weight = 100;
 		itemSize[] = {1,1};
 	};
-	class geb_Mussel: geb_SaltFish_Base {
+	class geb_Mussel: Shrimp {
 		scope = 2;
 		displayName = "$STR_fish_mussel";
 		descriptionShort = "$STR_fish_mussel_desc";
@@ -659,7 +616,7 @@ class cfgVehicles
 		weight = 100;
 		itemSize[] = {1,1};
 	};
-	class geb_BlackDevilSnail: geb_SaltFish_Base {
+	class geb_BlackDevilSnail: Shrimp {
 		scope = 2;
 		displayName = "$STR_fish_blackdevilsnail";
 		descriptionShort = "$STR_fish_blackdevilsnail_desc";
@@ -668,7 +625,7 @@ class cfgVehicles
 		weight = 100;
 		itemSize[] = {1,1};
 	};
-	class geb_StarFish: geb_SaltFish_Base {
+	class geb_StarFish: Shrimp {
 		scope = 2;
 		displayName = "$STR_fish_starfish";
 		descriptionShort = "$STR_fish_starfish_desc";
@@ -677,7 +634,7 @@ class cfgVehicles
 		weight = 2500;
 		itemSize[] = {2,2};
 	};
-	class geb_BlueJellyFish: geb_SaltFish_Base {
+	class geb_BlueJellyFish: Shrimp {
 		scope = 2;
 		displayName = "$STR_fish_bluejellyfish";
 		descriptionShort = "$STR_fish_bluejellyfish_desc";
@@ -810,12 +767,6 @@ class cfgVehicles
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\largemouthbass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
-	};
-	class geb_FatHeadMinnowFilletMeat: CarpFilletMeat {
-		scope = 2;
-		displayName = "$STR_fish_fatheadminnow_fillet";
-		descriptionShort = "$STR_fish_fatheadminnow_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
 	};
 	class geb_NorthernPikeFilletMeat: CarpFilletMeat {
 		scope = 2;
@@ -1138,15 +1089,6 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\snowcrablegs.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\kingcrab.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
-		};
-	};
-	class geb_BlueJellyFishFilletMeat: MackerelFilletMeat {
-		scope = 2;
-		displayName = "$STR_fish_bluejellyfish_fillet";
-		descriptionShort = "$STR_fish_bluejellyfish_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
-		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\jellyfishfillet.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
 	class geb_AmericanLobsterTail : MackerelFilletMeat {
