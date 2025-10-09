@@ -132,7 +132,6 @@ class cfgVehicles
 			};
 		};
 	};
-
     class geb_FishKnife_Base: HuntingKnife{
         scope=0;
 		displayName="Fish Knife Base";
@@ -162,7 +161,6 @@ class cfgVehicles
         hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\bluefishknife.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishknife.rvmat"};
-
 	};
 	class geb_OrangeFishKnife: geb_FishKnife_Base {
 		scope = 2;
@@ -179,7 +177,6 @@ class cfgVehicles
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\greenfishknife.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishknife.rvmat"};
-
 	};
 	class geb_YellowFishKnife: geb_FishKnife_Base {
 		scope = 2;
@@ -196,7 +193,6 @@ class cfgVehicles
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\redfishknife.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishknife.rvmat"};
-
 	};
 	class geb_PurpleFishKnife: geb_FishKnife_Base {
 		scope = 2;
@@ -205,9 +201,7 @@ class cfgVehicles
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\purplefishknife.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishknife.rvmat"};
-
 	};
-	
 	class FishingRod_Base_New : FishingRod_Base {
 	inventorySlot[] += {
 			"Shoulder",
