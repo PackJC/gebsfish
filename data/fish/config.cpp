@@ -339,6 +339,49 @@ class cfgVehicles
 		rotationFlags = 17;
 		weight = 100;
 		itemSize[] = {1,1};
+		inventorySlot[]=
+		{
+			"Trap_Bait",
+			"Bait",
+			"Trap_Bait_1",
+			"Trap_Bait_2"
+		};
+		class AnimationSources: FoodAnimationSources
+		{
+			class Bait_Hooked
+			{
+				source="user";
+				animPeriod=0.0099999998;
+				initPhase=1;
+			};
+			class Bait_Unhooked
+			{
+				source="user";
+				animPeriod=0.0099999998;
+				initPhase=0;
+			};
+		};
+		soundImpactType="organic";
+		class Fishing
+		{
+			signalCycleTargetAdjustment=-12;
+			signalCycleTargetEndAdjustment=-20;
+			signalDurationMin=1.2;
+			signalDurationMax=1.6;
+			resultQuantityBaseMod=0;
+			resultQuantityDispersionMin=0;
+			resultQuantityDispersionMax=0;
+			hookLossChanceMod=0;
+			baitLossChanceMod=0;
+		};
+		class Trapping
+		{
+			baitTypes[]={1,2};
+			baitTypeChances[]={0.75,0.050000001};
+			resultQuantityBaseMod=0;
+			resultQuantityDispersionMin=0;
+			resultQuantityDispersionMax=0;
+		};
 	};
 	class geb_NorthernPike: geb_FreshFish_Base {
 		scope = 2;
