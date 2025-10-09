@@ -98,7 +98,6 @@ class gebsfishTypes {
         fishItems.Insert("geb_FlatHeadCatFish");
         fishItems.Insert("geb_FlatHeadCatFishFilletMeat");
         fishItems.Insert("geb_FatHeadMinnow");
-        fishItems.Insert("geb_FatHeadMinnowFilletMeat");
         fishItems.Insert("geb_BlueGill");
         fishItems.Insert("geb_BlueGillFilletMeat");
         fishItems.Insert("geb_Sauger");
@@ -149,7 +148,6 @@ class gebsfishTypes {
         fishItems.Insert("geb_SnowCrab");
         fishItems.Insert("geb_SnowCrabLegs");
         fishItems.Insert("geb_BlueJellyFish");
-        fishItems.Insert("geb_BlueJellyFishFilletMeat");
         fishItems.Insert("geb_AmericanLobster");
         fishItems.Insert("geb_AmericanLobsterTail");
         fishItems.Insert("geb_AmericanLobsterClaw");
