@@ -22,7 +22,6 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareSmallMouthBass);
 		RegisterRecipe(new PrepareSunFish);
 		RegisterRecipe(new PrepareWallEye);
-		RegisterRecipe(new PrepareFatHeadMinnow);
 		RegisterRecipe(new PrepareNorthernPike);
 		RegisterRecipe(new PrepareYellowPerch);
 		RegisterRecipe(new PrepareSauger);
@@ -38,12 +37,8 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareChinookSalmon);
 
 		//Saltwater Crustaceans
-		RegisterRecipe(new PrepareMussel);
-		RegisterRecipe(new PrepareBlackDevilSnail);
-		RegisterRecipe(new PrepareStarFish);
 		RegisterRecipe(new PrepareKingCrab);
 		RegisterRecipe(new PrepareSnowCrab);
-		RegisterRecipe(new PrepareBloodClam);
 		RegisterRecipe(new PrepareAmericanLobster);
 		RegisterRecipe(new PrepareEuropeanLobster);
 
@@ -68,7 +63,6 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareAngelShark);
 		RegisterRecipe(new PrepareGreatWhiteShark);
 		RegisterRecipe(new PrepareYellowFinTuna);
-		RegisterRecipe(new PrepareBlueJellyFish);
 
 		//Tools
 		RegisterRecipe(new CraftBambooFishingNet);
