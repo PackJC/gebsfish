@@ -121,4 +121,7 @@ Use a Collection if you want to include this mod on your server for your users.
 ## Monetization
 You are hereby given monetization approval under the conditions that you follow the DayZ Server Monetization agreement and have obtained permission from Bohemia. Read more here https://www.bohemia.net/monetization
 
+## Donations 
+We accept donations at https://www.paypal.com/paypalme/packjc every dollar counts and we greatly appreciate any contributions!
+
 ### Copyright © Smoky Mountain Software 2022-2025
