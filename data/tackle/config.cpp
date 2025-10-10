@@ -531,7 +531,7 @@ class cfgVehicles
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
-					hitpoints = 10;
+					hitpoints = 18;
 					healthLevels[] = {
 						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
 						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
@@ -553,7 +553,7 @@ class cfgVehicles
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
-					hitpoints = 10;
+					hitpoints = 18;
 					healthLevels[] = {
 						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
 						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
@@ -575,7 +575,7 @@ class cfgVehicles
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
-					hitpoints = 10;
+					hitpoints = 18;
 					healthLevels[] = {
 						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
 						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
@@ -597,7 +597,7 @@ class cfgVehicles
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
-					hitpoints = 10;
+					hitpoints = 18;
 					healthLevels[] = {
 						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
 						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
@@ -621,7 +621,7 @@ class cfgVehicles
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
-					hitpoints = 10;
+					hitpoints = 18;
 					healthLevels[] = {
 						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
 						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
@@ -646,7 +646,7 @@ class cfgVehicles
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
-					hitpoints = 10;
+					hitpoints = 18;
 					healthLevels[] = {
 						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
 						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
@@ -671,7 +671,7 @@ class cfgVehicles
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
-					hitpoints = 10;
+					hitpoints = 18;
 					healthLevels[] = {
 						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
 						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
@@ -695,7 +695,7 @@ class cfgVehicles
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
-					hitpoints = 10;
+					hitpoints = 18;
 					healthLevels[] = {
 						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
 						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
