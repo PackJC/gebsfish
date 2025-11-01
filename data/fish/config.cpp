@@ -346,6 +346,51 @@ class cfgVehicles
 			"Trap_Bait_1",
 			"Trap_Bait_2"
 		};
+		class Food
+        {
+            class FoodStages
+            {
+                class Raw
+                {
+                    visual_properties[]={0, 0, 0};
+                    nutrition_properties[]={5, 10, 20, 1, 0, 16, 1, 8};
+                    cooking_properties[]={0, 0};
+                };
+                class Rotten
+                {
+                    visual_properties[]={-1, -1, 5};
+                    nutrition_properties[]={10, 5, 8, 1, 0, "4 + 		  16", 1, 16};
+                    cooking_properties[]={0, 0};
+                };
+                class Baked
+                {
+                    visual_properties[]={0, 1, 1};
+                    nutrition_properties[]={2, 50, 12, 1, 0};
+                    cooking_properties[]={70, 45};
+                };
+                class Boiled
+                {
+                    visual_properties[]={0, 2, 2};
+                    nutrition_properties[]={2, 40, 32, 1, 0};
+                    cooking_properties[]={105, 55};
+                };
+                class Dried
+                {
+                    visual_properties[]={0, 3, 3};
+                    nutrition_properties[]={3, 40, 4, 1, 0};
+                    cooking_properties[]={70, 45, 80};
+                };
+                class Burned
+                {
+                    visual_properties[]={0, 4, 4};
+                    nutrition_properties[]={5, 10, 0, 1, 0, 16, 1, 3};
+                    cooking_properties[]={100, 30};
+                };
+            };
+            class FoodStageTransitions : AnimalCorpsesStageTransitions
+            {
+            };
+        };
 		class AnimationSources: FoodAnimationSources
 		{
 			class Bait_Hooked
