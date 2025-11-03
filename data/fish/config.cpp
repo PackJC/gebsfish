@@ -387,9 +387,6 @@ class cfgVehicles
                     cooking_properties[]={100, 30};
                 };
             };
-            class FoodStageTransitions : AnimalCorpsesStageTransitions
-            {
-            };
         };
 		class AnimationSources: FoodAnimationSources
 		{
