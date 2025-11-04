@@ -34,6 +34,23 @@ class cfgVehicles
 	class MackerelFilletMeat;
 	class FoodAnimationSources;
 
+	//Obsolete classes
+	class geb_FatHeadMinnowFilletMeat: CarpFilletMeat {
+		scope = 2;
+		displayName = "$STR_fish_fatheadminnow_fillet";
+		descriptionShort = "$STR_fish_fatheadminnow_desc";
+		model = "\dz\gear\food\carp_fillet.p3d";
+	};
+	class geb_BlueJellyFishFilletMeat: MackerelFilletMeat {
+		scope = 2;
+		displayName = "$STR_fish_bluejellyfish_fillet";
+		descriptionShort = "$STR_fish_bluejellyfish_desc";
+		model = "\dz\gear\food\mackerel_fillet.p3d";
+		hiddenSelectionsTextures[] = {
+			"\gebsfish\data\fish\jellyfishfillet.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
+		};
+	};
+
 	//Base classes for fish
 	class geb_FreshFish_Base: Edible_Base {
 		scope = 0;
