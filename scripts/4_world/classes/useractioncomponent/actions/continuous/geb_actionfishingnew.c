@@ -71,9 +71,9 @@ modded class ActionFishingNew: ActionContinuousBase {
 
         // Find the display name in the config
         string displayName = "";
-        if (GetGame().ConfigIsExisting("CfgVehicles " + typeName))
+        if (g_Game.ConfigIsExisting("CfgVehicles " + typeName))
         {
-            displayName = GetGame().ConfigGetTextOut("CfgVehicles " + typeName + " displayName");
+            displayName = g_Game.ConfigGetTextOut("CfgVehicles " + typeName + " displayName");
         }
         
         // Return display name or fallback to type name if not found
@@ -86,7 +86,7 @@ modded class ActionFishingNew: ActionContinuousBase {
     }
 
     void TrySpawnPredator(FishingActionData action_data){
-		if (!GetGame().IsServer() || !m_gebsConfig) return;
+		if (!g_Game.IsServer() || !m_gebsConfig) return;
 
 		// Check if predator spawning is enabled
 		if (!m_gebsConfig.PredatorSettings.PredatorSpawnEnabled)
@@ -206,7 +206,7 @@ modded class ActionFishingNew: ActionContinuousBase {
 		spawnPos = Vector(center[0] + xOffset, center[1], center[2] + zOffset);
 
 		// Now keep regenerating if it's on water
-		while ((GetGame().SurfaceIsSea(spawnPos[0], spawnPos[2]) || GetGame().SurfaceIsPond(spawnPos[0], spawnPos[2])) && attempts < maxAttempts)
+		while ((g_Game.SurfaceIsSea(spawnPos[0], spawnPos[2]) || g_Game.SurfaceIsPond(spawnPos[0], spawnPos[2])) && attempts < maxAttempts)
 		{
 			if( ELEVATED_DEBUG == m_gebsConfig.GeneralSettings.DebugLogs ){
 				GebsfishLogger.Debug("Surface selected for spawning predator was over water. Selecting new location for spawning predator.", "PredatorSpawnFishing");
@@ -232,7 +232,7 @@ modded class ActionFishingNew: ActionContinuousBase {
 	}
 
     void SpawnPredator(string classname, vector position, PlayerBase triggeringPlayer, out bool soundPlayed){
-		Object predator = GetGame().CreateObject(classname, position, false, true);
+		Object predator = g_Game.CreateObject(classname, position, false, true);
 		if (predator)
 		{
 
@@ -248,10 +248,10 @@ modded class ActionFishingNew: ActionContinuousBase {
 			#endif
             
 			// Send RPC to all players within 50 meters
-			if (!soundPlayed && GetGame().IsServer())
+			if (!soundPlayed && g_Game.IsServer())
 			{
 				array<Man> players = new array<Man>();
-				GetGame().GetPlayers(players);
+				g_Game.GetPlayers(players);
 
 				foreach (Man player : players)
 				{
