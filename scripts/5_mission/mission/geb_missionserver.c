@@ -21,7 +21,7 @@ modded class MissionServer
 			auto configParams = new Param1<gebsfishConfig>(GetGebSettingsConfig());
 			GebsfishLogger.Info("Sending Geb's Fishing config " + VERSION_GEBSFISH + " to Player: " + identity.GetName() + " RPC: " + GebsfishRPC.CONFIGSYNC, "RPC");
 			PlayerBase player = PlayerBase.Cast(identity.GetPlayer());
-			GetGame().RPCSingleParam(player, GebsfishRPC.CONFIGSYNC, configParams, true, identity);
+			g_Game.RPCSingleParam(player, GebsfishRPC.CONFIGSYNC, configParams, true, identity);
 		}
 		
 	}
@@ -30,7 +30,7 @@ modded class MissionServer
 		super.OnGameplayDataHandlerLoad();
 
 		YieldsMap mGeb_YieldsMapAll;
-		mGeb_YieldsMapAll = GetGame().GetMission().GetWorldData().GetCatchYieldBank().GetYieldsMap();
+		mGeb_YieldsMapAll = g_Game.GetMission().GetWorldData().GetCatchYieldBank().GetYieldsMap();
 		if(m_gebsConfig.GeneralSettings.DebugLogs == ELEVATED_DEBUG){
 			GebsfishLogger.Debug("Start Dump:","YieldMap");
 			YieldItemBase yItem;
@@ -107,9 +107,9 @@ modded class MissionServer
 
         // Find the display name in the config
         string displayName = "";
-        if (GetGame().ConfigIsExisting("CfgVehicles " + typeName))
+        if (g_Game.ConfigIsExisting("CfgVehicles " + typeName))
         {
-            displayName = GetGame().ConfigGetTextOut("CfgVehicles " + typeName + " displayName");
+            displayName = g_Game.ConfigGetTextOut("CfgVehicles " + typeName + " displayName");
         }
         
         // Return display name or fallback to type name if not found
