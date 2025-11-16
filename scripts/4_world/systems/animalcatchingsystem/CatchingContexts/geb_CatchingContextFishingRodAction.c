@@ -178,7 +178,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase
 
 	override protected void TryDamageItems()
 	{
-		if (!GetGame().IsMultiplayer() || GetGame().IsDedicatedServer())
+		if (!g_Game.IsMultiplayer() || g_Game.IsDedicatedServer())
 		{
 			if (m_Hook && !m_Hook.IsSetForDeletion())
 				if (m_gebsConfig.GeneralSettings.DebugLogs)
