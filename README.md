@@ -11,7 +11,7 @@
 <p align="center">
   <img alt="Mode Version" src="https://img.shields.io/badge/Mod-v3.3.0-blue?style=for-the-badge">
   <img alt="DayZ Version" src="https://img.shields.io/badge/DayZ-v1.28-teal?style=for-the-badge">
-  <img alt="Workshop Subscribers" src="https://img.shields.io/badge/Workshop Subs-904K-purple?style=for-the-badge">
+  <img alt="Workshop Subscribers" src="https://img.shields.io/badge/Workshop Subs-908K-purple?style=for-the-badge">
 </p>
 
 <p align="center">
