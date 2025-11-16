@@ -31,25 +31,25 @@ class GebsfishLogger
 			GebsAsciiArt.Write(fh); //header art
 
 			string side = "UNKNOWN";
-            if (GetGame())
+            if (g_Game)
             {
-                if (GetGame().IsServer())
+                if (g_Game.IsServer())
                     side = "SERVER";
                 else
                     side = "CLIENT";
             }
 
 			string worldName = "empty";
-			if (GetGame())
+			if (g_Game)
 			{
-				GetGame().GetWorldName(worldName);
+				g_Game.GetWorldName(worldName);
 				worldName.ToLower();
 			}
 
 			// string serverName = "Unknown";
-			// if (GetGame())
+			// if (g_Game)
 			// {
-			// 	serverName = GetGame().GetHostName();
+			// 	serverName = g_Game.GetHostName();
 			// 	GebsfishLogger.Debug("Server Name is: " + serverName + "!!!", "Header");
 			// }
 
@@ -85,9 +85,9 @@ class GebsfishLogger
 		string ts   = BuildDateTimeReadable();
 
 		string side = "UNKNOWN";
-        if (GetGame())
+        if (g_Game)
         {
-            if (GetGame().IsServer())
+            if (g_Game.IsServer())
                 side = "SERVER";
             else
                 side = "CLIENT";
