@@ -44,13 +44,13 @@ class ActionDigBugs : ActionContinuousBase
 			return false;
 
 		vector plr_pos = player.GetPosition();
-		float height = GetGame().SurfaceY(plr_pos[0], plr_pos[2]);
+		float height = g_Game.SurfaceY(plr_pos[0], plr_pos[2]);
 		height = plr_pos[1] - height;
 
 		if (height > 0.4)
 			return false;
 
-		if (!GetGame().IsDedicatedServer())
+		if (!g_Game.IsDedicatedServer())
 		{
 			if (!player.IsPlacingLocal())
 			{
@@ -59,8 +59,8 @@ class ActionDigBugs : ActionContinuousBase
 					string surface_type;
 					vector position;
 					position = target.GetCursorHitPos();
-					GetGame().SurfaceGetType(position[0], position[2], surface_type);
-					if (GetGame().IsSurfaceFertile(surface_type))
+					g_Game.SurfaceGetType(position[0], position[2], surface_type);
+					if (g_Game.IsSurfaceFertile(surface_type))
 					{
 						return true;
 					}
@@ -128,7 +128,7 @@ class ActionDigBugs : ActionContinuousBase
 		// Spawn the selected bug if one was found
 		if (selectedBug != "")
 		{
-			ItemBase bugs = ItemBase.Cast(GetGame().CreateObject(selectedBug, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
+			ItemBase bugs = ItemBase.Cast(g_Game.CreateObject(selectedBug, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
 			if (bugs)
 			{
 				bugs.SetQuantity(10, false);
