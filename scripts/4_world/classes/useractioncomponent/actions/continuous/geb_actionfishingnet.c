@@ -43,13 +43,13 @@ class ActionBambooFishingNet : ActionContinuousBase
 		
 		// Check if player is standing on terrain
 		vector plr_pos = player.GetPosition();
-		float height = GetGame().SurfaceY(plr_pos[0], plr_pos[2]);
+		float height = g_Game.SurfaceY(plr_pos[0], plr_pos[2]);
 		height = plr_pos[1] - height;
 		
 		if ( height > 0.4 )
 			return false; // Player is not standing on ground
 		
-		if ( !GetGame().IsDedicatedServer() )
+		if ( !g_Game.IsDedicatedServer() )
 		{
 			if ( !player.IsPlacingLocal() /*&& player.IsCurrentCameraAimedAtGround()*/ )
 			{
@@ -58,8 +58,8 @@ class ActionBambooFishingNet : ActionContinuousBase
 					string surface_type;
 					vector position;
 					position = target.GetCursorHitPos();
-					GetGame().SurfaceGetType( position[0], position[2], surface_type );
-					if (GetGame().SurfaceIsPond(position[0], position[2]) || GetGame().SurfaceIsSea(position[0], position[2]))
+					g_Game.SurfaceGetType( position[0], position[2], surface_type );
+					if (g_Game.SurfaceIsPond(position[0], position[2]) || g_Game.SurfaceIsSea(position[0], position[2]))
 					{
 						return true;
 					}
@@ -102,7 +102,7 @@ class ActionBambooFishingNet : ActionContinuousBase
 	override void OnFinishProgressServer( ActionData action_data )
 	{	
 		ItemBase bugs;
-		Class.CastTo(bugs, GetGame().CreateObjectEx("geb_FatHeadMinnow", action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
+		Class.CastTo(bugs, g_Game.CreateObjectEx("geb_FatHeadMinnow", action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
 		action_data.m_Player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
 	}
 	

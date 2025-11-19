@@ -22,7 +22,7 @@ modded class PrepareFish {
 	}
 
     void TrySpawnPredator(PlayerBase player){
-		if (!GetGame().IsServer() || !m_gebsConfig) return;
+		if (!g_Game.IsServer() || !m_gebsConfig) return;
 
 		// Check if predator spawning is enabled
 		if (!m_gebsConfig.PredatorSettings.PredatorSpawnEnabled)
@@ -130,7 +130,7 @@ modded class PrepareFish {
 	}
 
 	void SpawnPredator(string classname, vector position, PlayerBase triggeringPlayer, out bool soundPlayed){
-		Object predator = GetGame().CreateObject(classname, position, false, true);
+		Object predator = g_Game.CreateObject(classname, position, false, true);
 		if (predator)
 		{
 			if(m_gebsConfig.GeneralSettings.DebugLogs){
@@ -145,10 +145,10 @@ modded class PrepareFish {
 			#endif
             
 			// Send RPC to all players within 50 meters
-			if (!soundPlayed && GetGame().IsServer())
+			if (!soundPlayed && g_Game.IsServer())
 			{
 				array<Man> players = new array<Man>();
-				GetGame().GetPlayers(players);
+				g_Game.GetPlayers(players);
 
 				foreach (Man player : players)
 				{
