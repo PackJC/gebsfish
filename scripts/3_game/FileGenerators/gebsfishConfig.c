@@ -350,7 +350,7 @@ class SardinesConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 4;
+    int CatchMethod = 6;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
     int CatchProbability = 15;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
@@ -361,7 +361,7 @@ class BitterlingsConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 4;
+    int CatchMethod = 6;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
     int CatchProbability = 15;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
@@ -400,7 +400,7 @@ class ShrimpConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 4;
+    int CatchMethod = 6;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
     int CatchProbability = 1;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
