@@ -518,6 +518,14 @@ class cfgVehicles
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\laketrout.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\laketrout.rvmat"};
 	};
+	class geb_Sturgeon: geb_FreshFish_Base {
+		scope = 2;
+		displayName = "$STR_fish_sturgeon";
+		descriptionShort = "$STR_fish_sturgeon_desc";
+		model = "\gebsfish\data\fish\sturgeon.p3d";
+		itemSize[] = {5,2};
+		weight = 1700;
+	};
 	class geb_WhiteBass: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_whitebass";
@@ -613,6 +621,13 @@ class cfgVehicles
 		displayName = "$STR_fish_leopardshark";
 		descriptionShort = "$STR_fish_leopardshark_desc";
 		model = "\gebsfish\data\fish\leopardshark.p3d";
+		weight = 8000;
+	};
+	class geb_HammerHeadShark: geb_LargeFish_Base {
+		scope = 2;
+		displayName = "$STR_fish_hammerheadshark";
+		descriptionShort = "$STR_fish_hammerheadshark_desc";
+		model = "\gebsfish\data\fish\hammerheadshark.p3d";
 		weight = 8000;
 	};
 	class geb_PacificCod: geb_SaltFish_Base {
@@ -934,7 +949,6 @@ class cfgVehicles
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\cutthroattrout_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
-
 	};
 	class geb_LakeTroutFilletMeat: CarpFilletMeat {
 		scope = 2;
@@ -943,6 +957,15 @@ class cfgVehicles
 		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\laketrout_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
+		};
+	};
+	class geb_SturgeonFilletMeat: CarpFilletMeat {
+		scope = 2;
+		displayName = "$STR_fish_sturgeon_fillet";
+		descriptionShort = "$STR_fish_sturgeon_desc";
+		model = "\dz\gear\food\carp_fillet.p3d";
+		hiddenSelectionsTextures[] = {
+			"\gebsfish\data\fish\sturgeon_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
 	class geb_WhiteBassFilletMeat: CarpFilletMeat {
@@ -1071,6 +1094,15 @@ class cfgVehicles
 		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\leopardshark_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
+		};
+	};
+	class geb_HammerHeadSharkFilletMeat: MackerelFilletMeat {
+		scope = 2;
+		displayName = "$STR_fish_hammerheadshark_fillet";
+		descriptionShort = "$STR_fish_hammerheadshark_desc";
+		model = "\dz\gear\food\mackerel_fillet.p3d";
+		hiddenSelectionsTextures[] = {
+			"\gebsfish\data\fish\hammerheadshark_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
 	class geb_PacificCodFilletMeat: MackerelFilletMeat {

@@ -35,6 +35,7 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareSlimySculpin);
 		RegisterRecipe(new PrepareSockEyeSalmon);
 		RegisterRecipe(new PrepareChinookSalmon);
+		RegisterRecipe(new PrepareSturgeon);
 
 		//Saltwater Crustaceans
 		RegisterRecipe(new PrepareKingCrab);
@@ -51,7 +52,6 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareBonita);
 		RegisterRecipe(new PrepareCherrySalmon);
 		RegisterRecipe(new PrepareFlatHeadMullet);
-		RegisterRecipe(new PrepareLeopardShark);
 		RegisterRecipe(new PreparePacificCod);
 		RegisterRecipe(new PrepareRedHeadCichlid);
 		RegisterRecipe(new PrepareRoughNeckRock);
@@ -62,6 +62,8 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareSiameseTigerFish);
 		RegisterRecipe(new PrepareAngelShark);
 		RegisterRecipe(new PrepareGreatWhiteShark);
+		RegisterRecipe(new PrepareHammerHeadShark);
+		RegisterRecipe(new PrepareLeopardShark);
 		RegisterRecipe(new PrepareYellowFinTuna);
 
 		//Tools
