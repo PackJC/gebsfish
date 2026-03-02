@@ -10,10 +10,12 @@
 */
 
 
-//To restrict items in containers
-class geb_WormContainer : Container_Base
+class geb_FilteredContainerBase : Container_Base
 {
-	ref TStringArray ItemArray = { "Worm", "geb_GrubWorm", "geb_RubberWorm" };
+	protected TStringArray GetAllowedItemKinds()
+	{
+		return null;
+	}
 
 	override int GetDamageSystemVersionChange()
 	{
@@ -22,170 +24,93 @@ class geb_WormContainer : Container_Base
 
 	override bool CanReceiveItemIntoCargo(EntityAI item)
 	{
-		for (int i = 0; i < ItemArray.Count(); i++)
+		TStringArray allowed = GetAllowedItemKinds();
+		if (!allowed || allowed.Count() == 0)
+			return false;
+
+		for (int i = 0; i < allowed.Count(); i++)
 		{
-			if (item.IsKindOf(ItemArray.Get(i)))
-			{
+			if (item && item.IsKindOf(allowed.Get(i)))
 				return true;
-			};
 		}
 
 		return false;
 	}
 };
 
-class geb_BugContainer : Container_Base
+class geb_WormContainer : geb_FilteredContainerBase
 {
-	ref TStringArray ItemArray = { "Worm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm", "geb_RubberWorm"};
+	static ref TStringArray s_Allowed = { "Worm", "geb_GrubWorm", "geb_RubberWorm" };
 
-	override int GetDamageSystemVersionChange()
+	override protected TStringArray GetAllowedItemKinds()
 	{
-		return 110;
-	}
-
-	override bool CanReceiveItemIntoCargo(EntityAI item)
-	{
-		for (int i = 0; i < ItemArray.Count(); i++)
-		{
-			if (item.IsKindOf(ItemArray.Get(i)))
-			{
-				return true;
-			};
-		}
-		return false;
+		return s_Allowed;
 	}
 };
 
-
-class geb_BambooFishingNet : Container_Base
+class geb_BugContainer : geb_FilteredContainerBase
 {
-	ref TStringArray ItemArray = { "Worm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm", "geb_RubberWorm", "geb_Minnow", "geb_SignalCrayfish", "geb_EuropeanCrayfish"};
+	static ref TStringArray s_Allowed = { "Worm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm", "geb_RubberWorm" };
 
-	override int GetDamageSystemVersionChange()
+	override protected TStringArray GetAllowedItemKinds()
 	{
-		return 110;
-	}
-
-	override bool CanReceiveItemIntoCargo(EntityAI item)
-	{
-		for (int i = 0; i < ItemArray.Count(); i++)
-		{
-			if (item.IsKindOf(ItemArray.Get(i)))
-			{
-				return true;
-			};
-		}
-		return false;
+		return s_Allowed;
 	}
 };
 
-class geb_MinnowBucket : Container_Base
+class geb_BambooFishingNet : geb_FilteredContainerBase
 {
-	ref TStringArray ItemArray = { "geb_FatheadMinnow", "geb_SignalCrayFish", "geb_EuropeanCrayFish", "Shrimp" };
+	static ref TStringArray s_Allowed = { "Worm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm", "geb_RubberWorm", "geb_Minnow", "geb_SignalCrayFish", "geb_EuropeanCrayFish" };
 
-	override int GetDamageSystemVersionChange()
+	override protected TStringArray GetAllowedItemKinds()
 	{
-		return 110;
-	}
-
-	override bool CanReceiveItemIntoCargo(EntityAI item)
-	{
-		for (int i = 0; i < ItemArray.Count(); i++)
-		{
-			if (item.IsKindOf(ItemArray.Get(i)))
-			{
-				return true;
-			};
-		}
-		return false;
+		return s_Allowed;
 	}
 };
 
-class geb_SmallTackleBase : Container_Base
+class geb_MinnowBucket : geb_FilteredContainerBase
 {
-	ref TStringArray ItemArray = { "Jig", "geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook",
-		"geb_FishKnife_Base",  "BoneKnife", "BoneHook", "pliers"
+	static ref TStringArray s_Allowed = { "geb_FatheadMinnow", "geb_SignalCrayFish", "geb_EuropeanCrayFish", "Shrimp" };
+
+	override protected TStringArray GetAllowedItemKinds()
+	{
+		return s_Allowed;
+	}
+};
+
+class geb_SmallTackleBase : geb_FilteredContainerBase
+{
+	static ref TStringArray s_Allowed = {
+		"Jig", "geb_OrangeFishGloves", "geb_BlueFishGloves",
+		"geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet",
+		"Hook", "geb_FishKnife_Base", "BoneKnife", "BoneHook", "Pliers"
 	};
 
-
-	override int GetDamageSystemVersionChange()
+	override protected TStringArray GetAllowedItemKinds()
 	{
-		return 110;
-	}
-
-	override bool CanReceiveItemIntoCargo(EntityAI item)
-	{
-		for (int i = 0; i < ItemArray.Count(); i++)
-		{
-			if (item.IsKindOf(ItemArray.Get(i)))
-			{
-				return true;
-			};
-		}
-
-		return false;
+		return s_Allowed;
 	}
 };
 
-
-class geb_LargeTackleBase : Container_Base
+class geb_LargeTackleBase : geb_FilteredContainerBase
 {
-	ref TStringArray ItemArray = { "Jig", "geb_OrangeFishGloves", "geb_BlueFishGloves", "geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet", "Hook",
-		"geb_FishKnife_Base", "BoneKnife", "BoneHook",  "Cleaver", "CombatKnife", "HuntingKnife", "ak_bayonet", "m9a1_bayonet", "pliers", "screwdriver", "steakknife", "stoneknife"
+	static ref TStringArray s_Allowed = {
+		"Jig", "geb_OrangeFishGloves", "geb_BlueFishGloves",
+		"geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet",
+		"Hook", "geb_FishKnife_Base", "BoneKnife", "BoneHook",
+		"Cleaver", "CombatKnife", "HuntingKnife", "ak_bayonet", "m9a1_bayonet",
+		"Pliers", "Screwdriver", "Steakknife", "stoneknife"
 	};
 
-
-	override int GetDamageSystemVersionChange()
+	override protected TStringArray GetAllowedItemKinds()
 	{
-		return 110;
-	}
-
-	override bool CanReceiveItemIntoCargo(EntityAI item)
-	{
-		for (int i = 0; i < ItemArray.Count(); i++)
-		{
-			if (item.IsKindOf(ItemArray.Get(i)))
-			{
-				return true;
-			};
-		}
-
-		return false;
+		return s_Allowed;
 	}
 };
 
-
-class geb_SmallTackle : geb_SmallTackleBase
-{
-
-};
-
-class geb_OldRedTackle : geb_LargeTackleBase
-{
-
-};
-
-class geb_OldGreenTackle : geb_LargeTackleBase
-{
-
-};
-
-
-
-class geb_OldBlueTackle : geb_LargeTackleBase
-{
-
-};
-
-
-class geb_OldPurpleTackle : geb_LargeTackleBase
-{
-
-};
-
-
-class geb_Tackle_Base : geb_LargeTackleBase
-{
-
-};
-
+class geb_SmallTackle : geb_SmallTackleBase {};
+class geb_OldRedTackle : geb_LargeTackleBase {};
+class geb_OldGreenTackle : geb_LargeTackleBase {};
+class geb_OldBlueTackle : geb_LargeTackleBase {};
+class geb_OldPurpleTackle : geb_LargeTackleBase {};
+class geb_Tackle_Base : geb_LargeTackleBase {};
