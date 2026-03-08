@@ -81,6 +81,10 @@ class gebsfishTypes {
         fishItems.Insert("geb_LakeTroutFilletMeat");
         fishItems.Insert("geb_CutThroatTrout");
         fishItems.Insert("geb_CutThroatTroutFilletMeat");
+        fishItems.Insert("geb_HammerHeadShark");
+        fishItems.Insert("geb_HammerHeadSharkFilletMeat");
+        fishItems.Insert("geb_Sturgeon");
+        fishItems.Insert("geb_SturgeonFilletMeat");
         fishItems.Insert("geb_EuropeanCrayFish");
         fishItems.Insert("geb_SignalCrayFish");
         fishItems.Insert("geb_NorthernPike");

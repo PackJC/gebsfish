@@ -285,5 +285,4 @@ modded class ActionFishingNew: ActionContinuousBase {
             }
 		}
 	}
-
 }
