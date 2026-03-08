@@ -1,4 +1,4 @@
-class PrepareLeopardShark extends PrepareFish {
+class PrepareHammerHeadShark extends PrepareFish {
 	int ran;	
 	override void Init(){
 		super.Init();

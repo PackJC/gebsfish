@@ -113,6 +113,7 @@ class gebsfishConfig {
         //Save bugs config data to file
         Bugs = new array<ref BugEntry>();
         //Save fish config data to file
+
         Mackerel = new MackerelConf;
         Carp = new CarpConf;
         Sardines = new SardinesConf;
