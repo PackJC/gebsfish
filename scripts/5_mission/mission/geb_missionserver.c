@@ -25,7 +25,7 @@ modded class MissionServer
 			auto configParams = new Param1<gebsfishConfig>(GetGebSettingsConfig());
 			GebsfishLogger.Info("Sending Geb's Fishing config " + VERSION_GEBSFISH + " to Player: " + identity.GetName() + " RPC: ConfigSync", "RPC");
 			PlayerBase player = PlayerBase.Cast(identity.GetPlayer());
-			GetRPCManager().SendRPC("gebsfish", "ConfigSync", configParams, player);
+			GetRPCManager().SendRPC("gebsfish", "ConfigSync", configParams, true, identity, player);
 		}
 		
 	}

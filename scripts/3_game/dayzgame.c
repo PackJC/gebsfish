@@ -22,7 +22,9 @@ modded class DayZGame {
         if (!ctx.Read(data))
             return;
         
-        PlayerBase player = PlayerBase.Cast(target);
+        // Use Man instead of PlayerBase since Man is accessible from 3_Game module
+        // PlaySoundSet is available on Man/ManBase which PlayerBase extends
+        Man player = Man.Cast(target);
         if (!player)
             return;
         

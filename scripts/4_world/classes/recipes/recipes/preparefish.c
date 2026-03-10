@@ -158,7 +158,7 @@ modded class PrepareFish {
 						float distance = vector.Distance(triggeringPlayer.GetPosition(), nearbyPlayer.GetPosition());
 						if (distance <= m_gebsConfig.PredatorSettings.PredatorWarningSoundRadius) {    // Distance from triggering player
 							Param1<string> rpcData = new Param1<string>("PredatorWarning_SoundSet");
-							GetRPCManager().SendRPC("gebsfish", "PlayPredatorSound", rpcData, nearbyPlayer);
+							GetRPCManager().SendRPC("gebsfish", "PlayPredatorSound", rpcData, true, nearbyPlayer.GetIdentity(), nearbyPlayer);
 							if(m_gebsConfig.GeneralSettings.DebugLogs){
 								GebsfishLogger.Debug("Sent RPC to play sound for players within " + m_gebsConfig.PredatorSettings.PredatorWarningSoundRadius + " meters of " + triggeringPlayer.GetIdentity().GetName() + ": " + nearbyPlayer.GetIdentity().GetName() + ".", "PredatorSpawnPrepareRPC");
 							}
