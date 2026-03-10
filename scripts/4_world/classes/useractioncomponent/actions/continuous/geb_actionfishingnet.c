@@ -99,12 +99,18 @@ class ActionBambooFishingNet : ActionContinuousBase
 		return true;
 	}
 
-	override void OnFinishProgressServer( ActionData action_data )
-	{	
-		ItemBase bugs;
-		Class.CastTo(bugs, g_Game.CreateObjectEx("geb_FatHeadMinnow", action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
-		action_data.m_Player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
-	}
+override void OnFinishProgressServer( ActionData action_data )
+{
+	PlayerBase player = action_data.m_Player;
+	ItemBase net = action_data.m_MainItem;
+
+	g_Game.CreateObjectEx("geb_FatHeadMinnow", player.GetPosition(), ECE_PLACE_ON_SURFACE);
+
+	player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
+
+	if (net)
+		net.DecreaseHealth("", "", 5);
+}
 	
 	void SetDiggingAnimation( ItemBase item )
 	{
