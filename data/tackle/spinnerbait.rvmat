@@ -56,7 +56,7 @@ class Stage4
 };
 class Stage5
 {
-	texture="gebsfish\data\tools\spinnerbait_smdi.paa";
+	texture="gebsfish\data\tackle\spinnerbait_smdi.paa";
 	uvSource="tex";
 	class uvTransform
 	{

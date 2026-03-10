@@ -261,7 +261,7 @@ modded class ActionFishingNew: ActionContinuousBase {
 						float distance = vector.Distance(triggeringPlayer.GetPosition(), nearbyPlayer.GetPosition());
 						if (distance <= m_gebsConfig.PredatorSettings.PredatorWarningSoundRadius) {    // Distance from triggering player
 							Param1<string> rpcData = new Param1<string>("PredatorWarning_SoundSet");
-							nearbyPlayer.RPCSingleParam(GebsfishRPC.PLAYPREDATORSOUND, rpcData, true, nearbyPlayer.GetIdentity());
+							GetRPCManager().SendRPC("gebsfish", "PlayPredatorSound", rpcData, true, nearbyPlayer.GetIdentity(), nearbyPlayer);
 							if(m_gebsConfig.GeneralSettings.DebugLogs){
 								GebsfishLogger.Debug("Sent RPC to play sound for player within " + m_gebsConfig.PredatorSettings.PredatorWarningSoundRadius + " meters of " + triggeringPlayer.GetIdentity().GetName() + ": " + nearbyPlayer.GetIdentity().GetName(), "PredatorSpawnFishingRPC");
 							}
@@ -285,5 +285,4 @@ modded class ActionFishingNew: ActionContinuousBase {
             }
 		}
 	}
-
 }
