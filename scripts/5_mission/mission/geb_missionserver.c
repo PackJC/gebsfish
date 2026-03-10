@@ -7,9 +7,9 @@ modded class MissionServer
 			GebsfishLogger.Info("Version " + VERSION_GEBSFISH + " loaded successfully!", "MissionServer Init");
 		}
 
-		// Register RPCs with Community Framework
-		GetRPCManager().AddRPC("gebsfish", "ConfigSync", g_Game, SingleplayerExecutionType.Client);
-		GetRPCManager().AddRPC("gebsfish", "PlayPredatorSound", g_Game, SingleplayerExecutionType.Client);
+		// RPCs are now registered in DayZGame.DeferredInit() to ensure they're registered on both client and server
+		// GetRPCManager().AddRPC("gebsfish", "ConfigSync", g_Game, SingleplayerExecutionType.Client);
+		// GetRPCManager().AddRPC("gebsfish", "PlayPredatorSound", g_Game, SingleplayerExecutionType.Client);
 
 		gebsfishTypes fishTypesGenerator = new gebsfishTypes();
     	fishTypesGenerator.GenerateTypesXML();
