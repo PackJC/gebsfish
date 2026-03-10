@@ -14,48 +14,6 @@ modded class ActionFishingNew: ActionContinuousBase {
             {
                 TrySpawnPredator(fad);
 
-				// //Logging utils
-                // string gebcatchtype = fad.m_ContextData.GebGetCatchingResult();
-                // string gebcatchname = GetDisplayNameFromTypeName(gebcatchtype);
-				// string gebcatchitem = fad.m_MainItem.GetType();
-				// string gebcatchitemname = GetDisplayNameFromTypeName(gebcatchitem);
-				// string gebcatchmessage = "caught a " + gebcatchname + " with a " + gebcatchitemname;
-
-				// // Helper: safe display name (falls back to raw type or a fallback label)
-				// static string SafeDisplayNameFromType(string typeName, string fallback = "Unknown")
-				// {
-				// 	if (typeName == "" || typeName == string.Empty) return fallback;
-				// 	string dn = GetDisplayNameFromTypeName(typeName);
-				// 	return (dn != "" && dn != string.Empty) ? dn : typeName;
-				// }
-
-				// // --- Simplified message generation ---
-				// string gebcatchmessage = "caught nothing.";  // default on null/any failure
-
-				// if (fad && fad.m_ContextData) // guard everything
-				// {
-				// 	string catchType = fad.m_ContextData.GebGetCatchingResult();
-				// 	if (catchType != "" && catchType != string.Empty)
-				// 	{
-				// 		string catchName = SafeDisplayNameFromType(catchType);
-
-				// 		string toolType = (fad.m_MainItem) ? fad.m_MainItem.GetType() : "";
-				// 		string toolName = SafeDisplayNameFromType(toolType, "Unknown");
-
-				// 		gebcatchmessage = "caught a " + catchName + " with a " + toolName;
-				// 	}
-				// }
-
-				// if(m_gebsConfig.GeneralSettings.DebugLogs){
-				//	   GebsfishLogger.Debug("" + player.GetIdentity().GetName() + " " + gebcatchmessage, "PredatorSpawnFishing");   
-				// 	player.MessageImportant("You " + gebcatchmessage);
-                // }
-
-                // #ifdef ExtraLogs
-				// if(m_gebsConfig.CFToolsLogging.CatchLogs) {
-				// 	SendToCFTools(player, "", "", gebcatchmessage);
-				// }
-                // #endif
             }
             else if (Math.RandomFloat(0, 1) <= m_gebsConfig.PredatorSettings.PredatorSpawnChanceFailCatch) // 1% chance to spawn even on failure
             {   
