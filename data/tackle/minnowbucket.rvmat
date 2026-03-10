@@ -56,7 +56,7 @@ class Stage4
 };
 class Stage5
 {
-	texture="gebsfish\data\tools\minnowbucket_smdi.paa";
+	texture="gebsfish\data\tackle\minnowbucket_smdi.paa";
 	uvSource="tex";
 	class uvTransform
 	{

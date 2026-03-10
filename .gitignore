@@ -4,3 +4,5 @@
 *.bin
 *.vs
 .DS_Store
+/.rules
+/CF

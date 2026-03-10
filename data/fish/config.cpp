@@ -46,9 +46,6 @@ class cfgVehicles
 		displayName = "$STR_fish_bluejellyfish_fillet";
 		descriptionShort = "$STR_fish_bluejellyfish_desc";
 		model = "\dz\gear\food\mackerel_fillet.p3d";
-		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\jellyfishfillet.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
-		};
 	};
 
 	//Base classes for fish
@@ -474,7 +471,7 @@ class cfgVehicles
 		itemSize[] = {5,2};
 		weight = 1700;
 		hiddenSelections[] = {"zbytek"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\rainbowtrout.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\rainbowtrout_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\rainbowtrout.rvmat"};
 	};
 	class geb_BrookTrout: geb_Trout_Base {
@@ -515,7 +512,7 @@ class cfgVehicles
 		itemSize[] = {5,2};
 		weight = 1700;
 		hiddenSelections[] = {"zbytek"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\laketrout.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\laketrout_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\laketrout.rvmat"};
 	};
 	class geb_Sturgeon: geb_FreshFish_Base {

@@ -7,6 +7,10 @@ modded class MissionServer
 			GebsfishLogger.Info("Version " + VERSION_GEBSFISH + " loaded successfully!", "MissionServer Init");
 		}
 
+		// RPCs are now registered in DayZGame.DeferredInit() to ensure they're registered on both client and server
+		// GetRPCManager().AddRPC("gebsfish", "ConfigSync", g_Game, SingleplayerExecutionType.Client);
+		// GetRPCManager().AddRPC("gebsfish", "PlayPredatorSound", g_Game, SingleplayerExecutionType.Client);
+
 		gebsfishTypes fishTypesGenerator = new gebsfishTypes();
     	fishTypesGenerator.GenerateTypesXML();
 		gebsfishSpawnableTypes fishSpawnableTypesGenerator = new gebsfishSpawnableTypes();
@@ -19,9 +23,9 @@ modded class MissionServer
 		if(identity){
 			//if identity is valid, send config to player. 
 			auto configParams = new Param1<gebsfishConfig>(GetGebSettingsConfig());
-			GebsfishLogger.Info("Sending Geb's Fishing config " + VERSION_GEBSFISH + " to Player: " + identity.GetName() + " RPC: " + GebsfishRPC.CONFIGSYNC, "RPC");
+			GebsfishLogger.Info("Sending Geb's Fishing config " + VERSION_GEBSFISH + " to Player: " + identity.GetName() + " RPC: ConfigSync", "RPC");
 			PlayerBase player = PlayerBase.Cast(identity.GetPlayer());
-			g_Game.RPCSingleParam(player, GebsfishRPC.CONFIGSYNC, configParams, true, identity);
+			GetRPCManager().SendRPC("gebsfish", "ConfigSync", configParams, true, identity, player);
 		}
 		
 	}

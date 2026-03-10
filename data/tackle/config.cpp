@@ -402,7 +402,7 @@ class cfgVehicles
 		descriptionShort = "$STR_tools_tackle_desc";
 		model = "\gebsfish\data\tackle\oldtackle.p3d";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_old_greentackle.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\oldgreentackle.paa"};
 		rotationFlags = 17;
 		weight = 140;
 		itemSize[] = {3,2};
