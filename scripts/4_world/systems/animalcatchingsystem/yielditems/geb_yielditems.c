@@ -373,6 +373,21 @@ class geb_YieldLeopardShark : FishYieldItemBase
     }
 };
 
+class geb_YieldHammerHeadShark : FishYieldItemBase
+{
+    override void Init()
+    {
+        super.Init();
+		
+        // autoptr TFloatArray gebCycle = m_gebsConfig.LeopardShark.BiteSpeed;
+        // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+		m_QualityBase = m_gebsConfig.GeneralSettings.FishQuality;
+		m_Type = "geb_HammerHeadShark";
+		m_EnviroMask = m_gebsConfig.HammerHeadShark.Environment;
+		m_MethodMask = m_gebsConfig.HammerHeadShark.CatchMethod;
+    }
+};
+
 class geb_YieldPacificCod : FishYieldItemBase
 {
     override void Init()
@@ -434,6 +449,21 @@ class geb_YieldYellowFinTuna : FishYieldItemBase
 };
 
 //Freshwater
+class geb_YieldSturgeon : FishYieldItemBase
+{
+    override void Init()
+    {
+        super.Init();
+		
+        // autoptr TFloatArray gebCycle = m_gebsConfig.NorthernPike.BiteSpeed;
+        // m_HourlyCycleLengthCoefs = {gebCycle[0],gebCycle[1],gebCycle[2],gebCycle[3],gebCycle[4],gebCycle[5],gebCycle[6],gebCycle[7],gebCycle[8],gebCycle[9],gebCycle[10],gebCycle[11],gebCycle[12],gebCycle[13],gebCycle[14],gebCycle[15],gebCycle[16],gebCycle[17],gebCycle[18],gebCycle[19],gebCycle[20],gebCycle[21],gebCycle[22],gebCycle[23]};
+		m_QualityBase = m_gebsConfig.GeneralSettings.FishQuality;
+		m_Type = "geb_Sturgeon";
+		m_EnviroMask = m_gebsConfig.Sturgeon.Environment;
+		m_MethodMask = m_gebsConfig.Sturgeon.CatchMethod;
+    }
+};
+
 class geb_YieldNorthernPike : FishYieldItemBase
 {
     override void Init()
