@@ -14,7 +14,7 @@ modded class ActionDigWorms
 			string spawnType = "Worm";
 
 			if (Math.RandomFloat01() < grubChance)
-				spawnType = "Grub"; // replace with your real classname if different
+				spawnType = "geb_GrubWorm"; // replace with your real classname if different
 
 			GetGame().CreateObjectEx(spawnType, action_data.m_Target.GetCursorHitPos(), ECE_PLACE_ON_SURFACE);
 		}

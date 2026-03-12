@@ -70,6 +70,7 @@ modded class PluginRecipesManager
 		RegisterRecipe(new CraftBambooFishingNet);
 		RegisterRecipe(new RepairFishingPole);
 		RegisterRecipe(new CraftHookFromWire);
+		RegisterRecipe(new CraftHookFromBarbedWire);
 
 	}
 };
