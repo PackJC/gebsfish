@@ -58,7 +58,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase
 
         if (m_gebsConfig.GeneralSettings.DebugLogs)
 		{
-			GebsfishLogger.Debug("---------------------Starting New Fishing Session---------------------","GenerateResult")
+			GebsfishLogger.Debug("---------------------Starting New Fishing Session---------------------","GenerateResult");
 			GebsfishLogger.Debug("---Generating Fishing Result---","GenerateResult");
             GebsfishLogger.Debug("Random number rolled: " + idx, "GenerateResult");
             GebsfishLogger.Debug("Yield Item Selected: " + yItem, "GenerateResult");

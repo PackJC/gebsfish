@@ -1,67 +1,79 @@
-class CraftHookFromWire extends RecipeBase
-{
+class CraftHookFromMetalWire extends RecipeBase
+{	
 	override void Init()
 	{
-		m_Name = "#STR_tool_CraftHookFromWire";
-		m_IsInstaRecipe = false;
-		m_AnimationLength = 1;
-		m_Specialty = 0.0;
+		m_Name = "#STR_craftMetalWire";
+		m_IsInstaRecipe = false;//should this recipe be performed instantly without animation
+		m_AnimationLength = 1;//animation length in relative time units
+		m_Specialty = 0.01;// value > 0 for roughness, value < 0 for precision
+		
+		m_AnywhereInInventory = false;//is this recipe valid even when neither of the items is in hands
+		//conditions
+		m_MinDamageIngredient[0] = -1;//-1 = disable check
+		m_MaxDamageIngredient[0] = 3;//-1 = disable check
+		
+		m_MinQuantityIngredient[0] = -1;//-1 = disable check
+		m_MaxQuantityIngredient[0] = -1;//-1 = disable check
+		
+		m_MinDamageIngredient[1] = -1;//-1 = disable check
+		m_MaxDamageIngredient[1] = 3;//-1 = disable check
+		
+		m_MinQuantityIngredient[1] = -1;//-1 = disable check
+		m_MaxQuantityIngredient[1] = -1;//-1 = disable check
+		//----------------------------------------------------------------------------------------------------------------------
+		
+		//INGREDIENTS
+		//ingredient 1
+		InsertIngredient(0,"MetalWire");//you can insert multiple ingredients this way
+		
+		m_IngredientAddHealth[0] = 0;// 0 = do nothing
+		m_IngredientSetHealth[0] = -1; // -1 = do nothing
+		m_IngredientAddQuantity[0] = 0;// 0 = do nothing
+		m_IngredientDestroy[0] = true;//true = destroy, false = do nothing
+		m_IngredientUseSoftSkills[0] = false;// set 'true' to allow modification of the values by softskills on this ingredient
+		
+		//ingredient 2
+		InsertIngredient(1,"Pliers");
+		
+		m_IngredientAddHealth[1] = -0.5;// 0 = do nothing
+		m_IngredientSetHealth[1] = -1; // -1 = do nothing
+		m_IngredientAddQuantity[1] = 0;// 0 = do nothing
+		m_IngredientDestroy[1] = false;// false = do nothing
+		m_IngredientUseSoftSkills[1] = true;// set 'true' to allow modification of the values by softskills on this ingredient
+		//----------------------------------------------------------------------------------------------------------------------
+		
+		//result1
+		AddResult("Hook");//add results here
 
-		// Ingredient conditions
-		m_MinDamageIngredient[0] = -1;
-		m_MaxDamageIngredient[0] = 3; // pliers not ruined
-		m_MinQuantityIngredient[0] = -1;
-		m_MaxQuantityIngredient[0] = -1;
-
-		m_MinDamageIngredient[1] = -1;
-		m_MaxDamageIngredient[1] = 3; // wire not ruined
-		m_MinQuantityIngredient[1] = 3; // require at least 3 quantity on the wire
-		m_MaxQuantityIngredient[1] = -1;
-
-		// Ingredient 1 = Pliers
-		InsertIngredient(0, "Pliers");
-		m_IngredientAddHealth[0] = -5;   // damage pliers once per craft
-		m_IngredientSetHealth[0] = -1;
-		m_IngredientAddQuantity[0] = 0;
-		m_IngredientDestroy[0] = false;
-		m_IngredientUseSoftSkills[0] = false;
-
-		// Ingredient 2 = Metal Wire
-		InsertIngredient(1, "MetalWire");
-		m_IngredientAddHealth[1] = 0;
-		m_IngredientSetHealth[1] = -1;
-		m_IngredientAddQuantity[1] = -1; // consume 1 quantity per craft
-		m_IngredientDestroy[1] = false;
-		m_IngredientUseSoftSkills[1] = false;
-
-		// Result = Hook
-		AddResult("Hook");
-		m_ResultSetFullQuantity[0] = false;
-		m_ResultSetQuantity[0] = -1;
-		m_ResultSetHealth[0] = -1;
-		m_ResultInheritsHealth[0] = -1;
-		m_ResultInheritsColor[0] = -1;
-		m_ResultToInventory[0] = -1;
-		m_ResultUseSoftSkills[0] = false;
-		m_ResultReplacesIngredient[0] = -1;
+		m_ResultSetFullQuantity[0] = false;//true = set full quantity, false = do nothing
+		m_ResultSetQuantity[0] = 1;//-1 = do nothing
+		m_ResultSetHealth[0] = -1;//-1 = do nothing
+		m_ResultInheritsHealth[0] = 0;// (value) == -1 means do nothing; a (value) >= 0 means this result will inherit health from ingredient number (value);(value) == -2 means this result will inherit health from all ingredients averaged(result_health = combined_health_of_ingredients / number_of_ingredients)
+		m_ResultInheritsColor[0] = 0;// (value) == -1 means do nothing; a (value) >= 0 means this result classname will be a composite of the name provided in AddResult method and config value "color" of ingredient (value)
+		m_ResultToInventory[0] = -2;//(value) == -2 spawn result on the ground;(value) == -1 place anywhere in the players inventory, (value) >= 0 means switch position with ingredient number(value)
+		m_ResultUseSoftSkills[0] = false;// set 'true' to allow modification of the values by softskills on this result
+		m_ResultReplacesIngredient[0] = -1;// value == -1 means do nothing; a value >= 0 means this result will transfer item propertiesvariables, attachments etc.. from an ingredient value
+		
+		//----------------------------------------------------------------------------------------------------------------------
 	}
-
-	override bool CanDo(ItemBase ingredients[], PlayerBase player)
+	
+	override void Do(ItemBase ingredients[], PlayerBase player,array<ItemBase> results, float specialty_weight)//gets called upon recipe's completion
 	{
-		ItemBase wire = ingredients[1];
-		if (!wire)
-			return false;
-
-		return wire.GetQuantity() >= 3;
-	}
-
-	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight)
-	{
-		ItemBase hook = results[0];
-
-		if (hook)
+		// We will save the wire type for decrafting
+		MetalWire wire = MetalWire.Cast( results[0] );
+		if ( wire )
 		{
-			hook.SetHealth01("", "", 0.8);
+			int health = wire.GetHealthLevel();
+			health++;
+			wire.SetHealth01("","", 1 - 0.3*health);
 		}
 	}
-}
+	
+	override bool CanDo(ItemBase ingredients[], PlayerBase player)
+	{
+		if (ingredients[0] && ingredients[0].GetInventory().IsAttachment())
+			return false;
+		
+		return true;
+	}
+};
