@@ -34,20 +34,6 @@ class cfgVehicles
 	class MackerelFilletMeat;
 	class FoodAnimationSources;
 
-	//Obsolete classes
-	class geb_FatHeadMinnowFilletMeat: CarpFilletMeat {
-		scope = 2;
-		displayName = "$STR_fish_fatheadminnow_fillet";
-		descriptionShort = "$STR_fish_fatheadminnow_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
-	};
-	class geb_BlueJellyFishFilletMeat: MackerelFilletMeat {
-		scope = 2;
-		displayName = "$STR_fish_bluejellyfish_fillet";
-		descriptionShort = "$STR_fish_bluejellyfish_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
-	};
-
 	//Base classes for fish
 	class geb_FreshFish_Base: Edible_Base {
 		scope = 0;
@@ -285,11 +271,223 @@ class cfgVehicles
 			};
 		};
 	};
+
     class geb_Trout_Base: geb_FreshFish_Base {
 		scope = 0;
 		model = "\gebsfish\data\fish\geb_Trout_Base.p3d";
 	};
+
+	class geb_FreshWater_Fillet_Lean: CarpFilletMeat
+	{
+		class Food: Food
+		{
+			class FoodStages: FoodStages
+			{
+				class Raw: Raw
+				{
+					nutrition_properties[] = {1, 55, 55, 1, 0};
+				};
+				class Baked: Baked
+				{
+					nutrition_properties[] = {1, 75, 20, 1, 0};
+				};
+				class Boiled: Boiled
+				{
+					nutrition_properties[] = {1, 65, 70, 1, 0};
+				};
+				class Dried: Dried
+				{
+					nutrition_properties[] = {1, 95, 10, 1, 0};
+				};
+				class Burned: Burned
+				{
+					nutrition_properties[] = {1, 20, 0, 1, 0};
+				};
+			};
+		};
+	};
+
+	class geb_FreshWater_Fillet_Medium: CarpFilletMeat
+	{
+		class Food: Food
+		{
+			class FoodStages: FoodStages
+			{
+				class Raw: Raw
+				{
+					nutrition_properties[] = {1, 65, 60, 1, 0};
+				};
+				class Baked: Baked
+				{
+					nutrition_properties[] = {1, 90, 20, 1, 0};
+				};
+				class Boiled: Boiled
+				{
+					nutrition_properties[] = {1, 75, 75, 1, 0};
+				};
+				class Dried: Dried
+				{
+					nutrition_properties[] = {1, 110, 10, 1, 0};
+				};
+				class Burned: Burned
+				{
+					nutrition_properties[] = {1, 20, 0, 1, 0};
+				};
+			};
+		};
+	};
+
+	class geb_FreshWater_Fillet_Heavy: CarpFilletMeat
+	{
+		class Food: Food
+		{
+			class FoodStages: FoodStages
+			{
+				class Raw: Raw
+				{
+					nutrition_properties[] = {1, 80, 65, 1, 0};
+				};
+				class Baked: Baked
+				{
+					nutrition_properties[] = {1, 110, 22, 1, 0};
+				};
+				class Boiled: Boiled
+				{
+					nutrition_properties[] = {1, 90, 80, 1, 0};
+				};
+				class Dried: Dried
+				{
+					nutrition_properties[] = {1, 130, 10, 1, 0};
+				};
+				class Burned: Burned
+				{
+					nutrition_properties[] = {1, 20, 0, 1, 0};
+				};
+			};
+		};
+	};
+
+	class geb_SaltWater_Fillet_Lean: MackerelFilletMeat
+	{
+		class Food: Food
+		{
+			class FoodStages: FoodStages
+			{
+				class Raw: Raw
+				{
+					nutrition_properties[] = {1, 60, 55, 1, 0};
+				};
+				class Baked: Baked
+				{
+					nutrition_properties[] = {1, 85, 20, 1, 0};
+				};
+				class Boiled: Boiled
+				{
+					nutrition_properties[] = {1, 70, 75, 1, 0};
+				};
+				class Dried: Dried
+				{
+					nutrition_properties[] = {1, 105, 10, 1, 0};
+				};
+				class Burned: Burned
+				{
+					nutrition_properties[] = {1, 20, 0, 1, 0};
+				};
+			};
+		};
+	};
+
+	class geb_SaltWater_Fillet_Medium: MackerelFilletMeat
+	{
+		class Food: Food
+		{
+			class FoodStages: FoodStages
+			{
+				class Raw: Raw
+				{
+					nutrition_properties[] = {1, 75, 60, 1, 0};
+				};
+				class Baked: Baked
+				{
+					nutrition_properties[] = {1, 100, 20, 1, 0};
+				};
+				class Boiled: Boiled
+				{
+					nutrition_properties[] = {1, 85, 75, 1, 0};
+				};
+				class Dried: Dried
+				{
+					nutrition_properties[] = {1, 120, 10, 1, 0};
+				};
+				class Burned: Burned
+				{
+					nutrition_properties[] = {1, 20, 0, 1, 0};
+				};
+			};
+		};
+	};
+
+	class geb_SaltWater_Fillet_Fatty: MackerelFilletMeat
+	{
+		class Food: Food
+		{
+			class FoodStages: FoodStages
+			{
+				class Raw: Raw
+				{
+					nutrition_properties[] = {1, 95, 65, 1, 0};
+				};
+				class Baked: Baked
+				{
+					nutrition_properties[] = {1, 125, 22, 1, 0};
+				};
+				class Boiled: Boiled
+				{
+					nutrition_properties[] = {1, 100, 80, 1, 0};
+				};
+				class Dried: Dried
+				{
+					nutrition_properties[] = {1, 145, 10, 1, 0};
+				};
+				class Burned: Burned
+				{
+					nutrition_properties[] = {1, 20, 0, 1, 0};
+				};
+			};
+		};
+	};
+
+	class geb_SaltWater_Fillet_Predator: MackerelFilletMeat
+	{
+		class Food: Food
+		{
+			class FoodStages: FoodStages
+			{
+				class Raw: Raw
+				{
+					nutrition_properties[] = {1, 115, 70, 1, 0};
+				};
+				class Baked: Baked
+				{
+					nutrition_properties[] = {1, 145, 22, 1, 0};
+				};
+				class Boiled: Boiled
+				{
+					nutrition_properties[] = {1, 120, 85, 1, 0};
+				};
+				class Dried: Dried
+				{
+					nutrition_properties[] = {1, 165, 10, 1, 0};
+				};
+				class Burned: Burned
+				{
+					nutrition_properties[] = {1, 20, 0, 1, 0};
+				};
+			};
+		};
+	};
 	
+
 	/*
 
 		FISH
@@ -818,8 +1016,9 @@ class cfgVehicles
 		itemSize[] = {1,2};
 		weight = 200;
 	};
+
 	//Freshwater Fish Fillets
-	class geb_BlueGillFilletMeat: CarpFilletMeat {
+	class geb_BlueGillFilletMeat: geb_FreshWater_Fillet_Lean {
 		scope = 2;
 		displayName = "$STR_fish_bluegill_fillet";
 		descriptionShort = "$STR_fish_bluegill_desc";
@@ -828,7 +1027,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\bluegill_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_BlackBassFilletMeat: CarpFilletMeat {
+	class geb_BlackBassFilletMeat: geb_FreshWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_blackbass_fillet";
 		descriptionShort = "$STR_fish_blackbass_desc";
@@ -837,7 +1036,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\blackbass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_SmallMouthBassFilletMeat: CarpFilletMeat {
+	class geb_SmallMouthBassFilletMeat: geb_FreshWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_Smallmouthbass_fillet";
 		descriptionShort = "$STR_fish_Smallmouthbass_desc";
@@ -846,7 +1045,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\smallmouthbass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_WallEyeFilletMeat: CarpFilletMeat {
+	class geb_WallEyeFilletMeat: geb_FreshWater_Fillet_Lean {
 		scope = 2;
 		displayName = "$STR_fish_walleye_fillet";
 		descriptionShort = "$STR_fish_walleye_desc";
@@ -855,7 +1054,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\walleye_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_SunFishFilletMeat: CarpFilletMeat {
+	class geb_SunFishFilletMeat: geb_FreshWater_Fillet_Lean {
 		scope = 2;
 		displayName = "$STR_fish_sunfish_fillet";
 		descriptionShort = "$STR_fish_sunfish_desc";
@@ -864,7 +1063,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\sunfish_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_FlatHeadCatFishFilletMeat: CarpFilletMeat {
+	class geb_FlatHeadCatFishFilletMeat: geb_FreshWater_Fillet_Heavy {
 		scope = 2;
 		displayName = "$STR_fish_flatheadcatfish_fillet";
 		descriptionShort = "$STR_fish_flatheadcatfish_desc";
@@ -873,7 +1072,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\flatheadcatfish_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_LargeMouthBassFilletMeat: CarpFilletMeat {
+	class geb_LargeMouthBassFilletMeat: geb_FreshWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_largemouthbass_fillet";
 		descriptionShort = "$STR_fish_largemouthbass_desc";
@@ -882,7 +1081,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\largemouthbass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_NorthernPikeFilletMeat: CarpFilletMeat {
+	class geb_NorthernPikeFilletMeat: geb_FreshWater_Fillet_Heavy {
 		scope = 2;
 		displayName = "$STR_fish_northernpike_fillet";
 		descriptionShort = "$STR_fish_northernpike_desc";
@@ -891,7 +1090,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\northernpike_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_YellowPerchFilletMeat: CarpFilletMeat {
+	class geb_YellowPerchFilletMeat: geb_FreshWater_Fillet_Lean {
 		scope = 2;
 		displayName = "$STR_fish_yellowperch_fillet";
 		descriptionShort = "$STR_fish_yellowperch_desc";
@@ -900,7 +1099,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\perch_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_SaugerFilletMeat: CarpFilletMeat {
+	class geb_SaugerFilletMeat: geb_FreshWater_Fillet_Lean {
 		scope = 2;
 		displayName = "$STR_fish_sauger_fillet";
 		descriptionShort = "$STR_fish_sauger_desc";
@@ -909,7 +1108,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\sauger_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_RainbowTroutFilletMeat: CarpFilletMeat {
+	class geb_RainbowTroutFilletMeat: geb_FreshWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_rainbowtrout_fillet";
 		descriptionShort = "$STR_fish_rainbowtrout_desc";
@@ -918,7 +1117,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\rainbowtrout_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_BrownTroutFilletMeat: CarpFilletMeat {
+	class geb_BrownTroutFilletMeat: geb_FreshWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_browntrout_fillet";
 		descriptionShort = "$STR_fish_browntrout_desc";
@@ -928,7 +1127,7 @@ class cfgVehicles
 		};
 
 	};
-	class geb_BrookTroutFilletMeat: CarpFilletMeat {
+	class geb_BrookTroutFilletMeat: geb_FreshWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_brooktrout_fillet";
 		descriptionShort = "$STR_fish_brooktrout_desc";
@@ -938,7 +1137,7 @@ class cfgVehicles
 		};
 
 	};
-	class geb_CutThroatTroutFilletMeat: CarpFilletMeat {
+	class geb_CutThroatTroutFilletMeat: geb_FreshWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_cuthroattrout_fillet";
 		descriptionShort = "$STR_fish_cutthroattrout_desc";
@@ -947,7 +1146,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\cutthroattrout_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_LakeTroutFilletMeat: CarpFilletMeat {
+	class geb_LakeTroutFilletMeat: geb_FreshWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_laketrout_fillet";
 		descriptionShort = "$STR_fish_laketrout_desc";
@@ -956,7 +1155,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\laketrout_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_SturgeonFilletMeat: CarpFilletMeat {
+	class geb_SturgeonFilletMeat: geb_FreshWater_Fillet_Heavy {
 		scope = 2;
 		displayName = "$STR_fish_sturgeon_fillet";
 		descriptionShort = "$STR_fish_sturgeon_desc";
@@ -965,7 +1164,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\sturgeon_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_WhiteBassFilletMeat: CarpFilletMeat {
+	class geb_WhiteBassFilletMeat: geb_FreshWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_whitebass_fillet";
 		descriptionShort = "$STR_fish_whitebass_desc";
@@ -974,7 +1173,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\whitebass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_BowFinFilletMeat: CarpFilletMeat {
+	class geb_BowFinFilletMeat: geb_FreshWater_Fillet_Heavy {
 		scope = 2;
 		displayName = "$STR_fish_bowfin_fillet";
 		descriptionShort = "$STR_fish_bowfin_desc";
@@ -983,7 +1182,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\bowfin_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_SlimySculpinFilletMeat: CarpFilletMeat {
+	class geb_SlimySculpinFilletMeat: geb_FreshWater_Fillet_Lean {
 		scope = 2;
 		displayName = "$STR_fish_slimysculpin_fillet";
 		descriptionShort = "$STR_fish_slimysculpin_desc";
@@ -994,7 +1193,7 @@ class cfgVehicles
 	};
 
 	//Saltwater Fish fillets
-	class geb_AngelFishFilletMeat: MackerelFilletMeat {
+	class geb_AngelFishFilletMeat: geb_SaltWater_Fillet_Lean {
 		scope = 2;
 		displayName = "$STR_fish_angelfish_fillet";
 		descriptionShort = "$STR_fish_angelfish_desc";
@@ -1003,7 +1202,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\angelfish_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_AsianSeaBassFilletMeat: MackerelFilletMeat {
+	class geb_AsianSeaBassFilletMeat: geb_SaltWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_asianseabass_fillet";
 		descriptionShort = "$STR_fish_asianseabass_desc";
@@ -1012,7 +1211,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\asianseabass_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_AtlanticBlueMarlinFilletMeat: MackerelFilletMeat {
+	class geb_AtlanticBlueMarlinFilletMeat: geb_SaltWater_Fillet_Predator{
 		scope = 2;
 		displayName = "$STR_fish_atlanticbluemarlin_fillet";
 		descriptionShort = "$STR_fish_atlanticbluemarlin_desc";
@@ -1021,7 +1220,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\bluemarlin_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_AtlanticSailFishFilletMeat: MackerelFilletMeat {
+	class geb_AtlanticSailFishFilletMeat: geb_SaltWater_Fillet_Predator{
 		scope = 2;
 		displayName = "$STR_fish_atlanticsailfish_fillet";
 		descriptionShort = "$STR_fish_atlanticsailfish_desc";
@@ -1030,7 +1229,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\bluemarlin_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_MahiMahiFilletMeat: MackerelFilletMeat {
+	class geb_MahiMahiFilletMeat: geb_SaltWater_Fillet_Fatty{
 		scope = 2;
 		displayName = "$STR_fish_mahimahi_fillet";
 		descriptionShort = "$STR_fish_mahimahi_desc";
@@ -1039,7 +1238,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\mahimahi_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_BonitaFilletMeat: MackerelFilletMeat {
+	class geb_BonitaFilletMeat: geb_SaltWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_bonita_fillet";
 		descriptionShort = "$STR_fish_bonita_desc";
@@ -1048,7 +1247,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\bonita_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_CherrySalmonFilletMeat: MackerelFilletMeat {
+	class geb_CherrySalmonFilletMeat: geb_SaltWater_Fillet_Fatty{
 		scope = 2;
 		displayName = "$STR_fish_cherrysalmon_fillet";
 		descriptionShort = "$STR_fish_cherrysalmon_desc";
@@ -1057,7 +1256,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\cherrysalmon_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_SockEyeSalmonFilletMeat: MackerelFilletMeat {
+	class geb_SockEyeSalmonFilletMeat: geb_SaltWater_Fillet_Fatty{
 		scope = 2;
 		displayName = "$STR_fish_sockeyesalmon_fillet";
 		descriptionShort = "$STR_fish_sockeyesalmon_desc";
@@ -1066,7 +1265,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\sockeyesalmon_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_ChinookSalmonFilletMeat: MackerelFilletMeat {
+	class geb_ChinookSalmonFilletMeat: geb_SaltWater_Fillet_Fatty{
 		scope = 2;
 		displayName = "$STR_fish_chinooksalmon_fillet";
 		descriptionShort = "$STR_fish_chinooksalmon_desc";
@@ -1075,7 +1274,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\chinooksalmon_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_FlatHeadMulletFilletMeat: MackerelFilletMeat {
+	class geb_FlatHeadMulletFilletMeat: geb_SaltWater_Fillet_Lean {
 		scope = 2;
 		displayName = "$STR_fish_flatheadmullet_fillet";
 		descriptionShort = "$STR_fish_flatheadmullet_desc";
@@ -1084,7 +1283,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\flatheadmullet_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_LeopardSharkFilletMeat: MackerelFilletMeat {
+	class geb_LeopardSharkFilletMeat: geb_SaltWater_Fillet_Predator{
 		scope = 2;
 		displayName = "$STR_fish_leopardshark_fillet";
 		descriptionShort = "$STR_fish_leopardshark_desc";
@@ -1093,7 +1292,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\leopardshark_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_HammerHeadSharkFilletMeat: MackerelFilletMeat {
+	class geb_HammerHeadSharkFilletMeat: geb_SaltWater_Fillet_Predator{
 		scope = 2;
 		displayName = "$STR_fish_hammerheadshark_fillet";
 		descriptionShort = "$STR_fish_hammerheadshark_desc";
@@ -1102,7 +1301,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\hammerheadshark_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_PacificCodFilletMeat: MackerelFilletMeat {
+	class geb_PacificCodFilletMeat: geb_SaltWater_Fillet_Lean {
 		scope = 2;
 		displayName = "$STR_fish_pacificcod_fillet";
 		descriptionShort = "$STR_fish_pacificcod_desc";
@@ -1111,7 +1310,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\pacificcod_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_RedHeadCichlidFilletMeat: MackerelFilletMeat {
+	class geb_RedHeadCichlidFilletMeat: geb_SaltWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_redheadcichlid_fillet";
 		descriptionShort = "$STR_fish_redheadcichlid_desc";
@@ -1120,7 +1319,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\redheadcichlid_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_RoughNeckRockFilletMeat: MackerelFilletMeat {
+	class geb_RoughNeckRockFilletMeat: geb_SaltWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_roughneckrock_fillet";
 		descriptionShort = "$STR_fish_roughneckrock_desc";
@@ -1129,7 +1328,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\roughneckrock_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_SeverumFilletMeat: MackerelFilletMeat {
+	class geb_SeverumFilletMeat: geb_SaltWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_severum_fillet";
 		descriptionShort = "$STR_fish_severum_desc";
@@ -1139,7 +1338,7 @@ class cfgVehicles
 		};
 	};
 
-	class geb_BlueTangFilletMeat: MackerelFilletMeat {
+	class geb_BlueTangFilletMeat: geb_SaltWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_bluetang_fillet";
 		descriptionShort = "$STR_fish_bluetang_desc";
@@ -1148,7 +1347,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\bluetang_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_LargeHeadHairTailFishFilletMeat: MackerelFilletMeat {
+	class geb_LargeHeadHairTailFishFilletMeat: geb_SaltWater_Fillet_Lean {
 		scope = 2;
 		displayName = "$STR_fish_largeheadhairtailfish_fillet";
 		descriptionShort = "$STR_fish_largeheadhairtailfish_desc";
@@ -1157,7 +1356,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\hairtailfish_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_HumpHeadWrasseFilletMeat: MackerelFilletMeat {
+	class geb_HumpHeadWrasseFilletMeat: geb_SaltWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_humpheadwrasse_fillet";
 		descriptionShort = "$STR_fish_humpheadwrasse_desc";
@@ -1166,7 +1365,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\humpheadwrasse_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_SiameseTigerFishFilletMeat: MackerelFilletMeat {
+	class geb_SiameseTigerFishFilletMeat: geb_SaltWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_siamesetigerfish_fillet";
 		descriptionShort = "$STR_fish_siamesetigerfish_desc";
@@ -1175,7 +1374,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\siamesetigerfish_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_GreatWhiteSharkFilletMeat: MackerelFilletMeat {
+	class geb_GreatWhiteSharkFilletMeat: geb_SaltWater_Fillet_Predator{
 		scope = 2;
 		displayName = "$STR_fish_greatwhiteshark_fillet";
 		descriptionShort = "$STR_fish_greatwhiteshark_desc";
@@ -1184,7 +1383,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\greatwhiteshark_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_AngelSharkFilletMeat: MackerelFilletMeat {
+	class geb_AngelSharkFilletMeat: geb_SaltWater_Fillet_Predator{
 		scope = 2;
 		displayName = "$STR_fish_angelshark_fillet";
 		descriptionShort = "$STR_fish_angelshark_desc";
@@ -1193,7 +1392,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\angelshark_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_YellowFinTunaFilletMeat: MackerelFilletMeat {
+	class geb_YellowFinTunaFilletMeat: geb_SaltWater_Fillet_Fatty{
 		scope = 2;
 		displayName = "$STR_fish_yellowfintuna_fillet";
 		descriptionShort = "$STR_fish_yellowfintuna_desc";
@@ -1212,6 +1411,32 @@ class cfgVehicles
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\kingcrab.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
+		class Food: Food
+		{
+			class FoodStages: FoodStages
+			{
+				class Raw: Raw
+				{
+					nutrition_properties[] = {1,95,68,1,0};
+				};
+				class Baked: Baked
+				{
+					nutrition_properties[] = {1,120,22,1,0};
+				};
+				class Boiled: Boiled
+				{
+					nutrition_properties[] = {1,100,82,1,0};
+				};
+				class Dried: Dried
+				{
+					nutrition_properties[] = {1,135,10,1,0};
+				};
+				class Burned: Burned
+				{
+					nutrition_properties[] = {1,20,0,1,0};
+				};
+			};
+		};
 	};
 	class geb_SnowCrabLegs: MackerelFilletMeat {
 		scope = 2;
@@ -1220,6 +1445,32 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\snowcrablegs.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\kingcrab.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
+		};
+		class Food: Food
+		{
+			class FoodStages: FoodStages
+			{
+				class Raw: Raw
+				{
+					nutrition_properties[] = {1,78,64,1,0};
+				};
+				class Baked: Baked
+				{
+					nutrition_properties[] = {1,100,22,1,0};
+				};
+				class Boiled: Boiled
+				{
+					nutrition_properties[] = {1,86,80,1,0};
+				};
+				class Dried: Dried
+				{
+					nutrition_properties[] = {1,118,10,1,0};
+				};
+				class Burned: Burned
+				{
+					nutrition_properties[] = {1,20,0,1,0};
+				};
+			};
 		};
 	};
 	class geb_AmericanLobsterTail : MackerelFilletMeat {
@@ -1231,6 +1482,32 @@ class cfgVehicles
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\americanlobsterclaw_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\americanlobsterclaw.rvmat"};
 		itemSize[] = {1,3};
+		class Food: Food
+		{
+			class FoodStages: FoodStages
+			{
+				class Raw: Raw
+				{
+					nutrition_properties[] = {1,105,70,1,0};
+				};
+				class Baked: Baked
+				{
+					nutrition_properties[] = {1,130,22,1,0};
+				};
+				class Boiled: Boiled
+				{
+					nutrition_properties[] = {1,108,84,1,0};
+				};
+				class Dried: Dried
+				{
+					nutrition_properties[] = {1,145,10,1,0};
+				};
+				class Burned: Burned
+				{
+					nutrition_properties[] = {1,20,0,1,0};
+				};
+			};
+		};
 	};
 	class geb_EuropeanLobsterTail : MackerelFilletMeat {
 		scope = 2;
@@ -1241,6 +1518,32 @@ class cfgVehicles
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobstertail_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\europeanlobstertail.rvmat"};
 		itemSize[] = {1,3};
+		class Food: Food
+		{
+			class FoodStages: FoodStages
+			{
+				class Raw: Raw
+				{
+					nutrition_properties[] = {1,92,68,1,0};
+				};
+				class Baked: Baked
+				{
+					nutrition_properties[] = {1,116,22,1,0};
+				};
+				class Boiled: Boiled
+				{
+					nutrition_properties[] = {1,98,82,1,0};
+				};
+				class Dried: Dried
+				{
+					nutrition_properties[] = {1,132,10,1,0};
+				};
+				class Burned: Burned
+				{
+					nutrition_properties[] = {1,20,0,1,0};
+				};
+			};
+		};
 	};	
 	class geb_AmericanLobsterClaw : MackerelFilletMeat {
 		scope = 2;
@@ -1251,6 +1554,32 @@ class cfgVehicles
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\americanlobsterclaw_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\americanlobsterclaw.rvmat"};
 		itemSize[] = {2,2};
+		class Food: Food
+		{
+			class FoodStages: FoodStages
+			{
+				class Raw: Raw
+				{
+					nutrition_properties[] = {1,84,66,1,0};
+				};
+				class Baked: Baked
+				{
+					nutrition_properties[] = {1,106,22,1,0};
+				};
+				class Boiled: Boiled
+				{
+					nutrition_properties[] = {1,90,80,1,0};
+				};
+				class Dried: Dried
+				{
+					nutrition_properties[] = {1,122,10,1,0};
+				};
+				class Burned: Burned
+				{
+					nutrition_properties[] = {1,20,0,1,0};
+				};
+			};
+		};
 	};
 	class geb_EuropeanLobsterClaw : MackerelFilletMeat {
 		scope = 2;
@@ -1261,7 +1590,32 @@ class cfgVehicles
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobsterclaw_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\europeanlobsterclaw.rvmat"};
 		itemSize[] = {2,2};
-
+		class Food: Food
+		{
+			class FoodStages: FoodStages
+			{
+				class Raw: Raw
+				{
+					nutrition_properties[] = {1,74,64,1,0};
+				};
+				class Baked: Baked
+				{
+					nutrition_properties[] = {1,96,22,1,0};
+				};
+				class Boiled: Boiled
+				{
+					nutrition_properties[] = {1,82,78,1,0};
+				};
+				class Dried: Dried
+				{
+					nutrition_properties[] = {1,112,10,1,0};
+				};
+				class Burned: Burned
+				{
+					nutrition_properties[] = {1,20,0,1,0};
+				};
+			};
+		};
 	};
 };
 	
