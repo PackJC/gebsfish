@@ -1,8 +1,8 @@
-class CraftHookFromMetalWire extends RecipeBase
+class CraftHookFromWire extends RecipeBase
 {	
 	override void Init()
 	{
-		m_Name = "#STR_craftMetalWire";
+		m_Name = "#STR_craftMetalHook";
 		m_IsInstaRecipe = false;//should this recipe be performed instantly without animation
 		m_AnimationLength = 1;//animation length in relative time units
 		m_Specialty = 0.01;// value > 0 for roughness, value < 0 for precision
@@ -25,7 +25,8 @@ class CraftHookFromMetalWire extends RecipeBase
 		//INGREDIENTS
 		//ingredient 1
 		InsertIngredient(0,"MetalWire");//you can insert multiple ingredients this way
-		
+		InsertIngredient(0,"BarbedWire");//you can insert multiple ingredients this way
+
 		m_IngredientAddHealth[0] = 0;// 0 = do nothing
 		m_IngredientSetHealth[0] = -1; // -1 = do nothing
 		m_IngredientAddQuantity[0] = 0;// 0 = do nothing
