@@ -33,6 +33,13 @@ class cfgVehicles
 	class CarpFilletMeat;
 	class MackerelFilletMeat;
 	class FoodAnimationSources;
+	class Food;
+	class FoodStages;
+	class Raw;
+	class Baked;
+	class Boiled;
+	class Dried;
+	class Burned;
 
 	//Base classes for fish
 	class geb_FreshFish_Base: Edible_Base {
