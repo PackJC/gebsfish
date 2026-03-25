@@ -7,6 +7,7 @@
   Contributions welcome via github
 
 */
+
 modded class geb_BambooFishingNet extends Container_Base
 {
 	override bool IsContainer()

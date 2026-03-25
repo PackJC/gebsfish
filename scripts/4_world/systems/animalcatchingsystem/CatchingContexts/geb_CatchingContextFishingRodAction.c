@@ -1,8 +1,8 @@
-//added file only for debugging. Remove code in future. 
+//added file only for debugging. Remove code in future.
+//Can we remove this for 1.29? Cole - 3/25/26
 
 modded class CatchingContextFishingRodAction : CatchingContextFishingBase
 {
-    
     override void InitCatchingItemData()
 	{
 		super.InitCatchingItemData();

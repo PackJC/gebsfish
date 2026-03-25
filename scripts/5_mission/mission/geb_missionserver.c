@@ -27,7 +27,6 @@ modded class MissionServer
 			PlayerBase player = PlayerBase.Cast(identity.GetPlayer());
 			GetRPCManager().SendRPC("gebsfish", "ConfigSync", configParams, true, identity, player);
 		}
-		
 	}
 
 	override void OnGameplayDataHandlerLoad() {
@@ -121,7 +120,6 @@ modded class MissionServer
         {
             return typeName; // Fallback to type name if no display name is found
         }
-
         return displayName;
     }
 }
