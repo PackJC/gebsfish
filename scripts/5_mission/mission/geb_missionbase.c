@@ -26,11 +26,10 @@ modded class MissionBase{ //Original
 				//start loading fish data
 				GebsfishLogger.Info("Adding fish to the yield data.", "MissionBase");
 
-				//fishies
+				//Fish
 				bank.RegisterYieldItem(new geb_YieldCarp(m_gebsConfig.Carp.CatchProbability));
 
 				bank.RegisterYieldItem(new geb_YieldMackerel(m_gebsConfig.Mackerel.CatchProbability));
-
 
 				bank.RegisterYieldItem(new geb_YieldSardines(m_gebsConfig.Sardines.CatchProbability));
 
