@@ -578,7 +578,7 @@ class cfgVehicles
                 class Rotten
                 {
                     visual_properties[]={-1, -1, 5};
-                    nutrition_properties[]={10, 5, 8, 1, 0, "4 + 		  16", 1, 16};
+                    nutrition_properties[]={10, 5, 8, 1, 0, 20, 1, 16};
                     cooking_properties[]={0, 0};
                 };
                 class Baked
