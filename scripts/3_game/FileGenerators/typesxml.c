@@ -81,7 +81,7 @@ class gebsfishTypes
     protected void EnsureDirectoryExists()
     {
         MakeDirectory("$profile:Gebs");
-        MakeDirectory("$profile:Gebs/extras");
+        MakeDirectory("$profile:Gebs/Extras");
         MakeDirectory(DIRECTORY_PATH);
     }
 
@@ -161,12 +161,8 @@ class gebsfishTypes
         fishItems.Insert("geb_BonitaFilletMeat");
         fishItems.Insert("geb_CherrySalmon");
         fishItems.Insert("geb_CherrySalmonFilletMeat");
-
-        // Fixed probable classname typo from original file:
-        // original had "geb_FlatHeadmullet"
         fishItems.Insert("geb_FlatHeadMullet");
         fishItems.Insert("geb_FlatHeadMulletFilletMeat");
-
         fishItems.Insert("geb_LeopardShark");
         fishItems.Insert("geb_LeopardSharkFilletMeat");
         fishItems.Insert("geb_PacificCod");
