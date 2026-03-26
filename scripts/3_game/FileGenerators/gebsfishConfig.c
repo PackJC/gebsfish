@@ -22,7 +22,6 @@ class gebsfishConfig
     void gebsfishConfig()
     {
         // Intentionally empty.
-        // Initialization is done explicitly so load / reset flow stays predictable.
     }
 
     protected string GetConfigPath()
@@ -59,7 +58,7 @@ class gebsfishConfig
         Save();
     }
 
-    protected void InitializeBaseObjects()
+    void InitializeBaseObjects()
     {
         GeneralSettings = new GenSetConf;
         CFToolsLogging = new LogConf;

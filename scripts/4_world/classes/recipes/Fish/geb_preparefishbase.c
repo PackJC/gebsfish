@@ -116,7 +116,7 @@ class PrepareBowFin extends GebPrepareFishBase
 	}
 };
 
-modded class PrepareBrookTrout extends GebPrepareFishBase
+class PrepareBrookTrout extends GebPrepareFishBase
 {
 	override void Init()
 	{
@@ -135,7 +135,7 @@ modded class PrepareBrookTrout extends GebPrepareFishBase
 	}
 };
 
-modded class PrepareBrownTrout extends GebPrepareFishBase
+class PrepareBrownTrout extends GebPrepareFishBase
 {
 	override void Init()
 	{
@@ -192,7 +192,7 @@ modded class PrepareCarp extends PrepareFish
 	}
 };
 
-modded class PrepareCherrySalmon extends GebPrepareFishBase
+class PrepareCherrySalmon extends GebPrepareFishBase
 {
 	override void Init()
 	{
@@ -211,7 +211,7 @@ modded class PrepareCherrySalmon extends GebPrepareFishBase
 	}
 };
 
-modded class PrepareChinookSalmon extends GebPrepareFishBase
+class PrepareChinookSalmon extends GebPrepareFishBase
 {
 	override void Init()
 	{
@@ -230,7 +230,7 @@ modded class PrepareChinookSalmon extends GebPrepareFishBase
 	}
 };
 
-modded class PrepareCutThroatTrout extends GebPrepareFishBase
+class PrepareCutThroatTrout extends GebPrepareFishBase
 {
 	override void Init()
 	{
@@ -285,7 +285,7 @@ class PrepareNorthernPike extends GebPrepareFishBase
 	}
 };
 
-modded class PrepareRainbowTrout extends GebPrepareFishBase
+class PrepareRainbowTrout extends GebPrepareFishBase
 {
 	override void Init()
 	{
@@ -331,7 +331,7 @@ class PrepareSmallMouthBass extends GebPrepareFishBase
 	}
 };
 
-modded class PrepareSockEyeSalmon extends GebPrepareFishBase
+class PrepareSockEyeSalmon extends GebPrepareFishBase
 {
 	override void Init()
 	{
