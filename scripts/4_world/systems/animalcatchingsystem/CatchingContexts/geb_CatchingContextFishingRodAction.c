@@ -1,8 +1,8 @@
-//added file only for debugging. Remove code in future. 
+//added file only for debugging. Remove code in future.
+//Can we remove this for 1.29? Cole - 3/25/26
 
 modded class CatchingContextFishingRodAction : CatchingContextFishingBase
 {
-    
     override void InitCatchingItemData()
 	{
 		super.InitCatchingItemData();
@@ -58,7 +58,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase
 
         if (m_gebsConfig.GeneralSettings.DebugLogs)
 		{
-			GebsfishLogger.Debug("---------------------Starting New Fishing Session---------------------","GenerateResult")
+			GebsfishLogger.Debug("---------------------Starting New Fishing Session---------------------","GenerateResult");
 			GebsfishLogger.Debug("---Generating Fishing Result---","GenerateResult");
             GebsfishLogger.Debug("Random number rolled: " + idx, "GenerateResult");
             GebsfishLogger.Debug("Yield Item Selected: " + yItem, "GenerateResult");
