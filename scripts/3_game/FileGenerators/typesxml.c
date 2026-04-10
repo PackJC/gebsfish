@@ -1,7 +1,7 @@
 class gebsfishTypes
 {
-    private const string DIRECTORY_PATH = "$profile:Gebs/extras/mpmissions/";
-    private const string FILE_PATH = "$profile:Gebs/extras/mpmissions/gebsfish-types.xml";
+    private const string DIRECTORY_PATH = "$profile:Gebs/Extras/mpmissions/";
+    private const string FILE_PATH = "$profile:Gebs/Extras/mpmissions/gebsfish-types.xml";
     private const string VERSION_PREFIX = "<!-- Version: ";
 
     void GenerateTypesXML()

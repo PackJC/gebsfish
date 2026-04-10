@@ -1,7 +1,7 @@
 class gebsfishSpawnableTypes
 {
-    private const string DIRECTORY_PATH = "$profile:Gebs/extras/mpmissions/";
-    private const string FILE_PATH = "$profile:Gebs/extras/mpmissions/gebsfish-spawnabletypes.xml";
+    private const string DIRECTORY_PATH = "$profile:Gebs/Extras/mpmissions/";
+    private const string FILE_PATH = "$profile:Gebs/Extras/mpmissions/gebsfish-spawnabletypes.xml";
     private const string VERSION_PREFIX = "<!-- Version: ";
 
     void GenerateSpawnableTypesXML()
@@ -24,7 +24,7 @@ class gebsfishSpawnableTypes
         FileHandle file = OpenFile(FILE_PATH, FileMode.WRITE);
         if (!file)
         {
-            GebsfishLogger.Error("Could not create gebsfish-spawnabletypes.xml in $profile:Gebs/extras/mpmissions/.", "SpawnableTypes");
+            GebsfishLogger.Error("Could not create gebsfish-spawnabletypes.xml in $profile:Gebs/Extras/mpmissions/.", "SpawnableTypes");
             return;
         }
 
@@ -35,7 +35,7 @@ class gebsfishSpawnableTypes
         WriteFooter(file);
 
         CloseFile(file);
-        GebsfishLogger.Info("gebsfish-spawnabletypes.xml successfully generated in $profile:Gebs/extras/mpmissions/.", "SpawnableTypes");
+        GebsfishLogger.Info("gebsfish-spawnabletypes.xml successfully generated in $profile:Gebs/Extras/mpmissions/.", "SpawnableTypes");
     }
 
     protected bool IsCurrentVersion(string filePath, string expectedVersion)
