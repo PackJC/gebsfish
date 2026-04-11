@@ -490,11 +490,8 @@ class cfgVehicles
 		scope=2;
 		displayName = "$STR_tools_grubworm";
 		descriptionShort = "$STR_tools_grubworm_desc";
-		model = "\dz\gear\food\bait_worm.p3d";
+		model = "\gebsfish\data\tackle\geb_grub.p3d";
 		rotationFlags = 17;
-		hiddenSelections[] = {"cs_raw"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\grubworm_ca.paa"};
-
 	};
 	class geb_RubberWorm: Worm {
 		scope = 2;
