@@ -288,8 +288,8 @@ class PredatorConf {
     string PredatorSpawnEnabledInfo = "Turns on(1) and off(0) the predators feature of the mod. When on, it will enable the random spawning of predators when catching/cutting up the fish.";
     bool PredatorSpawnEnabled = 1;
     string PredatorSpawnChanceInfo = "Controls the chance for a predator to spawn when a fish is caught or cut up. Fishing is when fishing, preparing is when getting fillets, failcatch is when nothing is caught.";
-    float PredatorSpawnChanceFishing = 0.10;
-    float PredatorSpawnChancePreparing = 0.10;
+    float PredatorSpawnChanceFishing = 0.05;
+    float PredatorSpawnChancePreparing = 0.05;
     float PredatorSpawnChanceFailCatch = 0.01;
     string PredatorSpawnSoundInfo = "PredatorWarningSoundEnable controls the audible notification and PredatorWarningSoundRadius controls how far players hear the sound from the triggering player.";
     bool PredatorWarningSoundEnable = 1;
