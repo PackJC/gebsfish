@@ -66,6 +66,36 @@ modded class NavalPlusData {
 
 #endif
 
+#ifdef Sahrani
+
+modded class SahraniData {
+    override void InitYieldBank() {
+        GetDayZGame().GetYieldDataInitInvoker().Invoke(m_YieldBank);
+    }
+}
+
+#endif
+
+#ifdef Artseinen
+
+modded class ArtseinenData {
+    override void InitYieldBank() {
+        GetDayZGame().GetYieldDataInitInvoker().Invoke(m_YieldBank);
+    }
+}
+
+#endif
+
+#ifdef MelkartV2
+
+modded class MelkartV2Data {
+    override void InitYieldBank() {
+        GetDayZGame().GetYieldDataInitInvoker().Invoke(m_YieldBank);
+    }
+}
+
+#endif
+
 // #ifdef AlteriaScripts no world data for alteria yet. 
 
 // modded class AlteriaData {
