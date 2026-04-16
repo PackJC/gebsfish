@@ -2,7 +2,7 @@ class CraftHookFromWire extends RecipeBase
 {	
 	override void Init()
 	{
-		m_Name = "#STR_craftMetalHook";
+		m_Name = "#STR_craft_metalhook";
 		m_IsInstaRecipe = false;//should this recipe be performed instantly without animation
 		m_AnimationLength = 1;//animation length in relative time units
 		m_Specialty = 0.01;// value > 0 for roughness, value < 0 for precision
