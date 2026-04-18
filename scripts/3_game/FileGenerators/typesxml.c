@@ -271,6 +271,8 @@ class gebsfishTypes
         gearItems.Insert(new XmlTypeEntry("geb_BlueFishShirt", 3, 1));
         gearItems.Insert(new XmlTypeEntry("geb_PurpleFishShirt", 3, 1));
         gearItems.Insert(new XmlTypeEntry("geb_FishingRodRepairKit", 3, 1));
+        gearItems.Insert(new XmlTypeEntry("geb_BlueFishGloves", 3, 1));
+        gearItems.Insert(new XmlTypeEntry("geb_OrangeFishGloves", 3, 1));
 
         FPrint(file, "    <!-- Gear Items -->");
         foreach (XmlTypeEntry gear : gearItems)
