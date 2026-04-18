@@ -121,22 +121,6 @@ class gebsfishSpawnableTypes
         tackleItems.Insert("geb_FunRedTackle");
         tackleItems.Insert("geb_SmallTackle");
 
-        // Repeated entries change before release.
-        tackleItems.Insert("geb_LimeTackle");
-        tackleItems.Insert("geb_LimeTackle");
-        tackleItems.Insert("geb_LimeTackle");
-        tackleItems.Insert("geb_LimeTackle");
-        tackleItems.Insert("geb_LimeTackle");
-        tackleItems.Insert("geb_LimeTackle");
-        tackleItems.Insert("geb_LimeTackle");
-        tackleItems.Insert("geb_LimeTackle");
-        tackleItems.Insert("geb_LimeTackle");
-        tackleItems.Insert("geb_LimeTackle");
-        tackleItems.Insert("geb_LimeTackle");
-        tackleItems.Insert("geb_LimeTackle");
-        tackleItems.Insert("geb_LimeTackle");
-        tackleItems.Insert("geb_LimeTackle");
-
         ref array<ref XmlCargoItem> tackleCargo = new array<ref XmlCargoItem>;
         tackleCargo.Insert(new XmlCargoItem("geb_Lure1", 0.33));
         tackleCargo.Insert(new XmlCargoItem("geb_Lure2", 0.33));

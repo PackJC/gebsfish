@@ -8,7 +8,7 @@ PixelShaderID="Super";
 VertexShaderID="Super";
 class Stage1
 {
-	texture="gebfish\data\fish\sturgeon_nohq.paa";
+	texture="gebsfish\data\fish\sturgeon_normals.paa";
 	uvSource="tex";
 	class uvTransform
 	{
@@ -56,7 +56,7 @@ class Stage4
 };
 class Stage5
 {
-	texture="dz\gear\food\data\carp_live_smdi.paa";
+	texture="gebsfish\data\fish\sturgeon_smdi.paa";
 	uvSource="tex";
 	class uvTransform
 	{
