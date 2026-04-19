@@ -639,7 +639,7 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_tools_lure2";
 		descriptionShort = "$STR_tools_lure2_desc";
-		model = "\gebsfish\data\tackle\lure2.p3d";
+		model = "\gebsfish\data\tackle\greencrank.p3d";
 		inventorySlot[] = {"Hook"};
 		rotationFlags = 12;
 		hookType = "geb_Lure2";
@@ -662,7 +662,7 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_tools_lure3";
 		descriptionShort = "$STR_tools_lure3_desc";
-		model = "\gebsfish\data\tackle\lure3.p3d";
+		model = "\gebsfish\data\tackle\yellowcrank.p3d";
 		inventorySlot[] = {"Hook"};
 		rotationFlags = 12;
 		hookType = "geb_Lure3";
