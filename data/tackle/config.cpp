@@ -196,9 +196,7 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_tools_smalltackle";
 		descriptionShort = "$STR_tools_smalltackle_desc";
-		model = "\gebsfish\data\tackle\geb_smalltackle.p3d";
-		hiddenSelections[] = {"zbytek"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_smalltackle.paa"};
+		model = "\gebsfish\data\tackle\smalltackle.p3d";
 		rotationFlags = 17;
 		weight = 140;
 		itemSize[] = {2,1};
@@ -240,9 +238,7 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_tools_wormcontainer";
 		descriptionShort = "$STR_tools_wormcontainer_desc";
-		model = "\gebsfish\data\tackle\geb_wormcontainer.p3d";
-		hiddenSelections[] = {"zbytek"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\geb_wormcontainer.paa"};
+		model = "\gebsfish\data\tackle\wormcontainer.p3d";
 		rotationFlags = 17;
 		weight = 140;
 		itemSize[] = {2,2};
@@ -329,7 +325,7 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_tools_minnowcontainer";
 		descriptionShort = "$STR_tools_minnowcontainer_desc";
-		model = "\gebsfish\data\tackle\minnowbucket.p3d";
+		model = "\gebsfish\data\tackle\baitbucket.p3d";
 		debug_ItemCategory = 6;
 		weight = 25;
 		itemSize[] = {3,3};
@@ -516,13 +512,11 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_tools_spinnerbait1";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
-		model = "\gebsfish\data\tackle\spinnerbait.p3d";
+		model = "\gebsfish\data\tackle\spinner1.p3d";
 		weight = 15;
 		absorbency = 0.8;
 		itemSize[] = {1,1};
 		inventorySlot[] = {"Hook"};
-		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinnerbait1.paa"};
 		rotationFlags = 17;
 		hookType = "geb_SpinnerBait1";
 		class DamageSystem {
@@ -540,13 +534,17 @@ class cfgVehicles
 			};
 		};
 	};
-	class geb_SpinnerBait2: geb_SpinnerBait1 {
+	class geb_SpinnerBait2: geb_Lure {
 		scope = 2;
 		displayName = "$STR_tools_spinnerbait2";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
+		model = "\gebsfish\data\tackle\spinner2.p3d";
+		weight = 15;
+		absorbency = 0.8;
+		itemSize[] = {1,1};
+		inventorySlot[] = {"Hook"};
+		rotationFlags = 17;
 		hookType = "geb_SpinnerBait2";
-		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinnerbait2.paa"};
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
@@ -562,13 +560,17 @@ class cfgVehicles
 			};
 		};
 	};
-	class geb_SpinnerBait3: geb_SpinnerBait1 {
+	class geb_SpinnerBait3: geb_Lure {
 		scope = 2;
 		displayName = "$STR_tools_spinnerbait3";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
+		model = "\gebsfish\data\tackle\spinner3.p3d";
+		weight = 15;
+		absorbency = 0.8;
+		itemSize[] = {1,1};
+		inventorySlot[] = {"Hook"};
+		rotationFlags = 17;
 		hookType = "geb_SpinnerBait3";
-		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinnerbait3.paa"};
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
@@ -584,13 +586,17 @@ class cfgVehicles
 			};
 		};
 	};
-	class geb_SpinnerBait4: geb_SpinnerBait1 {
+	class geb_SpinnerBait4: geb_Lure {
 		scope = 2;
 		displayName = "$STR_tools_spinnerbait4";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
+		model = "\gebsfish\data\tackle\spinner4.p3d";
+		weight = 15;
+		absorbency = 0.8;
+		itemSize[] = {1,1};
+		inventorySlot[] = {"Hook"};
+		rotationFlags = 17;
 		hookType = "geb_SpinnerBait4";
-		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinnerbait4.paa"};
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
@@ -610,9 +616,8 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_tools_lure1";
 		descriptionShort = "$STR_tools_lure1_desc";
-		model = "\gebsfish\data\tackle\lure1.p3d";
-		hiddenSelections[] = {"zbytek"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\lure1.paa"};
+		model = "\gebsfish\data\tackle\popper.p3d";
+		inventorySlot[] = {"Hook"};
 		rotationFlags = 12;
 		hookType = "geb_Lure1";
 		class DamageSystem {
@@ -636,8 +641,6 @@ class cfgVehicles
 		descriptionShort = "$STR_tools_lure2_desc";
 		model = "\gebsfish\data\tackle\lure2.p3d";
 		inventorySlot[] = {"Hook"};
-		hiddenSelections[] = {"zbytek"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\lure2.paa"};
 		rotationFlags = 12;
 		hookType = "geb_Lure2";
 		class DamageSystem {
@@ -661,8 +664,6 @@ class cfgVehicles
 		descriptionShort = "$STR_tools_lure3_desc";
 		model = "\gebsfish\data\tackle\lure3.p3d";
 		inventorySlot[] = {"Hook"};
-		hiddenSelections[] = {"zbytek"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\lure3.paa"};
 		rotationFlags = 12;
 		hookType = "geb_Lure3";
 		class DamageSystem {
@@ -686,8 +687,6 @@ class cfgVehicles
 		descriptionShort = "$STR_tools_lure4_desc";
 		model = "\gebsfish\data\tackle\lure4.p3d";
 		inventorySlot[] = {"Hook"};
-		hiddenSelections[] = {"zbytek"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\lure3.paa"};
 		rotationFlags = 12;
 		class DamageSystem {
 			class GlobalHealth {
