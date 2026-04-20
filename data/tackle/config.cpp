@@ -396,9 +396,9 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_tools_oldgreentackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		model = "\gebsfish\data\tackle\oldtackle.p3d";
+		model = "\gebsfish\data\tackle\mediumtackle.p3d";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\oldgreentackle.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_green.paa"};
 		rotationFlags = 17;
 		weight = 140;
 		itemSize[] = {3,2};
@@ -440,25 +440,25 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_tools_oldgreentackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\oldgreentackle.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_green.paa"};
 	};
 	class geb_OldRedTackle: geb_OldTackleBase {
 		scope = 2;
 		displayName = "$STR_tools_oldredtackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\oldredtackle.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_red.paa"};
 	};
 	class geb_OldBlueTackle: geb_OldTackleBase {
 		scope = 2;
 		displayName = "$STR_tools_oldbluetackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\oldbluetackle.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_blue.paa"};
 	};
 	class geb_OldPurpleTackle: geb_OldTackleBase {
 		scope = 2;
 		displayName = "$STR_tools_oldpurpletackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\oldpurpletackle.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_purple.paa"};
 	};
 
 	/*
