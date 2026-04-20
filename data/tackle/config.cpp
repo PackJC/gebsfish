@@ -280,9 +280,9 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_tools_bugcontainer";
 		descriptionShort = "$STR_tools_bugcontainer_desc";
-		model = "\gebsfish\data\tools\bugcontainer.p3d"; 
-		hiddenSelections[] = {"zbytek"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\bugcontainer.paa"};
+		model = "\gebsfish\data\tackle\bugcontainer.p3d"; 
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\bugcontainer.paa"};
 		itemInfo[] = {"CatchBugs"};
 		rotationFlags = 12;
 		weight = 140;
@@ -470,7 +470,7 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_tools_grasshopper";
 		descriptionShort = "$STR_tools_grasshopper_desc";
-		model = "\gebsfish\data\tackle\geb_grasshopper.p3d";
+		model = "\gebsfish\data\tackle\grasshopper.p3d";
 		rotationFlags = 17;
 		weight = 21;
 	};
@@ -478,7 +478,7 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_tools_fieldcricket";
 		descriptionShort = "$STR_tools_fieldcricket_desc";
-		model = "\gebsfish\data\tackle\geb_fieldcricket.p3d";
+		model = "\gebsfish\data\tackle\fieldcricket.p3d";
 		rotationFlags = 17;
 		weight = 21;
 	};
@@ -486,7 +486,7 @@ class cfgVehicles
 		scope=2;
 		displayName = "$STR_tools_grubworm";
 		descriptionShort = "$STR_tools_grubworm_desc";
-		model = "\gebsfish\data\tackle\geb_grub.p3d";
+		model = "\gebsfish\data\tackle\grub.p3d";
 		rotationFlags = 17;
 	};
 	class geb_RubberWorm: Worm {
@@ -496,7 +496,7 @@ class cfgVehicles
 		model = "\dz\gear\food\bait_worm.p3d";
 		rotationFlags = 17;
 		hiddenSelections[] = {"cs_raw"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\rubberworm_ca.paa","\gebsfish\data\tackle\rubberworm_ca.paa","\gebsfish\data\tackle\rubberworm_ca.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\rubberworm_co.paa","\gebsfish\data\tackle\rubberworm_co.paa","\gebsfish\data\tackle\rubberworm_co.paa"};
 	};
 
 	/*
@@ -685,7 +685,7 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_tools_lure4";
 		descriptionShort = "$STR_tools_lure4_desc";
-		model = "\gebsfish\data\tackle\lure4.p3d";
+		model = "\gebsfish\data\tackle\squarebill.p3d";
 		inventorySlot[] = {"Hook"};
 		rotationFlags = 12;
 		class DamageSystem {

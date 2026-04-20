@@ -9,7 +9,7 @@ VertexShaderID="Super";
 
 class Stage1
 {
-	texture="gebsfish\data\tackle\newtackle_nohq.paa";
+	texture="gebsfish\data\tackle\newtackle_normals.paa";
 	uvSource="tex";
 	class uvTransform
 	{
