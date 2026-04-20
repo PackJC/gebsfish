@@ -4,7 +4,7 @@
         "Sections": [
             {
                 "SectionName": "Developers",
-                "SectionLines": ["Geb/Pack-JC", "lothsun"]
+                "SectionLines": ["Geb/PackJC", "lothsun"]
             },
             {
                 "SectionName": "Code Contributions",
