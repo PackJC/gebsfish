@@ -957,7 +957,7 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_fish_bluejellyfish";
 		descriptionShort = "$STR_fish_bluejellyfish_desc";
-		model = "\gebsfish\data\fish\jellyfish.p3d";
+		model = "\gebsfish\data\fish\bluejellyfish.p3d";
 		rotationFlags = 17;
 		weight = 500;
 		itemSize[] = {2,2};
