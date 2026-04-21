@@ -850,7 +850,7 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_fish_roughneckrock";
 		descriptionShort = "$STR_fish_roughneckrock_desc";
-		model = "\gebsfish\data\fish\roughneckrock.p3d";
+		model = "\gebsfish\data\fish\rougheyerock.p3d";
 		weight = 3000;
 		itemSize[] = {4,3};
 		
@@ -1332,7 +1332,7 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_roughneckrock_desc";
 		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\roughneckrock_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
+			"\gebsfish\data\fish\rougheyerock_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
 	class geb_SeverumFilletMeat: geb_SaltWater_Fillet_Medium {
