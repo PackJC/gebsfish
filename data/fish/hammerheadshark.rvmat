@@ -8,7 +8,7 @@ PixelShaderID="Super";
 VertexShaderID="Super";
 class Stage1
 {
-	texture="gebfish\data\fish\hammerheadshark_nohq.paa";
+	texture="gebsfish\data\fish\hammerheadshark_normals.paa";
 	uvSource="tex";
 	class uvTransform
 	{
