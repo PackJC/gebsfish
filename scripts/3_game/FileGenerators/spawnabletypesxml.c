@@ -130,6 +130,14 @@ class gebsfishSpawnableTypes
         tackleCargo.Insert(new XmlCargoItem("geb_SpinnerBait2", 0.33));
         tackleCargo.Insert(new XmlCargoItem("geb_SpinnerBait3", 0.33));
         tackleCargo.Insert(new XmlCargoItem("geb_SpinnerBait4", 0.33));
+        tackleCargo.Insert(new XmlCargoItem("geb_CurlyTailJig1", 0.33));
+        tackleCargo.Insert(new XmlCargoItem("geb_CurlyTailJig2", 0.33));
+        tackleCargo.Insert(new XmlCargoItem("geb_CurlyTailJig3", 0.33));
+        tackleCargo.Insert(new XmlCargoItem("geb_CurlyTailJig4", 0.33));
+        tackleCargo.Insert(new XmlCargoItem("geb_SpoonLure1", 0.33));
+        tackleCargo.Insert(new XmlCargoItem("geb_SpoonLure2", 0.33));
+        tackleCargo.Insert(new XmlCargoItem("geb_SpoonLure3", 0.33));
+        tackleCargo.Insert(new XmlCargoItem("geb_SpoonLure4", 0.33));
 
         FPrint(file, "    <!-- Tackle -->");
         foreach (string tackle : tackleItems)

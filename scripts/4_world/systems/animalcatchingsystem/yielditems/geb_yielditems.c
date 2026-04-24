@@ -69,11 +69,11 @@ class geb_YieldSockEyeSalmon : GebYieldFishBase
 	}
 }
 
-class geb_YieldSturgeon : GebYieldFishBase
+class geb_YieldLakeSturgeon : GebYieldFishBase
 {
 	override void Init()
 	{
-		SetupYield("geb_Sturgeon", m_gebsConfig.Sturgeon.Environment, m_gebsConfig.Sturgeon.CatchMethod);
+		SetupYield("geb_LakeSturgeon", m_gebsConfig.LakeSturgeon.Environment, m_gebsConfig.LakeSturgeon.CatchMethod);
 	}
 }
 
@@ -82,6 +82,14 @@ class geb_YieldNorthernPike : GebYieldFishBase
 	override void Init()
 	{
 		SetupYield("geb_NorthernPike", m_gebsConfig.NorthernPike.Environment, m_gebsConfig.NorthernPike.CatchMethod);
+	}
+}
+
+class geb_YieldAlligatorGar : GebYieldFishBase
+{
+	override void Init()
+	{
+		SetupYield("geb_AlligatorGar", m_gebsConfig.AlligatorGar.Environment, m_gebsConfig.AlligatorGar.CatchMethod);
 	}
 }
 

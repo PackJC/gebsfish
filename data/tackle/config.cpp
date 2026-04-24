@@ -42,7 +42,7 @@ class cfgVehicles
 
 	*/
 	class geb_Tackle_Base: Container_Base {
-		scope = 2;
+		scope = 0;
 		displayName = "Tackle Base";
 		descriptionShort = "Tackle Base Class";
 		model = "gebsfish\data\tackle\largetackle.p3d";
@@ -239,7 +239,6 @@ class cfgVehicles
 		displayName = "$STR_tools_wormcontainer";
 		descriptionShort = "$STR_tools_wormcontainer_desc";
 		model = "\gebsfish\data\tackle\wormcontainer.p3d";
-		rotationFlags = 17;
 		weight = 140;
 		itemSize[] = {2,2};
 		itemsCargoSize[] = {3,2};
@@ -399,7 +398,7 @@ class cfgVehicles
 		model = "\gebsfish\data\tackle\mediumtackle.p3d";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_green.paa"};
-		rotationFlags = 17;
+		rotationFlags = 8;
 		weight = 140;
 		itemSize[] = {3,2};
 		itemsCargoSize[] = {3,2};
@@ -509,112 +508,58 @@ class cfgVehicles
 
 	*/
 
-	class geb_Lure: Jig
-	{
+	class geb_Lure: Jig {
+		scope = 0;
+		weight = 15;
+		absorbency = 0.8;
+		itemSize[] = {1,1};
+		inventorySlot[] = {"Hook"};
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 18;
+					healthLevels[] = {
+						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
+						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
+						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
+						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
+						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
+					};
+				};
+			};
+		};
 	};
 	class geb_SpinnerBait1: geb_Lure {
-		scope = 2;
 		displayName = "$STR_tools_spinnerbait1";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
-		model = "\gebsfish\data\tackle\spinner1.p3d";
-		weight = 15;
-		absorbency = 0.8;
-		itemSize[] = {1,1};
-		inventorySlot[] = {"Hook"};
-		rotationFlags = 17;
+		model = "\gebsfish\data\tackle\spinner.p3d";
 		hookType = "geb_SpinnerBait1";
-		class DamageSystem {
-			class GlobalHealth {
-				class Health {
-					hitpoints = 18;
-					healthLevels[] = {
-						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
-					};
-				};
-			};
-		};
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinner1_co.paa"};
 	};
 	class geb_SpinnerBait2: geb_Lure {
-		scope = 2;
 		displayName = "$STR_tools_spinnerbait2";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
-		model = "\gebsfish\data\tackle\spinner2.p3d";
-		weight = 15;
-		absorbency = 0.8;
-		itemSize[] = {1,1};
-		inventorySlot[] = {"Hook"};
-		rotationFlags = 17;
+		model = "\gebsfish\data\tackle\spinner.p3d";
 		hookType = "geb_SpinnerBait2";
-		class DamageSystem {
-			class GlobalHealth {
-				class Health {
-					hitpoints = 18;
-					healthLevels[] = {
-						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
-					};
-				};
-			};
-		};
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinner2_co.paa"};
 	};
 	class geb_SpinnerBait3: geb_Lure {
-		scope = 2;
 		displayName = "$STR_tools_spinnerbait3";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
-		model = "\gebsfish\data\tackle\spinner3.p3d";
-		weight = 15;
-		absorbency = 0.8;
-		itemSize[] = {1,1};
-		inventorySlot[] = {"Hook"};
-		rotationFlags = 17;
+		model = "\gebsfish\data\tackle\spinner.p3d";
 		hookType = "geb_SpinnerBait3";
-		class DamageSystem {
-			class GlobalHealth {
-				class Health {
-					hitpoints = 18;
-					healthLevels[] = {
-						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
-					};
-				};
-			};
-		};
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinner3_co.paa"};
 	};
 	class geb_SpinnerBait4: geb_Lure {
-		scope = 2;
 		displayName = "$STR_tools_spinnerbait4";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
-		model = "\gebsfish\data\tackle\spinner4.p3d";
-		weight = 15;
-		absorbency = 0.8;
-		itemSize[] = {1,1};
-		inventorySlot[] = {"Hook"};
-		rotationFlags = 17;
+		model = "\gebsfish\data\tackle\spinner.p3d";
 		hookType = "geb_SpinnerBait4";
-		class DamageSystem {
-			class GlobalHealth {
-				class Health {
-					hitpoints = 18;
-					healthLevels[] = {
-						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
-					};
-				};
-			};
-		};
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinner4_co.paa"};
 	};
 	class geb_Lure1: geb_Lure {
 		scope = 2;
@@ -622,7 +567,6 @@ class cfgVehicles
 		descriptionShort = "$STR_tools_lure1_desc";
 		model = "\gebsfish\data\tackle\popper.p3d";
 		inventorySlot[] = {"Hook"};
-		rotationFlags = 12;
 		hookType = "geb_Lure1";
 		class DamageSystem {
 			class GlobalHealth {
@@ -645,7 +589,6 @@ class cfgVehicles
 		descriptionShort = "$STR_tools_lure2_desc";
 		model = "\gebsfish\data\tackle\greencrank.p3d";
 		inventorySlot[] = {"Hook"};
-		rotationFlags = 12;
 		hookType = "geb_Lure2";
 		class DamageSystem {
 			class GlobalHealth {
@@ -668,7 +611,6 @@ class cfgVehicles
 		descriptionShort = "$STR_tools_lure3_desc";
 		model = "\gebsfish\data\tackle\yellowcrank.p3d";
 		inventorySlot[] = {"Hook"};
-		rotationFlags = 12;
 		hookType = "geb_Lure3";
 		class DamageSystem {
 			class GlobalHealth {
@@ -691,7 +633,6 @@ class cfgVehicles
 		descriptionShort = "$STR_tools_lure4_desc";
 		model = "\gebsfish\data\tackle\squarebill.p3d";
 		inventorySlot[] = {"Hook"};
-		rotationFlags = 12;
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
@@ -706,5 +647,78 @@ class cfgVehicles
 				};
 			};
 		};
+	};
+	class geb_SpoonLure1: geb_Lure {
+		scope=2;
+		displayName = "$STR_tools_spoonlure1";
+		descriptionShort = "$STR_tools_spoonlure1_desc";
+		model = "\gebsfish\data\tackle\spoonlure.p3d";
+		hookType = "geb_SpoonLure1";
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spoonlure_blue_co.paa"};
+
+	};
+	class geb_SpoonLure2: geb_Lure {
+		scope=2;
+		displayName = "$STR_tools_spoonlure2";
+		descriptionShort = "$STR_tools_spoonlure2_desc";
+		model = "\gebsfish\data\tackle\spoonlure.p3d";
+		hookType = "geb_SpoonLure2";
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spoonlure_white_co.paa"};
+	};	
+	class geb_SpoonLure3: geb_Lure {
+		scope=2;
+		displayName = "$STR_tools_spoonlure3";
+		descriptionShort = "$STR_tools_spoonlure3_desc";
+		model = "\gebsfish\data\tackle\spoonlure.p3d";
+		hookType = "geb_SpoonLure3";
+		hiddenSelections[] = {"Camo"};	
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spoonlure_red_co.paa"};
+	};	
+	class geb_SpoonLure4: geb_Lure {
+		scope=2;
+		displayName = "$STR_tools_spoonlure4";
+		descriptionShort = "$STR_tools_spoonlure4_desc";
+		model = "\gebsfish\data\tackle\spoonlure.p3d";
+		hookType = "geb_SpoonLure4";
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spoonlure_yellow_co.paa"};
+	};
+	class geb_CurlyTailJig1: geb_Lure {
+		scope=2;
+		displayName = "$STR_tools_curlytailjig1";
+		descriptionShort = "$STR_tools_curlytailjig1_desc";
+		model = "\gebsfish\data\tackle\curlytailjig.p3d";
+		hookType = "geb_CurlyTailJig1";
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\curlytailjig_blue_co.paa"};
+	};
+	class geb_CurlyTailJig2: geb_Lure {
+		scope=2;
+		displayName = "$STR_tools_curlytailjig2";
+		descriptionShort = "$STR_tools_curlytailjig2_desc";
+		model = "\gebsfish\data\tackle\curlytailjig.p3d";
+		hookType = "geb_CurlyTailJig2";
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\curlytailjig_green_co.paa"};
+	};
+	class geb_CurlyTailJig3: geb_Lure {
+		scope=2;
+		displayName = "$STR_tools_curlytailjig3";
+		descriptionShort = "$STR_tools_curlytailjig3_desc";
+		model = "\gebsfish\data\tackle\curlytailjig.p3d";
+		hookType = "geb_CurlyTailJig3";
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\curlytailjig_red_co.paa"};
+	};
+	class geb_CurlyTailJig4: geb_Lure {
+		scope=2;
+		displayName = "$STR_tools_curlytailjig4";
+		descriptionShort = "$STR_tools_curlytailjig4_desc";
+		model = "\gebsfish\data\tackle\curlytailjig.p3d";
+		hookType = "geb_CurlyTailJig4";
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\curlytailjig_purple_co.paa"};
 	};
 };

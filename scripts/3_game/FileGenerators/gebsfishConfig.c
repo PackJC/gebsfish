@@ -24,6 +24,7 @@ class gebsfishConfig {
     ref SteelheadTroutConf SteelheadTrout;
     ref ShrimpConf Shrimp;
     ref NorthernPikeConf NorthernPike;
+    ref AlligatorGarConf AlligatorGar;
     ref LargeMouthBassConf LargeMouthBass;
     ref SmallMouthBassConf SmallMouthBass;
     ref WallEyeConf WallEye;
@@ -35,7 +36,7 @@ class gebsfishConfig {
     ref BrookTroutConf BrookTrout;
     ref LakeTroutConf LakeTrout;
     ref CutThroatTroutConf CutThroatTrout;
-    ref SturgeonConf Sturgeon;
+    ref LakeSturgeonConf LakeSturgeon;
     ref YellowPerchConf YellowPerch;
     ref FlatHeadCatFishConf FlatHeadCatFish;
     ref FatHeadMinnowConf FatHeadMinnow;
@@ -122,6 +123,7 @@ class gebsfishConfig {
         SteelheadTrout = new SteelheadTroutConf;
         Shrimp = new ShrimpConf;
         NorthernPike = new NorthernPikeConf;
+        AlligatorGar = new AlligatorGarConf;
         LargeMouthBass = new LargeMouthBassConf;
         SmallMouthBass = new SmallMouthBassConf;
         WallEye = new WallEyeConf;
@@ -133,7 +135,7 @@ class gebsfishConfig {
         BrookTrout = new BrookTroutConf;
         LakeTrout = new LakeTroutConf;
         CutThroatTrout = new CutThroatTroutConf;
-        Sturgeon = new SturgeonConf;
+        LakeSturgeon = new LakeSturgeonConf;
         YellowPerch = new YellowPerchConf;
         FlatHeadCatFish = new FlatHeadCatFishConf;
         FatHeadMinnow = new FatHeadMinnowConf;
@@ -422,6 +424,20 @@ class NorthernPikeConf {
     // autoptr TFloatArray BiteSpeed = {0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0};  
 };
 
+class AlligatorGarConf {
+    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
+    int Environment = 1;
+    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
+    int CatchMethod = 1;
+    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
+    int MeatMin = 2;
+    int MeatMax = 4;
+    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
+    int CatchProbability = 15;
+    // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
+    // autoptr TFloatArray BiteSpeed = {0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0};  
+};
+
 class LargeMouthBassConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
@@ -576,7 +592,7 @@ class CutThroatTroutConf {
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
 
-class SturgeonConf {
+class LakeSturgeonConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";

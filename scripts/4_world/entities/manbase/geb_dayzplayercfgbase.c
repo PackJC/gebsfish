@@ -15,47 +15,69 @@ modded class ModItemRegisterCallbacks
         super.RegisterTwoHanded(pType, pBehavior);
         
           //Saltwater Fish
-          pType.AddItemInHandsProfileIK("geb_AsianSeaBass", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
           pType.AddItemInHandsProfileIK("geb_GreatWhiteShark", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
           pType.AddItemInHandsProfileIK("geb_AngelShark", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
           pType.AddItemInHandsProfileIK("geb_LeopardShark", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
+          pType.AddItemInHandsProfileIK("geb_HammerHeadShark", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
           pType.AddItemInHandsProfileIK("geb_HumpHeadWrasse", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_FlatHeadMullet", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_CherrySalmon", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_Bonita", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_BlueTang", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_AngelFish", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_PacificCod", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_LargeHeadHairTailFish", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_RedHeadCichlid", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_YellowFinTuna", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_Severum", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_RoughNeckRock", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_SiameseTigerFish", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
           pType.AddItemInHandsProfileIK("geb_AtlanticBlueMarlin", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
           pType.AddItemInHandsProfileIK("geb_MahiMahi", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
           pType.AddItemInHandsProfileIK("geb_AtlanticSailFish", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_HammerHeadShark", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_Sturgeon", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
+          pType.AddItemInHandsProfileIK("geb_LargeHeadHairTailFish", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
 
-          //Freshwater Fish
-          pType.AddItemInHandsProfileIK("geb_LargeMouthBass", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_SmallMouthBass", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_WallEye", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_YellowPerch", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_RainbowTrout", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_Trout_Base", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_LakeTrout", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_BlueGill", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_BlackBass", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_SunFish",  "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_NorthernPike",  "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_FlatHeadCatfish",  "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_Sauger",  "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_WhiteBass",  "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_BowFin",  "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_SlimySculpin",  "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_SockEyeSalmon",  "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
-          pType.AddItemInHandsProfileIK("geb_ChinookSalmon",  "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
+          //unsure where these go yet
+          pType.AddItemInHandsProfileIK("geb_BlueTang", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
+          pType.AddItemInHandsProfileIK("geb_AngelFish", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
+          pType.AddItemInHandsProfileIK("geb_RedHeadCichlid", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
+          pType.AddItemInHandsProfileIK("geb_Severum", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
+          pType.AddItemInHandsProfileIK("geb_SiameseTigerFish", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
+          
+
+          //Freshwater Fish          
+          pType.AddItemInHandsProfileIK("geb_Sturgeon", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
+          pType.AddItemInHandsProfileIK("geb_NorthernPike",  "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+          pType.AddItemInHandsProfileIK("geb_AlligatorGar",  "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+          pType.AddItemInHandsProfileIK("geb_FlatHeadCatfish",  "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
     }
+
+    override void RegisterOneHanded(DayZPlayerType pType, DayzPlayerItemBehaviorCfg pBehavior)
+    {
+        super.RegisterOneHanded(pType, pBehavior);
+        pType.AddItemInHandsProfileIK("geb_LargeMouthBass", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_SmallMouthBass", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_WhiteBass",  "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_BlackBass", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_Sauger",  "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_RainbowTrout", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_Trout_Base", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_LakeTrout", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_SockEyeSalmon",  "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_ChinookSalmon",  "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_WallEye", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_YellowPerch", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_BowFin",  "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_BlueGill", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_AsianSeaBass", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_FlatHeadMullet", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_CherrySalmon", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_Bonita", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_PacificCod", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_YellowFinTuna", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_RoughNeckRock", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_SunFish",  "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_SlimySculpin",  "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_AmericanLobster",  "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_EuropeanLobster",  "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        
+        pType.AddItemInHandsProfileIK("geb_StarFish", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/shrimp.anm");
+        pType.AddItemInHandsProfileIK("geb_BlackDevilSnail", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/shrimp.anm");
+        pType.AddItemInHandsProfileIK("geb_Mussel", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/shrimp.anm");
+        pType.AddItemInHandsProfileIK("geb_BloodClam", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/shrimp.anm");
+        pType.AddItemInHandsProfileIK("geb_FatHeadMinnow", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/shrimp.anm");
+        pType.AddItemInHandsProfileIK("geb_BlueJellyFish", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/shrimp.anm");
+        pType.AddItemInHandsProfileIK("geb_SignalCrayFish", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/shrimp.anm");
+        pType.AddItemInHandsProfileIK("geb_EuropeanCrayFish", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/shrimp.anm");
+
+    }
+
 };
