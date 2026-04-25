@@ -23,6 +23,7 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareSunFish);
 		RegisterRecipe(new PrepareWallEye);
 		RegisterRecipe(new PrepareNorthernPike);
+		RegisterRecipe(new PrepareAlligatorGar);
 		RegisterRecipe(new PrepareYellowPerch);
 		RegisterRecipe(new PrepareSauger);
 		RegisterRecipe(new PrepareRainbowTrout);
@@ -35,7 +36,7 @@ modded class PluginRecipesManager
 		RegisterRecipe(new PrepareSlimySculpin);
 		RegisterRecipe(new PrepareSockEyeSalmon);
 		RegisterRecipe(new PrepareChinookSalmon);
-		RegisterRecipe(new PrepareSturgeon);
+		RegisterRecipe(new PrepareLakeSturgeon);
 
 		//Saltwater Crustaceans
 		RegisterRecipe(new PrepareKingCrab);

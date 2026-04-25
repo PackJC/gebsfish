@@ -276,12 +276,31 @@ class PrepareLargeMouthBass extends GebPrepareFishBase
 	}
 };
 
+class PrepareAlligatorGar extends GebPrepareFishBase
+{
+	override void Init()
+	{
+		super.Init();
+		SetupStandardRecipe("geb_AlligatorGar", "geb_AlligatorGarFilletMeat", m_gebsConfig.AlligatorGar.MeatMin, m_gebsConfig.AlligatorGar.MeatMax);
+	}
+};
+
 class PrepareNorthernPike extends GebPrepareFishBase
 {
 	override void Init()
 	{
 		super.Init();
-		SetupStandardRecipe("geb_NorthernPike", "geb_NorthernPikeFilletMeat", m_gebsConfig.NorthernPike.MeatMin, m_gebsConfig.NorthernPike.MeatMax);
+		SetupFishRecipe("geb_NorthernPike");
+		AddDefaultResultAtIndex("geb_YellowCaviar", 0);
+
+		int ran = GetInclusiveRandom(m_gebsConfig.NorthernPike.MeatMin, m_gebsConfig.NorthernPike.MeatMax);
+		AddRepeatedResults("geb_NorthernPikeFilletMeat", ran, 1);
+	}
+
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight)
+	{
+		super.Do(ingredients, player, results, specialty_weight);
+		ApplyThirtyPercentCaviarChance(results);
 	}
 };
 
@@ -404,12 +423,23 @@ modded class PrepareSteelheadTrout extends PrepareFish
 	}
 };
 
-class PrepareSturgeon extends GebPrepareFishBase
+class PrepareLakeSturgeon extends GebPrepareFishBase
 {
+
 	override void Init()
 	{
 		super.Init();
-		SetupStandardRecipe("geb_Sturgeon", "geb_SturgeonFilletMeat", m_gebsConfig.Sturgeon.MeatMin, m_gebsConfig.Sturgeon.MeatMax);
+		SetupFishRecipe("geb_LakeSturgeon");
+		AddDefaultResultAtIndex("geb_BlackCaviar", 0);
+
+		int ran = GetInclusiveRandom(m_gebsConfig.LakeSturgeon.MeatMin, m_gebsConfig.LakeSturgeon.MeatMax);
+		AddRepeatedResults("geb_LakeSturgeonFilletMeat", ran, 1);
+	}
+
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight)
+	{
+		super.Do(ingredients, player, results, specialty_weight);
+		ApplyThirtyPercentCaviarChance(results);
 	}
 };
 

@@ -8,7 +8,7 @@ PixelShaderID="Super";
 VertexShaderID="Super";
 class Stage1
 {
-	texture="gebsfish\data\tools\fishingline_biggame_nohq.paa";
+	texture="gebsfish\data\tools\fishingline_biggame_normals.paa";
 	uvSource="tex";
 	class uvTransform
 	{

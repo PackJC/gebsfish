@@ -40,6 +40,7 @@ class cfgVehicles
 	class Boiled;
 	class Dried;
 	class Burned;
+	class RedCaviar;
 
 	//Base classes for fish
 	class geb_FreshFish_Base: Edible_Base {
@@ -53,6 +54,7 @@ class cfgVehicles
 		varQuantityMin = 0;
 		varQuantityMax = 1000;
 		isMeleeWeapon = 1;
+		rotationFlags=17;
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
@@ -132,6 +134,7 @@ class cfgVehicles
 		varQuantityMin = 0;
 		varQuantityMax = 1000;
 		isMeleeWeapon = 1;
+		rotationFlags=17;
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
@@ -282,10 +285,13 @@ class cfgVehicles
     class geb_Trout_Base: geb_FreshFish_Base {
 		scope = 0;
 		model = "\gebsfish\data\fish\geb_Trout_Base.p3d";
+		hiddenSelections[] = {"Camo"};
+
 	};
 
 	class geb_FreshWater_Fillet_Lean: CarpFilletMeat
 	{
+		scope=0;
 		class Food: Food
 		{
 			class FoodStages: FoodStages
@@ -316,6 +322,7 @@ class cfgVehicles
 
 	class geb_FreshWater_Fillet_Medium: CarpFilletMeat
 	{
+		scope=0;
 		class Food: Food
 		{
 			class FoodStages: FoodStages
@@ -346,6 +353,7 @@ class cfgVehicles
 
 	class geb_FreshWater_Fillet_Heavy: CarpFilletMeat
 	{
+		scope=0;
 		class Food: Food
 		{
 			class FoodStages: FoodStages
@@ -376,6 +384,7 @@ class cfgVehicles
 
 	class geb_SaltWater_Fillet_Lean: MackerelFilletMeat
 	{
+		scope=0;
 		class Food: Food
 		{
 			class FoodStages: FoodStages
@@ -406,6 +415,7 @@ class cfgVehicles
 
 	class geb_SaltWater_Fillet_Medium: MackerelFilletMeat
 	{
+		scope=0;
 		class Food: Food
 		{
 			class FoodStages: FoodStages
@@ -436,6 +446,7 @@ class cfgVehicles
 
 	class geb_SaltWater_Fillet_Fatty: MackerelFilletMeat
 	{
+		scope=0;
 		class Food: Food
 		{
 			class FoodStages: FoodStages
@@ -466,6 +477,7 @@ class cfgVehicles
 
 	class geb_SaltWater_Fillet_Predator: MackerelFilletMeat
 	{
+		scope=0;
 		class Food: Food
 		{
 			class FoodStages: FoodStages
@@ -508,12 +520,20 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\bluegill.p3d";
 		itemSize[] = {3,2};
 	};
+	//Needs to be renamed RedBreastSunFish next wipe
+	class geb_SunFish: geb_BlueGill {
+		scope = 2;
+		displayName = "$STR_fish_redbreastsunfish";
+		descriptionShort = "$STR_fish_redbreastsunfish_desc";
+		itemSize[] = {3,2};
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\redbreastsunfish_co.paa"};
+	};
 	class geb_BlackBass: geb_FreshFish_Base {
 		scope = 2;
-		displayName = "$STR_fish_blackbass";
-		descriptionShort = "$STR_fish_blackbass_desc";
-		model = "\gebsfish\data\fish\blackbass.p3d";
-		rotationFlags = 17;
+		displayName = "$STR_fish_spottedbass";
+		descriptionShort = "$STR_fish_spottedbass_desc";
+		model = "\gebsfish\data\fish\spottedbass.p3d";
 	};
 	class geb_FlatHeadCatFish: geb_FreshFish_Base {
 		scope = 2;
@@ -529,13 +549,6 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_walleye_desc";
 		model = "\gebsfish\data\fish\walleye.p3d";
 		itemSize[] = {4,2};
-	};
-	class geb_SunFish: geb_FreshFish_Base {
-		scope = 2;
-		displayName = "$STR_fish_sunfish";
-		descriptionShort = "$STR_fish_sunfish_desc";
-		model = "\gebsfish\data\fish\sunfish.p3d";
-		itemSize[] = {3,2};
 	};
 	class geb_SmallMouthBass: geb_FreshFish_Base {
 		scope = 2;
@@ -555,7 +568,6 @@ class cfgVehicles
 		displayName = "$STR_fish_fatheadminnow";
 		descriptionShort = "$STR_fish_fatheadminnow_desc";
 		model = "\gebsfish\data\fish\minnow.p3d";
-		rotationFlags = 17;
 		weight = 100;
 		itemSize[] = {1,1};
 		inventorySlot[]=
@@ -652,6 +664,14 @@ class cfgVehicles
 		itemSize[] = {6,2};
 		weight = 4000;
 	};
+	class geb_AlligatorGar: geb_FreshFish_Base {
+		scope = 2;
+		displayName = "$STR_fish_alligatorgar";
+		descriptionShort = "$STR_fish_alligatorgar_desc";
+		model = "\gebsfish\data\fish\alligatorgar.p3d";
+		itemSize[] = {6,2};
+		weight = 4000;
+	};
 	class geb_YellowPerch: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_yellowperch";
@@ -675,7 +695,7 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\rainbowtrout.p3d";
 		itemSize[] = {5,2};
 		weight = 1700;
-		hiddenSelections[] = {"zbytek"};
+		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\rainbowtrout_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\rainbowtrout.rvmat"};
 	};
@@ -685,7 +705,7 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_brooktrout_desc";
 		itemSize[] = {5,2};
 		weight = 1700;
-		hiddenSelections[] = {"zbytek"};
+		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\brooktrout.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\brooktrout.rvmat"};
 	};
@@ -695,7 +715,7 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_browntrout_desc";
 		itemSize[] = {5,2};
 		weight = 1700;
-		hiddenSelections[] = {"zbytek"};
+		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\browntrout.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\browntrout.rvmat"};
 	};
@@ -705,7 +725,7 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_cutthroattrout_desc";
 		itemSize[] = {5,2};
 		weight = 1700;
-		hiddenSelections[] = {"zbytek"};
+		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\cutthroattrout.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\cutthroattrout.rvmat"};
 	};
@@ -716,15 +736,15 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\laketrout.p3d";
 		itemSize[] = {5,2};
 		weight = 1700;
-		hiddenSelections[] = {"zbytek"};
+		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\laketrout_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\laketrout.rvmat"};
 	};
-	class geb_Sturgeon: geb_FreshFish_Base {
+	class geb_LakeSturgeon: geb_FreshFish_Base {
 		scope = 2;
-		displayName = "$STR_fish_sturgeon";
-		descriptionShort = "$STR_fish_sturgeon_desc";
-		model = "\gebsfish\data\fish\sturgeon.p3d";
+		displayName = "$STR_fish_lakesturgeon";
+		descriptionShort = "$STR_fish_lakesturgeon_desc";
+		model = "\gebsfish\data\fish\lakesturgeon.p3d";
 		itemSize[] = {5,2};
 		weight = 1700;
 	};
@@ -846,14 +866,14 @@ class cfgVehicles
 		weight = 3000;
 		itemSize[] = {4,3};
 	};
+	//Needs to be renamed RoughEyeRock next wipe
 	class geb_RoughNeckRock: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_roughneckrock";
 		descriptionShort = "$STR_fish_roughneckrock_desc";
-		model = "\gebsfish\data\fish\roughneckrock.p3d";
+		model = "\gebsfish\data\fish\rougheyerock.p3d";
 		weight = 3000;
 		itemSize[] = {4,3};
-		
 	};
 	class geb_Severum: geb_SaltFish_Base {
 		scope = 2;
@@ -922,7 +942,6 @@ class cfgVehicles
 		displayName = "$STR_fish_bloodclam";
 		descriptionShort = "$STR_fish_bloodclam_desc";
 		model = "\gebsfish\data\fish\bloodclam.p3d";
-		rotationFlags = 17;
 		weight = 100;
 		itemSize[] = {1,1};
 	};
@@ -931,7 +950,6 @@ class cfgVehicles
 		displayName = "$STR_fish_mussel";
 		descriptionShort = "$STR_fish_mussel_desc";
 		model = "\gebsfish\data\fish\mussel.p3d";
-		rotationFlags = 17;
 		weight = 100;
 		itemSize[] = {1,1};
 	};
@@ -940,7 +958,6 @@ class cfgVehicles
 		displayName = "$STR_fish_blackdevilsnail";
 		descriptionShort = "$STR_fish_blackdevilsnail_desc";
 		model = "\gebsfish\data\fish\blackdevilsnail.p3d";
-		rotationFlags = 17;
 		weight = 100;
 		itemSize[] = {1,1};
 	};
@@ -949,7 +966,6 @@ class cfgVehicles
 		displayName = "$STR_fish_starfish";
 		descriptionShort = "$STR_fish_starfish_desc";
 		model = "\gebsfish\data\fish\starfish.p3d";
-		rotationFlags = 17;
 		weight = 2500;
 		itemSize[] = {2,2};
 	};
@@ -957,8 +973,7 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_fish_bluejellyfish";
 		descriptionShort = "$STR_fish_bluejellyfish_desc";
-		model = "\gebsfish\data\fish\jellyfish.p3d";
-		rotationFlags = 17;
+		model = "\gebsfish\data\fish\bluejellyfish.p3d";
 		weight = 500;
 		itemSize[] = {2,2};
 	};
@@ -966,11 +981,10 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_fish_americanlobster";
 		descriptionShort = "$STR_fish_americanlobster_desc";
-		hiddenSelections[] = {"lobster"};
+		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\americanlobster_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\americanlobster.rvmat"};
 		model = "\gebsfish\data\fish\lobster.p3d";
-		rotationFlags = 17;
 		weight = 3000;
 		itemSize[] = {3,2};
 	};	
@@ -978,11 +992,10 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_fish_europeanlobster";
 		descriptionShort = "$STR_fish_europeanlobster_desc";
-		hiddenSelections[] = {"lobster"};
+		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobster_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\europeanlobster.rvmat"};
 		model = "\gebsfish\data\fish\lobster.p3d";
-		rotationFlags = 17;
 		weight = 3000;
 		itemSize[] = {3,2};
 	};
@@ -1061,13 +1074,14 @@ class cfgVehicles
 			"\gebsfish\data\fish\walleye_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
+	//Will need to be renamed RedBreastSunFishFillet next wipe
 	class geb_SunFishFilletMeat: geb_FreshWater_Fillet_Lean {
 		scope = 2;
-		displayName = "$STR_fish_sunfish_fillet";
-		descriptionShort = "$STR_fish_sunfish_desc";
+		displayName = "$STR_fish_redbreastsunfish_fillet";
+		descriptionShort = "$STR_fish_redbreastsunfish_desc";
 		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\sunfish_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
+			"\gebsfish\data\fish\redbreastsunfish_fillet_raw_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
 	class geb_FlatHeadCatFishFilletMeat: geb_FreshWater_Fillet_Heavy {
@@ -1095,6 +1109,15 @@ class cfgVehicles
 		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\northernpike_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
+		};
+	};
+	class geb_AlligatorGarFilletMeat: geb_FreshWater_Fillet_Heavy {
+		scope = 2;
+		displayName = "$STR_fish_alligatorgar_fillet";
+		descriptionShort = "$STR_fish_alligatorgar_desc";
+		model = "\dz\gear\food\carp_fillet.p3d";
+		hiddenSelectionsTextures[] = {
+			"\gebsfish\data\fish\alligatorgar_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
 	class geb_YellowPerchFilletMeat: geb_FreshWater_Fillet_Lean {
@@ -1162,13 +1185,13 @@ class cfgVehicles
 			"\gebsfish\data\fish\laketrout_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	class geb_SturgeonFilletMeat: geb_FreshWater_Fillet_Heavy {
+	class geb_LakeSturgeonFilletMeat: geb_FreshWater_Fillet_Heavy {
 		scope = 2;
-		displayName = "$STR_fish_sturgeon_fillet";
-		descriptionShort = "$STR_fish_sturgeon_desc";
+		displayName = "$STR_fish_lakesturgeon_fillet";
+		descriptionShort = "$STR_fish_lakesturgeon_desc";
 		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\sturgeon_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
+			"\gebsfish\data\fish\lakesturgeon_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
 	class geb_WhiteBassFilletMeat: geb_FreshWater_Fillet_Medium {
@@ -1332,7 +1355,7 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_roughneckrock_desc";
 		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\roughneckrock_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
+			"\gebsfish\data\fish\rougheyerock_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
 	class geb_SeverumFilletMeat: geb_SaltWater_Fillet_Medium {
@@ -1622,6 +1645,36 @@ class cfgVehicles
 					nutrition_properties[] = {1,20,0,1,0};
 				};
 			};
+		};
+	};
+	class geb_YellowCaviar: RedCaviar
+	{
+		scope=2;
+		displayName="$STR_YellowCaviar";
+		descriptionShort="$STR_YellowCaviar_desc";
+		hiddenSelections[]=
+		{
+			"cs_raw"
+		};
+		hiddenSelectionsTextures[]=
+		{
+			"gebsfish\data\fish\pike_caviar_raw_CO.paa",
+			"dz\gear\food\data\red_caviar_rotten_CO.paa"
+		};
+	};
+	class geb_BlackCaviar: RedCaviar
+	{
+		scope=2;
+		displayName="$STR_BlackCaviar";
+		descriptionShort="$STR_BlackCaviar_desc";
+		hiddenSelections[]=
+		{
+			"cs_raw"
+		};
+		hiddenSelectionsTextures[]=
+		{
+			"gebsfish\data\fish\sturgeon_caviar_raw_CO.paa",
+			"dz\gear\food\data\red_caviar_rotten_CO.paa"
 		};
 	};
 };

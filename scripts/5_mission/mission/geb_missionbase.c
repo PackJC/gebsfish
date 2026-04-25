@@ -47,6 +47,7 @@ modded class MissionBase
 		bank.RegisterYieldItem(new geb_YieldCarp(m_gebsConfig.Carp.CatchProbability));
 		bank.RegisterYieldItem(new geb_YieldBitterlings(m_gebsConfig.Bitterlings.CatchProbability));
 		bank.RegisterYieldItem(new geb_YieldNorthernPike(m_gebsConfig.NorthernPike.CatchProbability));
+		bank.RegisterYieldItem(new geb_YieldAlligatorGar(m_gebsConfig.AlligatorGar.CatchProbability));
 		bank.RegisterYieldItem(new geb_YieldLargeMouthBass(m_gebsConfig.LargeMouthBass.CatchProbability));
 		bank.RegisterYieldItem(new geb_YieldSmallMouthBass(m_gebsConfig.SmallMouthBass.CatchProbability));
 		bank.RegisterYieldItem(new geb_YieldWallEye(m_gebsConfig.WallEye.CatchProbability));

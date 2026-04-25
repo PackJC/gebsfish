@@ -66,16 +66,6 @@ modded class NavalPlusData {
 
 #endif
 
-#ifdef Sahrani
-
-modded class SahraniData {
-    override void InitYieldBank() {
-        GetDayZGame().GetYieldDataInitInvoker().Invoke(m_YieldBank);
-    }
-}
-
-#endif
-
 #ifdef Artseinen
 
 modded class ArtseinenData {
