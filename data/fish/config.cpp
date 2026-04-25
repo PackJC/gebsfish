@@ -531,9 +531,9 @@ class cfgVehicles
 	};
 	class geb_BlackBass: geb_FreshFish_Base {
 		scope = 2;
-		displayName = "$STR_fish_blackbass";
-		descriptionShort = "$STR_fish_blackbass_desc";
-		model = "\gebsfish\data\fish\blackbass.p3d";
+		displayName = "$STR_fish_spottedbass";
+		descriptionShort = "$STR_fish_spottedbass_desc";
+		model = "\gebsfish\data\fish\spottedbass.p3d";
 	};
 	class geb_FlatHeadCatFish: geb_FreshFish_Base {
 		scope = 2;
@@ -981,7 +981,7 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_fish_americanlobster";
 		descriptionShort = "$STR_fish_americanlobster_desc";
-		hiddenSelections[] = {"lobster"};
+		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\americanlobster_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\americanlobster.rvmat"};
 		model = "\gebsfish\data\fish\lobster.p3d";
@@ -992,7 +992,7 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_fish_europeanlobster";
 		descriptionShort = "$STR_fish_europeanlobster_desc";
-		hiddenSelections[] = {"lobster"};
+		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobster_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\europeanlobster.rvmat"};
 		model = "\gebsfish\data\fish\lobster.p3d";

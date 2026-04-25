@@ -8,7 +8,7 @@ PixelShaderID="Super";
 VertexShaderID="Super";
 class Stage1
 {
-	texture="gebsfish\data\fish\blackbass_normals.paa";
+	texture="gebsfish\data\fish\spottedbass_normals.paa";
 	uvSource="tex";
 	class uvTransform
 	{
@@ -56,7 +56,7 @@ class Stage4
 };
 class Stage5
 {
-	texture="gebsfish\data\fish\blackbass_smdi.paa";
+	texture="gebsfish\data\fish\spottedbass_smdi.paa";
 	uvSource="tex";
 	class uvTransform
 	{

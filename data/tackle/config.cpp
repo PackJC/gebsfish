@@ -392,7 +392,7 @@ class cfgVehicles
 		};
 	};
 	class geb_OldTackleBase: Container_Base {
-		scope = 2;
+		scope = 0;
 		displayName = "$STR_tools_oldgreentackle";
 		descriptionShort = "$STR_tools_tackle_desc";
 		model = "\gebsfish\data\tackle\mediumtackle.p3d";
