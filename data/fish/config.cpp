@@ -542,6 +542,7 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\flatheadcatfish.p3d";
 		itemSize[] = {7,2};
 		weight = 4000;
+		rotationFlags = 0;
 	};
 	class geb_WallEye: geb_FreshFish_Base {
 		scope = 2;
@@ -662,6 +663,7 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_northernpike_desc";
 		model = "\gebsfish\data\fish\northernpike.p3d";
 		itemSize[] = {6,2};
+		rotationFlags = 0;
 		weight = 4000;
 	};
 	class geb_AlligatorGar: geb_FreshFish_Base {
@@ -671,6 +673,8 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\alligatorgar.p3d";
 		itemSize[] = {6,2};
 		weight = 4000;
+		rotationFlags = 0;
+
 	};
 	class geb_YellowPerch: geb_FreshFish_Base {
 		scope = 2;
@@ -746,6 +750,7 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_lakesturgeon_desc";
 		model = "\gebsfish\data\fish\lakesturgeon.p3d";
 		itemSize[] = {5,2};
+		rotationFlags = 0;
 		weight = 1700;
 	};
 	class geb_WhiteBass: geb_FreshFish_Base {
@@ -779,6 +784,7 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\angelfish.p3d";
 		weight = 2500;
 		itemSize[] = {4,3};
+		rotationFlags = 0;
 	};
 	class geb_AsianSeaBass: geb_SaltFish_Base {
 		scope = 2;
@@ -791,6 +797,7 @@ class cfgVehicles
 		displayName = "$STR_fish_atlanticbluemarlin";
 		descriptionShort = "$STR_fish_atlanticbluemarlin_desc";
 		model = "\gebsfish\data\fish\bluemarlin.p3d";
+		rotationFlags = 0;
 	};
 	class geb_AtlanticSailFish: geb_LargeFish_Base {
 		scope = 2;
@@ -798,6 +805,7 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_atlanticsailfish_desc";
 		model = "\gebsfish\data\fish\sailfish.p3d";
 		itemSize[] = {20,7};
+		rotationFlags = 0;
 	};
 	class geb_MahiMahi: geb_LargeFish_Base {
 		scope = 2;
@@ -805,6 +813,7 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_mahimahi_desc";
 		model = "\gebsfish\data\fish\mahimahi.p3d";
 		itemSize[] = {18,8};
+		rotationFlags = 0;
 	};
 	//Needs to be changed to Bonito next wipe
 	class geb_Bonita: geb_SaltFish_Base {
@@ -845,6 +854,7 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_leopardshark_desc";
 		model = "\gebsfish\data\fish\leopardshark.p3d";
 		weight = 8000;
+		rotationFlags = 0;
 	};
 	class geb_HammerHeadShark: geb_LargeFish_Base {
 		scope = 2;
@@ -852,6 +862,7 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_hammerheadshark_desc";
 		model = "\gebsfish\data\fish\hammerheadshark.p3d";
 		weight = 8000;
+		rotationFlags = 0;
 	};
 	class geb_PacificCod: geb_SaltFish_Base {
 		scope = 2;
@@ -866,6 +877,7 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\redheadcichlid.p3d";
 		weight = 3000;
 		itemSize[] = {4,3};
+		rotationFlags = 0;
 	};
 	//Needs to be renamed RoughEyeRock next wipe
 	class geb_RoughNeckRock: geb_SaltFish_Base {
@@ -884,6 +896,7 @@ class cfgVehicles
 		weight = 3600;
 		itemBehaviour = 0;
 		itemSize[] = {5,4};
+		rotationFlags = 0;
 	};
 	class geb_BlueTang: geb_SaltFish_Base {
 		scope = 2;
@@ -892,6 +905,7 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\bluetang.p3d";
 		weight = 2000;
 		itemSize[] = {4,3};
+		rotationFlags = 0;
 	};
 	class geb_LargeHeadHairTailFish: geb_SaltFish_Base {
 		scope = 2;
@@ -900,6 +914,7 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\hairtailfish.p3d";
 		weight = 800;
 		itemSize[] = {4,1};
+		rotationFlags = 0;
 	};
 	class geb_HumpHeadWrasse: geb_SaltFish_Base {
 		scope = 2;
@@ -908,6 +923,7 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\humpheadwrasse.p3d";
 		weight = 3500;
 		itemSize[] = {5,4};
+		rotationFlags = 0;
 	};
 	class geb_SiameseTigerFish: geb_SaltFish_Base {
 		scope = 2;
@@ -916,12 +932,15 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\siamesetigerfish.p3d";
 		weight = 2500;
 		itemSize[] = {3,3};
+		rotationFlags = 0;
+
 	};
 	class geb_AngelShark: geb_LargeFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_angelshark";
 		descriptionShort = "$STR_fish_angelshark_desc";
 		model = "\gebsfish\data\fish\angelshark.p3d";
+		//Why 4?
 		rotationFlags = 4;
 	};
 	class geb_GreatWhiteShark: geb_LargeFish_Base {
@@ -1048,6 +1067,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\bluegill_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
+	//Will need to be renamed SpottedBassFilletMeat next wipe
 	class geb_BlackBassFilletMeat: geb_FreshWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_blackbass_fillet";
@@ -1351,6 +1371,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\redheadcichlid_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
+	//Will need to be renamed RoughEyeRockFilletMeat next wipe
 	class geb_RoughNeckRockFilletMeat: geb_SaltWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_rougheyerock_fillet";
@@ -1510,7 +1531,7 @@ class cfgVehicles
 		displayName = "$STR_fish_americanlobster_tail";
 		descriptionShort = "$STR_fish_americanlobster_desc";
 		model = "\gebsfish\data\fish\lobstertail.p3d";
-		hiddenSelections[] = {"lobster"};
+		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\americanlobsterclaw_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\americanlobsterclaw.rvmat"};
 		itemSize[] = {1,3};
@@ -1546,7 +1567,7 @@ class cfgVehicles
 		displayName = "$STR_fish_europeanlobster_tail";
 		descriptionShort = "$STR_fish_europeanlobster_desc";
 		model = "\gebsfish\data\fish\lobstertail.p3d";
-		hiddenSelections[] = {"lobster"};
+		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobstertail_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\europeanlobstertail.rvmat"};
 		itemSize[] = {1,3};
@@ -1582,7 +1603,7 @@ class cfgVehicles
 		displayName = "$STR_fish_americanlobster_claw";
 		descriptionShort = "$STR_fish_americanlobster_desc";
 		model = "\gebsfish\data\fish\lobsterclaw.p3d";
-		hiddenSelections[] = {"lobster"};
+		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\americanlobsterclaw_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\americanlobsterclaw.rvmat"};
 		itemSize[] = {2,2};
@@ -1618,7 +1639,7 @@ class cfgVehicles
 		displayName = "$STR_fish_europeanlobster_claw";
 		descriptionShort = "$STR_fish_europeanlobster_desc";
 		model = "\gebsfish\data\fish\lobsterclaw.p3d";
-		hiddenSelections[] = {"lobster"};
+		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobsterclaw_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\europeanlobsterclaw.rvmat"};
 		itemSize[] = {2,2};
