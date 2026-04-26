@@ -806,6 +806,7 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\mahimahi.p3d";
 		itemSize[] = {18,8};
 	};
+	//Needs to be changed to Bonito next wipe
 	class geb_Bonita: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_bonita";
@@ -869,8 +870,8 @@ class cfgVehicles
 	//Needs to be renamed RoughEyeRock next wipe
 	class geb_RoughNeckRock: geb_SaltFish_Base {
 		scope = 2;
-		displayName = "$STR_fish_roughneckrock";
-		descriptionShort = "$STR_fish_roughneckrock_desc";
+		displayName = "$STR_fish_rougheyerock";
+		descriptionShort = "$STR_fish_rougheyerock_desc";
 		model = "\gebsfish\data\fish\rougheyerock.p3d";
 		weight = 3000;
 		itemSize[] = {4,3};
@@ -1268,6 +1269,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\mahimahi_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
+	//Needs to be changed to Bonito next wipe
 	class geb_BonitaFilletMeat: geb_SaltWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_bonita_fillet";
@@ -1351,8 +1353,8 @@ class cfgVehicles
 	};
 	class geb_RoughNeckRockFilletMeat: geb_SaltWater_Fillet_Medium {
 		scope = 2;
-		displayName = "$STR_fish_roughneckrock_fillet";
-		descriptionShort = "$STR_fish_roughneckrock_desc";
+		displayName = "$STR_fish_rougheyerock_fillet";
+		descriptionShort = "$STR_fish_rougheyerock_desc";
 		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\rougheyerock_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
