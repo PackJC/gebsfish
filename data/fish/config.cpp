@@ -122,7 +122,6 @@ class cfgVehicles
 			};
 		};
 	};
-
 	class geb_SaltFish_Base: Edible_Base {
 		scope = 0;
 		itemSize[] = {5,2};
@@ -202,7 +201,6 @@ class cfgVehicles
 			};
 		};
 	};
-
 	class geb_LargeFish_Base: Edible_Base {
 		scope = 0;
 		debug_ItemCategory = 6;
@@ -281,16 +279,109 @@ class cfgVehicles
 			};
 		};
 	};
-
     class geb_Trout_Base: geb_FreshFish_Base {
 		scope = 0;
 		model = "\gebsfish\data\fish\geb_Trout_Base.p3d";
 		hiddenSelections[] = {"Camo"};
-
 	};
-
-	class geb_FreshWater_Fillet_Lean: CarpFilletMeat
-	{
+	class geb_Lobster_Base : geb_SaltFish_Base {
+		scope = 0;
+		model = "\gebsfish\data\fish\lobster.p3d";
+		weight = 3000;
+		itemSize[] = {3,2};
+	};
+	class geb_LobsterTail_Base : MackerelFilletMeat {
+		scope = 0;
+		model = "\gebsfish\data\fish\lobstertail.p3d";
+		itemSize[] = {1,3};
+		class Food: Food
+		{
+			class FoodStages: FoodStages
+			{
+				class Raw: Raw
+				{
+					nutrition_properties[] = {1,105,70,1,0};
+				};
+				class Baked: Baked
+				{
+					nutrition_properties[] = {1,130,22,1,0};
+				};
+				class Boiled: Boiled
+				{
+					nutrition_properties[] = {1,108,84,1,0};
+				};
+				class Dried: Dried
+				{
+					nutrition_properties[] = {1,145,10,1,0};
+				};
+				class Burned: Burned
+				{
+					nutrition_properties[] = {1,20,0,1,0};
+				};
+			};
+		};
+	};
+	class geb_LobsterClaw_Base : MackerelFilletMeat {
+		scope = 0;
+		model = "\gebsfish\data\fish\lobsterclaw.p3d";
+		itemSize[] = {2,2};
+		class Food: Food
+		{
+			class FoodStages: FoodStages
+			{
+				class Raw: Raw
+				{
+					nutrition_properties[] = {1,84,66,1,0};
+				};
+				class Baked: Baked
+				{
+					nutrition_properties[] = {1,106,22,1,0};
+				};
+				class Boiled: Boiled
+				{
+					nutrition_properties[] = {1,90,80,1,0};
+				};
+				class Dried: Dried
+				{
+					nutrition_properties[] = {1,122,10,1,0};
+				};
+				class Burned: Burned
+				{
+					nutrition_properties[] = {1,20,0,1,0};
+				};
+			};
+		};
+	};
+	class geb_Crayfish_Base: Shrimp {
+		scope = 0;
+		rotationFlags = 34;
+		model = "\gebsfish\data\fish\crayfish.p3d";
+		itemSize[] = {2,1};
+		weight = 200;
+		hiddenSelections[] =
+        {
+            "Camo"
+        };
+		hiddenSelectionsTextures[] =
+        {
+            "dz\gear\food\data\shrimp_raw_co.paa",
+            "dz\gear\food\data\shrimp_baked_co.paa",
+            "dz\gear\food\data\shrimp_boiled_co.paa",
+            "dz\gear\food\data\shrimp_dried_co.paa",
+            "dz\gear\food\data\shrimp_burnt_co.paa",
+            "dz\gear\food\data\shrimp_rotten_co.paa"
+        };
+        hiddenSelectionsMaterials[] =
+        {
+            "dz\gear\food\data\shrimp_raw.rvmat",
+            "dz\gear\food\data\shrimp_baked.rvmat",
+            "dz\gear\food\data\shrimp_boiled.rvmat",
+            "dz\gear\food\data\shrimp_dried.rvmat",
+            "dz\gear\food\data\shrimp_burnt.rvmat",
+            "dz\gear\food\data\shrimp_rotten.rvmat"
+        };
+	};
+	class geb_FreshWater_Fillet_Lean: CarpFilletMeat {
 		scope=0;
 		class Food: Food
 		{
@@ -319,9 +410,7 @@ class cfgVehicles
 			};
 		};
 	};
-
-	class geb_FreshWater_Fillet_Medium: CarpFilletMeat
-	{
+	class geb_FreshWater_Fillet_Medium: CarpFilletMeat {
 		scope=0;
 		class Food: Food
 		{
@@ -350,9 +439,7 @@ class cfgVehicles
 			};
 		};
 	};
-
-	class geb_FreshWater_Fillet_Heavy: CarpFilletMeat
-	{
+	class geb_FreshWater_Fillet_Heavy: CarpFilletMeat {
 		scope=0;
 		class Food: Food
 		{
@@ -381,9 +468,7 @@ class cfgVehicles
 			};
 		};
 	};
-
-	class geb_SaltWater_Fillet_Lean: MackerelFilletMeat
-	{
+	class geb_SaltWater_Fillet_Lean: MackerelFilletMeat {
 		scope=0;
 		class Food: Food
 		{
@@ -412,9 +497,7 @@ class cfgVehicles
 			};
 		};
 	};
-
-	class geb_SaltWater_Fillet_Medium: MackerelFilletMeat
-	{
+	class geb_SaltWater_Fillet_Medium: MackerelFilletMeat {
 		scope=0;
 		class Food: Food
 		{
@@ -443,9 +526,7 @@ class cfgVehicles
 			};
 		};
 	};
-
-	class geb_SaltWater_Fillet_Fatty: MackerelFilletMeat
-	{
+	class geb_SaltWater_Fillet_Fatty: MackerelFilletMeat {
 		scope=0;
 		class Food: Food
 		{
@@ -474,9 +555,7 @@ class cfgVehicles
 			};
 		};
 	};
-
-	class geb_SaltWater_Fillet_Predator: MackerelFilletMeat
-	{
+	class geb_SaltWater_Fillet_Predator: MackerelFilletMeat {
 		scope=0;
 		class Food: Food
 		{
@@ -505,8 +584,6 @@ class cfgVehicles
 			};
 		};
 	};
-	
-
 	/*
 
 		FISH
@@ -542,6 +619,7 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\flatheadcatfish.p3d";
 		itemSize[] = {7,2};
 		weight = 4000;
+		rotationFlags = 0;
 	};
 	class geb_WallEye: geb_FreshFish_Base {
 		scope = 2;
@@ -662,6 +740,7 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_northernpike_desc";
 		model = "\gebsfish\data\fish\northernpike.p3d";
 		itemSize[] = {6,2};
+		rotationFlags = 0;
 		weight = 4000;
 	};
 	class geb_AlligatorGar: geb_FreshFish_Base {
@@ -671,6 +750,7 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\alligatorgar.p3d";
 		itemSize[] = {6,2};
 		weight = 4000;
+		rotationFlags = 0;
 	};
 	class geb_YellowPerch: geb_FreshFish_Base {
 		scope = 2;
@@ -746,6 +826,7 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_lakesturgeon_desc";
 		model = "\gebsfish\data\fish\lakesturgeon.p3d";
 		itemSize[] = {5,2};
+		rotationFlags = 0;
 		weight = 1700;
 	};
 	class geb_WhiteBass: geb_FreshFish_Base {
@@ -779,6 +860,7 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\angelfish.p3d";
 		weight = 2500;
 		itemSize[] = {4,3};
+		rotationFlags = 0;
 	};
 	class geb_AsianSeaBass: geb_SaltFish_Base {
 		scope = 2;
@@ -791,6 +873,7 @@ class cfgVehicles
 		displayName = "$STR_fish_atlanticbluemarlin";
 		descriptionShort = "$STR_fish_atlanticbluemarlin_desc";
 		model = "\gebsfish\data\fish\bluemarlin.p3d";
+		rotationFlags = 0;
 	};
 	class geb_AtlanticSailFish: geb_LargeFish_Base {
 		scope = 2;
@@ -798,6 +881,7 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_atlanticsailfish_desc";
 		model = "\gebsfish\data\fish\sailfish.p3d";
 		itemSize[] = {20,7};
+		rotationFlags = 0;
 	};
 	class geb_MahiMahi: geb_LargeFish_Base {
 		scope = 2;
@@ -805,7 +889,9 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_mahimahi_desc";
 		model = "\gebsfish\data\fish\mahimahi.p3d";
 		itemSize[] = {18,8};
+		rotationFlags = 0;
 	};
+	//Needs to be changed to Bonito next wipe
 	class geb_Bonita: geb_SaltFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_bonita";
@@ -865,12 +951,13 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\redheadcichlid.p3d";
 		weight = 3000;
 		itemSize[] = {4,3};
+		rotationFlags = 0;
 	};
 	//Needs to be renamed RoughEyeRock next wipe
 	class geb_RoughNeckRock: geb_SaltFish_Base {
 		scope = 2;
-		displayName = "$STR_fish_roughneckrock";
-		descriptionShort = "$STR_fish_roughneckrock_desc";
+		displayName = "$STR_fish_rougheyerock";
+		descriptionShort = "$STR_fish_rougheyerock_desc";
 		model = "\gebsfish\data\fish\rougheyerock.p3d";
 		weight = 3000;
 		itemSize[] = {4,3};
@@ -883,6 +970,7 @@ class cfgVehicles
 		weight = 3600;
 		itemBehaviour = 0;
 		itemSize[] = {5,4};
+		rotationFlags = 0;
 	};
 	class geb_BlueTang: geb_SaltFish_Base {
 		scope = 2;
@@ -891,6 +979,7 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\bluetang.p3d";
 		weight = 2000;
 		itemSize[] = {4,3};
+		rotationFlags = 0;
 	};
 	class geb_LargeHeadHairTailFish: geb_SaltFish_Base {
 		scope = 2;
@@ -898,7 +987,8 @@ class cfgVehicles
 		descriptionShort = "$STR_fish_largeheadhairtailfish_desc";
 		model = "\gebsfish\data\fish\hairtailfish.p3d";
 		weight = 800;
-		itemSize[] = {4,1};
+		itemSize[] = {8,2};
+		rotationFlags = 0;
 	};
 	class geb_HumpHeadWrasse: geb_SaltFish_Base {
 		scope = 2;
@@ -907,6 +997,7 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\humpheadwrasse.p3d";
 		weight = 3500;
 		itemSize[] = {5,4};
+		rotationFlags = 0;
 	};
 	class geb_SiameseTigerFish: geb_SaltFish_Base {
 		scope = 2;
@@ -915,13 +1006,13 @@ class cfgVehicles
 		model = "\gebsfish\data\fish\siamesetigerfish.p3d";
 		weight = 2500;
 		itemSize[] = {3,3};
+		rotationFlags = 0;
 	};
 	class geb_AngelShark: geb_LargeFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_angelshark";
 		descriptionShort = "$STR_fish_angelshark_desc";
 		model = "\gebsfish\data\fish\angelshark.p3d";
-		rotationFlags = 4;
 	};
 	class geb_GreatWhiteShark: geb_LargeFish_Base {
 		scope = 2;
@@ -945,6 +1036,7 @@ class cfgVehicles
 		weight = 100;
 		itemSize[] = {1,1};
 	};
+	//Needs to be renamed geb_BlueMussel next wipe
 	class geb_Mussel: Shrimp {
 		scope = 2;
 		displayName = "$STR_fish_mussel";
@@ -977,27 +1069,21 @@ class cfgVehicles
 		weight = 500;
 		itemSize[] = {2,2};
 	};
-	class geb_AmericanLobster: geb_SaltFish_Base {
+	class geb_AmericanLobster: geb_Lobster_Base {
 		scope = 2;
 		displayName = "$STR_fish_americanlobster";
 		descriptionShort = "$STR_fish_americanlobster_desc";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\americanlobster_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\americanlobster.rvmat"};
-		model = "\gebsfish\data\fish\lobster.p3d";
-		weight = 3000;
-		itemSize[] = {3,2};
 	};	
-	class geb_EuropeanLobster: geb_SaltFish_Base {
+	class geb_EuropeanLobster: geb_Lobster_Base {
 		scope = 2;
 		displayName = "$STR_fish_europeanlobster";
 		descriptionShort = "$STR_fish_europeanlobster_desc";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobster_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\europeanlobster.rvmat"};
-		model = "\gebsfish\data\fish\lobster.p3d";
-		weight = 3000;
-		itemSize[] = {3,2};
 	};
 	class geb_KingCrab: geb_SaltFish_Base {
 		scope = 2;
@@ -1018,23 +1104,194 @@ class cfgVehicles
 		itemSize[] = {3,3};
 	};
 	//Freshwater crustaceans
-	class  geb_EuropeanCrayFish: Shrimp {
+	class  geb_EuropeanCrayFish: geb_Crayfish_Base {
 		scope = 2;
-		rotationFlags = 34;
 		displayName = "$STR_fish_europeancrayfish";
 		descriptionShort = "$STR_fish_europeancrayfish_desc";
-		model = "\gebsfish\data\fish\europeancrayfish.p3d";
-		itemSize[] = {1,2};
-		weight = 200;
+		hiddenSelections[] =
+        {
+            "Camo"
+        };
+		hiddenSelectionsTextures[] =
+        {
+            "\gebsfish\data\fish\crayfish_european_co.paa",
+            "dz\gear\food\data\shrimp_baked_co.paa",
+            "dz\gear\food\data\shrimp_boiled_co.paa",
+            "dz\gear\food\data\shrimp_dried_co.paa",
+            "dz\gear\food\data\shrimp_burnt_co.paa",
+            "dz\gear\food\data\shrimp_rotten_co.paa"
+        };
+        hiddenSelectionsMaterials[] =
+        {
+            "\gebsfish\data\fish\crayfish_european.rvmat",
+            "dz\gear\food\data\shrimp_baked.rvmat",
+            "dz\gear\food\data\shrimp_boiled.rvmat",
+            "dz\gear\food\data\shrimp_dried.rvmat",
+            "dz\gear\food\data\shrimp_burnt.rvmat",
+            "dz\gear\food\data\shrimp_rotten.rvmat"
+        };
 	};
-	class  geb_SignalCrayFish: Shrimp {
+	class  geb_SignalCrayFish: geb_Crayfish_Base {
 		scope = 2;
-		rotationFlags = 34;
 		displayName = "$STR_fish_signalcrayfish";
 		descriptionShort = "$STR_fish_signalcrayfish_desc";
-		model = "\gebsfish\data\fish\signalcrayfish.p3d";
-		itemSize[] = {1,2};
-		weight = 200;
+		hiddenSelections[] =
+        {
+            "Camo"
+        };
+		hiddenSelectionsTextures[] =
+        {
+            "\gebsfish\data\fish\crayfish_signal_co.paa",
+            "dz\gear\food\data\shrimp_baked_co.paa",
+            "dz\gear\food\data\shrimp_boiled_co.paa",
+            "dz\gear\food\data\shrimp_dried_co.paa",
+            "dz\gear\food\data\shrimp_burnt_co.paa",
+            "dz\gear\food\data\shrimp_rotten_co.paa"
+        };
+        hiddenSelectionsMaterials[] =
+        {
+            "\gebsfish\data\fish\crayfish_signal.rvmat",
+            "dz\gear\food\data\shrimp_baked.rvmat",
+            "dz\gear\food\data\shrimp_boiled.rvmat",
+            "dz\gear\food\data\shrimp_dried.rvmat",
+            "dz\gear\food\data\shrimp_burnt.rvmat",
+            "dz\gear\food\data\shrimp_rotten.rvmat"
+        };
+	};
+	class  geb_FloridaCrayFish: geb_Crayfish_Base {
+		scope = 2;
+		displayName = "$STR_fish_floridacrayfish";
+		descriptionShort = "$STR_fish_floridacrayfish_desc";
+		hiddenSelections[] =
+        {
+            "Camo"
+        };
+		hiddenSelectionsTextures[] =
+        {
+            "\gebsfish\data\fish\crayfish_florida_co.paa",
+            "dz\gear\food\data\shrimp_baked_co.paa",
+            "dz\gear\food\data\shrimp_boiled_co.paa",
+            "dz\gear\food\data\shrimp_dried_co.paa",
+            "dz\gear\food\data\shrimp_burnt_co.paa",
+            "dz\gear\food\data\shrimp_rotten_co.paa"
+        };
+        hiddenSelectionsMaterials[] =
+        {
+            "\gebsfish\data\fish\crayfish_florida.rvmat",
+            "dz\gear\food\data\shrimp_baked.rvmat",
+            "dz\gear\food\data\shrimp_boiled.rvmat",
+            "dz\gear\food\data\shrimp_dried.rvmat",
+            "dz\gear\food\data\shrimp_burnt.rvmat",
+            "dz\gear\food\data\shrimp_rotten.rvmat"
+        };	
+	};
+	class  geb_RustyCrayFish: geb_Crayfish_Base {
+		scope = 2;
+		displayName = "$STR_fish_rustycrayfish";
+		descriptionShort = "$STR_fish_rustycrayfish_desc";
+		hiddenSelections[] =
+        {
+            "Camo"
+        };
+		hiddenSelectionsTextures[] =
+        {
+            "\gebsfish\data\fish\crayfish_rusty_co.paa",
+            "dz\gear\food\data\shrimp_baked_co.paa",
+            "dz\gear\food\data\shrimp_boiled_co.paa",
+            "dz\gear\food\data\shrimp_dried_co.paa",
+            "dz\gear\food\data\shrimp_burnt_co.paa",
+            "dz\gear\food\data\shrimp_rotten_co.paa"
+        };
+        hiddenSelectionsMaterials[] =
+        {
+            "\gebsfish\data\fish\crayfish_rusty.rvmat",
+            "dz\gear\food\data\shrimp_baked.rvmat",
+            "dz\gear\food\data\shrimp_boiled.rvmat",
+            "dz\gear\food\data\shrimp_dried.rvmat",
+            "dz\gear\food\data\shrimp_burnt.rvmat",
+            "dz\gear\food\data\shrimp_rotten.rvmat"
+        };	
+	};
+	class  geb_RedSwampCrayFish: geb_Crayfish_Base {
+		scope = 2;
+		displayName = "$STR_fish_redswampcrayfish";
+		descriptionShort = "$STR_fish_redswampcrayfish_desc";
+		hiddenSelections[] =
+        {
+            "Camo"
+        };
+		hiddenSelectionsTextures[] =
+        {
+            "\gebsfish\data\fish\crayfish_redswamp_co.paa",
+            "dz\gear\food\data\shrimp_baked_co.paa",
+            "dz\gear\food\data\shrimp_boiled_co.paa",
+            "dz\gear\food\data\shrimp_dried_co.paa",
+            "dz\gear\food\data\shrimp_burnt_co.paa",
+            "dz\gear\food\data\shrimp_rotten_co.paa"
+        };
+        hiddenSelectionsMaterials[] =
+        {
+            "\gebsfish\data\fish\crayfish_redswamp.rvmat",
+            "dz\gear\food\data\shrimp_baked.rvmat",
+            "dz\gear\food\data\shrimp_boiled.rvmat",
+            "dz\gear\food\data\shrimp_dried.rvmat",
+            "dz\gear\food\data\shrimp_burnt.rvmat",
+            "dz\gear\food\data\shrimp_rotten.rvmat"
+        };	
+	};
+	class  geb_MonongahelaCrayFish: geb_Crayfish_Base {
+		scope = 2;
+		displayName = "$STR_fish_monongahelacrayfish";
+		descriptionShort = "$STR_fish_monongahelacrayfish_desc";
+		hiddenSelections[] =
+        {
+            "Camo"
+        };
+		hiddenSelectionsTextures[] =
+        {
+            "\gebsfish\data\fish\crayfish_monongahela_co.paa",
+            "dz\gear\food\data\shrimp_baked_co.paa",
+            "dz\gear\food\data\shrimp_boiled_co.paa",
+            "dz\gear\food\data\shrimp_dried_co.paa",
+            "dz\gear\food\data\shrimp_burnt_co.paa",
+            "dz\gear\food\data\shrimp_rotten_co.paa"
+        };
+        hiddenSelectionsMaterials[] =
+        {
+            "\gebsfish\data\fish\crayfish_monongahela.rvmat",
+            "dz\gear\food\data\shrimp_baked.rvmat",
+            "dz\gear\food\data\shrimp_boiled.rvmat",
+            "dz\gear\food\data\shrimp_dried.rvmat",
+            "dz\gear\food\data\shrimp_burnt.rvmat",
+            "dz\gear\food\data\shrimp_rotten.rvmat"
+        };	
+	};
+	class  geb_CaveCrayFish: geb_Crayfish_Base {
+		scope = 2;
+		displayName = "$STR_fish_cavecrayfish";
+		descriptionShort = "$STR_fish_cavecrayfish_desc";
+		hiddenSelections[] =
+        {
+            "Camo"
+        };
+		hiddenSelectionsTextures[] =
+        {
+            "\gebsfish\data\fish\crayfish_cave_co.paa",
+            "dz\gear\food\data\shrimp_baked_co.paa",
+            "dz\gear\food\data\shrimp_boiled_co.paa",
+            "dz\gear\food\data\shrimp_dried_co.paa",
+            "dz\gear\food\data\shrimp_burnt_co.paa",
+            "dz\gear\food\data\shrimp_rotten_co.paa"
+        };
+        hiddenSelectionsMaterials[] =
+        {
+            "\gebsfish\data\fish\crayfish_cave.rvmat",
+            "dz\gear\food\data\shrimp_baked.rvmat",
+            "dz\gear\food\data\shrimp_boiled.rvmat",
+            "dz\gear\food\data\shrimp_dried.rvmat",
+            "dz\gear\food\data\shrimp_burnt.rvmat",
+            "dz\gear\food\data\shrimp_rotten.rvmat"
+        };	
 	};
 
 	//Freshwater Fish Fillets
@@ -1047,6 +1304,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\bluegill_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
+	//Will need to be renamed SpottedBassFilletMeat next wipe
 	class geb_BlackBassFilletMeat: geb_FreshWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_blackbass_fillet";
@@ -1155,7 +1413,6 @@ class cfgVehicles
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\browntrout_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
-
 	};
 	class geb_BrookTroutFilletMeat: geb_FreshWater_Fillet_Medium {
 		scope = 2;
@@ -1165,7 +1422,6 @@ class cfgVehicles
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\brooktrout_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
-
 	};
 	class geb_CutThroatTroutFilletMeat: geb_FreshWater_Fillet_Medium {
 		scope = 2;
@@ -1268,6 +1524,7 @@ class cfgVehicles
 			"\gebsfish\data\fish\mahimahi_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
+	//Needs to be changed to Bonito next wipe
 	class geb_BonitaFilletMeat: geb_SaltWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_bonita_fillet";
@@ -1349,10 +1606,11 @@ class cfgVehicles
 			"\gebsfish\data\fish\redheadcichlid_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
+	//Will need to be renamed RoughEyeRockFilletMeat next wipe
 	class geb_RoughNeckRockFilletMeat: geb_SaltWater_Fillet_Medium {
 		scope = 2;
-		displayName = "$STR_fish_roughneckrock_fillet";
-		descriptionShort = "$STR_fish_roughneckrock_desc";
+		displayName = "$STR_fish_rougheyerock_fillet";
+		descriptionShort = "$STR_fish_rougheyerock_desc";
 		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\rougheyerock_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
@@ -1367,7 +1625,6 @@ class cfgVehicles
 			"\gebsfish\data\fish\severum_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-
 	class geb_BlueTangFilletMeat: geb_SaltWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_bluetang_fillet";
@@ -1503,152 +1760,39 @@ class cfgVehicles
 			};
 		};
 	};
-	class geb_AmericanLobsterTail : MackerelFilletMeat {
+	class geb_AmericanLobsterTail : geb_LobsterTail_Base {
 		scope = 2;
 		displayName = "$STR_fish_americanlobster_tail";
 		descriptionShort = "$STR_fish_americanlobster_desc";
-		model = "\gebsfish\data\fish\lobstertail.p3d";
-		hiddenSelections[] = {"lobster"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\americanlobsterclaw_ca.paa"};
-		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\americanlobsterclaw.rvmat"};
-		itemSize[] = {1,3};
-		class Food: Food
-		{
-			class FoodStages: FoodStages
-			{
-				class Raw: Raw
-				{
-					nutrition_properties[] = {1,105,70,1,0};
-				};
-				class Baked: Baked
-				{
-					nutrition_properties[] = {1,130,22,1,0};
-				};
-				class Boiled: Boiled
-				{
-					nutrition_properties[] = {1,108,84,1,0};
-				};
-				class Dried: Dried
-				{
-					nutrition_properties[] = {1,145,10,1,0};
-				};
-				class Burned: Burned
-				{
-					nutrition_properties[] = {1,20,0,1,0};
-				};
-			};
-		};
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\americanlobstertail_ca.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\americanlobstertail.rvmat"};
 	};
-	class geb_EuropeanLobsterTail : MackerelFilletMeat {
+	class geb_EuropeanLobsterTail : geb_LobsterTail_Base {
 		scope = 2;
 		displayName = "$STR_fish_europeanlobster_tail";
 		descriptionShort = "$STR_fish_europeanlobster_desc";
-		model = "\gebsfish\data\fish\lobstertail.p3d";
-		hiddenSelections[] = {"lobster"};
+		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobstertail_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\europeanlobstertail.rvmat"};
-		itemSize[] = {1,3};
-		class Food: Food
-		{
-			class FoodStages: FoodStages
-			{
-				class Raw: Raw
-				{
-					nutrition_properties[] = {1,92,68,1,0};
-				};
-				class Baked: Baked
-				{
-					nutrition_properties[] = {1,116,22,1,0};
-				};
-				class Boiled: Boiled
-				{
-					nutrition_properties[] = {1,98,82,1,0};
-				};
-				class Dried: Dried
-				{
-					nutrition_properties[] = {1,132,10,1,0};
-				};
-				class Burned: Burned
-				{
-					nutrition_properties[] = {1,20,0,1,0};
-				};
-			};
-		};
 	};	
-	class geb_AmericanLobsterClaw : MackerelFilletMeat {
+	class geb_AmericanLobsterClaw : geb_LobsterClaw_Base {
 		scope = 2;
 		displayName = "$STR_fish_americanlobster_claw";
 		descriptionShort = "$STR_fish_americanlobster_desc";
-		model = "\gebsfish\data\fish\lobsterclaw.p3d";
-		hiddenSelections[] = {"lobster"};
+		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\americanlobsterclaw_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\americanlobsterclaw.rvmat"};
-		itemSize[] = {2,2};
-		class Food: Food
-		{
-			class FoodStages: FoodStages
-			{
-				class Raw: Raw
-				{
-					nutrition_properties[] = {1,84,66,1,0};
-				};
-				class Baked: Baked
-				{
-					nutrition_properties[] = {1,106,22,1,0};
-				};
-				class Boiled: Boiled
-				{
-					nutrition_properties[] = {1,90,80,1,0};
-				};
-				class Dried: Dried
-				{
-					nutrition_properties[] = {1,122,10,1,0};
-				};
-				class Burned: Burned
-				{
-					nutrition_properties[] = {1,20,0,1,0};
-				};
-			};
-		};
 	};
-	class geb_EuropeanLobsterClaw : MackerelFilletMeat {
+	class geb_EuropeanLobsterClaw : geb_LobsterClaw_Base {
 		scope = 2;
 		displayName = "$STR_fish_europeanlobster_claw";
 		descriptionShort = "$STR_fish_europeanlobster_desc";
-		model = "\gebsfish\data\fish\lobsterclaw.p3d";
-		hiddenSelections[] = {"lobster"};
+		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobsterclaw_ca.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\europeanlobsterclaw.rvmat"};
-		itemSize[] = {2,2};
-		class Food: Food
-		{
-			class FoodStages: FoodStages
-			{
-				class Raw: Raw
-				{
-					nutrition_properties[] = {1,74,64,1,0};
-				};
-				class Baked: Baked
-				{
-					nutrition_properties[] = {1,96,22,1,0};
-				};
-				class Boiled: Boiled
-				{
-					nutrition_properties[] = {1,82,78,1,0};
-				};
-				class Dried: Dried
-				{
-					nutrition_properties[] = {1,112,10,1,0};
-				};
-				class Burned: Burned
-				{
-					nutrition_properties[] = {1,20,0,1,0};
-				};
-			};
-		};
 	};
-	class geb_YellowCaviar: RedCaviar
-	{
+	class geb_YellowCaviar: RedCaviar {
 		scope=2;
 		displayName="$STR_YellowCaviar";
 		descriptionShort="$STR_YellowCaviar_desc";
@@ -1662,8 +1806,7 @@ class cfgVehicles
 			"dz\gear\food\data\red_caviar_rotten_CO.paa"
 		};
 	};
-	class geb_BlackCaviar: RedCaviar
-	{
+	class geb_BlackCaviar: RedCaviar {
 		scope=2;
 		displayName="$STR_BlackCaviar";
 		descriptionShort="$STR_BlackCaviar_desc";

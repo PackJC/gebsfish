@@ -587,7 +587,7 @@ class cfgVehicles
 		scope = 2;
 		displayName = "$STR_tools_lure2";
 		descriptionShort = "$STR_tools_lure2_desc";
-		model = "\gebsfish\data\tackle\greencrank.p3d";
+		model = "\gebsfish\data\tackle\redcrank.p3d";
 		inventorySlot[] = {"Hook"};
 		hookType = "geb_Lure2";
 		class DamageSystem {
