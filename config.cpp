@@ -14,9 +14,16 @@ class CfgPatches
 	{
 		requiredAddons[]=
 		{
-			"DZ_Data",
+			"JM_CF_Scripts",  // Required for GetRPCManager()
+			"DZ_Vehicles_Wheeled",
+			"DZ_Vehicles_Parts",
+			"DZ_Vehicles_Water",
+			"DZ_Sounds",
 			"DZ_Scripts",
-			"JM_CF_Scripts"  // Required for GetRPCManager()
+			"DZ_Data",
+			"DZ_Weapons_Melee",
+			"DZ_Gear_Tools",
+			"DZ_Vehicles"
 		};
 	};
 };
