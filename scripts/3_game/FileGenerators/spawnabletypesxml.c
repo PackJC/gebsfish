@@ -1,11 +1,9 @@
-class gebsfishSpawnableTypes
-{
+class gebsfishSpawnableTypes {
     private const string DIRECTORY_PATH = "$profile:Gebs/Extras/mpmissions/";
     private const string FILE_PATH = "$profile:Gebs/Extras/mpmissions/gebsfish-spawnabletypes.xml";
     private const string VERSION_PREFIX = "<!-- Version: ";
 
-    void GenerateSpawnableTypesXML()
-    {
+    void GenerateSpawnableTypesXML() {
         // Only generate this on the server.
         if (!g_Game || !g_Game.IsServer())
             return;
@@ -13,8 +11,7 @@ class gebsfishSpawnableTypes
         string version = VERSION_GEBSFISH;
 
         // Skip regeneration if the current file already matches the mod version.
-        if (IsCurrentVersion(FILE_PATH, version))
-        {
+        if (IsCurrentVersion(FILE_PATH, version)) {
             GebsfishLogger.Info("Spawnable types XML already at version " + version + ". Skipping regeneration.", "SpawnableTypes");
             return;
         }
@@ -22,8 +19,7 @@ class gebsfishSpawnableTypes
         EnsureDirectoryExists();
 
         FileHandle file = OpenFile(FILE_PATH, FileMode.WRITE);
-        if (!file)
-        {
+        if (!file) {
             GebsfishLogger.Error("Could not create gebsfish-spawnabletypes.xml in $profile:Gebs/Extras/mpmissions/.", "SpawnableTypes");
             return;
         }
@@ -38,8 +34,7 @@ class gebsfishSpawnableTypes
         GebsfishLogger.Info("gebsfish-spawnabletypes.xml successfully generated in $profile:Gebs/Extras/mpmissions/.", "SpawnableTypes");
     }
 
-    protected bool IsCurrentVersion(string filePath, string expectedVersion)
-    {
+    protected bool IsCurrentVersion(string filePath, string expectedVersion) {
         if (!FileExist(filePath))
             return false;
 
@@ -52,8 +47,7 @@ class gebsfishSpawnableTypes
         int lineCount = 0;
 
         // Read the first few lines so the version comment can be found even if the XML declaration is first.
-        while (lineCount < 5 && FGets(readFile, line) > 0)
-        {
+        while (lineCount < 5 && FGets(readFile, line) > 0) {
             existingVersion = ExtractVersionFromLine(line);
             if (existingVersion != string.Empty)
                 break;
@@ -65,8 +59,7 @@ class gebsfishSpawnableTypes
         return existingVersion == expectedVersion;
     }
 
-    protected string ExtractVersionFromLine(string line)
-    {
+    protected string ExtractVersionFromLine(string line) {
         int start = line.IndexOf(VERSION_PREFIX);
         if (start == -1)
             return string.Empty;
@@ -79,27 +72,23 @@ class gebsfishSpawnableTypes
         return tail.Substring(VERSION_PREFIX.Length(), end - VERSION_PREFIX.Length()).Trim();
     }
 
-    protected void EnsureDirectoryExists()
-    {
+    protected void EnsureDirectoryExists() {
         MakeDirectory("$profile:Gebs");
         MakeDirectory("$profile:Gebs/extras");
         MakeDirectory(DIRECTORY_PATH);
     }
 
-    protected void WriteHeader(FileHandle file, string version)
-    {
+    protected void WriteHeader(FileHandle file, string version) {
         FPrint(file, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         FPrint(file, "<!-- Version: " + version + " -->");
         FPrint(file, "<spawnabletypes>");
     }
 
-    protected void WriteFooter(FileHandle file)
-    {
+    protected void WriteFooter(FileHandle file) {
         FPrint(file, "</spawnabletypes>");
     }
 
-    protected void WriteTackleSection(FileHandle file)
-    {
+    protected void WriteTackleSection(FileHandle file) {
         ref array<string> tackleItems = new array<string>;
         tackleItems.Insert("geb_OldBlueTackle");
         tackleItems.Insert("geb_OldGreenTackle");
@@ -140,14 +129,12 @@ class gebsfishSpawnableTypes
         tackleCargo.Insert(new XmlCargoItem("geb_SpoonLure4", 0.33));
 
         FPrint(file, "    <!-- Tackle -->");
-        foreach (string tackle : tackleItems)
-        {
+        foreach (string tackle : tackleItems) {
             WriteTypeWithSingleCargo(file, tackle, 0.20, tackleCargo);
         }
     }
 
-    protected void WriteClothingSection(FileHandle file)
-    {
+    protected void WriteClothingSection(FileHandle file) {
         ref array<string> clothingItems = new array<string>;
         clothingItems.Insert("geb_GreenFishShirt");
         clothingItems.Insert("geb_BlueFishShirt");
@@ -183,8 +170,7 @@ class gebsfishSpawnableTypes
         }
     }
 
-    protected void WriteContainerSection(FileHandle file)
-    {
+    protected void WriteContainerSection(FileHandle file) {
         FPrint(file, "    <!-- Containers -->");
 
         ref array<ref XmlCargoItem> wormCargo = new array<ref XmlCargoItem>;
@@ -203,50 +189,42 @@ class gebsfishSpawnableTypes
         WriteTypeWithRepeatedCargo(file, "geb_MinnowBucket", 12, 0.20, minnowCargo);
     }
 
-    protected void WriteTypeWithSingleCargo(FileHandle file, string typeName, float cargoChance, array<ref XmlCargoItem> items)
-    {
+    protected void WriteTypeWithSingleCargo(FileHandle file, string typeName, float cargoChance, array<ref XmlCargoItem> items) {
         FPrint(file, "    <type name=\"" + typeName + "\">");
         WriteCargoBlock(file, cargoChance, items);
         FPrint(file, "    </type>");
     }
 
-    protected void WriteTypeWithRepeatedCargo(FileHandle file, string typeName, int repeatCount, float cargoChance, array<ref XmlCargoItem> items)
-    {
+    protected void WriteTypeWithRepeatedCargo(FileHandle file, string typeName, int repeatCount, float cargoChance, array<ref XmlCargoItem> items) {
         FPrint(file, "    <type name=\"" + typeName + "\">");
 
-        for (int i = 0; i < repeatCount; i++)
-        {
+        for (int i = 0; i < repeatCount; i++) {
             WriteCargoBlock(file, cargoChance, items);
         }
 
         FPrint(file, "    </type>");
     }
 
-    protected void WriteCargoBlock(FileHandle file, float cargoChance, array<ref XmlCargoItem> items)
-    {
+    protected void WriteCargoBlock(FileHandle file, float cargoChance, array<ref XmlCargoItem> items) {
         FPrint(file, "        <cargo chance=\"" + FormatChance(cargoChance) + "\">");
 
-        foreach (XmlCargoItem item : items)
-        {
+        foreach (XmlCargoItem item : items) {
             FPrint(file, "            <item name=\"" + item.Name + "\" chance=\"" + FormatChance(item.Chance) + "\" />");
         }
 
         FPrint(file, "        </cargo>");
     }
 
-    protected string FormatChance(float chance)
-    {
+    protected string FormatChance(float chance) {
         return string.Format("%.2f", chance);
     }
 }
 
-class XmlCargoItem
-{
+class XmlCargoItem {
     string Name;
     float Chance;
 
-    void XmlCargoItem(string name, float chance)
-    {
+    void XmlCargoItem(string name, float chance) {
         Name = name;
         Chance = chance;
     }

@@ -8,10 +8,8 @@
 
 */
 
-modded class ModItemRegisterCallbacks
-{
-    override void RegisterTwoHanded(DayZPlayerType pType, DayzPlayerItemBehaviorCfg pBehavior)
-    {
+modded class ModItemRegisterCallbacks {
+    override void RegisterTwoHanded(DayZPlayerType pType, DayzPlayerItemBehaviorCfg pBehavior) {
         super.RegisterTwoHanded(pType, pBehavior);
         
           //Saltwater Fish
@@ -35,8 +33,7 @@ modded class ModItemRegisterCallbacks
           pType.AddItemInHandsProfileIK("geb_LakeSturgeon", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
     }
 
-    override void RegisterOneHanded(DayZPlayerType pType, DayzPlayerItemBehaviorCfg pBehavior)
-    {
+    override void RegisterOneHanded(DayZPlayerType pType, DayzPlayerItemBehaviorCfg pBehavior) {
         super.RegisterOneHanded(pType, pBehavior);
         pType.AddItemInHandsProfileIK("geb_LargeMouthBass", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
         pType.AddItemInHandsProfileIK("geb_SmallMouthBass", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
@@ -71,7 +68,5 @@ modded class ModItemRegisterCallbacks
         pType.AddItemInHandsProfileIK("geb_BlueJellyFish", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/shrimp.anm");
         pType.AddItemInHandsProfileIK("geb_SignalCrayFish", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/shrimp.anm");
         pType.AddItemInHandsProfileIK("geb_EuropeanCrayFish", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/shrimp.anm");
-
     }
-
 };

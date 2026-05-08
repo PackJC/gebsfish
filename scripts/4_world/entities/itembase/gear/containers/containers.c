@@ -10,26 +10,21 @@
 */
 
 
-class geb_FilteredContainerBase : Container_Base
-{
-	protected TStringArray GetAllowedItemKinds()
-	{
+class geb_FilteredContainerBase : Container_Base {
+	protected TStringArray GetAllowedItemKinds() {
 		return null;
 	}
 
-	override int GetDamageSystemVersionChange()
-	{
+	override int GetDamageSystemVersionChange() {
 		return 110;
 	}
 
-	override bool CanReceiveItemIntoCargo(EntityAI item)
-	{
+	override bool CanReceiveItemIntoCargo(EntityAI item) {
 		TStringArray allowed = GetAllowedItemKinds();
 		if (!allowed || allowed.Count() == 0)
 			return false;
 
-		for (int i = 0; i < allowed.Count(); i++)
-		{
+		for (int i = 0; i < allowed.Count(); i++) {
 			if (item && item.IsKindOf(allowed.Get(i)))
 				return true;
 		}
@@ -38,62 +33,51 @@ class geb_FilteredContainerBase : Container_Base
 	}
 };
 
-class geb_WormContainer : geb_FilteredContainerBase
-{
+class geb_WormContainer : geb_FilteredContainerBase {
 	static ref TStringArray s_Allowed = { "Worm", "geb_GrubWorm", "geb_RubberWorm" };
 
-	override protected TStringArray GetAllowedItemKinds()
-	{
+	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
 	}
 };
 
-class geb_BugContainer : geb_FilteredContainerBase
-{
+class geb_BugContainer : geb_FilteredContainerBase {
 	static ref TStringArray s_Allowed = { "Worm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm", "geb_RubberWorm" };
 
-	override protected TStringArray GetAllowedItemKinds()
-	{
+	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
 	}
 };
 
-class geb_BambooFishingNet : geb_FilteredContainerBase
-{
+class geb_BambooFishingNet : geb_FilteredContainerBase {
 	static ref TStringArray s_Allowed = { "Worm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm", "geb_RubberWorm", "geb_Minnow", "geb_SignalCrayFish", "geb_EuropeanCrayFish" };
 
-	override protected TStringArray GetAllowedItemKinds()
-	{
+	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
 	}
 };
 
-class geb_MinnowBucket : geb_FilteredContainerBase
-{
+class geb_MinnowBucket : geb_FilteredContainerBase {
 	static ref TStringArray s_Allowed = { "geb_FatheadMinnow", "geb_SignalCrayFish", "geb_EuropeanCrayFish", "Shrimp" };
 
-	override protected TStringArray GetAllowedItemKinds()
-	{
+	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
 	}
 };
 
-class geb_SmallTackleBase : geb_FilteredContainerBase
-{
+class geb_SmallTackleBase : geb_FilteredContainerBase {
 	static ref TStringArray s_Allowed = {
 		"Jig", "geb_OrangeFishGloves", "geb_BlueFishGloves",
 		"geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet",
 		"Hook", "geb_FishKnife_Base", "BoneKnife", "BoneHook", "Pliers"
 	};
 
-	override protected TStringArray GetAllowedItemKinds()
-	{
+	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
 	}
 };
 
-class geb_LargeTackleBase : geb_FilteredContainerBase
-{
+class geb_LargeTackleBase : geb_FilteredContainerBase {
 	static ref TStringArray s_Allowed = {
 		"Jig", "geb_OrangeFishGloves", "geb_BlueFishGloves",
 		"geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet",
@@ -102,8 +86,7 @@ class geb_LargeTackleBase : geb_FilteredContainerBase
 		"Pliers", "Screwdriver", "Steakknife", "stoneknife"
 	};
 
-	override protected TStringArray GetAllowedItemKinds()
-	{
+	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
 	}
 };

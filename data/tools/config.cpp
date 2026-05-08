@@ -8,13 +8,11 @@
 
 */
 
-class CfgNonAIVehicles
-{
+class CfgNonAIVehicles {
 	class StaticObject;
 };
 
-class CfgPatches
-{
+class CfgPatches {
 	class gebsToolsCfgPatches { 	
 		//Never Use same name for patch, because conflict message.
 		requiredAddons[] = {
@@ -24,8 +22,7 @@ class CfgPatches
 	};
 };
 
-class cfgVehicles
-{		
+class cfgVehicles {		
 	//Instantiate Needed Classes
 	class HuntingKnife;
 	class Container_Base;
@@ -39,8 +36,7 @@ class cfgVehicles
 
 	*/
 
-	class geb_FishingRodRepairKit: Inventory_Base
-	{
+	class geb_FishingRodRepairKit: Inventory_Base {
 		scope = 2;
 		displayName = "$STR_tools_fishingrodrepairkit";
 		descriptionShort = "$STR_tools_fishingrodrepairkit_desc";
@@ -61,19 +57,13 @@ class cfgVehicles
 		fragility=0.0099999998;
 		repairKitType=33033;
 		soundImpactType="wood";
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
 					hitpoints=100;
-					healthLevels[]=
-					{
-						
+					healthLevels[]= {
 						{
 							1,
-							
 							{
 								"DZ\gear\tools\data\cleaning_kit_wood.rvmat"
 							}
@@ -133,7 +123,7 @@ class cfgVehicles
 			};
 		};
 	};
-    class geb_FishKnife_Base: HuntingKnife{
+    class geb_FishKnife_Base: HuntingKnife {
         scope=0;
 		displayName="Fish Knife Base";
 		descriptionShort="Fish Knife Base Class";

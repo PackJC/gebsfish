@@ -1,21 +1,17 @@
-enum GebsfishLogLevel
-{
+enum GebsfishLogLevel {
     DEBUG = 0,
     INFO  = 1,
     WARN  = 2,
     ERROR = 3
 };
 
-class GebsfishLogger
-{
+class GebsfishLogger {
     private static const string LOG_DIR = "$profile:Gebs/Fish/Logs";
-
     private static string m_SessionFilePath = "";
     private static GebsfishLogLevel m_MinLevel = GebsfishLogLevel.DEBUG;
     private static bool m_Initialized = false;
 
-    static void Init(string tag = "gebsfish")
-    {
+    static void Init(string tag = "gebsfish") {
         if (m_Initialized)
             return;
 
@@ -28,8 +24,7 @@ class GebsfishLogger
         m_SessionFilePath = LOG_DIR + "/" + BuildDateTimeCompact() + "_" + safeTag + ".log";
 
         FileHandle file = OpenFile(m_SessionFilePath, FileMode.WRITE);
-        if (file == 0)
-        {
+        if (file == 0) {
             m_SessionFilePath = "";
             return;
         }
@@ -49,33 +44,27 @@ class GebsfishLogger
         m_Initialized = true;
     }
 
-    static void SetMinLevel(GebsfishLogLevel level)
-    {
+    static void SetMinLevel(GebsfishLogLevel level) {
         m_MinLevel = level;
     }
 
-    static void Debug(string msg, string category = "")
-    {
+    static void Debug(string msg, string category = "") {
         Log(GebsfishLogLevel.DEBUG, msg, category);
     }
 
-    static void Info(string msg, string category = "")
-    {
+    static void Info(string msg, string category = "") {
         Log(GebsfishLogLevel.INFO, msg, category);
     }
 
-    static void Warn(string msg, string category = "")
-    {
+    static void Warn(string msg, string category = "") {
         Log(GebsfishLogLevel.WARN, msg, category);
     }
 
-    static void Error(string msg, string category = "")
-    {
+    static void Error(string msg, string category = "") {
         Log(GebsfishLogLevel.ERROR, msg, category);
     }
 
-    static void Log(GebsfishLogLevel level, string message, string category = "")
-    {
+    static void Log(GebsfishLogLevel level, string message, string category = "") {
         if (level < m_MinLevel)
             return;
 
@@ -100,14 +89,12 @@ class GebsfishLogger
     }
 
     // Optional helper in case you ever want to force a new log file per session / reload.
-    static void Reset()
-    {
+    static void Reset() {
         m_SessionFilePath = "";
         m_Initialized = false;
     }
 
-    private static string GetExecutionSide()
-    {
+    private static string GetExecutionSide() {
         if (!g_Game)
             return "UNKNOWN";
 
@@ -117,8 +104,7 @@ class GebsfishLogger
         return "CLIENT";
     }
 
-    private static string GetWorldNameSafe()
-    {
+    private static string GetWorldNameSafe() {
         string worldName = "empty";
 
         if (g_Game)
@@ -130,8 +116,7 @@ class GebsfishLogger
         return worldName;
     }
 
-    private static string LevelToString(GebsfishLogLevel level)
-    {
+    private static string LevelToString(GebsfishLogLevel level) {
         switch (level)
         {
             case GebsfishLogLevel.DEBUG: return "DEBUG";
@@ -143,8 +128,7 @@ class GebsfishLogger
         return "UNKNOWN";
     }
 
-    private static string BuildDateTimeReadable()
-    {
+    private static string BuildDateTimeReadable() {
         int year, month, day, hour, minute, second;
         GetYearMonthDayUTC(year, month, day);
         GetHourMinuteSecondUTC(hour, minute, second);
@@ -152,8 +136,7 @@ class GebsfishLogger
         return Pad4(year) + "-" + Pad2(month) + "-" + Pad2(day) + " " + Pad2(hour) + ":" + Pad2(minute) + ":" + Pad2(second);
     }
 
-    private static string BuildDateTimeCompact()
-    {
+    private static string BuildDateTimeCompact() {
         int year, month, day, hour, minute, second;
         GetYearMonthDayUTC(year, month, day);
         GetHourMinuteSecondUTC(hour, minute, second);
@@ -161,15 +144,13 @@ class GebsfishLogger
         return Pad4(year) + Pad2(month) + Pad2(day) + "-" + Pad2(hour) + Pad2(minute) + Pad2(second);
     }
 
-    private static void EnsureDirectory(string fullPath)
-    {
+    private static void EnsureDirectory(string fullPath) {
         if (fullPath == string.Empty)
             return;
 
         fullPath.Replace("\\", "/");
 
-        while (fullPath.Length() > 0)
-        {
+        while (fullPath.Length() > 0) {
             int lastIndex = fullPath.Length() - 1;
             if (fullPath.Substring(lastIndex, 1) == "/")
                 fullPath = fullPath.Substring(0, lastIndex);
@@ -184,8 +165,7 @@ class GebsfishLogger
         string root = "";
         string rest = fullPath;
 
-        if (colonIndex != -1)
-        {
+        if (colonIndex != -1) {
             root = fullPath.Substring(0, colonIndex + 1);
 
             int afterColon = colonIndex + 1;
@@ -202,8 +182,7 @@ class GebsfishLogger
         rest.Split("/", parts);
 
         string current = root;
-        for (int i = 0; i < parts.Count(); i++)
-        {
+        for (int i = 0; i < parts.Count(); i++) {
             string segment = parts.Get(i);
             if (segment == string.Empty || segment == ".")
                 continue;
@@ -216,8 +195,7 @@ class GebsfishLogger
         }
     }
 
-    private static string SanitizeFileNamePart(string value)
-    {
+    private static string SanitizeFileNamePart(string value) {
         string result = value;
 
         result.Replace("\\", "_");
@@ -234,16 +212,14 @@ class GebsfishLogger
         return result;
     }
 
-    static string Pad2(int n)
-    {
+    static string Pad2(int n) {
         if (n < 10)
             return "0" + n.ToString();
 
         return n.ToString();
     }
 
-    static string Pad4(int n)
-    {
+    static string Pad4(int n) {
         string s = n.ToString();
 
         if (n < 10)

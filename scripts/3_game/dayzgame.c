@@ -1,7 +1,5 @@
-modded class DayZGame
-{
-    override void DeferredInit()
-    {
+modded class DayZGame {
+    override void DeferredInit() {
         super.DeferredInit();
 
         // Register RPCs with Community Framework - must be done on both client and server
@@ -9,19 +7,16 @@ modded class DayZGame
         GetRPCManager().AddRPC("gebsfish", "PlayPredatorSound", this, SingleplayerExecutionType.Client);
     }
 
-    void ConfigSync(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
-    {
+    void ConfigSync(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target) {
         GebsfishLogger.Info("ConfigSync RPC callback called. Type: " + type + ", IsClient: " + g_Game.IsClient(), "RPC");
 
-        if (type != CallType.Client)
-        {
+        if (type != CallType.Client) {
             GebsfishLogger.Info("ConfigSync: Not client type, returning.", "RPC");
             return;
         }
 
         Param1<gebsfishConfig> configParams;
-        if (!ctx.Read(configParams))
-        {
+        if (!ctx.Read(configParams)) {
             GebsfishLogger.Error("ConfigSync: Failed to read configParams from context!", "RPC");
             return;
         }
@@ -31,8 +26,7 @@ modded class DayZGame
         GebsfishLogger.Info("Client received config data " + VERSION_GEBSFISH + " from the server.", "RPC");
     }
 
-    void PlayPredatorSound(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
-    {
+    void PlayPredatorSound(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target) {
         if (type != CallType.Client)
             return;
 

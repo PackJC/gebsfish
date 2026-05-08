@@ -8,10 +8,8 @@
 
 */
 
-modded class PluginRecipesManager
-{
-	override void RegisterRecipies()
-	{
+modded class PluginRecipesManager {
+	override void RegisterRecipies() {
 		super.RegisterRecipies();
 
 		//Freshwater Fish 	
@@ -71,6 +69,5 @@ modded class PluginRecipesManager
 		RegisterRecipe(new CraftBambooFishingNet);
 		RegisterRecipe(new RepairFishingPole);
 		RegisterRecipe(new CraftHookFromWire);
-
 	}
 };

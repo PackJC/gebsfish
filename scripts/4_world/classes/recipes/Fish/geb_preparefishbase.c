@@ -1,7 +1,5 @@
-class GebPrepareFishBase extends PrepareFish
-{
-	void SetupFishRecipe(string ingredientType)
-	{
+class GebPrepareFishBase extends PrepareFish {
+	void SetupFishRecipe(string ingredientType) {
 		InsertIngredient(0, ingredientType);
 		m_IngredientAddHealth[0] = 0;
 		m_IngredientSetHealth[0] = -1;
@@ -10,8 +8,7 @@ class GebPrepareFishBase extends PrepareFish
 		m_IngredientAddHealth[1] = -4;
 	}
 
-	void AddDefaultResultAtIndex(string resultType, int index)
-	{
+	void AddDefaultResultAtIndex(string resultType, int index) {
 		AddResult(resultType);
 		m_ResultSetFullQuantity[index] = false;
 		m_ResultSetQuantity[index] = -1;
@@ -23,30 +20,25 @@ class GebPrepareFishBase extends PrepareFish
 		m_ResultReplacesIngredient[index] = 0;
 	}
 
-	void AddRepeatedResults(string resultType, int count, int startIndex = 0)
-	{
-		for (int i = 0; i < count; ++i)
-		{
+	void AddRepeatedResults(string resultType, int count, int startIndex = 0) {
+		for (int i = 0; i < count; ++i) {
 			AddDefaultResultAtIndex(resultType, startIndex + i);
 		}
 	}
 
-	int GetInclusiveRandom(int min, int max)
-	{
+	int GetInclusiveRandom(int min, int max) {
 		if (max < min)
 			max = min;
 
 		return Math.RandomInt(min, max + 1);
 	}
 
-	void SetupStandardRecipe(string ingredientType, string resultType, int minCount, int maxCount)
-	{
+	void SetupStandardRecipe(string ingredientType, string resultType, int minCount, int maxCount) {
 		SetupFishRecipe(ingredientType);
 		AddRepeatedResults(resultType, GetInclusiveRandom(minCount, maxCount));
 	}
 
-	void SetupLobsterRecipe(string ingredientType, string tailType, string clawType, int minCount, int maxCount)
-	{
+	void SetupLobsterRecipe(string ingredientType, string tailType, string clawType, int minCount, int maxCount) {
 		SetupFishRecipe(ingredientType);
 		AddDefaultResultAtIndex(tailType, 0);
 
@@ -58,68 +50,54 @@ class GebPrepareFishBase extends PrepareFish
 		AddRepeatedResults(clawType, clawCount, 1);
 	}
 
-	void ApplyThirtyPercentCaviarChance(array<ItemBase> results)
-	{
-		if (Math.RandomFloat(0, 1) > 0.3)
-		{
+	void ApplyThirtyPercentCaviarChance(array<ItemBase> results) {
+		if (Math.RandomFloat(0, 1) > 0.3) {
 			if (results && results.Count() > 0 && results[0])
 				results[0].Delete();
 		}
 	}
 
-	override bool CanDo(ItemBase ingredients[], PlayerBase player)
-	{
+	override bool CanDo(ItemBase ingredients[], PlayerBase player) {
 		return true;
 	}
 
-	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight)
-	{
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
 	}
 };
 
 // ===== FRESHWATER FISH =====
 
-class PrepareYellowPerch extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareYellowPerch extends GebPrepareFishBase {
+	override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_YellowPerch", "geb_YellowPerchFilletMeat", m_gebsConfig.YellowPerch.MeatMin, m_gebsConfig.YellowPerch.MeatMax);
 	}
 };
 
-class PrepareBlackBass extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareBlackBass extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_BlackBass", "geb_BlackBassFilletMeat", m_gebsConfig.BlackBass.MeatMin, m_gebsConfig.BlackBass.MeatMax);
 	}
 };
 
-class PrepareBlueGill extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareBlueGill extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_BlueGill", "geb_BlueGillFilletMeat", m_gebsConfig.BlueGill.MeatMin, m_gebsConfig.BlueGill.MeatMax);
 	}
 };
 
-class PrepareBowFin extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareBowFin extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_BowFin", "geb_BowFinFilletMeat", m_gebsConfig.BowFin.MeatMin, m_gebsConfig.BowFin.MeatMax);
 	}
 };
 
-class PrepareBrookTrout extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareBrookTrout extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupFishRecipe("geb_BrookTrout");
 		AddDefaultResultAtIndex("RedCaviar", 0);
@@ -128,17 +106,14 @@ class PrepareBrookTrout extends GebPrepareFishBase
 		AddRepeatedResults("geb_BrookTroutFilletMeat", ran, 1);
 	}
 
-	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight)
-	{
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
 		ApplyThirtyPercentCaviarChance(results);
 	}
 };
 
-class PrepareBrownTrout extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareBrownTrout extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupFishRecipe("geb_BrownTrout");
 		AddDefaultResultAtIndex("RedCaviar", 0);
@@ -147,17 +122,14 @@ class PrepareBrownTrout extends GebPrepareFishBase
 		AddRepeatedResults("geb_BrownTroutFilletMeat", ran, 1);
 	}
 
-	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight)
-	{
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
 		ApplyThirtyPercentCaviarChance(results);
 	}
 };
 
-modded class PrepareCarp extends PrepareFish
-{
-	override void Init()
-	{
+modded class PrepareCarp extends PrepareFish {
+    override void Init() {
 		super.Init();
 		InsertIngredient(0, "Carp");
 		m_IngredientAddHealth[0] = 0;
@@ -167,8 +139,7 @@ modded class PrepareCarp extends PrepareFish
 		m_IngredientAddHealth[1] = -4;
 
 		int ran = Math.RandomInt(m_gebsConfig.Carp.MeatMin, m_gebsConfig.Carp.MeatMax + 1);
-		for (int i = 0; i < ran; ++i)
-		{
+		for (int i = 0; i < ran; ++i) {
 			AddResult("CarpFilletMeat");
 			m_ResultSetFullQuantity[i] = false;
 			m_ResultSetQuantity[i] = -1;
@@ -181,21 +152,17 @@ modded class PrepareCarp extends PrepareFish
 		}
 	}
 
-	override bool CanDo(ItemBase ingredients[], PlayerBase player)
-	{
+	override bool CanDo(ItemBase ingredients[], PlayerBase player) {
 		return true;
 	}
 
-	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight)
-	{
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
 	}
 };
 
-class PrepareCherrySalmon extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareCherrySalmon extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupFishRecipe("geb_CherrySalmon");
 		AddDefaultResultAtIndex("RedCaviar", 0);
@@ -204,17 +171,14 @@ class PrepareCherrySalmon extends GebPrepareFishBase
 		AddRepeatedResults("geb_CherrySalmonFilletMeat", ran, 1);
 	}
 
-	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight)
-	{
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
 		ApplyThirtyPercentCaviarChance(results);
 	}
 };
 
-class PrepareChinookSalmon extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareChinookSalmon extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupFishRecipe("geb_ChinookSalmon");
 		AddDefaultResultAtIndex("RedCaviar", 0);
@@ -223,17 +187,14 @@ class PrepareChinookSalmon extends GebPrepareFishBase
 		AddRepeatedResults("geb_ChinookSalmonFilletMeat", ran, 1);
 	}
 
-	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight)
-	{
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
 		ApplyThirtyPercentCaviarChance(results);
 	}
 };
 
-class PrepareCutThroatTrout extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareCutThroatTrout extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupFishRecipe("geb_CutThroatTrout");
 		AddDefaultResultAtIndex("RedCaviar", 0);
@@ -242,53 +203,42 @@ class PrepareCutThroatTrout extends GebPrepareFishBase
 		AddRepeatedResults("geb_CutThroatTroutFilletMeat", ran, 1);
 	}
 
-	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight)
-	{
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
 		ApplyThirtyPercentCaviarChance(results);
 	}
 };
 
-class PrepareFlatHeadCatFish extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareFlatHeadCatFish extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_FlatHeadCatFish", "geb_FlatHeadCatFishFilletMeat", m_gebsConfig.FlatHeadCatFish.MeatMin, m_gebsConfig.FlatHeadCatFish.MeatMax);
 	}
 };
 
-class PrepareLakeTrout extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareLakeTrout extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_LakeTrout", "geb_LakeTroutFilletMeat", m_gebsConfig.LakeTrout.MeatMin, m_gebsConfig.LakeTrout.MeatMax);
 	}
 };
 
-class PrepareLargeMouthBass extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareLargeMouthBass extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_LargeMouthBass", "geb_LargeMouthBassFilletMeat", m_gebsConfig.LargeMouthBass.MeatMin, m_gebsConfig.LargeMouthBass.MeatMax);
 	}
 };
 
-class PrepareAlligatorGar extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareAlligatorGar extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_AlligatorGar", "geb_AlligatorGarFilletMeat", m_gebsConfig.AlligatorGar.MeatMin, m_gebsConfig.AlligatorGar.MeatMax);
 	}
 };
 
-class PrepareNorthernPike extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareNorthernPike extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupFishRecipe("geb_NorthernPike");
 		AddDefaultResultAtIndex("geb_YellowCaviar", 0);
@@ -297,17 +247,14 @@ class PrepareNorthernPike extends GebPrepareFishBase
 		AddRepeatedResults("geb_NorthernPikeFilletMeat", ran, 1);
 	}
 
-	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight)
-	{
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
 		ApplyThirtyPercentCaviarChance(results);
 	}
 };
 
-class PrepareRainbowTrout extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareRainbowTrout extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupFishRecipe("geb_RainbowTrout");
 		AddDefaultResultAtIndex("RedCaviar", 0);
@@ -316,44 +263,35 @@ class PrepareRainbowTrout extends GebPrepareFishBase
 		AddRepeatedResults("geb_RainbowTroutFilletMeat", ran, 1);
 	}
 
-	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight)
-	{
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
 		ApplyThirtyPercentCaviarChance(results);
 	}
 };
 
-class PrepareSauger extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareSauger extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_Sauger", "geb_SaugerFilletMeat", m_gebsConfig.Sauger.MeatMin, m_gebsConfig.Sauger.MeatMax);
 	}
 };
 
-class PrepareSlimySculpin extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareSlimySculpin extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_SlimySculpin", "geb_SlimySculpinFilletMeat", m_gebsConfig.SlimySculpin.MeatMin, m_gebsConfig.SlimySculpin.MeatMax);
 	}
 };
 
-class PrepareSmallMouthBass extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareSmallMouthBass extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_SmallMouthBass", "geb_SmallMouthBassFilletMeat", m_gebsConfig.SmallMouthBass.MeatMin, m_gebsConfig.SmallMouthBass.MeatMax);
 	}
 };
 
-class PrepareSockEyeSalmon extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareSockEyeSalmon extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupFishRecipe("geb_SockEyeSalmon");
 		AddDefaultResultAtIndex("RedCaviar", 0);
@@ -362,17 +300,14 @@ class PrepareSockEyeSalmon extends GebPrepareFishBase
 		AddRepeatedResults("geb_SockEyeSalmonFilletMeat", ran, 1);
 	}
 
-	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight)
-	{
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
 		ApplyThirtyPercentCaviarChance(results);
 	}
 };
 
-modded class PrepareSteelheadTrout extends PrepareFish
-{
-	override void Init()
-	{
+modded class PrepareSteelheadTrout extends PrepareFish {
+	override void Init() {
 		super.Init();
 		InsertIngredient(0, "SteelheadTrout");
 		m_IngredientAddHealth[0] = 0;
@@ -392,8 +327,7 @@ modded class PrepareSteelheadTrout extends PrepareFish
 		m_ResultReplacesIngredient[0] = 0;
 
 		int ran = Math.RandomInt(m_gebsConfig.SteelheadTrout.MeatMin, m_gebsConfig.SteelheadTrout.MeatMax + 1);
-		for (int i = 1; i <= ran; ++i)
-		{
+		for (int i = 1; i <= ran; ++i) {
 			AddResult("SteelheadTroutFilletMeat");
 			m_ResultSetFullQuantity[i] = false;
 			m_ResultSetQuantity[i] = -1;
@@ -406,28 +340,22 @@ modded class PrepareSteelheadTrout extends PrepareFish
 		}
 	}
 
-	override bool CanDo(ItemBase ingredients[], PlayerBase player)
-	{
+	override bool CanDo(ItemBase ingredients[], PlayerBase player) {
 		return true;
 	}
 
-	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight)
-	{
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
 
-		if (Math.RandomFloat(0, 1) > 0.3)
-		{
+		if (Math.RandomFloat(0, 1) > 0.3) {
 			if (results && results.Count() > 0 && results[0])
 				results[0].Delete();
 		}
 	}
 };
 
-class PrepareLakeSturgeon extends GebPrepareFishBase
-{
-
-	override void Init()
-	{
+class PrepareLakeSturgeon extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupFishRecipe("geb_LakeSturgeon");
 		AddDefaultResultAtIndex("geb_BlackCaviar", 0);
@@ -436,35 +364,28 @@ class PrepareLakeSturgeon extends GebPrepareFishBase
 		AddRepeatedResults("geb_LakeSturgeonFilletMeat", ran, 1);
 	}
 
-	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight)
-	{
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
 		ApplyThirtyPercentCaviarChance(results);
 	}
 };
 
-class PrepareSunFish extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareSunFish extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_SunFish", "geb_SunFishFilletMeat", m_gebsConfig.SunFish.MeatMin, m_gebsConfig.SunFish.MeatMax);
 	}
 };
 
-class PrepareWallEye extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareWallEye extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_WallEye", "geb_WallEyeFilletMeat", m_gebsConfig.WallEye.MeatMin, m_gebsConfig.WallEye.MeatMax);
 	}
 };
 
-class PrepareWhiteBass extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareWhiteBass extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_WhiteBass", "geb_WhiteBassFilletMeat", m_gebsConfig.WhiteBass.MeatMin, m_gebsConfig.WhiteBass.MeatMax);
 	}
@@ -475,127 +396,99 @@ class PrepareWhiteBass extends GebPrepareFishBase
 
 // ===== SALTWATER FISH =====
 
-class PrepareAngelFish extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareAngelFish extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_AngelFish", "geb_AngelFishFilletMeat", m_gebsConfig.AngelFish.MeatMin, m_gebsConfig.AngelFish.MeatMax);
 	}
 };
 
-class PrepareAngelShark extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareAngelShark extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_AngelShark", "geb_AngelSharkFilletMeat", m_gebsConfig.AngelShark.MeatMin, m_gebsConfig.AngelShark.MeatMax);
 	}
 };
 
-class PrepareAsianSeaBass extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareAsianSeaBass extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_AsianSeaBass", "geb_AsianSeaBassFilletMeat", m_gebsConfig.AsianSeaBass.MeatMin, m_gebsConfig.AsianSeaBass.MeatMax);
 	}
 };
 
-class PrepareAtlanticBlueMarlin extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareAtlanticBlueMarlin extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_AtlanticBlueMarlin", "geb_AtlanticBlueMarlinFilletMeat", m_gebsConfig.AtlanticBlueMarlin.MeatMin, m_gebsConfig.AtlanticBlueMarlin.MeatMax);
 	}
 };
 
-class PrepareAtlanticSailFish extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareAtlanticSailFish extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_AtlanticSailFish", "geb_AtlanticSailFishFilletMeat", m_gebsConfig.AtlanticSailFish.MeatMin, m_gebsConfig.AtlanticSailFish.MeatMax);
 	}
 };
 
-class PrepareBlueTang extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareBlueTang extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_BlueTang", "geb_BlueTangFilletMeat", m_gebsConfig.BlueTang.MeatMin, m_gebsConfig.BlueTang.MeatMax);
 	}
 };
 
-class PrepareBonita extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareBonita extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_Bonita", "geb_BonitaFilletMeat", m_gebsConfig.Bonita.MeatMin, m_gebsConfig.Bonita.MeatMax);
 	}
 };
 
-class PrepareFlatHeadMullet extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareFlatHeadMullet extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_FlatHeadMullet", "geb_FlatHeadMulletFilletMeat", m_gebsConfig.FlatHeadMullet.MeatMin, m_gebsConfig.FlatHeadMullet.MeatMax);
 	}
 };
 
-class PrepareGreatWhiteShark extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareGreatWhiteShark extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_GreatWhiteShark", "geb_GreatWhiteSharkFilletMeat", m_gebsConfig.GreatWhiteShark.MeatMin, m_gebsConfig.GreatWhiteShark.MeatMax);
 	}
 };
 
-class PrepareHammerHeadShark extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareHammerHeadShark extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_HammerHeadShark", "geb_HammerHeadSharkFilletMeat", m_gebsConfig.HammerHeadShark.MeatMin, m_gebsConfig.HammerHeadShark.MeatMax);
 	}
 };
 
-class PrepareHumpHeadWrasse extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareHumpHeadWrasse extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_HumpHeadWrasse", "geb_HumpHeadWrasseFilletMeat", m_gebsConfig.HumpHeadWrasse.MeatMin, m_gebsConfig.HumpHeadWrasse.MeatMax);
 	}
 };
 
-class PrepareLargeHeadHairTailFish extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareLargeHeadHairTailFish extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_LargeHeadHairTailFish", "geb_LargeHeadHairTailFishFilletMeat", m_gebsConfig.LargeHeadHairTailFish.MeatMin, m_gebsConfig.LargeHeadHairTailFish.MeatMax);
 	}
 };
 
-class PrepareLeopardShark extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareLeopardShark extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_LeopardShark", "geb_LeopardSharkFilletMeat", m_gebsConfig.LeopardShark.MeatMin, m_gebsConfig.LeopardShark.MeatMax);
 	}
 };
 
-modded class PrepareMackerel extends PrepareFish
-{
-	override void Init()
-	{
+modded class PrepareMackerel extends PrepareFish {
+	override void Init() {
 		super.Init();
 		InsertIngredient(0, "Mackerel");
 		m_IngredientAddHealth[0] = 0;
@@ -605,8 +498,7 @@ modded class PrepareMackerel extends PrepareFish
 		m_IngredientAddHealth[1] = -4;
 
 		int ran = Math.RandomInt(m_gebsConfig.Mackerel.MeatMin, m_gebsConfig.Mackerel.MeatMax + 1);
-		for (int i = 0; i < ran; ++i)
-		{
+		for (int i = 0; i < ran; ++i) {
 			AddResult("MackerelFilletMeat");
 			m_ResultSetFullQuantity[i] = false;
 			m_ResultSetQuantity[i] = -1;
@@ -619,75 +511,59 @@ modded class PrepareMackerel extends PrepareFish
 		}
 	}
 
-	override bool CanDo(ItemBase ingredients[], PlayerBase player)
-	{
+	override bool CanDo(ItemBase ingredients[], PlayerBase player) {
 		return true;
 	}
 
-	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight)
-	{
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
 	}
 };
 
-class PrepareMahiMahi extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareMahiMahi extends GebPrepareFishBase {
+	override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_MahiMahi", "geb_MahiMahiFilletMeat", m_gebsConfig.MahiMahi.MeatMin, m_gebsConfig.MahiMahi.MeatMax);
 	}
 };
 
-class PreparePacificCod extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PreparePacificCod extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_PacificCod", "geb_PacificCodFilletMeat", m_gebsConfig.PacificCod.MeatMin, m_gebsConfig.PacificCod.MeatMax);
 	}
 };
 
-class PrepareRedHeadCichlid extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareRedHeadCichlid extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_RedHeadCichlid", "geb_RedHeadCichlidFilletMeat", m_gebsConfig.RedHeadCichlid.MeatMin, m_gebsConfig.RedHeadCichlid.MeatMax);
 	}
 };
 
-class PrepareRoughNeckRock extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareRoughNeckRock extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_RoughNeckRock", "geb_RoughNeckRockFilletMeat", m_gebsConfig.RoughNeckRock.MeatMin, m_gebsConfig.RoughNeckRock.MeatMax);
 	}
 };
 
-class PrepareSeverum extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareSeverum extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_Severum", "geb_SeverumFilletMeat", m_gebsConfig.Severum.MeatMin, m_gebsConfig.Severum.MeatMax);
 	}
 };
 
-class PrepareSiameseTigerFish extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareSiameseTigerFish extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_SiameseTigerFish", "geb_SiameseTigerFishFilletMeat", m_gebsConfig.SiameseTigerFish.MeatMin, m_gebsConfig.SiameseTigerFish.MeatMax);
 	}
 };
 
-modded class PrepareWalleyePollock extends PrepareFish
-{
-	override void Init()
-	{
+modded class PrepareWalleyePollock extends PrepareFish {
+	override void Init() {
 		super.Init();
 		InsertIngredient(0, "WalleyePollock");
 		m_IngredientAddHealth[0] = 0;
@@ -697,8 +573,7 @@ modded class PrepareWalleyePollock extends PrepareFish
 		m_IngredientAddHealth[1] = -4;
 
 		int ran = Math.RandomInt(m_gebsConfig.WalleyePollock.MeatMin, m_gebsConfig.WalleyePollock.MeatMax + 1);
-		for (int i = 0; i < ran; ++i)
-		{
+		for (int i = 0; i < ran; ++i) {
 			AddResult("WalleyePollockFilletMeat");
 			m_ResultSetFullQuantity[i] = false;
 			m_ResultSetQuantity[i] = -1;
@@ -711,21 +586,17 @@ modded class PrepareWalleyePollock extends PrepareFish
 		}
 	}
 
-	override bool CanDo(ItemBase ingredients[], PlayerBase player)
-	{
+	override bool CanDo(ItemBase ingredients[], PlayerBase player) {
 		return true;
 	}
 
-	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight)
-	{
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
 	}
 };
 
-class PrepareYellowFinTuna extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareYellowFinTuna extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_YellowFinTuna", "geb_YellowFinTunaFilletMeat", m_gebsConfig.YellowFinTuna.MeatMin, m_gebsConfig.YellowFinTuna.MeatMax);
 	}
@@ -733,37 +604,29 @@ class PrepareYellowFinTuna extends GebPrepareFishBase
 
 // ===== SALTWATER CRUSTACEAN =====
 
-class PrepareAmericanLobster extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareAmericanLobster extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupLobsterRecipe("geb_AmericanLobster", "geb_AmericanLobsterTail", "geb_AmericanLobsterClaw", m_gebsConfig.AmericanLobster.MeatMin, m_gebsConfig.AmericanLobster.MeatMax);
 	}
 };
 
-class PrepareEuropeanLobster extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareEuropeanLobster extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupLobsterRecipe("geb_EuropeanLobster", "geb_EuropeanLobsterTail", "geb_EuropeanLobsterClaw", m_gebsConfig.EuropeanLobster.MeatMin, m_gebsConfig.EuropeanLobster.MeatMax);
 	}
 };
 
-class PrepareKingCrab extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareKingCrab extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_KingCrab", "geb_KingCrabLegs", m_gebsConfig.KingCrab.MeatMin, m_gebsConfig.KingCrab.MeatMax);
 	}
 };
 
-class PrepareSnowCrab extends GebPrepareFishBase
-{
-	override void Init()
-	{
+class PrepareSnowCrab extends GebPrepareFishBase {
+    override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_SnowCrab", "geb_SnowCrabLegs", m_gebsConfig.SnowCrab.MeatMin, m_gebsConfig.SnowCrab.MeatMax);
 	}

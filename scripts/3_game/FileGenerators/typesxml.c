@@ -1,11 +1,9 @@
-class gebsfishTypes
-{
+class gebsfishTypes {
     private const string DIRECTORY_PATH = "$profile:Gebs/Extras/mpmissions/";
     private const string FILE_PATH = "$profile:Gebs/Extras/mpmissions/gebsfish-types.xml";
     private const string VERSION_PREFIX = "<!-- Version: ";
 
-    void GenerateTypesXML()
-    {
+    void GenerateTypesXML() {
         // Only generate on the server.
         if (!g_Game || !g_Game.IsServer())
             return;
@@ -13,8 +11,7 @@ class gebsfishTypes
         string version = VERSION_GEBSFISH;
 
         // Skip regeneration if the existing file already matches the current version.
-        if (IsCurrentVersion(FILE_PATH, version))
-        {
+        if (IsCurrentVersion(FILE_PATH, version)) {
             GebsfishLogger.Info("Types XML already at version " + version + ". Skipping regeneration.", "Types");
             return;
         }
@@ -22,8 +19,7 @@ class gebsfishTypes
         EnsureDirectoryExists();
 
         FileHandle file = OpenFile(FILE_PATH, FileMode.WRITE);
-        if (!file)
-        {
+        if (!file) {
             GebsfishLogger.Error("Could not create gebsfish-types.xml in $profile:Gebs/extras/mpmissions/.", "Types");
             return;
         }
@@ -37,8 +33,7 @@ class gebsfishTypes
         GebsfishLogger.Info("gebsfish-types.xml successfully generated in $profile:Gebs/extras/mpmissions/.", "Types");
     }
 
-    protected bool IsCurrentVersion(string filePath, string expectedVersion)
-    {
+    protected bool IsCurrentVersion(string filePath, string expectedVersion) {
         if (!FileExist(filePath))
             return false;
 
@@ -51,8 +46,7 @@ class gebsfishTypes
         int lineCount = 0;
 
         // Read the first few lines so the version comment can be found even if the XML declaration is first.
-        while (lineCount < 5 && FGets(readFile, line) > 0)
-        {
+        while (lineCount < 5 && FGets(readFile, line) > 0) {
             existingVersion = ExtractVersionFromLine(line);
             if (existingVersion != string.Empty)
                 break;
@@ -64,8 +58,7 @@ class gebsfishTypes
         return existingVersion == expectedVersion;
     }
 
-    protected string ExtractVersionFromLine(string line)
-    {
+    protected string ExtractVersionFromLine(string line) {
         int start = line.IndexOf(VERSION_PREFIX);
         if (start == -1)
             return string.Empty;
@@ -78,30 +71,25 @@ class gebsfishTypes
         return tail.Substring(VERSION_PREFIX.Length(), end - VERSION_PREFIX.Length()).Trim();
     }
 
-    protected void EnsureDirectoryExists()
-    {
+    protected void EnsureDirectoryExists() {
         MakeDirectory("$profile:Gebs");
         MakeDirectory("$profile:Gebs/Extras");
         MakeDirectory(DIRECTORY_PATH);
     }
 
-    protected void WriteHeader(FileHandle file, string version)
-    {
+    protected void WriteHeader(FileHandle file, string version) {
         FPrint(file, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         FPrint(file, "<!-- Version: " + version + " -->");
         FPrint(file, "<types>");
     }
 
-    protected void WriteFooter(FileHandle file)
-    {
+    protected void WriteFooter(FileHandle file) {
         FPrint(file, "</types>");
     }
 
-    protected void WriteFishSection(FileHandle file)
-    {
+    protected void WriteFishSection(FileHandle file) {
         ref array<string> fishItems = new array<string>;
         fishItems.Reserve(128);
-
         fishItems.Insert("geb_SockEyeSalmon");
         fishItems.Insert("geb_SockEyeSalmonFilletMeat");
         fishItems.Insert("geb_ChinookSalmon");
@@ -207,17 +195,14 @@ class gebsfishTypes
         fishItems.Insert("geb_YellowFinTunaFilletMeat");
 
         FPrint(file, "    <!-- Fish Items -->");
-        foreach (string fish : fishItems)
-        {
+        foreach (string fish : fishItems) {
             WriteType(file, fish, 0, 14400, 0, 0, 10, 100, 100, "food", false);
         }
     }
 
-    protected void WriteGearSection(FileHandle file)
-    {
+    protected void WriteGearSection(FileHandle file) {
         ref array<ref XmlTypeEntry> gearItems = new array<ref XmlTypeEntry>;
         gearItems.Reserve(64);
-
         gearItems.Insert(new XmlTypeEntry("geb_RedFishingRod", 5, 1));
         gearItems.Insert(new XmlTypeEntry("geb_BlueFishingRod", 5, 1));
         gearItems.Insert(new XmlTypeEntry("geb_GreenFishingRod", 5, 1));
@@ -285,14 +270,12 @@ class gebsfishTypes
         gearItems.Insert(new XmlTypeEntry("geb_OrangeFishGloves", 3, 1));
 
         FPrint(file, "    <!-- Gear Items -->");
-        foreach (XmlTypeEntry gear : gearItems)
-        {
+        foreach (XmlTypeEntry gear : gearItems) {
             WriteType(file, gear.Name, gear.Nominal, 7200, 0, gear.Min, 0, 100, 200, "tools", true);
         }
     }
 
-    protected void WriteType(FileHandle file, string typeName, int nominal, int lifetime, int restock, int min, int quantMin, int quantMax, int cost, string category, bool addUsageTags)
-    {
+    protected void WriteType(FileHandle file, string typeName, int nominal, int lifetime, int restock, int min, int quantMin, int quantMax, int cost, string category, bool addUsageTags) {
         FPrint(file, "    <type name=\"" + typeName + "\">");
         FPrint(file, "        <nominal>" + nominal.ToString() + "</nominal>");
         FPrint(file, "        <lifetime>" + lifetime.ToString() + "</lifetime>");
@@ -304,8 +287,7 @@ class gebsfishTypes
         FPrint(file, "        <flags count_in_cargo=\"0\" count_in_hoarder=\"0\" count_in_map=\"1\" count_in_player=\"0\" crafted=\"1\" deloot=\"0\"/>");
         FPrint(file, "        <category name=\"" + category + "\"/>");
 
-        if (addUsageTags)
-        {
+        if (addUsageTags) {
             FPrint(file, "        <usage name=\"Coast\"/>");
             FPrint(file, "        <usage name=\"Farm\"/>");
             FPrint(file, "        <usage name=\"Hunting\"/>");
@@ -316,14 +298,12 @@ class gebsfishTypes
     }
 }
 
-class XmlTypeEntry
-{
+class XmlTypeEntry {
     string Name;
     int Nominal;
     int Min;
 
-    void XmlTypeEntry(string name, int nominal, int min)
-    {
+    void XmlTypeEntry(string name, int nominal, int min) {
         Name = name;
         Nominal = nominal;
         Min = min;

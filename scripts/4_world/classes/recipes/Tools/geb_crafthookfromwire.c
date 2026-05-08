@@ -1,7 +1,5 @@
-class CraftHookFromWire extends RecipeBase
-{	
-	override void Init()
-	{
+class CraftHookFromWire extends RecipeBase {	
+	override void Init() {
 		m_Name = "#STR_craft_metalhook";
 		m_IsInstaRecipe = false;//should this recipe be performed instantly without animation
 		m_AnimationLength = 1;//animation length in relative time units
@@ -58,20 +56,17 @@ class CraftHookFromWire extends RecipeBase
 		//----------------------------------------------------------------------------------------------------------------------
 	}
 	
-	override void Do(ItemBase ingredients[], PlayerBase player,array<ItemBase> results, float specialty_weight)//gets called upon recipe's completion
-	{
+	override void Do(ItemBase ingredients[], PlayerBase player,array<ItemBase> results, float specialty_weight) {
 		// We will save the wire type for decrafting
 		MetalWire wire = MetalWire.Cast( results[0] );
-		if ( wire )
-		{
+		if ( wire ) {
 			int health = wire.GetHealthLevel();
 			health++;
 			wire.SetHealth01("","", 1 - 0.3*health);
 		}
 	}
 	
-	override bool CanDo(ItemBase ingredients[], PlayerBase player)
-	{
+	override bool CanDo(ItemBase ingredients[], PlayerBase player) {
 		if (ingredients[0] && ingredients[0].GetInventory().IsAttachment())
 			return false;
 		

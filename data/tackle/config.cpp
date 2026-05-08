@@ -8,13 +8,11 @@
 
 */
 
-class CfgNonAIVehicles
-{
+class CfgNonAIVehicles {
 	class StaticObject;
 };
 
-class CfgPatches
-{
+class CfgPatches {
 	class gebsTackleCfgPatches { 	
 		//Never Use same name for patch, because conflict message.
 		requiredAddons[] = {
@@ -23,8 +21,7 @@ class CfgPatches
 		};
 	};
 };
-class cfgVehicles
-{		
+class cfgVehicles {		
 	//Instantiate Needed Classes
 	class Rope;
 	class Jig;
