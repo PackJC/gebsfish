@@ -1,7 +1,5 @@
-class RepairFishingPole : RecipeBase
-{	
-	override void Init()
-	{
+class RepairFishingPole : RecipeBase {	
+	override void Init() {
 		m_Name = "#repair";
 		m_IsInstaRecipe = false;//should this recipe be performed instantly without animation
 		m_AnimationLength = 2.5;//animation length in relative time units
@@ -42,20 +40,17 @@ class RepairFishingPole : RecipeBase
 		m_IngredientUseSoftSkills[1] = false;// set 'true' to allow modification of the values by softskills on this ingredient
 	}
 
-	override bool CanDo(ItemBase ingredients[], PlayerBase player)//final check for recipe's validity
-	{
+	override bool CanDo(ItemBase ingredients[], PlayerBase player) {
 		PluginRepairing moduleRepairing = PluginRepairing.Cast(GetPlugin(PluginRepairing));
 		return moduleRepairing.CanRepair(ingredients[0], ingredients[1]);
 	}
 
-	override void Do(ItemBase ingredients[], PlayerBase player,array<ItemBase> results, float specialty_weight)//gets called upon recipe's completion
-	{
+	override void Do(ItemBase ingredients[], PlayerBase player,array<ItemBase> results, float specialty_weight) {
 		PluginRepairing moduleRepairing = PluginRepairing.Cast(GetPlugin(PluginRepairing));
 		moduleRepairing.Repair(player, ingredients[0], ingredients[1], m_Specialty);
 	}
 	
-	override bool IsRepeatable()
-	{
+	override bool IsRepeatable() {
 		return true;
 	}
 }

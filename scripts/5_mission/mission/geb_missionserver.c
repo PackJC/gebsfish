@@ -1,9 +1,7 @@
-modded class MissionServer
-{
-	override void OnInit()
-	{		
+modded class MissionServer {
+	override void OnInit() {		
 		super.OnInit();
-		if(m_gebsConfig){
+		if(m_gebsConfig) {
 			GebsfishLogger.Info("Version " + VERSION_GEBSFISH + " loaded successfully!", "MissionServer Init");
 		}
 
@@ -20,7 +18,7 @@ modded class MissionServer
 	override void OnClientPrepareEvent(PlayerIdentity identity, out bool useDB, out vector pos, out float yaw, out int preloadTimeout) {
 		super.OnClientPrepareEvent(identity, useDB, pos, yaw, preloadTimeout);
 
-		if(identity){
+		if(identity) {
 			//if identity is valid, send config to player. 
 			auto configParams = new Param1<gebsfishConfig>(GetGebSettingsConfig());
 			GebsfishLogger.Info("Sending Geb's Fishing config " + VERSION_GEBSFISH + " to Player: " + identity.GetName() + " RPC: ConfigSync", "RPC");
@@ -31,14 +29,13 @@ modded class MissionServer
 
 	override void OnGameplayDataHandlerLoad() {
 		super.OnGameplayDataHandlerLoad();
-
 		YieldsMap mGeb_YieldsMapAll;
 		mGeb_YieldsMapAll = g_Game.GetMission().GetWorldData().GetCatchYieldBank().GetYieldsMap();
 		if(m_gebsConfig.GeneralSettings.DebugLogs == ELEVATED_DEBUG){
 			GebsfishLogger.Debug("Start Dump:","YieldMap");
 			YieldItemBase yItem;
 			int count = mGeb_YieldsMapAll.Count();
-			for (int i = 0; i < count; i++){
+			for (int i = 0; i < count; i++) {
 				yItem = mGeb_YieldsMapAll.GetElement(i);
 				string gebDebugCatchMethod;
 				string gebDebugCatchEnviro;
@@ -110,14 +107,12 @@ modded class MissionServer
 
         // Find the display name in the config
         string displayName = "";
-        if (g_Game.ConfigIsExisting("CfgVehicles " + typeName))
-        {
+        if (g_Game.ConfigIsExisting("CfgVehicles " + typeName)) {
             displayName = g_Game.ConfigGetTextOut("CfgVehicles " + typeName + " displayName");
         }
         
         // Return display name or fallback to type name if not found
-        if (displayName == "")
-        {
+        if (displayName == "") {
             return typeName; // Fallback to type name if no display name is found
         }
         return displayName;

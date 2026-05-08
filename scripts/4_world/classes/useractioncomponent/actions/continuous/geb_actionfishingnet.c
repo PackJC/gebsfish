@@ -8,10 +8,8 @@
 
 */
 
-class ActionBambooFishingNetCB : ActionContinuousBaseCB
-{
-	override void CreateActionComponent()
-	{
+class ActionBambooFishingNetCB : ActionContinuousBaseCB {
+	override void CreateActionComponent() {
 		float time_spent;
 		time_spent = UATimeSpent.DIG_WORMS;
 		time_spent = time_spent * 1.2;
@@ -19,10 +17,8 @@ class ActionBambooFishingNetCB : ActionContinuousBaseCB
 	}
 };
 
-class ActionBambooFishingNet : ActionContinuousBase
-{
-	void ActionBambooFishingNet()
-	{
+class ActionBambooFishingNet : ActionContinuousBase {
+	void ActionBambooFishingNet() {
 		m_CallbackClass = ActionBambooFishingNetCB;
 		m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_POKE;
 		m_StanceMask = DayZPlayerConstants.STANCEMASK_CROUCH;
@@ -30,14 +26,12 @@ class ActionBambooFishingNet : ActionContinuousBase
 		m_Text = "#STR_action_gatherminnows";
 	}
 	
-	override void CreateConditionComponents()  
-	{	
+	override void CreateConditionComponents() {	
 		m_ConditionItem = new CCINonRuined;
 		m_ConditionTarget = new CCTSurface(UAMaxDistances.DEFAULT);
 	}
 	
-	override bool ActionCondition( PlayerBase player, ActionTarget target, ItemBase item )
-	{
+	override bool ActionCondition( PlayerBase player, ActionTarget target, ItemBase item ) {
 		if ( player.IsPlacingLocal() )
 			return false;
 		
@@ -49,78 +43,61 @@ class ActionBambooFishingNet : ActionContinuousBase
 		if ( height > 0.4 )
 			return false; // Player is not standing on ground
 		
-		if ( !g_Game.IsDedicatedServer() )
-		{
-			if ( !player.IsPlacingLocal() /*&& player.IsCurrentCameraAimedAtGround()*/ )
-			{
-				if ( target )
-				{
+		if ( !g_Game.IsDedicatedServer() ) {
+			if ( !player.IsPlacingLocal() /*&& player.IsCurrentCameraAimedAtGround()*/ ) {
+				if ( target ) {
 					string surface_type;
 					vector position;
 					position = target.GetCursorHitPos();
 					g_Game.SurfaceGetType( position[0], position[2], surface_type );
-					if (g_Game.SurfaceIsPond(position[0], position[2]) || g_Game.SurfaceIsSea(position[0], position[2]))
-					{
+					if (g_Game.SurfaceIsPond(position[0], position[2]) || g_Game.SurfaceIsSea(position[0], position[2])) {
 						return true;
 					}
 				}
 			}
-		
 			return false;
 		}
-		else
-		{
+		else {
 			return true;
 		}
 	}
 	
-	override bool ActionConditionContinue( ActionData action_data )
-	{
+	override bool ActionConditionContinue( ActionData action_data ) {
 		return true;
 	}
 	
-	override bool SetupAction( PlayerBase player, ActionTarget target, ItemBase item, out ActionData action_data, Param extra_data = NULL )
-	{	
-		if( super.SetupAction( player, target, item, action_data, extra_data ) )
-		{
-			if ( item )
-			{
+	override bool SetupAction( PlayerBase player, ActionTarget target, ItemBase item, out ActionData action_data, Param extra_data = NULL ) {	
+		if( super.SetupAction( player, target, item, action_data, extra_data ) ) {
+			if ( item ) {
 				SetDiggingAnimation( item );
 			}
-			
 			return true;
 		}
-		
 		return false;
 	}
 
-	override bool HasTarget()
-	{
+	override bool HasTarget() {
 		return true;
 	}
 
-override void OnFinishProgressServer( ActionData action_data )
-{
-	PlayerBase player = action_data.m_Player;
-	ItemBase net = action_data.m_MainItem;
+    override void OnFinishProgressServer( ActionData action_data ) {
+	    PlayerBase player = action_data.m_Player;
+	    ItemBase net = action_data.m_MainItem;
 
-	g_Game.CreateObjectEx("geb_FatHeadMinnow", player.GetPosition(), ECE_PLACE_ON_SURFACE);
+	    g_Game.CreateObjectEx("geb_FatHeadMinnow", player.GetPosition(), ECE_PLACE_ON_SURFACE);
 
-	player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
+	    player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
 
-	if (net)
-		net.DecreaseHealth("", "", 5);
-}
+	    if (net)
+		    net.DecreaseHealth("", "", 5);
+    }
 	
-	void SetDiggingAnimation( ItemBase item )
-	{
-		if (item.KindOf("CatchBugs"))
-		{
+	void SetDiggingAnimation( ItemBase item ) {
+		if (item.KindOf("CatchBugs")) {
 			m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DEPLOY_1HD;
 			m_StanceMask = DayZPlayerConstants.STANCEMASK_ERECT | DayZPlayerConstants.STANCEMASK_CROUCH;
 		}
-		else
-		{
+		else {
 			m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DIGMANIPULATE;
 			m_StanceMask = DayZPlayerConstants.STANCEMASK_ERECT;
 		}

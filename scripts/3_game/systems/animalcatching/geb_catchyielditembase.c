@@ -1,6 +1,6 @@
 modded class YieldItemBase {
 
-    void YieldItemBase(int baseWeight){
+    void YieldItemBase(int baseWeight) {
 		m_BaseWeight = baseWeight;
 		Init();
 	}

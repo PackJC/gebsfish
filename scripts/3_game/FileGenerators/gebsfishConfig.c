@@ -82,9 +82,9 @@ class gebsfishConfig {
     ref array<ref JunkEntry> Junk;
     ref array<ref ContainerJunkEntry> ContainerJunk;
 
-    void Load(){
-        if (g_Game.IsDedicatedServer()){
-            if (FileExist(ModFolder + SettingsConfigFile)){
+    void Load() {
+        if (g_Game.IsDedicatedServer()) {
+            if (FileExist(ModFolder + SettingsConfigFile)) {
                 //If config exists, load file
                 JsonFileLoader<gebsfishConfig>.JsonLoadFile(ModFolder + SettingsConfigFile, this);
                 GebsfishLogger.Info("Found settings file; Loading gebsfish settings from file.", "JSON");
@@ -256,8 +256,8 @@ class gebsfishConfig {
         Save();
         }
     }
-    void Save(){
-        if (!FileExist(ModFolder)){
+    void Save() {
+        if (!FileExist(ModFolder)) {
             //if config folder doesn't exist, create it.
             MakeDirectory(ModFolder);
         }
@@ -1193,8 +1193,8 @@ class ContainerJunkEntry {
 //Save config data
 protected ref gebsfishConfig m_gebsConfig;
 // Helper function to return config data storage object
-static gebsfishConfig GetGebSettingsConfig(){
-    if (!m_gebsConfig){
+static gebsfishConfig GetGebSettingsConfig() {
+    if (!m_gebsConfig) {
         GebsfishLogger.Info("Initializing gebsfish.", "JSON");
         GebsfishLogger.Info("Loading JSON config file.", "JSON");
         m_gebsConfig = new gebsfishConfig;
@@ -1207,8 +1207,7 @@ static gebsfishConfig GetGebSettingsConfig(){
     return m_gebsConfig;
 }
 
-static void SetGebsfishConfig(gebsfishConfig config)
-{
+static void SetGebsfishConfig(gebsfishConfig config) {
     GebsfishLogger.Info("Setting config settings from server config file.", "JSON");
     m_gebsConfig = config;
 }

@@ -8,10 +8,8 @@
 
 */
 
-modded class MissionBase
-{
-	override void InitWorldYieldDataDefaults(CatchYieldBank bank)
-	{
+modded class MissionBase {
+	override void InitWorldYieldDataDefaults(CatchYieldBank bank) {
 		super.InitWorldYieldDataDefaults(bank);
 
 		if (!bank)
@@ -30,8 +28,7 @@ modded class MissionBase
 		GebsfishLogger.Info("Initialization of yield data complete.", "MissionBase");
 	}
 
-	protected void RegisterFishYieldData(CatchYieldBank bank)
-	{
+	protected void RegisterFishYieldData(CatchYieldBank bank) {
 		GebsfishLogger.Info("Adding fish to the yield data.", "MissionBase");
 
 		RegisterFreshwaterFish(bank);
@@ -42,8 +39,7 @@ modded class MissionBase
 		GebsfishLogger.Info("Registering fish complete.", "MissionBase");
 	}
 
-	protected void RegisterFreshwaterFish(CatchYieldBank bank)
-	{
+	protected void RegisterFreshwaterFish(CatchYieldBank bank) {
 		bank.RegisterYieldItem(new geb_YieldCarp(m_gebsConfig.Carp.CatchProbability));
 		bank.RegisterYieldItem(new geb_YieldBitterlings(m_gebsConfig.Bitterlings.CatchProbability));
 		bank.RegisterYieldItem(new geb_YieldNorthernPike(m_gebsConfig.NorthernPike.CatchProbability));
@@ -69,14 +65,12 @@ modded class MissionBase
 		bank.RegisterYieldItem(new geb_YieldSeverum(m_gebsConfig.Severum.CatchProbability));
 	}
 
-	protected void RegisterFreshwaterCrustaceans(CatchYieldBank bank)
-	{
+	protected void RegisterFreshwaterCrustaceans(CatchYieldBank bank) {
 		bank.RegisterYieldItem(new geb_YieldSignalCrayFish(m_gebsConfig.SignalCrayFish.CatchProbability));
 		bank.RegisterYieldItem(new geb_YieldEuropeanCrayFish(m_gebsConfig.EuropeanCrayFish.CatchProbability));
 	}
 
-	protected void RegisterSaltwaterFish(CatchYieldBank bank)
-	{
+	protected void RegisterSaltwaterFish(CatchYieldBank bank) {
 		bank.RegisterYieldItem(new geb_YieldMackerel(m_gebsConfig.Mackerel.CatchProbability));
 		bank.RegisterYieldItem(new geb_YieldSardines(m_gebsConfig.Sardines.CatchProbability));
 		bank.RegisterYieldItem(new geb_YieldWalleyePollock(m_gebsConfig.WalleyePollock.CatchProbability));
@@ -104,8 +98,7 @@ modded class MissionBase
 		bank.RegisterYieldItem(new geb_YieldYellowFinTuna(m_gebsConfig.YellowFinTuna.CatchProbability));
 	}
 
-	protected void RegisterSaltwaterCrustaceans(CatchYieldBank bank)
-	{
+	protected void RegisterSaltwaterCrustaceans(CatchYieldBank bank) {
 		bank.RegisterYieldItem(new geb_YieldShrimp(m_gebsConfig.Shrimp.CatchProbability));
 		bank.RegisterYieldItem(new geb_YieldBloodClam(m_gebsConfig.BloodClam.CatchProbability));
 		bank.RegisterYieldItem(new geb_YieldMussel(m_gebsConfig.Mussel.CatchProbability));
@@ -118,8 +111,7 @@ modded class MissionBase
 		bank.RegisterYieldItem(new geb_YieldEuropeanLobster(m_gebsConfig.EuropeanLobster.CatchProbability));
 	}
 
-	protected void RegisterJunkYieldData(CatchYieldBank bank)
-	{
+	protected void RegisterJunkYieldData(CatchYieldBank bank) {
 		GebsfishLogger.Info("Adding junk to the yield data.", "MissionBase");
 
 		int i;
@@ -140,8 +132,7 @@ modded class MissionBase
 		GebsfishLogger.Info("Registering junk items complete.", "MissionBase");
 	}
 
-	protected void RegisterTrapAnimalYieldData(CatchYieldBank bank)
-	{
+	protected void RegisterTrapAnimalYieldData(CatchYieldBank bank) {
 		bank.RegisterYieldItem(new YieldItemDeadRabbit(4));
 		bank.RegisterYieldItem(new YieldItemDeadRooster(1));
 		bank.RegisterYieldItem(new YieldItemDeadChicken_White(1));

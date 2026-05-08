@@ -1,7 +1,5 @@
-class CraftBambooFishingNet extends RecipeBase
-{	
-	override void Init()
-	{
+class CraftBambooFishingNet extends RecipeBase {	
+	override void Init() {
 		m_Name = "#STR_tool_CraftMakeshiftFishingNet";
 		m_IsInstaRecipe = false;//should this recipe be performed instantly without animation
 		m_AnimationLength = 0.5;//animation length in relative time units
@@ -49,13 +47,11 @@ class CraftBambooFishingNet extends RecipeBase
 		m_ResultReplacesIngredient[0] = -1;// value == -1 means do nothing; a value >= 0 means this result will transfer item propertiesvariables, attachments etc.. from an ingredient value
 	}
 
-	override bool CanDo( ItemBase ingredients[], PlayerBase player )//final check for recipe's validity
-	{
+	override bool CanDo( ItemBase ingredients[], PlayerBase player ) {
 		return true;
 	}
 
-	override void Do(ItemBase ingredients[], PlayerBase player,array<ItemBase> results, float specialty_weight)//gets called upon recipe's completion
-	{
+	override void Do(ItemBase ingredients[], PlayerBase player,array<ItemBase> results, float specialty_weight) {
 		Debug.Log("Recipe Do method called","recipes");
 	}
 };

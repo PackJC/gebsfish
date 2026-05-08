@@ -2,10 +2,8 @@
 // Purpose: Dedicated helper to print the ASCII banner into an open FileHandle.
 // Usage:   GebsAsciiArt.Write(fh);
 
-class GebsAsciiArt
-{
-	static void Write(FileHandle fh)
-	{
+class GebsAsciiArt {
+	static void Write(FileHandle fh) {
 		if (fh == 0) return;
 
 		FPrintln(fh, "                                                                                                                                                            ");

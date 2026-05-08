@@ -8,12 +8,9 @@
 
 */
 
-class CfgPatches
-{
-	class gebsfish
-	{
-		requiredAddons[]=
-		{
+class CfgPatches {
+	class gebsfish {
+		requiredAddons[]= {
 			"JM_CF_Scripts",  // Required for GetRPCManager()
 			"DZ_Vehicles_Wheeled",
 			"DZ_Vehicles_Parts",
@@ -27,10 +24,8 @@ class CfgPatches
 		};
 	};
 };
-class CfgMods
-{
-	class gebsfish
-	{
+class CfgMods {
+	class gebsfish {
 		dir="gebsfish";
 		picture = "gebsfish\data\logo.paa";					// picture in expanded description
 		logoSmall = "gebsfish\data\logo.paa";				// icon next to mod name when description is not expanded
@@ -45,37 +40,29 @@ class CfgMods
 		version="3.3";
 		extra=0;
 		type="mod";
-		dependencies[]=
-		{
+		dependencies[]= {
 			"Game",
 			"World",
 			"Mission"
 		};
-		defines[]=
-		{
+		defines[]= {
 			"Gebsfish",
 			"GEBSFISH"
 		};
-		class defs
-		{
-			class gameScriptModule
-			{
+		class defs {
+			class gameScriptModule {
 				value="";
-				files[]=
-				{
+				files[]= {
 					"gebsfish\scripts\3_Game"
 				};
 			};
-			class worldScriptModule
-			{
+			class worldScriptModule {
 				value="";
-				files[]=
-				{
+				files[]= {
 					"gebsfish\scripts\4_world"
 				};
 			};
-			class missionScriptModule
-			{
+			class missionScriptModule {
 				value = "";
 				files[] =
 				{
