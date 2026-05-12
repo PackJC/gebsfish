@@ -114,6 +114,11 @@ class gebsfishTypes {
         fishItems.Insert("geb_LakeSturgeonFilletMeat");
         fishItems.Insert("geb_EuropeanCrayFish");
         fishItems.Insert("geb_SignalCrayFish");
+        fishItems.Insert("geb_CaveCrayFish");
+        fishItems.Insert("geb_FloridaCrayFish");
+        fishItems.Insert("geb_MonongahelaCrayFish");
+        fishItems.Insert("geb_RedSwampCrayFish");
+        fishItems.Insert("geb_RustyCrayFish");
         fishItems.Insert("geb_NorthernPike");
         fishItems.Insert("geb_NorthernPikeFilletMeat");
         fishItems.Insert("geb_AlligatorGar");
@@ -124,6 +129,10 @@ class gebsfishTypes {
         fishItems.Insert("geb_WhiteBassFilletMeat");
         fishItems.Insert("geb_BlackBass");
         fishItems.Insert("geb_BlackBassFilletMeat");
+        fishItems.Insert("geb_StripedBass");
+        fishItems.Insert("geb_StripedBassFilletMeat");
+        fishItems.Insert("geb_NeoshoBass");
+        fishItems.Insert("geb_NeoshoBassFilletMeat");
         fishItems.Insert("geb_RainbowTrout");
         fishItems.Insert("geb_RainbowTroutFilletMeat");
         fishItems.Insert("geb_YellowPerch");

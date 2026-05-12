@@ -109,6 +109,18 @@ class geb_YieldBlackBass : GebYieldFishBase {
 	}
 }
 
+class geb_YieldNeoshoBass : GebYieldFishBase {
+    override void Init() {
+		SetupYield("geb_NeoshoBass", m_gebsConfig.NeoshoBass.Environment, m_gebsConfig.NeoshoBass.CatchMethod);
+	}
+}
+
+class geb_YieldStripedBass : GebYieldFishBase {
+    override void Init() {
+		SetupYield("geb_StripedBass", m_gebsConfig.StripedBass.Environment, m_gebsConfig.StripedBass.CatchMethod);
+	}
+}
+
 class geb_YieldRainbowTrout : GebYieldFishBase {
     override void Init() {
 		SetupYield("geb_RainbowTrout", m_gebsConfig.RainbowTrout.Environment, m_gebsConfig.RainbowTrout.CatchMethod);
@@ -192,6 +204,31 @@ class geb_YieldSignalCrayFish : GebYieldFishBase {
 class geb_YieldEuropeanCrayFish : GebYieldFishBase {
     override void Init() {
 		SetupYield("geb_EuropeanCrayFish", m_gebsConfig.EuropeanCrayFish.Environment, m_gebsConfig.EuropeanCrayFish.CatchMethod);
+	}
+}
+class geb_YieldFloridaCrayFish : GebYieldFishBase {
+    override void Init() {
+		SetupYield("geb_FloridaCrayFish", m_gebsConfig.FloridaCrayFish.Environment, m_gebsConfig.FloridaCrayFish.CatchMethod);
+	}
+}
+class geb_YieldCaveCrayFish : GebYieldFishBase {
+    override void Init() {
+		SetupYield("geb_CaveCrayFish", m_gebsConfig.CaveCrayFish.Environment, m_gebsConfig.CaveCrayFish.CatchMethod);
+	}
+}
+class geb_YieldMonongahelaCrayFish : GebYieldFishBase {
+    override void Init() {
+		SetupYield("geb_MonongahelaCrayFish", m_gebsConfig.MonongahelaCrayFish.Environment, m_gebsConfig.MonongahelaCrayFish.CatchMethod);
+	}
+}
+class geb_YieldRustyCrayFish : GebYieldFishBase {
+    override void Init() {
+		SetupYield("geb_RustyCrayFish", m_gebsConfig.RustyCrayFish.Environment, m_gebsConfig.RustyCrayFish.CatchMethod);
+	}
+}
+class geb_YieldRedSwampCrayFish : GebYieldFishBase {
+    override void Init() {
+		SetupYield("geb_RedSwampCrayFish", m_gebsConfig.RedSwampCrayFish.Environment, m_gebsConfig.RedSwampCrayFish.CatchMethod);
 	}
 }
 

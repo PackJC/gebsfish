@@ -16,25 +16,19 @@ class CfgPatches {
 	class gebsVehiclesCfgPatches { 	
 		//Never Use same name for patch, because conflict message.
 		requiredAddons[] = {
-			"DZ_Vehicles_Wheeled",
-			"DZ_Vehicles_Parts",
-            "DZ_Vehicles_Water",
-			"DZ_Sounds",
 			"DZ_Scripts",
 			"DZ_Data",
-			"DZ_Weapons_Melee",
-			"DZ_Gear_Tools",
-            "DZ_Vehicles"
+            "DZ_Vehicles",
+            "DZ_Sounds_Effects"
 		};
 	};
 };
 
 class cfgVehicles {		
-    class Boat;
-	class BoatScript;
+	class Boat_01_ColorBase;
 	class Crew;
 	class Driver;
-    class geb_jonboat_base : BoatScript {
+    class geb_jonboat_base : Boat_01_ColorBase {
         scope = 0;
         displayName = "$STR_cfgvehicle_Boat010";
         descriptionShort = "$STR_cfgvehicle_Boat011";

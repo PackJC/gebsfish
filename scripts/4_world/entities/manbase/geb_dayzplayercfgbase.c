@@ -39,6 +39,8 @@ modded class ModItemRegisterCallbacks {
         pType.AddItemInHandsProfileIK("geb_SmallMouthBass", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
         pType.AddItemInHandsProfileIK("geb_WhiteBass",  "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
         pType.AddItemInHandsProfileIK("geb_BlackBass", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_NeoshoBass", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_StripedBass", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
         pType.AddItemInHandsProfileIK("geb_Sauger",  "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
         pType.AddItemInHandsProfileIK("geb_RainbowTrout", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
         pType.AddItemInHandsProfileIK("geb_Trout_Base", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
@@ -68,5 +70,10 @@ modded class ModItemRegisterCallbacks {
         pType.AddItemInHandsProfileIK("geb_BlueJellyFish", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/shrimp.anm");
         pType.AddItemInHandsProfileIK("geb_SignalCrayFish", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/shrimp.anm");
         pType.AddItemInHandsProfileIK("geb_EuropeanCrayFish", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/shrimp.anm");
+        pType.AddItemInHandsProfileIK("geb_FloridaCrayFish", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/shrimp.anm");
+        pType.AddItemInHandsProfileIK("geb_RedSwampCrayFish", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/shrimp.anm");
+        pType.AddItemInHandsProfileIK("geb_CaveCrayFish", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/shrimp.anm");
+        pType.AddItemInHandsProfileIK("geb_RustyCrayFish", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/shrimp.anm");
+        pType.AddItemInHandsProfileIK("geb_MonongahelaCrayFish", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/shrimp.anm");
     }
 };

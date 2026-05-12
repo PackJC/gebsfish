@@ -50,6 +50,8 @@ modded class MissionBase {
 		bank.RegisterYieldItem(new geb_YieldSunFish(m_gebsConfig.SunFish.CatchProbability));
 		bank.RegisterYieldItem(new geb_YieldWhiteBass(m_gebsConfig.WhiteBass.CatchProbability));
 		bank.RegisterYieldItem(new geb_YieldBlackBass(m_gebsConfig.BlackBass.CatchProbability));
+		bank.RegisterYieldItem(new geb_YieldNeoshoBass(m_gebsConfig.NeoshoBass.CatchProbability));
+		bank.RegisterYieldItem(new geb_YieldStripedBass(m_gebsConfig.StripedBass.CatchProbability));
 		bank.RegisterYieldItem(new geb_YieldRainbowTrout(m_gebsConfig.RainbowTrout.CatchProbability));
 		bank.RegisterYieldItem(new geb_YieldBrownTrout(m_gebsConfig.BrownTrout.CatchProbability));
 		bank.RegisterYieldItem(new geb_YieldBrookTrout(m_gebsConfig.BrookTrout.CatchProbability));
@@ -68,6 +70,11 @@ modded class MissionBase {
 	protected void RegisterFreshwaterCrustaceans(CatchYieldBank bank) {
 		bank.RegisterYieldItem(new geb_YieldSignalCrayFish(m_gebsConfig.SignalCrayFish.CatchProbability));
 		bank.RegisterYieldItem(new geb_YieldEuropeanCrayFish(m_gebsConfig.EuropeanCrayFish.CatchProbability));
+		bank.RegisterYieldItem(new geb_YieldCaveCrayFish(m_gebsConfig.CaveCrayFish.CatchProbability));
+		bank.RegisterYieldItem(new geb_YieldFloridaCrayFish(m_gebsConfig.FloridaCrayFish.CatchProbability));
+		bank.RegisterYieldItem(new geb_YieldMonongahelaCrayFish(m_gebsConfig.MonongahelaCrayFish.CatchProbability));
+		bank.RegisterYieldItem(new geb_YieldRedSwampCrayFish(m_gebsConfig.RedSwampCrayFish.CatchProbability));
+		bank.RegisterYieldItem(new geb_YieldRustyCrayFish(m_gebsConfig.RustyCrayFish.CatchProbability));
 	}
 
 	protected void RegisterSaltwaterFish(CatchYieldBank bank) {

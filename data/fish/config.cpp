@@ -610,6 +610,18 @@ class cfgVehicles {
 		descriptionShort = "$STR_fish_spottedbass_desc";
 		model = "\gebsfish\data\fish\spottedbass.p3d";
 	};
+	class geb_StripedBass: geb_FreshFish_Base {
+		scope = 2;
+		displayName = "$STR_fish_stripedbass";
+		descriptionShort = "$STR_fish_stripedbass_desc";
+		model = "\gebsfish\data\fish\stripedbass.p3d";
+	};
+	class geb_NeoshoBass: geb_FreshFish_Base {
+		scope = 2;
+		displayName = "$STR_fish_neoshobass";
+		descriptionShort = "$STR_fish_neoshobass_desc";
+		model = "\gebsfish\data\fish\neoshobass.p3d";
+	};
 	class geb_FlatHeadCatFish: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_flatheadcatfish";
@@ -1310,6 +1322,24 @@ class cfgVehicles {
 		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\blackbass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
+		};
+	};
+	class geb_StripedBassFilletMeat: geb_FreshWater_Fillet_Medium {
+		scope = 2;
+		displayName = "$STR_fish_stripedbass_fillet";
+		descriptionShort = "$STR_fish_stripedbass_desc";
+		model = "\dz\gear\food\carp_fillet.p3d";
+		hiddenSelectionsTextures[] = {
+			"\gebsfish\data\fish\stripedbass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
+		};
+	};
+	class geb_NeoshoBassFilletMeat: geb_FreshWater_Fillet_Medium {
+		scope = 2;
+		displayName = "$STR_fish_neoshobass_fillet";
+		descriptionShort = "$STR_fish_neoshobass_desc";
+		model = "\dz\gear\food\carp_fillet.p3d";
+		hiddenSelectionsTextures[] = {
+			"\gebsfish\data\fish\neoshobass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
 	class geb_SmallMouthBassFilletMeat: geb_FreshWater_Fillet_Medium {

@@ -12,15 +12,10 @@ class CfgPatches {
 	class gebsfish {
 		requiredAddons[]= {
 			"JM_CF_Scripts",  // Required for GetRPCManager()
-			"DZ_Vehicles_Wheeled",
-			"DZ_Vehicles_Parts",
-			"DZ_Vehicles_Water",
-			"DZ_Sounds",
 			"DZ_Scripts",
 			"DZ_Data",
-			"DZ_Weapons_Melee",
-			"DZ_Gear_Tools",
-			"DZ_Vehicles"
+            "DZ_Vehicles",
+            "DZ_Sounds_Effects"
 		};
 	};
 };

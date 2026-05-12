@@ -30,6 +30,8 @@ class gebsfishConfig {
     ref WallEyeConf WallEye;
     ref SunFishConf SunFish;
     ref WhiteBassConf WhiteBass;
+    ref StripedBassConf StripedBass;
+    ref NeoshoBassConf NeoshoBass;
     ref BlackBassConf BlackBass;
     ref RainbowTroutConf RainbowTrout;
     ref BrownTroutConf BrownTrout;
@@ -47,6 +49,11 @@ class gebsfishConfig {
     ref SeverumConf Severum;
     ref SignalCrayFishConf SignalCrayFish;
     ref EuropeanCrayFishConf EuropeanCrayFish;
+    ref FloridaCrayFishConf FloridaCrayFish;
+    ref CaveCrayFishConf CaveCrayFish;
+    ref MonongahelaCrayFishConf MonongahelaCrayFish;
+    ref RedSwampCrayFishConf RedSwampCrayFish;
+    ref RustyCrayFishConf RustyCrayFish;
     ref MahiMahiConf MahiMahi;
     ref AtlanticSailFishConf AtlanticSailFish;
     ref AngelFishConf AngelFish;
@@ -129,6 +136,8 @@ class gebsfishConfig {
         WallEye = new WallEyeConf;
         SunFish = new SunFishConf;
         WhiteBass = new WhiteBassConf;
+        StripedBass = new StripedBassConf;
+        NeoshoBass = new NeoshoBassConf;
         BlackBass = new BlackBassConf;
         RainbowTrout = new RainbowTroutConf;
         BrownTrout = new BrownTroutConf;
@@ -146,6 +155,11 @@ class gebsfishConfig {
         Severum = new SeverumConf;
         SignalCrayFish = new SignalCrayFishConf;
         EuropeanCrayFish = new EuropeanCrayFishConf;
+        CaveCrayFish = new CaveCrayFishConf;
+        FloridaCrayFish = new FloridaCrayFishConf;
+        MonongahelaCrayFish = new MonongahelaCrayFishConf;
+        RedSwampCrayFish = new RedSwampCrayFishConf;
+        RustyCrayFish = new RustyCrayFishConf;
         MahiMahi = new MahiMahiConf;
         AtlanticSailFish = new AtlanticSailFishConf;
         AngelFish = new AngelFishConf;
@@ -521,6 +535,32 @@ class BlackBassConf {
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
+class StripedBassConf {
+    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
+    int Environment = 1;
+    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
+    int CatchMethod = 3;
+    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
+    int MeatMin = 1;
+    int MeatMax = 2;
+    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
+    int CatchProbability = 15;
+    // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
+    // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
+};
+class NeoshoBassConf {
+    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
+    int Environment = 1;
+    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
+    int CatchMethod = 3;
+    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
+    int MeatMin = 1;
+    int MeatMax = 2;
+    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
+    int CatchProbability = 15;
+    // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
+    // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
+};
 
 class RainbowTroutConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
@@ -733,6 +773,76 @@ class SignalCrayFishConf {
 };
 
 class EuropeanCrayFishConf {
+    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
+    int Environment = 1;
+    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
+    int CatchMethod = 4;
+    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
+    int MeatMin = 1;
+    int MeatMax = 2;
+    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
+    int CatchProbability = 15;
+    // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
+    // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
+};
+
+class CaveCrayFishConf {
+    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
+    int Environment = 1;
+    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
+    int CatchMethod = 4;
+    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
+    int MeatMin = 1;
+    int MeatMax = 2;
+    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
+    int CatchProbability = 15;
+    // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
+    // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
+};
+
+class FloridaCrayFishConf {
+    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
+    int Environment = 1;
+    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
+    int CatchMethod = 4;
+    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
+    int MeatMin = 1;
+    int MeatMax = 2;
+    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
+    int CatchProbability = 15;
+    // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
+    // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
+};
+
+class MonongahelaCrayFishConf {
+    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
+    int Environment = 1;
+    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
+    int CatchMethod = 4;
+    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
+    int MeatMin = 1;
+    int MeatMax = 2;
+    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
+    int CatchProbability = 15;
+    // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
+    // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
+};
+
+class RedSwampCrayFishConf {
+    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
+    int Environment = 1;
+    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
+    int CatchMethod = 4;
+    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
+    int MeatMin = 1;
+    int MeatMax = 2;
+    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
+    int CatchProbability = 15;
+    // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
+    // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
+};
+
+class RustyCrayFishConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
