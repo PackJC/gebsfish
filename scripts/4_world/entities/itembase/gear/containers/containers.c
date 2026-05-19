@@ -58,7 +58,7 @@ class geb_BambooFishingNet : geb_FilteredContainerBase {
 };
 
 class geb_MinnowBucket : geb_FilteredContainerBase {
-	static ref TStringArray s_Allowed = { "geb_FatheadMinnow", "geb_SignalCrayFish", "geb_EuropeanCrayFish", "Shrimp" };
+	static ref TStringArray s_Allowed = { "geb_FatheadMinnow", "geb_SignalCrayFish", "geb_EuropeanCrayFish", "Shrimp", "geb_AmericanBullFrog", "geb_RedSalamander" };
 
 	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;

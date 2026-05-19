@@ -80,17 +80,33 @@ class ActionBambooFishingNet : ActionContinuousBase {
 		return true;
 	}
 
-    override void OnFinishProgressServer( ActionData action_data ) {
-	    PlayerBase player = action_data.m_Player;
-	    ItemBase net = action_data.m_MainItem;
+override void OnFinishProgressServer(ActionData action_data)
+{
+    PlayerBase player = action_data.m_Player;
+    ItemBase net = action_data.m_MainItem;
 
-	    g_Game.CreateObjectEx("geb_FatHeadMinnow", player.GetPosition(), ECE_PLACE_ON_SURFACE);
+    int roll = Math.RandomInt(0, 3); // 0, 1, or 2 — equal chance
 
-	    player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
+    switch (roll)
+    {
+        case 0:
+            g_Game.CreateObjectEx("geb_FatHeadMinnow", player.GetPosition(), ECE_PLACE_ON_SURFACE);
+            break;
 
-	    if (net)
-		    net.DecreaseHealth("", "", 5);
+        case 1:
+            g_Game.CreateObjectEx("geb_AmericanBullFrog", player.GetPosition(), ECE_PLACE_ON_SURFACE);
+            break;
+
+        case 2:
+            g_Game.CreateObjectEx("geb_RedSalamander", player.GetPosition(), ECE_PLACE_ON_SURFACE);
+            break;
     }
+
+    player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
+
+    if (net)
+        net.DecreaseHealth("", "", 5);
+}
 	
 	void SetDiggingAnimation( ItemBase item ) {
 		if (item.KindOf("CatchBugs")) {

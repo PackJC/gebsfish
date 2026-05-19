@@ -282,6 +282,14 @@ class cfgVehicles {
 		model = "\gebsfish\data\fish\geb_Trout_Base.p3d";
 		hiddenSelections[] = {"Camo"};
 	};
+	class geb_PikeMuskellunge_Base: geb_FreshFish_Base {
+		scope = 0;
+		model = "\gebsfish\data\fish\northernpike.p3d";
+		hiddenSelections[] = {"Camo"};
+		itemSize[] = {6,2};
+		rotationFlags = 0;
+		weight = 4000;
+	};
 	class geb_Lobster_Base : geb_SaltFish_Base {
 		scope = 0;
 		model = "\gebsfish\data\fish\lobster.p3d";
@@ -744,7 +752,193 @@ class cfgVehicles {
 			resultQuantityDispersionMax=0;
 		};
 	};
-	class geb_NorthernPike: geb_FreshFish_Base {
+	class geb_AmericanBullFrog: Shrimp {
+		scope = 2;
+		displayName = "$STR_fish_americanbullfrog";
+		descriptionShort = "$STR_fish_americanbullfrog_desc";
+		model = "\gebsfish\data\fish\americanbullfrog.p3d";
+		weight = 100;
+		itemSize[] = {1,1};
+		inventorySlot[]=
+		{
+			"Trap_Bait",
+			"Bait",
+			"Trap_Bait_1",
+			"Trap_Bait_2"
+		};
+		class Food
+        {
+            class FoodStages
+            {
+                class Raw
+                {
+                    visual_properties[]={0, 0, 0};
+                    nutrition_properties[]={5, 10, 20, 1, 0, 16, 1, 8};
+                    cooking_properties[]={0, 0};
+                };
+                class Rotten
+                {
+                    visual_properties[]={-1, -1, 5};
+                    nutrition_properties[]={10, 5, 8, 1, 0, 20, 1, 16};
+                    cooking_properties[]={0, 0};
+                };
+                class Baked
+                {
+                    visual_properties[]={0, 1, 1};
+                    nutrition_properties[]={2, 50, 12, 1, 0};
+                    cooking_properties[]={70, 45};
+                };
+                class Boiled
+                {
+                    visual_properties[]={0, 2, 2};
+                    nutrition_properties[]={2, 40, 32, 1, 0};
+                    cooking_properties[]={105, 55};
+                };
+                class Dried
+                {
+                    visual_properties[]={0, 3, 3};
+                    nutrition_properties[]={3, 40, 4, 1, 0};
+                    cooking_properties[]={70, 45, 80};
+                };
+                class Burned
+                {
+                    visual_properties[]={0, 4, 4};
+                    nutrition_properties[]={5, 10, 0, 1, 0, 16, 1, 3};
+                    cooking_properties[]={100, 30};
+                };
+            };
+        };
+		class AnimationSources: FoodAnimationSources
+		{
+			class Bait_Hooked
+			{
+				source="user";
+				animPeriod=0.0099999998;
+				initPhase=1;
+			};
+			class Bait_Unhooked
+			{
+				source="user";
+				animPeriod=0.0099999998;
+				initPhase=0;
+			};
+		};
+		soundImpactType="organic";
+		class Fishing
+		{
+			signalCycleTargetAdjustment=-12;
+			signalCycleTargetEndAdjustment=-20;
+			signalDurationMin=1.2;
+			signalDurationMax=1.6;
+			resultQuantityBaseMod=0;
+			resultQuantityDispersionMin=0;
+			resultQuantityDispersionMax=0;
+			hookLossChanceMod=0;
+			baitLossChanceMod=0;
+		};
+		class Trapping
+		{
+			baitTypes[]={1,2};
+			baitTypeChances[]={0.75,0.050000001};
+			resultQuantityBaseMod=0;
+			resultQuantityDispersionMin=0;
+			resultQuantityDispersionMax=0;
+		};
+	};
+	class geb_RedSalamander: Shrimp {
+		scope = 2;
+		displayName = "$STR_fish_redsalamander";
+		descriptionShort = "$STR_fish_redsalamander_desc";
+		model = "\gebsfish\data\fish\redsalamander.p3d";
+		weight = 100;
+		itemSize[] = {1,1};
+		inventorySlot[]=
+		{
+			"Trap_Bait",
+			"Bait",
+			"Trap_Bait_1",
+			"Trap_Bait_2"
+		};
+		class Food
+        {
+            class FoodStages
+            {
+                class Raw
+                {
+                    visual_properties[]={0, 0, 0};
+                    nutrition_properties[]={5, 10, 20, 1, 0, 16, 1, 8};
+                    cooking_properties[]={0, 0};
+                };
+                class Rotten
+                {
+                    visual_properties[]={-1, -1, 5};
+                    nutrition_properties[]={10, 5, 8, 1, 0, 20, 1, 16};
+                    cooking_properties[]={0, 0};
+                };
+                class Baked
+                {
+                    visual_properties[]={0, 1, 1};
+                    nutrition_properties[]={2, 50, 12, 1, 0};
+                    cooking_properties[]={70, 45};
+                };
+                class Boiled
+                {
+                    visual_properties[]={0, 2, 2};
+                    nutrition_properties[]={2, 40, 32, 1, 0};
+                    cooking_properties[]={105, 55};
+                };
+                class Dried
+                {
+                    visual_properties[]={0, 3, 3};
+                    nutrition_properties[]={3, 40, 4, 1, 0};
+                    cooking_properties[]={70, 45, 80};
+                };
+                class Burned
+                {
+                    visual_properties[]={0, 4, 4};
+                    nutrition_properties[]={5, 10, 0, 1, 0, 16, 1, 3};
+                    cooking_properties[]={100, 30};
+                };
+            };
+        };
+		class AnimationSources: FoodAnimationSources
+		{
+			class Bait_Hooked
+			{
+				source="user";
+				animPeriod=0.0099999998;
+				initPhase=1;
+			};
+			class Bait_Unhooked
+			{
+				source="user";
+				animPeriod=0.0099999998;
+				initPhase=0;
+			};
+		};
+		soundImpactType="organic";
+		class Fishing
+		{
+			signalCycleTargetAdjustment=-12;
+			signalCycleTargetEndAdjustment=-20;
+			signalDurationMin=1.2;
+			signalDurationMax=1.6;
+			resultQuantityBaseMod=0;
+			resultQuantityDispersionMin=0;
+			resultQuantityDispersionMax=0;
+			hookLossChanceMod=0;
+			baitLossChanceMod=0;
+		};
+		class Trapping
+		{
+			baitTypes[]={1,2};
+			baitTypeChances[]={0.75,0.050000001};
+			resultQuantityBaseMod=0;
+			resultQuantityDispersionMin=0;
+			resultQuantityDispersionMax=0;
+		};
+	};
+	class geb_NorthernPike: geb_PikeMuskellunge_Base {
 		scope = 2;
 		displayName = "$STR_fish_northernpike";
 		descriptionShort = "$STR_fish_northernpike_desc";
@@ -752,6 +946,54 @@ class cfgVehicles {
 		itemSize[] = {6,2};
 		rotationFlags = 0;
 		weight = 4000;
+	};
+	class geb_TigerMuskellunge: geb_PikeMuskellunge_Base {
+		scope = 2;
+		displayName = "$STR_fish_tigermuskellunge";
+		descriptionShort = "$STR_fish_tigermuskellunge_desc";
+		itemSize[] = {6,2};
+		rotationFlags = 0;
+		weight = 4000;
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\tigermuskellunge_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\tigermuskellunge.rvmat"};
+
+	};
+	class geb_Muskellunge: geb_PikeMuskellunge_Base {
+		scope = 2;
+		displayName = "$STR_fish_muskellunge";
+		descriptionShort = "$STR_fish_muskellunge_desc";
+		itemSize[] = {6,2};
+		rotationFlags = 0;
+		weight = 4000;
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\muskellunge_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\muskellunge.rvmat"};
+
+	};
+	class geb_SpottedMuskellunge: geb_PikeMuskellunge_Base {
+		scope = 2;
+		displayName = "$STR_fish_spottedmuskellunge";
+		descriptionShort = "$STR_fish_spottedmuskellunge_desc";
+		itemSize[] = {6,2};
+		rotationFlags = 0;
+		weight = 4000;
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\spottedmuskellunge_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\spottedmuskellunge.rvmat"};
+
+	};
+	class geb_BarredMuskellunge: geb_PikeMuskellunge_Base {
+		scope = 2;
+		displayName = "$STR_fish_barredmuskellunge";
+		descriptionShort = "$STR_fish_barredmuskellunge_desc";
+		itemSize[] = {6,2};
+		rotationFlags = 0;
+		weight = 4000;
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\barredmuskellunge_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\barredmuskellunge.rvmat"};
+
 	};
 	class geb_AlligatorGar: geb_FreshFish_Base {
 		scope = 2;
@@ -1395,6 +1637,42 @@ class cfgVehicles {
 		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\northernpike_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
+		};
+	};
+	class geb_MuskellungeFilletMeat: geb_FreshWater_Fillet_Heavy {
+		scope = 2;
+		displayName = "$STR_fish_muskellunge_fillet";
+		descriptionShort = "$STR_fish_muskellunge_desc";
+		model = "\dz\gear\food\carp_fillet.p3d";
+		hiddenSelectionsTextures[] = {
+			"\gebsfish\data\fish\muskellunge_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
+		};
+	};
+	class geb_SpottedMuskellungeFilletMeat: geb_FreshWater_Fillet_Heavy {
+		scope = 2;
+		displayName = "$STR_fish_spottedmuskellunge_fillet";
+		descriptionShort = "$STR_fish_spottedmuskellunge_desc";
+		model = "\dz\gear\food\carp_fillet.p3d";
+		hiddenSelectionsTextures[] = {
+			"\gebsfish\data\fish\spottedmuskellunge_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
+		};
+	};
+	class geb_BarredMuskellungeFilletMeat: geb_FreshWater_Fillet_Heavy {
+		scope = 2;
+		displayName = "$STR_fish_barredmuskellunge_fillet";
+		descriptionShort = "$STR_fish_barredmuskellunge_desc";
+		model = "\dz\gear\food\carp_fillet.p3d";
+		hiddenSelectionsTextures[] = {
+			"\gebsfish\data\fish\barredmuskellunge_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
+		};
+	};
+	class geb_TigerMuskellungeFilletMeat: geb_FreshWater_Fillet_Heavy {
+		scope = 2;
+		displayName = "$STR_fish_tigermuskellunge_fillet";
+		descriptionShort = "$STR_fish_tigermuskellunge_desc";
+		model = "\dz\gear\food\carp_fillet.p3d";
+		hiddenSelectionsTextures[] = {
+			"\gebsfish\data\fish\tigermuskellunge_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
 	class geb_AlligatorGarFilletMeat: geb_FreshWater_Fillet_Heavy {

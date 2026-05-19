@@ -39,6 +39,12 @@ class cfgVehicles {
         attachments[] = {
             "SparkPlug"
         };
+		class Cargo
+		{
+			itemsCargoSize[] = {10,30};
+			allowOwnedCargoManipulation = 1;
+			openable = 0;
+		};
         class AnimationSources {
             class FoldingEngine {
                 source = "user";

@@ -119,6 +119,14 @@ class gebsfishTypes {
         fishItems.Insert("geb_MonongahelaCrayFish");
         fishItems.Insert("geb_RedSwampCrayFish");
         fishItems.Insert("geb_RustyCrayFish");
+        fishItems.Insert("geb_SpottedMuskellunge");
+        fishItems.Insert("geb_SpottedMuskellungeFilletMeat");
+        fishItems.Insert("geb_BarredMuskellunge");
+        fishItems.Insert("geb_BarredMuskellungeFilletMeat");
+        fishItems.Insert("geb_TigerMuskellunge");
+        fishItems.Insert("geb_TigerMuskellungeFilletMeat");
+        fishItems.Insert("geb_Muskellunge");
+        fishItems.Insert("geb_MuskellungeFilletMeat");
         fishItems.Insert("geb_NorthernPike");
         fishItems.Insert("geb_NorthernPikeFilletMeat");
         fishItems.Insert("geb_AlligatorGar");
@@ -140,6 +148,8 @@ class gebsfishTypes {
         fishItems.Insert("geb_FlatHeadCatFish");
         fishItems.Insert("geb_FlatHeadCatFishFilletMeat");
         fishItems.Insert("geb_FatHeadMinnow");
+        fishItems.Insert("geb_AmericanBullFrog");
+        fishItems.Insert("geb_RedSalamander");
         fishItems.Insert("geb_BlueGill");
         fishItems.Insert("geb_BlueGillFilletMeat");
         fishItems.Insert("geb_Sauger");

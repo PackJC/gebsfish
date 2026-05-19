@@ -253,6 +253,70 @@ class PrepareNorthernPike extends GebPrepareFishBase {
 	}
 };
 
+class PrepareMuskellunge extends GebPrepareFishBase {
+    override void Init() {
+		super.Init();
+		SetupFishRecipe("geb_Muskellunge");
+		AddDefaultResultAtIndex("geb_YellowCaviar", 0);
+
+		int ran = GetInclusiveRandom(m_gebsConfig.Muskellunge.MeatMin, m_gebsConfig.Muskellunge.MeatMax);
+		AddRepeatedResults("geb_MuskellungeFilletMeat", ran, 1);
+	}
+
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
+		super.Do(ingredients, player, results, specialty_weight);
+		ApplyThirtyPercentCaviarChance(results);
+	}
+};
+
+class PrepareTigerMuskellunge extends GebPrepareFishBase {
+    override void Init() {
+		super.Init();
+		SetupFishRecipe("geb_TigerMuskellunge");
+		AddDefaultResultAtIndex("geb_YellowCaviar", 0);
+
+		int ran = GetInclusiveRandom(m_gebsConfig.TigerMuskellunge.MeatMin, m_gebsConfig.TigerMuskellunge.MeatMax);
+		AddRepeatedResults("geb_TigerMuskellungeFilletMeat", ran, 1);
+	}
+
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
+		super.Do(ingredients, player, results, specialty_weight);
+		ApplyThirtyPercentCaviarChance(results);
+	}
+};
+
+class PrepareBarredMuskellunge extends GebPrepareFishBase {
+    override void Init() {
+		super.Init();
+		SetupFishRecipe("geb_BarredMuskellunge");
+		AddDefaultResultAtIndex("geb_YellowCaviar", 0);
+
+		int ran = GetInclusiveRandom(m_gebsConfig.BarredMuskellunge.MeatMin, m_gebsConfig.BarredMuskellunge.MeatMax);
+		AddRepeatedResults("geb_BarredMuskellungeFilletMeat", ran, 1);
+	}
+
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
+		super.Do(ingredients, player, results, specialty_weight);
+		ApplyThirtyPercentCaviarChance(results);
+	}
+};
+
+class PrepareSpottedMuskellunge extends GebPrepareFishBase {
+    override void Init() {
+		super.Init();
+		SetupFishRecipe("geb_SpottedMuskellunge");
+		AddDefaultResultAtIndex("geb_YellowCaviar", 0);
+
+		int ran = GetInclusiveRandom(m_gebsConfig.SpottedMuskellunge.MeatMin, m_gebsConfig.SpottedMuskellunge.MeatMax);
+		AddRepeatedResults("geb_SpottedMuskellungeFilletMeat", ran, 1);
+	}
+
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
+		super.Do(ingredients, player, results, specialty_weight);
+		ApplyThirtyPercentCaviarChance(results);
+	}
+};
+
 class PrepareRainbowTrout extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
@@ -388,6 +452,20 @@ class PrepareWhiteBass extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_WhiteBass", "geb_WhiteBassFilletMeat", m_gebsConfig.WhiteBass.MeatMin, m_gebsConfig.WhiteBass.MeatMax);
+	}
+};
+
+class PrepareStripedBass extends GebPrepareFishBase {
+    override void Init() {
+		super.Init();
+		SetupStandardRecipe("geb_StripedBass", "geb_StripedBassFilletMeat", m_gebsConfig.StripedBass.MeatMin, m_gebsConfig.StripedBass.MeatMax);
+	}
+};
+
+class PrepareNeoshoBass extends GebPrepareFishBase {
+    override void Init() {
+		super.Init();
+		SetupStandardRecipe("geb_NeoshoBass", "geb_NeoshoBassFilletMeat", m_gebsConfig.NeoshoBass.MeatMin, m_gebsConfig.NeoshoBass.MeatMax);
 	}
 };
 

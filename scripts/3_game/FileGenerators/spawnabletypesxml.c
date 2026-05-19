@@ -186,6 +186,8 @@ class gebsfishSpawnableTypes {
 
         ref array<ref XmlCargoItem> minnowCargo = new array<ref XmlCargoItem>;
         minnowCargo.Insert(new XmlCargoItem("geb_FatHeadMinnow", 1.00));
+        minnowCargo.Insert(new XmlCargoItem("geb_AmericanBullFrog", 1.00));
+        minnowCargo.Insert(new XmlCargoItem("geb_RedSalamander", 1.00));
         WriteTypeWithRepeatedCargo(file, "geb_MinnowBucket", 12, 0.20, minnowCargo);
     }
 

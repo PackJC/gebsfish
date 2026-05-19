@@ -67,6 +67,30 @@ class geb_YieldNorthernPike : GebYieldFishBase {
 	}
 }
 
+class geb_YieldMuskellunge : GebYieldFishBase {
+    override void Init() {
+		SetupYield("geb_Muskellunge", m_gebsConfig.Muskellunge.Environment, m_gebsConfig.Muskellunge.CatchMethod);
+	}
+}
+
+class geb_YieldTigerMuskellunge : GebYieldFishBase {
+    override void Init() {
+		SetupYield("geb_TigerMuskellunge", m_gebsConfig.TigerMuskellunge.Environment, m_gebsConfig.TigerMuskellunge.CatchMethod);
+	}
+}
+
+class geb_YieldSpottedMuskellunge : GebYieldFishBase {
+    override void Init() {
+		SetupYield("geb_SpottedMuskellunge", m_gebsConfig.SpottedMuskellunge.Environment, m_gebsConfig.SpottedMuskellunge.CatchMethod);
+	}
+}
+
+class geb_YieldBarredMuskellunge : GebYieldFishBase {
+    override void Init() {
+		SetupYield("geb_BarredMuskellunge", m_gebsConfig.BarredMuskellunge.Environment, m_gebsConfig.BarredMuskellunge.CatchMethod);
+	}
+}
+
 class geb_YieldAlligatorGar : GebYieldFishBase {
     override void Init() {
 		SetupYield("geb_AlligatorGar", m_gebsConfig.AlligatorGar.Environment, m_gebsConfig.AlligatorGar.CatchMethod);
@@ -166,6 +190,18 @@ class geb_YieldFlatHeadCatFish : GebYieldFishBase {
 class geb_YieldFatHeadMinnow : GebYieldFishBase {
     override void Init() {
 		SetupYield("geb_FatHeadMinnow", m_gebsConfig.FatHeadMinnow.Environment, m_gebsConfig.FatHeadMinnow.CatchMethod);
+	}
+}
+
+class geb_YieldAmericanBullFrog : GebYieldFishBase {
+    override void Init() {
+		SetupYield("geb_AmericanBullFrog", m_gebsConfig.AmericanBullFrog.Environment, m_gebsConfig.AmericanBullFrog.CatchMethod);
+	}
+}
+
+class geb_YieldRedSalamander : GebYieldFishBase {
+    override void Init() {
+		SetupYield("geb_RedSalamander", m_gebsConfig.RedSalamander.Environment, m_gebsConfig.RedSalamander.CatchMethod);
 	}
 }
 

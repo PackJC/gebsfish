@@ -15,7 +15,8 @@ class CfgPatches {
 			"DZ_Scripts",
 			"DZ_Data",
             "DZ_Vehicles",
-            "DZ_Sounds_Effects"
+            "DZ_Sounds_Effects",
+			"DZ_Weapons_Melee"
 		};
 	};
 };

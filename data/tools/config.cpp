@@ -17,7 +17,8 @@ class CfgPatches {
 		//Never Use same name for patch, because conflict message.
 		requiredAddons[] = {
 		"DZ_Data",
-		"DZ_Scripts"
+		"DZ_Scripts",
+		"DZ_Weapons_Melee"
 		};
 	};
 };
