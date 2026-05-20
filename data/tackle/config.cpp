@@ -96,7 +96,7 @@ class cfgVehicles {
 		displayName = "$STR_tools_yellowtackle";
 		descriptionShort = "$STR_tools_tackle_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] ={"gebsfish\data\tackle\geb_yellowtackle.paa"};
+		hiddenSelectionsTextures[] ={"gebsfish\data\tackle\largetackle_yellow_co.paa"};
 	};
 	class geb_BlueTackle: geb_Tackle_Base {
 		scope = 2;

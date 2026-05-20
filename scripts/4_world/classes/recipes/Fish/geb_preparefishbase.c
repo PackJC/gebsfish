@@ -237,6 +237,13 @@ class PrepareAlligatorGar extends GebPrepareFishBase {
 	}
 };
 
+class PrepareNorthernSnakeHead extends GebPrepareFishBase {
+    override void Init() {
+		super.Init();
+		SetupStandardRecipe("geb_NorthernSnakeHead", "geb_NorthernSnakeHeadFilletMeat", m_gebsConfig.NorthernSnakeHead.MeatMin, m_gebsConfig.NorthernSnakeHead.MeatMax);
+	}
+};
+
 class PrepareNorthernPike extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
@@ -677,6 +684,27 @@ class PrepareYellowFinTuna extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
 		SetupStandardRecipe("geb_YellowFinTuna", "geb_YellowFinTunaFilletMeat", m_gebsConfig.YellowFinTuna.MeatMin, m_gebsConfig.YellowFinTuna.MeatMax);
+	}
+};
+
+class PrepareYellowSnapper extends GebPrepareFishBase {
+    override void Init() {
+		super.Init();
+		SetupStandardRecipe("geb_YellowSnapper", "geb_YellowSnapperFilletMeat", m_gebsConfig.YellowSnapper.MeatMin, m_gebsConfig.YellowSnapper.MeatMax);
+	}
+};
+
+class PrepareSouthernFlounder extends GebPrepareFishBase {
+    override void Init() {
+		super.Init();
+		SetupStandardRecipe("geb_SouthernFlounder", "geb_SouthernFlounderFilletMeat", m_gebsConfig.SouthernFlounder.MeatMin, m_gebsConfig.SouthernFlounder.MeatMax);
+	}
+};
+
+class PrepareWhiteGrunt extends GebPrepareFishBase {
+    override void Init() {
+		super.Init();
+		SetupStandardRecipe("geb_WhiteGrunt", "geb_WhiteGruntFilletMeat", m_gebsConfig.WhiteGrunt.MeatMin, m_gebsConfig.WhiteGrunt.MeatMax);
 	}
 };
 

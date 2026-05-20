@@ -41,9 +41,9 @@ class cfgVehicles {
 		descriptionShort="$STR_clothes_orangefishinggloves_desc";
 		scope=2;
 		hiddenSelectionsTextures[]=	{
-			"\gebsfish\data\clothes\geb_orangefishgloves.paa",
-			"\gebsfish\data\clothes\geb_orangefishgloves.paa",
-			"\gebsfish\data\clothes\geb_orangefishgloves.paa"
+			"\gebsfish\data\clothes\geb_orangefishgloves_co.paa",
+			"\gebsfish\data\clothes\geb_orangefishgloves_co.paa",
+			"\gebsfish\data\clothes\geb_orangefishgloves_co.paa",
 		};
 	};
 	class geb_BlueFishGloves: NBCGloves_ColorBase {
@@ -52,9 +52,9 @@ class cfgVehicles {
 		scope=2;
 		hiddenSelectionsTextures[]=
 		{
-			"\gebsfish\data\clothes\geb_bluefishgloves.paa",
-			"\gebsfish\data\clothes\geb_bluefishgloves.paa",
-			"\gebsfish\data\clothes\geb_bluefishgloves.paa"
+			"\gebsfish\data\clothes\geb_bluefishgloves_co.paa",
+			"\gebsfish\data\clothes\geb_bluefishgloves_co.paa",
+			"\gebsfish\data\clothes\geb_bluefishgloves_co.paa"
 		};
 	};
 
@@ -66,9 +66,9 @@ class cfgVehicles {
 		visibilityModifier=0.94999999;
 		hiddenSelectionsTextures[]=
 		{
-			"\gebsfish\data\clothes\geb_bluefishhat.paa",
-			"\gebsfish\data\clothes\geb_bluefishhat.paa",
-			"\gebsfish\data\clothes\geb_bluefishhat.paa"
+			"\gebsfish\data\clothes\geb_bluefishhat_co.paa",
+			"\gebsfish\data\clothes\geb_bluefishhat_co.paa",
+			"\gebsfish\data\clothes\geb_bluefishhat_co.paa"
 		};
 	};
 	class geb_RedFishHat: BaseballCap_ColorBase {
@@ -78,9 +78,9 @@ class cfgVehicles {
 		visibilityModifier=0.94999999;
 		hiddenSelectionsTextures[]=
 		{
-			"\gebsfish\data\clothes\geb_redfishhat.paa",
-			"\gebsfish\data\clothes\geb_redfishhat.paa",
-			"\gebsfish\data\clothes\geb_redfishhat.paa"
+			"\gebsfish\data\clothes\geb_redfishhat_co.paa",
+			"\gebsfish\data\clothes\geb_redfishhat_co.paa",
+			"\gebsfish\data\clothes\geb_redfishhat_co.paa"
 		};
 	};	
 	class geb_GreenFishHat: BaseballCap_ColorBase {
@@ -90,9 +90,9 @@ class cfgVehicles {
 		visibilityModifier=0.94999999;
 		hiddenSelectionsTextures[]=
 		{
-			"\gebsfish\data\clothes\geb_greenfishhat.paa",
-			"\gebsfish\data\clothes\geb_greenfishhat.paa",
-			"\gebsfish\data\clothes\geb_greenfishhat.paa"
+			"\gebsfish\data\clothes\geb_greenfishhat_co.paa",
+			"\gebsfish\data\clothes\geb_greenfishhat_co.paa",
+			"\gebsfish\data\clothes\geb_greenfishhat_co.paa"
 		};
 	};	
 	class geb_PurpleFishHat: BaseballCap_ColorBase {
@@ -102,9 +102,9 @@ class cfgVehicles {
 		visibilityModifier=0.94999999;
 		hiddenSelectionsTextures[]=
 		{
-			"\gebsfish\data\clothes\geb_purplefishhat.paa",
-			"\gebsfish\data\clothes\geb_purplefishhat.paa",
-			"\gebsfish\data\clothes\geb_purplefishhat.paa"
+			"\gebsfish\data\clothes\geb_purplefishhat_co.paa",
+			"\gebsfish\data\clothes\geb_purplefishhat_co.paa",
+			"\gebsfish\data\clothes\geb_purplefishhat_co.paa"
 		};
 	};	
 
@@ -117,8 +117,8 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] =
 		{
 			"\dz\characters\tops\data\tshirt_ground_red_co.paa",
-			"\gebsfish\data\clothes\geb_redfishshirt.paa",
-			"\gebsfish\data\clothes\geb_redfishshirt.paa"
+			"\gebsfish\data\clothes\geb_redfishshirt_co.paa",
+			"\gebsfish\data\clothes\geb_redfishshirt_co.paa"
 		};
 	};
 	class geb_GreenFishShirt: TShirt_ColorBase {
@@ -129,8 +129,8 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] =
 		{
 			"\dz\characters\tops\data\tshirt_ground_green_co.paa",
-			"\gebsfish\data\clothes\geb_greenfishshirt.paa",
-			"\gebsfish\data\clothes\geb_greenfishshirt.paa"
+			"\gebsfish\data\clothes\geb_greenfishshirt_co.paa",
+			"\gebsfish\data\clothes\geb_greenfishshirt_co.paa"
 		};
 	};
 	class geb_BlueFishShirt: TShirt_ColorBase {
@@ -141,8 +141,8 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] =
 		{
 			"\dz\characters\tops\data\tshirt_ground_blue_co.paa",
-			"\gebsfish\data\clothes\geb_bluefishshirt.paa",
-			"\gebsfish\data\clothes\geb_bluefishshirt.paa"
+			"\gebsfish\data\clothes\geb_bluefishshirt_co.paa",
+			"\gebsfish\data\clothes\geb_bluefishshirt_co.paa"
 		};
 	};
 	class geb_PurpleFishShirt: TShirt_ColorBase {
@@ -153,8 +153,8 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] =
 		{
 			"\dz\characters\tops\data\tshirt_ground_black_co.paa",
-			"\gebsfish\data\clothes\geb_purplefishshirt.paa",
-			"\gebsfish\data\clothes\geb_purplefishshirt.paa"
+			"\gebsfish\data\clothes\geb_purplefishshirt_co.paa",
+			"\gebsfish\data\clothes\geb_purplefishshirt_co.paa"
 		};
 	};
 };

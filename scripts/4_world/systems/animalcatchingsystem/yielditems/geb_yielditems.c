@@ -61,6 +61,12 @@ class geb_YieldLakeSturgeon : GebYieldFishBase {
 	}
 }
 
+class geb_YieldNorthernSnakeHead : GebYieldFishBase {
+    override void Init() {
+		SetupYield("geb_NorthernSnakeHead", m_gebsConfig.NorthernSnakeHead.Environment, m_gebsConfig.NorthernSnakeHead.CatchMethod);
+	}
+}
+
 class geb_YieldNorthernPike : GebYieldFishBase {
     override void Init() {
 		SetupYield("geb_NorthernPike", m_gebsConfig.NorthernPike.Environment, m_gebsConfig.NorthernPike.CatchMethod);
@@ -402,12 +408,29 @@ class geb_YieldYellowFinTuna : GebYieldFishBase {
 	}
 }
 
+class geb_YieldYellowSnapper : GebYieldFishBase {
+    override void Init() {
+		SetupYield("geb_YellowSnapper", m_gebsConfig.YellowSnapper.Environment, m_gebsConfig.YellowSnapper.CatchMethod);
+	}
+}
+
+class geb_YieldWhiteGrunt : GebYieldFishBase {
+    override void Init() {
+		SetupYield("geb_WhiteGrunt", m_gebsConfig.WhiteGrunt.Environment, m_gebsConfig.WhiteGrunt.CatchMethod);
+	}
+}
+
+class geb_YieldSouthernFlounder : GebYieldFishBase {
+    override void Init() {
+		SetupYield("geb_SouthernFlounder", m_gebsConfig.SouthernFlounder.Environment, m_gebsConfig.SouthernFlounder.CatchMethod);
+	}
+}
+
 class geb_YieldSeverum : GebYieldFishBase {
     override void Init() {
 		SetupYield("geb_Severum", m_gebsConfig.Severum.Environment, m_gebsConfig.Severum.CatchMethod);
 	}
 }
-
 
 // ===== SALTWATER CRUSTACEAN / MARINE INVERTEBRATES =====
 class geb_YieldShrimp : GebYieldFishBase {

@@ -7,10 +7,6 @@ enum GebsfishRPC { // RPC enum generation
     PLAYPREDATORSOUND //Sync Predator sound to clients around triggering player; call -> GebsfishRPC.PLAYPREDATORSOUND
 };
 
-
-
-
-
 // LEGACY CODE - Remove in version 3.5
 // Define RPC constant for predator sound
 const int RPC_PLAY_PREDATOR_SOUND = 2757509117; // Unique ID for the predator sound RPC

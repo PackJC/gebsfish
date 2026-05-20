@@ -371,11 +371,11 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] =
         {
             "dz\gear\food\data\shrimp_raw_co.paa",
-            "dz\gear\food\data\shrimp_baked_co.paa",
-            "dz\gear\food\data\shrimp_boiled_co.paa",
-            "dz\gear\food\data\shrimp_dried_co.paa",
-            "dz\gear\food\data\shrimp_burnt_co.paa",
-            "dz\gear\food\data\shrimp_rotten_co.paa"
+            "\gebsfish\data\fish\crayfish_baked.paa",
+            "\gebsfish\data\fish\crayfish_boiled.paa",
+            "\gebsfish\data\fish\crayfish_dried.paa",
+            "\gebsfish\data\fish\crayfish_burned.paa",
+            "\gebsfish\data\fish\crayfish_rotten.paa"
         };
         hiddenSelectionsMaterials[] =
         {
@@ -943,6 +943,10 @@ class cfgVehicles {
 		displayName = "$STR_fish_northernpike";
 		descriptionShort = "$STR_fish_northernpike_desc";
 		model = "\gebsfish\data\fish\northernpike.p3d";
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\northernpike_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\northernpike.rvmat"};
+
 		itemSize[] = {6,2};
 		rotationFlags = 0;
 		weight = 4000;
@@ -957,7 +961,6 @@ class cfgVehicles {
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\tigermuskellunge_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\tigermuskellunge.rvmat"};
-
 	};
 	class geb_Muskellunge: geb_PikeMuskellunge_Base {
 		scope = 2;
@@ -969,7 +972,6 @@ class cfgVehicles {
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\muskellunge_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\muskellunge.rvmat"};
-
 	};
 	class geb_SpottedMuskellunge: geb_PikeMuskellunge_Base {
 		scope = 2;
@@ -981,7 +983,6 @@ class cfgVehicles {
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\spottedmuskellunge_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\spottedmuskellunge.rvmat"};
-
 	};
 	class geb_BarredMuskellunge: geb_PikeMuskellunge_Base {
 		scope = 2;
@@ -993,13 +994,21 @@ class cfgVehicles {
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\barredmuskellunge_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\barredmuskellunge.rvmat"};
-
 	};
 	class geb_AlligatorGar: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_alligatorgar";
 		descriptionShort = "$STR_fish_alligatorgar_desc";
 		model = "\gebsfish\data\fish\alligatorgar.p3d";
+		itemSize[] = {6,2};
+		weight = 4000;
+		rotationFlags = 0;
+	};
+	class geb_NorthernSnakeHead: geb_FreshFish_Base {
+		scope = 2;
+		displayName = "$STR_fish_northernsnakehead";
+		descriptionShort = "$STR_fish_northernsnakehead_desc";
+		model = "\gebsfish\data\fish\northernsnakehead.p3d";
 		itemSize[] = {6,2};
 		weight = 4000;
 		rotationFlags = 0;
@@ -1028,7 +1037,7 @@ class cfgVehicles {
 		itemSize[] = {5,2};
 		weight = 1700;
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\rainbowtrout_ca.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\rainbowtrout_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\rainbowtrout.rvmat"};
 	};
 	class geb_BrookTrout: geb_Trout_Base {
@@ -1038,7 +1047,7 @@ class cfgVehicles {
 		itemSize[] = {5,2};
 		weight = 1700;
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\brooktrout.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\brooktrout_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\brooktrout.rvmat"};
 	};
 	class geb_BrownTrout: geb_Trout_Base {
@@ -1048,7 +1057,7 @@ class cfgVehicles {
 		itemSize[] = {5,2};
 		weight = 1700;
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\browntrout.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\browntrout_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\browntrout.rvmat"};
 	};
 	class geb_CutThroatTrout: geb_Trout_Base {
@@ -1069,7 +1078,7 @@ class cfgVehicles {
 		itemSize[] = {5,2};
 		weight = 1700;
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\laketrout_ca.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\laketrout_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\laketrout.rvmat"};
 	};
 	class geb_LakeSturgeon: geb_FreshFish_Base {
@@ -1278,7 +1287,26 @@ class cfgVehicles {
 		descriptionShort = "$STR_fish_yellowfintuna_desc";
 		model = "\gebsfish\data\fish\yellowfintuna.p3d";
 	};
-
+	class geb_WhiteGrunt: geb_SaltFish_Base {
+		scope = 2;
+		displayName = "$STR_fish_whitegrunt";
+		descriptionShort = "$STR_fish_whitegrunt_desc";
+		model = "\gebsfish\data\fish\whitegrunt.p3d";
+	};
+	class geb_SouthernFlounder: geb_SaltFish_Base {
+		scope = 2;
+		displayName = "$STR_fish_southernflounder";
+		descriptionShort = "$STR_fish_southernflounder_desc";
+		model = "\gebsfish\data\fish\southernflounder.p3d";
+		weight = 2000;
+		rotationFlags = 0;
+	};
+	class geb_YellowSnapper: geb_SaltFish_Base {
+		scope = 2;
+		displayName = "$STR_fish_yellowsnapper";
+		descriptionShort = "$STR_fish_yellowsnapper_desc";
+		model = "\gebsfish\data\fish\yellowsnapper.p3d";
+	};
 	//8 Saltwater crustaceans
 	class geb_BloodClam: Shrimp {
 		scope = 2;
@@ -1326,7 +1354,7 @@ class cfgVehicles {
 		displayName = "$STR_fish_americanlobster";
 		descriptionShort = "$STR_fish_americanlobster_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\americanlobster_ca.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\americanlobster_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\americanlobster.rvmat"};
 	};	
 	class geb_EuropeanLobster: geb_Lobster_Base {
@@ -1334,7 +1362,7 @@ class cfgVehicles {
 		displayName = "$STR_fish_europeanlobster";
 		descriptionShort = "$STR_fish_europeanlobster_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobster_ca.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobster_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\europeanlobster.rvmat"};
 	};
 	class geb_KingCrab: geb_SaltFish_Base {
@@ -1367,20 +1395,20 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] =
         {
             "\gebsfish\data\fish\crayfish_european_co.paa",
-            "dz\gear\food\data\shrimp_baked_co.paa",
-            "dz\gear\food\data\shrimp_boiled_co.paa",
-            "dz\gear\food\data\shrimp_dried_co.paa",
-            "dz\gear\food\data\shrimp_burnt_co.paa",
-            "dz\gear\food\data\shrimp_rotten_co.paa"
+            "\gebsfish\data\fish\crayfish_baked.paa",
+            "\gebsfish\data\fish\crayfish_boiled.paa",
+            "\gebsfish\data\fish\crayfish_dried.paa",
+            "\gebsfish\data\fish\crayfish_burned.paa",
+            "\gebsfish\data\fish\crayfish_rotten.paa"
         };
         hiddenSelectionsMaterials[] =
         {
             "\gebsfish\data\fish\crayfish_european.rvmat",
-            "dz\gear\food\data\shrimp_baked.rvmat",
-            "dz\gear\food\data\shrimp_boiled.rvmat",
-            "dz\gear\food\data\shrimp_dried.rvmat",
-            "dz\gear\food\data\shrimp_burnt.rvmat",
-            "dz\gear\food\data\shrimp_rotten.rvmat"
+            "\gebsfish\data\fish\crayfish_european.rvmat",
+            "\gebsfish\data\fish\crayfish_european.rvmat",
+            "\gebsfish\data\fish\crayfish_european.rvmat",
+            "\gebsfish\data\fish\crayfish_european.rvmat",
+            "\gebsfish\data\fish\crayfish_european.rvmat",
         };
 	};
 	class  geb_SignalCrayFish: geb_Crayfish_Base {
@@ -1394,11 +1422,11 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] =
         {
             "\gebsfish\data\fish\crayfish_signal_co.paa",
-            "dz\gear\food\data\shrimp_baked_co.paa",
-            "dz\gear\food\data\shrimp_boiled_co.paa",
-            "dz\gear\food\data\shrimp_dried_co.paa",
-            "dz\gear\food\data\shrimp_burnt_co.paa",
-            "dz\gear\food\data\shrimp_rotten_co.paa"
+            "\gebsfish\data\fish\crayfish_baked.paa",
+            "\gebsfish\data\fish\crayfish_boiled.paa",
+            "\gebsfish\data\fish\crayfish_dried.paa",
+            "\gebsfish\data\fish\crayfish_burned.paa",
+            "\gebsfish\data\fish\crayfish_rotten.paa"
         };
         hiddenSelectionsMaterials[] =
         {
@@ -1421,11 +1449,11 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] =
         {
             "\gebsfish\data\fish\crayfish_florida_co.paa",
-            "dz\gear\food\data\shrimp_baked_co.paa",
-            "dz\gear\food\data\shrimp_boiled_co.paa",
-            "dz\gear\food\data\shrimp_dried_co.paa",
-            "dz\gear\food\data\shrimp_burnt_co.paa",
-            "dz\gear\food\data\shrimp_rotten_co.paa"
+            "\gebsfish\data\fish\crayfish_baked.paa",
+            "\gebsfish\data\fish\crayfish_boiled.paa",
+            "\gebsfish\data\fish\crayfish_dried.paa",
+            "\gebsfish\data\fish\crayfish_burned.paa",
+            "\gebsfish\data\fish\crayfish_rotten.paa"
         };
         hiddenSelectionsMaterials[] =
         {
@@ -1448,11 +1476,11 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] =
         {
             "\gebsfish\data\fish\crayfish_rusty_co.paa",
-            "dz\gear\food\data\shrimp_baked_co.paa",
-            "dz\gear\food\data\shrimp_boiled_co.paa",
-            "dz\gear\food\data\shrimp_dried_co.paa",
-            "dz\gear\food\data\shrimp_burnt_co.paa",
-            "dz\gear\food\data\shrimp_rotten_co.paa"
+            "\gebsfish\data\fish\crayfish_baked.paa",
+            "\gebsfish\data\fish\crayfish_boiled.paa",
+            "\gebsfish\data\fish\crayfish_dried.paa",
+            "\gebsfish\data\fish\crayfish_burned.paa",
+            "\gebsfish\data\fish\crayfish_rotten.paa"
         };
         hiddenSelectionsMaterials[] =
         {
@@ -1475,11 +1503,11 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] =
         {
             "\gebsfish\data\fish\crayfish_redswamp_co.paa",
-            "dz\gear\food\data\shrimp_baked_co.paa",
-            "dz\gear\food\data\shrimp_boiled_co.paa",
-            "dz\gear\food\data\shrimp_dried_co.paa",
-            "dz\gear\food\data\shrimp_burnt_co.paa",
-            "dz\gear\food\data\shrimp_rotten_co.paa"
+            "\gebsfish\data\fish\crayfish_baked.paa",
+            "\gebsfish\data\fish\crayfish_boiled.paa",
+            "\gebsfish\data\fish\crayfish_dried.paa",
+            "\gebsfish\data\fish\crayfish_burned.paa",
+            "\gebsfish\data\fish\crayfish_rotten.paa"
         };
         hiddenSelectionsMaterials[] =
         {
@@ -1502,11 +1530,11 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] =
         {
             "\gebsfish\data\fish\crayfish_monongahela_co.paa",
-            "dz\gear\food\data\shrimp_baked_co.paa",
-            "dz\gear\food\data\shrimp_boiled_co.paa",
-            "dz\gear\food\data\shrimp_dried_co.paa",
-            "dz\gear\food\data\shrimp_burnt_co.paa",
-            "dz\gear\food\data\shrimp_rotten_co.paa"
+            "\gebsfish\data\fish\crayfish_baked.paa",
+            "\gebsfish\data\fish\crayfish_boiled.paa",
+            "\gebsfish\data\fish\crayfish_dried.paa",
+            "\gebsfish\data\fish\crayfish_burned.paa",
+            "\gebsfish\data\fish\crayfish_rotten.paa"
         };
         hiddenSelectionsMaterials[] =
         {
@@ -1529,11 +1557,11 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] =
         {
             "\gebsfish\data\fish\crayfish_cave_co.paa",
-            "dz\gear\food\data\shrimp_baked_co.paa",
-            "dz\gear\food\data\shrimp_boiled_co.paa",
-            "dz\gear\food\data\shrimp_dried_co.paa",
-            "dz\gear\food\data\shrimp_burnt_co.paa",
-            "dz\gear\food\data\shrimp_rotten_co.paa"
+            "\gebsfish\data\fish\crayfish_baked.paa",
+            "\gebsfish\data\fish\crayfish_boiled.paa",
+            "\gebsfish\data\fish\crayfish_dried.paa",
+            "\gebsfish\data\fish\crayfish_burned.paa",
+            "\gebsfish\data\fish\crayfish_rotten.paa"
         };
         hiddenSelectionsMaterials[] =
         {
@@ -1684,6 +1712,15 @@ class cfgVehicles {
 			"\gebsfish\data\fish\alligatorgar_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
+	class geb_NorthernSnakeHeadFilletMeat: geb_FreshWater_Fillet_Heavy {
+		scope = 2;
+		displayName = "$STR_fish_northernsnakehead_fillet";
+		descriptionShort = "$STR_fish_northernsnakehead_desc";
+		model = "\dz\gear\food\carp_fillet.p3d";
+		hiddenSelectionsTextures[] = {
+			"\gebsfish\data\fish\northernsnakehead_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
+		};
+	};
 	class geb_YellowPerchFilletMeat: geb_FreshWater_Fillet_Lean {
 		scope = 2;
 		displayName = "$STR_fish_yellowperch_fillet";
@@ -1818,7 +1855,7 @@ class cfgVehicles {
 		descriptionShort = "$STR_fish_atlanticsailfish_desc";
 		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\bluemarlin_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
+			"\gebsfish\data\fish\sailfish_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
 	class geb_MahiMahiFilletMeat: geb_SaltWater_Fillet_Fatty{
@@ -1994,7 +2031,33 @@ class cfgVehicles {
 			"\gebsfish\data\fish\yellowfintuna_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 	};
-
+	class geb_WhiteGruntFilletMeat: geb_SaltWater_Fillet_Fatty{
+		scope = 2;
+		displayName = "$STR_fish_whitegrunt_fillet";
+		descriptionShort = "$STR_fish_whitegrunt_desc";
+		model = "\dz\gear\food\mackerel_fillet.p3d";
+		hiddenSelectionsTextures[] = {
+			"\gebsfish\data\fish\whitegrunt_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
+		};
+	};
+	class geb_SouthernFlounderFilletMeat: geb_SaltWater_Fillet_Fatty{
+		scope = 2;
+		displayName = "$STR_fish_southernflounder_fillet";
+		descriptionShort = "$STR_fish_southernflounder_desc";
+		model = "\dz\gear\food\mackerel_fillet.p3d";
+		hiddenSelectionsTextures[] = {
+			"\gebsfish\data\fish\southernflounder_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
+		};
+	};
+	class geb_YellowSnapperFilletMeat: geb_SaltWater_Fillet_Fatty{
+		scope = 2;
+		displayName = "$STR_fish_yellowsnapper_fillet";
+		descriptionShort = "$STR_fish_yellowsnapper_desc";
+		model = "\dz\gear\food\mackerel_fillet.p3d";
+		hiddenSelectionsTextures[] = {
+			"\gebsfish\data\fish\yellowsnapper_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
+		};
+	};
 	//Crustacean Fillets/Legs/Claws
 	class geb_KingCrabLegs: MackerelFilletMeat {
 		scope = 2;
@@ -2071,7 +2134,7 @@ class cfgVehicles {
 		displayName = "$STR_fish_americanlobster_tail";
 		descriptionShort = "$STR_fish_americanlobster_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\americanlobstertail_ca.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\americanlobstertail_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\americanlobstertail.rvmat"};
 	};
 	class geb_EuropeanLobsterTail : geb_LobsterTail_Base {
@@ -2079,7 +2142,7 @@ class cfgVehicles {
 		displayName = "$STR_fish_europeanlobster_tail";
 		descriptionShort = "$STR_fish_europeanlobster_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobstertail_ca.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobstertail_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\europeanlobstertail.rvmat"};
 	};	
 	class geb_AmericanLobsterClaw : geb_LobsterClaw_Base {
@@ -2087,7 +2150,7 @@ class cfgVehicles {
 		displayName = "$STR_fish_americanlobster_claw";
 		descriptionShort = "$STR_fish_americanlobster_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\americanlobsterclaw_ca.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\americanlobsterclaw_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\americanlobsterclaw.rvmat"};
 	};
 	class geb_EuropeanLobsterClaw : geb_LobsterClaw_Base {
@@ -2095,7 +2158,7 @@ class cfgVehicles {
 		displayName = "$STR_fish_europeanlobster_claw";
 		descriptionShort = "$STR_fish_europeanlobster_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobsterclaw_ca.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanlobsterclaw_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\europeanlobsterclaw.rvmat"};
 	};
 	class geb_YellowCaviar: RedCaviar {

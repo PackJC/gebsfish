@@ -8,7 +8,7 @@ PixelShaderID="Super";
 VertexShaderID="Super";
 class Stage1
 {
-	texture="gebsfish\data\fish\bowfin_nohq.paa";
+	texture="gebsfish\data\fish\bowfin_normals.paa";
 	uvSource="tex";
 	class uvTransform
 	{

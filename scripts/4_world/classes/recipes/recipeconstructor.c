@@ -14,13 +14,17 @@ modded class PluginRecipesManager {
 
 		//Freshwater Fish 	
 		RegisterRecipe(new PrepareBlueGill);
-		RegisterRecipe(new PrepareBlackBass);
 		RegisterRecipe(new PrepareFlatHeadCatFish);
 		RegisterRecipe(new PrepareLargeMouthBass);
 		RegisterRecipe(new PrepareSmallMouthBass);
 		RegisterRecipe(new PrepareSunFish);
 		RegisterRecipe(new PrepareWallEye);
 		RegisterRecipe(new PrepareNorthernPike);
+		RegisterRecipe(new PrepareMuskellunge);
+		RegisterRecipe(new PrepareBarredMuskellunge);
+		RegisterRecipe(new PrepareSpottedMuskellunge);
+		RegisterRecipe(new PrepareTigerMuskellunge);
+		RegisterRecipe(new PrepareNorthernSnakeHead);
 		RegisterRecipe(new PrepareAlligatorGar);
 		RegisterRecipe(new PrepareYellowPerch);
 		RegisterRecipe(new PrepareSauger);
@@ -30,6 +34,9 @@ modded class PluginRecipesManager {
 		RegisterRecipe(new PrepareLakeTrout);
 		RegisterRecipe(new PrepareCutThroatTrout);
 		RegisterRecipe(new PrepareWhiteBass);
+		RegisterRecipe(new PrepareStripedBass);
+		RegisterRecipe(new PrepareNeoshoBass);
+		RegisterRecipe(new PrepareBlackBass);
 		RegisterRecipe(new PrepareBowFin);
 		RegisterRecipe(new PrepareSlimySculpin);
 		RegisterRecipe(new PrepareSockEyeSalmon);
@@ -64,6 +71,9 @@ modded class PluginRecipesManager {
 		RegisterRecipe(new PrepareHammerHeadShark);
 		RegisterRecipe(new PrepareLeopardShark);
 		RegisterRecipe(new PrepareYellowFinTuna);
+		RegisterRecipe(new PrepareWhiteGrunt);
+		RegisterRecipe(new PrepareYellowSnapper);
+		RegisterRecipe(new PrepareSouthernFlounder);
 
 		//Tools
 		RegisterRecipe(new CraftBambooFishingNet);

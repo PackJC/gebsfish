@@ -127,6 +127,8 @@ class gebsfishTypes {
         fishItems.Insert("geb_TigerMuskellungeFilletMeat");
         fishItems.Insert("geb_Muskellunge");
         fishItems.Insert("geb_MuskellungeFilletMeat");
+        fishItems.Insert("geb_NorthernSnakeHead");
+        fishItems.Insert("geb_NorthernSnakeHeadFilletMeat");
         fishItems.Insert("geb_NorthernPike");
         fishItems.Insert("geb_NorthernPikeFilletMeat");
         fishItems.Insert("geb_AlligatorGar");
@@ -212,6 +214,12 @@ class gebsfishTypes {
         fishItems.Insert("geb_AngelSharkFilletMeat");
         fishItems.Insert("geb_YellowFinTuna");
         fishItems.Insert("geb_YellowFinTunaFilletMeat");
+        fishItems.Insert("geb_YellowSnapper");
+        fishItems.Insert("geb_YellowSnapperFilletMeat");
+        fishItems.Insert("geb_SouthernFlounder");
+        fishItems.Insert("geb_SouthernFlounderFilletMeat");
+        fishItems.Insert("geb_WhiteGrunt");
+        fishItems.Insert("geb_WhiteGruntFilletMeat");
 
         FPrint(file, "    <!-- Fish Items -->");
         foreach (string fish : fishItems) {
