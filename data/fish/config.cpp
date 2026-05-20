@@ -277,11 +277,6 @@ class cfgVehicles {
 			};
 		};
 	};
-    class geb_Trout_Base: geb_FreshFish_Base {
-		scope = 0;
-		model = "\gebsfish\data\fish\geb_Trout_Base.p3d";
-		hiddenSelections[] = {"Camo"};
-	};
 	class geb_PikeMuskellunge_Base: geb_FreshFish_Base {
 		scope = 0;
 		model = "\gebsfish\data\fish\northernpike.p3d";
@@ -1029,7 +1024,7 @@ class cfgVehicles {
 		itemSize[] = {4,1};
 		weight = 1500;
 	};
-	class geb_RainbowTrout: geb_Trout_Base {
+	class geb_RainbowTrout: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_rainbowtrout";
 		descriptionShort = "$STR_fish_rainbowtrout_desc";
@@ -1040,37 +1035,40 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\rainbowtrout_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\rainbowtrout.rvmat"};
 	};
-	class geb_BrookTrout: geb_Trout_Base {
+	class geb_BrookTrout: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_brooktrout";
 		descriptionShort = "$STR_fish_brooktrout_desc";
+		model = "\gebsfish\data\fish\brooktrout.p3d";
 		itemSize[] = {5,2};
 		weight = 1700;
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\brooktrout_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\brooktrout.rvmat"};
 	};
-	class geb_BrownTrout: geb_Trout_Base {
+	class geb_BrownTrout: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_browntrout";
 		descriptionShort = "$STR_fish_browntrout_desc";
+		model = "\gebsfish\data\fish\browntrout.p3d";
 		itemSize[] = {5,2};
 		weight = 1700;
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\browntrout_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\browntrout.rvmat"};
 	};
-	class geb_CutThroatTrout: geb_Trout_Base {
+	class geb_CutThroatTrout: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_cutthroattrout";
 		descriptionShort = "$STR_fish_cutthroattrout_desc";
+		model = "\gebsfish\data\fish\cutthroattrout.p3d";
 		itemSize[] = {5,2};
 		weight = 1700;
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\cutthroattrout.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\cutthroattrout.rvmat"};
 	};
-	class geb_LakeTrout: geb_Trout_Base {
+	class geb_LakeTrout: geb_FreshFish_Base {
 		scope = 2;
 		displayName = "$STR_fish_laketrout";
 		descriptionShort = "$STR_fish_laketrout_desc";
