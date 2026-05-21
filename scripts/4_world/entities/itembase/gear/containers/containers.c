@@ -19,17 +19,33 @@ class geb_FilteredContainerBase : Container_Base {
 		return 110;
 	}
 
-	override bool CanReceiveItemIntoCargo(EntityAI item) {
+	// Shared check so the drag-drop path (CanReceiveItemIntoCargo) and the
+	// script/persistence path (CanLoadItemIntoCargo) stay in lockstep.
+	// Vanilla DayZ does not always route every cargo move through the same
+	// check, so overriding both prevents disallowed items sneaking in via
+	// quickbar swaps, world-craft results, or save-load.
+	protected bool IsAllowedCargoItem(EntityAI item) {
+		if (!item)
+			return false;
+
 		TStringArray allowed = GetAllowedItemKinds();
 		if (!allowed || allowed.Count() == 0)
 			return false;
 
 		for (int i = 0; i < allowed.Count(); i++) {
-			if (item && item.IsKindOf(allowed.Get(i)))
+			if (item.IsKindOf(allowed.Get(i)))
 				return true;
 		}
 
 		return false;
+	}
+
+	override bool CanReceiveItemIntoCargo(EntityAI item) {
+		return IsAllowedCargoItem(item);
+	}
+
+	override bool CanLoadItemIntoCargo(EntityAI item) {
+		return IsAllowedCargoItem(item);
 	}
 };
 

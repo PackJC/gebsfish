@@ -28,10 +28,11 @@ modded class ActionDigWorms {
 		return GetFallbackDigWormSpawnType();
 	}
 
+	// Fallback used when the config is missing, empty, or has zero total weight.
+	// Always returns vanilla "Worm" so server owners who explicitly remove grubs
+	// from their config never get them spawned anyway. Grubs only appear when
+	// they're actively configured in m_gebsConfig.DigWorms.
 	string GetFallbackDigWormSpawnType() {
-		if (Math.RandomFloat01() < 0.25)
-			return "geb_GrubWorm";
-
 		return "Worm";
 	}
 
