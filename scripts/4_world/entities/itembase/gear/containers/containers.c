@@ -47,18 +47,60 @@ class geb_BugContainer : geb_FilteredContainerBase {
 	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
 	}
+
+	override bool IsContainer() {
+		return true;
+	}
+
+	override bool CanPutInCargo(EntityAI parent) {
+		if (!super.CanPutInCargo(parent))
+			return false;
+
+		// Prevent bug containers from being placed inside other bug containers.
+		// This blocks self-nesting while still allowing normal cargo rules elsewhere.
+		if (parent && parent.IsKindOf("geb_BugContainer"))
+			return false;
+
+		return true;
+	}
+
+	override void SetActions() {
+		super.SetActions();
+		AddAction(ActionDigBugs);
+	}
 };
 
 class geb_BambooFishingNet : geb_FilteredContainerBase {
-	static ref TStringArray s_Allowed = { "Worm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm", "geb_RubberWorm", "geb_Minnow", "geb_SignalCrayFish", "geb_EuropeanCrayFish" };
+	static ref TStringArray s_Allowed = { "Worm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm", "geb_RubberWorm", "geb_FatHeadMinnow", "geb_SignalCrayFish", "geb_EuropeanCrayFish" };
 
 	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
 	}
+
+	override bool IsContainer() {
+		return true;
+	}
+
+	override bool CanPutInCargo(EntityAI parent) {
+		if (!super.CanPutInCargo(parent))
+			return false;
+
+		// Prevent bamboo fishing nets from being placed inside other bamboo fishing nets.
+		// This blocks self-nesting while still allowing normal cargo rules elsewhere.
+		if (parent && parent.IsKindOf("geb_BambooFishingNet"))
+			return false;
+
+		return true;
+	}
+
+	override void SetActions() {
+		super.SetActions();
+		AddAction(ActionBambooFishingNet);
+	}
 };
 
 class geb_MinnowBucket : geb_FilteredContainerBase {
-	static ref TStringArray s_Allowed = { "geb_FatheadMinnow", "geb_SignalCrayFish", "geb_EuropeanCrayFish", "Shrimp", "geb_AmericanBullFrog", "geb_RedSalamander" };
+	static ref TStringArray s_Allowed = { "geb_FatHeadMinnow", "geb_SignalCrayFish", "geb_EuropeanCrayFish", "Shrimp", "geb_AmericanBullFrog", "geb_RedSalamander" };
 
 	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;

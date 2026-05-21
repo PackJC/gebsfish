@@ -1,5 +1,136 @@
 # Changelog
 
+## v4.0.0
+
+### Added or Changed
+
+- 1.29 compatibility
+- Community Framework (CF) now a required dependency; RPC system migrated to CF
+- `DZ_Weapons_Melee` added as a required addon
+- All fish now have melee functionality (matching vanilla)
+- All p3ds now use a `Camo` hidden selection to support retexturing
+- Added skinning action to Neosho Bass and Striped Bass
+- Renamed `Sturgeon` -> `LakeSturgeon`
+- Renamed `OldTackle` -> `MediumTackle` (class names finalized next wipe)
+- Bug Container moved from `data/tools/` to `data/tackle/`
+- Default predator spawn chance reduced from 25% to 5%
+- 30% chance of caviar when filleting Trout or Salmon
+- Small crustaceans and minnows can now be caught in large traps
+- Adjusted bait bucket size
+- Added cargo to the jonboat
+- AmericanBullFrog and RedSalamander added to net catches (equal chance for now)
+- Added stringtables for: Hammerhead Shark, Sturgeon, Cooler, Wooden Fish Mount, Craft Metal Hook, Rougheye Rock
+- Sahrani, Artseinen, and MelkartV2 yield support
+
+#### New Fish & Creatures
+- Hammerhead Shark
+- Lake Sturgeon (with roe -> Black Caviar)
+- Northern Pike (with roe -> Yellow Caviar) - new model
+- Alligator Gar
+- Spotted Bass (replaces Black Bass)
+- Black Bass + fillet
+- Bonito
+- Brown Trout, Brook Trout, Rainbow Trout, Cut Throat Trout (new models)
+- Lake Trout (new model)
+- Bowfin
+- Neosho Bass, Striped Bass
+- Muskellunge, Barred Muskellunge, Tiger Muskellunge, Spotted Muskellunge
+- Northern Snakehead
+- White Grunt, Southern Flounder, Yellow Snapper
+- American Bullfrog, Red Salamander
+- Red Breast Sunfish, new Bluegill model
+- Slimy Sculpin
+- Pacific Cod, Perch, Severum
+- Asian Sea Bass, Siamese Tigerfish, Angelfish
+- Blue Marlin, Blue Tang
+- Red Head Cichlid
+- Snow Crab + Snow Crab Legs
+- Fathead Minnow (new model)
+- Yellow Perch (new model)
+- Rougheye Rock
+- Walleye, White Bass, Yellowfin Tuna
+- Sockeye Salmon, Chinook Salmon
+- Sauger
+- Sailfish, Humphead Wrasse
+- Mussel, Starfish, Blood Clam (new models)
+- Blue Jellyfish
+- Black Devil Snail
+- Large Mouth Bass, Small Mouth Bass (new models)
+- New Crayfish variants
+
+#### New Items & Crafting
+- Grub Worm (chance to find when digging for worms)
+- Cooler
+- Wooden Fish Mount
+- Craft metal hook from metal wire + pliers
+
+#### New Tackle & Lures
+- 4 Spoon Lures
+- 4 Curly Tail Jigs
+- Spinner Baits 1-4 (new models)
+- Squarebill Lure (replaces Lure4)
+- Yellow Crank, Green Crank, Popper lures (replace old lures)
+- New Small Tackle and Large Tackle models
+- New Worm Container and Bait Bucket models
+
+#### Code & System Changes
+- Replaced all `GetGame()` calls with `g_Game` for consistency
+- Removed invalid `ref` keywords from RPC handler parameters (CF compatibility)
+- Refactored fish config to remove duplication and improve maintainability
+- Consolidated repeated classes into shared base files
+- Sorted large files by category for easier navigation
+- Standardized brace style across the codebase
+- XML regeneration fixes - version detection now reads multiple lines, files no longer regenerate every server restart, server-only guard added
+- Replaced `Param3` usage with `XmlTypeEntry` class for clarity
+- Logger: fixed initialization bug, added `Reset()`, filename sanitization, improved formatting consistency
+- Added base classes and inheritance cleanup for containers
+
+### Fixed
+
+- Multiplayer check in `TryDamageItems`
+- Config sync and predator sound RPCs
+- Net not taking damage when used
+- Grub worm digging
+- Sturgeon rvmat typo
+- Blue Marlin normals
+- Tacklebox normals
+- Hammerhead Shark materials mapping
+- Fillet textures (Chinook Salmon, Sailfish, Humphead Wrasse, others)
+- Fillets showing as wrong fish or blank
+- Old extra Bluegill fillet texture
+- Fathead Minnow rotten fillet bug
+- Crayfish position in inventory
+- Crayfish becoming invisible after cooking
+- Lobster Tail on ground / in inventory / in hand
+- Bonito hand position
+- Scope on base classes so they no longer spawn in
+- Two-hand fish positioning (mostly - slight inventory orientation issue remains)
+- p3d selections renamed to `Camo` where missing
+- `FlatHeadMullet` classname typo
+- Grasshopper texture naming convention
+- Missing semicolons causing config parse errors
+- Boat sound issue
+- Mahi Mahi LOD texture disappearing at distance
+- Duplicate bamboo net recipe removed
+- Crafting hook from wires
+- Repeated tackles removed from spawnable types
+- Missing clothes added to typesxml
+
+### Removed
+
+- Old expansion files
+- Old README
+- Fishing Calc (outdated)
+- Old trader files from types
+- Old `newtackle` textures
+- Old lure models (replaced by crank/popper variants)
+
+### Known Issues
+
+- Two-hand fish inventory orientation is slightly angled
+- Faster knife timing temporarily disabled while errors are worked out
+- Storm/night/bait buff system is experimental and not yet enabled
+
 ## v3.3.0
 
 ### Added or Changed

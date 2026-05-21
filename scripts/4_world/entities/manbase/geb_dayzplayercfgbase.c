@@ -36,6 +36,7 @@ modded class ModItemRegisterCallbacks {
           pType.AddItemInHandsProfileIK("geb_FlatHeadCatFish", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
           pType.AddItemInHandsProfileIK("geb_LakeSturgeon", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
           pType.AddItemInHandsProfileIK("geb_NorthernSnakeHead", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
+          pType.AddItemInHandsProfileIK("geb_SouthernFlounder", "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
     }
 
     override void RegisterOneHanded(DayZPlayerType pType, DayzPlayerItemBehaviorCfg pBehavior) {
@@ -48,7 +49,9 @@ modded class ModItemRegisterCallbacks {
         pType.AddItemInHandsProfileIK("geb_StripedBass", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
         pType.AddItemInHandsProfileIK("geb_Sauger",  "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
         pType.AddItemInHandsProfileIK("geb_RainbowTrout", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
-        pType.AddItemInHandsProfileIK("geb_Trout_Base", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_BrookTrout", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_BrownTrout", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+        pType.AddItemInHandsProfileIK("geb_CutThroatTrout", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
         pType.AddItemInHandsProfileIK("geb_LakeTrout", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
         pType.AddItemInHandsProfileIK("geb_SockEyeSalmon",  "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
         pType.AddItemInHandsProfileIK("geb_ChinookSalmon",  "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
@@ -63,7 +66,6 @@ modded class ModItemRegisterCallbacks {
         pType.AddItemInHandsProfileIK("geb_PacificCod", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
         pType.AddItemInHandsProfileIK("geb_YellowFinTuna", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
         pType.AddItemInHandsProfileIK("geb_YellowSnapper", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
-        pType.AddItemInHandsProfileIK("geb_SouthernFlounder", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
         pType.AddItemInHandsProfileIK("geb_WhiteGrunt", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
         pType.AddItemInHandsProfileIK("geb_RoughNeckRock", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
         pType.AddItemInHandsProfileIK("geb_SunFish",  "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");

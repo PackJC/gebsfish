@@ -42,9 +42,27 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     }
 
     override void GenerateResult() {
+		// A fully disabled or malformed yield config can leave this empty.
+		// Guard before random selection so the range never becomes 0..-1.
+		if (!m_ProbabilityArray || m_ProbabilityArray.Count() == 0) {
+			if (m_gebsConfig && m_gebsConfig.GeneralSettings.DebugLogs) {
+				GebsfishLogger.Debug("No valid fishing yields available. Skipping result generation.", "GenerateResult");
+			}
+			return;
+		}
+
 		YieldItemBase yItem;
 		int idx = m_Player.GetRandomGeneratorSyncManager().GetRandomInRange(RandomGeneratorSyncUsage.RGSAnimalCatching,0,m_ProbabilityArray.Count() - 1);
-		Class.CastTo(yItem,m_YieldsMapAll.Get(m_ProbabilityArray[idx]));
+
+		// The probability array stores keys into the yield map, so resolve the
+		// selected entry before setting it as the active fishing result.
+		if (!Class.CastTo(yItem,m_YieldsMapAll.Get(m_ProbabilityArray[idx])) || !yItem) {
+			if (m_gebsConfig && m_gebsConfig.GeneralSettings.DebugLogs) {
+				GebsfishLogger.Debug("Failed to resolve fishing yield item at probability index: " + idx, "GenerateResult");
+			}
+			return;
+		}
+
 		m_Result.SetYieldItem(yItem);
 
         if (m_gebsConfig.GeneralSettings.DebugLogs) {
@@ -152,11 +170,12 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 
 	override protected void TryDamageItems() {
 		if (!g_Game.IsMultiplayer() || g_Game.IsDedicatedServer()) {
-			if (m_Hook && !m_Hook.IsSetForDeletion())
+			if (m_Hook && !m_Hook.IsSetForDeletion()) {
 				if (m_gebsConfig.GeneralSettings.DebugLogs) {
 					GebsfishLogger.Debug("Applying damage to item: " + m_Hook.GetType() ,"TryDamageItems");
 				}
 				m_Hook.AddHealth("","Health",-UAFishingConstants.DAMAGE_HOOK);
+			}
 		}
 	}
 

@@ -50,15 +50,36 @@ class GebPrepareFishBase extends PrepareFish {
 		AddRepeatedResults(clawType, clawCount, 1);
 	}
 
-	void ApplyThirtyPercentCaviarChance(array<ItemBase> results) {
-		if (Math.RandomFloat(0, 1) > 0.3) {
+	void SetupCaviarRecipe(string ingredientType, string caviarType, string meatType, int minCount, int maxCount) {
+		SetupFishRecipe(ingredientType);
+		AddDefaultResultAtIndex(caviarType, 0);
+
+		int ran = GetInclusiveRandom(minCount, maxCount);
+		AddRepeatedResults(meatType, ran, 1);
+	}
+
+	float GetConfiguredCaviarChance() {
+		if (m_gebsConfig && m_gebsConfig.GeneralSettings) {
+			return m_gebsConfig.GeneralSettings.CaviarChance;
+		}
+
+		return 0.3;
+	}
+
+	void ApplyConfiguredCaviarChance(array<ItemBase> results) {
+		float chance = GetConfiguredCaviarChance();
+
+		if (chance >= 1.0)
+			return;
+
+		if (chance <= 0.0 || Math.RandomFloat(0, 1) > chance) {
 			if (results && results.Count() > 0 && results[0])
 				results[0].Delete();
 		}
 	}
 
 	override bool CanDo(ItemBase ingredients[], PlayerBase player) {
-		return true;
+		return super.CanDo(ingredients, player);
 	}
 
 	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
@@ -71,60 +92,100 @@ class GebPrepareFishBase extends PrepareFish {
 class PrepareYellowPerch extends GebPrepareFishBase {
 	override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_YellowPerch", "geb_YellowPerchFilletMeat", m_gebsConfig.YellowPerch.MeatMin, m_gebsConfig.YellowPerch.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.YellowPerch) {
+			minMeat = m_gebsConfig.YellowPerch.MeatMin;
+			maxMeat = m_gebsConfig.YellowPerch.MeatMax;
+		}
+		SetupStandardRecipe("geb_YellowPerch", "geb_YellowPerchFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareBlackBass extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_BlackBass", "geb_BlackBassFilletMeat", m_gebsConfig.BlackBass.MeatMin, m_gebsConfig.BlackBass.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.BlackBass) {
+			minMeat = m_gebsConfig.BlackBass.MeatMin;
+			maxMeat = m_gebsConfig.BlackBass.MeatMax;
+		}
+		SetupStandardRecipe("geb_BlackBass", "geb_BlackBassFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareBlueGill extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_BlueGill", "geb_BlueGillFilletMeat", m_gebsConfig.BlueGill.MeatMin, m_gebsConfig.BlueGill.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.BlueGill) {
+			minMeat = m_gebsConfig.BlueGill.MeatMin;
+			maxMeat = m_gebsConfig.BlueGill.MeatMax;
+		}
+		SetupStandardRecipe("geb_BlueGill", "geb_BlueGillFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareBowFin extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_BowFin", "geb_BowFinFilletMeat", m_gebsConfig.BowFin.MeatMin, m_gebsConfig.BowFin.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.BowFin) {
+			minMeat = m_gebsConfig.BowFin.MeatMin;
+			maxMeat = m_gebsConfig.BowFin.MeatMax;
+		}
+		SetupStandardRecipe("geb_BowFin", "geb_BowFinFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareBrookTrout extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupFishRecipe("geb_BrookTrout");
-		AddDefaultResultAtIndex("RedCaviar", 0);
-
-		int ran = GetInclusiveRandom(m_gebsConfig.BrookTrout.MeatMin, m_gebsConfig.BrookTrout.MeatMax);
-		AddRepeatedResults("geb_BrookTroutFilletMeat", ran, 1);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.BrookTrout) {
+			minMeat = m_gebsConfig.BrookTrout.MeatMin;
+			maxMeat = m_gebsConfig.BrookTrout.MeatMax;
+		}
+		SetupCaviarRecipe("geb_BrookTrout", "RedCaviar", "geb_BrookTroutFilletMeat", minMeat, maxMeat);
 	}
 
 	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
-		ApplyThirtyPercentCaviarChance(results);
+		ApplyConfiguredCaviarChance(results);
 	}
 };
 
 class PrepareBrownTrout extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupFishRecipe("geb_BrownTrout");
-		AddDefaultResultAtIndex("RedCaviar", 0);
-
-		int ran = GetInclusiveRandom(m_gebsConfig.BrownTrout.MeatMin, m_gebsConfig.BrownTrout.MeatMax);
-		AddRepeatedResults("geb_BrownTroutFilletMeat", ran, 1);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.BrownTrout) {
+			minMeat = m_gebsConfig.BrownTrout.MeatMin;
+			maxMeat = m_gebsConfig.BrownTrout.MeatMax;
+		}
+		SetupCaviarRecipe("geb_BrownTrout", "RedCaviar", "geb_BrownTroutFilletMeat", minMeat, maxMeat);
 	}
 
 	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
-		ApplyThirtyPercentCaviarChance(results);
+		ApplyConfiguredCaviarChance(results);
 	}
 };
 
@@ -138,7 +199,15 @@ modded class PrepareCarp extends PrepareFish {
 		m_IngredientDestroy[0] = true;
 		m_IngredientAddHealth[1] = -4;
 
-		int ran = Math.RandomInt(m_gebsConfig.Carp.MeatMin, m_gebsConfig.Carp.MeatMax + 1);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.Carp) {
+			minMeat = m_gebsConfig.Carp.MeatMin;
+			maxMeat = m_gebsConfig.Carp.MeatMax;
+		}
+		int ran = Math.RandomInt(minMeat, maxMeat + 1);
 		for (int i = 0; i < ran; ++i) {
 			AddResult("CarpFilletMeat");
 			m_ResultSetFullQuantity[i] = false;
@@ -153,7 +222,7 @@ modded class PrepareCarp extends PrepareFish {
 	}
 
 	override bool CanDo(ItemBase ingredients[], PlayerBase player) {
-		return true;
+		return super.CanDo(ingredients, player);
 	}
 
 	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
@@ -164,216 +233,320 @@ modded class PrepareCarp extends PrepareFish {
 class PrepareCherrySalmon extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupFishRecipe("geb_CherrySalmon");
-		AddDefaultResultAtIndex("RedCaviar", 0);
-
-		int ran = GetInclusiveRandom(m_gebsConfig.CherrySalmon.MeatMin, m_gebsConfig.CherrySalmon.MeatMax);
-		AddRepeatedResults("geb_CherrySalmonFilletMeat", ran, 1);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.CherrySalmon) {
+			minMeat = m_gebsConfig.CherrySalmon.MeatMin;
+			maxMeat = m_gebsConfig.CherrySalmon.MeatMax;
+		}
+		SetupCaviarRecipe("geb_CherrySalmon", "RedCaviar", "geb_CherrySalmonFilletMeat", minMeat, maxMeat);
 	}
 
 	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
-		ApplyThirtyPercentCaviarChance(results);
+		ApplyConfiguredCaviarChance(results);
 	}
 };
 
 class PrepareChinookSalmon extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupFishRecipe("geb_ChinookSalmon");
-		AddDefaultResultAtIndex("RedCaviar", 0);
-
-		int ran = GetInclusiveRandom(m_gebsConfig.ChinookSalmon.MeatMin, m_gebsConfig.ChinookSalmon.MeatMax);
-		AddRepeatedResults("geb_ChinookSalmonFilletMeat", ran, 1);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.ChinookSalmon) {
+			minMeat = m_gebsConfig.ChinookSalmon.MeatMin;
+			maxMeat = m_gebsConfig.ChinookSalmon.MeatMax;
+		}
+		SetupCaviarRecipe("geb_ChinookSalmon", "RedCaviar", "geb_ChinookSalmonFilletMeat", minMeat, maxMeat);
 	}
 
 	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
-		ApplyThirtyPercentCaviarChance(results);
+		ApplyConfiguredCaviarChance(results);
 	}
 };
 
 class PrepareCutThroatTrout extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupFishRecipe("geb_CutThroatTrout");
-		AddDefaultResultAtIndex("RedCaviar", 0);
-
-		int ran = GetInclusiveRandom(m_gebsConfig.CutThroatTrout.MeatMin, m_gebsConfig.CutThroatTrout.MeatMax);
-		AddRepeatedResults("geb_CutThroatTroutFilletMeat", ran, 1);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.CutThroatTrout) {
+			minMeat = m_gebsConfig.CutThroatTrout.MeatMin;
+			maxMeat = m_gebsConfig.CutThroatTrout.MeatMax;
+		}
+		SetupCaviarRecipe("geb_CutThroatTrout", "RedCaviar", "geb_CutThroatTroutFilletMeat", minMeat, maxMeat);
 	}
 
 	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
-		ApplyThirtyPercentCaviarChance(results);
+		ApplyConfiguredCaviarChance(results);
 	}
 };
 
 class PrepareFlatHeadCatFish extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_FlatHeadCatFish", "geb_FlatHeadCatFishFilletMeat", m_gebsConfig.FlatHeadCatFish.MeatMin, m_gebsConfig.FlatHeadCatFish.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.FlatHeadCatFish) {
+			minMeat = m_gebsConfig.FlatHeadCatFish.MeatMin;
+			maxMeat = m_gebsConfig.FlatHeadCatFish.MeatMax;
+		}
+		SetupStandardRecipe("geb_FlatHeadCatFish", "geb_FlatHeadCatFishFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareLakeTrout extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_LakeTrout", "geb_LakeTroutFilletMeat", m_gebsConfig.LakeTrout.MeatMin, m_gebsConfig.LakeTrout.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.LakeTrout) {
+			minMeat = m_gebsConfig.LakeTrout.MeatMin;
+			maxMeat = m_gebsConfig.LakeTrout.MeatMax;
+		}
+		SetupStandardRecipe("geb_LakeTrout", "geb_LakeTroutFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareLargeMouthBass extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_LargeMouthBass", "geb_LargeMouthBassFilletMeat", m_gebsConfig.LargeMouthBass.MeatMin, m_gebsConfig.LargeMouthBass.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.LargeMouthBass) {
+			minMeat = m_gebsConfig.LargeMouthBass.MeatMin;
+			maxMeat = m_gebsConfig.LargeMouthBass.MeatMax;
+		}
+		SetupStandardRecipe("geb_LargeMouthBass", "geb_LargeMouthBassFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareAlligatorGar extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_AlligatorGar", "geb_AlligatorGarFilletMeat", m_gebsConfig.AlligatorGar.MeatMin, m_gebsConfig.AlligatorGar.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.AlligatorGar) {
+			minMeat = m_gebsConfig.AlligatorGar.MeatMin;
+			maxMeat = m_gebsConfig.AlligatorGar.MeatMax;
+		}
+		SetupStandardRecipe("geb_AlligatorGar", "geb_AlligatorGarFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareNorthernSnakeHead extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_NorthernSnakeHead", "geb_NorthernSnakeHeadFilletMeat", m_gebsConfig.NorthernSnakeHead.MeatMin, m_gebsConfig.NorthernSnakeHead.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.NorthernSnakeHead) {
+			minMeat = m_gebsConfig.NorthernSnakeHead.MeatMin;
+			maxMeat = m_gebsConfig.NorthernSnakeHead.MeatMax;
+		}
+		SetupStandardRecipe("geb_NorthernSnakeHead", "geb_NorthernSnakeHeadFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareNorthernPike extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupFishRecipe("geb_NorthernPike");
-		AddDefaultResultAtIndex("geb_YellowCaviar", 0);
-
-		int ran = GetInclusiveRandom(m_gebsConfig.NorthernPike.MeatMin, m_gebsConfig.NorthernPike.MeatMax);
-		AddRepeatedResults("geb_NorthernPikeFilletMeat", ran, 1);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.NorthernPike) {
+			minMeat = m_gebsConfig.NorthernPike.MeatMin;
+			maxMeat = m_gebsConfig.NorthernPike.MeatMax;
+		}
+		SetupCaviarRecipe("geb_NorthernPike", "geb_YellowCaviar", "geb_NorthernPikeFilletMeat", minMeat, maxMeat);
 	}
 
 	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
-		ApplyThirtyPercentCaviarChance(results);
+		ApplyConfiguredCaviarChance(results);
 	}
 };
 
 class PrepareMuskellunge extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupFishRecipe("geb_Muskellunge");
-		AddDefaultResultAtIndex("geb_YellowCaviar", 0);
-
-		int ran = GetInclusiveRandom(m_gebsConfig.Muskellunge.MeatMin, m_gebsConfig.Muskellunge.MeatMax);
-		AddRepeatedResults("geb_MuskellungeFilletMeat", ran, 1);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.Muskellunge) {
+			minMeat = m_gebsConfig.Muskellunge.MeatMin;
+			maxMeat = m_gebsConfig.Muskellunge.MeatMax;
+		}
+		SetupCaviarRecipe("geb_Muskellunge", "geb_YellowCaviar", "geb_MuskellungeFilletMeat", minMeat, maxMeat);
 	}
 
 	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
-		ApplyThirtyPercentCaviarChance(results);
+		ApplyConfiguredCaviarChance(results);
 	}
 };
 
 class PrepareTigerMuskellunge extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupFishRecipe("geb_TigerMuskellunge");
-		AddDefaultResultAtIndex("geb_YellowCaviar", 0);
-
-		int ran = GetInclusiveRandom(m_gebsConfig.TigerMuskellunge.MeatMin, m_gebsConfig.TigerMuskellunge.MeatMax);
-		AddRepeatedResults("geb_TigerMuskellungeFilletMeat", ran, 1);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.TigerMuskellunge) {
+			minMeat = m_gebsConfig.TigerMuskellunge.MeatMin;
+			maxMeat = m_gebsConfig.TigerMuskellunge.MeatMax;
+		}
+		SetupCaviarRecipe("geb_TigerMuskellunge", "geb_YellowCaviar", "geb_TigerMuskellungeFilletMeat", minMeat, maxMeat);
 	}
 
 	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
-		ApplyThirtyPercentCaviarChance(results);
+		ApplyConfiguredCaviarChance(results);
 	}
 };
 
 class PrepareBarredMuskellunge extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupFishRecipe("geb_BarredMuskellunge");
-		AddDefaultResultAtIndex("geb_YellowCaviar", 0);
-
-		int ran = GetInclusiveRandom(m_gebsConfig.BarredMuskellunge.MeatMin, m_gebsConfig.BarredMuskellunge.MeatMax);
-		AddRepeatedResults("geb_BarredMuskellungeFilletMeat", ran, 1);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.BarredMuskellunge) {
+			minMeat = m_gebsConfig.BarredMuskellunge.MeatMin;
+			maxMeat = m_gebsConfig.BarredMuskellunge.MeatMax;
+		}
+		SetupCaviarRecipe("geb_BarredMuskellunge", "geb_YellowCaviar", "geb_BarredMuskellungeFilletMeat", minMeat, maxMeat);
 	}
 
 	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
-		ApplyThirtyPercentCaviarChance(results);
+		ApplyConfiguredCaviarChance(results);
 	}
 };
 
 class PrepareSpottedMuskellunge extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupFishRecipe("geb_SpottedMuskellunge");
-		AddDefaultResultAtIndex("geb_YellowCaviar", 0);
-
-		int ran = GetInclusiveRandom(m_gebsConfig.SpottedMuskellunge.MeatMin, m_gebsConfig.SpottedMuskellunge.MeatMax);
-		AddRepeatedResults("geb_SpottedMuskellungeFilletMeat", ran, 1);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.SpottedMuskellunge) {
+			minMeat = m_gebsConfig.SpottedMuskellunge.MeatMin;
+			maxMeat = m_gebsConfig.SpottedMuskellunge.MeatMax;
+		}
+		SetupCaviarRecipe("geb_SpottedMuskellunge", "geb_YellowCaviar", "geb_SpottedMuskellungeFilletMeat", minMeat, maxMeat);
 	}
 
 	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
-		ApplyThirtyPercentCaviarChance(results);
+		ApplyConfiguredCaviarChance(results);
 	}
 };
 
 class PrepareRainbowTrout extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupFishRecipe("geb_RainbowTrout");
-		AddDefaultResultAtIndex("RedCaviar", 0);
-
-		int ran = GetInclusiveRandom(m_gebsConfig.RainbowTrout.MeatMin, m_gebsConfig.RainbowTrout.MeatMax);
-		AddRepeatedResults("geb_RainbowTroutFilletMeat", ran, 1);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.RainbowTrout) {
+			minMeat = m_gebsConfig.RainbowTrout.MeatMin;
+			maxMeat = m_gebsConfig.RainbowTrout.MeatMax;
+		}
+		SetupCaviarRecipe("geb_RainbowTrout", "RedCaviar", "geb_RainbowTroutFilletMeat", minMeat, maxMeat);
 	}
 
 	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
-		ApplyThirtyPercentCaviarChance(results);
+		ApplyConfiguredCaviarChance(results);
 	}
 };
 
 class PrepareSauger extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_Sauger", "geb_SaugerFilletMeat", m_gebsConfig.Sauger.MeatMin, m_gebsConfig.Sauger.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.Sauger) {
+			minMeat = m_gebsConfig.Sauger.MeatMin;
+			maxMeat = m_gebsConfig.Sauger.MeatMax;
+		}
+		SetupStandardRecipe("geb_Sauger", "geb_SaugerFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareSlimySculpin extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_SlimySculpin", "geb_SlimySculpinFilletMeat", m_gebsConfig.SlimySculpin.MeatMin, m_gebsConfig.SlimySculpin.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.SlimySculpin) {
+			minMeat = m_gebsConfig.SlimySculpin.MeatMin;
+			maxMeat = m_gebsConfig.SlimySculpin.MeatMax;
+		}
+		SetupStandardRecipe("geb_SlimySculpin", "geb_SlimySculpinFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareSmallMouthBass extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_SmallMouthBass", "geb_SmallMouthBassFilletMeat", m_gebsConfig.SmallMouthBass.MeatMin, m_gebsConfig.SmallMouthBass.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.SmallMouthBass) {
+			minMeat = m_gebsConfig.SmallMouthBass.MeatMin;
+			maxMeat = m_gebsConfig.SmallMouthBass.MeatMax;
+		}
+		SetupStandardRecipe("geb_SmallMouthBass", "geb_SmallMouthBassFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareSockEyeSalmon extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupFishRecipe("geb_SockEyeSalmon");
-		AddDefaultResultAtIndex("RedCaviar", 0);
-
-		int ran = GetInclusiveRandom(m_gebsConfig.SockEyeSalmon.MeatMin, m_gebsConfig.SockEyeSalmon.MeatMax);
-		AddRepeatedResults("geb_SockEyeSalmonFilletMeat", ran, 1);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.SockEyeSalmon) {
+			minMeat = m_gebsConfig.SockEyeSalmon.MeatMin;
+			maxMeat = m_gebsConfig.SockEyeSalmon.MeatMax;
+		}
+		SetupCaviarRecipe("geb_SockEyeSalmon", "RedCaviar", "geb_SockEyeSalmonFilletMeat", minMeat, maxMeat);
 	}
 
 	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
-		ApplyThirtyPercentCaviarChance(results);
+		ApplyConfiguredCaviarChance(results);
 	}
 };
 
@@ -397,7 +570,15 @@ modded class PrepareSteelheadTrout extends PrepareFish {
 		m_ResultUseSoftSkills[0] = false;
 		m_ResultReplacesIngredient[0] = 0;
 
-		int ran = Math.RandomInt(m_gebsConfig.SteelheadTrout.MeatMin, m_gebsConfig.SteelheadTrout.MeatMax + 1);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.SteelheadTrout) {
+			minMeat = m_gebsConfig.SteelheadTrout.MeatMin;
+			maxMeat = m_gebsConfig.SteelheadTrout.MeatMax;
+		}
+		int ran = Math.RandomInt(minMeat, maxMeat + 1);
 		for (int i = 1; i <= ran; ++i) {
 			AddResult("SteelheadTroutFilletMeat");
 			m_ResultSetFullQuantity[i] = false;
@@ -412,13 +593,18 @@ modded class PrepareSteelheadTrout extends PrepareFish {
 	}
 
 	override bool CanDo(ItemBase ingredients[], PlayerBase player) {
-		return true;
+		return super.CanDo(ingredients, player);
 	}
 
 	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
 
-		if (Math.RandomFloat(0, 1) > 0.3) {
+		float chance = 0.3;
+		if (m_gebsConfig && m_gebsConfig.GeneralSettings) {
+			chance = m_gebsConfig.GeneralSettings.CaviarChance;
+		}
+
+		if (chance <= 0.0 || (chance < 1.0 && Math.RandomFloat(0, 1) > chance)) {
 			if (results && results.Count() > 0 && results[0])
 				results[0].Delete();
 		}
@@ -428,51 +614,95 @@ modded class PrepareSteelheadTrout extends PrepareFish {
 class PrepareLakeSturgeon extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupFishRecipe("geb_LakeSturgeon");
-		AddDefaultResultAtIndex("geb_BlackCaviar", 0);
-
-		int ran = GetInclusiveRandom(m_gebsConfig.LakeSturgeon.MeatMin, m_gebsConfig.LakeSturgeon.MeatMax);
-		AddRepeatedResults("geb_LakeSturgeonFilletMeat", ran, 1);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.LakeSturgeon) {
+			minMeat = m_gebsConfig.LakeSturgeon.MeatMin;
+			maxMeat = m_gebsConfig.LakeSturgeon.MeatMax;
+		}
+		SetupCaviarRecipe("geb_LakeSturgeon", "geb_BlackCaviar", "geb_LakeSturgeonFilletMeat", minMeat, maxMeat);
 	}
 
 	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		super.Do(ingredients, player, results, specialty_weight);
-		ApplyThirtyPercentCaviarChance(results);
+		ApplyConfiguredCaviarChance(results);
 	}
 };
 
 class PrepareSunFish extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_SunFish", "geb_SunFishFilletMeat", m_gebsConfig.SunFish.MeatMin, m_gebsConfig.SunFish.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.SunFish) {
+			minMeat = m_gebsConfig.SunFish.MeatMin;
+			maxMeat = m_gebsConfig.SunFish.MeatMax;
+		}
+		SetupStandardRecipe("geb_SunFish", "geb_SunFishFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareWallEye extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_WallEye", "geb_WallEyeFilletMeat", m_gebsConfig.WallEye.MeatMin, m_gebsConfig.WallEye.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.WallEye) {
+			minMeat = m_gebsConfig.WallEye.MeatMin;
+			maxMeat = m_gebsConfig.WallEye.MeatMax;
+		}
+		SetupStandardRecipe("geb_WallEye", "geb_WallEyeFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareWhiteBass extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_WhiteBass", "geb_WhiteBassFilletMeat", m_gebsConfig.WhiteBass.MeatMin, m_gebsConfig.WhiteBass.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.WhiteBass) {
+			minMeat = m_gebsConfig.WhiteBass.MeatMin;
+			maxMeat = m_gebsConfig.WhiteBass.MeatMax;
+		}
+		SetupStandardRecipe("geb_WhiteBass", "geb_WhiteBassFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareStripedBass extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_StripedBass", "geb_StripedBassFilletMeat", m_gebsConfig.StripedBass.MeatMin, m_gebsConfig.StripedBass.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.StripedBass) {
+			minMeat = m_gebsConfig.StripedBass.MeatMin;
+			maxMeat = m_gebsConfig.StripedBass.MeatMax;
+		}
+		SetupStandardRecipe("geb_StripedBass", "geb_StripedBassFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareNeoshoBass extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_NeoshoBass", "geb_NeoshoBassFilletMeat", m_gebsConfig.NeoshoBass.MeatMin, m_gebsConfig.NeoshoBass.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.NeoshoBass) {
+			minMeat = m_gebsConfig.NeoshoBass.MeatMin;
+			maxMeat = m_gebsConfig.NeoshoBass.MeatMax;
+		}
+		SetupStandardRecipe("geb_NeoshoBass", "geb_NeoshoBassFilletMeat", minMeat, maxMeat);
 	}
 };
 
@@ -484,91 +714,195 @@ class PrepareNeoshoBass extends GebPrepareFishBase {
 class PrepareAngelFish extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_AngelFish", "geb_AngelFishFilletMeat", m_gebsConfig.AngelFish.MeatMin, m_gebsConfig.AngelFish.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.AngelFish) {
+			minMeat = m_gebsConfig.AngelFish.MeatMin;
+			maxMeat = m_gebsConfig.AngelFish.MeatMax;
+		}
+		SetupStandardRecipe("geb_AngelFish", "geb_AngelFishFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareAngelShark extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_AngelShark", "geb_AngelSharkFilletMeat", m_gebsConfig.AngelShark.MeatMin, m_gebsConfig.AngelShark.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.AngelShark) {
+			minMeat = m_gebsConfig.AngelShark.MeatMin;
+			maxMeat = m_gebsConfig.AngelShark.MeatMax;
+		}
+		SetupStandardRecipe("geb_AngelShark", "geb_AngelSharkFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareAsianSeaBass extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_AsianSeaBass", "geb_AsianSeaBassFilletMeat", m_gebsConfig.AsianSeaBass.MeatMin, m_gebsConfig.AsianSeaBass.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.AsianSeaBass) {
+			minMeat = m_gebsConfig.AsianSeaBass.MeatMin;
+			maxMeat = m_gebsConfig.AsianSeaBass.MeatMax;
+		}
+		SetupStandardRecipe("geb_AsianSeaBass", "geb_AsianSeaBassFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareAtlanticBlueMarlin extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_AtlanticBlueMarlin", "geb_AtlanticBlueMarlinFilletMeat", m_gebsConfig.AtlanticBlueMarlin.MeatMin, m_gebsConfig.AtlanticBlueMarlin.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.AtlanticBlueMarlin) {
+			minMeat = m_gebsConfig.AtlanticBlueMarlin.MeatMin;
+			maxMeat = m_gebsConfig.AtlanticBlueMarlin.MeatMax;
+		}
+		SetupStandardRecipe("geb_AtlanticBlueMarlin", "geb_AtlanticBlueMarlinFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareAtlanticSailFish extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_AtlanticSailFish", "geb_AtlanticSailFishFilletMeat", m_gebsConfig.AtlanticSailFish.MeatMin, m_gebsConfig.AtlanticSailFish.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.AtlanticSailFish) {
+			minMeat = m_gebsConfig.AtlanticSailFish.MeatMin;
+			maxMeat = m_gebsConfig.AtlanticSailFish.MeatMax;
+		}
+		SetupStandardRecipe("geb_AtlanticSailFish", "geb_AtlanticSailFishFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareBlueTang extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_BlueTang", "geb_BlueTangFilletMeat", m_gebsConfig.BlueTang.MeatMin, m_gebsConfig.BlueTang.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.BlueTang) {
+			minMeat = m_gebsConfig.BlueTang.MeatMin;
+			maxMeat = m_gebsConfig.BlueTang.MeatMax;
+		}
+		SetupStandardRecipe("geb_BlueTang", "geb_BlueTangFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareBonita extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_Bonita", "geb_BonitaFilletMeat", m_gebsConfig.Bonita.MeatMin, m_gebsConfig.Bonita.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.Bonita) {
+			minMeat = m_gebsConfig.Bonita.MeatMin;
+			maxMeat = m_gebsConfig.Bonita.MeatMax;
+		}
+		SetupStandardRecipe("geb_Bonita", "geb_BonitaFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareFlatHeadMullet extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_FlatHeadMullet", "geb_FlatHeadMulletFilletMeat", m_gebsConfig.FlatHeadMullet.MeatMin, m_gebsConfig.FlatHeadMullet.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.FlatHeadMullet) {
+			minMeat = m_gebsConfig.FlatHeadMullet.MeatMin;
+			maxMeat = m_gebsConfig.FlatHeadMullet.MeatMax;
+		}
+		SetupStandardRecipe("geb_FlatHeadMullet", "geb_FlatHeadMulletFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareGreatWhiteShark extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_GreatWhiteShark", "geb_GreatWhiteSharkFilletMeat", m_gebsConfig.GreatWhiteShark.MeatMin, m_gebsConfig.GreatWhiteShark.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.GreatWhiteShark) {
+			minMeat = m_gebsConfig.GreatWhiteShark.MeatMin;
+			maxMeat = m_gebsConfig.GreatWhiteShark.MeatMax;
+		}
+		SetupStandardRecipe("geb_GreatWhiteShark", "geb_GreatWhiteSharkFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareHammerHeadShark extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_HammerHeadShark", "geb_HammerHeadSharkFilletMeat", m_gebsConfig.HammerHeadShark.MeatMin, m_gebsConfig.HammerHeadShark.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.HammerHeadShark) {
+			minMeat = m_gebsConfig.HammerHeadShark.MeatMin;
+			maxMeat = m_gebsConfig.HammerHeadShark.MeatMax;
+		}
+		SetupStandardRecipe("geb_HammerHeadShark", "geb_HammerHeadSharkFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareHumpHeadWrasse extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_HumpHeadWrasse", "geb_HumpHeadWrasseFilletMeat", m_gebsConfig.HumpHeadWrasse.MeatMin, m_gebsConfig.HumpHeadWrasse.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.HumpHeadWrasse) {
+			minMeat = m_gebsConfig.HumpHeadWrasse.MeatMin;
+			maxMeat = m_gebsConfig.HumpHeadWrasse.MeatMax;
+		}
+		SetupStandardRecipe("geb_HumpHeadWrasse", "geb_HumpHeadWrasseFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareLargeHeadHairTailFish extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_LargeHeadHairTailFish", "geb_LargeHeadHairTailFishFilletMeat", m_gebsConfig.LargeHeadHairTailFish.MeatMin, m_gebsConfig.LargeHeadHairTailFish.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.LargeHeadHairTailFish) {
+			minMeat = m_gebsConfig.LargeHeadHairTailFish.MeatMin;
+			maxMeat = m_gebsConfig.LargeHeadHairTailFish.MeatMax;
+		}
+		SetupStandardRecipe("geb_LargeHeadHairTailFish", "geb_LargeHeadHairTailFishFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareLeopardShark extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_LeopardShark", "geb_LeopardSharkFilletMeat", m_gebsConfig.LeopardShark.MeatMin, m_gebsConfig.LeopardShark.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.LeopardShark) {
+			minMeat = m_gebsConfig.LeopardShark.MeatMin;
+			maxMeat = m_gebsConfig.LeopardShark.MeatMax;
+		}
+		SetupStandardRecipe("geb_LeopardShark", "geb_LeopardSharkFilletMeat", minMeat, maxMeat);
 	}
 };
 
@@ -582,7 +916,15 @@ modded class PrepareMackerel extends PrepareFish {
 		m_IngredientDestroy[0] = true;
 		m_IngredientAddHealth[1] = -4;
 
-		int ran = Math.RandomInt(m_gebsConfig.Mackerel.MeatMin, m_gebsConfig.Mackerel.MeatMax + 1);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.Mackerel) {
+			minMeat = m_gebsConfig.Mackerel.MeatMin;
+			maxMeat = m_gebsConfig.Mackerel.MeatMax;
+		}
+		int ran = Math.RandomInt(minMeat, maxMeat + 1);
 		for (int i = 0; i < ran; ++i) {
 			AddResult("MackerelFilletMeat");
 			m_ResultSetFullQuantity[i] = false;
@@ -597,7 +939,7 @@ modded class PrepareMackerel extends PrepareFish {
 	}
 
 	override bool CanDo(ItemBase ingredients[], PlayerBase player) {
-		return true;
+		return super.CanDo(ingredients, player);
 	}
 
 	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
@@ -608,42 +950,90 @@ modded class PrepareMackerel extends PrepareFish {
 class PrepareMahiMahi extends GebPrepareFishBase {
 	override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_MahiMahi", "geb_MahiMahiFilletMeat", m_gebsConfig.MahiMahi.MeatMin, m_gebsConfig.MahiMahi.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.MahiMahi) {
+			minMeat = m_gebsConfig.MahiMahi.MeatMin;
+			maxMeat = m_gebsConfig.MahiMahi.MeatMax;
+		}
+		SetupStandardRecipe("geb_MahiMahi", "geb_MahiMahiFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PreparePacificCod extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_PacificCod", "geb_PacificCodFilletMeat", m_gebsConfig.PacificCod.MeatMin, m_gebsConfig.PacificCod.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.PacificCod) {
+			minMeat = m_gebsConfig.PacificCod.MeatMin;
+			maxMeat = m_gebsConfig.PacificCod.MeatMax;
+		}
+		SetupStandardRecipe("geb_PacificCod", "geb_PacificCodFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareRedHeadCichlid extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_RedHeadCichlid", "geb_RedHeadCichlidFilletMeat", m_gebsConfig.RedHeadCichlid.MeatMin, m_gebsConfig.RedHeadCichlid.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.RedHeadCichlid) {
+			minMeat = m_gebsConfig.RedHeadCichlid.MeatMin;
+			maxMeat = m_gebsConfig.RedHeadCichlid.MeatMax;
+		}
+		SetupStandardRecipe("geb_RedHeadCichlid", "geb_RedHeadCichlidFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareRoughNeckRock extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_RoughNeckRock", "geb_RoughNeckRockFilletMeat", m_gebsConfig.RoughNeckRock.MeatMin, m_gebsConfig.RoughNeckRock.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.RoughNeckRock) {
+			minMeat = m_gebsConfig.RoughNeckRock.MeatMin;
+			maxMeat = m_gebsConfig.RoughNeckRock.MeatMax;
+		}
+		SetupStandardRecipe("geb_RoughNeckRock", "geb_RoughNeckRockFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareSeverum extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_Severum", "geb_SeverumFilletMeat", m_gebsConfig.Severum.MeatMin, m_gebsConfig.Severum.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.Severum) {
+			minMeat = m_gebsConfig.Severum.MeatMin;
+			maxMeat = m_gebsConfig.Severum.MeatMax;
+		}
+		SetupStandardRecipe("geb_Severum", "geb_SeverumFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareSiameseTigerFish extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_SiameseTigerFish", "geb_SiameseTigerFishFilletMeat", m_gebsConfig.SiameseTigerFish.MeatMin, m_gebsConfig.SiameseTigerFish.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.SiameseTigerFish) {
+			minMeat = m_gebsConfig.SiameseTigerFish.MeatMin;
+			maxMeat = m_gebsConfig.SiameseTigerFish.MeatMax;
+		}
+		SetupStandardRecipe("geb_SiameseTigerFish", "geb_SiameseTigerFishFilletMeat", minMeat, maxMeat);
 	}
 };
 
@@ -657,7 +1047,15 @@ modded class PrepareWalleyePollock extends PrepareFish {
 		m_IngredientDestroy[0] = true;
 		m_IngredientAddHealth[1] = -4;
 
-		int ran = Math.RandomInt(m_gebsConfig.WalleyePollock.MeatMin, m_gebsConfig.WalleyePollock.MeatMax + 1);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.WalleyePollock) {
+			minMeat = m_gebsConfig.WalleyePollock.MeatMin;
+			maxMeat = m_gebsConfig.WalleyePollock.MeatMax;
+		}
+		int ran = Math.RandomInt(minMeat, maxMeat + 1);
 		for (int i = 0; i < ran; ++i) {
 			AddResult("WalleyePollockFilletMeat");
 			m_ResultSetFullQuantity[i] = false;
@@ -672,7 +1070,7 @@ modded class PrepareWalleyePollock extends PrepareFish {
 	}
 
 	override bool CanDo(ItemBase ingredients[], PlayerBase player) {
-		return true;
+		return super.CanDo(ingredients, player);
 	}
 
 	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
@@ -683,28 +1081,60 @@ modded class PrepareWalleyePollock extends PrepareFish {
 class PrepareYellowFinTuna extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_YellowFinTuna", "geb_YellowFinTunaFilletMeat", m_gebsConfig.YellowFinTuna.MeatMin, m_gebsConfig.YellowFinTuna.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.YellowFinTuna) {
+			minMeat = m_gebsConfig.YellowFinTuna.MeatMin;
+			maxMeat = m_gebsConfig.YellowFinTuna.MeatMax;
+		}
+		SetupStandardRecipe("geb_YellowFinTuna", "geb_YellowFinTunaFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareYellowSnapper extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_YellowSnapper", "geb_YellowSnapperFilletMeat", m_gebsConfig.YellowSnapper.MeatMin, m_gebsConfig.YellowSnapper.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.YellowSnapper) {
+			minMeat = m_gebsConfig.YellowSnapper.MeatMin;
+			maxMeat = m_gebsConfig.YellowSnapper.MeatMax;
+		}
+		SetupStandardRecipe("geb_YellowSnapper", "geb_YellowSnapperFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareSouthernFlounder extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_SouthernFlounder", "geb_SouthernFlounderFilletMeat", m_gebsConfig.SouthernFlounder.MeatMin, m_gebsConfig.SouthernFlounder.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.SouthernFlounder) {
+			minMeat = m_gebsConfig.SouthernFlounder.MeatMin;
+			maxMeat = m_gebsConfig.SouthernFlounder.MeatMax;
+		}
+		SetupStandardRecipe("geb_SouthernFlounder", "geb_SouthernFlounderFilletMeat", minMeat, maxMeat);
 	}
 };
 
 class PrepareWhiteGrunt extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_WhiteGrunt", "geb_WhiteGruntFilletMeat", m_gebsConfig.WhiteGrunt.MeatMin, m_gebsConfig.WhiteGrunt.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.WhiteGrunt) {
+			minMeat = m_gebsConfig.WhiteGrunt.MeatMin;
+			maxMeat = m_gebsConfig.WhiteGrunt.MeatMax;
+		}
+		SetupStandardRecipe("geb_WhiteGrunt", "geb_WhiteGruntFilletMeat", minMeat, maxMeat);
 	}
 };
 
@@ -713,27 +1143,59 @@ class PrepareWhiteGrunt extends GebPrepareFishBase {
 class PrepareAmericanLobster extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupLobsterRecipe("geb_AmericanLobster", "geb_AmericanLobsterTail", "geb_AmericanLobsterClaw", m_gebsConfig.AmericanLobster.MeatMin, m_gebsConfig.AmericanLobster.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.AmericanLobster) {
+			minMeat = m_gebsConfig.AmericanLobster.MeatMin;
+			maxMeat = m_gebsConfig.AmericanLobster.MeatMax;
+		}
+		SetupLobsterRecipe("geb_AmericanLobster", "geb_AmericanLobsterTail", "geb_AmericanLobsterClaw", minMeat, maxMeat);
 	}
 };
 
 class PrepareEuropeanLobster extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupLobsterRecipe("geb_EuropeanLobster", "geb_EuropeanLobsterTail", "geb_EuropeanLobsterClaw", m_gebsConfig.EuropeanLobster.MeatMin, m_gebsConfig.EuropeanLobster.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.EuropeanLobster) {
+			minMeat = m_gebsConfig.EuropeanLobster.MeatMin;
+			maxMeat = m_gebsConfig.EuropeanLobster.MeatMax;
+		}
+		SetupLobsterRecipe("geb_EuropeanLobster", "geb_EuropeanLobsterTail", "geb_EuropeanLobsterClaw", minMeat, maxMeat);
 	}
 };
 
 class PrepareKingCrab extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_KingCrab", "geb_KingCrabLegs", m_gebsConfig.KingCrab.MeatMin, m_gebsConfig.KingCrab.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.KingCrab) {
+			minMeat = m_gebsConfig.KingCrab.MeatMin;
+			maxMeat = m_gebsConfig.KingCrab.MeatMax;
+		}
+		SetupStandardRecipe("geb_KingCrab", "geb_KingCrabLegs", minMeat, maxMeat);
 	}
 };
 
 class PrepareSnowCrab extends GebPrepareFishBase {
     override void Init() {
 		super.Init();
-		SetupStandardRecipe("geb_SnowCrab", "geb_SnowCrabLegs", m_gebsConfig.SnowCrab.MeatMin, m_gebsConfig.SnowCrab.MeatMax);
+		int minMeat = 1;
+		int maxMeat = 1;
+		// Keep the recipe registered even if this fish config section is missing.
+		// Missing config falls back to one meat piece instead of crashing Init().
+		if (m_gebsConfig && m_gebsConfig.SnowCrab) {
+			minMeat = m_gebsConfig.SnowCrab.MeatMin;
+			maxMeat = m_gebsConfig.SnowCrab.MeatMax;
+		}
+		SetupStandardRecipe("geb_SnowCrab", "geb_SnowCrabLegs", minMeat, maxMeat);
 	}
 };

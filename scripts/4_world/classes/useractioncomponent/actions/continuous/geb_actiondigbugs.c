@@ -32,6 +32,20 @@ class ActionDigBugs : ActionContinuousBase {
 		m_ConditionTarget = new CCTSurface(UAMaxDistances.DEFAULT);
 	}
 
+	bool IsValidBugDigSurface(ActionTarget target) {
+		if (!target)
+			return false;
+
+		string surface_type;
+		vector position = target.GetCursorHitPos();
+		g_Game.SurfaceGetType(position[0], position[2], surface_type);
+
+		// Keep the client prompt and the server completion rule identical.
+		// This prevents the server from accepting bug digging on non-fertile
+		// terrain just because the client was allowed to start the action.
+		return g_Game.IsSurfaceFertile(surface_type);
+	}
+
 	override bool ActionCondition(PlayerBase player, ActionTarget target, ItemBase item) {
 		if (player.IsPlacingLocal())
 			return false;
@@ -43,23 +57,7 @@ class ActionDigBugs : ActionContinuousBase {
 		if (height > 0.4)
 			return false;
 
-		if (!g_Game.IsDedicatedServer()) {
-			if (!player.IsPlacingLocal()) {
-				if (target) {
-					string surface_type;
-					vector position;
-					position = target.GetCursorHitPos();
-					g_Game.SurfaceGetType(position[0], position[2], surface_type);
-					if (g_Game.IsSurfaceFertile(surface_type)) {
-						return true;
-					}
-				}
-			}
-			return false;
-		}
-		else {
-			return true;
-		}
+		return IsValidBugDigSurface(target);
 	}
 
 	override bool ActionConditionContinue(ActionData action_data) {
@@ -85,17 +83,33 @@ class ActionDigBugs : ActionContinuousBase {
 		float rndBug = 0.0;
 		string selectedBug = "";
 
-		// Calculate the total spawn chance for all bugs
+		if (!m_gebsConfig || !m_gebsConfig.Bugs || m_gebsConfig.Bugs.Count() == 0) {
+			return;
+		}
+
+		// Calculate the total spawn chance for valid bug entries only.
+		// Blank classnames and zero/negative chances are ignored so they cannot
+		// steal roll range from real bugs or try to spawn an empty classname.
 		foreach (BugEntry bug1 : m_gebsConfig.Bugs) {
+			if (!bug1 || bug1.Classname == "" || bug1.CatchChance <= 0)
+				continue;
+
 			bugSum += bug1.CatchChance;
+		}
+
+		if (bugSum <= 0) {
+			return;
 		}
 
 		// Generate a random value within the total spawn chance
 		rndBug = Math.RandomFloatInclusive(0.0, bugSum);
 
-		// Select a bug based on the random value
+		// Select a bug from the same filtered set used for the total above.
 		foreach (BugEntry bug : m_gebsConfig.Bugs) {
-			if (rndBug <= bug.CatchChance && bug.CatchChance > 0) {
+			if (!bug || bug.Classname == "" || bug.CatchChance <= 0)
+				continue;
+
+			if (rndBug <= bug.CatchChance) {
 				selectedBug = bug.Classname;
 				break;
 			}

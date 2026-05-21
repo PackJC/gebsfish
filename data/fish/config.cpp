@@ -366,11 +366,11 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] =
         {
             "dz\gear\food\data\shrimp_raw_co.paa",
-            "\gebsfish\data\fish\crayfish_baked.paa",
-            "\gebsfish\data\fish\crayfish_boiled.paa",
-            "\gebsfish\data\fish\crayfish_dried.paa",
-            "\gebsfish\data\fish\crayfish_burned.paa",
-            "\gebsfish\data\fish\crayfish_rotten.paa"
+            "\gebsfish\data\fish\crayfish_baked_co.paa",
+            "\gebsfish\data\fish\crayfish_boiled_co.paa",
+            "\gebsfish\data\fish\crayfish_dried_co.paa",
+            "\gebsfish\data\fish\crayfish_burned_co.paa",
+            "\gebsfish\data\fish\crayfish_rotten_co.paa"
         };
         hiddenSelectionsMaterials[] =
         {
@@ -1065,7 +1065,7 @@ class cfgVehicles {
 		itemSize[] = {5,2};
 		weight = 1700;
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\cutthroattrout.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\cutthroattrout_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\cutthroattrout.rvmat"};
 	};
 	class geb_LakeTrout: geb_FreshFish_Base {
@@ -1393,11 +1393,11 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] =
         {
             "\gebsfish\data\fish\crayfish_european_co.paa",
-            "\gebsfish\data\fish\crayfish_baked.paa",
-            "\gebsfish\data\fish\crayfish_boiled.paa",
-            "\gebsfish\data\fish\crayfish_dried.paa",
-            "\gebsfish\data\fish\crayfish_burned.paa",
-            "\gebsfish\data\fish\crayfish_rotten.paa"
+            "\gebsfish\data\fish\crayfish_baked_co.paa",
+            "\gebsfish\data\fish\crayfish_boiled_co.paa",
+            "\gebsfish\data\fish\crayfish_dried_co.paa",
+            "\gebsfish\data\fish\crayfish_burned_co.paa",
+            "\gebsfish\data\fish\crayfish_rotten_co.paa"
         };
         hiddenSelectionsMaterials[] =
         {
@@ -1420,11 +1420,11 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] =
         {
             "\gebsfish\data\fish\crayfish_signal_co.paa",
-            "\gebsfish\data\fish\crayfish_baked.paa",
-            "\gebsfish\data\fish\crayfish_boiled.paa",
-            "\gebsfish\data\fish\crayfish_dried.paa",
-            "\gebsfish\data\fish\crayfish_burned.paa",
-            "\gebsfish\data\fish\crayfish_rotten.paa"
+            "\gebsfish\data\fish\crayfish_baked_co.paa",
+            "\gebsfish\data\fish\crayfish_boiled_co.paa",
+            "\gebsfish\data\fish\crayfish_dried_co.paa",
+            "\gebsfish\data\fish\crayfish_burned_co.paa",
+            "\gebsfish\data\fish\crayfish_rotten_co.paa"
         };
         hiddenSelectionsMaterials[] =
         {
@@ -1447,11 +1447,11 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] =
         {
             "\gebsfish\data\fish\crayfish_florida_co.paa",
-            "\gebsfish\data\fish\crayfish_baked.paa",
-            "\gebsfish\data\fish\crayfish_boiled.paa",
-            "\gebsfish\data\fish\crayfish_dried.paa",
-            "\gebsfish\data\fish\crayfish_burned.paa",
-            "\gebsfish\data\fish\crayfish_rotten.paa"
+            "\gebsfish\data\fish\crayfish_baked_co.paa",
+            "\gebsfish\data\fish\crayfish_boiled_co.paa",
+            "\gebsfish\data\fish\crayfish_dried_co.paa",
+            "\gebsfish\data\fish\crayfish_burned_co.paa",
+            "\gebsfish\data\fish\crayfish_rotten_co.paa"
         };
         hiddenSelectionsMaterials[] =
         {
@@ -1474,11 +1474,11 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] =
         {
             "\gebsfish\data\fish\crayfish_rusty_co.paa",
-            "\gebsfish\data\fish\crayfish_baked.paa",
-            "\gebsfish\data\fish\crayfish_boiled.paa",
-            "\gebsfish\data\fish\crayfish_dried.paa",
-            "\gebsfish\data\fish\crayfish_burned.paa",
-            "\gebsfish\data\fish\crayfish_rotten.paa"
+            "\gebsfish\data\fish\crayfish_baked_co.paa",
+            "\gebsfish\data\fish\crayfish_boiled_co.paa",
+            "\gebsfish\data\fish\crayfish_dried_co.paa",
+            "\gebsfish\data\fish\crayfish_burned_co.paa",
+            "\gebsfish\data\fish\crayfish_rotten_co.paa"
         };
         hiddenSelectionsMaterials[] =
         {
@@ -1501,11 +1501,11 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] =
         {
             "\gebsfish\data\fish\crayfish_redswamp_co.paa",
-            "\gebsfish\data\fish\crayfish_baked.paa",
-            "\gebsfish\data\fish\crayfish_boiled.paa",
-            "\gebsfish\data\fish\crayfish_dried.paa",
-            "\gebsfish\data\fish\crayfish_burned.paa",
-            "\gebsfish\data\fish\crayfish_rotten.paa"
+            "\gebsfish\data\fish\crayfish_baked_co.paa",
+            "\gebsfish\data\fish\crayfish_boiled_co.paa",
+            "\gebsfish\data\fish\crayfish_dried_co.paa",
+            "\gebsfish\data\fish\crayfish_burned_co.paa",
+            "\gebsfish\data\fish\crayfish_rotten_co.paa"
         };
         hiddenSelectionsMaterials[] =
         {
@@ -1528,11 +1528,11 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] =
         {
             "\gebsfish\data\fish\crayfish_monongahela_co.paa",
-            "\gebsfish\data\fish\crayfish_baked.paa",
-            "\gebsfish\data\fish\crayfish_boiled.paa",
-            "\gebsfish\data\fish\crayfish_dried.paa",
-            "\gebsfish\data\fish\crayfish_burned.paa",
-            "\gebsfish\data\fish\crayfish_rotten.paa"
+            "\gebsfish\data\fish\crayfish_baked_co.paa",
+            "\gebsfish\data\fish\crayfish_boiled_co.paa",
+            "\gebsfish\data\fish\crayfish_dried_co.paa",
+            "\gebsfish\data\fish\crayfish_burned_co.paa",
+            "\gebsfish\data\fish\crayfish_rotten_co.paa"
         };
         hiddenSelectionsMaterials[] =
         {
@@ -1555,11 +1555,11 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] =
         {
             "\gebsfish\data\fish\crayfish_cave_co.paa",
-            "\gebsfish\data\fish\crayfish_baked.paa",
-            "\gebsfish\data\fish\crayfish_boiled.paa",
-            "\gebsfish\data\fish\crayfish_dried.paa",
-            "\gebsfish\data\fish\crayfish_burned.paa",
-            "\gebsfish\data\fish\crayfish_rotten.paa"
+            "\gebsfish\data\fish\crayfish_baked_co.paa",
+            "\gebsfish\data\fish\crayfish_boiled_co.paa",
+            "\gebsfish\data\fish\crayfish_dried_co.paa",
+            "\gebsfish\data\fish\crayfish_burned_co.paa",
+            "\gebsfish\data\fish\crayfish_rotten_co.paa"
         };
         hiddenSelectionsMaterials[] =
         {
@@ -1582,14 +1582,15 @@ class cfgVehicles {
 			"\gebsfish\data\fish\bluegill_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
-	//Will need to be renamed SpottedBassFilletMeat next wipe
+	// Class name kept as geb_BlackBassFilletMeat to avoid corrupting existing server inventories.
+	// All player-facing content (display name, description, textures) is spotted bass.
 	class geb_BlackBassFilletMeat: geb_FreshWater_Fillet_Medium {
 		scope = 2;
-		displayName = "$STR_fish_blackbass_fillet";
-		descriptionShort = "$STR_fish_blackbass_desc";
+		displayName = "$STR_fish_spottedbass_fillet";
+		descriptionShort = "$STR_fish_spottedbass_desc";
 		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\blackbass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
+			"\gebsfish\data\fish\spottedbass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_CO.paa","dz\gear\food\data\carp_fillet_boiled_CO.paa","dz\gear\food\data\carp_fillet_dried_CO.paa","dz\gear\food\data\carp_fillet_burnt_CO.paa"
 		};
 	};
 	class geb_StripedBassFilletMeat: geb_FreshWater_Fillet_Medium {
@@ -2063,7 +2064,7 @@ class cfgVehicles {
 		descriptionShort = "$STR_fish_kingcrab_desc";
 		model = "\gebsfish\data\fish\kingcrablegs.p3d";
 		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\kingcrab.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
+			"\gebsfish\data\fish\kingcrab_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 		class Food: Food
 		{
@@ -2098,7 +2099,7 @@ class cfgVehicles {
 		descriptionShort = "$STR_fish_snowcrab_desc";
 		model = "\gebsfish\data\fish\snowcrablegs.p3d";
 		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\kingcrab.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
+			"\gebsfish\data\fish\kingcrab_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 		class Food: Food
 		{

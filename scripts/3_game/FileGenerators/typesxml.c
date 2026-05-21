@@ -112,6 +112,8 @@ class gebsfishTypes {
         fishItems.Insert("geb_HammerHeadSharkFilletMeat");
         fishItems.Insert("geb_LakeSturgeon");
         fishItems.Insert("geb_LakeSturgeonFilletMeat");
+        fishItems.Insert("geb_BlackCaviar");
+        fishItems.Insert("geb_YellowCaviar");
         fishItems.Insert("geb_EuropeanCrayFish");
         fishItems.Insert("geb_SignalCrayFish");
         fishItems.Insert("geb_CaveCrayFish");
@@ -159,6 +161,7 @@ class gebsfishTypes {
         fishItems.Insert("geb_BowFin");
         fishItems.Insert("geb_BowFinFilletMeat");
         fishItems.Insert("geb_Mussel");
+        fishItems.Insert("geb_BloodClam");
         fishItems.Insert("geb_BlackDevilSnail");
         fishItems.Insert("geb_SlimySculpin");
         fishItems.Insert("geb_SlimySculpinFilletMeat");

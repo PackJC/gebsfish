@@ -254,8 +254,8 @@ class cfgVehicles {
 		descriptionShort = "$STR_tools_fishingnet_desc";
 		model = "\gebsfish\data\tools\bamboofishingnet.p3d";
 		hiddenSelections[] = {"zbytek"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\bamboofishingnet.paa"};
-		itemInfo[] = {"CatchBugs"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\bamboofishingnet_co.paa"};
+		itemInfo[] = {"FishingNet"};
 		weight = 100;
 		itemSize[] = {1,3};
 		itemsCargoSize[] = {1,1};

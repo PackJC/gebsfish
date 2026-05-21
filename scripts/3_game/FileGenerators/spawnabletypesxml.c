@@ -174,11 +174,11 @@ class gebsfishSpawnableTypes {
         FPrint(file, "    <!-- Containers -->");
 
         ref array<ref XmlCargoItem> wormCargo = new array<ref XmlCargoItem>;
-        wormCargo.Insert(new XmlCargoItem("geb_Worm", 1.00));
+        wormCargo.Insert(new XmlCargoItem("Worm", 1.00));
         WriteTypeWithRepeatedCargo(file, "geb_WormContainer", 6, 0.20, wormCargo);
 
         ref array<ref XmlCargoItem> bugCargo = new array<ref XmlCargoItem>;
-        bugCargo.Insert(new XmlCargoItem("geb_Worm", 0.27));
+        bugCargo.Insert(new XmlCargoItem("Worm", 0.27));
         bugCargo.Insert(new XmlCargoItem("geb_GrassHopper", 0.26));
         bugCargo.Insert(new XmlCargoItem("geb_FieldCricket", 0.20));
         bugCargo.Insert(new XmlCargoItem("geb_GrubWorm", 0.27));

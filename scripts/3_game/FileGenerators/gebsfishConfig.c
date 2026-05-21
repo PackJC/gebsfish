@@ -12,10 +12,14 @@ class gebsfishConfig {
     //Config Reference 
     string ConfigVersion = "";
     ref GenSetConf GeneralSettings;
+    ref RecipeToggleConf RecipeToggles;
     ref PredatorConf PredatorSettings;
     ref LogConf CFToolsLogging;
     ref array<ref PredatorEntry> Predators;
+    // Used by ActionDigBugs, the bug catcher / catch-bugs action.
     ref array<ref BugEntry> Bugs;
+    // Used by ActionDigWorms, the normal dig-worms action.
+    ref array<ref BugEntry> DigWorms;
     ref MackerelConf Mackerel;
     ref CarpConf Carp;
     ref SardinesConf Sardines;
@@ -113,7 +117,11 @@ class gebsfishConfig {
                     GebsfishLogger.Info("New config version found for mod; Backing up old file and saving as " + ModFolder + FileName + "_old" + FileType + " and generating new config file.", "JSON");
                 }
                 else {
-                    // Config exists and version matches, stop here.
+                    // Config exists and version matches, but older manually edited files can
+                    // still be missing shared settings sections. Fill those missing refs and
+                    // save so new options such as CaviarChance appear in the JSON.
+                    EnsureMissingConfigSections();
+                    Save();
                     return;
                 }
             }
@@ -123,13 +131,16 @@ class gebsfishConfig {
         ConfigVersion = CONFIG_VERSION;
         //Save general settings to file
         GeneralSettings = new GenSetConf;
+        RecipeToggles = new RecipeToggleConf;
         //Save CF Tools logging settings to file
         CFToolsLogging = new LogConf;
         //Save predator config data to the file 
         PredatorSettings = new PredatorConf;
         Predators = new array<ref PredatorEntry>();
-        //Save bugs config data to file
+        // Bug catcher / catch-bugs action spawn table.
         Bugs = new array<ref BugEntry>();
+        // Normal dig-worms action spawn table.
+        DigWorms = new array<ref BugEntry>();
         //Save fish config data to file
 
         Mackerel = new MackerelConf;
@@ -215,7 +226,7 @@ class gebsfishConfig {
         Junk = new array<ref JunkEntry>();
         ContainerJunk = new array<ref ContainerJunkEntry>();
 
-        //Add default bug data to file
+        // Add default bug catcher / catch-bugs data to file.
 
         BugEntry FieldCricket = new BugEntry();
         FieldCricket.Classname = "geb_FieldCricket";
@@ -237,6 +248,18 @@ class gebsfishConfig {
         Bugs.Insert(GrassHopper);
         Bugs.Insert(GrubWorm);
         Bugs.Insert(Worm);
+
+        // Add default normal dig-worms data to file.
+        BugEntry DigWorm = new BugEntry();
+        DigWorm.Classname = "Worm";
+        DigWorm.CatchChance = 0.75;
+
+        BugEntry DigGrubWorm = new BugEntry();
+        DigGrubWorm.Classname = "geb_GrubWorm";
+        DigGrubWorm.CatchChance = 0.25;
+
+        DigWorms.Insert(DigWorm);
+        DigWorms.Insert(DigGrubWorm);
 
         //Add default predator data to file
 
@@ -262,18 +285,26 @@ class gebsfishConfig {
         JunkEntry Wellies_Brown = new JunkEntry();
         Wellies_Brown.Classname = "Wellies_Brown";
         Wellies_Brown.CatchProbability = 5;
+        Wellies_Brown.MinHealthLevel = 3;
+        Wellies_Brown.MaxHealthLevel = 3;
 
         JunkEntry Wellies_Grey = new JunkEntry();
         Wellies_Grey.Classname = "Wellies_Grey";
         Wellies_Grey.CatchProbability = 5;
+        Wellies_Grey.MinHealthLevel = 3;
+        Wellies_Grey.MaxHealthLevel = 3;
 
         JunkEntry Wellies_Green = new JunkEntry();
         Wellies_Green.Classname = "Wellies_Green";
         Wellies_Green.CatchProbability = 5;
+        Wellies_Green.MinHealthLevel = 3;
+        Wellies_Green.MaxHealthLevel = 3;
 
         JunkEntry Wellies_Black = new JunkEntry();
         Wellies_Black.Classname = "Wellies_Black";
         Wellies_Black.CatchProbability = 5;
+        Wellies_Black.MinHealthLevel = 3;
+        Wellies_Black.MaxHealthLevel = 3;
 
         Junk.Insert(Wellies_Brown);
         Junk.Insert(Wellies_Grey);
@@ -283,6 +314,8 @@ class gebsfishConfig {
         ContainerJunkEntry Pot = new ContainerJunkEntry();
         Pot.Classname = "Pot";
         Pot.CatchProbability = 5;
+        Pot.MinHealthLevel = 3;
+        Pot.MaxHealthLevel = 3;
 
         ContainerJunk.Insert(Pot);
 
@@ -300,6 +333,40 @@ class gebsfishConfig {
         GebsfishLogger.Info("Settings file generation complete", "JSON");
 
     }
+
+    void EnsureMissingConfigSections() {
+        // These guards keep old or hand-edited JSON files from crashing shared
+        // settings, predator logic, bug digging, and junk registration.
+        // Existing values are preserved; only missing object/array refs are created.
+        if (!GeneralSettings) GeneralSettings = new GenSetConf;
+        if (!RecipeToggles) RecipeToggles = new RecipeToggleConf;
+        if (!CFToolsLogging) CFToolsLogging = new LogConf;
+        if (!PredatorSettings) PredatorSettings = new PredatorConf;
+        if (!Predators) Predators = new array<ref PredatorEntry>();
+        // Bugs is only for ActionDigBugs, the bug catcher / catch-bugs action.
+        if (!Bugs) Bugs = new array<ref BugEntry>();
+        // DigWorms is only for ActionDigWorms, the normal dig-worms action.
+        if (!DigWorms) {
+            DigWorms = new array<ref BugEntry>();
+
+            BugEntry DigWorm = new BugEntry();
+            DigWorm.Classname = "Worm";
+            DigWorm.CatchChance = 0.75;
+
+            BugEntry DigGrubWorm = new BugEntry();
+            DigGrubWorm.Classname = "geb_GrubWorm";
+            DigGrubWorm.CatchChance = 0.25;
+
+            DigWorms.Insert(DigWorm);
+            DigWorms.Insert(DigGrubWorm);
+        }
+        if (!Junk) Junk = new array<ref JunkEntry>();
+        if (!ContainerJunk) ContainerJunk = new array<ref ContainerJunkEntry>();
+
+        // Do not auto-create individual fish config sections here. Prepare recipes
+        // intentionally fall back to 1 meat when their section is missing, and
+        // mission registration skips missing fish instead of crashing.
+    }
 }
 
 //general settings config data
@@ -308,7 +375,17 @@ class GenSetConf {
     int DebugLogs = 0;
     string FishQualityInfo = "Sets the base value for the fish quantity bar";
     float FishQuality = 1;
-    
+    string FishKnifeSpeedMultiplierInfo = "Animation length multiplier applied when filleting a fish with a geb fish knife. 1.0 = vanilla speed, 0.7 = 30% faster. Set to 1.0 to disable the bonus.";
+    float FishKnifeSpeedMultiplier = 0.7;
+    string CaviarChanceInfo = "Chance that preparing roe/caviar fish keeps the caviar result. 0 disables caviar, 1 always gives caviar.";
+    float CaviarChance = 0.3;
+};
+
+class RecipeToggleConf {
+    string RecipeToggleInfo = "Enables or disables Gebsfish non-fish-prep recipes. Fish prepare/fillet recipes are not controlled here.";
+    bool CraftBambooFishingNet = 1;
+    bool CraftHookFromWire = 1;
+    bool RepairFishingPole = 1;
 };
 
 //cftools logging config data
@@ -1381,6 +1458,9 @@ class JunkEntry {
     string Classname;
     string CatchProbInfo = "Catch probability for this junk item. Typically a scale of 0-25, with 0 being no chance.";
     int CatchProbability;
+    string HealthLevelInfo = "Health level range for spawned junk: 0 pristine, 1 worn, 2 damaged, 3 badly damaged, 4 ruined. Use 3/3 for fixed badly damaged, 3/4 for random badly damaged or ruined.";
+    int MinHealthLevel = 3;
+    int MaxHealthLevel = 3;
 };
 
 class ContainerJunkEntry {
@@ -1388,6 +1468,9 @@ class ContainerJunkEntry {
     string Classname;
     string CatchProbInfo = "Catch probability for this junk item. Typically a scale of 0-25, with 0 being no chance.";
     int CatchProbability;
+    string HealthLevelInfo = "Health level range for spawned container junk: 0 pristine, 1 worn, 2 damaged, 3 badly damaged, 4 ruined. Use 3/3 for fixed badly damaged, 3/4 for random badly damaged or ruined.";
+    int MinHealthLevel = 3;
+    int MaxHealthLevel = 3;
 };
 
 //Save config data

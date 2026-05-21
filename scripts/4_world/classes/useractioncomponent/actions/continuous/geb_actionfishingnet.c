@@ -30,6 +30,17 @@ class ActionBambooFishingNet : ActionContinuousBase {
 		m_ConditionItem = new CCINonRuined;
 		m_ConditionTarget = new CCTSurface(UAMaxDistances.DEFAULT);
 	}
+
+	bool IsValidFishingNetSurface(ActionTarget target) {
+		if (!target)
+			return false;
+
+		vector position = target.GetCursorHitPos();
+
+		// Bamboo nets are meant for pond/sea water. Run the same check on the
+		// server as the client prompt so the action cannot complete from dry land.
+		return g_Game.SurfaceIsPond(position[0], position[2]) || g_Game.SurfaceIsSea(position[0], position[2]);
+	}
 	
 	override bool ActionCondition( PlayerBase player, ActionTarget target, ItemBase item ) {
 		if ( player.IsPlacingLocal() )
@@ -43,23 +54,7 @@ class ActionBambooFishingNet : ActionContinuousBase {
 		if ( height > 0.4 )
 			return false; // Player is not standing on ground
 		
-		if ( !g_Game.IsDedicatedServer() ) {
-			if ( !player.IsPlacingLocal() /*&& player.IsCurrentCameraAimedAtGround()*/ ) {
-				if ( target ) {
-					string surface_type;
-					vector position;
-					position = target.GetCursorHitPos();
-					g_Game.SurfaceGetType( position[0], position[2], surface_type );
-					if (g_Game.SurfaceIsPond(position[0], position[2]) || g_Game.SurfaceIsSea(position[0], position[2])) {
-						return true;
-					}
-				}
-			}
-			return false;
-		}
-		else {
-			return true;
-		}
+		return IsValidFishingNetSurface(target);
 	}
 	
 	override bool ActionConditionContinue( ActionData action_data ) {
