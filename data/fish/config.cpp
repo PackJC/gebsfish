@@ -1429,11 +1429,11 @@ class cfgVehicles {
         hiddenSelectionsMaterials[] =
         {
             "\gebsfish\data\fish\crayfish_signal.rvmat",
-            "dz\gear\food\data\shrimp_baked.rvmat",
-            "dz\gear\food\data\shrimp_boiled.rvmat",
-            "dz\gear\food\data\shrimp_dried.rvmat",
-            "dz\gear\food\data\shrimp_burnt.rvmat",
-            "dz\gear\food\data\shrimp_rotten.rvmat"
+            "\gebsfish\data\fish\crayfish_signal.rvmat",
+            "\gebsfish\data\fish\crayfish_signal.rvmat",
+            "\gebsfish\data\fish\crayfish_signal.rvmat",
+            "\gebsfish\data\fish\crayfish_signal.rvmat",
+            "\gebsfish\data\fish\crayfish_signal.rvmat"
         };
 	};
 	class  geb_FloridaCrayFish: geb_Crayfish_Base {
@@ -1456,11 +1456,11 @@ class cfgVehicles {
         hiddenSelectionsMaterials[] =
         {
             "\gebsfish\data\fish\crayfish_florida.rvmat",
-            "dz\gear\food\data\shrimp_baked.rvmat",
-            "dz\gear\food\data\shrimp_boiled.rvmat",
-            "dz\gear\food\data\shrimp_dried.rvmat",
-            "dz\gear\food\data\shrimp_burnt.rvmat",
-            "dz\gear\food\data\shrimp_rotten.rvmat"
+            "\gebsfish\data\fish\crayfish_florida.rvmat",
+            "\gebsfish\data\fish\crayfish_florida.rvmat",
+            "\gebsfish\data\fish\crayfish_florida.rvmat",
+            "\gebsfish\data\fish\crayfish_florida.rvmat",
+            "\gebsfish\data\fish\crayfish_florida.rvmat"
         };	
 	};
 	class  geb_RustyCrayFish: geb_Crayfish_Base {
@@ -1483,11 +1483,11 @@ class cfgVehicles {
         hiddenSelectionsMaterials[] =
         {
             "\gebsfish\data\fish\crayfish_rusty.rvmat",
-            "dz\gear\food\data\shrimp_baked.rvmat",
-            "dz\gear\food\data\shrimp_boiled.rvmat",
-            "dz\gear\food\data\shrimp_dried.rvmat",
-            "dz\gear\food\data\shrimp_burnt.rvmat",
-            "dz\gear\food\data\shrimp_rotten.rvmat"
+            "\gebsfish\data\fish\crayfish_rusty.rvmat",
+            "\gebsfish\data\fish\crayfish_rusty.rvmat",
+            "\gebsfish\data\fish\crayfish_rusty.rvmat",
+            "\gebsfish\data\fish\crayfish_rusty.rvmat",
+            "\gebsfish\data\fish\crayfish_rusty.rvmat"
         };	
 	};
 	class  geb_RedSwampCrayFish: geb_Crayfish_Base {
@@ -1510,11 +1510,11 @@ class cfgVehicles {
         hiddenSelectionsMaterials[] =
         {
             "\gebsfish\data\fish\crayfish_redswamp.rvmat",
-            "dz\gear\food\data\shrimp_baked.rvmat",
-            "dz\gear\food\data\shrimp_boiled.rvmat",
-            "dz\gear\food\data\shrimp_dried.rvmat",
-            "dz\gear\food\data\shrimp_burnt.rvmat",
-            "dz\gear\food\data\shrimp_rotten.rvmat"
+            "\gebsfish\data\fish\crayfish_redswamp.rvmat",
+            "\gebsfish\data\fish\crayfish_redswamp.rvmat",
+            "\gebsfish\data\fish\crayfish_redswamp.rvmat",
+            "\gebsfish\data\fish\crayfish_redswamp.rvmat",
+            "\gebsfish\data\fish\crayfish_redswamp.rvmat"
         };	
 	};
 	class  geb_MonongahelaCrayFish: geb_Crayfish_Base {
@@ -1537,11 +1537,11 @@ class cfgVehicles {
         hiddenSelectionsMaterials[] =
         {
             "\gebsfish\data\fish\crayfish_monongahela.rvmat",
-            "dz\gear\food\data\shrimp_baked.rvmat",
-            "dz\gear\food\data\shrimp_boiled.rvmat",
-            "dz\gear\food\data\shrimp_dried.rvmat",
-            "dz\gear\food\data\shrimp_burnt.rvmat",
-            "dz\gear\food\data\shrimp_rotten.rvmat"
+            "\gebsfish\data\fish\crayfish_monongahela.rvmat",
+            "\gebsfish\data\fish\crayfish_monongahela.rvmat",
+            "\gebsfish\data\fish\crayfish_monongahela.rvmat",
+            "\gebsfish\data\fish\crayfish_monongahela.rvmat",
+            "\gebsfish\data\fish\crayfish_monongahela.rvmat"
         };	
 	};
 	class  geb_CaveCrayFish: geb_Crayfish_Base {
@@ -1564,11 +1564,11 @@ class cfgVehicles {
         hiddenSelectionsMaterials[] =
         {
             "\gebsfish\data\fish\crayfish_cave.rvmat",
-            "dz\gear\food\data\shrimp_baked.rvmat",
-            "dz\gear\food\data\shrimp_boiled.rvmat",
-            "dz\gear\food\data\shrimp_dried.rvmat",
-            "dz\gear\food\data\shrimp_burnt.rvmat",
-            "dz\gear\food\data\shrimp_rotten.rvmat"
+            "\gebsfish\data\fish\crayfish_cave.rvmat",
+            "\gebsfish\data\fish\crayfish_cave.rvmat",
+            "\gebsfish\data\fish\crayfish_cave.rvmat",
+            "\gebsfish\data\fish\crayfish_cave.rvmat",
+            "\gebsfish\data\fish\crayfish_cave.rvmat"
         };	
 	};
 
