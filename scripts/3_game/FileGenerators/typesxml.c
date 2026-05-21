@@ -78,13 +78,13 @@ class gebsfishTypes {
     }
 
     protected void WriteHeader(FileHandle file, string version) {
-        FPrint(file, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        FPrint(file, "<!-- Version: " + version + " -->");
-        FPrint(file, "<types>");
+        FPrintln(file, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        FPrintln(file, "<!-- Version: " + version + " -->");
+        FPrintln(file, "<types>");
     }
 
     protected void WriteFooter(FileHandle file) {
-        FPrint(file, "</types>");
+        FPrintln(file, "</types>");
     }
 
     protected void WriteFishSection(FileHandle file) {
@@ -224,7 +224,7 @@ class gebsfishTypes {
         fishItems.Insert("geb_WhiteGrunt");
         fishItems.Insert("geb_WhiteGruntFilletMeat");
 
-        FPrint(file, "    <!-- Fish Items -->");
+        FPrintln(file, "    <!-- Fish Items -->");
         foreach (string fish : fishItems) {
             WriteType(file, fish, 0, 14400, 0, 0, 10, 100, 100, "food", false);
         }
@@ -299,32 +299,32 @@ class gebsfishTypes {
         gearItems.Insert(new XmlTypeEntry("geb_BlueFishGloves", 3, 1));
         gearItems.Insert(new XmlTypeEntry("geb_OrangeFishGloves", 3, 1));
 
-        FPrint(file, "    <!-- Gear Items -->");
+        FPrintln(file, "    <!-- Gear Items -->");
         foreach (XmlTypeEntry gear : gearItems) {
             WriteType(file, gear.Name, gear.Nominal, 7200, 0, gear.Min, 0, 100, 200, "tools", true);
         }
     }
 
     protected void WriteType(FileHandle file, string typeName, int nominal, int lifetime, int restock, int min, int quantMin, int quantMax, int cost, string category, bool addUsageTags) {
-        FPrint(file, "    <type name=\"" + typeName + "\">");
-        FPrint(file, "        <nominal>" + nominal.ToString() + "</nominal>");
-        FPrint(file, "        <lifetime>" + lifetime.ToString() + "</lifetime>");
-        FPrint(file, "        <restock>" + restock.ToString() + "</restock>");
-        FPrint(file, "        <min>" + min.ToString() + "</min>");
-        FPrint(file, "        <quantmin>" + quantMin.ToString() + "</quantmin>");
-        FPrint(file, "        <quantmax>" + quantMax.ToString() + "</quantmax>");
-        FPrint(file, "        <cost>" + cost.ToString() + "</cost>");
-        FPrint(file, "        <flags count_in_cargo=\"0\" count_in_hoarder=\"0\" count_in_map=\"1\" count_in_player=\"0\" crafted=\"1\" deloot=\"0\"/>");
-        FPrint(file, "        <category name=\"" + category + "\"/>");
+        FPrintln(file, "    <type name=\"" + typeName + "\">");
+        FPrintln(file, "        <nominal>" + nominal.ToString() + "</nominal>");
+        FPrintln(file, "        <lifetime>" + lifetime.ToString() + "</lifetime>");
+        FPrintln(file, "        <restock>" + restock.ToString() + "</restock>");
+        FPrintln(file, "        <min>" + min.ToString() + "</min>");
+        FPrintln(file, "        <quantmin>" + quantMin.ToString() + "</quantmin>");
+        FPrintln(file, "        <quantmax>" + quantMax.ToString() + "</quantmax>");
+        FPrintln(file, "        <cost>" + cost.ToString() + "</cost>");
+        FPrintln(file, "        <flags count_in_cargo=\"0\" count_in_hoarder=\"0\" count_in_map=\"1\" count_in_player=\"0\" crafted=\"1\" deloot=\"0\"/>");
+        FPrintln(file, "        <category name=\"" + category + "\"/>");
 
         if (addUsageTags) {
-            FPrint(file, "        <usage name=\"Coast\"/>");
-            FPrint(file, "        <usage name=\"Farm\"/>");
-            FPrint(file, "        <usage name=\"Hunting\"/>");
-            FPrint(file, "        <usage name=\"Village\"/>");
+            FPrintln(file, "        <usage name=\"Coast\"/>");
+            FPrintln(file, "        <usage name=\"Farm\"/>");
+            FPrintln(file, "        <usage name=\"Hunting\"/>");
+            FPrintln(file, "        <usage name=\"Village\"/>");
         }
 
-        FPrint(file, "    </type>");
+        FPrintln(file, "    </type>");
     }
 }
 

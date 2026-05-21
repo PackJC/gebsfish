@@ -79,13 +79,13 @@ class gebsfishSpawnableTypes {
     }
 
     protected void WriteHeader(FileHandle file, string version) {
-        FPrint(file, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        FPrint(file, "<!-- Version: " + version + " -->");
-        FPrint(file, "<spawnabletypes>");
+        FPrintln(file, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        FPrintln(file, "<!-- Version: " + version + " -->");
+        FPrintln(file, "<spawnabletypes>");
     }
 
     protected void WriteFooter(FileHandle file) {
-        FPrint(file, "</spawnabletypes>");
+        FPrintln(file, "</spawnabletypes>");
     }
 
     protected void WriteTackleSection(FileHandle file) {
@@ -128,7 +128,7 @@ class gebsfishSpawnableTypes {
         tackleCargo.Insert(new XmlCargoItem("geb_SpoonLure3", 0.33));
         tackleCargo.Insert(new XmlCargoItem("geb_SpoonLure4", 0.33));
 
-        FPrint(file, "    <!-- Tackle -->");
+        FPrintln(file, "    <!-- Tackle -->");
         foreach (string tackle : tackleItems) {
             WriteTypeWithSingleCargo(file, tackle, 0.20, tackleCargo);
         }
@@ -159,19 +159,19 @@ class gebsfishSpawnableTypes {
         gloveCargo.Insert(new XmlCargoItem("geb_BlueFishGloves", 0.50));
         gloveCargo.Insert(new XmlCargoItem("geb_OrangeFishGloves", 0.50));
 
-        FPrint(file, "    <!-- Clothes -->");
+        FPrintln(file, "    <!-- Clothes -->");
         foreach (string clothing : clothingItems)
         {
-            FPrint(file, "    <type name=\"" + clothing + "\">");
+            FPrintln(file, "    <type name=\"" + clothing + "\">");
             WriteCargoBlock(file, 0.15, knifeCargo);
             WriteCargoBlock(file, 0.15, hatCargo);
             WriteCargoBlock(file, 0.20, gloveCargo);
-            FPrint(file, "    </type>");
+            FPrintln(file, "    </type>");
         }
     }
 
     protected void WriteContainerSection(FileHandle file) {
-        FPrint(file, "    <!-- Containers -->");
+        FPrintln(file, "    <!-- Containers -->");
 
         ref array<ref XmlCargoItem> wormCargo = new array<ref XmlCargoItem>;
         wormCargo.Insert(new XmlCargoItem("Worm", 1.00));
@@ -192,29 +192,29 @@ class gebsfishSpawnableTypes {
     }
 
     protected void WriteTypeWithSingleCargo(FileHandle file, string typeName, float cargoChance, array<ref XmlCargoItem> items) {
-        FPrint(file, "    <type name=\"" + typeName + "\">");
+        FPrintln(file, "    <type name=\"" + typeName + "\">");
         WriteCargoBlock(file, cargoChance, items);
-        FPrint(file, "    </type>");
+        FPrintln(file, "    </type>");
     }
 
     protected void WriteTypeWithRepeatedCargo(FileHandle file, string typeName, int repeatCount, float cargoChance, array<ref XmlCargoItem> items) {
-        FPrint(file, "    <type name=\"" + typeName + "\">");
+        FPrintln(file, "    <type name=\"" + typeName + "\">");
 
         for (int i = 0; i < repeatCount; i++) {
             WriteCargoBlock(file, cargoChance, items);
         }
 
-        FPrint(file, "    </type>");
+        FPrintln(file, "    </type>");
     }
 
     protected void WriteCargoBlock(FileHandle file, float cargoChance, array<ref XmlCargoItem> items) {
-        FPrint(file, "        <cargo chance=\"" + FormatChance(cargoChance) + "\">");
+        FPrintln(file, "        <cargo chance=\"" + FormatChance(cargoChance) + "\">");
 
         foreach (XmlCargoItem item : items) {
-            FPrint(file, "            <item name=\"" + item.Name + "\" chance=\"" + FormatChance(item.Chance) + "\" />");
+            FPrintln(file, "            <item name=\"" + item.Name + "\" chance=\"" + FormatChance(item.Chance) + "\" />");
         }
 
-        FPrint(file, "        </cargo>");
+        FPrintln(file, "        </cargo>");
     }
 
     protected string FormatChance(float chance) {
