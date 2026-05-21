@@ -75,33 +75,71 @@ class ActionBambooFishingNet : ActionContinuousBase {
 		return true;
 	}
 
-override void OnFinishProgressServer(ActionData action_data)
-{
-    PlayerBase player = action_data.m_Player;
-    ItemBase net = action_data.m_MainItem;
+	// Returns the find chance from the config, clamped to [0, 1]. Defaults to
+	// 1.0 (always finds) when the config is unavailable.
+	float GetFishingNetFindChance() {
+		if (!m_gebsConfig || !m_gebsConfig.ForageSettings)
+			return 1.0;
 
-    int roll = Math.RandomInt(0, 3); // 0, 1, or 2 — equal chance
+		float chance = m_gebsConfig.ForageSettings.FishingNetFindChance;
+		if (chance < 0.0) chance = 0.0;
+		if (chance > 1.0) chance = 1.0;
+		return chance;
+	}
 
-    switch (roll)
-    {
-        case 0:
-            g_Game.CreateObjectEx("geb_FatHeadMinnow", player.GetPosition(), ECE_PLACE_ON_SURFACE);
-            break;
+	// Weighted-random spawn classname from m_gebsConfig.NetItems. Mirrors the
+	// pattern used by ActionDigWorms / ActionDigBugs so server admins can edit
+	// what comes out of the net the same way they edit worm/bug spawn tables.
+	// Returns empty string if no valid entries are configured.
+	string GetConfiguredNetSpawnType() {
+		if (!m_gebsConfig || !m_gebsConfig.NetItems || m_gebsConfig.NetItems.Count() == 0)
+			return "";
 
-        case 1:
-            g_Game.CreateObjectEx("geb_AmericanBullFrog", player.GetPosition(), ECE_PLACE_ON_SURFACE);
-            break;
+		float totalChance = 0.0;
+		foreach (BugEntry netEntry1 : m_gebsConfig.NetItems) {
+			if (!netEntry1 || netEntry1.Classname == "" || netEntry1.CatchChance <= 0)
+				continue;
 
-        case 2:
-            g_Game.CreateObjectEx("geb_RedSalamander", player.GetPosition(), ECE_PLACE_ON_SURFACE);
-            break;
-    }
+			totalChance += netEntry1.CatchChance;
+		}
 
-    player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
+		if (totalChance <= 0)
+			return "";
 
-    if (net)
-        net.DecreaseHealth("", "", 5);
-}
+		float roll = Math.RandomFloatInclusive(0.0, totalChance);
+		foreach (BugEntry netEntry : m_gebsConfig.NetItems) {
+			if (!netEntry || netEntry.Classname == "" || netEntry.CatchChance <= 0)
+				continue;
+
+			if (roll <= netEntry.CatchChance)
+				return netEntry.Classname;
+
+			roll -= netEntry.CatchChance;
+		}
+
+		return "";
+	}
+
+	override void OnFinishProgressServer(ActionData action_data) {
+		PlayerBase player = action_data.m_Player;
+		ItemBase net = action_data.m_MainItem;
+
+		// Per-attempt find chance gate. Net still takes damage on a miss so
+		// nets wear down even when the catch fails.
+		float findChance = GetFishingNetFindChance();
+		bool foundSomething = (findChance >= 1.0 || Math.RandomFloat01() <= findChance);
+
+		if (foundSomething) {
+			string spawnType = GetConfiguredNetSpawnType();
+			if (spawnType != "")
+				g_Game.CreateObjectEx(spawnType, player.GetPosition(), ECE_PLACE_ON_SURFACE);
+		}
+
+		player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
+
+		if (net)
+			net.DecreaseHealth("", "", 5);
+	}
 	
 	void SetDiggingAnimation( ItemBase item ) {
 		if (item.KindOf("CatchBugs")) {

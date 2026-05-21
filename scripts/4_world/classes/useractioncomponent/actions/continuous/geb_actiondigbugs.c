@@ -78,12 +78,34 @@ class ActionDigBugs : ActionContinuousBase {
 		return true;
 	}
 
+	// Returns the find chance from the config, clamped to [0, 1]. Defaults to
+	// 1.0 (always finds) when the config is unavailable so missing config
+	// never blocks the action.
+	float GetDigBugsFindChance() {
+		if (!m_gebsConfig || !m_gebsConfig.ForageSettings)
+			return 1.0;
+
+		float chance = m_gebsConfig.ForageSettings.DigBugsFindChance;
+		if (chance < 0.0) chance = 0.0;
+		if (chance > 1.0) chance = 1.0;
+		return chance;
+	}
+
 	override void OnFinishProgressServer(ActionData action_data) {
 		float bugSum = 0.0;
 		float rndBug = 0.0;
 		string selectedBug = "";
 
 		if (!m_gebsConfig || !m_gebsConfig.Bugs || m_gebsConfig.Bugs.Count() == 0) {
+			return;
+		}
+
+		// Per-attempt find chance gate. Tool damage still applies on a miss
+		// so the action has a cost even when nothing is found.
+		float findChance = GetDigBugsFindChance();
+		if (findChance < 1.0 && Math.RandomFloat01() > findChance) {
+			MiscGameplayFunctions.DealAbsoluteDmg(action_data.m_MainItem, 4);
+			action_data.m_Player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
 			return;
 		}
 

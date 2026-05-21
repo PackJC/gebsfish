@@ -21,6 +21,22 @@
 - AmericanBullFrog and RedSalamander added to net catches (equal chance for now)
 - Added stringtables for: Hammerhead Shark, Sturgeon, Cooler, Wooden Fish Mount, Craft Metal Hook, Rougheye Rock
 - Sahrani, Artseinen, and MelkartV2 yield support
+- **Weather catch buff system**
+    * Global rain / storm / night multipliers, configurable in `WeatherSettings`
+    * Per-fish `RainMultiplier` / `StormMultiplier` / `NightMultiplier` on every fish section in the config
+    * Stacked-multiplier cap prevents storm + night from compounding past 2.0x
+    * Default species sensitivities: trout / salmon favour rain, walleye / pike / catfish favour night, sturgeon favours storms, carp / reef fish are penalised
+    * Fishing rod description hints at the mechanic
+- **Forage find-chance**
+    * `DigWormsFindChance`, `DigBugsFindChance`, `FishingNetFindChance` (0-1 per-attempt probability of finding anything)
+    * Tool wear still applies on a miss
+- **Configurable fishing net catches**
+    * New `NetItems[]` config array (same shape as `Bugs[]` / `DigWorms[]`)
+    * Replaces the previously hardcoded minnow / frog / salamander switch
+    * Seeded with the three previous classnames at equal weights so vanilla behaviour is preserved
+- **Realistic catch probabilities**
+    * All 79 fish `CatchProbability` defaults updated to reflect real-world abundance and bite habit
+    * Bait / abundant 20-25, common gamefish 12-18, uncommon 7-11, trophy / rare 2-5
 
 #### New Fish & Creatures
 - Hammerhead Shark

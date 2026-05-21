@@ -14,12 +14,16 @@ class gebsfishConfig {
     ref GenSetConf GeneralSettings;
     ref RecipeToggleConf RecipeToggles;
     ref PredatorConf PredatorSettings;
+    ref WeatherConf WeatherSettings;
+    ref ForageConf ForageSettings;
     ref LogConf CFToolsLogging;
     ref array<ref PredatorEntry> Predators;
     // Used by ActionDigBugs, the bug catcher / catch-bugs action.
     ref array<ref BugEntry> Bugs;
     // Used by ActionDigWorms, the normal dig-worms action.
     ref array<ref BugEntry> DigWorms;
+    // Used by ActionBambooFishingNet, the in-water minnow / frog / salamander net.
+    ref array<ref BugEntry> NetItems;
     ref MackerelConf Mackerel;
     ref CarpConf Carp;
     ref SardinesConf Sardines;
@@ -134,13 +138,20 @@ class gebsfishConfig {
         RecipeToggles = new RecipeToggleConf;
         //Save CF Tools logging settings to file
         CFToolsLogging = new LogConf;
-        //Save predator config data to the file 
+        //Save predator config data to the file
         PredatorSettings = new PredatorConf;
+        // Weather catch buff settings. Per-species multipliers live inline
+        // on each FishConf class (Rain/Storm/NightMultiplier).
+        WeatherSettings = new WeatherConf;
+        // Forage settings (find chance per dig/net attempt).
+        ForageSettings = new ForageConf;
         Predators = new array<ref PredatorEntry>();
         // Bug catcher / catch-bugs action spawn table.
         Bugs = new array<ref BugEntry>();
         // Normal dig-worms action spawn table.
         DigWorms = new array<ref BugEntry>();
+        // Bamboo fishing net spawn table.
+        NetItems = new array<ref BugEntry>();
         //Save fish config data to file
 
         Mackerel = new MackerelConf;
@@ -261,6 +272,25 @@ class gebsfishConfig {
         DigWorms.Insert(DigWorm);
         DigWorms.Insert(DigGrubWorm);
 
+        // Add default bamboo-fishing-net spawn table. Matches the previously
+        // hardcoded behaviour (equal chance minnow / frog / salamander) but is
+        // now editable by server admins.
+        BugEntry NetMinnow = new BugEntry();
+        NetMinnow.Classname = "geb_FatHeadMinnow";
+        NetMinnow.CatchChance = 1.0;
+
+        BugEntry NetBullFrog = new BugEntry();
+        NetBullFrog.Classname = "geb_AmericanBullFrog";
+        NetBullFrog.CatchChance = 1.0;
+
+        BugEntry NetSalamander = new BugEntry();
+        NetSalamander.Classname = "geb_RedSalamander";
+        NetSalamander.CatchChance = 1.0;
+
+        NetItems.Insert(NetMinnow);
+        NetItems.Insert(NetBullFrog);
+        NetItems.Insert(NetSalamander);
+
         //Add default predator data to file
 
         PredatorEntry Wolf = new PredatorEntry();
@@ -342,6 +372,30 @@ class gebsfishConfig {
         if (!RecipeToggles) RecipeToggles = new RecipeToggleConf;
         if (!CFToolsLogging) CFToolsLogging = new LogConf;
         if (!PredatorSettings) PredatorSettings = new PredatorConf;
+        if (!WeatherSettings) WeatherSettings = new WeatherConf;
+        // Per-species multipliers now live on each FishConf class (Rain/Storm/
+        // NightMultiplier), so nothing extra to seed here.
+        if (!ForageSettings) ForageSettings = new ForageConf;
+        // NetItems is for ActionBambooFishingNet, the bamboo fishing net.
+        if (!NetItems) {
+            NetItems = new array<ref BugEntry>();
+
+            BugEntry NetMinnow = new BugEntry();
+            NetMinnow.Classname = "geb_FatHeadMinnow";
+            NetMinnow.CatchChance = 1.0;
+
+            BugEntry NetBullFrog = new BugEntry();
+            NetBullFrog.Classname = "geb_AmericanBullFrog";
+            NetBullFrog.CatchChance = 1.0;
+
+            BugEntry NetSalamander = new BugEntry();
+            NetSalamander.Classname = "geb_RedSalamander";
+            NetSalamander.CatchChance = 1.0;
+
+            NetItems.Insert(NetMinnow);
+            NetItems.Insert(NetBullFrog);
+            NetItems.Insert(NetSalamander);
+        }
         if (!Predators) Predators = new array<ref PredatorEntry>();
         // Bugs is only for ActionDigBugs, the bug catcher / catch-bugs action.
         if (!Bugs) Bugs = new array<ref BugEntry>();
@@ -367,6 +421,17 @@ class gebsfishConfig {
         // intentionally fall back to 1 meat when their section is missing, and
         // mission registration skips missing fish instead of crashing.
     }
+
+    // Per-species weather multipliers live inline on each FishConf class
+    // (RainMultiplier / StormMultiplier / NightMultiplier). They are read at
+    // yield-registration time by GebYieldFishBase.SetupYield in geb_yielditems.c
+    // and cached on the yield itself, mirroring how m_QualityBase /
+    // m_EnviroMask / m_MethodMask are already cached. The catching context
+    // then reads them off the GebYieldFishBase via GetRainMultiplier() etc.
+    //
+    // Adding a new fish: add the FishConf class with multiplier fields, then
+    // pass those fields to SetupYield in the matching geb_YieldXxx.Init().
+    // No code changes needed in this file beyond the FishConf class.
 }
 
 //general settings config data
@@ -415,6 +480,44 @@ class PredatorConf {
     bool PredatorWarningMessageGrey = 0;
 }
 
+//weather catch buff config data
+//Fish bite more during rain/storms and at night. Multipliers stack but
+//are clamped to MaxStackedMultiplier so a stormy night does not become a printer.
+//Set WeatherCatchBoostEnable = 0 to fully disable. Any individual multiplier
+//of 1.0 means "no effect" for that condition.
+class WeatherConf {
+    string WeatherCatchBoostInfo = "Controls the rain / storm / night catch-rate buff. Set WeatherCatchBoostEnable to 0 to disable entirely. Multipliers below 1.0 act as penalties.";
+    bool WeatherCatchBoostEnable = 1;
+
+    string RainInfo = "RainThreshold is the rain intensity (0-1) above which the rain buff kicks in. Rain above StormThreshold uses StormCatchMultiplier instead.";
+    float RainThreshold = 0.3;
+    float StormThreshold = 0.7;
+    float RainCatchMultiplier = 1.25;
+    float StormCatchMultiplier = 1.5;
+
+    string NightInfo = "Hours during which NightCatchMultiplier applies. NightStartHour is inclusive, NightEndHour is exclusive. Set both to 0 to disable the night buff.";
+    int NightStartHour = 20;
+    int NightEndHour = 6;
+    float NightCatchMultiplier = 1.15;
+
+    string CapInfo = "Hard cap on combined multipliers. Stops storm + night from compounding into something silly.";
+    float MaxStackedMultiplier = 2.0;
+
+    string SpeciesBuffsInfo = "Per-species multipliers are configured inline on each fish section below (RainMultiplier, StormMultiplier, NightMultiplier). 1.0 = no effect, higher = bites more, lower = bites less.";
+}
+
+//foraging config data
+//FindChance is a per-attempt 0-1 probability that ANY item spawns from the
+//action. 1.0 = always finds something (vanilla-style), 0.0 = never finds
+//anything. The SPAWN TABLE itself (which item appears when the roll succeeds)
+//is the top-level array on gebsfishConfig: DigWorms / Bugs / NetItems.
+class ForageConf {
+    string ForageInfo = "Per-attempt find-chance for the dig and net actions. 1.0 = always finds something, 0.0 = never finds anything. The spawn tables (DigWorms / Bugs / NetItems) decide WHAT spawns when the roll succeeds.";
+    float DigWormsFindChance = 0.85;
+    float DigBugsFindChance = 0.65;
+    float FishingNetFindChance = 0.5;
+}
+
 class PredatorEntry {
     string Classname;   //Classname of predator
     float SpawnChance;  //Spawn percentage chance
@@ -441,7 +544,11 @@ class MackerelConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 22;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.2;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};  
 };
@@ -454,7 +561,11 @@ class CarpConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 22;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 0.9;
+    float StormMultiplier = 0.8;
+    float NightMultiplier = 0.9;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 };
@@ -464,7 +575,11 @@ class SardinesConf {
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 6;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 24;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 0.9;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 };
@@ -474,7 +589,11 @@ class BitterlingsConf {
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 6;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 24;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.1;
+    float StormMultiplier = 1.0;
+    float NightMultiplier = 0.9;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 };
@@ -487,7 +606,11 @@ class WalleyePollockConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 24;
+    int CatchProbability = 20;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.0;
+    float NightMultiplier = 1.1;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1};  
 };
@@ -500,7 +623,11 @@ class SteelheadTroutConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 12;
+    int CatchProbability = 9;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.4;
+    float StormMultiplier = 1.3;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1};  
 };
@@ -510,7 +637,11 @@ class ShrimpConf {
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 6;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 1;
+    int CatchProbability = 22;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 0.9;
+    float StormMultiplier = 1.0;
+    float NightMultiplier = 1.3;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1};  
 };
@@ -523,7 +654,11 @@ class NorthernSnakeHeadConf {
     int MeatMin = 2;
     int MeatMax = 4;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 5;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.0;
+    float NightMultiplier = 1.5;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0};  
 };
@@ -536,7 +671,11 @@ class NorthernPikeConf {
     int MeatMin = 2;
     int MeatMax = 4;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 8;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 1.4;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0};  
 };
@@ -549,7 +688,11 @@ class MuskellungeConf {
     int MeatMin = 2;
     int MeatMax = 4;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 4;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 1.4;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0};  
 };
@@ -562,7 +705,11 @@ class SpottedMuskellungeConf {
     int MeatMin = 2;
     int MeatMax = 4;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 3;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 1.4;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0};  
 };
@@ -575,7 +722,11 @@ class BarredMuskellungeConf {
     int MeatMin = 2;
     int MeatMax = 4;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 3;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 1.4;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0};  
 };
@@ -588,7 +739,11 @@ class TigerMuskellungeConf {
     int MeatMin = 2;
     int MeatMax = 4;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 3;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 1.4;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0};  
 };
@@ -601,7 +756,11 @@ class AlligatorGarConf {
     int MeatMin = 2;
     int MeatMax = 4;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 4;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.2;
+    float NightMultiplier = 1.4;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0};  
 };
@@ -614,7 +773,11 @@ class LargeMouthBassConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 14;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.1;
+    float StormMultiplier = 1.3;
+    float NightMultiplier = 1.1;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -627,7 +790,11 @@ class SmallMouthBassConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 13;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.1;
+    float StormMultiplier = 1.3;
+    float NightMultiplier = 1.1;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -640,7 +807,11 @@ class WallEyeConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 12;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.0;
+    float NightMultiplier = 1.5;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -653,7 +824,11 @@ class SunFishConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 20;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.1;
+    float StormMultiplier = 0.9;
+    float NightMultiplier = 0.9;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -666,7 +841,11 @@ class WhiteBassConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 11;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.2;
+    float NightMultiplier = 1.3;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -679,7 +858,11 @@ class BlackBassConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 13;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.1;
+    float StormMultiplier = 1.3;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -692,7 +875,11 @@ class StripedBassConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 10;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.4;
+    float NightMultiplier = 1.3;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -705,7 +892,11 @@ class NeoshoBassConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 7;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.1;
+    float StormMultiplier = 1.3;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -718,7 +909,11 @@ class RainbowTroutConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 14;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.4;
+    float StormMultiplier = 1.3;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -731,7 +926,11 @@ class BrownTroutConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 12;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.4;
+    float StormMultiplier = 1.3;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -744,7 +943,11 @@ class BrookTroutConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 12;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.4;
+    float StormMultiplier = 1.3;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -757,7 +960,11 @@ class LakeTroutConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 8;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.3;
+    float StormMultiplier = 1.2;
+    float NightMultiplier = 1.1;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -770,7 +977,11 @@ class CutThroatTroutConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 9;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.4;
+    float StormMultiplier = 1.3;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -783,7 +994,11 @@ class LakeSturgeonConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 3;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.1;
+    float StormMultiplier = 1.4;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -796,7 +1011,11 @@ class YellowPerchConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 21;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.1;
+    float StormMultiplier = 1.0;
+    float NightMultiplier = 0.9;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -809,7 +1028,11 @@ class FlatHeadCatFishConf {
     int MeatMin = 1;
     int MeatMax = 4;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 5;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 1.6;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1};  
 };
@@ -822,7 +1045,11 @@ class FatHeadMinnowConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 25;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.2;
+    float StormMultiplier = 1.0;
+    float NightMultiplier = 0.9;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};  
 };
@@ -835,7 +1062,11 @@ class AmericanBullFrogConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 12;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.5;
+    float StormMultiplier = 1.2;
+    float NightMultiplier = 1.3;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};  
 };
@@ -848,7 +1079,11 @@ class RedSalamanderConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 7;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.6;
+    float StormMultiplier = 1.3;
+    float NightMultiplier = 1.2;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};  
 };
@@ -861,7 +1096,11 @@ class BlueGillConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 22;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.1;
+    float StormMultiplier = 0.9;
+    float NightMultiplier = 0.9;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};  
 };
@@ -874,7 +1113,11 @@ class SaugerConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 10;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.0;
+    float NightMultiplier = 1.5;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -887,7 +1130,11 @@ class BowFinConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 8;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.2;
+    float NightMultiplier = 1.4;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -900,7 +1147,11 @@ class SlimySculpinConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 16;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 1.2;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -913,7 +1164,11 @@ class SeverumConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 3;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.1;
+    float StormMultiplier = 1.0;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -926,7 +1181,11 @@ class SignalCrayFishConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 18;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 1.4;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -939,7 +1198,11 @@ class EuropeanCrayFishConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 11;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 1.4;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -952,7 +1215,11 @@ class CaveCrayFishConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 2;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.0;
+    float NightMultiplier = 1.5;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -965,7 +1232,11 @@ class FloridaCrayFishConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 8;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 1.4;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -978,7 +1249,11 @@ class MonongahelaCrayFishConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 7;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 1.4;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -991,7 +1266,11 @@ class RedSwampCrayFishConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 18;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.2;
+    float NightMultiplier = 1.4;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1004,7 +1283,11 @@ class RustyCrayFishConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 14;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 1.4;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1017,7 +1300,11 @@ class MahiMahiConf {
     int MeatMin = 3;
     int MeatMax = 7;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 10;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.2;
+    float StormMultiplier = 1.5;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0};  
 };
@@ -1030,7 +1317,11 @@ class AtlanticSailFishConf {
     int MeatMin = 4;
     int MeatMax = 7;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 4;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.2;
+    float StormMultiplier = 1.4;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0};  
 };
@@ -1043,7 +1334,11 @@ class AngelFishConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 10;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 0.9;
+    float StormMultiplier = 0.8;
+    float NightMultiplier = 0.8;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0};  
 };
@@ -1056,7 +1351,11 @@ class AsianSeaBassConf {
     int MeatMin = 2;
     int MeatMax = 4;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 10;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.2;
+    float StormMultiplier = 1.3;
+    float NightMultiplier = 1.2;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0};  
 };
@@ -1069,7 +1368,11 @@ class AtlanticBlueMarlinConf {
     int MeatMin = 3;
     int MeatMax = 6;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 3;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.2;
+    float StormMultiplier = 1.4;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0};  
 };
@@ -1082,7 +1385,11 @@ class BonitaConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 10;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.1;
+    float StormMultiplier = 1.3;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1095,7 +1402,11 @@ class CherrySalmonConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 6;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.3;
+    float StormMultiplier = 1.2;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1108,7 +1419,11 @@ class ChinookSalmonConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 8;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.3;
+    float StormMultiplier = 1.2;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1121,7 +1436,11 @@ class SockEyeSalmonConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 8;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.3;
+    float StormMultiplier = 1.2;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1134,7 +1453,11 @@ class FlatHeadMulletConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 18;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.3;
+    float StormMultiplier = 1.2;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1147,7 +1470,11 @@ class LeopardSharkConf {
     int MeatMin = 2;
     int MeatMax = 4;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 9;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.0;
+    float NightMultiplier = 1.4;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1160,7 +1487,11 @@ class HammerHeadSharkConf {
     int MeatMin = 2;
     int MeatMax = 4;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 5;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 1.5;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1173,7 +1504,11 @@ class PacificCodConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 16;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 1.2;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1186,7 +1521,11 @@ class RedHeadCichlidConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 4;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.0;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1199,7 +1538,11 @@ class RoughNeckRockConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 14;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.2;
+    float NightMultiplier = 1.2;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1212,7 +1555,11 @@ class BlueTangConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 12;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 0.9;
+    float StormMultiplier = 0.8;
+    float NightMultiplier = 0.9;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1225,7 +1572,11 @@ class LargeHeadHairTailFishConf {
     int MeatMin = 3;
     int MeatMax = 5;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 9;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 1.4;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1238,7 +1589,11 @@ class HumpHeadWrasseConf {
     int MeatMin = 3;
     int MeatMax = 5;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 4;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 0.9;
+    float StormMultiplier = 0.8;
+    float NightMultiplier = 0.8;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1251,7 +1606,11 @@ class SiameseTigerFishConf {
     int MeatMin = 3;
     int MeatMax = 6;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 6;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.1;
+    float StormMultiplier = 1.3;
+    float NightMultiplier = 1.2;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1264,7 +1623,11 @@ class GreatWhiteSharkConf {
     int MeatMin = 5;
     int MeatMax = 10;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 2;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.2;
+    float NightMultiplier = 1.4;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1277,7 +1640,11 @@ class AngelSharkConf {
     int MeatMin = 3;
     int MeatMax = 8;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 7;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.0;
+    float NightMultiplier = 1.5;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1290,7 +1657,11 @@ class YellowFinTunaConf {
     int MeatMin = 2;
     int MeatMax = 6;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 8;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.1;
+    float StormMultiplier = 1.3;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1303,7 +1674,11 @@ class YellowSnapperConf {
     int MeatMin = 2;
     int MeatMax = 6;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 13;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 1.3;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1316,7 +1691,11 @@ class SouthernFlounderConf {
     int MeatMin = 2;
     int MeatMax = 6;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 11;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.1;
+    float StormMultiplier = 1.3;
+    float NightMultiplier = 1.4;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1329,7 +1708,11 @@ class WhiteGruntConf {
     int MeatMin = 2;
     int MeatMax = 6;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 14;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 1.2;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};  
 };
@@ -1342,7 +1725,11 @@ class BloodClamConf {
     int BoneMin = 1;
     int BoneMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 14;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 0.9;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};  
 };
@@ -1355,7 +1742,11 @@ class MusselConf {
     int BoneMin = 1;
     int BoneMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 20;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 0.9;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};  
 };
@@ -1368,7 +1759,11 @@ class BlackDevilSnailConf {
     int BoneMin = 1;
     int BoneMax = 1;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 10;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.0;
+    float NightMultiplier = 1.2;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};  
 };
@@ -1381,7 +1776,11 @@ class StarFishConf {
     int BoneMin = 1;
     int BoneMax = 1;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 16;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.0;
+    float NightMultiplier = 1.0;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};  
 };
@@ -1394,7 +1793,11 @@ class KingCrabConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 5;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 1.3;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};  
 };
@@ -1407,7 +1810,11 @@ class SnowCrabConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 7;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.1;
+    float NightMultiplier = 1.3;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};  
 };
@@ -1420,7 +1827,11 @@ class BlueJellyFishConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 12;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.0;
+    float NightMultiplier = 1.4;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};  
 };
@@ -1433,7 +1844,11 @@ class AmericanLobsterConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 9;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.0;
+    float NightMultiplier = 1.4;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};  
 };
@@ -1446,7 +1861,11 @@ class EuropeanLobsterConf {
     int MeatMin = 1;
     int MeatMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 15;
+    int CatchProbability = 9;
+    string WeatherMultiplierInfo = "Per-species rain/storm/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
+    float RainMultiplier = 1.0;
+    float StormMultiplier = 1.0;
+    float NightMultiplier = 1.4;
     // autoptr TStringArray BiteSpeedInfo = {"How fast the fish bite at each time. Uses values 0.0-1.0 to slow or speed up the catch cycle times during the animation per in-game hour. 24 values as shown below.","12AM", "1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
     // autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};  
 };
