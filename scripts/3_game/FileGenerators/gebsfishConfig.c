@@ -436,9 +436,9 @@ class gebsfishConfig {
 
 //general settings config data
 class GenSetConf {
-    string DebugInfo = "Turns debug mode on to print extra logs to the script.log file";
+    string DebugInfo = "Turns debug mode on(1) or off(0) to print extra logs to the script.log file";
     int DebugLogs = 0;
-    string FishQualityInfo = "Sets the base value for the fish quantity bar";
+    string FishQualityInfo = "Sets the base value on(1) or off(0) for the fish quantity bar";
     float FishQuality = 1;
     string FishKnifeSpeedMultiplierInfo = "Animation length multiplier applied when filleting a fish with a geb fish knife. 1.0 = vanilla speed, 0.7 = 30% faster. Set to 1.0 to disable the bonus.";
     float FishKnifeSpeedMultiplier = 0.7;
@@ -447,7 +447,7 @@ class GenSetConf {
 };
 
 class RecipeToggleConf {
-    string RecipeToggleInfo = "Enables or disables Gebsfish non-fish-prep recipes. Fish prepare/fillet recipes are not controlled here.";
+    string RecipeToggleInfo = "Enables(1) or disables(0) Gebsfish non-fish-prep recipes. Fish prepare/fillet recipes are not controlled here.";
     bool CraftBambooFishingNet = 1;
     bool CraftHookFromWire = 1;
     bool RepairFishingPole = 1;
@@ -465,10 +465,11 @@ class LogConf {
 class PredatorConf {
     string PredatorSpawnEnabledInfo = "Turns on(1) and off(0) the predators feature of the mod. When on, it will enable the random spawning of predators when catching/cutting up the fish.";
     bool PredatorSpawnEnabled = 1;
-    string PredatorSpawnChanceInfo = "Controls the chance for a predator to spawn when a fish is caught or cut up. Fishing is when fishing, preparing is when getting fillets, failcatch is when nothing is caught.";
+    string PredatorSpawnChanceInfo = "Controls the chance for a predator to spawn from each action. Fishing is when a fish is caught, preparing is when filleting, failcatch is when fishing rolls nothing, fishingnet is when the bamboo fishing net action completes. Set any to 0 to disable that path.";
     float PredatorSpawnChanceFishing = 0.05;
     float PredatorSpawnChancePreparing = 0.05;
     float PredatorSpawnChanceFailCatch = 0.01;
+    float PredatorSpawnChanceFishingNet = 0.01;
     string PredatorSpawnSoundInfo = "PredatorWarningSoundEnable controls the audible notification and PredatorWarningSoundRadius controls how far players hear the sound from the triggering player.";
     bool PredatorWarningSoundEnable = 1;
     int PredatorWarningSoundRadius = 50;

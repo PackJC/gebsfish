@@ -135,6 +135,14 @@ class ActionBambooFishingNet : ActionContinuousBase {
 				g_Game.CreateObjectEx(spawnType, player.GetPosition(), ECE_PLACE_ON_SURFACE);
 		}
 
+		// Predator spawn chance for net use. Independent of the find-chance roll
+		// so predators can show up even if no minnow was caught (and vice versa).
+		// Default in config is much lower than fishing (0.01 vs 0.05) since the
+		// net is a slower / quieter activity than rod fishing.
+		if (player && g_Game.IsServer() && m_gebsConfig && m_gebsConfig.PredatorSettings) {
+			GebsPredatorSpawner.TrySpawn(player, m_gebsConfig.PredatorSettings.PredatorSpawnChanceFishingNet, "PredatorSpawnFishingNet");
+		}
+
 		player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
 
 		if (net)
