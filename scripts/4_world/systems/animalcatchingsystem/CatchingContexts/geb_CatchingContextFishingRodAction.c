@@ -183,9 +183,8 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     }
 
     // Weighted random selection over m_ProbabilityArray, biased by per-species
-    // multipliers cached on each GebYieldFishBase at registration time (read
-    // off the matching FishConf's RainMultiplier / StormMultiplier /
-    // NightMultiplier fields in SetupYield).
+    // weather/time-of-day multipliers and the per-bait fish-preference table.
+    // Each yield's final weight is SCALE * speciesWeatherMul * baitMul.
     // Returns -1 on any error condition (zero total weight, cast failures, etc.)
     // so the caller falls back to the existing uniform pick. Stays sync-safe by
     // using GetRandomInRange against an integer-scaled cumulative weight.
@@ -194,12 +193,19 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         if (n <= 0)
             return -1;
 
-        // Scale floats to ints (×1000) so weighted-random can use the integer
+        // Scale floats to ints (x1000) so weighted-random can use the integer
         // sync RNG, keeping client and server in lockstep.
         const int SCALE = 1000;
         ref array<int> scaled = new array<int>;
         scaled.Reserve(n);
         int total = 0;
+        int debugLevel = m_gebsConfig.GeneralSettings.DebugLogs;
+        string baitClassname = GetCurrentBaitClassname();
+
+        if (debugLevel == ELEVATED_DEBUG) {
+            GebsfishLogger.Debug("---PickWeightedYieldIndex (bait=" + baitClassname + ")---", "GenerateResult");
+            GebsfishLogger.Debug("species | weatherMul | baitMul | scaled", "GenerateResult");
+        }
 
         for (int i = 0; i < n; i++) {
             YieldItemBase y;
@@ -208,10 +214,15 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
             if (Class.CastTo(y, m_YieldsMapAll.Get(m_ProbabilityArray[i])) && y) {
                 GebYieldFishBase gy;
                 if (Class.CastTo(gy, y) && gy) {
-                    float mul = GetSpeciesWeatherMultiplier(gy);
-                    weight = Math.Round(SCALE * mul);
+                    float weatherMul = GetSpeciesWeatherMultiplier(gy);
+                    float baitMul = GetBaitMultiplier(gy.GetSpeciesClassname(), baitClassname);
+                    weight = Math.Round(SCALE * weatherMul * baitMul);
                     if (weight < 0)
                         weight = 0;
+
+                    if (debugLevel == ELEVATED_DEBUG) {
+                        GebsfishLogger.Debug(gy.GetSpeciesClassname() + " | " + weatherMul + " | " + baitMul + " | " + weight, "GenerateResult");
+                    }
                 }
             }
 
@@ -227,13 +238,55 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         for (int j = 0; j < n; j++) {
             cumul += scaled[j];
             if (roll < cumul) {
-                if (m_gebsConfig.GeneralSettings.DebugLogs == ELEVATED_DEBUG) {
+                if (debugLevel == ELEVATED_DEBUG) {
                     GebsfishLogger.Debug("Weighted yield pick: idx=" + j + " roll=" + roll + " total=" + total, "GenerateResult");
                 }
                 return j;
             }
         }
         return n - 1;  // floating-point edge case; clamp to last
+    }
+
+    // Returns the classname currently on the rod's hook. Prefers m_Bait (a
+    // worm / minnow / salamander attached to the hook) since that's the
+    // active bait when bait-style items are in use. Falls back to m_Hook,
+    // which for gebsfish lures IS the hook itself (geb_SpinnerBait*,
+    // geb_SpoonLure*, geb_CurlyTailJig*, geb_Lure*). Returns empty string
+    // when neither is available -- callers default to a neutral 1.0
+    // multiplier in that case.
+    protected string GetCurrentBaitClassname() {
+        if (m_Bait)
+            return m_Bait.GetType();
+        if (m_Hook)
+            return m_Hook.GetType();
+        return "";
+    }
+
+    // Per-bait fish-preference multiplier. Walks BaitPreferences for an
+    // entry matching the current bait classname, then walks that entry's
+    // Preferences for a row matching the fish classname. Returns 1.0 (no
+    // bias) when the bait isn't configured at all, when the fish isn't in
+    // the bait's preference list, or when the config is missing -- so the
+    // system is fully opt-in and a partial config can never block catches.
+    protected float GetBaitMultiplier(string fishClassname, string baitClassname) {
+        if (baitClassname == "" || fishClassname == "")
+            return 1.0;
+        if (!m_gebsConfig || !m_gebsConfig.BaitPreferences)
+            return 1.0;
+
+        foreach (BaitConfig bait : m_gebsConfig.BaitPreferences) {
+            if (!bait || bait.BaitClassname != baitClassname)
+                continue;
+            if (!bait.Preferences)
+                return 1.0;
+            foreach (BaitPreferenceEntry pref : bait.Preferences) {
+                if (pref && pref.FishClassname == fishClassname)
+                    return pref.Multiplier;
+            }
+            return 1.0;  // matched bait but fish not listed -- neutral
+        }
+
+        return 1.0;  // bait not in config at all -- neutral
     }
 
     // Per-species multiplier overlay. Reads the per-species Rain/Storm/Dawn/

@@ -43,6 +43,28 @@
 - **Realistic catch probabilities**
     * All 79 fish `CatchProbability` defaults updated to reflect real-world abundance and bite habit
     * Bait / abundant 20-25, common gamefish 12-18, uncommon 7-11, trophy / rare 2-5
+- **Bait-fish preference system**
+    * Per-bait `BaitPreferences[]` table on the global config — every bait/lure carries a list of fish it favours
+    * 24 baits (`Worm`, `geb_GrassHopper`, `geb_FieldCricket`, `geb_GrubWorm`, `geb_RubberWorm`, `Shrimp`, `geb_FatHeadMinnow`, `geb_RedSalamander`, `geb_SpinnerBait1-4`, `geb_SpoonLure1-4`, `geb_Lure1-4`, `geb_CurlyTailJig1-4`) × every one of the 79 fish = a fully populated 1,896-entry preference table seeded with biologically defensible defaults
+    * Multiplier > 1.0 makes that fish more likely to be the selected catch when this bait is on the hook; < 1.0 makes it less likely; 1.0 is neutral. Default range 0.3-2.5
+    * Layered on top of the per-species weather + time-of-day multipliers in `PickWeightedYieldIndex`, so final weight = CatchProbability × WeatherSpeciesMul × TimeOfDayMul × BaitMul
+    * Detection: rod's `m_Bait` slot (worms / live bait) is preferred; falls back to `m_Hook` (gebsfish lures self-identify as hooks via `hookType`). Unknown baits and empty hooks default to a neutral 1.0 across all fish so the system is fully opt-in
+    * Worms and insects favour panfish & trout, soft-plastic worms favour bass, live minnow & salamander favour pike / musky / walleye / catfish, spinnerbaits favour bass / pike / musky, spoons favour trout & salmon, jigs favour bass / walleye
+    * `DebugLogs = 2` (elevated) prints a per-cast table: `species | weatherMul | baitMul | scaled` for each fish in the pool
+- **Ecology pass: bait-preference category audit + fish Environment corrections**
+    * `geb_WhiteBass` moved from `PANFISH` to `BASS` bucket — behaviorally identical to other bass (schools chasing shad, hits spinners / jigs / minnows aggressively); the panfish weights were severely underweighting its lure response
+    * `geb_BowFin` moved from `CATFISH_BOTTOM` to `PIKE_MUSKY` bucket — aggressive ambush predators that smash spinnerbaits and lures, far more pike-like than catfish-like in feeding
+    * 12 fish `Environment` values corrected to match real-world ecology. `Environment` is a bitmask: `1` = pond, `2` = sea, `3` = both. Anadromous and catadromous species now correctly use `3` so they appear in both freshwater and saltwater rod pools
+    * `Environment = 3` (both) now: `SteelheadTrout`, `CherrySalmon`, `ChinookSalmon`, `SockEyeSalmon` (all anadromous Pacific salmonids), `StripedBass` (anadromous), `AsianSeaBass` (Barramundi, catadromous), `FlatHeadMullet` (mullets routinely enter brackish/fresh), `AlligatorGar` (tolerates brackish coastal water), `Mussel` (both freshwater and marine species)
+    * Three saltwater-misclassified fish corrected to `Environment = 1` (pond): `RedHeadCichlid`, `SiameseTigerFish`, `BlackDevilSnail` — all freshwater species in real life
+- **Realistic fish weights**
+    * 63 fish entity `weight` values rebalanced against real-world adult catch sizes. Previously many panfish/reef fish were 1.7-3 kg (too heavy) and trophy pelagic species were 1.7-3.7 kg (drastically too light)
+    * Smaller fish dropped to realistic sizes: `BlueGill` / `SunFish` 1700 → 400 g, `YellowPerch` 3000 → 500 g, `AngelFish` 2500 → 300 g, `BlueTang` 2000 → 500 g, `Severum` 3600 → 600 g, `RedHeadCichlid` 3000 → 500 g, `StarFish` 2500 → 400 g, `SlimySculpin` 300 → 80 g
+    * Trophy fish bumped to real-world proportions (still capped well below biological maximums for encumbrance playability): `GreatWhiteShark` 3700 → 20000 g, `AtlanticBlueMarlin` 3700 → 15000 g, `HumpHeadWrasse` / `YellowFinTuna` / `HammerHeadShark` → 12000 g, `AtlanticSailFish` 3700 → 10000 g, `AlligatorGar` 4000 → 8000 g, `ChinookSalmon` 1700 → 6000 g, `LakeSturgeon` 1700 → 5000 g
+    * Pike / Muskellunge family tiered (4000 g flat → `Muskellunge` 6000, `Barred` 5500, `Spotted` 5000, `NorthernPike` 4500) so the size hierarchy reflects reality
+    * Trout / salmon tiered by species (`BrookTrout` 1000 < `RainbowTrout` 1700 < `BrownTrout` 2000 < `LakeTrout` 3500 < `ChinookSalmon` 6000)
+    * `AmericanBullFrog` 100 → 400 g (bullfrogs are 200-500 g)
+    * Players landing the largest pelagic fish (sharks, marlin, tuna) will now have significant encumbrance — by design. Cleaning on-site or using boat / vehicle transport for trophy catches becomes meaningful gameplay
 
 #### New Fish & Creatures
 - Hammerhead Shark

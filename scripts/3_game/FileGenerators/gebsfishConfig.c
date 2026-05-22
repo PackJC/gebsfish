@@ -22,6 +22,10 @@ class gebsfishConfig {
     ref BambooFishingNetConf BambooFishingNetSettings;
     ref DigBugsConf DigBugsSettings;
     ref DigWormsConf DigWormsSettings;
+    // Per-bait fish-preference table. Multiplies into the weighted pick at
+    // catch time so the bait/lure on the hook biases WHICH fish gets
+    // selected. See SeedDefaultBaitPreferences() for the default ecology.
+    ref array<ref BaitConfig> BaitPreferences;
     ref MackerelConf Mackerel;
     ref CarpConf Carp;
     ref SardinesConf Sardines;
@@ -152,6 +156,11 @@ class gebsfishConfig {
         BambooFishingNetSettings = new BambooFishingNetConf;
         DigBugsSettings = new DigBugsConf;
         DigWormsSettings = new DigWormsConf;
+        // Per-bait fish-preference table. Seeded with biologically defensible
+        // multipliers so the system is "alive" out of the box; admins can
+        // tune by editing the JSON.
+        BaitPreferences = new array<ref BaitConfig>();
+        SeedDefaultBaitPreferences();
         //Save fish config data to file
 
         Mackerel = new MackerelConf;
@@ -457,10 +466,604 @@ class gebsfishConfig {
         if (!Junk)               { Junk = new array<ref JunkEntry>();                    changed = true; }
         if (!ContainerJunk)      { ContainerJunk = new array<ref ContainerJunkEntry>();  changed = true; }
 
+        if (!BaitPreferences) {
+            BaitPreferences = new array<ref BaitConfig>();
+            SeedDefaultBaitPreferences();
+            changed = true;
+        }
+
         // Do not auto-create individual fish config sections here. Prepare recipes
         // intentionally fall back to 1 meat when their section is missing, and
         // mission registration skips missing fish instead of crashing.
         return changed;
+    }
+
+    // Default per-bait fish-preference table. Every bait lists every
+    // rod-eligible fish. Multiplier > 1.0 makes that fish more likely
+    // to be the selected catch; < 1.0 makes it less likely; 1.0 is
+    // neutral. Fish are bucketed into 15 ecological categories so the
+    // seed stays compact; the JSON output still shows every fish-bait
+    // pair explicitly so admins can tune individual entries.
+    protected void SeedDefaultBaitPreferences() {
+        ref array<string> catPanfish = new array<string>;
+        catPanfish.Insert("geb_BlueGill");
+        catPanfish.Insert("geb_SunFish");
+        catPanfish.Insert("geb_YellowPerch");
+        catPanfish.Insert("Bitterlings");
+
+        ref array<string> catBass = new array<string>;
+        catBass.Insert("geb_LargeMouthBass");
+        catBass.Insert("geb_SmallMouthBass");
+        catBass.Insert("geb_BlackBass");
+        catBass.Insert("geb_NeoshoBass");
+        catBass.Insert("geb_StripedBass");
+        catBass.Insert("geb_WhiteBass");
+
+        ref array<string> catPikeMusky = new array<string>;
+        catPikeMusky.Insert("geb_NorthernPike");
+        catPikeMusky.Insert("geb_Muskellunge");
+        catPikeMusky.Insert("geb_BarredMuskellunge");
+        catPikeMusky.Insert("geb_SpottedMuskellunge");
+        catPikeMusky.Insert("geb_TigerMuskellunge");
+        catPikeMusky.Insert("geb_NorthernSnakeHead");
+        catPikeMusky.Insert("geb_BowFin");
+
+        ref array<string> catWalleye = new array<string>;
+        catWalleye.Insert("geb_WallEye");
+        catWalleye.Insert("geb_Sauger");
+
+        ref array<string> catTroutSalmon = new array<string>;
+        catTroutSalmon.Insert("SteelheadTrout");
+        catTroutSalmon.Insert("geb_BrookTrout");
+        catTroutSalmon.Insert("geb_BrownTrout");
+        catTroutSalmon.Insert("geb_RainbowTrout");
+        catTroutSalmon.Insert("geb_CutThroatTrout");
+        catTroutSalmon.Insert("geb_LakeTrout");
+        catTroutSalmon.Insert("geb_ChinookSalmon");
+        catTroutSalmon.Insert("geb_CherrySalmon");
+        catTroutSalmon.Insert("geb_SockEyeSalmon");
+
+        ref array<string> catCatfishBottom = new array<string>;
+        catCatfishBottom.Insert("geb_FlatHeadCatFish");
+        catCatfishBottom.Insert("geb_AlligatorGar");
+        catCatfishBottom.Insert("geb_LakeSturgeon");
+
+        ref array<string> catCarp = new array<string>;
+        catCarp.Insert("Carp");
+
+        ref array<string> catAmphibian = new array<string>;
+        catAmphibian.Insert("geb_AmericanBullFrog");
+        catAmphibian.Insert("geb_RedSalamander");
+
+        ref array<string> catBaitFish = new array<string>;
+        catBaitFish.Insert("geb_FatHeadMinnow");
+        catBaitFish.Insert("geb_FlatHeadMullet");
+        catBaitFish.Insert("geb_SlimySculpin");
+
+        ref array<string> catCrustacean = new array<string>;
+        catCrustacean.Insert("Shrimp");
+        catCrustacean.Insert("geb_SignalCrayFish");
+        catCrustacean.Insert("geb_EuropeanCrayFish");
+        catCrustacean.Insert("geb_FloridaCrayFish");
+        catCrustacean.Insert("geb_CaveCrayFish");
+        catCrustacean.Insert("geb_MonongahelaCrayFish");
+        catCrustacean.Insert("geb_RedSwampCrayFish");
+        catCrustacean.Insert("geb_RustyCrayFish");
+        catCrustacean.Insert("geb_AmericanLobster");
+        catCrustacean.Insert("geb_EuropeanLobster");
+        catCrustacean.Insert("geb_KingCrab");
+        catCrustacean.Insert("geb_SnowCrab");
+
+        ref array<string> catSaltwaterLarge = new array<string>;
+        catSaltwaterLarge.Insert("geb_GreatWhiteShark");
+        catSaltwaterLarge.Insert("geb_HammerHeadShark");
+        catSaltwaterLarge.Insert("geb_AngelShark");
+        catSaltwaterLarge.Insert("geb_LeopardShark");
+        catSaltwaterLarge.Insert("geb_AtlanticBlueMarlin");
+        catSaltwaterLarge.Insert("geb_AtlanticSailFish");
+        catSaltwaterLarge.Insert("geb_YellowFinTuna");
+
+        ref array<string> catSaltwaterMed = new array<string>;
+        catSaltwaterMed.Insert("geb_AsianSeaBass");
+        catSaltwaterMed.Insert("geb_Bonita");
+        catSaltwaterMed.Insert("geb_MahiMahi");
+        catSaltwaterMed.Insert("geb_RoughNeckRock");
+        catSaltwaterMed.Insert("geb_SiameseTigerFish");
+        catSaltwaterMed.Insert("WalleyePollock");
+        catSaltwaterMed.Insert("geb_PacificCod");
+        catSaltwaterMed.Insert("geb_LargeHeadHairTailFish");
+        catSaltwaterMed.Insert("geb_SouthernFlounder");
+
+        ref array<string> catSaltwaterSmall = new array<string>;
+        catSaltwaterSmall.Insert("Mackerel");
+        catSaltwaterSmall.Insert("Sardines");
+        catSaltwaterSmall.Insert("geb_YellowSnapper");
+        catSaltwaterSmall.Insert("geb_WhiteGrunt");
+
+        ref array<string> catReefTropical = new array<string>;
+        catReefTropical.Insert("geb_AngelFish");
+        catReefTropical.Insert("geb_BlueTang");
+        catReefTropical.Insert("geb_HumpHeadWrasse");
+        catReefTropical.Insert("geb_Severum");
+        catReefTropical.Insert("geb_RedHeadCichlid");
+
+        ref array<string> catShellfishInvert = new array<string>;
+        catShellfishInvert.Insert("geb_BloodClam");
+        catShellfishInvert.Insert("geb_Mussel");
+        catShellfishInvert.Insert("geb_BlackDevilSnail");
+        catShellfishInvert.Insert("geb_BlueJellyFish");
+        catShellfishInvert.Insert("geb_StarFish");
+
+        BaitConfig bait;
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "Worm";
+        AppendBaitPrefsByCategory(bait, catPanfish, 2.0);
+        AppendBaitPrefsByCategory(bait, catBass, 1.4);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 0.6);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.2);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.6);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.5);
+        AppendBaitPrefsByCategory(bait, catCarp, 2.0);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.2);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.7);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.4);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_GrassHopper";
+        AppendBaitPrefsByCategory(bait, catPanfish, 1.5);
+        AppendBaitPrefsByCategory(bait, catBass, 1.4);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 0.4);
+        AppendBaitPrefsByCategory(bait, catWalleye, 0.8);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 2.0);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.7);
+        AppendBaitPrefsByCategory(bait, catCarp, 1.0);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 1.8);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 0.9);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.4);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.6);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_FieldCricket";
+        AppendBaitPrefsByCategory(bait, catPanfish, 1.5);
+        AppendBaitPrefsByCategory(bait, catBass, 1.4);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 0.4);
+        AppendBaitPrefsByCategory(bait, catWalleye, 0.8);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 2.0);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.7);
+        AppendBaitPrefsByCategory(bait, catCarp, 1.0);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 1.8);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 0.9);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.4);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.6);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_GrubWorm";
+        AppendBaitPrefsByCategory(bait, catPanfish, 2.0);
+        AppendBaitPrefsByCategory(bait, catBass, 1.4);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 0.5);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.3);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.8);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.3);
+        AppendBaitPrefsByCategory(bait, catCarp, 1.4);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 1.0);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.1);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.4);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.7);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.7);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_RubberWorm";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.6);
+        AppendBaitPrefsByCategory(bait, catBass, 2.5);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.3);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.5);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 0.7);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.7);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.4);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 0.6);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.4);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.4);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.4);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "Shrimp";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.6);
+        AppendBaitPrefsByCategory(bait, catBass, 0.5);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 0.5);
+        AppendBaitPrefsByCategory(bait, catWalleye, 0.5);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 0.7);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.6);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.4);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 0.7);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.7);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 2.0);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 1.5);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.5);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_FatHeadMinnow";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.7);
+        AppendBaitPrefsByCategory(bait, catBass, 2.0);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.5);
+        AppendBaitPrefsByCategory(bait, catWalleye, 2.5);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.8);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.4);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 1.0);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 0.8);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.4);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.0);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.8);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.5);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.4);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_RedSalamander";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.4);
+        AppendBaitPrefsByCategory(bait, catBass, 2.0);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.0);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.5);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.0);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 2.5);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 0.6);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.4);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.3);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_SpinnerBait1";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.8);
+        AppendBaitPrefsByCategory(bait, catBass, 2.5);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.3);
+        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.6);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.7);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.5);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.4);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_SpinnerBait2";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.8);
+        AppendBaitPrefsByCategory(bait, catBass, 2.5);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.3);
+        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.6);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.7);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.5);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.4);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_SpinnerBait3";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.8);
+        AppendBaitPrefsByCategory(bait, catBass, 2.5);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.3);
+        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.6);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.7);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.5);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.4);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_SpinnerBait4";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.8);
+        AppendBaitPrefsByCategory(bait, catBass, 2.5);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.3);
+        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.6);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.7);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.5);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.4);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_SpoonLure1";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.6);
+        AppendBaitPrefsByCategory(bait, catBass, 1.5);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.0);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 2.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.8);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.9);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.6);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.5);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_SpoonLure2";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.6);
+        AppendBaitPrefsByCategory(bait, catBass, 1.5);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.0);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 2.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.8);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.9);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.6);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.5);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_SpoonLure3";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.6);
+        AppendBaitPrefsByCategory(bait, catBass, 1.5);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.0);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 2.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.8);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.9);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.6);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.5);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_SpoonLure4";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.6);
+        AppendBaitPrefsByCategory(bait, catBass, 1.5);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.0);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 2.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.8);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.9);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.6);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.5);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_Lure1";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.7);
+        AppendBaitPrefsByCategory(bait, catBass, 2.0);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.8);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.0);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.7);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_Lure2";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.7);
+        AppendBaitPrefsByCategory(bait, catBass, 2.0);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.8);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.0);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.7);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_Lure3";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.7);
+        AppendBaitPrefsByCategory(bait, catBass, 2.0);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.8);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.0);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.7);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_Lure4";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.7);
+        AppendBaitPrefsByCategory(bait, catBass, 2.0);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.8);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.0);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.7);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_CurlyTailJig1";
+        AppendBaitPrefsByCategory(bait, catPanfish, 1.5);
+        AppendBaitPrefsByCategory(bait, catBass, 2.2);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.3);
+        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.0);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.5);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.7);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.8);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_CurlyTailJig2";
+        AppendBaitPrefsByCategory(bait, catPanfish, 1.5);
+        AppendBaitPrefsByCategory(bait, catBass, 2.2);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.3);
+        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.0);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.5);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.7);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.8);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_CurlyTailJig3";
+        AppendBaitPrefsByCategory(bait, catPanfish, 1.5);
+        AppendBaitPrefsByCategory(bait, catBass, 2.2);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.3);
+        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.0);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.5);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.7);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.8);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_CurlyTailJig4";
+        AppendBaitPrefsByCategory(bait, catPanfish, 1.5);
+        AppendBaitPrefsByCategory(bait, catBass, 2.2);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.3);
+        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.0);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.5);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.7);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.8);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+    }
+
+    // Helper: append a BaitPreferenceEntry to `conf.Preferences` for
+    // every fish classname in `fishList`, all with the same multiplier.
+    // Lets SeedDefaultBaitPreferences emit per-category preferences in
+    // one line per (bait, category) pair instead of per fish.
+    protected void AppendBaitPrefsByCategory(BaitConfig conf, array<string> fishList, float mul) {
+        foreach (string fish : fishList) {
+            BaitPreferenceEntry pref = new BaitPreferenceEntry();
+            pref.FishClassname = fish;
+            pref.Multiplier = mul;
+            conf.Preferences.Insert(pref);
+        }
     }
 
     // Per-species weather multipliers live inline on each FishConf class
@@ -584,6 +1187,28 @@ class NetEntry {
     string Classname;
     float CatchChance;
     int Environment = 1;
+}
+
+// One per fish that a given bait/lure favours. Multiplier > 1.0 makes the
+// fish more likely to be the selected catch when this bait is on the hook;
+// < 1.0 makes it less likely. 1.0 = neutral, same as omitting the entry.
+class BaitPreferenceEntry {
+    string FishClassname;
+    float Multiplier = 1.0;
+}
+
+// Bait-side container: each bait/lure classname owns a list of fish it
+// favours. Lookups default to 1.0 (no bias) when the current bait is not
+// in BaitPreferences at all, or when the bait is configured but the
+// specific fish isn't listed. So admins can opt in incrementally without
+// listing every fish-bait pair.
+class BaitConfig {
+    string BaitClassname;
+    ref array<ref BaitPreferenceEntry> Preferences;
+
+    void BaitConfig() {
+        Preferences = new array<ref BaitPreferenceEntry>();
+    }
 }
 
 // Settings for ActionBambooFishingNet. Owns the per-attempt find-chance
@@ -730,7 +1355,7 @@ class WalleyePollockConf {
 };
 class SteelheadTroutConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
+    int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 3;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -887,7 +1512,7 @@ class TigerMuskellungeConf {
 };
 class AlligatorGarConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
+    int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 1;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -1027,7 +1652,7 @@ class BlackBassConf {
 };
 class StripedBassConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
+    int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 3;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -1587,7 +2212,7 @@ class AngelFishConf {
 };
 class AsianSeaBassConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
+    int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 3;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -1647,7 +2272,7 @@ class BonitaConf {
 };
 class CherrySalmonConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
+    int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 3;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -1667,7 +2292,7 @@ class CherrySalmonConf {
 };
 class ChinookSalmonConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
+    int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 3;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -1687,7 +2312,7 @@ class ChinookSalmonConf {
 };
 class SockEyeSalmonConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
+    int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 3;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -1707,7 +2332,7 @@ class SockEyeSalmonConf {
 };
 class FlatHeadMulletConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
+    int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 3;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -1787,7 +2412,7 @@ class PacificCodConf {
 };
 class RedHeadCichlidConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
+    int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 3;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -1887,7 +2512,7 @@ class HumpHeadWrasseConf {
 };
 class SiameseTigerFishConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
+    int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 3;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -2047,7 +2672,7 @@ class BloodClamConf {
 };
 class MusselConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
+    int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 6;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -2067,7 +2692,7 @@ class MusselConf {
 };
 class BlackDevilSnailConf {
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
+    int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 6;
     string BoneInfo = "BoneMin and BoneMax determine the minimum and maximum Bone pieces for the prepare action. DayZ has a hard limit of 10 bones max.";
