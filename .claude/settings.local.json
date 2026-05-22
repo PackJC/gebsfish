@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(git status *)",
-      "Bash(grep -rln \"class YieldItem\" \"/c/Users/ECHO/Documents/DayZ Projects/scripts\" 2>/dev/null | head -20)"
-    ]
-  }
-}
