@@ -4,9 +4,27 @@
 modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     override void InitCatchingItemData() {
 		super.InitCatchingItemData();
-		
+
+		// Per-fish bite-speed scaling. Aggregates the 24-hour BiteSpeed arrays
+		// off every yield in the current pool (weighted by CatchProbability x
+		// time-of-day multiplier), then stretches the cycle inversely. Lower
+		// aggregate -> longer wait. Skipped entirely when the buff is disabled
+		// in config so vanilla servers see no change.
+		float cycleTargetBefore = m_SignalCycleTarget;
+		float cycleEndBefore = m_SignalCycleEndTarget;
+		float biteSpeed = ComputeAggregateBiteSpeed();
+		if (biteSpeed != 1.0) {
+			m_SignalCycleTarget = m_SignalCycleTarget / biteSpeed;
+			m_SignalCycleEndTarget = m_SignalCycleEndTarget / biteSpeed;
+		}
+
+		if (m_gebsConfig.GeneralSettings.DebugLogs >= 1) {
+			GebsfishLogger.Debug("Cycle scaled by BiteSpeed=" + biteSpeed + ": cycleTarget " + cycleTargetBefore + "->" + m_SignalCycleTarget + ", cycleEnd " + cycleEndBefore + "->" + m_SignalCycleEndTarget, "InitCatchingItemData");
+		}
+
 		if (m_gebsConfig.GeneralSettings.DebugLogs == ELEVATED_DEBUG) {
 			GebsfishLogger.Debug("---InitCatchingItemData---","InitCatchingItemData");
+			GebsfishLogger.Debug("aggregate bite speed: " + biteSpeed,"InitCatchingItemData");
 			GebsfishLogger.Debug("m_SignalCycleTarget (adjusted): " + m_SignalCycleTarget,"InitCatchingItemData");
 			GebsfishLogger.Debug("m_SignalCycleTargetAdjustment: " + m_SignalCycleTargetAdjustment,"InitCatchingItemData");
 			GebsfishLogger.Debug("m_SignalTargetProbability: " + m_SignalTargetProbability,"InitCatchingItemData");
@@ -18,6 +36,110 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 			GebsfishLogger.Debug("m_SignalStartTimeMin: " + m_SignalStartTimeMin,"InitCatchingItemData");
 			GebsfishLogger.Debug("m_SignalStartTimeMax: " + m_SignalStartTimeMax,"InitCatchingItemData");
 		}
+	}
+
+	// Weighted average of per-fish BiteSpeed[currentHour] across every yield in
+	// the active probability pool. Each fish's contribution is weighted by its
+	// CatchProbability times its current time-of-day weather multiplier, so the
+	// aggregate reflects the fish actually likely to bite right now. Returns
+	// 1.0 (no effect) when the buff is disabled, the pool is empty, or all
+	// weights resolve to zero. Floor of 0.05 prevents an all-zero hour from
+	// freezing the cycle.
+	//
+	// Logging: DebugLogs=1 prints a one-line summary per cast (hour, pool size,
+	// final aggregate, top contributors). DebugLogs=2 (ELEVATED_DEBUG) adds a
+	// per-fish breakdown row showing BiteSpeed, CatchProbability, weather
+	// multiplier, weight, and contribution to the numerator.
+	protected float ComputeAggregateBiteSpeed() {
+		if (!m_gebsConfig || !m_gebsConfig.WeatherSettings)
+			return 1.0;
+		if (!m_gebsConfig.WeatherSettings.WeatherCatchBoostEnable)
+			return 1.0;
+		if (!m_ProbabilityArray || m_ProbabilityArray.Count() == 0)
+			return 1.0;
+
+		int hour = GetCurrentHour();
+		float numerator = 0.0;
+		float denominator = 0.0;
+		// Enforce's parser dislikes `bool x = (intExpr >= literal);` here, so
+		// cache the level as an int and compare inline at each log site -- same
+		// pattern that already compiles cleanly inside the `if`s above.
+		int debugLevel = m_gebsConfig.GeneralSettings.DebugLogs;
+
+		// Tracks the highest-weighted contributor so the regular debug summary
+		// can name the fish that's dominating the aggregate this cast.
+		string topName = "";
+		float topWeight = 0;
+		float topBiteSpeed = 0;
+
+		if (debugLevel == ELEVATED_DEBUG) {
+			GebsfishLogger.Debug("---BiteSpeed aggregate breakdown (hour=" + hour + ")---", "ComputeAggregateBiteSpeed");
+			GebsfishLogger.Debug("species | BiteSpeed[h] | CatchProb | weatherMul | weight | contribution", "ComputeAggregateBiteSpeed");
+		}
+
+		int n = m_ProbabilityArray.Count();
+		int contributors = 0;
+		for (int i = 0; i < n; i++) {
+			YieldItemBase y;
+			if (!Class.CastTo(y, m_YieldsMapAll.Get(m_ProbabilityArray[i])) || !y)
+				continue;
+			GebYieldFishBase gy;
+			if (!Class.CastTo(gy, y) || !gy)
+				continue;
+
+			float weatherMul = GetSpeciesWeatherMultiplier(gy);
+			float weight = gy.GetCatchProbability() * weatherMul;
+			float biteSpeed = gy.GetBiteSpeedForHour(hour);
+
+			if (weight <= 0) {
+				if (debugLevel == ELEVATED_DEBUG) {
+					GebsfishLogger.Debug(gy.GetSpeciesClassname() + " | " + biteSpeed + " | " + gy.GetCatchProbability() + " | " + weatherMul + " | 0 (SKIPPED) | 0", "ComputeAggregateBiteSpeed");
+				}
+				continue;
+			}
+
+			float contribution = biteSpeed * weight;
+			numerator += contribution;
+			denominator += weight;
+			contributors++;
+
+			if (weight > topWeight) {
+				topWeight = weight;
+				topName = gy.GetSpeciesClassname();
+				topBiteSpeed = biteSpeed;
+			}
+
+			if (debugLevel == ELEVATED_DEBUG) {
+				GebsfishLogger.Debug(gy.GetSpeciesClassname() + " | " + biteSpeed + " | " + gy.GetCatchProbability() + " | " + weatherMul + " | " + weight + " | " + contribution, "ComputeAggregateBiteSpeed");
+			}
+		}
+
+		if (denominator <= 0) {
+			if (debugLevel >= 1) {
+				GebsfishLogger.Debug("BiteSpeed aggregate: 1.0 baseline (all weights zero, pool=" + n + " hour=" + hour + ")", "ComputeAggregateBiteSpeed");
+			}
+			return 1.0;
+		}
+
+		float aggregated = numerator / denominator;
+		bool floored = false;
+		if (aggregated < 0.05) {
+			aggregated = 0.05;
+			floored = true;
+		}
+
+		if (debugLevel >= 1) {
+			string flooredTag = "";
+			if (floored)
+				flooredTag = " (FLOORED to 0.05)";
+			GebsfishLogger.Debug("BiteSpeed aggregate: " + aggregated + " | hour=" + hour + " | pool=" + n + " | contributors=" + contributors + " | top=" + topName + "(BiteSpeed=" + topBiteSpeed + ", weight=" + topWeight + ")" + flooredTag, "ComputeAggregateBiteSpeed");
+		}
+		if (debugLevel == ELEVATED_DEBUG) {
+			GebsfishLogger.Debug("totals: numerator=" + numerator + " denominator=" + denominator + " aggregated=" + aggregated, "ComputeAggregateBiteSpeed");
+			GebsfishLogger.Debug("---End BiteSpeed breakdown---", "ComputeAggregateBiteSpeed");
+		}
+
+		return aggregated;
 	}
 
     override bool ModifySignalProbability(inout float probability) {
@@ -114,11 +236,12 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         return n - 1;  // floating-point edge case; clamp to last
     }
 
-    // Per-species multiplier overlay. Reads the per-species Rain/Storm/Night
-    // multipliers straight off the GebYieldFishBase (cached there at
-    // registration time from the matching FishConf), then applies the same
-    // rain/storm/night conditions as the global multiplier. Yields that
-    // weren't passed multipliers in SetupYield default to 1.0 (no effect).
+    // Per-species multiplier overlay. Reads the per-species Rain/Storm/Dawn/
+    // Day/Dusk/Night multipliers straight off the GebYieldFishBase (cached
+    // there at registration time from the matching FishConf), then applies
+    // the same rain/storm + time-of-day conditions as the global multiplier.
+    // Yields that weren't passed multipliers in SetupYield default to 1.0
+    // (no effect).
     protected float GetSpeciesWeatherMultiplier(GebYieldFishBase gy) {
         if (!gy)
             return 1.0;
@@ -131,7 +254,6 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 
         float speciesRain  = gy.GetRainMultiplier();
         float speciesStorm = gy.GetStormMultiplier();
-        float speciesNight = gy.GetNightMultiplier();
 
         float multiplier = 1.0;
 
@@ -146,32 +268,72 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
             }
         }
 
-        // Night component (stacks with rain/storm).
-        if (w.NightStartHour != w.NightEndHour && speciesNight != 1.0) {
-            int year, month, day, hour, minute;
-            g_Game.GetWorld().GetDate(year, month, day, hour, minute);
-            bool isNight = false;
-            if (w.NightStartHour < w.NightEndHour) {
-                isNight = (hour >= w.NightStartHour && hour < w.NightEndHour);
-            } else {
-                isNight = (hour >= w.NightStartHour || hour < w.NightEndHour);
-            }
-            if (isNight)
-                multiplier = multiplier * speciesNight;
-        }
+        // Time-of-day component. Exactly one of Dawn / Day / Dusk / Night
+        // applies based on the current hour; pick the matching species
+        // multiplier and stack it onto the running total.
+        int hour = GetCurrentHour();
+        float speciesTimeOfDay = 1.0;
+        int window = ResolveTimeWindow(w, hour);
+        if (window == 0)      speciesTimeOfDay = gy.GetDawnMultiplier();
+        else if (window == 1) speciesTimeOfDay = gy.GetDayMultiplier();
+        else if (window == 2) speciesTimeOfDay = gy.GetDuskMultiplier();
+        else if (window == 3) speciesTimeOfDay = gy.GetNightMultiplier();
+
+        if (speciesTimeOfDay != 1.0)
+            multiplier = multiplier * speciesTimeOfDay;
 
         return multiplier;
     }
 
-    // Computes the combined rain / storm / night multiplier from the current
-    // world state. Returns 1.0 (no effect) when the buff is disabled in config,
-    // when no condition is currently active, or when weather/world state isn't
-    // available yet (mission startup race).
+    // Returns the current in-game hour (0-23). Defaults to 12 (noon) if the
+    // world state isn't available yet (mission startup race).
+    protected int GetCurrentHour() {
+        int year, month, day, hour, minute;
+        if (g_Game && g_Game.GetWorld()) {
+            g_Game.GetWorld().GetDate(year, month, day, hour, minute);
+            return hour;
+        }
+        return 12;
+    }
+
+    // Resolves the current time-of-day window based on hour and the configured
+    // Dawn/Day/Dusk/Night boundaries. Returns:
+    //   0 = Dawn
+    //   1 = Day
+    //   2 = Dusk
+    //   3 = Night
+    //  -1 = no window matched (shouldn't happen if config covers 24h)
+    // Checks dawn/day/dusk first since night may wrap midnight and is the
+    // catch-all fallback.
+    protected int ResolveTimeWindow(WeatherConf w, int hour) {
+        if (w.DawnStartHour != w.DawnEndHour && hour >= w.DawnStartHour && hour < w.DawnEndHour)
+            return 0;
+        if (w.DayStartHour != w.DayEndHour && hour >= w.DayStartHour && hour < w.DayEndHour)
+            return 1;
+        if (w.DuskStartHour != w.DuskEndHour && hour >= w.DuskStartHour && hour < w.DuskEndHour)
+            return 2;
+        if (w.NightStartHour != w.NightEndHour) {
+            bool isNight;
+            if (w.NightStartHour < w.NightEndHour)
+                isNight = (hour >= w.NightStartHour && hour < w.NightEndHour);
+            else
+                isNight = (hour >= w.NightStartHour || hour < w.NightEndHour);
+            if (isNight)
+                return 3;
+        }
+        return -1;
+    }
+
+    // Computes the combined rain / storm / dawn / day / dusk / night multiplier
+    // from the current world state. Returns 1.0 (no effect) when the buff is
+    // disabled in config, when no condition is currently active, or when
+    // weather/world state isn't available yet (mission startup race).
     //
     // Rain and storm are mutually exclusive (storm replaces rain rather than
-    // stacking with it). Rain/storm CAN stack with night. Combined result is
-    // clamped to WeatherSettings.MaxStackedMultiplier so a stormy night never
-    // becomes a runaway printer.
+    // stacking with it). Dawn/Day/Dusk/Night are also mutually exclusive --
+    // the current hour falls in exactly one. Rain/storm CAN stack with the
+    // time-of-day window. Combined result is clamped to MaxStackedMultiplier
+    // so a stormy dawn never becomes a runaway printer.
     protected float GetWeatherCatchMultiplier() {
         if (!m_gebsConfig || !m_gebsConfig.WeatherSettings)
             return 1.0;
@@ -193,25 +355,20 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
             }
         }
 
-        // ---- night component ----
-        // Skip when the configured window is zero-length (start == end), which
-        // is the convention for "disable the night buff."
-        if (w.NightStartHour != w.NightEndHour && w.NightCatchMultiplier != 1.0) {
-            int year, month, day, hour, minute;
-            g_Game.GetWorld().GetDate(year, month, day, hour, minute);
+        // ---- time-of-day component ----
+        // Exactly one of Dawn / Day / Dusk / Night applies based on hour.
+        // Each window has its own global multiplier in WeatherSettings;
+        // pick the matching one and stack it.
+        int hour = GetCurrentHour();
+        int window = ResolveTimeWindow(w, hour);
+        float timeOfDayMul = 1.0;
+        if (window == 0)      timeOfDayMul = w.DawnCatchMultiplier;
+        else if (window == 1) timeOfDayMul = w.DayCatchMultiplier;
+        else if (window == 2) timeOfDayMul = w.DuskCatchMultiplier;
+        else if (window == 3) timeOfDayMul = w.NightCatchMultiplier;
 
-            bool isNight = false;
-            if (w.NightStartHour < w.NightEndHour) {
-                // Same-day window, e.g. 14..18.
-                isNight = (hour >= w.NightStartHour && hour < w.NightEndHour);
-            } else {
-                // Wraps midnight, e.g. 20..6.
-                isNight = (hour >= w.NightStartHour || hour < w.NightEndHour);
-            }
-
-            if (isNight)
-                multiplier = multiplier * w.NightCatchMultiplier;
-        }
+        if (timeOfDayMul != 1.0)
+            multiplier = multiplier * timeOfDayMul;
 
         // ---- cap ----
         if (w.MaxStackedMultiplier > 0 && multiplier > w.MaxStackedMultiplier)

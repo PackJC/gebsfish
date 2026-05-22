@@ -87,7 +87,7 @@ class geb_BugContainer : geb_FilteredContainerBase {
 };
 
 class geb_BambooFishingNet : geb_FilteredContainerBase {
-	static ref TStringArray s_Allowed = { "Worm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm", "geb_RubberWorm", "geb_FatHeadMinnow", "geb_SignalCrayFish", "geb_EuropeanCrayFish" };
+	static ref TStringArray s_Allowed = { "Worm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm", "geb_RubberWorm", "geb_FatHeadMinnow", "geb_SignalCrayFish", "geb_EuropeanCrayFish", "geb_AmericanBullFrog", "geb_RedSalamander" };
 
 	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;

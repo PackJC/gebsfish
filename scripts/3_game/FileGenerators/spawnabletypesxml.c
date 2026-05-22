@@ -74,7 +74,7 @@ class gebsfishSpawnableTypes {
 
     protected void EnsureDirectoryExists() {
         MakeDirectory("$profile:Gebs");
-        MakeDirectory("$profile:Gebs/extras");
+        MakeDirectory("$profile:Gebs/Extras");
         MakeDirectory(DIRECTORY_PATH);
     }
 

@@ -27,13 +27,19 @@
     * Stacked-multiplier cap prevents storm + night from compounding past 2.0x
     * Default species sensitivities: trout / salmon favour rain, walleye / pike / catfish favour night, sturgeon favours storms, carp / reef fish are penalised
     * Fishing rod description hints at the mechanic
-- **Forage find-chance**
-    * `DigWormsFindChance`, `DigBugsFindChance`, `FishingNetFindChance` (0-1 per-attempt probability of finding anything)
+- **Per-action settings sections**
+    * Each "find something" action now has its own consolidated config section: `BambooFishingNetSettings`, `DigBugsSettings`, `DigWormsSettings`
+    * Each section owns its `FindChance` (0-1 per-attempt probability of finding anything) and a weighted `Catches[]` spawn table
+    * The bamboo net section also owns `PredatorSpawnChance` for predators spawning after the action
+    * Replaces the earlier scattered `ForageSettings.*FindChance` fields, top-level `Bugs[]` / `DigWorms[]` / `NetItems[]` arrays, and `PredatorSettings.PredatorSpawnChanceFishingNet`
     * Tool wear still applies on a miss
 - **Configurable fishing net catches**
-    * New `NetItems[]` config array (same shape as `Bugs[]` / `DigWorms[]`)
+    * `BambooFishingNetSettings.Catches[]` uses a new `NetEntry` type (Classname + CatchChance + Environment) so the same table can hold freshwater and saltwater entries
+    * `Environment` is 1=pond, 2=sea, 3=both -- entries that don't match the cast surface are skipped
     * Replaces the previously hardcoded minnow / frog / salamander switch
-    * Seeded with the three previous classnames at equal weights so vanilla behaviour is preserved
+    * Seeded with the three previous classnames at equal weights (all Environment=1) so vanilla behaviour is preserved
+    * Net catches now spawn into the net's cargo first (4x4), fall back to the player's feet when the net is full
+    * Cargo whitelist extended to include the bullfrog and salamander so the net can hold its own catches
 - **Realistic catch probabilities**
     * All 79 fish `CatchProbability` defaults updated to reflect real-world abundance and bite habit
     * Bait / abundant 20-25, common gamefish 12-18, uncommon 7-11, trophy / rare 2-5

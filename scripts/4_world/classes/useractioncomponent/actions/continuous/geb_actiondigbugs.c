@@ -78,14 +78,14 @@ class ActionDigBugs : ActionContinuousBase {
 		return true;
 	}
 
-	// Returns the find chance from the config, clamped to [0, 1]. Defaults to
-	// 1.0 (always finds) when the config is unavailable so missing config
-	// never blocks the action.
+	// Returns the find chance from the consolidated DigBugsSettings section,
+	// clamped to [0, 1]. Defaults to 1.0 (always finds) when the config is
+	// unavailable so missing config never blocks the action.
 	float GetDigBugsFindChance() {
-		if (!m_gebsConfig || !m_gebsConfig.ForageSettings)
+		if (!m_gebsConfig || !m_gebsConfig.DigBugsSettings)
 			return 1.0;
 
-		float chance = m_gebsConfig.ForageSettings.DigBugsFindChance;
+		float chance = m_gebsConfig.DigBugsSettings.FindChance;
 		if (chance < 0.0) chance = 0.0;
 		if (chance > 1.0) chance = 1.0;
 		return chance;
@@ -96,9 +96,11 @@ class ActionDigBugs : ActionContinuousBase {
 		float rndBug = 0.0;
 		string selectedBug = "";
 
-		if (!m_gebsConfig || !m_gebsConfig.Bugs || m_gebsConfig.Bugs.Count() == 0) {
+		if (!m_gebsConfig || !m_gebsConfig.DigBugsSettings)
 			return;
-		}
+		ref array<ref BugEntry> catches = m_gebsConfig.DigBugsSettings.Catches;
+		if (!catches || catches.Count() == 0)
+			return;
 
 		// Per-attempt find chance gate. Tool damage still applies on a miss
 		// so the action has a cost even when nothing is found.
@@ -112,7 +114,7 @@ class ActionDigBugs : ActionContinuousBase {
 		// Calculate the total spawn chance for valid bug entries only.
 		// Blank classnames and zero/negative chances are ignored so they cannot
 		// steal roll range from real bugs or try to spawn an empty classname.
-		foreach (BugEntry bug1 : m_gebsConfig.Bugs) {
+		foreach (BugEntry bug1 : catches) {
 			if (!bug1 || bug1.Classname == "" || bug1.CatchChance <= 0)
 				continue;
 
@@ -127,7 +129,7 @@ class ActionDigBugs : ActionContinuousBase {
 		rndBug = Math.RandomFloatInclusive(0.0, bugSum);
 
 		// Select a bug from the same filtered set used for the total above.
-		foreach (BugEntry bug : m_gebsConfig.Bugs) {
+		foreach (BugEntry bug : catches) {
 			if (!bug || bug.Classname == "" || bug.CatchChance <= 0)
 				continue;
 
@@ -138,11 +140,13 @@ class ActionDigBugs : ActionContinuousBase {
 			rndBug -= bug.CatchChance;
 		}
 
-		// Spawn the selected bug if one was found
+		// Spawn the selected bug if one was found. Quantity 1 -- one bug per
+		// successful dig. Previously SetQuantity(10) was hardcoded and got
+		// silently clamped to the item's max stack (5 for most bugs).
 		if (selectedBug != "") {
 			ItemBase bugs = ItemBase.Cast(g_Game.CreateObject(selectedBug, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
 			if (bugs) {
-				bugs.SetQuantity(10, false);
+				bugs.SetQuantity(1, false);
 			}
 		}
 
