@@ -48,10 +48,9 @@ class CraftBambooFishingNet extends RecipeBase {
 	}
 
 	override bool CanDo( ItemBase ingredients[], PlayerBase player ) {
-		return true;
-	}
+		if (m_gebsConfig && m_gebsConfig.RecipeToggles && !m_gebsConfig.RecipeToggles.CraftBambooFishingNet)
+			return false;
 
-	override void Do(ItemBase ingredients[], PlayerBase player,array<ItemBase> results, float specialty_weight) {
-		Debug.Log("Recipe Do method called","recipes");
+		return true;
 	}
 };

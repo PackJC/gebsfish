@@ -1,220 +1,52 @@
 modded class ActionFishingNew: ActionContinuousBase {
     override void OnEnd(ActionData action_data){
         super.OnEnd(action_data);
+
         FishingActionData fad;
-        if (Class.CastTo(fad, action_data)) {
-            // Animate the rod as a fallback
-            fad.AnimateRod(false, true);
-            PlayerBase player = fad.m_Player;
-            // Check if the fishing result is successful
-            if (fad.m_FishingResult == 1) {
-                TrySpawnPredator(fad);
-            }
-            else if (Math.RandomFloat(0, 1) <= m_gebsConfig.PredatorSettings.PredatorSpawnChanceFailCatch) {   
-                if(m_gebsConfig.GeneralSettings.DebugLogs) {
-					GebsfishLogger.Debug("" + m_gebsConfig.PredatorSettings.PredatorSpawnChanceFailCatch +"% random chance triggered. Spawning predator despite no catch.", "PredatorSpawnFishing");
-                }
-                TrySpawnPredator(fad);
+        if (!Class.CastTo(fad, action_data))
+            return;
+
+        // Animate the rod as a fallback.
+        fad.AnimateRod(false, true);
+
+        if (!fad.m_Player || !g_Game.IsServer())
+            return;
+
+        if (!m_gebsConfig || !m_gebsConfig.PredatorSettings)
+            return;
+
+        // Predator spawn chance is split by outcome:
+        //   - Catch succeeded -> PredatorSpawnChanceFishing
+        //   - Cast caught nothing -> PredatorSpawnChanceFailCatch
+        // GebsPredatorSpawner.TrySpawn handles the chance roll, predator
+        // selection, position search, multi-instance spawning, warning sound
+        // RPC, and chat broadcast. Caller just picks the right chance.
+        float chance;
+        if (fad.m_FishingResult == 1) {
+            chance = m_gebsConfig.PredatorSettings.PredatorSpawnChanceFishing;
+        } else {
+            chance = m_gebsConfig.PredatorSettings.PredatorSpawnChanceFailCatch;
+
+            if (m_gebsConfig.GeneralSettings && m_gebsConfig.GeneralSettings.DebugLogs) {
+                GebsfishLogger.Debug("Cast failed; rolling fail-catch predator chance (" + chance + ").", "PredatorSpawnFishing");
             }
         }
+
+        GebsPredatorSpawner.TrySpawn(fad.m_Player, chance, "PredatorSpawnFishing");
     }
 
     string GetDisplayNameFromTypeName(string typeName) {
-
         // Find the display name in the config
         string displayName = "";
         if (g_Game.ConfigIsExisting("CfgVehicles " + typeName)) {
             displayName = g_Game.ConfigGetTextOut("CfgVehicles " + typeName + " displayName");
         }
-        
+
         // Return display name or fallback to type name if not found
         if (displayName == "") {
-            return typeName; // Fallback to type name if no display name is found
+            return typeName;
         }
 
         return displayName;
     }
-
-    void TrySpawnPredator(FishingActionData action_data) {
-		if (!g_Game.IsServer() || !m_gebsConfig) return;
-
-		// Check if predator spawning is enabled
-		if (!m_gebsConfig.PredatorSettings.PredatorSpawnEnabled) {
-			if(m_gebsConfig.GeneralSettings.DebugLogs){
-				GebsfishLogger.Debug("Predator spawning disabled in config", "PredatorSpawnFishing");
-            }
-			return;
-		}
-
-		// Global spawn chance check
-		if (Math.RandomFloat(0, 1) > m_gebsConfig.PredatorSettings.PredatorSpawnChanceFishing) {
-			if(m_gebsConfig.GeneralSettings.DebugLogs) {
-				GebsfishLogger.Debug("Global predator spawn chance failed.", "PredatorSpawnFishing");
-            }
-			return;
-		}
-
-        PlayerBase player = action_data.m_Player;
-		vector playerPosition = player.GetPosition();
-		if(m_gebsConfig.GeneralSettings.DebugLogs) {
-			GebsfishLogger.Debug("Global predator spawn chance passed. Selecting predator to spawn from config.", "PredatorSpawnFishing");
-        }
-
-		PredatorEntry selectedPredator = GetRandomPredatorEntry();
-		if (selectedPredator) {
-			int count = Math.RandomInt(selectedPredator.MinCount, selectedPredator.MaxCount + 1);
-			if(m_gebsConfig.GeneralSettings.DebugLogs) {
-				GebsfishLogger.Debug("Spawning " + count + " " + selectedPredator.Classname + " around player.", "PredatorSpawnFishing");
-            }
-
-            bool soundPlayed = false; // Initialize sound flag
-			for (int i = 0; i < count; i++) {
-				vector spawnPos = GenerateSpawnPosition(playerPosition, selectedPredator.MinRadius, selectedPredator.MaxRadius);
-				SpawnPredator(selectedPredator.Classname, spawnPos, player, soundPlayed);
-			}
-
-            //Send message to the player
-			if(m_gebsConfig.PredatorSettings.PredatorWarningMessageEnable) {
-				string pred_message = Widget.TranslateString("#STR_action_predatorspawn");
-				//Send message to the player in green
-				if(m_gebsConfig.PredatorSettings.PredatorWarningMessageGreen) {
-					player.MessageFriendly(pred_message);
-				}
-				//Send message to the player in grey
-				if(m_gebsConfig.PredatorSettings.PredatorWarningMessageGrey) {
-					player.MessageStatus(pred_message);
-				}
-				//Send message to the player in red
-				if(m_gebsConfig.PredatorSettings.PredatorWarningMessageRed) {
-					player.MessageImportant(pred_message);
-				}
-				//Send message to the player in yellow
-				if(m_gebsConfig.PredatorSettings.PredatorWarningMessageYellow) {
-					player.MessageAction(pred_message);
-				}
-			}
-		}
-		else {
-			if(m_gebsConfig.GeneralSettings.DebugLogs) {
-				GebsfishLogger.Debug("No predator was selcted to spawn from the config.", "PredatorSpawnFishing");
-            }
-		}
-	}
-
-    PredatorEntry GetRandomPredatorEntry() {
-		float totalWeight = 0;
-		foreach (PredatorEntry predator1 : m_gebsConfig.Predators) {
-			totalWeight += predator1.SpawnChance;
-		}
-
-		if (totalWeight == 0) {
-			if(m_gebsConfig.GeneralSettings.DebugLogs) {
-				GebsfishLogger.Debug("No predators have a valid spawn chance in the config.", "PredatorSpawnFishing");
-            }
-			return null;
-		}
-
-		float randomValue = Math.RandomFloat(0, totalWeight);
-		float cumulativeWeight = 0;
-
-		foreach (PredatorEntry predator : m_gebsConfig.Predators) {
-			cumulativeWeight += predator.SpawnChance;
-			if (randomValue <= cumulativeWeight) {
-				return predator;
-			}
-		}
-
-		return null;
-	}
-
-    vector GenerateSpawnPosition(vector center, float minRadius, float maxRadius) {
-		vector spawnPos;
-		float angle;
-		float distance;
-		float xOffset;
-		float zOffset;
-
-		int attempts = 0;
-		const int maxAttempts = 20; // Prevent infinite loop
-
-		// First random spawn
-		angle = Math.RandomFloat(0, 360);
-		distance = Math.RandomFloat(minRadius, maxRadius);
-		xOffset = Math.Cos(angle) * distance;
-		zOffset = Math.Sin(angle) * distance;
-
-		spawnPos = Vector(center[0] + xOffset, center[1], center[2] + zOffset);
-
-		// Now keep regenerating if it's on water
-		while ((g_Game.SurfaceIsSea(spawnPos[0], spawnPos[2]) || g_Game.SurfaceIsPond(spawnPos[0], spawnPos[2])) && attempts < maxAttempts) {
-			if( ELEVATED_DEBUG == m_gebsConfig.GeneralSettings.DebugLogs ) {
-				GebsfishLogger.Debug("Surface selected for spawning predator was over water. Selecting new location for spawning predator.", "PredatorSpawnFishing");
-            }
-			angle = Math.RandomFloat(0, 360);
-			distance = Math.RandomFloat(minRadius, maxRadius);
-			xOffset = Math.Cos(angle) * distance;
-			zOffset = Math.Sin(angle) * distance;
-
-			spawnPos = Vector(center[0] + xOffset, center[1], center[2] + zOffset);
-
-			attempts++;
-		}
-
-		if(m_gebsConfig.GeneralSettings.DebugLogs) {
-			if (attempts >= maxAttempts) {
-				GebsfishLogger.Debug("Warning: Max attempts reached while trying to find a land spawn position.", "PredatorSpawnFishing");
-			}
-		}
-
-		return spawnPos;
-	}
-
-    void SpawnPredator(string classname, vector position, PlayerBase triggeringPlayer, out bool soundPlayed) {
-		Object predator = g_Game.CreateObject(classname, position, false, true);
-		if (predator) {
-
-			if(m_gebsConfig.GeneralSettings.DebugLogs) {
-				GebsfishLogger.Debug("Spawned " + classname + " at " + position.ToString(), "PredatorSpawnFishing");
-            }
-
-            #ifdef ExtraLogs
-				if(m_gebsConfig.CFToolsLogging.PredatorSpawn) {
-					string gebpredatorspawnmessage = "Predator " + classname + " spawned at " + position.ToString();
-					SendToCFTools(triggeringPlayer, "" , "" , gebpredatorspawnmessage);
-				}
-			#endif
-            
-			// Send RPC to all players within 50 meters
-			if (!soundPlayed && g_Game.IsServer()) {
-				array<Man> players = new array<Man>();
-				g_Game.GetPlayers(players);
-
-				foreach (Man player : players) {
-					PlayerBase nearbyPlayer = PlayerBase.Cast(player);
-					if (nearbyPlayer) {
-						float distance = vector.Distance(triggeringPlayer.GetPosition(), nearbyPlayer.GetPosition());
-						if (distance <= m_gebsConfig.PredatorSettings.PredatorWarningSoundRadius) {    // Distance from triggering player
-							Param1<string> rpcData = new Param1<string>("PredatorWarning_SoundSet");
-							GetRPCManager().SendRPC("gebsfish", "PlayPredatorSound", rpcData, true, nearbyPlayer.GetIdentity(), nearbyPlayer);
-							if(m_gebsConfig.GeneralSettings.DebugLogs) {
-								GebsfishLogger.Debug("Sent RPC to play sound for player within " + m_gebsConfig.PredatorSettings.PredatorWarningSoundRadius + " meters of " + triggeringPlayer.GetIdentity().GetName() + ": " + nearbyPlayer.GetIdentity().GetName(), "PredatorSpawnFishingRPC");
-							}
-							#ifdef ExtraLogs
-                                if(m_gebsConfig.CFToolsLogging.PredatorSounds) {
-									string gebpredatorsoundmessage = "Predator sound played for player within 50 meters of " + triggeringPlayer.GetIdentity().GetName();
-                                    SendToCFTools(nearbyPlayer , "" , "" , gebpredatorsoundmessage);
-                                }
-                            #endif
-						}
-					}
-				}
-				soundPlayed = true; // Mark the sound as played
-			}
-		}
-		else {
-			if(m_gebsConfig.GeneralSettings.DebugLogs) {
-				GebsfishLogger.Debug("Failed to spawn " + classname + ".", "PredatorSpawnFishing");
-            }
-		}
-	}
 }

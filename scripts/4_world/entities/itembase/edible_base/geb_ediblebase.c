@@ -45,7 +45,7 @@ class geb_GreatWhiteShark extends geb_EdibleBase {}
 class geb_HammerHeadShark extends geb_EdibleBase {}
 class geb_LeopardShark extends geb_EdibleBase {}
 class geb_MahiMahi extends geb_EdibleBase {}
-class geb_Sturgeon extends geb_EdibleBase {}
+class geb_LakeSturgeon extends geb_EdibleBase {}
 
 class geb_FatHeadMinnow extends Edible_Base {
     override void OnWasAttached(EntityAI parent, int slot_id) {

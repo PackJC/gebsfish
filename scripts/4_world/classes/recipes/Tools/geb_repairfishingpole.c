@@ -41,6 +41,9 @@ class RepairFishingPole : RecipeBase {
 	}
 
 	override bool CanDo(ItemBase ingredients[], PlayerBase player) {
+		if (m_gebsConfig && m_gebsConfig.RecipeToggles && !m_gebsConfig.RecipeToggles.RepairFishingPole)
+			return false;
+
 		PluginRepairing moduleRepairing = PluginRepairing.Cast(GetPlugin(PluginRepairing));
 		return moduleRepairing.CanRepair(ingredients[0], ingredients[1]);
 	}

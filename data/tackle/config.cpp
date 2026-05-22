@@ -278,7 +278,7 @@ class cfgVehicles {
 		descriptionShort = "$STR_tools_bugcontainer_desc";
 		model = "\gebsfish\data\tackle\bugcontainer.p3d"; 
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\bugcontainer.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\bugcontainer_co.paa"};
 		itemInfo[] = {"CatchBugs"};
 		rotationFlags = 12;
 		weight = 140;
@@ -435,7 +435,7 @@ class cfgVehicles {
 	class geb_OldGreenTackle: geb_OldTackleBase {
 		scope = 2;
 		displayName = "$STR_tools_oldgreentackle";
-		descriptionShort = "$STR_tools_tackle_desc"
+		descriptionShort = "$STR_tools_tackle_desc";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_green.paa"};
 	};
@@ -527,6 +527,7 @@ class cfgVehicles {
 		};
 	};
 	class geb_SpinnerBait1: geb_Lure {
+		scope = 2;
 		displayName = "$STR_tools_spinnerbait1";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
 		model = "\gebsfish\data\tackle\spinner.p3d";
@@ -535,6 +536,7 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinner1_co.paa"};
 	};
 	class geb_SpinnerBait2: geb_Lure {
+		scope = 2;
 		displayName = "$STR_tools_spinnerbait2";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
 		model = "\gebsfish\data\tackle\spinner.p3d";
@@ -543,6 +545,7 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinner2_co.paa"};
 	};
 	class geb_SpinnerBait3: geb_Lure {
+		scope = 2;
 		displayName = "$STR_tools_spinnerbait3";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
 		model = "\gebsfish\data\tackle\spinner.p3d";
@@ -551,6 +554,7 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinner3_co.paa"};
 	};
 	class geb_SpinnerBait4: geb_Lure {
+		scope = 2;
 		displayName = "$STR_tools_spinnerbait4";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
 		model = "\gebsfish\data\tackle\spinner.p3d";
@@ -630,6 +634,7 @@ class cfgVehicles {
 		descriptionShort = "$STR_tools_lure4_desc";
 		model = "\gebsfish\data\tackle\squarebill.p3d";
 		inventorySlot[] = {"Hook"};
+		hookType = "geb_Lure4";
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {

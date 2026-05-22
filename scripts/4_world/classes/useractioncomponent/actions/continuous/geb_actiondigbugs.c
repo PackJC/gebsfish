@@ -32,6 +32,20 @@ class ActionDigBugs : ActionContinuousBase {
 		m_ConditionTarget = new CCTSurface(UAMaxDistances.DEFAULT);
 	}
 
+	bool IsValidBugDigSurface(ActionTarget target) {
+		if (!target)
+			return false;
+
+		string surface_type;
+		vector position = target.GetCursorHitPos();
+		g_Game.SurfaceGetType(position[0], position[2], surface_type);
+
+		// Keep the client prompt and the server completion rule identical.
+		// This prevents the server from accepting bug digging on non-fertile
+		// terrain just because the client was allowed to start the action.
+		return g_Game.IsSurfaceFertile(surface_type);
+	}
+
 	override bool ActionCondition(PlayerBase player, ActionTarget target, ItemBase item) {
 		if (player.IsPlacingLocal())
 			return false;
@@ -43,23 +57,7 @@ class ActionDigBugs : ActionContinuousBase {
 		if (height > 0.4)
 			return false;
 
-		if (!g_Game.IsDedicatedServer()) {
-			if (!player.IsPlacingLocal()) {
-				if (target) {
-					string surface_type;
-					vector position;
-					position = target.GetCursorHitPos();
-					g_Game.SurfaceGetType(position[0], position[2], surface_type);
-					if (g_Game.IsSurfaceFertile(surface_type)) {
-						return true;
-					}
-				}
-			}
-			return false;
-		}
-		else {
-			return true;
-		}
+		return IsValidBugDigSurface(target);
 	}
 
 	override bool ActionConditionContinue(ActionData action_data) {
@@ -80,33 +78,75 @@ class ActionDigBugs : ActionContinuousBase {
 		return true;
 	}
 
+	// Returns the find chance from the consolidated DigBugsSettings section,
+	// clamped to [0, 1]. Defaults to 1.0 (always finds) when the config is
+	// unavailable so missing config never blocks the action.
+	float GetDigBugsFindChance() {
+		if (!m_gebsConfig || !m_gebsConfig.DigBugsSettings)
+			return 1.0;
+
+		float chance = m_gebsConfig.DigBugsSettings.FindChance;
+		if (chance < 0.0) chance = 0.0;
+		if (chance > 1.0) chance = 1.0;
+		return chance;
+	}
+
 	override void OnFinishProgressServer(ActionData action_data) {
 		float bugSum = 0.0;
 		float rndBug = 0.0;
 		string selectedBug = "";
 
-		// Calculate the total spawn chance for all bugs
-		foreach (BugEntry bug1 : m_gebsConfig.Bugs) {
+		if (!m_gebsConfig || !m_gebsConfig.DigBugsSettings)
+			return;
+		ref array<ref BugEntry> catches = m_gebsConfig.DigBugsSettings.Catches;
+		if (!catches || catches.Count() == 0)
+			return;
+
+		// Per-attempt find chance gate. Tool damage still applies on a miss
+		// so the action has a cost even when nothing is found.
+		float findChance = GetDigBugsFindChance();
+		if (findChance < 1.0 && Math.RandomFloat01() > findChance) {
+			MiscGameplayFunctions.DealAbsoluteDmg(action_data.m_MainItem, 4);
+			action_data.m_Player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
+			return;
+		}
+
+		// Calculate the total spawn chance for valid bug entries only.
+		// Blank classnames and zero/negative chances are ignored so they cannot
+		// steal roll range from real bugs or try to spawn an empty classname.
+		foreach (BugEntry bug1 : catches) {
+			if (!bug1 || bug1.Classname == "" || bug1.CatchChance <= 0)
+				continue;
+
 			bugSum += bug1.CatchChance;
+		}
+
+		if (bugSum <= 0) {
+			return;
 		}
 
 		// Generate a random value within the total spawn chance
 		rndBug = Math.RandomFloatInclusive(0.0, bugSum);
 
-		// Select a bug based on the random value
-		foreach (BugEntry bug : m_gebsConfig.Bugs) {
-			if (rndBug <= bug.CatchChance && bug.CatchChance > 0) {
+		// Select a bug from the same filtered set used for the total above.
+		foreach (BugEntry bug : catches) {
+			if (!bug || bug.Classname == "" || bug.CatchChance <= 0)
+				continue;
+
+			if (rndBug <= bug.CatchChance) {
 				selectedBug = bug.Classname;
 				break;
 			}
 			rndBug -= bug.CatchChance;
 		}
 
-		// Spawn the selected bug if one was found
+		// Spawn the selected bug if one was found. Quantity 1 -- one bug per
+		// successful dig. Previously SetQuantity(10) was hardcoded and got
+		// silently clamped to the item's max stack (5 for most bugs).
 		if (selectedBug != "") {
 			ItemBase bugs = ItemBase.Cast(g_Game.CreateObject(selectedBug, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
 			if (bugs) {
-				bugs.SetQuantity(10, false);
+				bugs.SetQuantity(1, false);
 			}
 		}
 

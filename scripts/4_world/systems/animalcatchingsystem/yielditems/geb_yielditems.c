@@ -9,229 +9,320 @@
 */
 
 class GebYieldFishBase extends FishYieldItemBase {
-	void SetupYield(string typeName, int envMask, int methodMask) {
+	// Per-species weather multipliers cached at registration time, mirroring
+	// how m_QualityBase / m_EnviroMask / m_MethodMask are already cached.
+	// Default 1.0 = no effect, used as fallback for yields that don't pass
+	// multipliers to SetupYield.
+	protected float m_RainMultiplier = 1.0;
+	protected float m_StormMultiplier = 1.0;
+	protected float m_DawnMultiplier = 1.0;
+	protected float m_DayMultiplier = 1.0;
+	protected float m_DuskMultiplier = 1.0;
+	protected float m_NightMultiplier = 1.0;
+	// CatchProbability cached so the catching context can weight bite-speed
+	// aggregation by per-fish abundance without hitting the config map again.
+	protected int m_CatchProbability = 0;
+	// 24-hour bite-speed array, 0=12AM ... 23=11PM, range 0.0-1.0. 1.0 means
+	// vanilla baseline. Null until SetupYield seeds it; GetBiteSpeedForHour
+	// falls back to 1.0 when the array is missing or malformed.
+	protected ref TFloatArray m_BiteSpeed;
+
+	void SetupYield(string typeName, int envMask, int methodMask, float rainMul = 1.0, float stormMul = 1.0, float nightMul = 1.0, float dawnMul = 1.0, float dayMul = 1.0, float duskMul = 1.0, int catchProb = 0, TFloatArray biteSpeed = null) {
 		super.Init();
 		m_QualityBase = m_gebsConfig.GeneralSettings.FishQuality;
 		m_Type = typeName;
 		m_EnviroMask = envMask;
 		m_MethodMask = methodMask;
+		m_RainMultiplier = rainMul;
+		m_StormMultiplier = stormMul;
+		m_NightMultiplier = nightMul;
+		m_DawnMultiplier = dawnMul;
+		m_DayMultiplier = dayMul;
+		m_DuskMultiplier = duskMul;
+		m_CatchProbability = catchProb;
+		m_BiteSpeed = biteSpeed;
+	}
+
+	// Exposes the fish classname (m_Type) so the catching context can read it
+	// without depending on m_Type's access modifier on the vanilla parent.
+	string GetSpeciesClassname() {
+		return m_Type;
+	}
+
+	// Per-species weather multipliers. Catching context applies these on top of
+	// the global rain/storm/dawn/day/dusk/night multipliers when biasing yield selection.
+	float GetRainMultiplier()  { return m_RainMultiplier; }
+	float GetStormMultiplier() { return m_StormMultiplier; }
+	float GetDawnMultiplier()  { return m_DawnMultiplier; }
+	float GetDayMultiplier()   { return m_DayMultiplier; }
+	float GetDuskMultiplier()  { return m_DuskMultiplier; }
+	float GetNightMultiplier() { return m_NightMultiplier; }
+
+	int GetCatchProbability() { return m_CatchProbability; }
+
+	// Returns the bite-speed multiplier for the given hour (0-23). Falls back to
+	// 1.0 (vanilla baseline) when the array is null, the wrong size, or the
+	// hour is out of range -- so a missing / malformed JSON entry never freezes
+	// the catch cycle.
+	float GetBiteSpeedForHour(int hour) {
+		if (!m_BiteSpeed || m_BiteSpeed.Count() != 24)
+			return 1.0;
+		if (hour < 0 || hour > 23)
+			return 1.0;
+		return m_BiteSpeed[hour];
 	}
 };
 
 // ===== FRESHWATER FISH =====
 class geb_YieldCarp : GebYieldFishBase {
 	override void Init() {
-		SetupYield("Carp", m_gebsConfig.Carp.Environment, m_gebsConfig.Carp.CatchMethod);
+		CarpConf c = m_gebsConfig.Carp;
+		SetupYield("Carp", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldBitterlings : GebYieldFishBase {
 	override void Init() {
-		SetupYield("Bitterlings", m_gebsConfig.Bitterlings.Environment, m_gebsConfig.Bitterlings.CatchMethod);
+		BitterlingsConf c = m_gebsConfig.Bitterlings;
+		SetupYield("Bitterlings", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldSteelheadTrout : GebYieldFishBase {
 	override void Init() {
-		SetupYield("SteelheadTrout", m_gebsConfig.SteelheadTrout.Environment, m_gebsConfig.SteelheadTrout.CatchMethod);
+		SteelheadTroutConf c = m_gebsConfig.SteelheadTrout;
+		SetupYield("SteelheadTrout", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldCherrySalmon : GebYieldFishBase {
 	override void Init() {
-		SetupYield("geb_CherrySalmon", m_gebsConfig.CherrySalmon.Environment, m_gebsConfig.CherrySalmon.CatchMethod);
+		CherrySalmonConf c = m_gebsConfig.CherrySalmon;
+		SetupYield("geb_CherrySalmon", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldChinookSalmon : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_ChinookSalmon", m_gebsConfig.ChinookSalmon.Environment, m_gebsConfig.ChinookSalmon.CatchMethod);
+		ChinookSalmonConf c = m_gebsConfig.ChinookSalmon;
+		SetupYield("geb_ChinookSalmon", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldSockEyeSalmon : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_SockEyeSalmon", m_gebsConfig.SockEyeSalmon.Environment, m_gebsConfig.SockEyeSalmon.CatchMethod);
+		SockEyeSalmonConf c = m_gebsConfig.SockEyeSalmon;
+		SetupYield("geb_SockEyeSalmon", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldLakeSturgeon : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_LakeSturgeon", m_gebsConfig.LakeSturgeon.Environment, m_gebsConfig.LakeSturgeon.CatchMethod);
+		LakeSturgeonConf c = m_gebsConfig.LakeSturgeon;
+		SetupYield("geb_LakeSturgeon", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldNorthernSnakeHead : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_NorthernSnakeHead", m_gebsConfig.NorthernSnakeHead.Environment, m_gebsConfig.NorthernSnakeHead.CatchMethod);
+		NorthernSnakeHeadConf c = m_gebsConfig.NorthernSnakeHead;
+		SetupYield("geb_NorthernSnakeHead", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldNorthernPike : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_NorthernPike", m_gebsConfig.NorthernPike.Environment, m_gebsConfig.NorthernPike.CatchMethod);
+		NorthernPikeConf c = m_gebsConfig.NorthernPike;
+		SetupYield("geb_NorthernPike", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldMuskellunge : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_Muskellunge", m_gebsConfig.Muskellunge.Environment, m_gebsConfig.Muskellunge.CatchMethod);
+		MuskellungeConf c = m_gebsConfig.Muskellunge;
+		SetupYield("geb_Muskellunge", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldTigerMuskellunge : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_TigerMuskellunge", m_gebsConfig.TigerMuskellunge.Environment, m_gebsConfig.TigerMuskellunge.CatchMethod);
+		TigerMuskellungeConf c = m_gebsConfig.TigerMuskellunge;
+		SetupYield("geb_TigerMuskellunge", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldSpottedMuskellunge : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_SpottedMuskellunge", m_gebsConfig.SpottedMuskellunge.Environment, m_gebsConfig.SpottedMuskellunge.CatchMethod);
+		SpottedMuskellungeConf c = m_gebsConfig.SpottedMuskellunge;
+		SetupYield("geb_SpottedMuskellunge", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldBarredMuskellunge : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_BarredMuskellunge", m_gebsConfig.BarredMuskellunge.Environment, m_gebsConfig.BarredMuskellunge.CatchMethod);
+		BarredMuskellungeConf c = m_gebsConfig.BarredMuskellunge;
+		SetupYield("geb_BarredMuskellunge", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldAlligatorGar : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_AlligatorGar", m_gebsConfig.AlligatorGar.Environment, m_gebsConfig.AlligatorGar.CatchMethod);
+		AlligatorGarConf c = m_gebsConfig.AlligatorGar;
+		SetupYield("geb_AlligatorGar", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldLargeMouthBass : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_LargeMouthBass", m_gebsConfig.LargeMouthBass.Environment, m_gebsConfig.LargeMouthBass.CatchMethod);
+		LargeMouthBassConf c = m_gebsConfig.LargeMouthBass;
+		SetupYield("geb_LargeMouthBass", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldSmallMouthBass : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_SmallMouthBass", m_gebsConfig.SmallMouthBass.Environment, m_gebsConfig.SmallMouthBass.CatchMethod);
+		SmallMouthBassConf c = m_gebsConfig.SmallMouthBass;
+		SetupYield("geb_SmallMouthBass", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldWallEye : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_WallEye", m_gebsConfig.WallEye.Environment, m_gebsConfig.WallEye.CatchMethod);
+		WallEyeConf c = m_gebsConfig.WallEye;
+		SetupYield("geb_WallEye", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldSunFish : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_SunFish", m_gebsConfig.SunFish.Environment, m_gebsConfig.SunFish.CatchMethod);
+		SunFishConf c = m_gebsConfig.SunFish;
+		SetupYield("geb_SunFish", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldWhiteBass : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_WhiteBass", m_gebsConfig.WhiteBass.Environment, m_gebsConfig.WhiteBass.CatchMethod);
+		WhiteBassConf c = m_gebsConfig.WhiteBass;
+		SetupYield("geb_WhiteBass", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldBlackBass : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_BlackBass", m_gebsConfig.BlackBass.Environment, m_gebsConfig.BlackBass.CatchMethod);
+		BlackBassConf c = m_gebsConfig.BlackBass;
+		SetupYield("geb_BlackBass", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldNeoshoBass : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_NeoshoBass", m_gebsConfig.NeoshoBass.Environment, m_gebsConfig.NeoshoBass.CatchMethod);
+		NeoshoBassConf c = m_gebsConfig.NeoshoBass;
+		SetupYield("geb_NeoshoBass", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldStripedBass : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_StripedBass", m_gebsConfig.StripedBass.Environment, m_gebsConfig.StripedBass.CatchMethod);
+		StripedBassConf c = m_gebsConfig.StripedBass;
+		SetupYield("geb_StripedBass", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldRainbowTrout : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_RainbowTrout", m_gebsConfig.RainbowTrout.Environment, m_gebsConfig.RainbowTrout.CatchMethod);
+		RainbowTroutConf c = m_gebsConfig.RainbowTrout;
+		SetupYield("geb_RainbowTrout", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldBrownTrout : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_BrownTrout", m_gebsConfig.BrownTrout.Environment, m_gebsConfig.BrownTrout.CatchMethod);
+		BrownTroutConf c = m_gebsConfig.BrownTrout;
+		SetupYield("geb_BrownTrout", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldBrookTrout : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_BrookTrout", m_gebsConfig.BrookTrout.Environment, m_gebsConfig.BrookTrout.CatchMethod);
+		BrookTroutConf c = m_gebsConfig.BrookTrout;
+		SetupYield("geb_BrookTrout", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldLakeTrout : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_LakeTrout", m_gebsConfig.LakeTrout.Environment, m_gebsConfig.LakeTrout.CatchMethod);
+		LakeTroutConf c = m_gebsConfig.LakeTrout;
+		SetupYield("geb_LakeTrout", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldCutThroatTrout : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_CutThroatTrout", m_gebsConfig.CutThroatTrout.Environment, m_gebsConfig.CutThroatTrout.CatchMethod);
+		CutThroatTroutConf c = m_gebsConfig.CutThroatTrout;
+		SetupYield("geb_CutThroatTrout", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldYellowPerch : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_YellowPerch", m_gebsConfig.YellowPerch.Environment, m_gebsConfig.YellowPerch.CatchMethod);
+		YellowPerchConf c = m_gebsConfig.YellowPerch;
+		SetupYield("geb_YellowPerch", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldFlatHeadCatFish : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_FlatHeadCatFish", m_gebsConfig.FlatHeadCatFish.Environment, m_gebsConfig.FlatHeadCatFish.CatchMethod);
+		FlatHeadCatFishConf c = m_gebsConfig.FlatHeadCatFish;
+		SetupYield("geb_FlatHeadCatFish", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldFatHeadMinnow : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_FatHeadMinnow", m_gebsConfig.FatHeadMinnow.Environment, m_gebsConfig.FatHeadMinnow.CatchMethod);
+		FatHeadMinnowConf c = m_gebsConfig.FatHeadMinnow;
+		SetupYield("geb_FatHeadMinnow", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldAmericanBullFrog : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_AmericanBullFrog", m_gebsConfig.AmericanBullFrog.Environment, m_gebsConfig.AmericanBullFrog.CatchMethod);
+		AmericanBullFrogConf c = m_gebsConfig.AmericanBullFrog;
+		SetupYield("geb_AmericanBullFrog", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldRedSalamander : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_RedSalamander", m_gebsConfig.RedSalamander.Environment, m_gebsConfig.RedSalamander.CatchMethod);
+		RedSalamanderConf c = m_gebsConfig.RedSalamander;
+		SetupYield("geb_RedSalamander", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldBlueGill : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_BlueGill", m_gebsConfig.BlueGill.Environment, m_gebsConfig.BlueGill.CatchMethod);
+		BlueGillConf c = m_gebsConfig.BlueGill;
+		SetupYield("geb_BlueGill", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldSauger : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_Sauger", m_gebsConfig.Sauger.Environment, m_gebsConfig.Sauger.CatchMethod);
+		SaugerConf c = m_gebsConfig.Sauger;
+		SetupYield("geb_Sauger", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldBowFin : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_BowFin", m_gebsConfig.BowFin.Environment, m_gebsConfig.BowFin.CatchMethod);
+		BowFinConf c = m_gebsConfig.BowFin;
+		SetupYield("geb_BowFin", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldSlimySculpin : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_SlimySculpin", m_gebsConfig.SlimySculpin.Environment, m_gebsConfig.SlimySculpin.CatchMethod);
+		SlimySculpinConf c = m_gebsConfig.SlimySculpin;
+		SetupYield("geb_SlimySculpin", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
@@ -239,38 +330,45 @@ class geb_YieldSlimySculpin : GebYieldFishBase {
 // ===== FRESHWATER CRUSTACEAN =====
 class geb_YieldSignalCrayFish : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_SignalCrayFish", m_gebsConfig.SignalCrayFish.Environment, m_gebsConfig.SignalCrayFish.CatchMethod);
+		SignalCrayFishConf c = m_gebsConfig.SignalCrayFish;
+		SetupYield("geb_SignalCrayFish", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldEuropeanCrayFish : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_EuropeanCrayFish", m_gebsConfig.EuropeanCrayFish.Environment, m_gebsConfig.EuropeanCrayFish.CatchMethod);
+		EuropeanCrayFishConf c = m_gebsConfig.EuropeanCrayFish;
+		SetupYield("geb_EuropeanCrayFish", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 class geb_YieldFloridaCrayFish : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_FloridaCrayFish", m_gebsConfig.FloridaCrayFish.Environment, m_gebsConfig.FloridaCrayFish.CatchMethod);
+		FloridaCrayFishConf c = m_gebsConfig.FloridaCrayFish;
+		SetupYield("geb_FloridaCrayFish", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 class geb_YieldCaveCrayFish : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_CaveCrayFish", m_gebsConfig.CaveCrayFish.Environment, m_gebsConfig.CaveCrayFish.CatchMethod);
+		CaveCrayFishConf c = m_gebsConfig.CaveCrayFish;
+		SetupYield("geb_CaveCrayFish", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 class geb_YieldMonongahelaCrayFish : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_MonongahelaCrayFish", m_gebsConfig.MonongahelaCrayFish.Environment, m_gebsConfig.MonongahelaCrayFish.CatchMethod);
+		MonongahelaCrayFishConf c = m_gebsConfig.MonongahelaCrayFish;
+		SetupYield("geb_MonongahelaCrayFish", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 class geb_YieldRustyCrayFish : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_RustyCrayFish", m_gebsConfig.RustyCrayFish.Environment, m_gebsConfig.RustyCrayFish.CatchMethod);
+		RustyCrayFishConf c = m_gebsConfig.RustyCrayFish;
+		SetupYield("geb_RustyCrayFish", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 class geb_YieldRedSwampCrayFish : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_RedSwampCrayFish", m_gebsConfig.RedSwampCrayFish.Environment, m_gebsConfig.RedSwampCrayFish.CatchMethod);
+		RedSwampCrayFishConf c = m_gebsConfig.RedSwampCrayFish;
+		SetupYield("geb_RedSwampCrayFish", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
@@ -278,217 +376,253 @@ class geb_YieldRedSwampCrayFish : GebYieldFishBase {
 // ===== SALTWATER FISH =====
 class geb_YieldMackerel : GebYieldFishBase {
     override void Init() {
-		SetupYield("Mackerel", m_gebsConfig.Mackerel.Environment, m_gebsConfig.Mackerel.CatchMethod);
+		MackerelConf c = m_gebsConfig.Mackerel;
+		SetupYield("Mackerel", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldSardines : GebYieldFishBase {
     override void Init() {
-		SetupYield("Sardines", m_gebsConfig.Sardines.Environment, m_gebsConfig.Sardines.CatchMethod);
+		SardinesConf c = m_gebsConfig.Sardines;
+		SetupYield("Sardines", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldWalleyePollock : GebYieldFishBase {
     override void Init() {
-		SetupYield("WalleyePollock", m_gebsConfig.WalleyePollock.Environment, m_gebsConfig.WalleyePollock.CatchMethod);
+		WalleyePollockConf c = m_gebsConfig.WalleyePollock;
+		SetupYield("WalleyePollock", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldMahiMahi : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_MahiMahi", m_gebsConfig.MahiMahi.Environment, m_gebsConfig.MahiMahi.CatchMethod);
+		MahiMahiConf c = m_gebsConfig.MahiMahi;
+		SetupYield("geb_MahiMahi", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldAtlanticSailFish : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_AtlanticSailFish", m_gebsConfig.AtlanticSailFish.Environment, m_gebsConfig.AtlanticSailFish.CatchMethod);
+		AtlanticSailFishConf c = m_gebsConfig.AtlanticSailFish;
+		SetupYield("geb_AtlanticSailFish", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldAngelFish : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_AngelFish", m_gebsConfig.AngelFish.Environment, m_gebsConfig.AngelFish.CatchMethod);
+		AngelFishConf c = m_gebsConfig.AngelFish;
+		SetupYield("geb_AngelFish", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldAsianSeaBass : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_AsianSeaBass", m_gebsConfig.AsianSeaBass.Environment, m_gebsConfig.AsianSeaBass.CatchMethod);
+		AsianSeaBassConf c = m_gebsConfig.AsianSeaBass;
+		SetupYield("geb_AsianSeaBass", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldAtlanticBlueMarlin : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_AtlanticBlueMarlin", m_gebsConfig.AtlanticBlueMarlin.Environment, m_gebsConfig.AtlanticBlueMarlin.CatchMethod);
+		AtlanticBlueMarlinConf c = m_gebsConfig.AtlanticBlueMarlin;
+		SetupYield("geb_AtlanticBlueMarlin", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldBonita : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_Bonita", m_gebsConfig.Bonita.Environment, m_gebsConfig.Bonita.CatchMethod);
+		BonitaConf c = m_gebsConfig.Bonita;
+		SetupYield("geb_Bonita", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldFlatHeadMullet : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_FlatHeadMullet", m_gebsConfig.FlatHeadMullet.Environment, m_gebsConfig.FlatHeadMullet.CatchMethod);
+		FlatHeadMulletConf c = m_gebsConfig.FlatHeadMullet;
+		SetupYield("geb_FlatHeadMullet", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldRedHeadCichlid : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_RedHeadCichlid", m_gebsConfig.RedHeadCichlid.Environment, m_gebsConfig.RedHeadCichlid.CatchMethod);
+		RedHeadCichlidConf c = m_gebsConfig.RedHeadCichlid;
+		SetupYield("geb_RedHeadCichlid", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldRoughNeckRock : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_RoughNeckRock", m_gebsConfig.RoughNeckRock.Environment, m_gebsConfig.RoughNeckRock.CatchMethod);
+		RoughNeckRockConf c = m_gebsConfig.RoughNeckRock;
+		SetupYield("geb_RoughNeckRock", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldBlueTang : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_BlueTang", m_gebsConfig.BlueTang.Environment, m_gebsConfig.BlueTang.CatchMethod);
+		BlueTangConf c = m_gebsConfig.BlueTang;
+		SetupYield("geb_BlueTang", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldLargeHeadHairTailFish : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_LargeHeadHairTailFish", m_gebsConfig.LargeHeadHairTailFish.Environment, m_gebsConfig.LargeHeadHairTailFish.CatchMethod);
+		LargeHeadHairTailFishConf c = m_gebsConfig.LargeHeadHairTailFish;
+		SetupYield("geb_LargeHeadHairTailFish", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldHumpHeadWrasse : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_HumpHeadWrasse", m_gebsConfig.HumpHeadWrasse.Environment, m_gebsConfig.HumpHeadWrasse.CatchMethod);
+		HumpHeadWrasseConf c = m_gebsConfig.HumpHeadWrasse;
+		SetupYield("geb_HumpHeadWrasse", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldSiameseTigerFish : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_SiameseTigerFish", m_gebsConfig.SiameseTigerFish.Environment, m_gebsConfig.SiameseTigerFish.CatchMethod);
+		SiameseTigerFishConf c = m_gebsConfig.SiameseTigerFish;
+		SetupYield("geb_SiameseTigerFish", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldLeopardShark : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_LeopardShark", m_gebsConfig.LeopardShark.Environment, m_gebsConfig.LeopardShark.CatchMethod);
+		LeopardSharkConf c = m_gebsConfig.LeopardShark;
+		SetupYield("geb_LeopardShark", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldHammerHeadShark : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_HammerHeadShark", m_gebsConfig.HammerHeadShark.Environment, m_gebsConfig.HammerHeadShark.CatchMethod);
+		HammerHeadSharkConf c = m_gebsConfig.HammerHeadShark;
+		SetupYield("geb_HammerHeadShark", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldPacificCod : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_PacificCod", m_gebsConfig.PacificCod.Environment, m_gebsConfig.PacificCod.CatchMethod);
+		PacificCodConf c = m_gebsConfig.PacificCod;
+		SetupYield("geb_PacificCod", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldGreatWhiteShark : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_GreatWhiteShark", m_gebsConfig.GreatWhiteShark.Environment, m_gebsConfig.GreatWhiteShark.CatchMethod);
+		GreatWhiteSharkConf c = m_gebsConfig.GreatWhiteShark;
+		SetupYield("geb_GreatWhiteShark", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldAngelShark : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_AngelShark", m_gebsConfig.AngelShark.Environment, m_gebsConfig.AngelShark.CatchMethod);
+		AngelSharkConf c = m_gebsConfig.AngelShark;
+		SetupYield("geb_AngelShark", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldYellowFinTuna : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_YellowFinTuna", m_gebsConfig.YellowFinTuna.Environment, m_gebsConfig.YellowFinTuna.CatchMethod);
+		YellowFinTunaConf c = m_gebsConfig.YellowFinTuna;
+		SetupYield("geb_YellowFinTuna", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldYellowSnapper : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_YellowSnapper", m_gebsConfig.YellowSnapper.Environment, m_gebsConfig.YellowSnapper.CatchMethod);
+		YellowSnapperConf c = m_gebsConfig.YellowSnapper;
+		SetupYield("geb_YellowSnapper", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldWhiteGrunt : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_WhiteGrunt", m_gebsConfig.WhiteGrunt.Environment, m_gebsConfig.WhiteGrunt.CatchMethod);
+		WhiteGruntConf c = m_gebsConfig.WhiteGrunt;
+		SetupYield("geb_WhiteGrunt", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldSouthernFlounder : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_SouthernFlounder", m_gebsConfig.SouthernFlounder.Environment, m_gebsConfig.SouthernFlounder.CatchMethod);
+		SouthernFlounderConf c = m_gebsConfig.SouthernFlounder;
+		SetupYield("geb_SouthernFlounder", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldSeverum : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_Severum", m_gebsConfig.Severum.Environment, m_gebsConfig.Severum.CatchMethod);
+		SeverumConf c = m_gebsConfig.Severum;
+		SetupYield("geb_Severum", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 // ===== SALTWATER CRUSTACEAN / MARINE INVERTEBRATES =====
 class geb_YieldShrimp : GebYieldFishBase {
     override void Init() {
-		SetupYield("Shrimp", m_gebsConfig.Shrimp.Environment, m_gebsConfig.Shrimp.CatchMethod);
+		ShrimpConf c = m_gebsConfig.Shrimp;
+		SetupYield("Shrimp", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldBloodClam : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_BloodClam", m_gebsConfig.BloodClam.Environment, m_gebsConfig.BloodClam.CatchMethod);
+		BloodClamConf c = m_gebsConfig.BloodClam;
+		SetupYield("geb_BloodClam", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldMussel : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_Mussel", m_gebsConfig.Mussel.Environment, m_gebsConfig.Mussel.CatchMethod);
+		MusselConf c = m_gebsConfig.Mussel;
+		SetupYield("geb_Mussel", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldBlackDevilSnail : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_BlackDevilSnail", m_gebsConfig.BlackDevilSnail.Environment, m_gebsConfig.BlackDevilSnail.CatchMethod);
+		BlackDevilSnailConf c = m_gebsConfig.BlackDevilSnail;
+		SetupYield("geb_BlackDevilSnail", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldStarFish : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_StarFish", m_gebsConfig.StarFish.Environment, m_gebsConfig.StarFish.CatchMethod);
+		StarFishConf c = m_gebsConfig.StarFish;
+		SetupYield("geb_StarFish", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldKingCrab : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_KingCrab", m_gebsConfig.KingCrab.Environment, m_gebsConfig.KingCrab.CatchMethod);
+		KingCrabConf c = m_gebsConfig.KingCrab;
+		SetupYield("geb_KingCrab", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldSnowCrab : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_SnowCrab", m_gebsConfig.SnowCrab.Environment, m_gebsConfig.SnowCrab.CatchMethod);
+		SnowCrabConf c = m_gebsConfig.SnowCrab;
+		SetupYield("geb_SnowCrab", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldBlueJellyFish : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_BlueJellyFish", m_gebsConfig.BlueJellyFish.Environment, m_gebsConfig.BlueJellyFish.CatchMethod);
+		BlueJellyFishConf c = m_gebsConfig.BlueJellyFish;
+		SetupYield("geb_BlueJellyFish", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldAmericanLobster : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_AmericanLobster", m_gebsConfig.AmericanLobster.Environment, m_gebsConfig.AmericanLobster.CatchMethod);
+		AmericanLobsterConf c = m_gebsConfig.AmericanLobster;
+		SetupYield("geb_AmericanLobster", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }
 
 class geb_YieldEuropeanLobster : GebYieldFishBase {
     override void Init() {
-		SetupYield("geb_EuropeanLobster", m_gebsConfig.EuropeanLobster.Environment, m_gebsConfig.EuropeanLobster.CatchMethod);
+		EuropeanLobsterConf c = m_gebsConfig.EuropeanLobster;
+		SetupYield("geb_EuropeanLobster", c.Environment, c.CatchMethod, c.RainMultiplier, c.StormMultiplier, c.NightMultiplier, c.DawnMultiplier, c.DayMultiplier, c.DuskMultiplier, c.CatchProbability, c.BiteSpeed);
 	}
 }

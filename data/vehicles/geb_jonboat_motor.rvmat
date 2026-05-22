@@ -10,7 +10,7 @@ PixelShaderID = "Super";
 VertexShaderID = "Super";
 class Stage1
 {
-    texture="gebsfish\data\vehicles\boatmotor_black_normals.paa";
+    texture="gebsfish\data\vehicles\geb_jonboat_motor_black_normals.paa";
     uvSource = "tex";
     class uvTransform
     {

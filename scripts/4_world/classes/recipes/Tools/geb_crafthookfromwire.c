@@ -48,7 +48,7 @@ class CraftHookFromWire extends RecipeBase {
 		m_ResultSetQuantity[0] = 1;//-1 = do nothing
 		m_ResultSetHealth[0] = -1;//-1 = do nothing
 		m_ResultInheritsHealth[0] = 0;// (value) == -1 means do nothing; a (value) >= 0 means this result will inherit health from ingredient number (value);(value) == -2 means this result will inherit health from all ingredients averaged(result_health = combined_health_of_ingredients / number_of_ingredients)
-		m_ResultInheritsColor[0] = 0;// (value) == -1 means do nothing; a (value) >= 0 means this result classname will be a composite of the name provided in AddResult method and config value "color" of ingredient (value)
+		m_ResultInheritsColor[0] = -1;// (value) == -1 means do nothing; a (value) >= 0 means this result classname will be a composite of the name provided in AddResult method and config value "color" of ingredient (value)
 		m_ResultToInventory[0] = -2;//(value) == -2 spawn result on the ground;(value) == -1 place anywhere in the players inventory, (value) >= 0 means switch position with ingredient number(value)
 		m_ResultUseSoftSkills[0] = false;// set 'true' to allow modification of the values by softskills on this result
 		m_ResultReplacesIngredient[0] = -1;// value == -1 means do nothing; a value >= 0 means this result will transfer item propertiesvariables, attachments etc.. from an ingredient value
@@ -56,17 +56,10 @@ class CraftHookFromWire extends RecipeBase {
 		//----------------------------------------------------------------------------------------------------------------------
 	}
 	
-	override void Do(ItemBase ingredients[], PlayerBase player,array<ItemBase> results, float specialty_weight) {
-		// We will save the wire type for decrafting
-		MetalWire wire = MetalWire.Cast( results[0] );
-		if ( wire ) {
-			int health = wire.GetHealthLevel();
-			health++;
-			wire.SetHealth01("","", 1 - 0.3*health);
-		}
-	}
-	
 	override bool CanDo(ItemBase ingredients[], PlayerBase player) {
+		if (m_gebsConfig && m_gebsConfig.RecipeToggles && !m_gebsConfig.RecipeToggles.CraftHookFromWire)
+			return false;
+
 		if (ingredients[0] && ingredients[0].GetInventory().IsAttachment())
 			return false;
 		

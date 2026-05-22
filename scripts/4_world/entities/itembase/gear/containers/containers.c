@@ -19,17 +19,33 @@ class geb_FilteredContainerBase : Container_Base {
 		return 110;
 	}
 
-	override bool CanReceiveItemIntoCargo(EntityAI item) {
+	// Shared check so the drag-drop path (CanReceiveItemIntoCargo) and the
+	// script/persistence path (CanLoadItemIntoCargo) stay in lockstep.
+	// Vanilla DayZ does not always route every cargo move through the same
+	// check, so overriding both prevents disallowed items sneaking in via
+	// quickbar swaps, world-craft results, or save-load.
+	protected bool IsAllowedCargoItem(EntityAI item) {
+		if (!item)
+			return false;
+
 		TStringArray allowed = GetAllowedItemKinds();
 		if (!allowed || allowed.Count() == 0)
 			return false;
 
 		for (int i = 0; i < allowed.Count(); i++) {
-			if (item && item.IsKindOf(allowed.Get(i)))
+			if (item.IsKindOf(allowed.Get(i)))
 				return true;
 		}
 
 		return false;
+	}
+
+	override bool CanReceiveItemIntoCargo(EntityAI item) {
+		return IsAllowedCargoItem(item);
+	}
+
+	override bool CanLoadItemIntoCargo(EntityAI item) {
+		return IsAllowedCargoItem(item);
 	}
 };
 
@@ -47,18 +63,60 @@ class geb_BugContainer : geb_FilteredContainerBase {
 	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
 	}
+
+	override bool IsContainer() {
+		return true;
+	}
+
+	override bool CanPutInCargo(EntityAI parent) {
+		if (!super.CanPutInCargo(parent))
+			return false;
+
+		// Prevent bug containers from being placed inside other bug containers.
+		// This blocks self-nesting while still allowing normal cargo rules elsewhere.
+		if (parent && parent.IsKindOf("geb_BugContainer"))
+			return false;
+
+		return true;
+	}
+
+	override void SetActions() {
+		super.SetActions();
+		AddAction(ActionDigBugs);
+	}
 };
 
 class geb_BambooFishingNet : geb_FilteredContainerBase {
-	static ref TStringArray s_Allowed = { "Worm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm", "geb_RubberWorm", "geb_Minnow", "geb_SignalCrayFish", "geb_EuropeanCrayFish" };
+	static ref TStringArray s_Allowed = { "Worm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm", "geb_RubberWorm", "geb_FatHeadMinnow", "geb_SignalCrayFish", "geb_EuropeanCrayFish", "geb_AmericanBullFrog", "geb_RedSalamander" };
 
 	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
 	}
+
+	override bool IsContainer() {
+		return true;
+	}
+
+	override bool CanPutInCargo(EntityAI parent) {
+		if (!super.CanPutInCargo(parent))
+			return false;
+
+		// Prevent bamboo fishing nets from being placed inside other bamboo fishing nets.
+		// This blocks self-nesting while still allowing normal cargo rules elsewhere.
+		if (parent && parent.IsKindOf("geb_BambooFishingNet"))
+			return false;
+
+		return true;
+	}
+
+	override void SetActions() {
+		super.SetActions();
+		AddAction(ActionBambooFishingNet);
+	}
 };
 
 class geb_MinnowBucket : geb_FilteredContainerBase {
-	static ref TStringArray s_Allowed = { "geb_FatheadMinnow", "geb_SignalCrayFish", "geb_EuropeanCrayFish", "Shrimp", "geb_AmericanBullFrog", "geb_RedSalamander" };
+	static ref TStringArray s_Allowed = { "geb_FatHeadMinnow", "geb_SignalCrayFish", "geb_EuropeanCrayFish", "Shrimp", "geb_AmericanBullFrog", "geb_RedSalamander" };
 
 	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
