@@ -51,6 +51,14 @@ class RepairFishingPole : RecipeBase {
 	override void Do(ItemBase ingredients[], PlayerBase player,array<ItemBase> results, float specialty_weight) {
 		PluginRepairing moduleRepairing = PluginRepairing.Cast(GetPlugin(PluginRepairing));
 		moduleRepairing.Repair(player, ingredients[0], ingredients[1], m_Specialty);
+
+		// Cap the result at Worn (HealthLevel 1) instead of letting
+		// PluginRepairing bring it all the way to Pristine. Matches
+		// RepairBambooFishingNet behaviour so the player can't restore
+		// a rod to factory condition with a single repair kit -- repairs
+		// keep items usable but show wear.
+		if (ingredients[1] && ingredients[1].GetHealthLevel() < 1)
+			ingredients[1].SetHealthLevel(1, "");
 	}
 	
 	override bool IsRepeatable() {
