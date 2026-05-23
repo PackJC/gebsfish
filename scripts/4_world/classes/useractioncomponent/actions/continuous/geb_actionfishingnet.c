@@ -177,11 +177,15 @@ class ActionBambooFishingNet : ActionContinuousBase {
 				// Try to spawn the catch into the net's cargo first. Falls
 				// back to the player's feet when the net is full or the
 				// filtered-cargo check rejects the item (see s_Allowed in
-				// containers.c). CreateInCargo returns null on either
-				// failure mode, so a single check covers both.
+				// containers.c). CreateInInventory returns null on either
+				// failure mode, so a single check covers both. Use
+				// CreateInInventory rather than CreateInCargo* because the
+				// former handles slot lookup automatically and matches the
+				// pattern used elsewhere in the mod (geb_jonboat.c spark
+				// plug spawn).
 				EntityAI catchEntity;
 				if (net && net.GetInventory())
-					catchEntity = net.GetInventory().CreateInCargo(spawnType);
+					catchEntity = net.GetInventory().CreateInInventory(spawnType);
 				if (!catchEntity)
 					g_Game.CreateObjectEx(spawnType, player.GetPosition(), ECE_PLACE_ON_SURFACE);
 			}

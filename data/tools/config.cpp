@@ -256,10 +256,6 @@ class cfgVehicles {
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\bamboofishingnet_co.paa"};
 		itemInfo[] = {"CatchWithNet"};
-		// "Shoulder" lets the net slot onto the player's back / shoulder
-		// the same way fishing rods do. Appended with `+=` so vanilla
-		// Container_Base cargo slots stay intact.
-		inventorySlot[] += {"Shoulder"};
 		weight = 100;
 		itemSize[] = {1,3};
 		itemsCargoSize[] = {4,4};

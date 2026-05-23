@@ -493,6 +493,7 @@ class RecipeToggleConf {
     bool CraftBambooFishingNet = 1;
     bool CraftHookFromWire = 1;
     bool RepairFishingPole = 1;
+    bool RepairBambooFishingNet = 1;
 };
 
 //cftools logging config data
