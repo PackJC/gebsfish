@@ -23,9 +23,10 @@ class RepairBambooFishingNet : RecipeBase {
 
 		// ---- ingredient 1: the bamboo fishing net being repaired ----
 		// Min 1 (must be at least Worn -- can't "repair" a Pristine net).
-		// Max 4 lets you repair any damage state including Ruined.
+		// Max 3 (Badly Damaged) -- Ruined nets are beyond saving and have
+		// to be crafted from scratch.
 		m_MinDamageIngredient[1] = 1;
-		m_MaxDamageIngredient[1] = 4;
+		m_MaxDamageIngredient[1] = 3;
 		m_MinQuantityIngredient[1] = -1;
 		m_MaxQuantityIngredient[1] = -1;
 
