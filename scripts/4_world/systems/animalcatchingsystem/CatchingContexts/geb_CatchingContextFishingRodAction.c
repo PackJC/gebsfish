@@ -487,10 +487,14 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         int a = y / 100;
         int b = 2 - a + (a / 4);
 
-        float jd = Math.Floor(365.25 * (y + 4716))
-                 + Math.Floor(30.6001 * (m + 1))
-                 + day + b - 1524.5
-                 + hour / 24.0;
+        // Broken into intermediates because Enforce's parser doesn't accept
+        // multi-line expressions with leading + operators -- collapsing the
+        // single jd expression below was the original syntax error.
+        float jdYearTerm = Math.Floor(365.25 * (y + 4716));
+        float jdMonthTerm = Math.Floor(30.6001 * (m + 1));
+        float jdDayTerm = day + b - 1524.5;
+        float jdHourTerm = hour / 24.0;
+        float jd = jdYearTerm + jdMonthTerm + jdDayTerm + jdHourTerm;
 
         float daysSince = jd - 2451550.26;   // ref new moon JD
         float synodic = 29.530588853;        // average synodic month

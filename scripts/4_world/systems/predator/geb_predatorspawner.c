@@ -75,13 +75,26 @@ class GebsPredatorSpawner {
 
         vector playerPos = player.GetPosition();
         bool soundPlayed = false;
+        bool anySpawned = false;
         for (int i = 0; i < count; i++) {
-            vector spawnPos = FindLandSpawnPosition(playerPos, selected.MinRadius, selected.MaxRadius, debugLogs, logTag);
+            bool foundLand;
+            vector spawnPos = FindLandSpawnPosition(playerPos, selected.MinRadius, selected.MaxRadius, debugLogs, logTag, foundLand);
+            // Skip rather than spawn over water. Happens when the triggering
+            // player is fishing far from shore (boat in deep sea) and no
+            // random offset within [MinRadius, MaxRadius] hit terrain after
+            // the retry cap.
+            if (!foundLand) {
+                if (debugLogs)
+                    GebsfishLogger.Debug("Skipping predator spawn -- no land found within [" + selected.MinRadius + "m, " + selected.MaxRadius + "m] of player. Likely too far from shore.", logTag);
+                continue;
+            }
             SpawnOneAt(selected.Classname, spawnPos, player, cfg, debugLogs, logTag, soundPlayed);
+            anySpawned = true;
         }
 
-        BroadcastPredatorMessage(cfg, player);
-        return true;
+        if (anySpawned)
+            BroadcastPredatorMessage(cfg, player);
+        return anySpawned;
     }
 
     // Weighted random over m_gebsConfig.Predators using SpawnChance as the weight.
@@ -119,36 +132,50 @@ class GebsPredatorSpawner {
         return null;
     }
 
-    // Picks a random offset in [minRadius..maxRadius] around center and retries
-    // up to 20 times if it lands on sea or pond. Falls back to whatever the
-    // last roll was so the spawn never hangs indefinitely.
-    protected static vector FindLandSpawnPosition(vector center, float minRadius, float maxRadius, int debugLogs, string logTag) {
+    // Picks a random offset in [minRadius..maxRadius] around center and
+    // retries up to 20 times to find a position that isn't over sea or pond.
+    // Sets foundLand=true on success. On failure (all 20 attempts landed
+    // over water, typically when fishing far from shore in a boat) returns
+    // center as a safe fallback with foundLand=false so the caller can skip
+    // the spawn instead of dropping a wolf underwater.
+    //
+    // Pins the result's Y to the terrain surface via SurfaceY rather than
+    // reusing center's Y. This matters when the triggering player is on a
+    // boat, on a cliff, or wading in shallow water -- their Y is not the
+    // ground level the predator needs to spawn at.
+    protected static vector FindLandSpawnPosition(vector center, float minRadius, float maxRadius, int debugLogs, string logTag, out bool foundLand) {
+        foundLand = false;
         if (minRadius < 0) minRadius = 0;
         if (maxRadius < 0) maxRadius = 0;
         if (maxRadius < minRadius) maxRadius = minRadius;
 
-        float angle = Math.RandomFloat(0, 360);
-        float distance = Math.RandomFloat(minRadius, maxRadius);
-        float xOffset = Math.Cos(angle) * distance;
-        float zOffset = Math.Sin(angle) * distance;
-
-        vector spawnPos = Vector(center[0] + xOffset, center[1], center[2] + zOffset);
+        vector spawnPos = center;
 
         const int maxAttempts = 20;
-        int attempts = 0;
-        while ((g_Game.SurfaceIsSea(spawnPos[0], spawnPos[2]) || g_Game.SurfaceIsPond(spawnPos[0], spawnPos[2])) && attempts < maxAttempts) {
-            if (debugLogs == ELEVATED_DEBUG)
-                GebsfishLogger.Debug("Surface selected for spawning predator was over water. Retrying.", logTag);
+        for (int attempts = 0; attempts < maxAttempts; attempts++) {
+            float angle = Math.RandomFloat(0, 360);
+            float distance = Math.RandomFloat(minRadius, maxRadius);
+            float xOffset = Math.Cos(angle) * distance;
+            float zOffset = Math.Sin(angle) * distance;
 
-            angle = Math.RandomFloat(0, 360);
-            distance = Math.RandomFloat(minRadius, maxRadius);
-            xOffset = Math.Cos(angle) * distance;
-            zOffset = Math.Sin(angle) * distance;
-            spawnPos = Vector(center[0] + xOffset, center[1], center[2] + zOffset);
-            attempts++;
+            float candidateX = center[0] + xOffset;
+            float candidateZ = center[2] + zOffset;
+
+            if (g_Game.SurfaceIsSea(candidateX, candidateZ) || g_Game.SurfaceIsPond(candidateX, candidateZ)) {
+                if (debugLogs == ELEVATED_DEBUG)
+                    GebsfishLogger.Debug("Surface selected for spawning predator was over water. Retrying.", logTag);
+                continue;
+            }
+
+            // Use the terrain surface Y, not the player's Y. The player
+            // could be on a boat or cliff edge.
+            float candidateY = g_Game.SurfaceY(candidateX, candidateZ);
+            spawnPos = Vector(candidateX, candidateY, candidateZ);
+            foundLand = true;
+            return spawnPos;
         }
 
-        if (debugLogs && attempts >= maxAttempts)
+        if (debugLogs)
             GebsfishLogger.Debug("Warning: Max attempts reached while trying to find a land spawn position.", logTag);
 
         return spawnPos;
