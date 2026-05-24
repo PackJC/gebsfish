@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C 'C:\\\\Users\\\\ECHO\\\\Documents\\\\DayZ Projects\\\\gebsfish' show --stat ef64b31)",
+      "Bash(git -C 'C:\\\\Users\\\\ECHO\\\\Documents\\\\DayZ Projects\\\\gebsfish' ls-files)",
+      "Bash(git -C 'C:\\\\Users\\\\ECHO\\\\Documents\\\\DayZ Projects\\\\gebsfish' show --stat c510225)",
+      "Bash(git -C 'C:\\\\Users\\\\ECHO\\\\Documents\\\\DayZ Projects\\\\gebsfish' show --stat 873aa20)",
+      "Bash(git -C 'C:\\\\Users\\\\ECHO\\\\Documents\\\\DayZ Projects\\\\gebsfish' branch -a)"
+    ]
+  }
+}

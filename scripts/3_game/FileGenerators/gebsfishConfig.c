@@ -22,6 +22,8 @@ class gebsfishConfig {
     ref BambooFishingNetConf BambooFishingNetSettings;
     ref DigBugsConf DigBugsSettings;
     ref DigWormsConf DigWormsSettings;
+    string BaitPreferenceEnableInfo = "Master toggle for the bait / lure preference system. Each entry in BaitPreferences pairs a bait classname (Worm, geb_GrubWorm, geb_SpinnerBaitRed, etc.) with a list of per-fish multipliers that bias the weighted catch pick toward that fish when this bait is on the hook (e.g. a Worm makes BlueGill 2.0x more likely while making large saltwater fish 0.3x). Set to 0 to disable the bias entirely -- every bait becomes neutral 1.0x for every fish and only the underlying CatchProbability values drive the pick. Bait still functions mechanically (gets eaten/destroyed, hook still loses bait on a miss) -- this only disables the per-fish bias. The BaitPreferences array still loads from JSON when disabled so a server can flip this on/off without losing tuned values. Useful when admins want bait to function but not influence catch outcomes, or for diagnosing whether unexpected fish are coming from bait bias vs weather/temperature/time-of-day multipliers.";
+    bool BaitPreferenceEnable = 1;
     // Per-bait fish-preference table. Multiplies into the weighted pick at
     // catch time so the bait/lure on the hook biases WHICH fish gets
     // selected. See SeedDefaultBaitPreferences() for the default ecology.
@@ -1157,7 +1159,22 @@ class WeatherConf {
     string CapInfo = "Hard cap on combined multipliers. Stops storm + night from compounding into something silly.";
     float MaxStackedMultiplier = 2.0;
 
-    string SpeciesBuffsInfo = "Per-species multipliers are configured inline on each fish section below (RainMultiplier, StormMultiplier, DawnMultiplier, DayMultiplier, DuskMultiplier, NightMultiplier). 1.0 = no effect, higher = bites more, lower = bites less.";
+    string MoonPhaseInfo = "Moon-phase catch buff. Calculates the actual lunar phase from the in-game date and interpolates between FullMoonMultiplier (at full moon) and NewMoonMultiplier (at new moon), smooth across quarter moons. Only applies at night since the moon isn't a visible/active factor during the day. Independent of WeatherCatchBoostEnable so admins can run moon-only or weather-only. Defaults stay within +-20% to avoid feeling gimmicky.";
+    bool MoonPhaseEnable = 1;
+    float FullMoonMultiplier = 1.20;
+    float NewMoonMultiplier = 0.90;
+
+    string TemperatureInfo = "Per-species water-temperature catch buff. Reads ambient air temperature as a proxy for water temperature and applies a per-fish bell curve: 1.0x at the fish's TempOptimal, falling linearly to MinTempMultiplier as water drops to TempMin and to MaxTempMultiplier as it rises to TempMax. Outside [TempMin, TempMax] the multiplier stays clamped at those floors so cold-water fish never fully shut down in summer (and vice versa). All temps in degrees Celsius. Set TemperatureEffectEnable to 0 to disable entirely; set a fish's TempMin equal to its TempMax to disable just that fish. Independent of WeatherCatchBoostEnable.";
+    bool TemperatureEffectEnable = 1;
+    float MinTempMultiplier = 0.1;
+    float MaxTempMultiplier = 0.1;
+    string WaterTempOffsetInfo = "Admin offset (degrees Celsius) added to ambient air temperature before the per-fish curve is applied. Use NEGATIVE values for winter/cold-themed servers (e.g. Sakhal) so cold-water fish actually feed and warm-water fish back off; use POSITIVE values for tropical/summer servers. Default 0 = use ambient air temp unchanged. This shifts the curve globally without editing every fish's TempOptimal/TempMin/TempMax. Examples: 0 = vanilla Chernarus (bass active in summer, trout in spring/fall); -5 = cold map like Sakhal (lake trout/salmon/cod active year-round, bass struggles); -10 = frozen lake roleplay (only cold-water species feed); +5 = tropical mod (reef fish/marlin/mahi dominate, trout shut down).";
+    float WaterTempOffset = 0.0;
+
+    string BiteSpeedEnableInfo = "Master toggle for the per-fish BiteSpeed cycle scaling. Each fish has a 24-hour BiteSpeed array (e.g. CarpConf.BiteSpeed = {0.85, 0.85, ..., 1.0, ...}) where 1.0 means the fish bites at its natural speed for that hour and 0.5 means the cycle takes twice as long. The catching context aggregates these across the active fish pool, weighted by per-fish CatchProbability and the current time-of-day multiplier, then stretches the catch cycle inversely so lower aggregates mean longer waits between bites. Set to 0 to bypass entirely and use vanilla DayZ cycle length regardless of which fish are in the pool -- the per-fish BiteSpeed arrays still appear in JSON for tuning but have no in-game effect. Independent of WeatherCatchBoostEnable, MoonPhaseEnable, and TemperatureEffectEnable. Useful for servers wanting a flat fishing experience without per-hour variance, or for isolating whether a tuning issue is coming from BiteSpeed math vs other multipliers.";
+    bool BiteSpeedEnable = 1;
+
+    string SpeciesBuffsInfo = "Per-species multipliers are configured inline on each fish section below (RainMultiplier, StormMultiplier, DawnMultiplier, DayMultiplier, DuskMultiplier, NightMultiplier, TempOptimal, TempMin, TempMax). 1.0 = no effect, higher = bites more, lower = bites less.";
 }
 
 class PredatorEntry {
@@ -1260,6 +1277,9 @@ class DigWormsConf {
 
 //fish config data
 class MackerelConf {
+    float TempOptimal = 18.0;
+    float TempMin = 8.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1280,6 +1300,9 @@ class MackerelConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.95, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.95, 1, 1, 0.95, 0.95, 0.9, 0.9, 0.85};
 };
 class CarpConf {
+    float TempOptimal = 24.0;
+    float TempMin = 14.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1300,6 +1323,9 @@ class CarpConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.95, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.95, 1, 1, 0.95, 0.95, 0.9, 0.9, 0.85};
 };
 class SardinesConf {
+    float TempOptimal = 18.0;
+    float TempMin = 8.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1317,6 +1343,9 @@ class SardinesConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class BitterlingsConf {
+    float TempOptimal = 22.0;
+    float TempMin = 12.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1334,6 +1363,9 @@ class BitterlingsConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class WalleyePollockConf {
+    float TempOptimal = 8.0;
+    float TempMin = 1.0;
+    float TempMax = 14.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1354,6 +1386,9 @@ class WalleyePollockConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class SteelheadTroutConf {
+    float TempOptimal = 13.0;
+    float TempMin = 4.0;
+    float TempMax = 20.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1374,6 +1409,9 @@ class SteelheadTroutConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class ShrimpConf {
+    float TempOptimal = 20.0;
+    float TempMin = 12.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1391,6 +1429,9 @@ class ShrimpConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class NorthernSnakeHeadConf {
+    float TempOptimal = 21.0;
+    float TempMin = 12.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1411,6 +1452,9 @@ class NorthernSnakeHeadConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class NorthernPikeConf {
+    float TempOptimal = 18.0;
+    float TempMin = 8.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1431,6 +1475,9 @@ class NorthernPikeConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
 };
 class MuskellungeConf {
+    float TempOptimal = 19.0;
+    float TempMin = 10.0;
+    float TempMax = 25.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1451,6 +1498,9 @@ class MuskellungeConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
 };
 class SpottedMuskellungeConf {
+    float TempOptimal = 19.0;
+    float TempMin = 10.0;
+    float TempMax = 25.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1471,6 +1521,9 @@ class SpottedMuskellungeConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
 };
 class BarredMuskellungeConf {
+    float TempOptimal = 19.0;
+    float TempMin = 10.0;
+    float TempMax = 25.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1491,6 +1544,9 @@ class BarredMuskellungeConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
 };
 class TigerMuskellungeConf {
+    float TempOptimal = 19.0;
+    float TempMin = 10.0;
+    float TempMax = 25.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1511,6 +1567,9 @@ class TigerMuskellungeConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
 };
 class AlligatorGarConf {
+    float TempOptimal = 26.0;
+    float TempMin = 16.0;
+    float TempMax = 32.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1531,6 +1590,9 @@ class AlligatorGarConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
 };
 class LargeMouthBassConf {
+    float TempOptimal = 24.0;
+    float TempMin = 14.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1551,6 +1613,9 @@ class LargeMouthBassConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class SmallMouthBassConf {
+    float TempOptimal = 21.0;
+    float TempMin = 12.0;
+    float TempMax = 27.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1571,6 +1636,9 @@ class SmallMouthBassConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class WallEyeConf {
+    float TempOptimal = 18.0;
+    float TempMin = 8.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1591,6 +1659,9 @@ class WallEyeConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
 };
 class SunFishConf {
+    float TempOptimal = 25.0;
+    float TempMin = 15.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1611,6 +1682,9 @@ class SunFishConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class WhiteBassConf {
+    float TempOptimal = 21.0;
+    float TempMin = 12.0;
+    float TempMax = 27.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1631,6 +1705,9 @@ class WhiteBassConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.95, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.95, 1, 1, 0.95, 0.95, 0.9, 0.9, 0.85};
 };
 class BlackBassConf {
+    float TempOptimal = 23.0;
+    float TempMin = 13.0;
+    float TempMax = 29.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1651,6 +1728,9 @@ class BlackBassConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class StripedBassConf {
+    float TempOptimal = 20.0;
+    float TempMin = 10.0;
+    float TempMax = 26.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1671,6 +1751,9 @@ class StripedBassConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
 };
 class NeoshoBassConf {
+    float TempOptimal = 22.0;
+    float TempMin = 13.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1691,6 +1774,9 @@ class NeoshoBassConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class RainbowTroutConf {
+    float TempOptimal = 14.0;
+    float TempMin = 4.0;
+    float TempMax = 21.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1711,6 +1797,9 @@ class RainbowTroutConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class BrownTroutConf {
+    float TempOptimal = 14.0;
+    float TempMin = 4.0;
+    float TempMax = 21.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1731,6 +1820,9 @@ class BrownTroutConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class BrookTroutConf {
+    float TempOptimal = 13.0;
+    float TempMin = 4.0;
+    float TempMax = 20.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1751,6 +1843,9 @@ class BrookTroutConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class LakeTroutConf {
+    float TempOptimal = 10.0;
+    float TempMin = 2.0;
+    float TempMax = 16.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1771,6 +1866,9 @@ class LakeTroutConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class CutThroatTroutConf {
+    float TempOptimal = 13.0;
+    float TempMin = 4.0;
+    float TempMax = 20.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1791,6 +1889,9 @@ class CutThroatTroutConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class LakeSturgeonConf {
+    float TempOptimal = 15.0;
+    float TempMin = 5.0;
+    float TempMax = 22.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1811,6 +1912,9 @@ class LakeSturgeonConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.95, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.95, 1, 1, 0.95, 0.95, 0.9, 0.9, 0.85};
 };
 class YellowPerchConf {
+    float TempOptimal = 19.0;
+    float TempMin = 10.0;
+    float TempMax = 25.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1831,6 +1935,9 @@ class YellowPerchConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class FlatHeadCatFishConf {
+    float TempOptimal = 26.0;
+    float TempMin = 16.0;
+    float TempMax = 32.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1851,6 +1958,9 @@ class FlatHeadCatFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class FatHeadMinnowConf {
+    float TempOptimal = 22.0;
+    float TempMin = 12.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1871,6 +1981,9 @@ class FatHeadMinnowConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class AmericanBullFrogConf {
+    float TempOptimal = 25.0;
+    float TempMin = 15.0;
+    float TempMax = 32.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1891,6 +2004,9 @@ class AmericanBullFrogConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class RedSalamanderConf {
+    float TempOptimal = 15.0;
+    float TempMin = 6.0;
+    float TempMax = 22.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1911,6 +2027,9 @@ class RedSalamanderConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class BlueGillConf {
+    float TempOptimal = 25.0;
+    float TempMin = 15.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1931,6 +2050,9 @@ class BlueGillConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class SaugerConf {
+    float TempOptimal = 18.0;
+    float TempMin = 8.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1951,6 +2073,9 @@ class SaugerConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
 };
 class BowFinConf {
+    float TempOptimal = 22.0;
+    float TempMin = 12.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1971,6 +2096,9 @@ class BowFinConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class SlimySculpinConf {
+    float TempOptimal = 10.0;
+    float TempMin = 2.0;
+    float TempMax = 16.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1991,6 +2119,9 @@ class SlimySculpinConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.95, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.95, 1, 1, 0.95, 0.95, 0.9, 0.9, 0.85};
 };
 class SeverumConf {
+    float TempOptimal = 27.0;
+    float TempMin = 20.0;
+    float TempMax = 32.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2011,6 +2142,9 @@ class SeverumConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class SignalCrayFishConf {
+    float TempOptimal = 22.0;
+    float TempMin = 12.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2031,6 +2165,9 @@ class SignalCrayFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class EuropeanCrayFishConf {
+    float TempOptimal = 22.0;
+    float TempMin = 12.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2051,6 +2188,9 @@ class EuropeanCrayFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class CaveCrayFishConf {
+    float TempOptimal = 12.0;
+    float TempMin = 4.0;
+    float TempMax = 18.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2071,6 +2211,9 @@ class CaveCrayFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class FloridaCrayFishConf {
+    float TempOptimal = 25.0;
+    float TempMin = 15.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2091,6 +2234,9 @@ class FloridaCrayFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class MonongahelaCrayFishConf {
+    float TempOptimal = 22.0;
+    float TempMin = 12.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2111,6 +2257,9 @@ class MonongahelaCrayFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class RedSwampCrayFishConf {
+    float TempOptimal = 24.0;
+    float TempMin = 14.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2131,6 +2280,9 @@ class RedSwampCrayFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class RustyCrayFishConf {
+    float TempOptimal = 22.0;
+    float TempMin = 12.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2151,6 +2303,9 @@ class RustyCrayFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class MahiMahiConf {
+    float TempOptimal = 27.0;
+    float TempMin = 20.0;
+    float TempMax = 32.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2171,6 +2326,9 @@ class MahiMahiConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class AtlanticSailFishConf {
+    float TempOptimal = 27.0;
+    float TempMin = 21.0;
+    float TempMax = 32.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2191,6 +2349,9 @@ class AtlanticSailFishConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class AngelFishConf {
+    float TempOptimal = 27.0;
+    float TempMin = 20.0;
+    float TempMax = 32.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2211,6 +2372,9 @@ class AngelFishConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class AsianSeaBassConf {
+    float TempOptimal = 28.0;
+    float TempMin = 20.0;
+    float TempMax = 33.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2231,6 +2395,9 @@ class AsianSeaBassConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class AtlanticBlueMarlinConf {
+    float TempOptimal = 26.0;
+    float TempMin = 20.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2251,6 +2418,9 @@ class AtlanticBlueMarlinConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class BonitaConf {
+    float TempOptimal = 22.0;
+    float TempMin = 14.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2271,6 +2441,9 @@ class BonitaConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class CherrySalmonConf {
+    float TempOptimal = 12.0;
+    float TempMin = 4.0;
+    float TempMax = 18.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2291,6 +2464,9 @@ class CherrySalmonConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class ChinookSalmonConf {
+    float TempOptimal = 12.0;
+    float TempMin = 4.0;
+    float TempMax = 18.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2311,6 +2487,9 @@ class ChinookSalmonConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class SockEyeSalmonConf {
+    float TempOptimal = 13.0;
+    float TempMin = 4.0;
+    float TempMax = 18.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2331,6 +2510,9 @@ class SockEyeSalmonConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class FlatHeadMulletConf {
+    float TempOptimal = 25.0;
+    float TempMin = 15.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2351,6 +2533,9 @@ class FlatHeadMulletConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class LeopardSharkConf {
+    float TempOptimal = 18.0;
+    float TempMin = 10.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2371,6 +2556,9 @@ class LeopardSharkConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class HammerHeadSharkConf {
+    float TempOptimal = 26.0;
+    float TempMin = 18.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2391,6 +2579,9 @@ class HammerHeadSharkConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class PacificCodConf {
+    float TempOptimal = 8.0;
+    float TempMin = 2.0;
+    float TempMax = 14.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2411,6 +2602,9 @@ class PacificCodConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class RedHeadCichlidConf {
+    float TempOptimal = 27.0;
+    float TempMin = 20.0;
+    float TempMax = 32.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2431,6 +2625,9 @@ class RedHeadCichlidConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class RoughNeckRockConf {
+    float TempOptimal = 17.0;
+    float TempMin = 8.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2451,6 +2648,9 @@ class RoughNeckRockConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class BlueTangConf {
+    float TempOptimal = 26.0;
+    float TempMin = 20.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2471,6 +2671,9 @@ class BlueTangConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class LargeHeadHairTailFishConf {
+    float TempOptimal = 17.0;
+    float TempMin = 8.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2491,6 +2694,9 @@ class LargeHeadHairTailFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class HumpHeadWrasseConf {
+    float TempOptimal = 27.0;
+    float TempMin = 20.0;
+    float TempMax = 32.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2511,6 +2717,9 @@ class HumpHeadWrasseConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class SiameseTigerFishConf {
+    float TempOptimal = 27.0;
+    float TempMin = 20.0;
+    float TempMax = 32.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2531,6 +2740,9 @@ class SiameseTigerFishConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class GreatWhiteSharkConf {
+    float TempOptimal = 17.0;
+    float TempMin = 10.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2551,6 +2763,9 @@ class GreatWhiteSharkConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class AngelSharkConf {
+    float TempOptimal = 18.0;
+    float TempMin = 10.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2571,6 +2786,9 @@ class AngelSharkConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class YellowFinTunaConf {
+    float TempOptimal = 25.0;
+    float TempMin = 18.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2591,6 +2809,9 @@ class YellowFinTunaConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class YellowSnapperConf {
+    float TempOptimal = 25.0;
+    float TempMin = 18.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2611,6 +2832,9 @@ class YellowSnapperConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class SouthernFlounderConf {
+    float TempOptimal = 18.0;
+    float TempMin = 10.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2631,6 +2855,9 @@ class SouthernFlounderConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class WhiteGruntConf {
+    float TempOptimal = 25.0;
+    float TempMin = 18.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2651,6 +2878,9 @@ class WhiteGruntConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class BloodClamConf {
+    float TempOptimal = 18.0;
+    float TempMin = 4.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2671,6 +2901,9 @@ class BloodClamConf {
     autoptr TFloatArray BiteSpeed = {0.95, 0.95, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.9, 0.9, 0.9, 0.95, 0.95, 0.95};
 };
 class MusselConf {
+    float TempOptimal = 16.0;
+    float TempMin = 4.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2691,6 +2924,9 @@ class MusselConf {
     autoptr TFloatArray BiteSpeed = {0.95, 0.95, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.9, 0.9, 0.9, 0.95, 0.95, 0.95};
 };
 class BlackDevilSnailConf {
+    float TempOptimal = 22.0;
+    float TempMin = 10.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2711,6 +2947,9 @@ class BlackDevilSnailConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class StarFishConf {
+    float TempOptimal = 16.0;
+    float TempMin = 4.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2731,6 +2970,9 @@ class StarFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 };
 class KingCrabConf {
+    float TempOptimal = 5.0;
+    float TempMin = 0.0;
+    float TempMax = 12.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2751,6 +2993,9 @@ class KingCrabConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class SnowCrabConf {
+    float TempOptimal = 4.0;
+    float TempMin = 0.0;
+    float TempMax = 10.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2771,6 +3016,9 @@ class SnowCrabConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class BlueJellyFishConf {
+    float TempOptimal = 20.0;
+    float TempMin = 8.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2791,6 +3039,9 @@ class BlueJellyFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class AmericanLobsterConf {
+    float TempOptimal = 12.0;
+    float TempMin = 4.0;
+    float TempMax = 18.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2811,6 +3062,9 @@ class AmericanLobsterConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class EuropeanLobsterConf {
+    float TempOptimal = 14.0;
+    float TempMin = 5.0;
+    float TempMax = 20.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
