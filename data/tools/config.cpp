@@ -131,6 +131,19 @@ class cfgVehicles {
 		model="\gebsfish\data\tools\fishknife.p3d";
     	hiddenSelections[] = {"Camo"};
         weight=100;
+        // The geb fish knife has two intentional buffs over a vanilla HuntingKnife:
+        //   1. Durability: hitpoints=200 is ~54% more than vanilla's 130. Sits
+        //      between KitchenKnife (150) and KukriKnife (250) -- a "premium
+        //      fishing tool" feel without being the strongest blade in the game.
+        //   2. Filleting speed: 10% faster than vanilla via the
+        //      GeneralSettings.FishKnifeSpeedMultiplier knob in fishingsettings.json
+        //      (default 0.9). The bonus only applies when the recipe's
+        //      ApplyFishKnifeSpeedBonus detects a geb_FishKnife_Base derivative
+        //      in the ingredient slot; a vanilla knife still cuts at vanilla
+        //      speed. Multiplier values much below 0.9 cause visible animation
+        //      desync (recipe finishes before the skinning finish-animation
+        //      lands) -- see the info string on FishKnifeSpeedMultiplier in
+        //      gebsfishConfig.c for the full explanation.
         class DamageSystem {
 			class GlobalHealth {
 				class Health {

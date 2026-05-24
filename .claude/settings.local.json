@@ -5,7 +5,15 @@
       "Bash(git -C 'C:\\\\Users\\\\ECHO\\\\Documents\\\\DayZ Projects\\\\gebsfish' ls-files)",
       "Bash(git -C 'C:\\\\Users\\\\ECHO\\\\Documents\\\\DayZ Projects\\\\gebsfish' show --stat c510225)",
       "Bash(git -C 'C:\\\\Users\\\\ECHO\\\\Documents\\\\DayZ Projects\\\\gebsfish' show --stat 873aa20)",
-      "Bash(git -C 'C:\\\\Users\\\\ECHO\\\\Documents\\\\DayZ Projects\\\\gebsfish' branch -a)"
+      "Bash(git -C 'C:\\\\Users\\\\ECHO\\\\Documents\\\\DayZ Projects\\\\gebsfish' branch -a)",
+      "Bash(find \"C:\\\\Users\\\\ECHO\\\\Documents\\\\DayZ Projects\" -name \"config.cpp\" -path \"*weapons*melee*\" 2>&1 | head -5)",
+      "Bash(grep -oh 'descriptionShort = \"\\\\$STR_tools_[a-zA-Z0-9_]*\"' data/tackle/config.cpp data/tools/config.cpp)",
+      "Bash(grep -qi ^str_tools___TRACKED_VAR__ languagecore/stringtable.csv)",
+      "Bash(awk -F, '{print $1}')",
+      "Read(//tmp/**)",
+      "Bash(awk -F, '{ *)",
+      "Bash(awk -F, 'NR>1 { *)",
+      "Bash(python -c ' *)"
     ]
   }
 }

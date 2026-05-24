@@ -650,10 +650,14 @@ class cfgVehicles {
 			};
 		};
 	};
+	// All 4 spoon lure variants share the same description via the de-numbered
+	// $STR_tools_spoonlure_desc stringtable key (the per-variant *_desc1..4
+	// entries were removed in favor of one shared entry). Only displayName and
+	// the texture differ per color.
 	class geb_SpoonLure1: geb_Lure {
 		scope=2;
 		displayName = "$STR_tools_spoonlure1";
-		descriptionShort = "$STR_tools_spoonlure1_desc";
+		descriptionShort = "$STR_tools_spoonlure_desc";
 		model = "\gebsfish\data\tackle\spoonlure.p3d";
 		hookType = "geb_SpoonLure1";
 		hiddenSelections[] = {"Camo"};
@@ -663,34 +667,36 @@ class cfgVehicles {
 	class geb_SpoonLure2: geb_Lure {
 		scope=2;
 		displayName = "$STR_tools_spoonlure2";
-		descriptionShort = "$STR_tools_spoonlure2_desc";
+		descriptionShort = "$STR_tools_spoonlure_desc";
 		model = "\gebsfish\data\tackle\spoonlure.p3d";
 		hookType = "geb_SpoonLure2";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spoonlure_white_co.paa"};
-	};	
+	};
 	class geb_SpoonLure3: geb_Lure {
 		scope=2;
 		displayName = "$STR_tools_spoonlure3";
-		descriptionShort = "$STR_tools_spoonlure3_desc";
+		descriptionShort = "$STR_tools_spoonlure_desc";
 		model = "\gebsfish\data\tackle\spoonlure.p3d";
 		hookType = "geb_SpoonLure3";
-		hiddenSelections[] = {"Camo"};	
+		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spoonlure_red_co.paa"};
-	};	
+	};
 	class geb_SpoonLure4: geb_Lure {
 		scope=2;
 		displayName = "$STR_tools_spoonlure4";
-		descriptionShort = "$STR_tools_spoonlure4_desc";
+		descriptionShort = "$STR_tools_spoonlure_desc";
 		model = "\gebsfish\data\tackle\spoonlure.p3d";
 		hookType = "geb_SpoonLure4";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spoonlure_yellow_co.paa"};
 	};
+	// All 4 curly tail jig variants share the same description via the
+	// de-numbered $STR_tools_curlytailjig_desc stringtable key.
 	class geb_CurlyTailJig1: geb_Lure {
 		scope=2;
 		displayName = "$STR_tools_curlytailjig1";
-		descriptionShort = "$STR_tools_curlytailjig1_desc";
+		descriptionShort = "$STR_tools_curlytailjig_desc";
 		model = "\gebsfish\data\tackle\curlytailjig.p3d";
 		hookType = "geb_CurlyTailJig1";
 		hiddenSelections[] = {"Camo"};
@@ -699,7 +705,7 @@ class cfgVehicles {
 	class geb_CurlyTailJig2: geb_Lure {
 		scope=2;
 		displayName = "$STR_tools_curlytailjig2";
-		descriptionShort = "$STR_tools_curlytailjig2_desc";
+		descriptionShort = "$STR_tools_curlytailjig_desc";
 		model = "\gebsfish\data\tackle\curlytailjig.p3d";
 		hookType = "geb_CurlyTailJig2";
 		hiddenSelections[] = {"Camo"};
@@ -708,7 +714,7 @@ class cfgVehicles {
 	class geb_CurlyTailJig3: geb_Lure {
 		scope=2;
 		displayName = "$STR_tools_curlytailjig3";
-		descriptionShort = "$STR_tools_curlytailjig3_desc";
+		descriptionShort = "$STR_tools_curlytailjig_desc";
 		model = "\gebsfish\data\tackle\curlytailjig.p3d";
 		hookType = "geb_CurlyTailJig3";
 		hiddenSelections[] = {"Camo"};
@@ -717,7 +723,7 @@ class cfgVehicles {
 	class geb_CurlyTailJig4: geb_Lure {
 		scope=2;
 		displayName = "$STR_tools_curlytailjig4";
-		descriptionShort = "$STR_tools_curlytailjig4_desc";
+		descriptionShort = "$STR_tools_curlytailjig_desc";
 		model = "\gebsfish\data\tackle\curlytailjig.p3d";
 		hookType = "geb_CurlyTailJig4";
 		hiddenSelections[] = {"Camo"};

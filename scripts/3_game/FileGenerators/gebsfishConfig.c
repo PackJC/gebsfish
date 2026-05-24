@@ -1085,10 +1085,10 @@ class gebsfishConfig {
 class GenSetConf {
     string DebugInfo = "Debug log level for script.log. 0 = off, 1 = standard (per-cast summaries: BiteSpeed aggregate, cycle scaling, weighted pick results), 2 = elevated (per-tick probability, per-fish BiteSpeed breakdown table). Set to 1 when tuning fishing config; 2 only when reproducing a specific bug since it is very chatty.";
     int DebugLogs = 0;
-    string FishQualityInfo = "Sets the base value on(1) or off(0) for the fish quantity bar";
-    float FishQuality = 1;
-    string FishKnifeSpeedMultiplierInfo = "Animation length multiplier applied when filleting a fish with a geb fish knife. 1.0 = vanilla speed, 0.7 = 30% faster. Set to 1.0 to disable the bonus.";
-    float FishKnifeSpeedMultiplier = 0.7;
+    string FishQualityInfo = "Base quality value applied to every fish spawned from a successful catch. Read by trader mods (DayZ-Expansion-Market, TraderPlus, Dr. Jones, etc.) to determine sell price, and by the engine to drive food quality / nutrition values. Vanilla DayZ uses QUALITY_FISH_BASE = 0.35, but several popular trader mods only accept items at FULL quality (1.0) and will silently reject or refuse to buy fish that come in below that threshold. Default is 1.0 to stay compatible with those traders out of the box. Lower it (e.g. 0.35) only if your trader setup accepts fractional quality and you want to match vanilla payouts. Higher values (1.5+) work as a payout boost on traders that scale price by quality.";
+    float FishQuality = 1.0;
+    string FishKnifeSpeedMultiplierInfo = "Animation length multiplier applied when filleting a fish with a geb fish knife. 1.0 = vanilla speed (no bonus), 0.9 = 10% faster (default), 0.7 = 30% faster but causes visible animation desync. DayZ does not expose a way to scale the actual character animation playback, only the recipe duration -- so values too far below 1.0 produce a noticeable gap where the recipe ends before the skinning finish-animation completes (player can freeze briefly, or move away before the fillet visually appears). 0.9 keeps the gap inside the finish-transition window so it isn't perceptible.";
+    float FishKnifeSpeedMultiplier = 0.9;
     string CaviarChanceInfo = "Chance that preparing roe/caviar fish keeps the caviar result. 0 disables caviar, 1 always gives caviar.";
     float CaviarChance = 0.3;
 };
