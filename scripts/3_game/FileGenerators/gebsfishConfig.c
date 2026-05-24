@@ -22,6 +22,12 @@ class gebsfishConfig {
     ref BambooFishingNetConf BambooFishingNetSettings;
     ref DigBugsConf DigBugsSettings;
     ref DigWormsConf DigWormsSettings;
+    string BaitPreferenceEnableInfo = "Master toggle for the bait / lure preference system. Each entry in BaitPreferences pairs a bait classname (Worm, geb_GrubWorm, geb_SpinnerBaitRed, etc.) with a list of per-fish multipliers that bias the weighted catch pick toward that fish when this bait is on the hook (e.g. a Worm makes BlueGill 2.0x more likely while making large saltwater fish 0.3x). Set to 0 to disable the bias entirely -- every bait becomes neutral 1.0x for every fish and only the underlying CatchProbability values drive the pick. Bait still functions mechanically (gets eaten/destroyed, hook still loses bait on a miss) -- this only disables the per-fish bias. The BaitPreferences array still loads from JSON when disabled so a server can flip this on/off without losing tuned values. Useful when admins want bait to function but not influence catch outcomes, or for diagnosing whether unexpected fish are coming from bait bias vs weather/temperature/time-of-day multipliers.";
+    bool BaitPreferenceEnable = 1;
+    // Per-bait fish-preference table. Multiplies into the weighted pick at
+    // catch time so the bait/lure on the hook biases WHICH fish gets
+    // selected. See SeedDefaultBaitPreferences() for the default ecology.
+    ref array<ref BaitConfig> BaitPreferences;
     ref MackerelConf Mackerel;
     ref CarpConf Carp;
     ref SardinesConf Sardines;
@@ -152,6 +158,11 @@ class gebsfishConfig {
         BambooFishingNetSettings = new BambooFishingNetConf;
         DigBugsSettings = new DigBugsConf;
         DigWormsSettings = new DigWormsConf;
+        // Per-bait fish-preference table. Seeded with biologically defensible
+        // multipliers so the system is "alive" out of the box; admins can
+        // tune by editing the JSON.
+        BaitPreferences = new array<ref BaitConfig>();
+        SeedDefaultBaitPreferences();
         //Save fish config data to file
 
         Mackerel = new MackerelConf;
@@ -457,10 +468,604 @@ class gebsfishConfig {
         if (!Junk)               { Junk = new array<ref JunkEntry>();                    changed = true; }
         if (!ContainerJunk)      { ContainerJunk = new array<ref ContainerJunkEntry>();  changed = true; }
 
+        if (!BaitPreferences) {
+            BaitPreferences = new array<ref BaitConfig>();
+            SeedDefaultBaitPreferences();
+            changed = true;
+        }
+
         // Do not auto-create individual fish config sections here. Prepare recipes
         // intentionally fall back to 1 meat when their section is missing, and
         // mission registration skips missing fish instead of crashing.
         return changed;
+    }
+
+    // Default per-bait fish-preference table. Every bait lists every
+    // rod-eligible fish. Multiplier > 1.0 makes that fish more likely
+    // to be the selected catch; < 1.0 makes it less likely; 1.0 is
+    // neutral. Fish are bucketed into 15 ecological categories so the
+    // seed stays compact; the JSON output still shows every fish-bait
+    // pair explicitly so admins can tune individual entries.
+    protected void SeedDefaultBaitPreferences() {
+        ref array<string> catPanfish = new array<string>;
+        catPanfish.Insert("geb_BlueGill");
+        catPanfish.Insert("geb_SunFish");
+        catPanfish.Insert("geb_YellowPerch");
+        catPanfish.Insert("Bitterlings");
+
+        ref array<string> catBass = new array<string>;
+        catBass.Insert("geb_LargeMouthBass");
+        catBass.Insert("geb_SmallMouthBass");
+        catBass.Insert("geb_BlackBass");
+        catBass.Insert("geb_NeoshoBass");
+        catBass.Insert("geb_StripedBass");
+        catBass.Insert("geb_WhiteBass");
+
+        ref array<string> catPikeMusky = new array<string>;
+        catPikeMusky.Insert("geb_NorthernPike");
+        catPikeMusky.Insert("geb_Muskellunge");
+        catPikeMusky.Insert("geb_BarredMuskellunge");
+        catPikeMusky.Insert("geb_SpottedMuskellunge");
+        catPikeMusky.Insert("geb_TigerMuskellunge");
+        catPikeMusky.Insert("geb_NorthernSnakeHead");
+        catPikeMusky.Insert("geb_BowFin");
+
+        ref array<string> catWalleye = new array<string>;
+        catWalleye.Insert("geb_WallEye");
+        catWalleye.Insert("geb_Sauger");
+
+        ref array<string> catTroutSalmon = new array<string>;
+        catTroutSalmon.Insert("SteelheadTrout");
+        catTroutSalmon.Insert("geb_BrookTrout");
+        catTroutSalmon.Insert("geb_BrownTrout");
+        catTroutSalmon.Insert("geb_RainbowTrout");
+        catTroutSalmon.Insert("geb_CutThroatTrout");
+        catTroutSalmon.Insert("geb_LakeTrout");
+        catTroutSalmon.Insert("geb_ChinookSalmon");
+        catTroutSalmon.Insert("geb_CherrySalmon");
+        catTroutSalmon.Insert("geb_SockEyeSalmon");
+
+        ref array<string> catCatfishBottom = new array<string>;
+        catCatfishBottom.Insert("geb_FlatHeadCatFish");
+        catCatfishBottom.Insert("geb_AlligatorGar");
+        catCatfishBottom.Insert("geb_LakeSturgeon");
+
+        ref array<string> catCarp = new array<string>;
+        catCarp.Insert("Carp");
+
+        ref array<string> catAmphibian = new array<string>;
+        catAmphibian.Insert("geb_AmericanBullFrog");
+        catAmphibian.Insert("geb_RedSalamander");
+
+        ref array<string> catBaitFish = new array<string>;
+        catBaitFish.Insert("geb_FatHeadMinnow");
+        catBaitFish.Insert("geb_FlatHeadMullet");
+        catBaitFish.Insert("geb_SlimySculpin");
+
+        ref array<string> catCrustacean = new array<string>;
+        catCrustacean.Insert("Shrimp");
+        catCrustacean.Insert("geb_SignalCrayFish");
+        catCrustacean.Insert("geb_EuropeanCrayFish");
+        catCrustacean.Insert("geb_FloridaCrayFish");
+        catCrustacean.Insert("geb_CaveCrayFish");
+        catCrustacean.Insert("geb_MonongahelaCrayFish");
+        catCrustacean.Insert("geb_RedSwampCrayFish");
+        catCrustacean.Insert("geb_RustyCrayFish");
+        catCrustacean.Insert("geb_AmericanLobster");
+        catCrustacean.Insert("geb_EuropeanLobster");
+        catCrustacean.Insert("geb_KingCrab");
+        catCrustacean.Insert("geb_SnowCrab");
+
+        ref array<string> catSaltwaterLarge = new array<string>;
+        catSaltwaterLarge.Insert("geb_GreatWhiteShark");
+        catSaltwaterLarge.Insert("geb_HammerHeadShark");
+        catSaltwaterLarge.Insert("geb_AngelShark");
+        catSaltwaterLarge.Insert("geb_LeopardShark");
+        catSaltwaterLarge.Insert("geb_AtlanticBlueMarlin");
+        catSaltwaterLarge.Insert("geb_AtlanticSailFish");
+        catSaltwaterLarge.Insert("geb_YellowFinTuna");
+
+        ref array<string> catSaltwaterMed = new array<string>;
+        catSaltwaterMed.Insert("geb_AsianSeaBass");
+        catSaltwaterMed.Insert("geb_Bonita");
+        catSaltwaterMed.Insert("geb_MahiMahi");
+        catSaltwaterMed.Insert("geb_RoughNeckRock");
+        catSaltwaterMed.Insert("geb_SiameseTigerFish");
+        catSaltwaterMed.Insert("WalleyePollock");
+        catSaltwaterMed.Insert("geb_PacificCod");
+        catSaltwaterMed.Insert("geb_LargeHeadHairTailFish");
+        catSaltwaterMed.Insert("geb_SouthernFlounder");
+
+        ref array<string> catSaltwaterSmall = new array<string>;
+        catSaltwaterSmall.Insert("Mackerel");
+        catSaltwaterSmall.Insert("Sardines");
+        catSaltwaterSmall.Insert("geb_YellowSnapper");
+        catSaltwaterSmall.Insert("geb_WhiteGrunt");
+
+        ref array<string> catReefTropical = new array<string>;
+        catReefTropical.Insert("geb_AngelFish");
+        catReefTropical.Insert("geb_BlueTang");
+        catReefTropical.Insert("geb_HumpHeadWrasse");
+        catReefTropical.Insert("geb_Severum");
+        catReefTropical.Insert("geb_RedHeadCichlid");
+
+        ref array<string> catShellfishInvert = new array<string>;
+        catShellfishInvert.Insert("geb_BloodClam");
+        catShellfishInvert.Insert("geb_Mussel");
+        catShellfishInvert.Insert("geb_BlackDevilSnail");
+        catShellfishInvert.Insert("geb_BlueJellyFish");
+        catShellfishInvert.Insert("geb_StarFish");
+
+        BaitConfig bait;
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "Worm";
+        AppendBaitPrefsByCategory(bait, catPanfish, 2.0);
+        AppendBaitPrefsByCategory(bait, catBass, 1.4);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 0.6);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.2);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.6);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.5);
+        AppendBaitPrefsByCategory(bait, catCarp, 2.0);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.2);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.7);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.4);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_GrassHopper";
+        AppendBaitPrefsByCategory(bait, catPanfish, 1.5);
+        AppendBaitPrefsByCategory(bait, catBass, 1.4);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 0.4);
+        AppendBaitPrefsByCategory(bait, catWalleye, 0.8);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 2.0);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.7);
+        AppendBaitPrefsByCategory(bait, catCarp, 1.0);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 1.8);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 0.9);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.4);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.6);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_FieldCricket";
+        AppendBaitPrefsByCategory(bait, catPanfish, 1.5);
+        AppendBaitPrefsByCategory(bait, catBass, 1.4);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 0.4);
+        AppendBaitPrefsByCategory(bait, catWalleye, 0.8);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 2.0);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.7);
+        AppendBaitPrefsByCategory(bait, catCarp, 1.0);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 1.8);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 0.9);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.4);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.6);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_GrubWorm";
+        AppendBaitPrefsByCategory(bait, catPanfish, 2.0);
+        AppendBaitPrefsByCategory(bait, catBass, 1.4);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 0.5);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.3);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.8);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.3);
+        AppendBaitPrefsByCategory(bait, catCarp, 1.4);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 1.0);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.1);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.4);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.7);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.7);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_RubberWorm";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.6);
+        AppendBaitPrefsByCategory(bait, catBass, 2.5);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.3);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.5);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 0.7);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.7);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.4);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 0.6);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.4);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.4);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.4);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "Shrimp";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.6);
+        AppendBaitPrefsByCategory(bait, catBass, 0.5);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 0.5);
+        AppendBaitPrefsByCategory(bait, catWalleye, 0.5);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 0.7);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.6);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.4);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 0.7);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.7);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 2.0);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 1.5);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.5);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_FatHeadMinnow";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.7);
+        AppendBaitPrefsByCategory(bait, catBass, 2.0);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.5);
+        AppendBaitPrefsByCategory(bait, catWalleye, 2.5);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.8);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.4);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 1.0);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 0.8);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.4);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.0);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.8);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.5);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.4);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_RedSalamander";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.4);
+        AppendBaitPrefsByCategory(bait, catBass, 2.0);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.0);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.5);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.0);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 2.5);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 0.6);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.4);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.3);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_SpinnerBait1";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.8);
+        AppendBaitPrefsByCategory(bait, catBass, 2.5);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.3);
+        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.6);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.7);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.5);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.4);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_SpinnerBait2";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.8);
+        AppendBaitPrefsByCategory(bait, catBass, 2.5);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.3);
+        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.6);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.7);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.5);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.4);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_SpinnerBait3";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.8);
+        AppendBaitPrefsByCategory(bait, catBass, 2.5);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.3);
+        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.6);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.7);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.5);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.4);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_SpinnerBait4";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.8);
+        AppendBaitPrefsByCategory(bait, catBass, 2.5);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.3);
+        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.6);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.7);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.5);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.4);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_SpoonLure1";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.6);
+        AppendBaitPrefsByCategory(bait, catBass, 1.5);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.0);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 2.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.8);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.9);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.6);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.5);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_SpoonLure2";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.6);
+        AppendBaitPrefsByCategory(bait, catBass, 1.5);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.0);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 2.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.8);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.9);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.6);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.5);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_SpoonLure3";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.6);
+        AppendBaitPrefsByCategory(bait, catBass, 1.5);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.0);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 2.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.8);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.9);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.6);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.5);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_SpoonLure4";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.6);
+        AppendBaitPrefsByCategory(bait, catBass, 1.5);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.0);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 2.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.8);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.9);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.6);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.5);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_Lure1";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.7);
+        AppendBaitPrefsByCategory(bait, catBass, 2.0);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.8);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.0);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.7);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_Lure2";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.7);
+        AppendBaitPrefsByCategory(bait, catBass, 2.0);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.8);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.0);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.7);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_Lure3";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.7);
+        AppendBaitPrefsByCategory(bait, catBass, 2.0);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.8);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.0);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.7);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_Lure4";
+        AppendBaitPrefsByCategory(bait, catPanfish, 0.7);
+        AppendBaitPrefsByCategory(bait, catBass, 2.0);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.8);
+        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.5);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.0);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.7);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_CurlyTailJig1";
+        AppendBaitPrefsByCategory(bait, catPanfish, 1.5);
+        AppendBaitPrefsByCategory(bait, catBass, 2.2);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.3);
+        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.0);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.5);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.7);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.8);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_CurlyTailJig2";
+        AppendBaitPrefsByCategory(bait, catPanfish, 1.5);
+        AppendBaitPrefsByCategory(bait, catBass, 2.2);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.3);
+        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.0);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.5);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.7);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.8);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_CurlyTailJig3";
+        AppendBaitPrefsByCategory(bait, catPanfish, 1.5);
+        AppendBaitPrefsByCategory(bait, catBass, 2.2);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.3);
+        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.0);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.5);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.7);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.8);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+
+        bait = new BaitConfig();
+        bait.BaitClassname = "geb_CurlyTailJig4";
+        AppendBaitPrefsByCategory(bait, catPanfish, 1.5);
+        AppendBaitPrefsByCategory(bait, catBass, 2.2);
+        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.3);
+        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
+        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.0);
+        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
+        AppendBaitPrefsByCategory(bait, catCarp, 0.5);
+        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
+        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
+        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.7);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.8);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
+        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        BaitPreferences.Insert(bait);
+    }
+
+    // Helper: append a BaitPreferenceEntry to `conf.Preferences` for
+    // every fish classname in `fishList`, all with the same multiplier.
+    // Lets SeedDefaultBaitPreferences emit per-category preferences in
+    // one line per (bait, category) pair instead of per fish.
+    protected void AppendBaitPrefsByCategory(BaitConfig conf, array<string> fishList, float mul) {
+        foreach (string fish : fishList) {
+            BaitPreferenceEntry pref = new BaitPreferenceEntry();
+            pref.FishClassname = fish;
+            pref.Multiplier = mul;
+            conf.Preferences.Insert(pref);
+        }
     }
 
     // Per-species weather multipliers live inline on each FishConf class
@@ -555,7 +1160,22 @@ class WeatherConf {
     string CapInfo = "Hard cap on combined multipliers. Stops storm + night from compounding into something silly.";
     float MaxStackedMultiplier = 2.0;
 
-    string SpeciesBuffsInfo = "Per-species multipliers are configured inline on each fish section below (RainMultiplier, StormMultiplier, DawnMultiplier, DayMultiplier, DuskMultiplier, NightMultiplier). 1.0 = no effect, higher = bites more, lower = bites less.";
+    string MoonPhaseInfo = "Moon-phase catch buff. Calculates the actual lunar phase from the in-game date and interpolates between FullMoonMultiplier (at full moon) and NewMoonMultiplier (at new moon), smooth across quarter moons. Only applies at night since the moon isn't a visible/active factor during the day. Independent of WeatherCatchBoostEnable so admins can run moon-only or weather-only. Defaults stay within +-20% to avoid feeling gimmicky.";
+    bool MoonPhaseEnable = 1;
+    float FullMoonMultiplier = 1.20;
+    float NewMoonMultiplier = 0.90;
+
+    string TemperatureInfo = "Per-species water-temperature catch buff. Reads ambient air temperature as a proxy for water temperature and applies a per-fish bell curve: 1.0x at the fish's TempOptimal, falling linearly to MinTempMultiplier as water drops to TempMin and to MaxTempMultiplier as it rises to TempMax. Outside [TempMin, TempMax] the multiplier stays clamped at those floors so cold-water fish never fully shut down in summer (and vice versa). All temps in degrees Celsius. Set TemperatureEffectEnable to 0 to disable entirely; set a fish's TempMin equal to its TempMax to disable just that fish. Independent of WeatherCatchBoostEnable.";
+    bool TemperatureEffectEnable = 1;
+    float MinTempMultiplier = 0.1;
+    float MaxTempMultiplier = 0.1;
+    string WaterTempOffsetInfo = "Admin offset (degrees Celsius) added to ambient air temperature before the per-fish curve is applied. Use NEGATIVE values for winter/cold-themed servers (e.g. Sakhal) so cold-water fish actually feed and warm-water fish back off; use POSITIVE values for tropical/summer servers. Default 0 = use ambient air temp unchanged. This shifts the curve globally without editing every fish's TempOptimal/TempMin/TempMax. Examples: 0 = vanilla Chernarus (bass active in summer, trout in spring/fall); -5 = cold map like Sakhal (lake trout/salmon/cod active year-round, bass struggles); -10 = frozen lake roleplay (only cold-water species feed); +5 = tropical mod (reef fish/marlin/mahi dominate, trout shut down).";
+    float WaterTempOffset = 0.0;
+
+    string BiteSpeedEnableInfo = "Master toggle for the per-fish BiteSpeed cycle scaling. Each fish has a 24-hour BiteSpeed array (e.g. CarpConf.BiteSpeed = {0.85, 0.85, ..., 1.0, ...}) where 1.0 means the fish bites at its natural speed for that hour and 0.5 means the cycle takes twice as long. The catching context aggregates these across the active fish pool, weighted by per-fish CatchProbability and the current time-of-day multiplier, then stretches the catch cycle inversely so lower aggregates mean longer waits between bites. Set to 0 to bypass entirely and use vanilla DayZ cycle length regardless of which fish are in the pool -- the per-fish BiteSpeed arrays still appear in JSON for tuning but have no in-game effect. Independent of WeatherCatchBoostEnable, MoonPhaseEnable, and TemperatureEffectEnable. Useful for servers wanting a flat fishing experience without per-hour variance, or for isolating whether a tuning issue is coming from BiteSpeed math vs other multipliers.";
+    bool BiteSpeedEnable = 1;
+
+    string SpeciesBuffsInfo = "Per-species multipliers are configured inline on each fish section below (RainMultiplier, StormMultiplier, DawnMultiplier, DayMultiplier, DuskMultiplier, NightMultiplier, TempOptimal, TempMin, TempMax). 1.0 = no effect, higher = bites more, lower = bites less.";
 }
 
 class PredatorEntry {
@@ -585,6 +1205,28 @@ class NetEntry {
     string Classname;
     float CatchChance;
     int Environment = 1;
+}
+
+// One per fish that a given bait/lure favours. Multiplier > 1.0 makes the
+// fish more likely to be the selected catch when this bait is on the hook;
+// < 1.0 makes it less likely. 1.0 = neutral, same as omitting the entry.
+class BaitPreferenceEntry {
+    string FishClassname;
+    float Multiplier = 1.0;
+}
+
+// Bait-side container: each bait/lure classname owns a list of fish it
+// favours. Lookups default to 1.0 (no bias) when the current bait is not
+// in BaitPreferences at all, or when the bait is configured but the
+// specific fish isn't listed. So admins can opt in incrementally without
+// listing every fish-bait pair.
+class BaitConfig {
+    string BaitClassname;
+    ref array<ref BaitPreferenceEntry> Preferences;
+
+    void BaitConfig() {
+        Preferences = new array<ref BaitPreferenceEntry>();
+    }
 }
 
 // Settings for ActionBambooFishingNet. Owns the per-attempt find-chance
@@ -636,6 +1278,9 @@ class DigWormsConf {
 
 //fish config data
 class MackerelConf {
+    float TempOptimal = 18.0;
+    float TempMin = 8.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -656,6 +1301,9 @@ class MackerelConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.95, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.95, 1, 1, 0.95, 0.95, 0.9, 0.9, 0.85};
 };
 class CarpConf {
+    float TempOptimal = 24.0;
+    float TempMin = 14.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -676,6 +1324,9 @@ class CarpConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.95, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.95, 1, 1, 0.95, 0.95, 0.9, 0.9, 0.85};
 };
 class SardinesConf {
+    float TempOptimal = 18.0;
+    float TempMin = 8.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -693,6 +1344,9 @@ class SardinesConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class BitterlingsConf {
+    float TempOptimal = 22.0;
+    float TempMin = 12.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -710,6 +1364,9 @@ class BitterlingsConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class WalleyePollockConf {
+    float TempOptimal = 8.0;
+    float TempMin = 1.0;
+    float TempMax = 14.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -730,8 +1387,11 @@ class WalleyePollockConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class SteelheadTroutConf {
+    float TempOptimal = 13.0;
+    float TempMin = 4.0;
+    float TempMax = 20.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
+    int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 3;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -750,6 +1410,9 @@ class SteelheadTroutConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class ShrimpConf {
+    float TempOptimal = 20.0;
+    float TempMin = 12.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -767,6 +1430,9 @@ class ShrimpConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class NorthernSnakeHeadConf {
+    float TempOptimal = 21.0;
+    float TempMin = 12.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -787,6 +1453,9 @@ class NorthernSnakeHeadConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class NorthernPikeConf {
+    float TempOptimal = 18.0;
+    float TempMin = 8.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -807,6 +1476,9 @@ class NorthernPikeConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
 };
 class MuskellungeConf {
+    float TempOptimal = 19.0;
+    float TempMin = 10.0;
+    float TempMax = 25.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -827,6 +1499,9 @@ class MuskellungeConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
 };
 class SpottedMuskellungeConf {
+    float TempOptimal = 19.0;
+    float TempMin = 10.0;
+    float TempMax = 25.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -847,6 +1522,9 @@ class SpottedMuskellungeConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
 };
 class BarredMuskellungeConf {
+    float TempOptimal = 19.0;
+    float TempMin = 10.0;
+    float TempMax = 25.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -867,6 +1545,9 @@ class BarredMuskellungeConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
 };
 class TigerMuskellungeConf {
+    float TempOptimal = 19.0;
+    float TempMin = 10.0;
+    float TempMax = 25.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -887,8 +1568,11 @@ class TigerMuskellungeConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
 };
 class AlligatorGarConf {
+    float TempOptimal = 26.0;
+    float TempMin = 16.0;
+    float TempMax = 32.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
+    int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 1;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -907,6 +1591,9 @@ class AlligatorGarConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
 };
 class LargeMouthBassConf {
+    float TempOptimal = 24.0;
+    float TempMin = 14.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -927,6 +1614,9 @@ class LargeMouthBassConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class SmallMouthBassConf {
+    float TempOptimal = 21.0;
+    float TempMin = 12.0;
+    float TempMax = 27.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -947,6 +1637,9 @@ class SmallMouthBassConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class WallEyeConf {
+    float TempOptimal = 18.0;
+    float TempMin = 8.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -967,6 +1660,9 @@ class WallEyeConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
 };
 class SunFishConf {
+    float TempOptimal = 25.0;
+    float TempMin = 15.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -987,6 +1683,9 @@ class SunFishConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class WhiteBassConf {
+    float TempOptimal = 21.0;
+    float TempMin = 12.0;
+    float TempMax = 27.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1007,6 +1706,9 @@ class WhiteBassConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.95, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.95, 1, 1, 0.95, 0.95, 0.9, 0.9, 0.85};
 };
 class BlackBassConf {
+    float TempOptimal = 23.0;
+    float TempMin = 13.0;
+    float TempMax = 29.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1027,8 +1729,11 @@ class BlackBassConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class StripedBassConf {
+    float TempOptimal = 20.0;
+    float TempMin = 10.0;
+    float TempMax = 26.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
+    int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 3;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -1047,6 +1752,9 @@ class StripedBassConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
 };
 class NeoshoBassConf {
+    float TempOptimal = 22.0;
+    float TempMin = 13.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1067,6 +1775,9 @@ class NeoshoBassConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class RainbowTroutConf {
+    float TempOptimal = 14.0;
+    float TempMin = 4.0;
+    float TempMax = 21.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1087,6 +1798,9 @@ class RainbowTroutConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class BrownTroutConf {
+    float TempOptimal = 14.0;
+    float TempMin = 4.0;
+    float TempMax = 21.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1107,6 +1821,9 @@ class BrownTroutConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class BrookTroutConf {
+    float TempOptimal = 13.0;
+    float TempMin = 4.0;
+    float TempMax = 20.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1127,6 +1844,9 @@ class BrookTroutConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class LakeTroutConf {
+    float TempOptimal = 10.0;
+    float TempMin = 2.0;
+    float TempMax = 16.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1147,6 +1867,9 @@ class LakeTroutConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class CutThroatTroutConf {
+    float TempOptimal = 13.0;
+    float TempMin = 4.0;
+    float TempMax = 20.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1167,6 +1890,9 @@ class CutThroatTroutConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class LakeSturgeonConf {
+    float TempOptimal = 15.0;
+    float TempMin = 5.0;
+    float TempMax = 22.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1187,6 +1913,9 @@ class LakeSturgeonConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.95, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.95, 1, 1, 0.95, 0.95, 0.9, 0.9, 0.85};
 };
 class YellowPerchConf {
+    float TempOptimal = 19.0;
+    float TempMin = 10.0;
+    float TempMax = 25.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1207,6 +1936,9 @@ class YellowPerchConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class FlatHeadCatFishConf {
+    float TempOptimal = 26.0;
+    float TempMin = 16.0;
+    float TempMax = 32.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1227,6 +1959,9 @@ class FlatHeadCatFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class FatHeadMinnowConf {
+    float TempOptimal = 22.0;
+    float TempMin = 12.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1247,6 +1982,9 @@ class FatHeadMinnowConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class AmericanBullFrogConf {
+    float TempOptimal = 25.0;
+    float TempMin = 15.0;
+    float TempMax = 32.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1267,6 +2005,9 @@ class AmericanBullFrogConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class RedSalamanderConf {
+    float TempOptimal = 15.0;
+    float TempMin = 6.0;
+    float TempMax = 22.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1287,6 +2028,9 @@ class RedSalamanderConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class BlueGillConf {
+    float TempOptimal = 25.0;
+    float TempMin = 15.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1307,6 +2051,9 @@ class BlueGillConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class SaugerConf {
+    float TempOptimal = 18.0;
+    float TempMin = 8.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1327,6 +2074,9 @@ class SaugerConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
 };
 class BowFinConf {
+    float TempOptimal = 22.0;
+    float TempMin = 12.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1347,6 +2097,9 @@ class BowFinConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class SlimySculpinConf {
+    float TempOptimal = 10.0;
+    float TempMin = 2.0;
+    float TempMax = 16.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1367,6 +2120,9 @@ class SlimySculpinConf {
     autoptr TFloatArray BiteSpeed = {0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.95, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.95, 1, 1, 0.95, 0.95, 0.9, 0.9, 0.85};
 };
 class SeverumConf {
+    float TempOptimal = 27.0;
+    float TempMin = 20.0;
+    float TempMax = 32.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1387,6 +2143,9 @@ class SeverumConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class SignalCrayFishConf {
+    float TempOptimal = 22.0;
+    float TempMin = 12.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1407,6 +2166,9 @@ class SignalCrayFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class EuropeanCrayFishConf {
+    float TempOptimal = 22.0;
+    float TempMin = 12.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1427,6 +2189,9 @@ class EuropeanCrayFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class CaveCrayFishConf {
+    float TempOptimal = 12.0;
+    float TempMin = 4.0;
+    float TempMax = 18.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1447,6 +2212,9 @@ class CaveCrayFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class FloridaCrayFishConf {
+    float TempOptimal = 25.0;
+    float TempMin = 15.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1467,6 +2235,9 @@ class FloridaCrayFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class MonongahelaCrayFishConf {
+    float TempOptimal = 22.0;
+    float TempMin = 12.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1487,6 +2258,9 @@ class MonongahelaCrayFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class RedSwampCrayFishConf {
+    float TempOptimal = 24.0;
+    float TempMin = 14.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1507,6 +2281,9 @@ class RedSwampCrayFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class RustyCrayFishConf {
+    float TempOptimal = 22.0;
+    float TempMin = 12.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1527,6 +2304,9 @@ class RustyCrayFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class MahiMahiConf {
+    float TempOptimal = 27.0;
+    float TempMin = 20.0;
+    float TempMax = 32.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1547,6 +2327,9 @@ class MahiMahiConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class AtlanticSailFishConf {
+    float TempOptimal = 27.0;
+    float TempMin = 21.0;
+    float TempMax = 32.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1567,6 +2350,9 @@ class AtlanticSailFishConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class AngelFishConf {
+    float TempOptimal = 27.0;
+    float TempMin = 20.0;
+    float TempMax = 32.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1587,8 +2373,11 @@ class AngelFishConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class AsianSeaBassConf {
+    float TempOptimal = 28.0;
+    float TempMin = 20.0;
+    float TempMax = 33.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
+    int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 3;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -1607,6 +2396,9 @@ class AsianSeaBassConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class AtlanticBlueMarlinConf {
+    float TempOptimal = 26.0;
+    float TempMin = 20.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1627,6 +2419,9 @@ class AtlanticBlueMarlinConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class BonitaConf {
+    float TempOptimal = 22.0;
+    float TempMin = 14.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1647,8 +2442,11 @@ class BonitaConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class CherrySalmonConf {
+    float TempOptimal = 12.0;
+    float TempMin = 4.0;
+    float TempMax = 18.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
+    int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 3;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -1667,8 +2465,11 @@ class CherrySalmonConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class ChinookSalmonConf {
+    float TempOptimal = 12.0;
+    float TempMin = 4.0;
+    float TempMax = 18.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
+    int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 3;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -1687,8 +2488,11 @@ class ChinookSalmonConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class SockEyeSalmonConf {
+    float TempOptimal = 13.0;
+    float TempMin = 4.0;
+    float TempMax = 18.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
+    int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 3;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -1707,8 +2511,11 @@ class SockEyeSalmonConf {
     autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
 };
 class FlatHeadMulletConf {
+    float TempOptimal = 25.0;
+    float TempMin = 15.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
+    int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 3;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -1727,6 +2534,9 @@ class FlatHeadMulletConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class LeopardSharkConf {
+    float TempOptimal = 18.0;
+    float TempMin = 10.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1747,6 +2557,9 @@ class LeopardSharkConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class HammerHeadSharkConf {
+    float TempOptimal = 26.0;
+    float TempMin = 18.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1767,6 +2580,9 @@ class HammerHeadSharkConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class PacificCodConf {
+    float TempOptimal = 8.0;
+    float TempMin = 2.0;
+    float TempMax = 14.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1787,8 +2603,11 @@ class PacificCodConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class RedHeadCichlidConf {
+    float TempOptimal = 27.0;
+    float TempMin = 20.0;
+    float TempMax = 32.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
+    int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 3;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -1807,6 +2626,9 @@ class RedHeadCichlidConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class RoughNeckRockConf {
+    float TempOptimal = 17.0;
+    float TempMin = 8.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1827,6 +2649,9 @@ class RoughNeckRockConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class BlueTangConf {
+    float TempOptimal = 26.0;
+    float TempMin = 20.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1847,6 +2672,9 @@ class BlueTangConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class LargeHeadHairTailFishConf {
+    float TempOptimal = 17.0;
+    float TempMin = 8.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1867,6 +2695,9 @@ class LargeHeadHairTailFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class HumpHeadWrasseConf {
+    float TempOptimal = 27.0;
+    float TempMin = 20.0;
+    float TempMax = 32.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1887,8 +2718,11 @@ class HumpHeadWrasseConf {
     autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
 };
 class SiameseTigerFishConf {
+    float TempOptimal = 27.0;
+    float TempMin = 20.0;
+    float TempMax = 32.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
+    int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 3;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -1907,6 +2741,9 @@ class SiameseTigerFishConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class GreatWhiteSharkConf {
+    float TempOptimal = 17.0;
+    float TempMin = 10.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1927,6 +2764,9 @@ class GreatWhiteSharkConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class AngelSharkConf {
+    float TempOptimal = 18.0;
+    float TempMin = 10.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1947,6 +2787,9 @@ class AngelSharkConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class YellowFinTunaConf {
+    float TempOptimal = 25.0;
+    float TempMin = 18.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1967,6 +2810,9 @@ class YellowFinTunaConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class YellowSnapperConf {
+    float TempOptimal = 25.0;
+    float TempMin = 18.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -1987,6 +2833,9 @@ class YellowSnapperConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class SouthernFlounderConf {
+    float TempOptimal = 18.0;
+    float TempMin = 10.0;
+    float TempMax = 24.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2007,6 +2856,9 @@ class SouthernFlounderConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class WhiteGruntConf {
+    float TempOptimal = 25.0;
+    float TempMin = 18.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2027,6 +2879,9 @@ class WhiteGruntConf {
     autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
 };
 class BloodClamConf {
+    float TempOptimal = 18.0;
+    float TempMin = 4.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2047,8 +2902,11 @@ class BloodClamConf {
     autoptr TFloatArray BiteSpeed = {0.95, 0.95, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.9, 0.9, 0.9, 0.95, 0.95, 0.95};
 };
 class MusselConf {
+    float TempOptimal = 16.0;
+    float TempMin = 4.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
+    int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 6;
     string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
@@ -2067,8 +2925,11 @@ class MusselConf {
     autoptr TFloatArray BiteSpeed = {0.95, 0.95, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.9, 0.9, 0.9, 0.95, 0.95, 0.95};
 };
 class BlackDevilSnailConf {
+    float TempOptimal = 22.0;
+    float TempMin = 10.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
+    int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 6;
     string BoneInfo = "BoneMin and BoneMax determine the minimum and maximum Bone pieces for the prepare action. DayZ has a hard limit of 10 bones max.";
@@ -2087,6 +2948,9 @@ class BlackDevilSnailConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class StarFishConf {
+    float TempOptimal = 16.0;
+    float TempMin = 4.0;
+    float TempMax = 28.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2107,6 +2971,9 @@ class StarFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 };
 class KingCrabConf {
+    float TempOptimal = 5.0;
+    float TempMin = 0.0;
+    float TempMax = 12.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2127,6 +2994,9 @@ class KingCrabConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class SnowCrabConf {
+    float TempOptimal = 4.0;
+    float TempMin = 0.0;
+    float TempMax = 10.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2147,6 +3017,9 @@ class SnowCrabConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class BlueJellyFishConf {
+    float TempOptimal = 20.0;
+    float TempMin = 8.0;
+    float TempMax = 30.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2167,6 +3040,9 @@ class BlueJellyFishConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class AmericanLobsterConf {
+    float TempOptimal = 12.0;
+    float TempMin = 4.0;
+    float TempMax = 18.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
@@ -2187,6 +3063,9 @@ class AmericanLobsterConf {
     autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
 };
 class EuropeanLobsterConf {
+    float TempOptimal = 14.0;
+    float TempMin = 5.0;
+    float TempMax = 20.0;
     string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";

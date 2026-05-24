@@ -53,7 +53,12 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 	protected float ComputeAggregateBiteSpeed() {
 		if (!m_gebsConfig || !m_gebsConfig.WeatherSettings)
 			return 1.0;
-		if (!m_gebsConfig.WeatherSettings.WeatherCatchBoostEnable)
+		// Gate on BiteSpeedEnable (not WeatherCatchBoostEnable) so the three
+		// catch-modifying systems -- weather/time-of-day, moon, and BiteSpeed --
+		// are independently toggleable. The aggregate still uses
+		// GetSpeciesWeatherMultiplier internally for per-fish weighting, and
+		// that helper handles its own enable gating.
+		if (!m_gebsConfig.WeatherSettings.BiteSpeedEnable)
 			return 1.0;
 		if (!m_ProbabilityArray || m_ProbabilityArray.Count() == 0)
 			return 1.0;
@@ -183,9 +188,8 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     }
 
     // Weighted random selection over m_ProbabilityArray, biased by per-species
-    // multipliers cached on each GebYieldFishBase at registration time (read
-    // off the matching FishConf's RainMultiplier / StormMultiplier /
-    // NightMultiplier fields in SetupYield).
+    // weather/time-of-day multipliers and the per-bait fish-preference table.
+    // Each yield's final weight is SCALE * speciesWeatherMul * baitMul.
     // Returns -1 on any error condition (zero total weight, cast failures, etc.)
     // so the caller falls back to the existing uniform pick. Stays sync-safe by
     // using GetRandomInRange against an integer-scaled cumulative weight.
@@ -194,12 +198,19 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         if (n <= 0)
             return -1;
 
-        // Scale floats to ints (×1000) so weighted-random can use the integer
+        // Scale floats to ints (x1000) so weighted-random can use the integer
         // sync RNG, keeping client and server in lockstep.
         const int SCALE = 1000;
         ref array<int> scaled = new array<int>;
         scaled.Reserve(n);
         int total = 0;
+        int debugLevel = m_gebsConfig.GeneralSettings.DebugLogs;
+        string baitClassname = GetCurrentBaitClassname();
+
+        if (debugLevel == ELEVATED_DEBUG) {
+            GebsfishLogger.Debug("---PickWeightedYieldIndex (bait=" + baitClassname + ")---", "GenerateResult");
+            GebsfishLogger.Debug("species | weatherMul | baitMul | scaled", "GenerateResult");
+        }
 
         for (int i = 0; i < n; i++) {
             YieldItemBase y;
@@ -208,10 +219,15 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
             if (Class.CastTo(y, m_YieldsMapAll.Get(m_ProbabilityArray[i])) && y) {
                 GebYieldFishBase gy;
                 if (Class.CastTo(gy, y) && gy) {
-                    float mul = GetSpeciesWeatherMultiplier(gy);
-                    weight = Math.Round(SCALE * mul);
+                    float weatherMul = GetSpeciesWeatherMultiplier(gy);
+                    float baitMul = GetBaitMultiplier(gy.GetSpeciesClassname(), baitClassname);
+                    weight = Math.Round(SCALE * weatherMul * baitMul);
                     if (weight < 0)
                         weight = 0;
+
+                    if (debugLevel == ELEVATED_DEBUG) {
+                        GebsfishLogger.Debug(gy.GetSpeciesClassname() + " | " + weatherMul + " | " + baitMul + " | " + weight, "GenerateResult");
+                    }
                 }
             }
 
@@ -227,7 +243,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         for (int j = 0; j < n; j++) {
             cumul += scaled[j];
             if (roll < cumul) {
-                if (m_gebsConfig.GeneralSettings.DebugLogs == ELEVATED_DEBUG) {
+                if (debugLevel == ELEVATED_DEBUG) {
                     GebsfishLogger.Debug("Weighted yield pick: idx=" + j + " roll=" + roll + " total=" + total, "GenerateResult");
                 }
                 return j;
@@ -236,12 +252,133 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         return n - 1;  // floating-point edge case; clamp to last
     }
 
+    // Returns the classname currently on the rod's hook. Prefers m_Bait (a
+    // worm / minnow / salamander attached to the hook) since that's the
+    // active bait when bait-style items are in use. Falls back to m_Hook,
+    // which for gebsfish lures IS the hook itself (geb_SpinnerBait*,
+    // geb_SpoonLure*, geb_CurlyTailJig*, geb_Lure*). Returns empty string
+    // when neither is available -- callers default to a neutral 1.0
+    // multiplier in that case.
+    protected string GetCurrentBaitClassname() {
+        if (m_Bait)
+            return m_Bait.GetType();
+        if (m_Hook)
+            return m_Hook.GetType();
+        return "";
+    }
+
+    // Per-bait fish-preference multiplier. Walks BaitPreferences for an
+    // entry matching the current bait classname, then walks that entry's
+    // Preferences for a row matching the fish classname. Returns 1.0 (no
+    // bias) when the bait isn't configured at all, when the fish isn't in
+    // the bait's preference list, or when the config is missing -- so the
+    // system is fully opt-in and a partial config can never block catches.
+    protected float GetBaitMultiplier(string fishClassname, string baitClassname) {
+        if (baitClassname == "" || fishClassname == "")
+            return 1.0;
+        if (!m_gebsConfig || !m_gebsConfig.BaitPreferences)
+            return 1.0;
+        // Master toggle: when disabled, every bait is neutral 1.0x for every
+        // fish so only CatchProbability and the other multipliers (weather,
+        // time-of-day, temperature, moon) drive the weighted pick.
+        if (!m_gebsConfig.BaitPreferenceEnable)
+            return 1.0;
+
+        foreach (BaitConfig bait : m_gebsConfig.BaitPreferences) {
+            if (!bait || bait.BaitClassname != baitClassname)
+                continue;
+            if (!bait.Preferences)
+                return 1.0;
+            foreach (BaitPreferenceEntry pref : bait.Preferences) {
+                if (pref && pref.FishClassname == fishClassname)
+                    return pref.Multiplier;
+            }
+            return 1.0;  // matched bait but fish not listed -- neutral
+        }
+
+        return 1.0;  // bait not in config at all -- neutral
+    }
+
+    // Returns the current water temperature in degrees Celsius. Uses ambient
+    // air temperature as a proxy -- water temperature isn't exposed cleanly
+    // by the engine, but ambient already tracks weather/time-of-day/season,
+    // so it's a defensible stand-in for game purposes. Adds the admin-
+    // configured WaterTempOffset so winter/tropical servers can shift the
+    // whole curve without editing every fish. Defaults to 18 C (plus offset)
+    // if world state isn't available yet (mission startup race) so the curve
+    // returns a sensible mid-range neutral value.
+    protected float GetCurrentWaterTemp() {
+        float offset = 0.0;
+        if (m_gebsConfig && m_gebsConfig.WeatherSettings)
+            offset = m_gebsConfig.WeatherSettings.WaterTempOffset;
+
+        if (!g_Game || !g_Game.GetMission())
+            return 18.0 + offset;
+        WorldData worldData = g_Game.GetMission().GetWorldData();
+        if (!worldData)
+            return 18.0 + offset;
+        return worldData.GetBaseEnvTemperature() + offset;
+    }
+
+    // Per-species water-temperature multiplier. Piecewise linear bell curve:
+    //   - 1.0 at TempOptimal
+    //   - lerps to MinTempMultiplier as water drops to TempMin
+    //   - lerps to MaxTempMultiplier as water rises to TempMax
+    //   - clamps to those floors outside [TempMin, TempMax]
+    // Returns 1.0 (neutral) when disabled in config, when the fish wasn't
+    // initialized via SetTemperature (sentinel TempMin == TempMax), or when
+    // TempMin >= TempOptimal >= TempMax (degenerate range).
+    protected float GetSpeciesTempMultiplier(GebYieldFishBase gy) {
+        if (!gy)
+            return 1.0;
+        if (!m_gebsConfig || !m_gebsConfig.WeatherSettings)
+            return 1.0;
+        WeatherConf w = m_gebsConfig.WeatherSettings;
+        if (!w.TemperatureEffectEnable)
+            return 1.0;
+
+        float tempOpt = gy.GetTempOptimal();
+        float tempMin = gy.GetTempMin();
+        float tempMax = gy.GetTempMax();
+
+        // Uninitialized sentinel: same value means SetTemperature was never
+        // called for this fish. Stay neutral so partial wiring never breaks
+        // catches.
+        if (tempMin == tempMax)
+            return 1.0;
+        // Degenerate range guard -- treat as disabled to avoid divide-by-zero.
+        if (tempOpt <= tempMin || tempOpt >= tempMax)
+            return 1.0;
+
+        float waterTemp = GetCurrentWaterTemp();
+        float floorMin = w.MinTempMultiplier;
+        float floorMax = w.MaxTempMultiplier;
+
+        if (waterTemp <= tempMin)
+            return floorMin;
+        if (waterTemp >= tempMax)
+            return floorMax;
+        if (waterTemp == tempOpt)
+            return 1.0;
+
+        if (waterTemp < tempOpt) {
+            // Cold side: lerp from floorMin (at TempMin) to 1.0 (at TempOptimal).
+            float t = (waterTemp - tempMin) / (tempOpt - tempMin);
+            return Math.Lerp(floorMin, 1.0, t);
+        }
+        // Warm side: lerp from 1.0 (at TempOptimal) to floorMax (at TempMax).
+        float t2 = (waterTemp - tempOpt) / (tempMax - tempOpt);
+        return Math.Lerp(1.0, floorMax, t2);
+    }
+
     // Per-species multiplier overlay. Reads the per-species Rain/Storm/Dawn/
     // Day/Dusk/Night multipliers straight off the GebYieldFishBase (cached
     // there at registration time from the matching FishConf), then applies
     // the same rain/storm + time-of-day conditions as the global multiplier.
-    // Yields that weren't passed multipliers in SetupYield default to 1.0
-    // (no effect).
+    // Stacks the per-species temperature curve on top. Yields that weren't
+    // passed multipliers in SetupYield default to 1.0 (no effect). Bails
+    // early only when BOTH WeatherCatchBoostEnable and TemperatureEffectEnable
+    // are off -- temperature is independent of the rain/time toggle.
     protected float GetSpeciesWeatherMultiplier(GebYieldFishBase gy) {
         if (!gy)
             return 1.0;
@@ -249,38 +386,47 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
             return 1.0;
 
         WeatherConf w = m_gebsConfig.WeatherSettings;
-        if (!w.WeatherCatchBoostEnable)
+        if (!w.WeatherCatchBoostEnable && !w.TemperatureEffectEnable)
             return 1.0;
-
-        float speciesRain  = gy.GetRainMultiplier();
-        float speciesStorm = gy.GetStormMultiplier();
 
         float multiplier = 1.0;
 
-        // Rain / storm component (mutually exclusive, matches global rule).
-        Weather weather = g_Game.GetWeather();
-        if (weather && weather.GetRain()) {
-            float rain = weather.GetRain().GetActual();
-            if (rain >= w.StormThreshold && speciesStorm != 1.0) {
-                multiplier = multiplier * speciesStorm;
-            } else if (rain >= w.RainThreshold && speciesRain != 1.0) {
-                multiplier = multiplier * speciesRain;
+        if (w.WeatherCatchBoostEnable) {
+            float speciesRain  = gy.GetRainMultiplier();
+            float speciesStorm = gy.GetStormMultiplier();
+
+            // Rain / storm component (mutually exclusive, matches global rule).
+            Weather weather = g_Game.GetWeather();
+            if (weather && weather.GetRain()) {
+                float rain = weather.GetRain().GetActual();
+                if (rain >= w.StormThreshold && speciesStorm != 1.0) {
+                    multiplier = multiplier * speciesStorm;
+                } else if (rain >= w.RainThreshold && speciesRain != 1.0) {
+                    multiplier = multiplier * speciesRain;
+                }
             }
+
+            // Time-of-day component. Exactly one of Dawn / Day / Dusk / Night
+            // applies based on the current hour; pick the matching species
+            // multiplier and stack it onto the running total.
+            int hour = GetCurrentHour();
+            float speciesTimeOfDay = 1.0;
+            int window = ResolveTimeWindow(w, hour);
+            if (window == 0)      speciesTimeOfDay = gy.GetDawnMultiplier();
+            else if (window == 1) speciesTimeOfDay = gy.GetDayMultiplier();
+            else if (window == 2) speciesTimeOfDay = gy.GetDuskMultiplier();
+            else if (window == 3) speciesTimeOfDay = gy.GetNightMultiplier();
+
+            if (speciesTimeOfDay != 1.0)
+                multiplier = multiplier * speciesTimeOfDay;
         }
 
-        // Time-of-day component. Exactly one of Dawn / Day / Dusk / Night
-        // applies based on the current hour; pick the matching species
-        // multiplier and stack it onto the running total.
-        int hour = GetCurrentHour();
-        float speciesTimeOfDay = 1.0;
-        int window = ResolveTimeWindow(w, hour);
-        if (window == 0)      speciesTimeOfDay = gy.GetDawnMultiplier();
-        else if (window == 1) speciesTimeOfDay = gy.GetDayMultiplier();
-        else if (window == 2) speciesTimeOfDay = gy.GetDuskMultiplier();
-        else if (window == 3) speciesTimeOfDay = gy.GetNightMultiplier();
-
-        if (speciesTimeOfDay != 1.0)
-            multiplier = multiplier * speciesTimeOfDay;
+        // ---- temperature component ----
+        // Independent of WeatherCatchBoostEnable. Helper returns 1.0 when
+        // disabled or when the fish wasn't wired through SetTemperature yet.
+        float tempMul = GetSpeciesTempMultiplier(gy);
+        if (tempMul != 1.0)
+            multiplier = multiplier * tempMul;
 
         return multiplier;
     }
@@ -324,51 +470,129 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         return -1;
     }
 
-    // Computes the combined rain / storm / dawn / day / dusk / night multiplier
-    // from the current world state. Returns 1.0 (no effect) when the buff is
-    // disabled in config, when no condition is currently active, or when
-    // weather/world state isn't available yet (mission startup race).
+    // Computes the synodic moon phase as a 0..1 fraction where 0 = new moon,
+    // 0.5 = full moon, 1.0 = back to new. Uses the Meeus Julian Date formula
+    // against a known reference new moon (2000-01-06 18:14 UTC, JD 2451550.26)
+    // and the long-term-average synodic period (29.530588853 days). Accuracy
+    // stays within ~6 hours over many years -- well inside game tolerances.
+    // The in-game date drives this so any HUD mod showing the calendar will
+    // line up with the phase reported here.
+    protected float ComputeMoonPhase(int year, int month, int day, int hour) {
+        int y = year;
+        int m = month;
+        if (m <= 2) {
+            y = y - 1;
+            m = m + 12;
+        }
+        int a = y / 100;
+        int b = 2 - a + (a / 4);
+
+        float jd = Math.Floor(365.25 * (y + 4716))
+                 + Math.Floor(30.6001 * (m + 1))
+                 + day + b - 1524.5
+                 + hour / 24.0;
+
+        float daysSince = jd - 2451550.26;   // ref new moon JD
+        float synodic = 29.530588853;        // average synodic month
+        float phase = daysSince / synodic;
+        phase = phase - Math.Floor(phase);
+        if (phase < 0)
+            phase = phase + 1.0;
+        return phase;
+    }
+
+    // Per-cast moon-phase multiplier. Returns 1.0 (neutral) when disabled,
+    // during daytime (moon not a visible/active factor), when both extremes
+    // are 1.0, or when the world date isn't available yet. Otherwise lerps
+    // linearly between FullMoonMultiplier at full moon and NewMoonMultiplier
+    // at new moon, smooth across quarter moons. Independent of
+    // WeatherCatchBoostEnable so admins can run moon-only or weather-only.
+    protected float GetMoonMultiplier() {
+        if (!m_gebsConfig || !m_gebsConfig.WeatherSettings)
+            return 1.0;
+        WeatherConf w = m_gebsConfig.WeatherSettings;
+        if (!w.MoonPhaseEnable)
+            return 1.0;
+        if (w.FullMoonMultiplier == 1.0 && w.NewMoonMultiplier == 1.0)
+            return 1.0;
+
+        // Moon only applies at night -- reuse the configured Night window.
+        int hour = GetCurrentHour();
+        if (ResolveTimeWindow(w, hour) != 3)
+            return 1.0;
+
+        int year, month, day, h, minute;
+        if (!g_Game || !g_Game.GetWorld())
+            return 1.0;
+        g_Game.GetWorld().GetDate(year, month, day, h, minute);
+
+        float phase = ComputeMoonPhase(year, month, day, h);
+
+        // phase=0.5 -> distFromFull=0 (full). phase=0 or 1 -> distFromFull=1 (new).
+        float distFromFull = Math.AbsFloat(phase - 0.5) * 2.0;
+
+        return Math.Lerp(w.FullMoonMultiplier, w.NewMoonMultiplier, distFromFull);
+    }
+
+    // Computes the combined rain / storm / dawn / day / dusk / night / moon
+    // multiplier from the current world state. Returns 1.0 (no effect) when
+    // every feature is disabled, when no condition is currently active, or
+    // when weather/world state isn't available yet (mission startup race).
     //
     // Rain and storm are mutually exclusive (storm replaces rain rather than
     // stacking with it). Dawn/Day/Dusk/Night are also mutually exclusive --
     // the current hour falls in exactly one. Rain/storm CAN stack with the
-    // time-of-day window. Combined result is clamped to MaxStackedMultiplier
-    // so a stormy dawn never becomes a runaway printer.
+    // time-of-day window AND with the moon-phase multiplier (moon is night-
+    // only, so it never stacks with Dawn/Day/Dusk). MoonPhaseEnable is
+    // independent of WeatherCatchBoostEnable so admins can run moon-only or
+    // weather-only. Combined result is clamped to MaxStackedMultiplier so a
+    // stormy full-moon night never becomes a runaway printer.
     protected float GetWeatherCatchMultiplier() {
         if (!m_gebsConfig || !m_gebsConfig.WeatherSettings)
             return 1.0;
 
         WeatherConf w = m_gebsConfig.WeatherSettings;
-        if (!w.WeatherCatchBoostEnable)
+        // Bail out only if BOTH feature toggles are off -- moon is independent
+        // of WeatherCatchBoostEnable.
+        if (!w.WeatherCatchBoostEnable && !w.MoonPhaseEnable)
             return 1.0;
 
         float multiplier = 1.0;
 
-        // ---- rain / storm component ----
-        Weather weather = g_Game.GetWeather();
-        if (weather && weather.GetRain()) {
-            float rain = weather.GetRain().GetActual();
-            if (rain >= w.StormThreshold && w.StormCatchMultiplier != 1.0) {
-                multiplier = multiplier * w.StormCatchMultiplier;
-            } else if (rain >= w.RainThreshold && w.RainCatchMultiplier != 1.0) {
-                multiplier = multiplier * w.RainCatchMultiplier;
+        if (w.WeatherCatchBoostEnable) {
+            // ---- rain / storm component ----
+            Weather weather = g_Game.GetWeather();
+            if (weather && weather.GetRain()) {
+                float rain = weather.GetRain().GetActual();
+                if (rain >= w.StormThreshold && w.StormCatchMultiplier != 1.0) {
+                    multiplier = multiplier * w.StormCatchMultiplier;
+                } else if (rain >= w.RainThreshold && w.RainCatchMultiplier != 1.0) {
+                    multiplier = multiplier * w.RainCatchMultiplier;
+                }
             }
+
+            // ---- time-of-day component ----
+            // Exactly one of Dawn / Day / Dusk / Night applies based on hour.
+            // Each window has its own global multiplier in WeatherSettings;
+            // pick the matching one and stack it.
+            int hour = GetCurrentHour();
+            int window = ResolveTimeWindow(w, hour);
+            float timeOfDayMul = 1.0;
+            if (window == 0)      timeOfDayMul = w.DawnCatchMultiplier;
+            else if (window == 1) timeOfDayMul = w.DayCatchMultiplier;
+            else if (window == 2) timeOfDayMul = w.DuskCatchMultiplier;
+            else if (window == 3) timeOfDayMul = w.NightCatchMultiplier;
+
+            if (timeOfDayMul != 1.0)
+                multiplier = multiplier * timeOfDayMul;
         }
 
-        // ---- time-of-day component ----
-        // Exactly one of Dawn / Day / Dusk / Night applies based on hour.
-        // Each window has its own global multiplier in WeatherSettings;
-        // pick the matching one and stack it.
-        int hour = GetCurrentHour();
-        int window = ResolveTimeWindow(w, hour);
-        float timeOfDayMul = 1.0;
-        if (window == 0)      timeOfDayMul = w.DawnCatchMultiplier;
-        else if (window == 1) timeOfDayMul = w.DayCatchMultiplier;
-        else if (window == 2) timeOfDayMul = w.DuskCatchMultiplier;
-        else if (window == 3) timeOfDayMul = w.NightCatchMultiplier;
-
-        if (timeOfDayMul != 1.0)
-            multiplier = multiplier * timeOfDayMul;
+        // ---- moon-phase component ----
+        // Independent of WeatherCatchBoostEnable. Helper handles disable /
+        // daytime / no-op cases and returns 1.0 in any of them.
+        float moonMul = GetMoonMultiplier();
+        if (moonMul != 1.0)
+            multiplier = multiplier * moonMul;
 
         // ---- cap ----
         if (w.MaxStackedMultiplier > 0 && multiplier > w.MaxStackedMultiplier)
