@@ -15,7 +15,6 @@ class gebsfishConfig {
     ref RecipeToggleConf RecipeToggles;
     ref PredatorConf PredatorSettings;
     ref WeatherConf WeatherSettings;
-    ref LogConf CFToolsLogging;
     ref array<ref PredatorEntry> Predators;
     // Per-action sections -- each owns its own find-chance, spawn table,
     // and any action-specific extras (the net also has PredatorSpawnChance).
@@ -145,8 +144,6 @@ class gebsfishConfig {
         //Save general settings to file
         GeneralSettings = new GenSetConf;
         RecipeToggles = new RecipeToggleConf;
-        //Save CF Tools logging settings to file
-        CFToolsLogging = new LogConf;
         //Save predator config data to the file
         PredatorSettings = new PredatorConf;
         // Weather catch buff settings. Per-species multipliers live inline
@@ -389,7 +386,6 @@ class gebsfishConfig {
         bool changed = false;
         if (!GeneralSettings)    { GeneralSettings = new GenSetConf;       changed = true; }
         if (!RecipeToggles)      { RecipeToggles = new RecipeToggleConf;   changed = true; }
-        if (!CFToolsLogging)     { CFToolsLogging = new LogConf;           changed = true; }
         if (!PredatorSettings)   { PredatorSettings = new PredatorConf;    changed = true; }
         if (!WeatherSettings)    { WeatherSettings = new WeatherConf;      changed = true; }
         // Per-species multipliers now live on each FishConf class (Rain/Storm/
@@ -542,19 +538,6 @@ class gebsfishConfig {
         catBaitFish.Insert("geb_FlatHeadMullet");
         catBaitFish.Insert("geb_SlimySculpin");
 
-        ref array<string> catCrustacean = new array<string>;
-        catCrustacean.Insert("Shrimp");
-        catCrustacean.Insert("geb_SignalCrayFish");
-        catCrustacean.Insert("geb_EuropeanCrayFish");
-        catCrustacean.Insert("geb_FloridaCrayFish");
-        catCrustacean.Insert("geb_CaveCrayFish");
-        catCrustacean.Insert("geb_MonongahelaCrayFish");
-        catCrustacean.Insert("geb_RedSwampCrayFish");
-        catCrustacean.Insert("geb_RustyCrayFish");
-        catCrustacean.Insert("geb_AmericanLobster");
-        catCrustacean.Insert("geb_EuropeanLobster");
-        catCrustacean.Insert("geb_KingCrab");
-        catCrustacean.Insert("geb_SnowCrab");
 
         ref array<string> catSaltwaterLarge = new array<string>;
         catSaltwaterLarge.Insert("geb_GreatWhiteShark");
@@ -589,13 +572,6 @@ class gebsfishConfig {
         catReefTropical.Insert("geb_Severum");
         catReefTropical.Insert("geb_RedHeadCichlid");
 
-        ref array<string> catShellfishInvert = new array<string>;
-        catShellfishInvert.Insert("geb_BloodClam");
-        catShellfishInvert.Insert("geb_Mussel");
-        catShellfishInvert.Insert("geb_BlackDevilSnail");
-        catShellfishInvert.Insert("geb_BlueJellyFish");
-        catShellfishInvert.Insert("geb_StarFish");
-
         BaitConfig bait;
 
         bait = new BaitConfig();
@@ -609,12 +585,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 2.0);
         AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
         AppendBaitPrefsByCategory(bait, catBaitFish, 1.2);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.5);
         AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.5);
         AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.7);
         AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.4);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -628,12 +602,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 1.0);
         AppendBaitPrefsByCategory(bait, catAmphibian, 1.8);
         AppendBaitPrefsByCategory(bait, catBaitFish, 0.9);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.4);
         AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.6);
         AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -647,12 +619,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 1.0);
         AppendBaitPrefsByCategory(bait, catAmphibian, 1.8);
         AppendBaitPrefsByCategory(bait, catBaitFish, 0.9);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.4);
         AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.6);
         AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -666,12 +636,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 1.4);
         AppendBaitPrefsByCategory(bait, catAmphibian, 1.0);
         AppendBaitPrefsByCategory(bait, catBaitFish, 1.1);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.4);
         AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.5);
         AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.7);
         AppendBaitPrefsByCategory(bait, catReefTropical, 0.7);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -685,32 +653,12 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 0.4);
         AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
         AppendBaitPrefsByCategory(bait, catBaitFish, 0.6);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.4);
         AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.4);
         AppendBaitPrefsByCategory(bait, catReefTropical, 0.4);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
         BaitPreferences.Insert(bait);
 
-        bait = new BaitConfig();
-        bait.BaitClassname = "Shrimp";
-        AppendBaitPrefsByCategory(bait, catPanfish, 0.6);
-        AppendBaitPrefsByCategory(bait, catBass, 0.5);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 0.5);
-        AppendBaitPrefsByCategory(bait, catWalleye, 0.5);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 0.7);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.6);
-        AppendBaitPrefsByCategory(bait, catCarp, 0.4);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 0.7);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.5);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.5);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.7);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 2.0);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 1.5);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.5);
-        BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
         bait.BaitClassname = "geb_FatHeadMinnow";
@@ -723,12 +671,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 0.4);
         AppendBaitPrefsByCategory(bait, catAmphibian, 1.0);
         AppendBaitPrefsByCategory(bait, catBaitFish, 0.8);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.4);
         AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.0);
         AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.8);
         AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.5);
         AppendBaitPrefsByCategory(bait, catReefTropical, 0.4);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -742,12 +688,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 0.3);
         AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
         AppendBaitPrefsByCategory(bait, catBaitFish, 0.6);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.5);
         AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.5);
         AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.4);
         AppendBaitPrefsByCategory(bait, catReefTropical, 0.3);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -761,12 +705,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 0.3);
         AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
         AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.6);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.7);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.5);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.4);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.8);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.2);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -780,12 +722,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 0.3);
         AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
         AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.6);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.7);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.5);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.4);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.8);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.2);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -799,12 +739,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 0.3);
         AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
         AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.6);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.7);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.5);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.4);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.8);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.2);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -818,12 +756,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 0.3);
         AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
         AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.6);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.7);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.5);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.4);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.8);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.2);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -837,12 +773,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 0.3);
         AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
         AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.8);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.9);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.6);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.5);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.8);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 2.0);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.5);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 1.0);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -856,12 +790,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 0.3);
         AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
         AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.8);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.9);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.6);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.5);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.8);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 2.0);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.5);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 1.0);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -875,12 +807,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 0.3);
         AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
         AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.8);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.9);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.6);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.5);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.8);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 2.0);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.5);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 1.0);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -894,12 +824,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 0.3);
         AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
         AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.8);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.9);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.6);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.5);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
+        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.8);
+        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 2.0);
+        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.5);
+        AppendBaitPrefsByCategory(bait, catReefTropical, 1.0);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -913,12 +841,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 0.3);
         AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
         AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.5);
         AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.0);
         AppendBaitPrefsByCategory(bait, catReefTropical, 0.7);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -932,12 +858,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 0.3);
         AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
         AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.5);
         AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.0);
         AppendBaitPrefsByCategory(bait, catReefTropical, 0.7);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -951,12 +875,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 0.3);
         AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
         AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.5);
         AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.0);
         AppendBaitPrefsByCategory(bait, catReefTropical, 0.7);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -970,12 +892,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 0.3);
         AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
         AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.5);
         AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.0);
         AppendBaitPrefsByCategory(bait, catReefTropical, 0.7);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -989,12 +909,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 0.5);
         AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
         AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.7);
         AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
         AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.8);
         AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -1008,12 +926,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 0.5);
         AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
         AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.7);
         AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
         AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.8);
         AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -1027,12 +943,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 0.5);
         AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
         AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.7);
         AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
         AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.8);
         AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
         BaitPreferences.Insert(bait);
 
         bait = new BaitConfig();
@@ -1046,12 +960,10 @@ class gebsfishConfig {
         AppendBaitPrefsByCategory(bait, catCarp, 0.5);
         AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
         AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catCrustacean, 0.3);
         AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.7);
         AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
         AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.8);
         AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
-        AppendBaitPrefsByCategory(bait, catShellfishInvert, 0.3);
         BaitPreferences.Insert(bait);
     }
 
@@ -1099,14 +1011,6 @@ class RecipeToggleConf {
     bool CraftHookFromWire = 1;
     bool RepairFishingPole = 1;
     bool RepairBambooFishingNet = 1;
-};
-
-//cftools logging config data
-class LogConf {
-    string LoggingInfo = "Requires the ExtraLogs mod by TRG to use this section.";
-    bool CatchLogs = 0;
-    bool PredatorSpawn = 0;
-    bool PredatorSounds = 0;
 };
 
 //predator animals config data

@@ -640,11 +640,32 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 		m_Result.SetYieldItem(yItem);
 
         if (m_gebsConfig.GeneralSettings.DebugLogs) {
+			// Resolve the yield's species classname for the log instead of
+			// stringifying the YieldItemBase reference directly. Enforce's
+			// default object-to-string for YieldItemBase walks the first
+			// internal member, so concatenating yItem directly to a string
+			// rendered as something like "[0,..]" rather than a usable name.
+			// Casting to GebYieldFishBase gives us the configured species
+			// classname (e.g. "geb_BlueGill").
+			string yieldClassname = "<unresolved>";
+			GebYieldFishBase gyResult;
+			if (Class.CastTo(gyResult, yItem) && gyResult)
+				yieldClassname = gyResult.GetSpeciesClassname();
+
 			GebsfishLogger.Debug("---------------------Starting New Fishing Session---------------------","GenerateResult");
 			GebsfishLogger.Debug("---Generating Fishing Result---","GenerateResult");
             GebsfishLogger.Debug("Random number rolled: " + idx, "GenerateResult");
-            GebsfishLogger.Debug("Yield Item Selected: " + yItem, "GenerateResult");
-			GebsfishLogger.Debug("Possible Catch: " + m_Result.GebGetFishingResultName(),"GenerateResult");
+            GebsfishLogger.Debug("Yield Item Selected: " + yieldClassname, "GenerateResult");
+			// Wording note: this fish is locked in at GenerateResult time --
+			// the catching context picks once at fishing start, before any
+			// signal fires, and that same yield is what spawns on a successful
+			// reel-in. The label spells that out so the log isn't mistaken
+			// for "one of several possible catches" or for an array index
+			// readout. m_Result.GebGetFishingResultName resolves to the same
+			// species classname via m_YItem.GetType() -- kept as a second
+			// readout because it confirms the result struct actually received
+			// the yield (i.e. SetYieldItem succeeded).
+			GebsfishLogger.Debug("Pre-determined yield (will spawn on success): " + m_Result.GebGetFishingResultName(),"GenerateResult");
 
 			if (m_gebsConfig.GeneralSettings.DebugLogs == ELEVATED_DEBUG) {
 				array<int> arr = m_ProbabilityArray;
@@ -733,7 +754,25 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 
 	override protected void RemoveItemSafe(EntityAI item) {
 		if (item && !m_Player.IsQuickFishing()) {
-			item.SetPrepareToDelete(); //should probably flag the bait too, but the action terminates anyway
+			// Hooks can carry an attached bait item (worm, minnow, salamander,
+			// etc.) in their "Bait" slot -- same slot name vanilla uses in
+			// CatchingContextFishingRodAction.AddCatchingItem. Deleting the hook
+			// without first flagging that attachment for deletion would leave
+			// the bait orphaned (or trip an attachment-detach error inside the
+			// engine's parent cleanup). The original vanilla comment punted on
+			// this with "the action terminates anyway" -- handle it properly so
+			// the inventory stays consistent if any other system reads it
+			// mid-cleanup.
+			EntityAI attachedBait = item.FindAttachmentBySlotName("Bait");
+			if (attachedBait) {
+				attachedBait.SetPrepareToDelete();
+				attachedBait.DeleteSafe();
+				if (m_gebsConfig.GeneralSettings.DebugLogs) {
+					GebsfishLogger.Debug("Cleaned up attached bait before parent removal: " + attachedBait.GetType(),"RemoveItemSafe");
+				}
+			}
+
+			item.SetPrepareToDelete();
 			item.DeleteSafe();
 
 			if (m_gebsConfig.GeneralSettings.DebugLogs) {
@@ -749,6 +788,21 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 					GebsfishLogger.Debug("Applying damage to item: " + m_Hook.GetType() ,"TryDamageItems");
 				}
 				m_Hook.AddHealth("","Health",-UAFishingConstants.DAMAGE_HOOK);
+                m_MainItem.AddHealth(-UAFishingConstants.DAMAGE_HOOK);
+				// Vanilla's old ActionFishingNew used the single-arg form
+				// (AddHealth(-1.5)) on the rod, not the 3-arg form. The rod's
+				// damage system seems to require it -- the 3-arg form lands on
+				// hooks just fine but silently no-ops on rods. Matching vanilla's
+				// exact signature here.
+				if (m_MainItem) {
+					if (m_gebsConfig.GeneralSettings.DebugLogs) {
+						GebsfishLogger.Debug("Applying damage to rod: " + m_MainItem.GetType() + " (HP before: " + m_MainItem.GetHealth("","Health") + ")","TryDamageItems");
+					}
+					m_MainItem.AddHealth(-UAFishingConstants.DAMAGE_HOOK);
+					if (m_gebsConfig.GeneralSettings.DebugLogs) {
+						GebsfishLogger.Debug("Rod HP after: " + m_MainItem.GetHealth("","Health"),"TryDamageItems");
+					}
+				}
 			}
 		}
 	}

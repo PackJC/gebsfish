@@ -224,6 +224,13 @@ class cfgVehicles {
 			"fishingrod10"
 		};
 	}; 
+	// Restated DamageSystem block on the modded FishingRod base so every
+	// rod variant (vanilla FishingRod + geb_RedFishingRod / Green / Blue /
+	// Purple) shares a single source of truth for HP and visual-state
+	// thresholds. hitpoints=150 and the healthLevels[] paths below are
+	// identical to vanilla's FishingRod config -- carried over verbatim so
+	// repair kits, market mods, and any other system that reads rod HP
+	// behaves the same with or without gebsfish loaded.
 	class FishingRod : FishingRod_Base_New
     {
 		inventorySlot[]+={"Shoulder", "Melee", "fishingpole", "fishingrod1", "fishingrod2", "fishingrod3", "fishingrod4", "fishingrod5", "fishingrod6", "fishingrod7", "fishingrod8", "fishingrod9", "fishingrod10"};
@@ -231,6 +238,20 @@ class cfgVehicles {
 		repairableWithKits[] = {33033};  // Use the same repairKitType as above
 		repairCosts[] = {0.1};          // 10% quantity used per full repair
         hiddenSelectionsTextures[]={"\DZ\gear\tools\data\fishing_rod_co.paa"};
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 150;
+					healthLevels[] = {
+						{1, {"DZ\gear\tools\data\fishing_rod.rvmat"}},
+						{0.7, {"DZ\gear\tools\data\fishing_rod.rvmat"}},
+						{0.5, {"DZ\gear\tools\data\fishing_rod_damage.rvmat"}},
+						{0.3, {"DZ\gear\tools\data\fishing_rod_damage.rvmat"}},
+						{0, {"DZ\gear\tools\data\fishing_rod_destruct.rvmat"}}
+					};
+				};
+			};
+		};
     };
 	class geb_RedFishingRod: FishingRod {
 		scope = 2;
@@ -259,7 +280,7 @@ class cfgVehicles {
 		descriptionShort = "$STR_CfgVehicles_FishingRod1";
 		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishingrod_purple_co.paa"};
-	};	
+	};
 	class geb_BambooFishingNet : Container_Base {
 		scope = 2;
 		rotationFlags = 17;

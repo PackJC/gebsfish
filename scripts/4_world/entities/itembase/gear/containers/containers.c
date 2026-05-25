@@ -123,10 +123,34 @@ class geb_MinnowBucket : geb_FilteredContainerBase {
 	}
 };
 
+// Tackle-box allow lists. Three groups of entries:
+//
+//   1. ARTIFICIAL LURES -- "geb_Lure" catches all 16 lure variants via the
+//      config inheritance walk (geb_SpinnerBait1-4 / geb_SpoonLure1-4 /
+//      geb_Lure1-4 / geb_CurlyTailJig1-4 all extend geb_Lure). "Jig" stays
+//      for vanilla jigs.
+//   2. LIVE BAIT -- worms (vanilla + grub + rubber), insects (grasshopper +
+//      cricket), minnows, salamander, bullfrog. Players can stash bait
+//      directly in the tackle box instead of always needing the dedicated
+//      worm/bug/minnow containers, while the dedicated containers still
+//      remain the most efficient way to organize bait at scale.
+//   3. TOOLS -- hooks, knives, pliers, gloves, dedicated bait containers,
+//      the bamboo fishing net, and the geb_FishingRodRepairKit. The cargo
+//      grids were bumped (small 6x1 -> 6x2, large 9x1 -> 9x3 in
+//      data/tackle/config.cpp) so the 2x2 repair kit fits.
+
 class geb_SmallTackleBase : geb_FilteredContainerBase {
 	static ref TStringArray s_Allowed = {
-		"Jig", "geb_OrangeFishGloves", "geb_BlueFishGloves",
+		// Lures / jigs
+		"Jig", "geb_Lure",
+		// Live bait
+		"Worm", "geb_GrubWorm", "geb_RubberWorm",
+		"geb_GrassHopper", "geb_FieldCricket",
+		"geb_FatHeadMinnow", "geb_RedSalamander", "geb_AmericanBullFrog",
+		// Tools / containers
+		"geb_OrangeFishGloves", "geb_BlueFishGloves",
 		"geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet",
+		"geb_FishingRodRepairKit",
 		"Hook", "geb_FishKnife_Base", "BoneKnife", "BoneHook", "Pliers"
 	};
 
@@ -137,8 +161,16 @@ class geb_SmallTackleBase : geb_FilteredContainerBase {
 
 class geb_LargeTackleBase : geb_FilteredContainerBase {
 	static ref TStringArray s_Allowed = {
-		"Jig", "geb_OrangeFishGloves", "geb_BlueFishGloves",
+		// Lures / jigs
+		"Jig", "geb_Lure",
+		// Live bait
+		"Worm", "geb_GrubWorm", "geb_RubberWorm",
+		"geb_GrassHopper", "geb_FieldCricket",
+		"geb_FatHeadMinnow", "geb_RedSalamander", "geb_AmericanBullFrog",
+		// Tools / containers
+		"geb_OrangeFishGloves", "geb_BlueFishGloves",
 		"geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet",
+		"geb_FishingRodRepairKit",
 		"Hook", "geb_FishKnife_Base", "BoneKnife", "BoneHook",
 		"Cleaver", "CombatKnife", "HuntingKnife", "ak_bayonet", "m9a1_bayonet",
 		"Pliers", "Screwdriver", "Steakknife", "stoneknife"
@@ -146,6 +178,48 @@ class geb_LargeTackleBase : geb_FilteredContainerBase {
 
 	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
+	}
+};
+
+// Cooler container -- preserves fillets parented in its cargo. The
+// actual decay slowdown lives in the modded Edible_Base.ProcessDecay
+// override (see edible_base/geb_ediblebase.c). This class only handles
+// cargo filtering + nesting prevention.
+//
+// Named geb_Cooler_base to match the config-side base class. The
+// colored variants (geb_RedCooler / geb_BlueCooler / etc.) don't need
+// their own script classes -- DayZ falls back to the config parent's
+// script class at instantiation, so every variant gets the same cargo
+// filter and decay-preservation behavior automatically.
+//
+// Allow list keys on the two vanilla fillet base classes (CarpFilletMeat
+// and MackerelFilletMeat). All gebsfish fillet variants extend one of
+// those (see data/fish/config.cpp -- geb_FreshWater_Fillet_* extend
+// CarpFilletMeat, geb_SaltWater_Fillet_* + lobster parts extend
+// MackerelFilletMeat) so IsKindOf catches every current and future
+// fillet without listing every species individually.
+class geb_Cooler_base : geb_FilteredContainerBase {
+	static ref TStringArray s_Allowed = { "CarpFilletMeat", "MackerelFilletMeat" };
+
+	override protected TStringArray GetAllowedItemKinds() {
+		return s_Allowed;
+	}
+
+	override bool IsContainer() {
+		return true;
+	}
+
+	override bool CanPutInCargo(EntityAI parent) {
+		if (!super.CanPutInCargo(parent))
+			return false;
+
+		// Prevent coolers-inside-coolers. IsKindOf walks the config
+		// inheritance chain, so all colored variants are caught by the
+		// base check.
+		if (parent && parent.IsKindOf("geb_Cooler_base"))
+			return false;
+
+		return true;
 	}
 };
 

@@ -48,7 +48,11 @@ class cfgVehicles {
 		rotationFlags = 8;
 		weight = 140;
 		itemSize[] = {3,2};
-		itemsCargoSize[] = {9,1};
+		// Cargo grid bumped from {9,1} to {9,3} so the 2x2
+		// geb_FishingRodRepairKit fits alongside lures and bait. 27 slots
+		// total, plenty of room for a full tackle loadout (lures, hooks,
+		// knives, gloves, repair kit, bait jars).
+		itemsCargoSize[] = {9,3};
 		canBeDigged = 1;
 		absorbency = 0;
 		isMeleeWeapon = 1;
@@ -197,7 +201,10 @@ class cfgVehicles {
 		rotationFlags = 17;
 		weight = 140;
 		itemSize[] = {2,1};
-		itemsCargoSize[] = {6,1};
+		// Cargo grid bumped from {6,1} to {6,2} so the 2x2
+		// geb_FishingRodRepairKit can fit. 12 slots total, room for a
+		// minimal loadout (a few lures, hooks, a knife, the repair kit).
+		itemsCargoSize[] = {6,2};
 		allowOwnedCargoManipulation = 1;
 		randomQuantity = 2;
 		canBeDigged = 1;
@@ -231,6 +238,162 @@ class cfgVehicles {
 			};
 		};
 	};
+	/*
+		SKELETON: geb_Cooler
+
+		Cargo container intended to slow / freeze the spoilage cycle on
+		fish fillets stored inside it. The config block below ships the
+		visual + inventory framework (cargo slots, weight, durability,
+		repair, melee, anim sounds) so the item is fully spawnable and
+		usable as a regular container today. The actual "keeps fillets
+		from rotting" mechanic is NOT wired up yet -- it needs a script
+		hook to either:
+		  A) periodically reset Foodstage.GetFoodStageTime on items
+		     parented to this cooler, OR
+		  B) override Edible_Base.GetDecayCoef when the item's
+		     hierarchy parent is a geb_Cooler so the natural decay tick
+		     multiplies by ~0 (or a configurable slow-down).
+		Option B is cleaner because it piggybacks on the existing decay
+		system; option A is more brute-force but easier to verify.
+		See also data/tools/config.cpp (geb_BambooFishingNet) for the
+		cargo-filtering pattern -- the cooler should be restricted to
+		fish, fillets, and bait items via a containers.c s_Allowed entry
+		so players can't use it as a bullet-proof cooler for unrelated
+		loot. Stringtable keys ($STR_tools_cooler*) and the model path
+		below are placeholders -- swap in the real p3d / .paa / strings
+		when the asset is ready.
+	*/
+	class geb_Cooler_base: Container_Base {
+		scope = 0;  // bump to 2 once the model + textures + stringtable are in place
+		displayName = "$STR_tools_cooler";
+		descriptionShort = "$STR_tools_cooler_desc";
+		model = "\gebsfish\data\tackle\cooler.p3d";  // placeholder -- replace when the cooler model is added
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_blue_co.paa"};  // placeholder texture path
+		rotationFlags = 8;
+		weight = 1200;  // a cooler is heavier than a tackle box -- ~1.2kg empty
+		itemSize[] = {4,3};
+		itemsCargoSize[] = {6,4};  // 24 slots -- generous fillet storage
+		allowOwnedCargoManipulation = 1;
+		randomQuantity = 2;
+		canBeDigged = 1;
+		repairableWithKits[] = {2};  // duct tape -- same as tackle boxes
+		repairCosts[] = {25};
+		isMeleeWeapon = 1;
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 150;  // sturdier than tackle (80) since coolers are usually hard plastic
+					healthLevels[] = {
+						{1,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
+						{0.7,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
+						{0.5,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
+						{0.3,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
+						{0,{"DZ\gear\containers\data\FirsAidKit_destruct.rvmat"}}
+					};
+				};
+			};
+		};
+		class AnimEvents {
+			class SoundWeapon {
+				class pickUpItem_Light {
+					soundSet = "pickUpCourierBag_Light_SoundSet";
+					id = 796;
+				};
+				class pickUpItem {
+					soundSet = "pickUpCourierBag_SoundSet";
+					id = 797;
+				};
+			};
+		};
+	};
+	// Color variants mirroring the geb_*Tackle palette. Each one only changes
+	// scope (so it spawns), displayName (stringtable key per color), and the
+	// hidden-selection texture path. Everything else inherits from
+	// geb_Cooler_base -- including the cargo filter on the script side
+	// (containers.c geb_Cooler_base) since DayZ falls back to the config
+	// parent's script class when a derived class doesn't define its own.
+	// Texture paths (cooler_<color>_co.paa) and stringtable keys
+	// ($STR_tools_<color>cooler) are placeholders -- swap in real assets
+	// when the textures land.
+	class geb_RedCooler: geb_Cooler_base {
+		scope = 2;
+		displayName = "$STR_tools_redcooler";
+		descriptionShort = "$STR_tools_cooler_desc";
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_red_co.paa"};
+	};
+	class geb_YellowCooler: geb_Cooler_base {
+		scope = 2;
+		displayName = "$STR_tools_yellowcooler";
+		descriptionShort = "$STR_tools_cooler_desc";
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_yellow_co.paa"};
+	};
+	class geb_BlueCooler: geb_Cooler_base {
+		scope = 2;
+		displayName = "$STR_tools_bluecooler";
+		descriptionShort = "$STR_tools_cooler_desc";
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_blue_co.paa"};
+	};
+	class geb_OrangeCooler: geb_Cooler_base {
+		scope = 2;
+		displayName = "$STR_tools_orangecooler";
+		descriptionShort = "$STR_tools_cooler_desc";
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_orange_co.paa"};
+	};
+	class geb_BrownCooler: geb_Cooler_base {
+		scope = 2;
+		displayName = "$STR_tools_browncooler";
+		descriptionShort = "$STR_tools_cooler_desc";
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_brown_co.paa"};
+	};
+	class geb_PurpleCooler: geb_Cooler_base {
+		scope = 2;
+		displayName = "$STR_tools_purplecooler";
+		descriptionShort = "$STR_tools_cooler_desc";
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_purple_co.paa"};
+	};
+	class geb_PinkCooler: geb_Cooler_base {
+		scope = 2;
+		displayName = "$STR_tools_pinkcooler";
+		descriptionShort = "$STR_tools_cooler_desc";
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_pink_co.paa"};
+	};
+	class geb_LimeCooler: geb_Cooler_base {
+		scope = 2;
+		displayName = "$STR_tools_limecooler";
+		descriptionShort = "$STR_tools_cooler_desc";
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_lime_co.paa"};
+	};
+	class geb_LightBlueCooler: geb_Cooler_base {
+		scope = 2;
+		displayName = "$STR_tools_lightbluecooler";
+		descriptionShort = "$STR_tools_cooler_desc";
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_lightblue_co.paa"};
+	};
+	class geb_GreenCooler: geb_Cooler_base {
+		scope = 2;
+		displayName = "$STR_tools_greencooler";
+		descriptionShort = "$STR_tools_cooler_desc";
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_green_co.paa"};
+	};
+	class geb_CamoCooler: geb_Cooler_base {
+		scope = 2;
+		displayName = "$STR_tools_camocooler";
+		descriptionShort = "$STR_tools_cooler_desc";
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_camo_co.paa"};
+	};
+
 	class geb_WormContainer: Container_Base {
 		scope = 2;
 		displayName = "$STR_tools_wormcontainer";

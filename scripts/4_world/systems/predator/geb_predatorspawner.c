@@ -195,13 +195,6 @@ class GebsPredatorSpawner {
         if (debugLogs)
             GebsfishLogger.Debug("Spawned " + classname + " at " + position.ToString(), logTag);
 
-        #ifdef ExtraLogs
-            if (cfg.CFToolsLogging && cfg.CFToolsLogging.PredatorSpawn) {
-                string gebpredatorspawnmessage = "Predator " + classname + " spawned at " + position.ToString();
-                SendToCFTools(triggeringPlayer, "", "", gebpredatorspawnmessage);
-            }
-        #endif
-
         // Warning sound RPC, fired once per TrySpawn call (the `out bool` flag).
         if (!cfg.PredatorSettings.PredatorWarningSoundEnable || soundPlayed)
             return;
@@ -232,13 +225,6 @@ class GebsPredatorSpawner {
 
             if (debugLogs)
                 GebsfishLogger.Debug("Sent warning sound RPC to " + nearbyIdentity.GetName() + " (within " + cfg.PredatorSettings.PredatorWarningSoundRadius + "m of " + triggeringPlayerName + ").", logTag + "RPC");
-
-            #ifdef ExtraLogs
-                if (cfg.CFToolsLogging && cfg.CFToolsLogging.PredatorSounds) {
-                    string gebpredatorsoundmessage = "Predator sound played for player within " + cfg.PredatorSettings.PredatorWarningSoundRadius + " meters of " + triggeringPlayerName;
-                    SendToCFTools(nearbyPlayer, "", "", gebpredatorsoundmessage);
-                }
-            #endif
         }
 
         soundPlayed = true;
