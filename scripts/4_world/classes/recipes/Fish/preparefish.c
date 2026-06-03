@@ -49,6 +49,8 @@ modded class PrepareFish {
 		super.Do(ingredients, player, results, specialty_weight);
         // Trigger predator spawning
 		TrySpawnPredator(player);
+		// Roll for a damaged hook 'stuck in the fish'
+		TrySpawnHookFromFish(player);
 	}
 
     // Predator spawn after filleting succeeds. Delegates to GebsPredatorSpawner,
@@ -58,5 +60,110 @@ modded class PrepareFish {
     void TrySpawnPredator(PlayerBase player) {
         if (!m_gebsConfig || !m_gebsConfig.PredatorSettings) return;
         GebsPredatorSpawner.TrySpawn(player, m_gebsConfig.PredatorSettings.PredatorSpawnChancePreparing, "PredatorSpawnPrepare");
+    }
+
+    // Damaged-hook-from-fish feature. Per fillet, rolls HookFromFishChance
+    // (default 0.004 = ~1/250) and on a hit, picks a hook classname from the
+    // weighted HookFromFishCatches pool and spawns it at a random health level
+    // in that entry's [MinHealthLevel, MaxHealthLevel] range. Server-only so
+    // the spawn doesn't double up between client + server. Tries the player's
+    // inventory first (cleanest UX -- hook lands where the fillets do), falls
+    // back to player position if inventory placement fails. Logs at DebugLogs
+    // >= 1 so admins can see when the system fires.
+    void TrySpawnHookFromFish(PlayerBase player) {
+        if (!player) return;
+        if (!g_Game.IsServer()) return;
+        if (!m_gebsConfig || !m_gebsConfig.GeneralSettings) return;
+
+        GenSetConf gs = m_gebsConfig.GeneralSettings;
+        if (!gs.HookFromFishEnable) return;
+        if (gs.HookFromFishChance <= 0) return;
+
+        int debugLevel = gs.DebugLogs;
+        float roll = Math.RandomFloat01();
+        if (roll > gs.HookFromFishChance) {
+            if (debugLevel == ELEVATED_DEBUG)
+                GebsfishLogger.Debug("HookFromFish miss: roll=" + roll + " chance=" + gs.HookFromFishChance, "HookFromFish");
+            return;
+        }
+
+        ref array<ref HookFromFishEntry> entries = m_gebsConfig.HookFromFishCatches;
+        if (!entries || entries.Count() == 0) {
+            if (debugLevel >= 1)
+                GebsfishLogger.Debug("HookFromFish hit but Catches pool empty -- skipping", "HookFromFish");
+            return;
+        }
+
+        // Sum valid weights.
+        float totalWeight = 0;
+        foreach (HookFromFishEntry e1 : entries) {
+            if (!e1 || e1.Classname == "" || e1.Weight <= 0)
+                continue;
+            totalWeight += e1.Weight;
+        }
+
+        if (totalWeight <= 0) {
+            if (debugLevel >= 1)
+                GebsfishLogger.Debug("HookFromFish hit but totalWeight=0 after filter -- skipping", "HookFromFish");
+            return;
+        }
+
+        // Weighted pick.
+        float pickRoll = Math.RandomFloat(0.0, totalWeight);
+        float pickStart = pickRoll;
+        HookFromFishEntry picked = null;
+        foreach (HookFromFishEntry e : entries) {
+            if (!e || e.Classname == "" || e.Weight <= 0)
+                continue;
+            if (pickRoll <= e.Weight) {
+                picked = e;
+                break;
+            }
+            pickRoll -= e.Weight;
+        }
+
+        if (!picked) {
+            if (debugLevel >= 1)
+                GebsfishLogger.Debug("HookFromFish weighted walk exhausted (roll=" + pickStart + " total=" + totalWeight + ") -- skipping", "HookFromFish");
+            return;
+        }
+
+        // Random health level inside the configured range. Clamp to 0..4 in
+        // case an admin typo'd a value -- SetHealthLevel above 4 silently no-ops
+        // in some engine builds, which would leave the hook at pristine and
+        // mislead bug reports.
+        int minLvl = picked.MinHealthLevel;
+        int maxLvl = picked.MaxHealthLevel;
+        if (minLvl < 0) minLvl = 0;
+        if (minLvl > 4) minLvl = 4;
+        if (maxLvl < minLvl) maxLvl = minLvl;
+        if (maxLvl > 4) maxLvl = 4;
+        int healthLevel = Math.RandomInt(minLvl, maxLvl + 1);
+
+        // Prefer player inventory (lands in cargo / on belt slot if it fits).
+        // CreateInInventory returns null on failure, in which case fall back
+        // to dropping it at the player's feet so the hook isn't lost on a
+        // full inventory.
+        EntityAI spawned = null;
+        if (player.GetInventory())
+            spawned = player.GetInventory().CreateInInventory(picked.Classname);
+
+        if (!spawned) {
+            spawned = EntityAI.Cast(g_Game.CreateObjectEx(picked.Classname, player.GetPosition(), ECE_PLACE_ON_SURFACE));
+        }
+
+        if (!spawned) {
+            if (debugLevel >= 1)
+                GebsfishLogger.Debug("HookFromFish picked=" + picked.Classname + " but CreateInInventory/CreateObjectEx both returned null -- spawn failed", "HookFromFish");
+            return;
+        }
+
+        ItemBase spawnedItem = ItemBase.Cast(spawned);
+        if (spawnedItem)
+            spawnedItem.SetHealthLevel(healthLevel, "");
+
+        if (debugLevel >= 1) {
+            GebsfishLogger.Debug("HookFromFish hit: spawned=" + picked.Classname + " healthLevel=" + healthLevel + " roll=" + roll + " chance=" + gs.HookFromFishChance + " pickRoll=" + pickStart + " totalWeight=" + totalWeight, "HookFromFish");
+        }
     }
 }

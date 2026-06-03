@@ -96,37 +96,93 @@ class ActionDigBugs : ActionContinuousBase {
 		float rndBug = 0.0;
 		string selectedBug = "";
 
-		if (!m_gebsConfig || !m_gebsConfig.DigBugsSettings)
+		int debugLevel = 0;
+		if (m_gebsConfig && m_gebsConfig.GeneralSettings)
+			debugLevel = m_gebsConfig.GeneralSettings.DebugLogs;
+
+		// Guard action_data fields up front. Vanilla normally guarantees these
+		// are populated when OnFinishProgressServer fires, but edge cases
+		// (player disconnect mid-action, inventory wipe by another mod, item
+		// destroyed by environment) can leave them null. Without these guards
+		// the DealAbsoluteDmg / GetSoftSkillsManager calls below would crash.
+		if (!action_data || !action_data.m_Player || !action_data.m_MainItem) {
+			if (debugLevel >= 1)
+				GebsfishLogger.Debug("Dig-bugs: action_data missing player or main item -- skipping", "DigBugs");
 			return;
+		}
+
+		if (!m_gebsConfig || !m_gebsConfig.DigBugsSettings) {
+			if (debugLevel >= 1)
+				GebsfishLogger.Debug("Dig-bugs: config missing -- skipping", "DigBugs");
+			return;
+		}
 		ref array<ref BugEntry> catches = m_gebsConfig.DigBugsSettings.Catches;
-		if (!catches || catches.Count() == 0)
+		if (!catches || catches.Count() == 0) {
+			if (debugLevel >= 1)
+				GebsfishLogger.Debug("Dig-bugs: Catches table empty -- skipping", "DigBugs");
 			return;
+		}
 
 		// Per-attempt find chance gate. Tool damage still applies on a miss
 		// so the action has a cost even when nothing is found.
 		float findChance = GetDigBugsFindChance();
-		if (findChance < 1.0 && Math.RandomFloat01() > findChance) {
+		float findRoll = -1;
+		bool foundSomething = true;
+		if (findChance < 1.0) {
+			findRoll = Math.RandomFloat01();
+			foundSomething = (findRoll <= findChance);
+		}
+		if (debugLevel >= 1) {
+			GebsfishLogger.Debug("Dig-bugs find-chance gate: findChance=" + findChance + " roll=" + findRoll + " result=" + foundSomething, "DigBugs");
+		}
+		if (!foundSomething) {
 			MiscGameplayFunctions.DealAbsoluteDmg(action_data.m_MainItem, 4);
 			action_data.m_Player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
 			return;
 		}
 
+		if (debugLevel == ELEVATED_DEBUG) {
+			GebsfishLogger.Debug("---Dig-bugs weighted pick---", "DigBugs");
+			GebsfishLogger.Debug("entry | classname | chance | included", "DigBugs");
+		}
+
 		// Calculate the total spawn chance for valid bug entries only.
 		// Blank classnames and zero/negative chances are ignored so they cannot
 		// steal roll range from real bugs or try to spawn an empty classname.
+		int idx = 0;
 		foreach (BugEntry bug1 : catches) {
-			if (!bug1 || bug1.Classname == "" || bug1.CatchChance <= 0)
-				continue;
-
-			bugSum += bug1.CatchChance;
+			bool included = true;
+			string reason = "";
+			if (!bug1 || bug1.Classname == "" || bug1.CatchChance <= 0) {
+				included = false;
+				reason = "blank/zero";
+			}
+			if (debugLevel == ELEVATED_DEBUG) {
+				string entryCls = "<null>";
+				float entryChance = 0;
+				if (bug1) {
+					entryCls = bug1.Classname;
+					entryChance = bug1.CatchChance;
+				}
+				string flag = "yes";
+				if (!included)
+					flag = "no (" + reason + ")";
+				GebsfishLogger.Debug("" + idx + " | " + entryCls + " | " + entryChance + " | " + flag, "DigBugs");
+			}
+			if (included)
+				bugSum += bug1.CatchChance;
+			idx++;
 		}
 
 		if (bugSum <= 0) {
+			if (debugLevel >= 1)
+				GebsfishLogger.Debug("Dig-bugs: totalChance=0 after filter -- skipping", "DigBugs");
 			return;
 		}
 
 		// Generate a random value within the total spawn chance
 		rndBug = Math.RandomFloatInclusive(0.0, bugSum);
+		float rndStart = rndBug;
 
 		// Select a bug from the same filtered set used for the total above.
 		foreach (BugEntry bug : catches) {
@@ -138,6 +194,10 @@ class ActionDigBugs : ActionContinuousBase {
 				break;
 			}
 			rndBug -= bug.CatchChance;
+		}
+
+		if (debugLevel >= 1) {
+			GebsfishLogger.Debug("Dig-bugs picked: " + selectedBug + " roll=" + rndStart + " totalChance=" + bugSum, "DigBugs");
 		}
 
 		// Spawn the selected bug if one was found. Quantity 1 -- one bug per

@@ -31,7 +31,7 @@ modded class MissionServer {
 		super.OnGameplayDataHandlerLoad();
 		YieldsMap mGeb_YieldsMapAll;
 		mGeb_YieldsMapAll = g_Game.GetMission().GetWorldData().GetCatchYieldBank().GetYieldsMap();
-		if(m_gebsConfig.GeneralSettings.DebugLogs == ELEVATED_DEBUG){
+		if(m_gebsConfig && m_gebsConfig.GeneralSettings && m_gebsConfig.GeneralSettings.DebugLogs == ELEVATED_DEBUG){
 			GebsfishLogger.Debug("Start Dump:","YieldMap");
 			YieldItemBase yItem;
 			int count = mGeb_YieldsMapAll.Count();

@@ -11,12 +11,12 @@ modded class CAContinuousRepeatFishing : CAContinuousRepeat {
 				if (maximalUsableDuration <= 0) {
 					float deadzonesTime = UAFishingConstants.SIGNAL_DEADZONE_END_DURATION + UAFishingConstants.SIGNAL_DEADZONE_START_DURATION;
 
-                    if (m_gebsConfig.GeneralSettings.DebugLogs) {
+                    if (m_gebsConfig && m_gebsConfig.GeneralSettings && m_gebsConfig.GeneralSettings.DebugLogs) {
 					    GebsfishLogger.Debug("Cycle m_TimeToComplete: " + m_TimeToComplete + " shorter than combined deadzone times: " + deadzonesTime + "! No time left for any signal, skipping!","FishingCA");
                     }
 				}
 				else {
-                    if (m_gebsConfig.GeneralSettings.DebugLogs) {
+                    if (m_gebsConfig && m_gebsConfig.GeneralSettings && m_gebsConfig.GeneralSettings.DebugLogs) {
 					    GebsfishLogger.Debug("maximalUsableDuration " + maximalUsableDuration + " is shorter than UAFishingConstants.SIGNAL_DURATION_MIN_BASE, skipping signal!","FishingCA");
                     }
 				}
@@ -31,12 +31,12 @@ modded class CAContinuousRepeatFishing : CAContinuousRepeat {
 			m_SignalEndTime = m_SignalStartTime + m_SignalDuration;
 			
 			if (durationTime != m_SignalDuration) {
-                if (m_gebsConfig.GeneralSettings.DebugLogs) {
+                if (m_gebsConfig && m_gebsConfig.GeneralSettings && m_gebsConfig.GeneralSettings.DebugLogs) {
 				    GebsfishLogger.Debug("Signal durationTime adjusted from " + durationTime + " to " + m_SignalDuration + ". maximalUsableDuration: " + maximalUsableDuration + ", m_TimeToComplete: " + m_TimeToComplete,"FishingCA");
                 }
 			}
 			if (startTime != m_SignalStartTime) {
-                if (m_gebsConfig.GeneralSettings.DebugLogs) {
+                if (m_gebsConfig && m_gebsConfig.GeneralSettings && m_gebsConfig.GeneralSettings.DebugLogs) {
 				    GebsfishLogger.Debug("Signal startTime adjusted from " + startTime + " to " + m_SignalStartTime + ". m_SignalDuration: " + m_SignalDuration + ", m_TimeToComplete: " + m_TimeToComplete,"FishingCA");
                 }
 			}

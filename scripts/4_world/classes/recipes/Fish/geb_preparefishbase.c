@@ -207,6 +207,11 @@ modded class PrepareCarp extends PrepareFish {
 			minMeat = m_gebsConfig.Carp.MeatMin;
 			maxMeat = m_gebsConfig.Carp.MeatMax;
 		}
+		// Defend against admin inversion (MeatMin > MeatMax). Without this
+		// the RandomInt rolls into a degenerate range and the for-loop never
+		// runs -> zero fillets, silently. Matches the GetInclusiveRandom
+		// guard used by every fish that extends GebPrepareFishBase.
+		if (maxMeat < minMeat) maxMeat = minMeat;
 		int ran = Math.RandomInt(minMeat, maxMeat + 1);
 		for (int i = 0; i < ran; ++i) {
 			AddResult("CarpFilletMeat");
@@ -578,6 +583,11 @@ modded class PrepareSteelheadTrout extends PrepareFish {
 			minMeat = m_gebsConfig.SteelheadTrout.MeatMin;
 			maxMeat = m_gebsConfig.SteelheadTrout.MeatMax;
 		}
+		// Defend against admin inversion (MeatMin > MeatMax). Without this
+		// the RandomInt rolls into a degenerate range and the for-loop never
+		// runs -> zero fillets, silently. Matches the GetInclusiveRandom
+		// guard used by every fish that extends GebPrepareFishBase.
+		if (maxMeat < minMeat) maxMeat = minMeat;
 		int ran = Math.RandomInt(minMeat, maxMeat + 1);
 		for (int i = 1; i <= ran; ++i) {
 			AddResult("SteelheadTroutFilletMeat");
@@ -924,6 +934,11 @@ modded class PrepareMackerel extends PrepareFish {
 			minMeat = m_gebsConfig.Mackerel.MeatMin;
 			maxMeat = m_gebsConfig.Mackerel.MeatMax;
 		}
+		// Defend against admin inversion (MeatMin > MeatMax). Without this
+		// the RandomInt rolls into a degenerate range and the for-loop never
+		// runs -> zero fillets, silently. Matches the GetInclusiveRandom
+		// guard used by every fish that extends GebPrepareFishBase.
+		if (maxMeat < minMeat) maxMeat = minMeat;
 		int ran = Math.RandomInt(minMeat, maxMeat + 1);
 		for (int i = 0; i < ran; ++i) {
 			AddResult("MackerelFilletMeat");
@@ -1055,6 +1070,11 @@ modded class PrepareWalleyePollock extends PrepareFish {
 			minMeat = m_gebsConfig.WalleyePollock.MeatMin;
 			maxMeat = m_gebsConfig.WalleyePollock.MeatMax;
 		}
+		// Defend against admin inversion (MeatMin > MeatMax). Without this
+		// the RandomInt rolls into a degenerate range and the for-loop never
+		// runs -> zero fillets, silently. Matches the GetInclusiveRandom
+		// guard used by every fish that extends GebPrepareFishBase.
+		if (maxMeat < minMeat) maxMeat = minMeat;
 		int ran = Math.RandomInt(minMeat, maxMeat + 1);
 		for (int i = 0; i < ran; ++i) {
 			AddResult("WalleyePollockFilletMeat");

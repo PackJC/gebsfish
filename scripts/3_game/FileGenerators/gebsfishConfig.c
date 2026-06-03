@@ -109,6 +109,11 @@ class gebsfishConfig {
 
     ref array<ref JunkEntry> Junk;
     ref array<ref ContainerJunkEntry> ContainerJunk;
+    // Weighted pool of hooks that can be "found" in a fish during fillet. Each
+    // entry pairs a hook classname with a health-level range and a weight; the
+    // pick is gated by GeneralSettings.HookFromFishEnable / HookFromFishChance.
+    // Default seed is one vanilla FishingHook at Badly Damaged.
+    ref array<ref HookFromFishEntry> HookFromFishCatches;
 
     void Load() {
         if (g_Game.IsDedicatedServer()) {
@@ -130,8 +135,19 @@ class gebsfishConfig {
                     // actually filled in -- otherwise we'd needlessly rewrite
                     // the JSON on every server start (and risk corrupting
                     // hand-edited files via reformatting).
-                    if (EnsureMissingConfigSections()) {
+                    bool needSave = EnsureMissingConfigSections();
+                    if (needSave) {
                         GebsfishLogger.Info("Backfilled missing config sections; saving updated JSON.", "JSON");
+                    }
+                    // Clamp hand-edited values that fall outside their valid
+                    // range (hours [0,23], rain thresholds [0,1], etc). Logs
+                    // each correction so the admin sees the warning, and
+                    // saves the corrected file so the JSON matches the
+                    // values the mod is actually using.
+                    if (ValidateAndClampLoadedConfig()) {
+                        needSave = true;
+                    }
+                    if (needSave) {
                         Save();
                     }
                     return;
@@ -310,7 +326,7 @@ class gebsfishConfig {
         Wolf.Classname = "Animal_CanisLupus_Grey";
         Wolf.SpawnChance = 0.6;
         Wolf.MinCount = 1;
-        Wolf.MaxCount = 3;
+        Wolf.MaxCount = 1;
         Wolf.MinRadius = 50;
         Wolf.MaxRadius = 200;
 
@@ -361,6 +377,17 @@ class gebsfishConfig {
         Pot.MaxHealthLevel = 3;
 
         ContainerJunk.Insert(Pot);
+
+        // Default HookFromFish pool: one vanilla FishingHook at Badly Damaged.
+        // Mirrors the user-requested default ("1/250 chance, hook, badly
+        // damaged, on"). Admins can add lures/other variants and weight them.
+        HookFromFishCatches = new array<ref HookFromFishEntry>();
+        HookFromFishEntry defaultHook = new HookFromFishEntry();
+        defaultHook.Classname = "FishingHook";
+        defaultHook.Weight = 1.0;
+        defaultHook.MinHealthLevel = 3;
+        defaultHook.MaxHealthLevel = 3;
+        HookFromFishCatches.Insert(defaultHook);
 
         //Save it
         Save();
@@ -464,6 +491,25 @@ class gebsfishConfig {
         if (!Junk)               { Junk = new array<ref JunkEntry>();                    changed = true; }
         if (!ContainerJunk)      { ContainerJunk = new array<ref ContainerJunkEntry>();  changed = true; }
 
+        // Backfill the hook-from-fish pool when it's missing OR present-but-
+        // empty. The empty case happens when an admin deletes every entry to
+        // test ("does the system work without a pool?") -- without re-seeding,
+        // the feature is silently broken because TrySpawnHookFromFish bails
+        // on Count() == 0. Re-seeding the vanilla FishingHook gives them a
+        // working baseline back; if they want the feature truly off, the
+        // proper toggle is GeneralSettings.HookFromFishEnable = 0.
+        if (!HookFromFishCatches || HookFromFishCatches.Count() == 0) {
+            if (!HookFromFishCatches)
+                HookFromFishCatches = new array<ref HookFromFishEntry>();
+            HookFromFishEntry defaultHook = new HookFromFishEntry();
+            defaultHook.Classname = "FishingHook";
+            defaultHook.Weight = 1.0;
+            defaultHook.MinHealthLevel = 3;
+            defaultHook.MaxHealthLevel = 3;
+            HookFromFishCatches.Insert(defaultHook);
+            changed = true;
+        }
+
         if (!BaitPreferences) {
             BaitPreferences = new array<ref BaitConfig>();
             SeedDefaultBaitPreferences();
@@ -474,6 +520,90 @@ class gebsfishConfig {
         // intentionally fall back to 1 meat when their section is missing, and
         // mission registration skips missing fish instead of crashing.
         return changed;
+    }
+
+    // Walks the loaded config and clamps fields whose only valid range is
+    // tightly bounded by the engine or by callsite math. Hand-edited JSON
+    // can land outside those ranges (typo, copy-paste, deliberate test),
+    // and the resulting silent-wrong-behavior is hard to debug without
+    // log breadcrumbs. Each correction is logged so admins can see what
+    // their JSON tried to say and what the mod is actually running with.
+    //
+    // Returns true if any field was clamped so the caller can re-Save()
+    // the file -- if we ran the JSON through clamps but never persisted,
+    // the admin would re-open the file, see the out-of-range value still
+    // there, and wonder which value the mod is using. Saving makes the
+    // file match in-memory state.
+    bool ValidateAndClampLoadedConfig() {
+        bool changed = false;
+        bool localChanged;
+
+        if (WeatherSettings) {
+            // Hour fields -- valid range is [0, 23]. ResolveTimeWindow's
+            // comparisons silently misbehave outside this range: 25 looks
+            // unreachable (hour < 25 is always true), -1 looks always-true
+            // (hour >= -1 is always satisfied), and the wrong time-of-day
+            // multiplier gets applied.
+            //
+            // Pattern: helper returns the (possibly corrected) value AND a
+            // wasClamped out-flag. We OR every flag into `changed` so the
+            // caller can re-Save() exactly when something needed fixing.
+            // Going through a return value (not inout on a struct member)
+            // sidesteps Enforce parser pickiness about passing object
+            // fields as inout/out parameters.
+            WeatherSettings.DawnStartHour  = ClampHour(WeatherSettings.DawnStartHour,  "DawnStartHour",  localChanged); if (localChanged) changed = true;
+            WeatherSettings.DawnEndHour    = ClampHour(WeatherSettings.DawnEndHour,    "DawnEndHour",    localChanged); if (localChanged) changed = true;
+            WeatherSettings.DayStartHour   = ClampHour(WeatherSettings.DayStartHour,   "DayStartHour",   localChanged); if (localChanged) changed = true;
+            WeatherSettings.DayEndHour     = ClampHour(WeatherSettings.DayEndHour,     "DayEndHour",     localChanged); if (localChanged) changed = true;
+            WeatherSettings.DuskStartHour  = ClampHour(WeatherSettings.DuskStartHour,  "DuskStartHour",  localChanged); if (localChanged) changed = true;
+            WeatherSettings.DuskEndHour    = ClampHour(WeatherSettings.DuskEndHour,    "DuskEndHour",    localChanged); if (localChanged) changed = true;
+            WeatherSettings.NightStartHour = ClampHour(WeatherSettings.NightStartHour, "NightStartHour", localChanged); if (localChanged) changed = true;
+            WeatherSettings.NightEndHour   = ClampHour(WeatherSettings.NightEndHour,   "NightEndHour",   localChanged); if (localChanged) changed = true;
+
+            // Rain thresholds -- valid range is [0, 1] because they're
+            // compared against Weather.GetRain().GetActual() which is
+            // [0, 1]. >1 makes the threshold unreachable; <0 makes it
+            // always-triggered (rain >= -0.5 is always true).
+            WeatherSettings.RainThreshold  = ClampUnit(WeatherSettings.RainThreshold,  "RainThreshold",  localChanged); if (localChanged) changed = true;
+            WeatherSettings.StormThreshold = ClampUnit(WeatherSettings.StormThreshold, "StormThreshold", localChanged); if (localChanged) changed = true;
+        }
+
+        return changed;
+    }
+
+    // Clamps an hour value to [0, 23]. Sets wasClamped=true if the input
+    // was out of range, false otherwise. Returns the corrected value.
+    protected int ClampHour(int value, string fieldName, out bool wasClamped) {
+        wasClamped = false;
+        if (value < 0) {
+            GebsfishLogger.Warn("WeatherSettings." + fieldName + " was " + value + " (must be 0-23). Clamping to 0.", "ConfigValidation");
+            wasClamped = true;
+            return 0;
+        }
+        if (value > 23) {
+            GebsfishLogger.Warn("WeatherSettings." + fieldName + " was " + value + " (must be 0-23). Clamping to 23.", "ConfigValidation");
+            wasClamped = true;
+            return 23;
+        }
+        return value;
+    }
+
+    // Clamps a float to [0.0, 1.0]. Used for rain / storm thresholds that
+    // compare against the engine's normalised rain value. Sets wasClamped
+    // accordingly. Returns the corrected value.
+    protected float ClampUnit(float value, string fieldName, out bool wasClamped) {
+        wasClamped = false;
+        if (value < 0.0) {
+            GebsfishLogger.Warn("WeatherSettings." + fieldName + " was " + value + " (must be 0.0-1.0). Clamping to 0.0.", "ConfigValidation");
+            wasClamped = true;
+            return 0.0;
+        }
+        if (value > 1.0) {
+            GebsfishLogger.Warn("WeatherSettings." + fieldName + " was " + value + " (must be 0.0-1.0). Clamping to 1.0.", "ConfigValidation");
+            wasClamped = true;
+            return 1.0;
+        }
+        return value;
     }
 
     // Default per-bait fish-preference table. Every bait lists every
@@ -1003,6 +1133,9 @@ class GenSetConf {
     float FishKnifeSpeedMultiplier = 0.9;
     string CaviarChanceInfo = "Chance that preparing roe/caviar fish keeps the caviar result. 0 disables caviar, 1 always gives caviar.";
     float CaviarChance = 0.3;
+    string HookFromFishInfo = "When filleting a fish, there is a per-fillet chance to recover a damaged hook 'stuck in the fish'. HookFromFishEnable toggles the feature, HookFromFishChance is the probability per fillet completion (default 0.004 = ~1/250). The pool of possible hooks (and the health-level range each spawns at) lives in the top-level HookFromFishCatches array so admins can add lures or other hook variants and weight them. Set Weight to 0 to disable an entry without deleting it; set MinHealthLevel/MaxHealthLevel both to 3 for a fixed Badly Damaged hook, or 3/4 for a random Badly Damaged or Ruined.";
+    bool HookFromFishEnable = 1;
+    float HookFromFishChance = 0.004;
 };
 
 class RecipeToggleConf {
@@ -1014,12 +1147,40 @@ class RecipeToggleConf {
 };
 
 //predator animals config data
+//
+// Predator spawning runs through three independent gates -- the final per-
+// action odds are the product of all three. Tune each gate separately so
+// admins can think about "how often" and "what / how many" without those
+// two questions interacting.
+//
+//   Gate 1: per-action chance (these fields). Rolls once per fishing /
+//           filleting / failed-cast / net-use event. With the defaults of
+//           0.01, anything-at-all happens roughly 1/100 actions.
+//
+//   Gate 2: weighted predator pick over the Predators[] array, using each
+//           entry's SpawnChance as a relative weight. The defaults give
+//           wolves 0.6 / (0.6 + 0.3) = 2/3 of all predator spawns and
+//           bears the remaining 1/3.
+//
+//   Gate 3: per-predator MinCount/MaxCount (uniform random). Defaults are
+//           wolf 1/1 and bear 1/1, so exactly one animal spawns when the
+//           predator is picked. Widen the range (e.g. wolf 1/3) for a
+//           higher-stakes server.
+//
+//   Combined per-catch with the defaults:
+//     wolf: 1/100 * 2/3 = 1/150 (~0.67%), always one wolf
+//     bear: 1/100 * 1/3 = 1/300 (~0.33%), always one bear
+//
+// GebsPredatorSpawner.TrySpawn applies all three gates in order. A fourth
+// silent filter (no land within [MinRadius, MaxRadius]) can drop the
+// effective rate below these nominal fractions when the player is far
+// from shore -- not configurable here, see geb_predatorspawner.c.
 class PredatorConf {
     string PredatorSpawnEnabledInfo = "Turns on(1) and off(0) the predators feature of the mod. When on, it will enable the random spawning of predators when catching/cutting up the fish.";
     bool PredatorSpawnEnabled = 1;
-    string PredatorSpawnChanceInfo = "Controls the chance for a predator to spawn from each action. Fishing is when a fish is caught, preparing is when filleting, failcatch is when fishing rolls nothing. Bamboo fishing net has its own predator chance under BambooFishingNetSettings.PredatorSpawnChance. Set any to 0 to disable that path.";
-    float PredatorSpawnChanceFishing = 0.05;
-    float PredatorSpawnChancePreparing = 0.05;
+    string PredatorSpawnChanceInfo = "Gate 1 of 3 for predator spawning -- the per-action chance that ANY predator is selected. Fishing is when a fish is caught, preparing is when filleting, failcatch is when fishing rolls nothing. Bamboo fishing net has its own predator chance under BambooFishingNetSettings.PredatorSpawnChance. Set any to 0 to disable that path entirely. Final per-catch odds = thisChance * (predator weight / sum of weights), so 0.01 here with default wolf/bear weights gives wolves 1/150 and bear 1/300. See the comment above PredatorConf for the full three-gate breakdown.";
+    float PredatorSpawnChanceFishing = 0.01;
+    float PredatorSpawnChancePreparing = 0.01;
     float PredatorSpawnChanceFailCatch = 0.01;
     string PredatorSpawnSoundInfo = "PredatorWarningSoundEnable controls the audible notification and PredatorWarningSoundRadius controls how far players hear the sound from the triggering player.";
     bool PredatorWarningSoundEnable = 1;
@@ -3008,6 +3169,20 @@ class ContainerJunkEntry {
     string CatchProbInfo = "Catch probability for this junk item. Typically a scale of 0-25, with 0 being no chance.";
     int CatchProbability;
     string HealthLevelInfo = "Health level range for spawned container junk: 0 pristine, 1 worn, 2 damaged, 3 badly damaged, 4 ruined. Use 3/3 for fixed badly damaged, 3/4 for random badly damaged or ruined.";
+    int MinHealthLevel = 3;
+    int MaxHealthLevel = 3;
+};
+
+// HookFromFish config entry. Weighted pool used by the 'damaged hook stuck in
+// a fish' fillet feature (gated by GeneralSettings.HookFromFishEnable /
+// HookFromFishChance). MinHealthLevel/MaxHealthLevel work the same way as the
+// junk entries: 0 pristine, 1 worn, 2 damaged, 3 badly damaged, 4 ruined.
+class HookFromFishEntry {
+    string ClassnameInfo = "Hook classname to spawn (e.g. FishingHook for vanilla, or any gebsfish lure/hook).";
+    string Classname;
+    string WeightInfo = "Relative weight in the weighted pick. Set to 0 to disable an entry without deleting it. Pure ratios -- 2.0 is twice as likely as 1.0.";
+    float Weight = 1.0;
+    string HealthLevelInfo = "Health level range. 0 pristine, 1 worn, 2 damaged, 3 badly damaged, 4 ruined. Defaults to 3/3 (fixed Badly Damaged).";
     int MinHealthLevel = 3;
     int MaxHealthLevel = 3;
 };

@@ -36,7 +36,15 @@ class GebYieldFishBase extends FishYieldItemBase {
 
 	void SetupYield(string typeName, int envMask, int methodMask, float rainMul = 1.0, float stormMul = 1.0, float nightMul = 1.0, float dawnMul = 1.0, float dayMul = 1.0, float duskMul = 1.0, int catchProb = 0, TFloatArray biteSpeed = null) {
 		super.Init();
-		m_QualityBase = m_gebsConfig.GeneralSettings.FishQuality;
+		// Defensive: if GeneralSettings isn't populated yet (mod startup race
+		// with the JSON load, or an admin who somehow wiped the section out
+		// of an existing JSON), fall back to vanilla DayZ's QUALITY_FISH_BASE
+		// (0.35). Without the guard, an unpopulated config crashes every fish
+		// registration and breaks the entire fishing system.
+		if (m_gebsConfig && m_gebsConfig.GeneralSettings)
+			m_QualityBase = m_gebsConfig.GeneralSettings.FishQuality;
+		else
+			m_QualityBase = 0.35;
 		m_Type = typeName;
 		m_EnviroMask = envMask;
 		m_MethodMask = methodMask;
