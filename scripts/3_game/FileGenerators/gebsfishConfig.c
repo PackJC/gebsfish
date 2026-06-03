@@ -1133,7 +1133,7 @@ class GenSetConf {
     float FishKnifeSpeedMultiplier = 0.9;
     string CaviarChanceInfo = "Chance that preparing roe/caviar fish keeps the caviar result. 0 disables caviar, 1 always gives caviar.";
     float CaviarChance = 0.3;
-    string HookFromFishInfo = "When filleting a fish, there is a per-fillet chance to recover a damaged hook 'stuck in the fish'. HookFromFishEnable toggles the feature, HookFromFishChance is the probability per fillet completion (default 0.004 = ~1/250). The pool of possible hooks (and the health-level range each spawns at) lives in the top-level HookFromFishCatches array so admins can add lures or other hook variants and weight them. Set Weight to 0 to disable an entry without deleting it; set MinHealthLevel/MaxHealthLevel both to 3 for a fixed Badly Damaged hook, or 3/4 for a random Badly Damaged or Ruined.";
+    string HookFromFishInfo = "When filleting a fish, there is a chance to recover a damaged hook 'stuck in the fish'. The roll happens once per fillet action (each time you fillet a fish), not once per fillet meat produced -- a fish that yields several fillets still only rolls once. HookFromFishEnable toggles the feature, HookFromFishChance is the probability per fillet action (default 0.004 = ~1/250). The pool of possible hooks (and the health-level range each spawns at) lives in the top-level HookFromFishCatches array so admins can add lures or other hook variants and weight them. Set Weight to 0 to disable an entry without deleting it; set MinHealthLevel/MaxHealthLevel both to 3 for a fixed Badly Damaged hook, or 3/4 for a random Badly Damaged or Ruined.";
     bool HookFromFishEnable = 1;
     float HookFromFishChance = 0.004;
 };

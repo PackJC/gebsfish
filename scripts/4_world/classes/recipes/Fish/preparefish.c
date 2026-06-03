@@ -62,10 +62,12 @@ modded class PrepareFish {
         GebsPredatorSpawner.TrySpawn(player, m_gebsConfig.PredatorSettings.PredatorSpawnChancePreparing, "PredatorSpawnPrepare");
     }
 
-    // Damaged-hook-from-fish feature. Per fillet, rolls HookFromFishChance
-    // (default 0.004 = ~1/250) and on a hit, picks a hook classname from the
-    // weighted HookFromFishCatches pool and spawns it at a random health level
-    // in that entry's [MinHealthLevel, MaxHealthLevel] range. Server-only so
+    // Damaged-hook-from-fish feature. Fires once per fillet action (one Do()
+    // call = one fish prepared, regardless of how many fillet meats it yields):
+    // rolls HookFromFishChance (default 0.004 = ~1/250) and on a hit, picks a
+    // hook classname from the weighted HookFromFishCatches pool and spawns it
+    // at a random health level in that entry's [MinHealthLevel, MaxHealthLevel]
+    // range. Server-only so
     // the spawn doesn't double up between client + server. Tries the player's
     // inventory first (cleanest UX -- hook lands where the fillets do), falls
     // back to player position if inventory placement fails. Logs at DebugLogs
