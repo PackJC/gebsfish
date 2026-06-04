@@ -27,7 +27,7 @@ modded class ActionFishingNew: ActionContinuousBase {
         } else {
             chance = m_gebsConfig.PredatorSettings.PredatorSpawnChanceFailCatch;
 
-            if (m_gebsConfig.GeneralSettings && m_gebsConfig.GeneralSettings.DebugLogs) {
+            if (GebGetDebugLevel() >= 1) {
                 GebsfishLogger.Debug("Cast failed; rolling fail-catch predator chance (" + chance + ").", "PredatorSpawnFishing");
             }
         }

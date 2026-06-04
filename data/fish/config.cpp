@@ -2185,8 +2185,8 @@ class cfgVehicles {
 	};
 	class geb_YellowCaviar: RedCaviar {
 		scope=2;
-		displayName="$STR_YellowCaviar";
-		descriptionShort="$STR_YellowCaviar_desc";
+		displayName="$STR_fish_YellowCaviar";
+		descriptionShort="$STR_fish_YellowCaviar_desc";
 		hiddenSelections[]=
 		{
 			"cs_raw"
@@ -2199,8 +2199,8 @@ class cfgVehicles {
 	};
 	class geb_BlackCaviar: RedCaviar {
 		scope=2;
-		displayName="$STR_BlackCaviar";
-		descriptionShort="$STR_BlackCaviar_desc";
+		displayName="$STR_fish_BlackCaviar";
+		descriptionShort="$STR_fish_BlackCaviar_desc";
 		hiddenSelections[]=
 		{
 			"cs_raw"

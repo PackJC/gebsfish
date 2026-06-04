@@ -92,13 +92,7 @@ class ActionDigBugs : ActionContinuousBase {
 	}
 
 	override void OnFinishProgressServer(ActionData action_data) {
-		float bugSum = 0.0;
-		float rndBug = 0.0;
-		string selectedBug = "";
-
-		int debugLevel = 0;
-		if (m_gebsConfig && m_gebsConfig.GeneralSettings)
-			debugLevel = m_gebsConfig.GeneralSettings.DebugLogs;
+		int debugLevel = GebGetDebugLevel();
 
 		// Guard action_data fields up front. Vanilla normally guarantees these
 		// are populated when OnFinishProgressServer fires, but edge cases
@@ -141,64 +135,24 @@ class ActionDigBugs : ActionContinuousBase {
 			return;
 		}
 
-		if (debugLevel == ELEVATED_DEBUG) {
-			GebsfishLogger.Debug("---Dig-bugs weighted pick---", "DigBugs");
-			GebsfishLogger.Debug("entry | classname | chance | included", "DigBugs");
-		}
-
-		// Calculate the total spawn chance for valid bug entries only.
-		// Blank classnames and zero/negative chances are ignored so they cannot
-		// steal roll range from real bugs or try to spawn an empty classname.
-		int idx = 0;
-		foreach (BugEntry bug1 : catches) {
-			bool included = true;
-			string reason = "";
-			if (!bug1 || bug1.Classname == "" || bug1.CatchChance <= 0) {
-				included = false;
-				reason = "blank/zero";
-			}
-			if (debugLevel == ELEVATED_DEBUG) {
-				string entryCls = "<null>";
-				float entryChance = 0;
-				if (bug1) {
-					entryCls = bug1.Classname;
-					entryChance = bug1.CatchChance;
-				}
-				string flag = "yes";
-				if (!included)
-					flag = "no (" + reason + ")";
-				GebsfishLogger.Debug("" + idx + " | " + entryCls + " | " + entryChance + " | " + flag, "DigBugs");
-			}
-			if (included)
-				bugSum += bug1.CatchChance;
-			idx++;
-		}
-
-		if (bugSum <= 0) {
-			if (debugLevel >= 1)
-				GebsfishLogger.Debug("Dig-bugs: totalChance=0 after filter -- skipping", "DigBugs");
-			return;
-		}
-
-		// Generate a random value within the total spawn chance
-		rndBug = Math.RandomFloatInclusive(0.0, bugSum);
-		float rndStart = rndBug;
-
-		// Select a bug from the same filtered set used for the total above.
+		// Build the eligible pool once, then defer the roll to the shared
+		// picker (single filter pass -> sum and walk can't disagree).
+		TStringArray names = new TStringArray;
+		TFloatArray weights = new TFloatArray;
 		foreach (BugEntry bug : catches) {
 			if (!bug || bug.Classname == "" || bug.CatchChance <= 0)
 				continue;
-
-			if (rndBug <= bug.CatchChance) {
-				selectedBug = bug.Classname;
-				break;
-			}
-			rndBug -= bug.CatchChance;
+			names.Insert(bug.Classname);
+			weights.Insert(bug.CatchChance);
 		}
 
-		if (debugLevel >= 1) {
-			GebsfishLogger.Debug("Dig-bugs picked: " + selectedBug + " roll=" + rndStart + " totalChance=" + bugSum, "DigBugs");
+		int pick = GebWeightedPick.Pick(names, weights, debugLevel, "DigBugs");
+		if (pick < 0) {
+			// No eligible entries -- bail before tool damage / specialty,
+			// matching the previous totalChance<=0 behaviour.
+			return;
 		}
+		string selectedBug = names[pick];
 
 		// Spawn the selected bug if one was found. Quantity 1 -- one bug per
 		// successful dig. Previously SetQuantity(10) was hardcoded and got

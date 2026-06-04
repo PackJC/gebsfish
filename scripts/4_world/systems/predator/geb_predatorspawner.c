@@ -37,9 +37,7 @@ class GebsPredatorSpawner {
             return false;
         }
 
-        int debugLogs = 0;
-        if (cfg.GeneralSettings)
-            debugLogs = cfg.GeneralSettings.DebugLogs;
+        int debugLogs = GebGetDebugLevel();
 
         if (!cfg.PredatorSettings.PredatorSpawnEnabled) {
             if (debugLogs)
@@ -105,31 +103,23 @@ class GebsPredatorSpawner {
             return null;
         }
 
-        float totalWeight = 0;
-        foreach (PredatorEntry predator1 : cfg.Predators) {
-            if (!predator1 || predator1.Classname == "" || predator1.SpawnChance <= 0)
-                continue;
-            totalWeight += predator1.SpawnChance;
-        }
-
-        if (totalWeight <= 0) {
-            if (debugLogs)
-                GebsfishLogger.Debug("No predators have a valid spawn chance in the config.", logTag);
-            return null;
-        }
-
-        float randomValue = Math.RandomFloat(0, totalWeight);
-        float cumulative = 0;
+        // Filter to eligible entries once, keeping a parallel ref list so the
+        // shared picker's returned index maps back to the PredatorEntry.
+        array<ref PredatorEntry> eligible = new array<ref PredatorEntry>();
+        TStringArray names = new TStringArray;
+        TFloatArray weights = new TFloatArray;
         foreach (PredatorEntry predator : cfg.Predators) {
             if (!predator || predator.Classname == "" || predator.SpawnChance <= 0)
                 continue;
-
-            cumulative += predator.SpawnChance;
-            if (randomValue <= cumulative)
-                return predator;
+            eligible.Insert(predator);
+            names.Insert(predator.Classname);
+            weights.Insert(predator.SpawnChance);
         }
 
-        return null;
+        int pick = GebWeightedPick.Pick(names, weights, debugLogs, logTag);
+        if (pick < 0)
+            return null;
+        return eligible[pick];
     }
 
     // Picks a random offset in [minRadius..maxRadius] around center and
@@ -153,7 +143,9 @@ class GebsPredatorSpawner {
 
         const int maxAttempts = 20;
         for (int attempts = 0; attempts < maxAttempts; attempts++) {
-            float angle = Math.RandomFloat(0, 360);
+            // Math.Cos/Sin take radians, so the angle must span [0, 2pi) --
+            // feeding degrees here produced an angularly clumped spawn ring.
+            float angle = Math.RandomFloat(0, Math.PI2);
             float distance = Math.RandomFloat(minRadius, maxRadius);
             float xOffset = Math.Cos(angle) * distance;
             float zOffset = Math.Sin(angle) * distance;

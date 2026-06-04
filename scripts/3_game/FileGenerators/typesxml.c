@@ -298,6 +298,18 @@ class gebsfishTypes {
         gearItems.Insert(new XmlTypeEntry("geb_FishingRodRepairKit", 3, 1));
         gearItems.Insert(new XmlTypeEntry("geb_BlueFishGloves", 3, 1));
         gearItems.Insert(new XmlTypeEntry("geb_OrangeFishGloves", 3, 1));
+        // Coolers (filtered food containers) -- same loot profile as tackle boxes.
+        gearItems.Insert(new XmlTypeEntry("geb_RedCooler", 3, 1));
+        gearItems.Insert(new XmlTypeEntry("geb_YellowCooler", 3, 1));
+        gearItems.Insert(new XmlTypeEntry("geb_BlueCooler", 3, 1));
+        gearItems.Insert(new XmlTypeEntry("geb_OrangeCooler", 3, 1));
+        gearItems.Insert(new XmlTypeEntry("geb_BrownCooler", 3, 1));
+        gearItems.Insert(new XmlTypeEntry("geb_PurpleCooler", 3, 1));
+        gearItems.Insert(new XmlTypeEntry("geb_PinkCooler", 3, 1));
+        gearItems.Insert(new XmlTypeEntry("geb_LimeCooler", 3, 1));
+        gearItems.Insert(new XmlTypeEntry("geb_LightBlueCooler", 3, 1));
+        gearItems.Insert(new XmlTypeEntry("geb_GreenCooler", 3, 1));
+        gearItems.Insert(new XmlTypeEntry("geb_CamoCooler", 3, 1));
 
         FPrintln(file, "    <!-- Gear Items -->");
         foreach (XmlTypeEntry gear : gearItems) {

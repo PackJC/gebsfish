@@ -122,36 +122,38 @@ class gebsfishConfig {
                 JsonFileLoader<gebsfishConfig>.JsonLoadFile(ModFolder + SettingsConfigFile, this);
                 GebsfishLogger.Info("Found settings file; Loading gebsfish settings from file.", "JSON");
                 
-                // If version mismatch, backup old version of json before replacing it
-                if (ConfigVersion != CONFIG_VERSION){
+                // Migrate in place: backfill any missing/new config sections and
+                // clamp out-of-range hand-edited values. On a version change we
+                // additionally snapshot the old file and re-stamp the version --
+                // but we KEEP every loaded value instead of rebuilding from
+                // defaults, so a mod update adds new settings without wiping the
+                // admin's existing tuning. The _old backup stays as a safety net.
+                // A full default rebuild now only runs when no config file exists.
+                bool versionChanged = (ConfigVersion != CONFIG_VERSION);
+                if (versionChanged) {
                     JsonFileLoader<gebsfishConfig>.JsonSaveFile(ModFolder + FileName + "_old" + FileType, this);
-                    
-                    GebsfishLogger.Info("New config version found for mod; Backing up old file and saving as " + ModFolder + FileName + "_old" + FileType + " and generating new config file.", "JSON");
+                    GebsfishLogger.Info("New config version found for mod; backed up old file as " + ModFolder + FileName + "_old" + FileType + " and migrating settings (existing values preserved).", "JSON");
+                    ConfigVersion = CONFIG_VERSION;
                 }
-                else {
-                    // Config exists and version matches. Older manually edited
-                    // files can still be missing shared settings sections, so
-                    // backfill any null refs. Only Save() if something was
-                    // actually filled in -- otherwise we'd needlessly rewrite
-                    // the JSON on every server start (and risk corrupting
-                    // hand-edited files via reformatting).
-                    bool needSave = EnsureMissingConfigSections();
-                    if (needSave) {
-                        GebsfishLogger.Info("Backfilled missing config sections; saving updated JSON.", "JSON");
-                    }
-                    // Clamp hand-edited values that fall outside their valid
-                    // range (hours [0,23], rain thresholds [0,1], etc). Logs
-                    // each correction so the admin sees the warning, and
-                    // saves the corrected file so the JSON matches the
-                    // values the mod is actually using.
-                    if (ValidateAndClampLoadedConfig()) {
-                        needSave = true;
-                    }
-                    if (needSave) {
-                        Save();
-                    }
-                    return;
+
+                // New sections introduced by the update load as null -> seed them.
+                // Existing sections keep the admin's loaded values untouched.
+                bool needSave = EnsureMissingConfigSections();
+                if (needSave) {
+                    GebsfishLogger.Info("Backfilled missing config sections.", "JSON");
                 }
+                // Clamp hand-edited values outside their valid range (hours [0,23],
+                // rain thresholds [0,1], etc), logging each correction.
+                if (ValidateAndClampLoadedConfig()) {
+                    needSave = true;
+                }
+                // Persist after a version change (to stamp the new version and write
+                // any newly-added sections), otherwise only when something actually
+                // changed -- avoids needless rewrites of hand-edited files.
+                if (versionChanged || needSave) {
+                    Save();
+                }
+                return;
             }
         GebsfishLogger.Info("Generating settings file.", "JSON");
 
@@ -2951,9 +2953,6 @@ class BloodClamConf {
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 4;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int BoneMin = 1;
-    int BoneMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
     int CatchProbability = 14;
     string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
@@ -2974,9 +2973,6 @@ class MusselConf {
     int Environment = 3;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 6;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int BoneMin = 1;
-    int BoneMax = 2;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
     int CatchProbability = 20;
     string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
@@ -2997,9 +2993,6 @@ class BlackDevilSnailConf {
     int Environment = 1;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 6;
-    string BoneInfo = "BoneMin and BoneMax determine the minimum and maximum Bone pieces for the prepare action. DayZ has a hard limit of 10 bones max.";
-    int BoneMin = 1;
-    int BoneMax = 1;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
     int CatchProbability = 10;
     string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
@@ -3020,9 +3013,6 @@ class StarFishConf {
     int Environment = 2;
     string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
     int CatchMethod = 6;
-    string BoneInfo = "BoneMin and BoneMax determine the minimum and maximum Bone pieces for the prepare action. DayZ has a hard limit of 10 bones max.";
-    int BoneMin = 1;
-    int BoneMax = 1;
     string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
     int CatchProbability = 16;
     string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
@@ -3207,6 +3197,16 @@ static gebsfishConfig GetGebSettingsConfig() {
 static void SetGebsfishConfig(gebsfishConfig config) {
     GebsfishLogger.Info("Setting config settings from server config file.", "JSON");
     m_gebsConfig = config;
+}
+
+// Null-safe accessor for the configured debug-log level. Returns 0 (logging
+// off) whenever the config or GeneralSettings hasn't loaded yet, so call sites
+// can gate logging with a single call instead of repeating the double
+// null-check. 0 = off, 1 = normal, 2 (ELEVATED_DEBUG) = verbose.
+static int GebGetDebugLevel() {
+    if (!m_gebsConfig || !m_gebsConfig.GeneralSettings)
+        return 0;
+    return m_gebsConfig.GeneralSettings.DebugLogs;
 }
 //Prevent double printing in log file since it loads the yield data twice
 bool gebsMissionLoaded = false;

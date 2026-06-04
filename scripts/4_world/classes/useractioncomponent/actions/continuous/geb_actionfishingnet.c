@@ -31,6 +31,10 @@ class ActionBambooFishingNet : ActionContinuousBase {
 		m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_POKE;
 		m_StanceMask = DayZPlayerConstants.STANCEMASK_CROUCH;
 		m_FullBody = true;
+		// Match ActionDigBugs so netting grants the same toughness progression
+		// as the other manual gathering actions. Without this the AddSpecialty
+		// call in OnFinishProgressServer adds the unset base-class default (0).
+		m_SpecialtyWeight = UASoftSkillsWeight.ROUGH_MEDIUM;
 		m_Text = "#STR_action_gatherminnows";
 	}
 
@@ -114,9 +118,7 @@ class ActionBambooFishingNet : ActionContinuousBase {
 	// This is how saltwater casts get different catches than freshwater
 	// casts without needing two separate config arrays.
 	string GetConfiguredNetSpawnType(int environment) {
-		int debugLevel = 0;
-		if (m_gebsConfig && m_gebsConfig.GeneralSettings)
-			debugLevel = m_gebsConfig.GeneralSettings.DebugLogs;
+		int debugLevel = GebGetDebugLevel();
 
 		if (!m_gebsConfig || !m_gebsConfig.BambooFishingNetSettings) {
 			if (debugLevel >= 1)
@@ -130,91 +132,41 @@ class ActionBambooFishingNet : ActionContinuousBase {
 			return "";
 		}
 
-		if (debugLevel == ELEVATED_DEBUG) {
-			GebsfishLogger.Debug("---Net spawn weighted pick (env=" + environment + ")---", "NetSpawn");
-			GebsfishLogger.Debug("entry | classname | entryEnv | chance | included", "NetSpawn");
-		}
-
-		float totalChance = 0.0;
-		int idx = 0;
-		foreach (NetEntry netEntry1 : catches) {
-			string reason = "";
-			bool included = true;
-			if (!netEntry1 || netEntry1.Classname == "" || netEntry1.CatchChance <= 0) {
-				included = false;
-				reason = "blank/zero";
-			} else if (netEntry1.Environment != 3 && netEntry1.Environment != environment) {
-				included = false;
-				reason = "env-mismatch";
-			}
-
-			if (debugLevel == ELEVATED_DEBUG) {
-				string entryCls = "<null>";
-				int entryEnv = -1;
-				float entryChance = 0;
-				if (netEntry1) {
-					entryCls = netEntry1.Classname;
-					entryEnv = netEntry1.Environment;
-					entryChance = netEntry1.CatchChance;
-				}
-				string flag = "yes";
-				if (!included)
-					flag = "no (" + reason + ")";
-				GebsfishLogger.Debug("" + idx + " | " + entryCls + " | " + entryEnv + " | " + entryChance + " | " + flag, "NetSpawn");
-			}
-
-			if (included)
-				totalChance += netEntry1.CatchChance;
-			idx++;
-		}
-
-		if (totalChance <= 0) {
-			if (debugLevel >= 1)
-				GebsfishLogger.Debug("Net spawn lookup: totalChance=0 after filter (env=" + environment + ") -- returning empty", "NetSpawn");
-			return "";
-		}
-
-		float roll = Math.RandomFloatInclusive(0.0, totalChance);
-		float rollStart = roll;
+		// Build the eligible pool once (env filter lives only here, so the
+		// sum/walk can't disagree), then defer the roll to the shared picker.
+		TStringArray names = new TStringArray;
+		TFloatArray weights = new TFloatArray;
 		foreach (NetEntry netEntry : catches) {
 			if (!netEntry || netEntry.Classname == "" || netEntry.CatchChance <= 0)
 				continue;
 			if (netEntry.Environment != 3 && netEntry.Environment != environment)
 				continue;
-
-			if (roll <= netEntry.CatchChance) {
-				if (debugLevel >= 1) {
-					GebsfishLogger.Debug("Net spawn picked: " + netEntry.Classname + " roll=" + rollStart + " totalChance=" + totalChance + " env=" + environment, "NetSpawn");
-				}
-				return netEntry.Classname;
-			}
-
-			roll -= netEntry.CatchChance;
+			names.Insert(netEntry.Classname);
+			weights.Insert(netEntry.CatchChance);
 		}
 
-		if (debugLevel >= 1)
-			GebsfishLogger.Debug("Net spawn lookup: weighted walk exhausted (roll=" + rollStart + " totalChance=" + totalChance + ") -- returning empty", "NetSpawn");
-		return "";
+		int pick = GebWeightedPick.Pick(names, weights, debugLevel, "NetSpawn");
+		if (pick < 0)
+			return "";
+		return names[pick];
 	}
 
 	override void OnFinishProgressServer(ActionData action_data) {
-		PlayerBase player = action_data.m_Player;
-		ItemBase net = action_data.m_MainItem;
+		int debugLevel = GebGetDebugLevel();
 
-		int debugLevel = 0;
-		if (m_gebsConfig && m_gebsConfig.GeneralSettings)
-			debugLevel = m_gebsConfig.GeneralSettings.DebugLogs;
-
-		// Guard action_data fields up front. The downstream code calls
+		// Guard action_data and its fields up front. The downstream code calls
 		// player.GetPosition / player.GetSoftSkillsManager and dereferences
-		// net via net.GetInventory -- a null on either would crash. Vanilla
+		// net via net.GetInventory -- a null on any would crash. Vanilla
 		// usually has these populated when OnFinishProgressServer fires, but
 		// disconnect / inventory-wipe edge cases can leave them null.
-		if (!player) {
+		if (!action_data || !action_data.m_Player) {
 			if (debugLevel >= 1)
-				GebsfishLogger.Debug("Bamboo net: action_data.m_Player is null -- skipping", "NetSpawn");
+				GebsfishLogger.Debug("Bamboo net: action_data or player is null -- skipping", "NetSpawn");
 			return;
 		}
+
+		PlayerBase player = action_data.m_Player;
+		ItemBase net = action_data.m_MainItem;
 
 		// Per-attempt find chance gate. Net still takes damage on a miss so
 		// nets wear down even when the catch fails.

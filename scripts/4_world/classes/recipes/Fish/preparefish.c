@@ -96,39 +96,23 @@ modded class PrepareFish {
             return;
         }
 
-        // Sum valid weights.
-        float totalWeight = 0;
-        foreach (HookFromFishEntry e1 : entries) {
-            if (!e1 || e1.Classname == "" || e1.Weight <= 0)
-                continue;
-            totalWeight += e1.Weight;
-        }
-
-        if (totalWeight <= 0) {
-            if (debugLevel >= 1)
-                GebsfishLogger.Debug("HookFromFish hit but totalWeight=0 after filter -- skipping", "HookFromFish");
-            return;
-        }
-
-        // Weighted pick.
-        float pickRoll = Math.RandomFloat(0.0, totalWeight);
-        float pickStart = pickRoll;
-        HookFromFishEntry picked = null;
+        // Filter to eligible hooks once, keeping a parallel ref list so the
+        // shared picker's index maps back to the entry (for its health range).
+        array<ref HookFromFishEntry> eligible = new array<ref HookFromFishEntry>();
+        TStringArray names = new TStringArray;
+        TFloatArray weights = new TFloatArray;
         foreach (HookFromFishEntry e : entries) {
             if (!e || e.Classname == "" || e.Weight <= 0)
                 continue;
-            if (pickRoll <= e.Weight) {
-                picked = e;
-                break;
-            }
-            pickRoll -= e.Weight;
+            eligible.Insert(e);
+            names.Insert(e.Classname);
+            weights.Insert(e.Weight);
         }
 
-        if (!picked) {
-            if (debugLevel >= 1)
-                GebsfishLogger.Debug("HookFromFish weighted walk exhausted (roll=" + pickStart + " total=" + totalWeight + ") -- skipping", "HookFromFish");
+        int pick = GebWeightedPick.Pick(names, weights, debugLevel, "HookFromFish");
+        if (pick < 0)
             return;
-        }
+        HookFromFishEntry picked = eligible[pick];
 
         // Random health level inside the configured range. Clamp to 0..4 in
         // case an admin typo'd a value -- SetHealthLevel above 4 silently no-ops
@@ -165,7 +149,7 @@ modded class PrepareFish {
             spawnedItem.SetHealthLevel(healthLevel, "");
 
         if (debugLevel >= 1) {
-            GebsfishLogger.Debug("HookFromFish hit: spawned=" + picked.Classname + " healthLevel=" + healthLevel + " roll=" + roll + " chance=" + gs.HookFromFishChance + " pickRoll=" + pickStart + " totalWeight=" + totalWeight, "HookFromFish");
+            GebsfishLogger.Debug("HookFromFish hit: spawned=" + picked.Classname + " healthLevel=" + healthLevel + " roll=" + roll + " chance=" + gs.HookFromFishChance, "HookFromFish");
         }
     }
 }
