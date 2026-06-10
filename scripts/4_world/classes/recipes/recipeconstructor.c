@@ -12,68 +12,20 @@ modded class PluginRecipesManager {
 	override void RegisterRecipies() {
 		super.RegisterRecipies();
 
-		//Freshwater Fish 	
-		RegisterRecipe(new PrepareBlueGill);
-		RegisterRecipe(new PrepareFlatHeadCatFish);
-		RegisterRecipe(new PrepareLargeMouthBass);
-		RegisterRecipe(new PrepareSmallMouthBass);
-		RegisterRecipe(new PrepareSunFish);
-		RegisterRecipe(new PrepareWallEye);
-		RegisterRecipe(new PrepareNorthernPike);
-		RegisterRecipe(new PrepareMuskellunge);
-		RegisterRecipe(new PrepareBarredMuskellunge);
-		RegisterRecipe(new PrepareSpottedMuskellunge);
-		RegisterRecipe(new PrepareTigerMuskellunge);
-		RegisterRecipe(new PrepareNorthernSnakeHead);
-		RegisterRecipe(new PrepareAlligatorGar);
-		RegisterRecipe(new PrepareYellowPerch);
-		RegisterRecipe(new PrepareSauger);
-		RegisterRecipe(new PrepareRainbowTrout);
-		RegisterRecipe(new PrepareBrownTrout);
-		RegisterRecipe(new PrepareBrookTrout);
-		RegisterRecipe(new PrepareLakeTrout);
-		RegisterRecipe(new PrepareCutThroatTrout);
-		RegisterRecipe(new PrepareWhiteBass);
-		RegisterRecipe(new PrepareStripedBass);
-		RegisterRecipe(new PrepareNeoshoBass);
-		RegisterRecipe(new PrepareBlackBass);
-		RegisterRecipe(new PrepareBowFin);
-		RegisterRecipe(new PrepareSlimySculpin);
-		RegisterRecipe(new PrepareSockEyeSalmon);
-		RegisterRecipe(new PrepareChinookSalmon);
-		RegisterRecipe(new PrepareLakeSturgeon);
-
-		//Saltwater Crustaceans
-		RegisterRecipe(new PrepareKingCrab);
-		RegisterRecipe(new PrepareSnowCrab);
-		RegisterRecipe(new PrepareAmericanLobster);
-		RegisterRecipe(new PrepareEuropeanLobster);
-
-		//Saltwater Fish
-		RegisterRecipe(new PrepareAngelFish);
-		RegisterRecipe(new PrepareAtlanticSailFish);
-		RegisterRecipe(new PrepareMahiMahi);
-		RegisterRecipe(new PrepareAsianSeaBass);
-		RegisterRecipe(new PrepareAtlanticBlueMarlin);
-		RegisterRecipe(new PrepareBonita);
-		RegisterRecipe(new PrepareCherrySalmon);
-		RegisterRecipe(new PrepareFlatHeadMullet);
-		RegisterRecipe(new PreparePacificCod);
-		RegisterRecipe(new PrepareRedHeadCichlid);
-		RegisterRecipe(new PrepareRoughNeckRock);
-		RegisterRecipe(new PrepareSeverum);
-		RegisterRecipe(new PrepareBlueTang);
-		RegisterRecipe(new PrepareLargeHeadHairTailFish);
-		RegisterRecipe(new PrepareHumpHeadWrasse);
-		RegisterRecipe(new PrepareSiameseTigerFish);
-		RegisterRecipe(new PrepareAngelShark);
-		RegisterRecipe(new PrepareGreatWhiteShark);
-		RegisterRecipe(new PrepareHammerHeadShark);
-		RegisterRecipe(new PrepareLeopardShark);
-		RegisterRecipe(new PrepareYellowFinTuna);
-		RegisterRecipe(new PrepareWhiteGrunt);
-		RegisterRecipe(new PrepareYellowSnapper);
-		RegisterRecipe(new PrepareSouthernFlounder);
+		// Fish fillet/caviar/lobster recipes -- data-driven from the live Species table.
+		// One generic recipe per row that has a ResultMain; the 4 vanilla fish
+		// (Carp/SteelheadTrout/Mackerel/WalleyePollock) stay as their own modded classes.
+		gebsfishConfig cfg = GetGebSettingsConfig();
+		if (cfg && cfg.Fish && cfg.Fish.Species) {
+			GebPrepareFishData recipe;
+			foreach (FishConf f : cfg.Fish.Species) {
+				if (!f || f.ResultMain == "") continue;                       // catch-only: no recipe
+				if (f.Classname == "Carp" || f.Classname == "SteelheadTrout" || f.Classname == "Mackerel" || f.Classname == "WalleyePollock") continue; // vanilla: modded classes
+				recipe = new GebPrepareFishData();
+				recipe.SetConf(f);
+				RegisterRecipe(recipe);
+			}
+		}
 
 		//Tools
 		RegisterRecipe(new CraftBambooFishingNet);

@@ -6,7 +6,7 @@ enum GebsfishLogLevel {
 };
 
 class GebsfishLogger {
-    private static const string LOG_DIR = "$profile:Gebs/Fish/Logs";
+    private static const string LOG_DIR = "$profile:Gebs/logs";
     private static string m_SessionFilePath = "";
     private static GebsfishLogLevel m_MinLevel = GebsfishLogLevel.DEBUG;
     private static bool m_Initialized = false;

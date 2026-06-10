@@ -98,10 +98,10 @@ class ActionBambooFishingNet : ActionContinuousBase {
 	// section, clamped to [0, 1]. Defaults to 1.0 (always finds) when the
 	// config is unavailable.
 	float GetFishingNetFindChance() {
-		if (!m_gebsConfig || !m_gebsConfig.BambooFishingNetSettings)
+		if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.BambooFishingNetSettings)
 			return 1.0;
 
-		float chance = m_gebsConfig.BambooFishingNetSettings.FindChance;
+		float chance = m_gebsConfig.General.BambooFishingNetSettings.FindChance;
 		if (chance < 0.0) chance = 0.0;
 		if (chance > 1.0) chance = 1.0;
 		return chance;
@@ -120,12 +120,12 @@ class ActionBambooFishingNet : ActionContinuousBase {
 	string GetConfiguredNetSpawnType(int environment) {
 		int debugLevel = GebGetDebugLevel();
 
-		if (!m_gebsConfig || !m_gebsConfig.BambooFishingNetSettings) {
+		if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.BambooFishingNetSettings) {
 			if (debugLevel >= 1)
 				GebsfishLogger.Debug("Net spawn lookup: config missing -- returning empty", "NetSpawn");
 			return "";
 		}
-		ref array<ref NetEntry> catches = m_gebsConfig.BambooFishingNetSettings.Catches;
+		ref array<ref NetEntry> catches = m_gebsConfig.General.BambooFishingNetSettings.Catches;
 		if (!catches || catches.Count() == 0) {
 			if (debugLevel >= 1)
 				GebsfishLogger.Debug("Net spawn lookup: Catches table empty -- returning empty (env=" + environment + ")", "NetSpawn");
@@ -221,8 +221,8 @@ class ActionBambooFishingNet : ActionContinuousBase {
 		// roll so predators can show up even if no minnow was caught (and
 		// vice versa). Default in config is much lower than fishing
 		// (0.01 vs 0.05) since the net is a slower / quieter activity.
-		if (player && g_Game.IsServer() && m_gebsConfig && m_gebsConfig.BambooFishingNetSettings) {
-			GebsPredatorSpawner.TrySpawn(player, m_gebsConfig.BambooFishingNetSettings.PredatorSpawnChance, "PredatorSpawnFishingNet");
+		if (player && g_Game.IsServer() && m_gebsConfig && m_gebsConfig.General && m_gebsConfig.General.BambooFishingNetSettings) {
+			GebsPredatorSpawner.TrySpawn(player, m_gebsConfig.General.BambooFishingNetSettings.PredatorSpawnChance, "PredatorSpawnFishingNet");
 		}
 
 		player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);

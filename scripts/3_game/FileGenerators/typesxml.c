@@ -1,6 +1,6 @@
 class gebsfishTypes {
-    private const string DIRECTORY_PATH = "$profile:Gebs/Extras/mpmissions/";
-    private const string FILE_PATH = "$profile:Gebs/Extras/mpmissions/gebsfish-types.xml";
+    private const string DIRECTORY_PATH = "$profile:Gebs/mpmissions/";
+    private const string FILE_PATH = "$profile:Gebs/mpmissions/gebsfish-types.xml";
     private const string VERSION_PREFIX = "<!-- Version: ";
 
     void GenerateTypesXML() {
@@ -20,7 +20,7 @@ class gebsfishTypes {
 
         FileHandle file = OpenFile(FILE_PATH, FileMode.WRITE);
         if (!file) {
-            GebsfishLogger.Error("Could not create gebsfish-types.xml in $profile:Gebs/extras/mpmissions/.", "Types");
+            GebsfishLogger.Error("Could not create gebsfish-types.xml in $profile:Gebs/mpmissions/.", "Types");
             return;
         }
 
@@ -30,7 +30,7 @@ class gebsfishTypes {
         WriteFooter(file);
 
         CloseFile(file);
-        GebsfishLogger.Info("gebsfish-types.xml successfully generated in $profile:Gebs/extras/mpmissions/.", "Types");
+        GebsfishLogger.Info("gebsfish-types.xml successfully generated in $profile:Gebs/mpmissions/.", "Types");
     }
 
     protected bool IsCurrentVersion(string filePath, string expectedVersion) {
@@ -73,7 +73,6 @@ class gebsfishTypes {
 
     protected void EnsureDirectoryExists() {
         MakeDirectory("$profile:Gebs");
-        MakeDirectory("$profile:Gebs/Extras");
         MakeDirectory(DIRECTORY_PATH);
     }
 
@@ -88,232 +87,61 @@ class gebsfishTypes {
     }
 
     protected void WriteFishSection(FileHandle file) {
-        ref array<string> fishItems = new array<string>;
-        fishItems.Reserve(128);
-        fishItems.Insert("geb_SockEyeSalmon");
-        fishItems.Insert("geb_SockEyeSalmonFilletMeat");
-        fishItems.Insert("geb_ChinookSalmon");
-        fishItems.Insert("geb_ChinookSalmonFilletMeat");
-        fishItems.Insert("geb_SmallMouthBass");
-        fishItems.Insert("geb_SmallMouthBassFilletMeat");
-        fishItems.Insert("geb_SunFish");
-        fishItems.Insert("geb_SunFishFilletMeat");
-        fishItems.Insert("geb_WallEye");
-        fishItems.Insert("geb_WallEyeFilletMeat");
-        fishItems.Insert("geb_BrownTrout");
-        fishItems.Insert("geb_BrownTroutFilletMeat");
-        fishItems.Insert("geb_BrookTrout");
-        fishItems.Insert("geb_BrookTroutFilletMeat");
-        fishItems.Insert("geb_LakeTrout");
-        fishItems.Insert("geb_LakeTroutFilletMeat");
-        fishItems.Insert("geb_CutThroatTrout");
-        fishItems.Insert("geb_CutThroatTroutFilletMeat");
-        fishItems.Insert("geb_HammerHeadShark");
-        fishItems.Insert("geb_HammerHeadSharkFilletMeat");
-        fishItems.Insert("geb_LakeSturgeon");
-        fishItems.Insert("geb_LakeSturgeonFilletMeat");
-        fishItems.Insert("geb_BlackCaviar");
-        fishItems.Insert("geb_YellowCaviar");
-        fishItems.Insert("geb_EuropeanCrayFish");
-        fishItems.Insert("geb_SignalCrayFish");
-        fishItems.Insert("geb_CaveCrayFish");
-        fishItems.Insert("geb_FloridaCrayFish");
-        fishItems.Insert("geb_MonongahelaCrayFish");
-        fishItems.Insert("geb_RedSwampCrayFish");
-        fishItems.Insert("geb_RustyCrayFish");
-        fishItems.Insert("geb_SpottedMuskellunge");
-        fishItems.Insert("geb_SpottedMuskellungeFilletMeat");
-        fishItems.Insert("geb_BarredMuskellunge");
-        fishItems.Insert("geb_BarredMuskellungeFilletMeat");
-        fishItems.Insert("geb_TigerMuskellunge");
-        fishItems.Insert("geb_TigerMuskellungeFilletMeat");
-        fishItems.Insert("geb_Muskellunge");
-        fishItems.Insert("geb_MuskellungeFilletMeat");
-        fishItems.Insert("geb_NorthernSnakeHead");
-        fishItems.Insert("geb_NorthernSnakeHeadFilletMeat");
-        fishItems.Insert("geb_NorthernPike");
-        fishItems.Insert("geb_NorthernPikeFilletMeat");
-        fishItems.Insert("geb_AlligatorGar");
-        fishItems.Insert("geb_AlligatorGarFilletMeat");
-        fishItems.Insert("geb_LargeMouthBass");
-        fishItems.Insert("geb_LargeMouthBassFilletMeat");
-        fishItems.Insert("geb_WhiteBass");
-        fishItems.Insert("geb_WhiteBassFilletMeat");
-        fishItems.Insert("geb_BlackBass");
-        fishItems.Insert("geb_BlackBassFilletMeat");
-        fishItems.Insert("geb_StripedBass");
-        fishItems.Insert("geb_StripedBassFilletMeat");
-        fishItems.Insert("geb_NeoshoBass");
-        fishItems.Insert("geb_NeoshoBassFilletMeat");
-        fishItems.Insert("geb_RainbowTrout");
-        fishItems.Insert("geb_RainbowTroutFilletMeat");
-        fishItems.Insert("geb_YellowPerch");
-        fishItems.Insert("geb_YellowPerchFilletMeat");
-        fishItems.Insert("geb_FlatHeadCatFish");
-        fishItems.Insert("geb_FlatHeadCatFishFilletMeat");
-        fishItems.Insert("geb_FatHeadMinnow");
-        fishItems.Insert("geb_AmericanBullFrog");
-        fishItems.Insert("geb_RedSalamander");
-        fishItems.Insert("geb_BlueGill");
-        fishItems.Insert("geb_BlueGillFilletMeat");
-        fishItems.Insert("geb_Sauger");
-        fishItems.Insert("geb_SaugerFilletMeat");
-        fishItems.Insert("geb_BowFin");
-        fishItems.Insert("geb_BowFinFilletMeat");
-        fishItems.Insert("geb_Mussel");
-        fishItems.Insert("geb_BloodClam");
-        fishItems.Insert("geb_BlackDevilSnail");
-        fishItems.Insert("geb_SlimySculpin");
-        fishItems.Insert("geb_SlimySculpinFilletMeat");
-        fishItems.Insert("geb_AngelFish");
-        fishItems.Insert("geb_AngelFishFilletMeat");
-        fishItems.Insert("geb_AsianSeaBass");
-        fishItems.Insert("geb_AsianSeaBassFilletMeat");
-        fishItems.Insert("geb_AtlanticBlueMarlin");
-        fishItems.Insert("geb_AtlanticBlueMarlinFilletMeat");
-        fishItems.Insert("geb_Bonita");
-        fishItems.Insert("geb_BonitaFilletMeat");
-        fishItems.Insert("geb_CherrySalmon");
-        fishItems.Insert("geb_CherrySalmonFilletMeat");
-        fishItems.Insert("geb_FlatHeadMullet");
-        fishItems.Insert("geb_FlatHeadMulletFilletMeat");
-        fishItems.Insert("geb_LeopardShark");
-        fishItems.Insert("geb_LeopardSharkFilletMeat");
-        fishItems.Insert("geb_PacificCod");
-        fishItems.Insert("geb_PacificCodFilletMeat");
-        fishItems.Insert("geb_RedHeadCichlid");
-        fishItems.Insert("geb_RedHeadCichlidFilletMeat");
-        fishItems.Insert("geb_RoughNeckRock");
-        fishItems.Insert("geb_RoughNeckRockFilletMeat");
-        fishItems.Insert("geb_Severum");
-        fishItems.Insert("geb_SeverumFilletMeat");
-        fishItems.Insert("geb_BlueTang");
-        fishItems.Insert("geb_BlueTangFilletMeat");
-        fishItems.Insert("geb_LargeHeadHairTailFish");
-        fishItems.Insert("geb_LargeHeadHairTailFishFilletMeat");
-        fishItems.Insert("geb_HumpHeadWrasse");
-        fishItems.Insert("geb_HumpHeadWrasseFilletMeat");
-        fishItems.Insert("geb_SiameseTigerFish");
-        fishItems.Insert("geb_SiameseTigerFishFilletMeat");
-        fishItems.Insert("geb_MahiMahi");
-        fishItems.Insert("geb_MahiMahiFilletMeat");
-        fishItems.Insert("geb_AtlanticSailFish");
-        fishItems.Insert("geb_AtlanticSailFishFilletMeat");
-        fishItems.Insert("geb_StarFish");
-        fishItems.Insert("geb_KingCrab");
-        fishItems.Insert("geb_KingCrabLegs");
-        fishItems.Insert("geb_SnowCrab");
-        fishItems.Insert("geb_SnowCrabLegs");
-        fishItems.Insert("geb_BlueJellyFish");
-        fishItems.Insert("geb_AmericanLobster");
-        fishItems.Insert("geb_AmericanLobsterTail");
-        fishItems.Insert("geb_AmericanLobsterClaw");
-        fishItems.Insert("geb_EuropeanLobster");
-        fishItems.Insert("geb_EuropeanLobsterTail");
-        fishItems.Insert("geb_EuropeanLobsterClaw");
-        fishItems.Insert("geb_GreatWhiteShark");
-        fishItems.Insert("geb_GreatWhiteSharkFilletMeat");
-        fishItems.Insert("geb_AngelShark");
-        fishItems.Insert("geb_AngelSharkFilletMeat");
-        fishItems.Insert("geb_YellowFinTuna");
-        fishItems.Insert("geb_YellowFinTunaFilletMeat");
-        fishItems.Insert("geb_YellowSnapper");
-        fishItems.Insert("geb_YellowSnapperFilletMeat");
-        fishItems.Insert("geb_SouthernFlounder");
-        fishItems.Insert("geb_SouthernFlounderFilletMeat");
-        fishItems.Insert("geb_WhiteGrunt");
-        fishItems.Insert("geb_WhiteGruntFilletMeat");
-
         FPrintln(file, "    <!-- Fish Items -->");
-        foreach (string fish : fishItems) {
-            WriteType(file, fish, 0, 14400, 0, 0, 10, 100, 100, "food", false);
+
+        gebsfishConfig cfg = GetGebSettingsConfig();
+        if (cfg && cfg.Fish && cfg.Fish.Species) {
+            foreach (FishConf f : cfg.Fish.Species) {
+                if (!f || f.Classname == "") continue;
+                WriteType(file, f.Classname, 0, 14400, 0, 0, 10, 100, 100, "food", false);
+                if (f.ResultMain != "")  WriteType(file, f.ResultMain, 0, 14400, 0, 0, 10, 100, 100, "food", false);
+                if (f.ResultBonus != "") WriteType(file, f.ResultBonus, 0, 14400, 0, 0, 10, 100, 100, "food", false);
+            }
         }
     }
 
     protected void WriteGearSection(FileHandle file) {
         ref array<ref XmlTypeEntry> gearItems = new array<ref XmlTypeEntry>;
-        gearItems.Reserve(64);
-        gearItems.Insert(new XmlTypeEntry("geb_RedFishingRod", 5, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_BlueFishingRod", 5, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_GreenFishingRod", 5, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_PurpleFishingRod", 5, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_BlueFishKnife", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_OrangeFishKnife", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_GreenFishKnife", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_YellowFishKnife", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_RedFishKnife", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_PurpleFishKnife", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_OldRedTackle", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_OldPurpleTackle", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_OldGreenTackle", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_OldBlueTackle", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_YellowTackle", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_RedTackle", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_PurpleTackle", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_PinkTackle", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_OrangeTackle", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_LimeTackle", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_LightBlueTackle", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_GreenTackle", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_BrownTackle", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_CamoTackle", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_BlueTackle", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_SmallTackle", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_MinnowBucket", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_BambooFishingNet", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_BugContainer", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_WormContainer", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_RubberWorm", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_GrassHopper", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_FieldCricket", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_GrubWorm", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_SpinnerBait1", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_SpinnerBait2", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_SpinnerBait3", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_SpinnerBait4", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_Lure1", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_Lure2", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_Lure3", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_Lure4", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_SpoonLure1", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_SpoonLure2", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_SpoonLure3", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_SpoonLure4", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_CurlyTailJig1", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_CurlyTailJig2", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_CurlyTailJig3", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_CurlyTailJig4", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_FunPurpleTackle", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_FunYellowTackle", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_FunGreenTackle", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_FunRedTackle", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_BlueFishHat", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_RedFishHat", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_GreenFishHat", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_PurpleFishHat", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_RedFishShirt", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_GreenFishShirt", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_BlueFishShirt", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_PurpleFishShirt", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_FishingRodRepairKit", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_BlueFishGloves", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_OrangeFishGloves", 3, 1));
-        // Coolers (filtered food containers) -- same loot profile as tackle boxes.
-        gearItems.Insert(new XmlTypeEntry("geb_RedCooler", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_YellowCooler", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_BlueCooler", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_OrangeCooler", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_BrownCooler", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_PurpleCooler", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_PinkCooler", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_LimeCooler", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_LightBlueCooler", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_GreenCooler", 3, 1));
-        gearItems.Insert(new XmlTypeEntry("geb_CamoCooler", 3, 1));
+        gearItems.Reserve(80);
+
+        // Fishing rods spawn slightly more often than the rest of the gear.
+        TStringArray rods = {"geb_RedFishingRod", "geb_BlueFishingRod", "geb_GreenFishingRod", "geb_PurpleFishingRod"};
+        InsertGearBatch(gearItems, rods, 5, 1);
+
+        // Everything else (knives, tackle boxes, containers, baits/lures,
+        // clothing, coolers) shares the same 3/1 loot profile.
+        TStringArray gear = {
+            "geb_BlueFishKnife", "geb_OrangeFishKnife", "geb_GreenFishKnife", "geb_YellowFishKnife",
+            "geb_RedFishKnife", "geb_PurpleFishKnife",
+            "geb_OldRedTackle", "geb_OldPurpleTackle", "geb_OldGreenTackle", "geb_OldBlueTackle",
+            "geb_YellowTackle", "geb_RedTackle", "geb_PurpleTackle", "geb_PinkTackle",
+            "geb_OrangeTackle", "geb_LimeTackle", "geb_LightBlueTackle", "geb_GreenTackle",
+            "geb_BrownTackle", "geb_CamoTackle", "geb_BlueTackle", "geb_SmallTackle",
+            "geb_MinnowBucket", "geb_BambooFishingNet", "geb_BugContainer", "geb_WormContainer",
+            "geb_RubberWorm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm",
+            "geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
+            "geb_Lure1", "geb_Lure2", "geb_Lure3", "geb_Lure4",
+            "geb_SpoonLure1", "geb_SpoonLure2", "geb_SpoonLure3", "geb_SpoonLure4",
+            "geb_CurlyTailJig1", "geb_CurlyTailJig2", "geb_CurlyTailJig3", "geb_CurlyTailJig4",
+            "geb_FunPurpleTackle", "geb_FunYellowTackle", "geb_FunGreenTackle", "geb_FunRedTackle",
+            "geb_BlueFishHat", "geb_RedFishHat", "geb_GreenFishHat", "geb_PurpleFishHat",
+            "geb_RedFishShirt", "geb_GreenFishShirt", "geb_BlueFishShirt", "geb_PurpleFishShirt",
+            "geb_FishingRodRepairKit", "geb_BlueFishGloves", "geb_OrangeFishGloves",
+            "geb_RedCooler", "geb_YellowCooler", "geb_BlueCooler", "geb_OrangeCooler",
+            "geb_BrownCooler", "geb_PurpleCooler", "geb_PinkCooler", "geb_LimeCooler",
+            "geb_LightBlueCooler", "geb_GreenCooler", "geb_CamoCooler"
+        };
+        InsertGearBatch(gearItems, gear, 3, 1);
 
         FPrintln(file, "    <!-- Gear Items -->");
-        foreach (XmlTypeEntry gear : gearItems) {
-            WriteType(file, gear.Name, gear.Nominal, 7200, 0, gear.Min, 0, 100, 200, "tools", true);
+        foreach (XmlTypeEntry gearEntry : gearItems) {
+            WriteType(file, gearEntry.Name, gearEntry.Nominal, 7200, 0, gearEntry.Min, 0, 100, 200, "tools", true);
+        }
+    }
+
+    protected void InsertGearBatch(array<ref XmlTypeEntry> gearItems, TStringArray names, int nominal, int min) {
+        foreach (string name : names) {
+            gearItems.Insert(new XmlTypeEntry(name, nominal, min));
         }
     }
 

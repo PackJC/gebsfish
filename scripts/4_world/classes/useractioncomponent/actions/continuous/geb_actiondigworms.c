@@ -2,12 +2,12 @@ modded class ActionDigWorms {
 	string GetConfiguredDigWormSpawnType() {
 		int debugLevel = GebGetDebugLevel();
 
-		if (!m_gebsConfig || !m_gebsConfig.DigWormsSettings) {
+		if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.DigWormsSettings) {
 			if (debugLevel >= 1)
 				GebsfishLogger.Debug("Dig-worms: config missing -- using fallback", "DigWorms");
 			return GetFallbackDigWormSpawnType();
 		}
-		ref array<ref BugEntry> catches = m_gebsConfig.DigWormsSettings.Catches;
+		ref array<ref BugEntry> catches = m_gebsConfig.General.DigWormsSettings.Catches;
 		if (!catches || catches.Count() == 0) {
 			if (debugLevel >= 1)
 				GebsfishLogger.Debug("Dig-worms: Catches table empty -- using fallback", "DigWorms");
@@ -42,10 +42,10 @@ modded class ActionDigWorms {
 	// vanilla-style behaviour) when the config is unavailable so missing
 	// config never blocks the action.
 	float GetDigWormsFindChance() {
-		if (!m_gebsConfig || !m_gebsConfig.DigWormsSettings)
+		if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.DigWormsSettings)
 			return 1.0;
 
-		float chance = m_gebsConfig.DigWormsSettings.FindChance;
+		float chance = m_gebsConfig.General.DigWormsSettings.FindChance;
 		if (chance < 0.0) chance = 0.0;
 		if (chance > 1.0) chance = 1.0;
 		return chance;

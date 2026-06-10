@@ -31,8 +31,8 @@ modded class PrepareFish {
 
     void ApplyFishKnifeSpeedBonus(ItemBase ingredients[]) {
 		float multiplier = 1.0;
-		if (m_gebsConfig && m_gebsConfig.GeneralSettings)
-			multiplier = m_gebsConfig.GeneralSettings.FishKnifeSpeedMultiplier;
+		if (m_gebsConfig && m_gebsConfig.General && m_gebsConfig.General.GeneralSettings)
+			multiplier = m_gebsConfig.General.GeneralSettings.FishKnifeSpeedMultiplier;
 
 		if (multiplier <= 0)
 			multiplier = 1.0;
@@ -58,8 +58,8 @@ modded class PrepareFish {
     // loop, warning sound RPC, and chat broadcast. Caller just provides the
     // player + chance value from config.
     void TrySpawnPredator(PlayerBase player) {
-        if (!m_gebsConfig || !m_gebsConfig.PredatorSettings) return;
-        GebsPredatorSpawner.TrySpawn(player, m_gebsConfig.PredatorSettings.PredatorSpawnChancePreparing, "PredatorSpawnPrepare");
+        if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.PredatorSettings) return;
+        GebsPredatorSpawner.TrySpawn(player, m_gebsConfig.General.PredatorSettings.PredatorSpawnChancePreparing, "PredatorSpawnPrepare");
     }
 
     // Damaged-hook-from-fish feature. Fires once per fillet action (one Do()
@@ -75,9 +75,9 @@ modded class PrepareFish {
     void TrySpawnHookFromFish(PlayerBase player) {
         if (!player) return;
         if (!g_Game.IsServer()) return;
-        if (!m_gebsConfig || !m_gebsConfig.GeneralSettings) return;
+        if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.GeneralSettings) return;
 
-        GenSetConf gs = m_gebsConfig.GeneralSettings;
+        GenSetConf gs = m_gebsConfig.General.GeneralSettings;
         if (!gs.HookFromFishEnable) return;
         if (gs.HookFromFishChance <= 0) return;
 
@@ -89,7 +89,7 @@ modded class PrepareFish {
             return;
         }
 
-        ref array<ref HookFromFishEntry> entries = m_gebsConfig.HookFromFishCatches;
+        ref array<ref HookFromFishEntry> entries = m_gebsConfig.General.HookFromFishCatches;
         if (!entries || entries.Count() == 0) {
             if (debugLevel >= 1)
                 GebsfishLogger.Debug("HookFromFish hit but Catches pool empty -- skipping", "HookFromFish");

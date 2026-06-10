@@ -67,14 +67,14 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 	// per-fish breakdown row showing BiteSpeed, CatchProbability, weather
 	// multiplier, weight, and contribution to the numerator.
 	protected float ComputeAggregateBiteSpeed() {
-		if (!m_gebsConfig || !m_gebsConfig.WeatherSettings)
+		if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
 			return 1.0;
 		// Gate on BiteSpeedEnable (not WeatherCatchBoostEnable) so the three
 		// catch-modifying systems -- weather/time-of-day, moon, and BiteSpeed --
 		// are independently toggleable. The aggregate still uses
 		// GetSpeciesWeatherMultiplier internally for per-fish weighting, and
 		// that helper handles its own enable gating.
-		if (!m_gebsConfig.WeatherSettings.BiteSpeedEnable)
+		if (!m_gebsConfig.General.WeatherSettings.BiteSpeedEnable)
 			return 1.0;
 		if (!m_ProbabilityArray || m_ProbabilityArray.Count() == 0)
 			return 1.0;
@@ -200,9 +200,9 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     // multipliers automatically participates in the weighted pick. When the
     // feature is disabled, GenerateResult falls back to the uniform pick path.
     protected bool HasActiveSpeciesBuffs() {
-        if (!m_gebsConfig || !m_gebsConfig.WeatherSettings)
+        if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
             return false;
-        return m_gebsConfig.WeatherSettings.WeatherCatchBoostEnable;
+        return m_gebsConfig.General.WeatherSettings.WeatherCatchBoostEnable;
     }
 
     // Weighted random selection over m_ProbabilityArray, biased by per-species
@@ -339,15 +339,15 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     protected float GetBaitMultiplier(string fishClassname, string baitClassname) {
         if (baitClassname == "" || fishClassname == "")
             return 1.0;
-        if (!m_gebsConfig || !m_gebsConfig.BaitPreferences)
+        if (!m_gebsConfig || !m_gebsConfig.Bait || !m_gebsConfig.Bait.Preferences)
             return 1.0;
         // Master toggle: when disabled, every bait is neutral 1.0x for every
         // fish so only CatchProbability and the other multipliers (weather,
         // time-of-day, temperature, moon) drive the weighted pick.
-        if (!m_gebsConfig.BaitPreferenceEnable)
+        if (!m_gebsConfig.Bait.Enable)
             return 1.0;
 
-        foreach (BaitConfig bait : m_gebsConfig.BaitPreferences) {
+        foreach (BaitConfig bait : m_gebsConfig.Bait.Preferences) {
             // Case-insensitive on the classname match: m_Bait.GetType() comes
             // back in DayZ's canonical PascalCase, but admins hand-editing
             // the JSON sometimes type "worm" or "WORM" -- silently failing
@@ -385,8 +385,8 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     // returns a sensible mid-range neutral value.
     protected float GetCurrentWaterTemp() {
         float offset = 0.0;
-        if (m_gebsConfig && m_gebsConfig.WeatherSettings)
-            offset = m_gebsConfig.WeatherSettings.WaterTempOffset;
+        if (m_gebsConfig && m_gebsConfig.General && m_gebsConfig.General.WeatherSettings)
+            offset = m_gebsConfig.General.WeatherSettings.WaterTempOffset;
 
         if (!g_Game || !g_Game.GetMission())
             return 18.0 + offset;
@@ -407,9 +407,9 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     protected float GetSpeciesTempMultiplier(GebYieldFishBase gy) {
         if (!gy)
             return 1.0;
-        if (!m_gebsConfig || !m_gebsConfig.WeatherSettings)
+        if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
             return 1.0;
-        WeatherConf w = m_gebsConfig.WeatherSettings;
+        WeatherConf w = m_gebsConfig.General.WeatherSettings;
         if (!w.TemperatureEffectEnable)
             return 1.0;
 
@@ -470,10 +470,10 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 
         if (!gy)
             return 1.0;
-        if (!m_gebsConfig || !m_gebsConfig.WeatherSettings)
+        if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
             return 1.0;
 
-        WeatherConf w = m_gebsConfig.WeatherSettings;
+        WeatherConf w = m_gebsConfig.General.WeatherSettings;
         if (!w.WeatherCatchBoostEnable && !w.TemperatureEffectEnable)
             return 1.0;
 
@@ -642,9 +642,9 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     // at new moon, smooth across quarter moons. Independent of
     // WeatherCatchBoostEnable so admins can run moon-only or weather-only.
     protected float GetMoonMultiplier() {
-        if (!m_gebsConfig || !m_gebsConfig.WeatherSettings)
+        if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
             return 1.0;
-        WeatherConf w = m_gebsConfig.WeatherSettings;
+        WeatherConf w = m_gebsConfig.General.WeatherSettings;
         if (!w.MoonPhaseEnable)
             return 1.0;
         if (w.FullMoonMultiplier == 1.0 && w.NewMoonMultiplier == 1.0)
@@ -682,17 +682,17 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     // weather-only. Combined result is clamped to MaxStackedMultiplier so a
     // stormy full-moon night never becomes a runaway printer.
     protected float GetWeatherCatchMultiplier() {
-        if (!m_gebsConfig || !m_gebsConfig.WeatherSettings)
+        if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
             return 1.0;
 
-        WeatherConf w = m_gebsConfig.WeatherSettings;
+        WeatherConf w = m_gebsConfig.General.WeatherSettings;
         // Bail out only if BOTH feature toggles are off -- moon is independent
         // of WeatherCatchBoostEnable.
         if (!w.WeatherCatchBoostEnable && !w.MoonPhaseEnable)
             return 1.0;
 
         int debugLevel = 0;
-        if (m_gebsConfig.GeneralSettings)
+        if (m_gebsConfig.General && m_gebsConfig.General.GeneralSettings)
             debugLevel = GetDebugLogLevel();
 
         float multiplier = 1.0;

@@ -2193,7 +2193,7 @@ class cfgVehicles {
 		};
 		hiddenSelectionsTextures[]=
 		{
-			"gebsfish\data\fish\pike_caviar_raw_CO.paa",
+			"\gebsfish\data\fish\pike_caviar_raw_CO.paa",
 			"dz\gear\food\data\red_caviar_rotten_CO.paa"
 		};
 	};
@@ -2207,7 +2207,7 @@ class cfgVehicles {
 		};
 		hiddenSelectionsTextures[]=
 		{
-			"gebsfish\data\fish\sturgeon_caviar_raw_CO.paa",
+			"\gebsfish\data\fish\sturgeon_caviar_raw_CO.paa",
 			"dz\gear\food\data\red_caviar_rotten_CO.paa"
 		};
 	};

@@ -82,10 +82,10 @@ class ActionDigBugs : ActionContinuousBase {
 	// clamped to [0, 1]. Defaults to 1.0 (always finds) when the config is
 	// unavailable so missing config never blocks the action.
 	float GetDigBugsFindChance() {
-		if (!m_gebsConfig || !m_gebsConfig.DigBugsSettings)
+		if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.DigBugsSettings)
 			return 1.0;
 
-		float chance = m_gebsConfig.DigBugsSettings.FindChance;
+		float chance = m_gebsConfig.General.DigBugsSettings.FindChance;
 		if (chance < 0.0) chance = 0.0;
 		if (chance > 1.0) chance = 1.0;
 		return chance;
@@ -105,20 +105,24 @@ class ActionDigBugs : ActionContinuousBase {
 			return;
 		}
 
-		if (!m_gebsConfig || !m_gebsConfig.DigBugsSettings) {
+		// A completed dig always wears the tool and trains the skill, whether
+		// or not anything is found below (matches dig-worms).
+		MiscGameplayFunctions.DealAbsoluteDmg(action_data.m_MainItem, 4);
+		action_data.m_Player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
+
+		if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.DigBugsSettings) {
 			if (debugLevel >= 1)
 				GebsfishLogger.Debug("Dig-bugs: config missing -- skipping", "DigBugs");
 			return;
 		}
-		ref array<ref BugEntry> catches = m_gebsConfig.DigBugsSettings.Catches;
+		ref array<ref BugEntry> catches = m_gebsConfig.General.DigBugsSettings.Catches;
 		if (!catches || catches.Count() == 0) {
 			if (debugLevel >= 1)
 				GebsfishLogger.Debug("Dig-bugs: Catches table empty -- skipping", "DigBugs");
 			return;
 		}
 
-		// Per-attempt find chance gate. Tool damage still applies on a miss
-		// so the action has a cost even when nothing is found.
+		// Per-attempt find chance gate.
 		float findChance = GetDigBugsFindChance();
 		float findRoll = -1;
 		bool foundSomething = true;
@@ -129,11 +133,8 @@ class ActionDigBugs : ActionContinuousBase {
 		if (debugLevel >= 1) {
 			GebsfishLogger.Debug("Dig-bugs find-chance gate: findChance=" + findChance + " roll=" + findRoll + " result=" + foundSomething, "DigBugs");
 		}
-		if (!foundSomething) {
-			MiscGameplayFunctions.DealAbsoluteDmg(action_data.m_MainItem, 4);
-			action_data.m_Player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
+		if (!foundSomething)
 			return;
-		}
 
 		// Build the eligible pool once, then defer the roll to the shared
 		// picker (single filter pass -> sum and walk can't disagree).
@@ -147,26 +148,17 @@ class ActionDigBugs : ActionContinuousBase {
 		}
 
 		int pick = GebWeightedPick.Pick(names, weights, debugLevel, "DigBugs");
-		if (pick < 0) {
-			// No eligible entries -- bail before tool damage / specialty,
-			// matching the previous totalChance<=0 behaviour.
+		if (pick < 0)
 			return;
-		}
 		string selectedBug = names[pick];
 
-		// Spawn the selected bug if one was found. Quantity 1 -- one bug per
-		// successful dig. Previously SetQuantity(10) was hardcoded and got
-		// silently clamped to the item's max stack (5 for most bugs).
+		// Spawn the selected bug. Quantity 1 -- one bug per successful dig.
 		if (selectedBug != "") {
 			ItemBase bugs = ItemBase.Cast(g_Game.CreateObject(selectedBug, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
 			if (bugs) {
 				bugs.SetQuantity(1, false);
 			}
 		}
-
-		// Apply damage to the main item and update player's specialty weight
-		MiscGameplayFunctions.DealAbsoluteDmg(action_data.m_MainItem, 4);
-		action_data.m_Player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
 	}
 
 	void SetDiggingAnimation(ItemBase item) {

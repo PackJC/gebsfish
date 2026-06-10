@@ -1,6 +1,6 @@
 class gebsfishSpawnableTypes {
-    private const string DIRECTORY_PATH = "$profile:Gebs/Extras/mpmissions/";
-    private const string FILE_PATH = "$profile:Gebs/Extras/mpmissions/gebsfish-spawnabletypes.xml";
+    private const string DIRECTORY_PATH = "$profile:Gebs/mpmissions/";
+    private const string FILE_PATH = "$profile:Gebs/mpmissions/gebsfish-spawnabletypes.xml";
     private const string VERSION_PREFIX = "<!-- Version: ";
 
     void GenerateSpawnableTypesXML() {
@@ -20,7 +20,7 @@ class gebsfishSpawnableTypes {
 
         FileHandle file = OpenFile(FILE_PATH, FileMode.WRITE);
         if (!file) {
-            GebsfishLogger.Error("Could not create gebsfish-spawnabletypes.xml in $profile:Gebs/Extras/mpmissions/.", "SpawnableTypes");
+            GebsfishLogger.Error("Could not create gebsfish-spawnabletypes.xml in $profile:Gebs/mpmissions/.", "SpawnableTypes");
             return;
         }
 
@@ -31,7 +31,7 @@ class gebsfishSpawnableTypes {
         WriteFooter(file);
 
         CloseFile(file);
-        GebsfishLogger.Info("gebsfish-spawnabletypes.xml successfully generated in $profile:Gebs/Extras/mpmissions/.", "SpawnableTypes");
+        GebsfishLogger.Info("gebsfish-spawnabletypes.xml successfully generated in $profile:Gebs/mpmissions/.", "SpawnableTypes");
     }
 
     protected bool IsCurrentVersion(string filePath, string expectedVersion) {
@@ -74,7 +74,6 @@ class gebsfishSpawnableTypes {
 
     protected void EnsureDirectoryExists() {
         MakeDirectory("$profile:Gebs");
-        MakeDirectory("$profile:Gebs/Extras");
         MakeDirectory(DIRECTORY_PATH);
     }
 
@@ -89,44 +88,22 @@ class gebsfishSpawnableTypes {
     }
 
     protected void WriteTackleSection(FileHandle file) {
-        ref array<string> tackleItems = new array<string>;
-        tackleItems.Insert("geb_OldBlueTackle");
-        tackleItems.Insert("geb_OldGreenTackle");
-        tackleItems.Insert("geb_OldPurpleTackle");
-        tackleItems.Insert("geb_OldRedTackle");
-        tackleItems.Insert("geb_RedTackle");
-        tackleItems.Insert("geb_PurpleTackle");
-        tackleItems.Insert("geb_PinkTackle");
-        tackleItems.Insert("geb_OrangeTackle");
-        tackleItems.Insert("geb_LimeTackle");
-        tackleItems.Insert("geb_LightBlueTackle");
-        tackleItems.Insert("geb_GreenTackle");
-        tackleItems.Insert("geb_BrownTackle");
-        tackleItems.Insert("geb_CamoTackle");
-        tackleItems.Insert("geb_BlueTackle");
-        tackleItems.Insert("geb_FunPurpleTackle");
-        tackleItems.Insert("geb_FunYellowTackle");
-        tackleItems.Insert("geb_FunGreenTackle");
-        tackleItems.Insert("geb_FunRedTackle");
-        tackleItems.Insert("geb_SmallTackle");
+        ref TStringArray tackleItems = {
+            "geb_OldBlueTackle", "geb_OldGreenTackle", "geb_OldPurpleTackle", "geb_OldRedTackle",
+            "geb_RedTackle", "geb_PurpleTackle", "geb_PinkTackle", "geb_OrangeTackle",
+            "geb_LimeTackle", "geb_LightBlueTackle", "geb_GreenTackle", "geb_BrownTackle",
+            "geb_CamoTackle", "geb_BlueTackle", "geb_FunPurpleTackle", "geb_FunYellowTackle",
+            "geb_FunGreenTackle", "geb_FunRedTackle", "geb_SmallTackle"
+        };
 
+        TStringArray lures = {
+            "geb_Lure1", "geb_Lure2", "geb_Lure3", "geb_Lure4",
+            "geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
+            "geb_CurlyTailJig1", "geb_CurlyTailJig2", "geb_CurlyTailJig3", "geb_CurlyTailJig4",
+            "geb_SpoonLure1", "geb_SpoonLure2", "geb_SpoonLure3", "geb_SpoonLure4"
+        };
         ref array<ref XmlCargoItem> tackleCargo = new array<ref XmlCargoItem>;
-        tackleCargo.Insert(new XmlCargoItem("geb_Lure1", 0.33));
-        tackleCargo.Insert(new XmlCargoItem("geb_Lure2", 0.33));
-        tackleCargo.Insert(new XmlCargoItem("geb_Lure3", 0.33));
-        tackleCargo.Insert(new XmlCargoItem("geb_Lure4", 0.33));
-        tackleCargo.Insert(new XmlCargoItem("geb_SpinnerBait1", 0.33));
-        tackleCargo.Insert(new XmlCargoItem("geb_SpinnerBait2", 0.33));
-        tackleCargo.Insert(new XmlCargoItem("geb_SpinnerBait3", 0.33));
-        tackleCargo.Insert(new XmlCargoItem("geb_SpinnerBait4", 0.33));
-        tackleCargo.Insert(new XmlCargoItem("geb_CurlyTailJig1", 0.33));
-        tackleCargo.Insert(new XmlCargoItem("geb_CurlyTailJig2", 0.33));
-        tackleCargo.Insert(new XmlCargoItem("geb_CurlyTailJig3", 0.33));
-        tackleCargo.Insert(new XmlCargoItem("geb_CurlyTailJig4", 0.33));
-        tackleCargo.Insert(new XmlCargoItem("geb_SpoonLure1", 0.33));
-        tackleCargo.Insert(new XmlCargoItem("geb_SpoonLure2", 0.33));
-        tackleCargo.Insert(new XmlCargoItem("geb_SpoonLure3", 0.33));
-        tackleCargo.Insert(new XmlCargoItem("geb_SpoonLure4", 0.33));
+        InsertCargoBatch(tackleCargo, lures, 0.33);
 
         FPrintln(file, "    <!-- Tackle -->");
         foreach (string tackle : tackleItems) {
@@ -135,29 +112,19 @@ class gebsfishSpawnableTypes {
     }
 
     protected void WriteClothingSection(FileHandle file) {
-        ref array<string> clothingItems = new array<string>;
-        clothingItems.Insert("geb_GreenFishShirt");
-        clothingItems.Insert("geb_BlueFishShirt");
-        clothingItems.Insert("geb_PurpleFishShirt");
-        clothingItems.Insert("geb_RedFishShirt");
+        ref TStringArray clothingItems = {"geb_GreenFishShirt", "geb_BlueFishShirt", "geb_PurpleFishShirt", "geb_RedFishShirt"};
 
+        TStringArray knives = {"geb_BlueFishKnife", "geb_OrangeFishKnife", "geb_GreenFishKnife", "geb_YellowFishKnife", "geb_RedFishKnife", "geb_PurpleFishKnife"};
         ref array<ref XmlCargoItem> knifeCargo = new array<ref XmlCargoItem>;
-        knifeCargo.Insert(new XmlCargoItem("geb_BlueFishKnife", 0.16));
-        knifeCargo.Insert(new XmlCargoItem("geb_OrangeFishKnife", 0.16));
-        knifeCargo.Insert(new XmlCargoItem("geb_GreenFishKnife", 0.16));
-        knifeCargo.Insert(new XmlCargoItem("geb_YellowFishKnife", 0.16));
-        knifeCargo.Insert(new XmlCargoItem("geb_RedFishKnife", 0.16));
-        knifeCargo.Insert(new XmlCargoItem("geb_PurpleFishKnife", 0.16));
+        InsertCargoBatch(knifeCargo, knives, 0.16);
 
+        TStringArray hats = {"geb_BlueFishHat", "geb_GreenFishHat", "geb_PurpleFishHat", "geb_RedFishHat"};
         ref array<ref XmlCargoItem> hatCargo = new array<ref XmlCargoItem>;
-        hatCargo.Insert(new XmlCargoItem("geb_BlueFishHat", 0.25));
-        hatCargo.Insert(new XmlCargoItem("geb_GreenFishHat", 0.25));
-        hatCargo.Insert(new XmlCargoItem("geb_PurpleFishHat", 0.25));
-        hatCargo.Insert(new XmlCargoItem("geb_RedFishHat", 0.25));
+        InsertCargoBatch(hatCargo, hats, 0.25);
 
+        TStringArray gloves = {"geb_BlueFishGloves", "geb_OrangeFishGloves"};
         ref array<ref XmlCargoItem> gloveCargo = new array<ref XmlCargoItem>;
-        gloveCargo.Insert(new XmlCargoItem("geb_BlueFishGloves", 0.50));
-        gloveCargo.Insert(new XmlCargoItem("geb_OrangeFishGloves", 0.50));
+        InsertCargoBatch(gloveCargo, gloves, 0.50);
 
         FPrintln(file, "    <!-- Clothes -->");
         foreach (string clothing : clothingItems)
@@ -205,6 +172,12 @@ class gebsfishSpawnableTypes {
         }
 
         FPrintln(file, "    </type>");
+    }
+
+    protected void InsertCargoBatch(array<ref XmlCargoItem> items, TStringArray names, float chance) {
+        foreach (string name : names) {
+            items.Insert(new XmlCargoItem(name, chance));
+        }
     }
 
     protected void WriteCargoBlock(FileHandle file, float cargoChance, array<ref XmlCargoItem> items) {

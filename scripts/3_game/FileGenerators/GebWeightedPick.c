@@ -13,10 +13,9 @@
 // eligible classnames + weights into parallel arrays, then call Pick once.
 //
 // Centralising the math here means a caller's "sum" pass and "walk" pass can
-// never disagree on which entries are eligible (the bug that used to be
-// possible when the two foreach loops were copied by hand), and the
-// float-rounding boundary case clamps to the last eligible entry instead of
-// silently returning nothing.
+// never disagree on which entries are eligible, and the float-rounding
+// boundary case clamps to the last eligible entry instead of silently
+// returning nothing.
 //
 // Returns the index into names[]/weights[] that won the roll, or -1 when the
 // pool is empty or every weight is <= 0. debugLevel + logTag drive an optional

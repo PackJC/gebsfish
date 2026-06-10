@@ -21,6 +21,14 @@ modded class DayZGame {
             return;
         }
 
+        // Don't overwrite with an empty/garbled payload -- keep whatever the
+        // client already has (defaults) rather than nulling the config and
+        // crashing the catch math.
+        if (!configParams || !configParams.param1 || !configParams.param1.General || !configParams.param1.Fish) {
+            GebsfishLogger.Error("ConfigSync: received an incomplete config payload -- ignoring it (client keeps current values).", "RPC");
+            return;
+        }
+
         GebsfishLogger.Info("ConfigSync: Successfully read configParams, setting config.", "RPC");
         SetGebsfishConfig(configParams.param1);
         GebsfishLogger.Info("Client received config data " + VERSION_GEBSFISH + " from the server.", "RPC");

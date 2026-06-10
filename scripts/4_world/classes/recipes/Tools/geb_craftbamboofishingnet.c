@@ -48,7 +48,7 @@ class CraftBambooFishingNet extends RecipeBase {
 	}
 
 	override bool CanDo( ItemBase ingredients[], PlayerBase player ) {
-		if (m_gebsConfig && m_gebsConfig.RecipeToggles && !m_gebsConfig.RecipeToggles.CraftBambooFishingNet)
+		if (m_gebsConfig && m_gebsConfig.General && m_gebsConfig.General.RecipeToggles && !m_gebsConfig.General.RecipeToggles.CraftBambooFishingNet)
 			return false;
 
 		return true;

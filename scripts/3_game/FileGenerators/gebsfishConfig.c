@@ -1,1104 +1,254 @@
-class gebsfishConfig {
-    
-    //Define Config Version
-    static const string CONFIG_VERSION = VERSION_GEBSFISH;
+/* ============================================================================
+   Gebsfish config -- four JSON files + a keyed fish table.
+   - general.json  -> GeneralConfig (mechanics / actions / predators / weather)
+   - bait.json     -> BaitSettingsConf (per-bait fish-preference table)
+   - junk.json     -> JunkConfig (world-junk + container-junk tables)
+   - fish.json     -> FishConfig (the keyed Species table + catch tuning)
+   The gebsfishConfig facade owns all four; GetGebSettingsConfig() returns it.
+   Each class seeds its own defaults on a cold start via SeedDefaults() and
+   backfills any missing section on load via Backfill().
+   ============================================================================ */
 
-    //config location
-    private const static string ModFolder = "$profile:\\Gebs\\";
-    private const static string SettingsConfigFile = "fishingsettings.json";
-    private const static string FileName = "fishingsettings";
-    private const static string FileType = ".json";
+// ---- one fish row ----------------------------------------------------------
+class FishConf {
+    string Classname;          // catch/spawn classname + recipe ingredient
+    int    RecipeShape;        // 0 fillet | 1 caviar | 2 lobster  (NOT 'Shape' -- collides with an engine type)
+    string ResultMain;         // repeated result (fillet meat / lobster claws); "" = no recipe
+    string ResultBonus;        // single index-0 result (caviar / lobster tail); "" for RecipeShape 0
+    int    MeatMin;
+    int    MeatMax;
+    int    Environment;        // 1 pond | 2 sea | 3 both
+    int    CatchMethod;        // rod/trap bitmask
+    int    CatchProbability;   // 0-25
+    float  RainMultiplier;
+    float  StormMultiplier;
+    float  DawnMultiplier;
+    float  DayMultiplier;
+    float  DuskMultiplier;
+    float  NightMultiplier;
+    float  TempOptimal;
+    float  TempMin;
+    float  TempMax;
+    ref TFloatArray BiteSpeed;
+    void FishConf(string cn = "") { Classname = cn; }
+}
 
-    //Config Reference 
+// ===========================================================================
+// FILE 1: general.json
+// ===========================================================================
+class GeneralConfig {
+    string ConfigVersionInfo = "Mod config version this file was written with. Do NOT edit -- used to migrate the file on mod updates.";
     string ConfigVersion = "";
-    ref GenSetConf GeneralSettings;
-    ref RecipeToggleConf RecipeToggles;
-    ref PredatorConf PredatorSettings;
-    ref WeatherConf WeatherSettings;
-    ref array<ref PredatorEntry> Predators;
-    // Per-action sections -- each owns its own find-chance, spawn table,
-    // and any action-specific extras (the net also has PredatorSpawnChance).
-    ref BambooFishingNetConf BambooFishingNetSettings;
-    ref DigBugsConf DigBugsSettings;
-    ref DigWormsConf DigWormsSettings;
-    string BaitPreferenceEnableInfo = "Master toggle for the bait / lure preference system. Each entry in BaitPreferences pairs a bait classname (Worm, geb_GrubWorm, geb_SpinnerBaitRed, etc.) with a list of per-fish multipliers that bias the weighted catch pick toward that fish when this bait is on the hook (e.g. a Worm makes BlueGill 2.0x more likely while making large saltwater fish 0.3x). Set to 0 to disable the bias entirely -- every bait becomes neutral 1.0x for every fish and only the underlying CatchProbability values drive the pick. Bait still functions mechanically (gets eaten/destroyed, hook still loses bait on a miss) -- this only disables the per-fish bias. The BaitPreferences array still loads from JSON when disabled so a server can flip this on/off without losing tuned values. Useful when admins want bait to function but not influence catch outcomes, or for diagnosing whether unexpected fish are coming from bait bias vs weather/temperature/time-of-day multipliers.";
-    bool BaitPreferenceEnable = 1;
-    // Per-bait fish-preference table. Multiplies into the weighted pick at
-    // catch time so the bait/lure on the hook biases WHICH fish gets
-    // selected. See SeedDefaultBaitPreferences() for the default ecology.
-    ref array<ref BaitConfig> BaitPreferences;
-    ref MackerelConf Mackerel;
-    ref CarpConf Carp;
-    ref SardinesConf Sardines;
-    ref BitterlingsConf Bitterlings;
-    ref WalleyePollockConf WalleyePollock;
-    ref SteelheadTroutConf SteelheadTrout;
-    ref ShrimpConf Shrimp;
-    ref NorthernSnakeHeadConf NorthernSnakeHead;
-    ref NorthernPikeConf NorthernPike;
-    ref BarredMuskellungeConf BarredMuskellunge;
-    ref SpottedMuskellungeConf SpottedMuskellunge;
-    ref TigerMuskellungeConf TigerMuskellunge;
-    ref MuskellungeConf Muskellunge;
-    ref AlligatorGarConf AlligatorGar;
-    ref LargeMouthBassConf LargeMouthBass;
-    ref SmallMouthBassConf SmallMouthBass;
-    ref WallEyeConf WallEye;
-    ref SunFishConf SunFish;
-    ref WhiteBassConf WhiteBass;
-    ref StripedBassConf StripedBass;
-    ref NeoshoBassConf NeoshoBass;
-    ref BlackBassConf BlackBass;
-    ref RainbowTroutConf RainbowTrout;
-    ref BrownTroutConf BrownTrout;
-    ref BrookTroutConf BrookTrout;
-    ref LakeTroutConf LakeTrout;
-    ref CutThroatTroutConf CutThroatTrout;
-    ref LakeSturgeonConf LakeSturgeon;
-    ref YellowPerchConf YellowPerch;
-    ref FlatHeadCatFishConf FlatHeadCatFish;
-    ref FatHeadMinnowConf FatHeadMinnow;
-    ref AmericanBullFrogConf AmericanBullFrog;
-    ref RedSalamanderConf RedSalamander;
-    ref BlueGillConf BlueGill;
-    ref SaugerConf Sauger;
-    ref BowFinConf BowFin;
-    ref SlimySculpinConf SlimySculpin;
-    ref SeverumConf Severum;
-    ref SignalCrayFishConf SignalCrayFish;
-    ref EuropeanCrayFishConf EuropeanCrayFish;
-    ref FloridaCrayFishConf FloridaCrayFish;
-    ref CaveCrayFishConf CaveCrayFish;
-    ref MonongahelaCrayFishConf MonongahelaCrayFish;
-    ref RedSwampCrayFishConf RedSwampCrayFish;
-    ref RustyCrayFishConf RustyCrayFish;
-    ref MahiMahiConf MahiMahi;
-    ref AtlanticSailFishConf AtlanticSailFish;
-    ref AngelFishConf AngelFish;
-    ref AsianSeaBassConf AsianSeaBass;
-    ref AtlanticBlueMarlinConf AtlanticBlueMarlin;
-    ref BonitaConf Bonita;
-    ref CherrySalmonConf CherrySalmon;
-    ref ChinookSalmonConf ChinookSalmon;
-    ref SockEyeSalmonConf SockEyeSalmon;
-    ref FlatHeadMulletConf FlatHeadMullet;
-    ref LeopardSharkConf LeopardShark;
-    ref HammerHeadSharkConf HammerHeadShark;
-    ref PacificCodConf PacificCod;
-    ref RedHeadCichlidConf RedHeadCichlid;
-    ref RoughNeckRockConf RoughNeckRock;
-    ref BlueTangConf BlueTang;
-    ref LargeHeadHairTailFishConf LargeHeadHairTailFish;
-    ref HumpHeadWrasseConf HumpHeadWrasse;
-    ref SiameseTigerFishConf SiameseTigerFish;
-    ref GreatWhiteSharkConf GreatWhiteShark;
-    ref AngelSharkConf AngelShark;
-    ref YellowFinTunaConf YellowFinTuna;
-    ref WhiteGruntConf WhiteGrunt;
-    ref SouthernFlounderConf SouthernFlounder;
-    ref YellowSnapperConf YellowSnapper;
-    ref BloodClamConf BloodClam;
-    ref MusselConf Mussel;
-    ref BlackDevilSnailConf BlackDevilSnail;
-    ref StarFishConf StarFish;
-    ref KingCrabConf KingCrab;
-    ref SnowCrabConf SnowCrab;
-    ref BlueJellyFishConf BlueJellyFish;
-    ref AmericanLobsterConf AmericanLobster;
-    ref EuropeanLobsterConf EuropeanLobster;
+    string GeneralSettingsInfo = "Global mod settings (each field inside has its own *Info): debug log level, fish quality, knife fillet speed, caviar chance, and the hook-from-fish toggle/chance.";
+    ref GenSetConf                    GeneralSettings;
+    string RecipeTogglesInfo = "Enable(1)/disable(0) the gebsfish craft/repair recipes (one bool per recipe inside).";
+    ref RecipeToggleConf              RecipeToggles;
+    string HookFromFishCatchesInfo = "Weighted pool of hooks 'found' stuck in a fish while filleting (gated by GeneralSettings.HookFromFishEnable/Chance). Each entry: Classname (hook/lure to give), Weight (relative odds; 0 disables that entry), MinHealthLevel/MaxHealthLevel (0 pristine .. 4 ruined).";
+    ref array<ref HookFromFishEntry>  HookFromFishCatches;
+    string PredatorSettingsInfo = "Predator-spawn settings: per-activity chances, enable toggle, and warning sound/message options (each field has its own *Info).";
+    ref PredatorConf                  PredatorSettings;
+    string PredatorsInfo = "Weighted pool of predators that can spawn. Each entry: Classname (animal), SpawnChance (relative weight), MinCount/MaxCount (how many), MinRadius/MaxRadius (metres from the player to spawn).";
+    ref array<ref PredatorEntry>      Predators;
+    string BambooFishingNetSettingsInfo = "Bamboo-net action: FindChance (0-1 per cast), PredatorSpawnChance, and a Catches table (each entry: Classname, CatchChance, Environment 1 pond/2 sea/3 both).";
+    ref BambooFishingNetConf          BambooFishingNetSettings;
+    string DigBugsSettingsInfo = "Dig-for-bugs action: FindChance (0-1) plus a Catches table (each entry: Classname, CatchChance).";
+    ref DigBugsConf                   DigBugsSettings;
+    string DigWormsSettingsInfo = "Dig-for-worms action: FindChance (0-1) plus a Catches table (each entry: Classname, CatchChance).";
+    ref DigWormsConf                  DigWormsSettings;
+    string WeatherSettingsInfo = "Global weather/time-of-day/temperature/moon catch modifiers and their thresholds (each field has its own *Info inside).";
+    ref WeatherConf                   WeatherSettings;
 
-    ref array<ref JunkEntry> Junk;
-    ref array<ref ContainerJunkEntry> ContainerJunk;
-    // Weighted pool of hooks that can be "found" in a fish during fillet. Each
-    // entry pairs a hook classname with a health-level range and a weight; the
-    // pick is gated by GeneralSettings.HookFromFishEnable / HookFromFishChance.
-    // Default seed is one vanilla FishingHook at Badly Damaged.
-    ref array<ref HookFromFishEntry> HookFromFishCatches;
+    private const static string PATH = "$profile:Gebs/general.json";
 
     void Load() {
-        if (g_Game.IsDedicatedServer()) {
-            if (FileExist(ModFolder + SettingsConfigFile)) {
-                //If config exists, load file
-                JsonFileLoader<gebsfishConfig>.JsonLoadFile(ModFolder + SettingsConfigFile, this);
-                GebsfishLogger.Info("Found settings file; Loading gebsfish settings from file.", "JSON");
-                
-                // Migrate in place: backfill any missing/new config sections and
-                // clamp out-of-range hand-edited values. On a version change we
-                // additionally snapshot the old file and re-stamp the version --
-                // but we KEEP every loaded value instead of rebuilding from
-                // defaults, so a mod update adds new settings without wiping the
-                // admin's existing tuning. The _old backup stays as a safety net.
-                // A full default rebuild now only runs when no config file exists.
-                bool versionChanged = (ConfigVersion != CONFIG_VERSION);
-                if (versionChanged) {
-                    JsonFileLoader<gebsfishConfig>.JsonSaveFile(ModFolder + FileName + "_old" + FileType, this);
-                    GebsfishLogger.Info("New config version found for mod; backed up old file as " + ModFolder + FileName + "_old" + FileType + " and migrating settings (existing values preserved).", "JSON");
-                    ConfigVersion = CONFIG_VERSION;
-                }
+        if (FileExist(PATH)) { JsonFileLoader<GeneralConfig>.JsonLoadFile(PATH, this); Backfill(); }
+        else SeedDefaults();
+        Save();
+    }
+    void Save() { JsonFileLoader<GeneralConfig>.JsonSaveFile(PATH, this); }
 
-                // New sections introduced by the update load as null -> seed them.
-                // Existing sections keep the admin's loaded values untouched.
-                bool needSave = EnsureMissingConfigSections();
-                if (needSave) {
-                    GebsfishLogger.Info("Backfilled missing config sections.", "JSON");
-                }
-                // Clamp hand-edited values outside their valid range (hours [0,23],
-                // rain thresholds [0,1], etc), logging each correction.
-                if (ValidateAndClampLoadedConfig()) {
-                    needSave = true;
-                }
-                // Persist after a version change (to stamp the new version and write
-                // any newly-added sections), otherwise only when something actually
-                // changed -- avoids needless rewrites of hand-edited files.
-                if (versionChanged || needSave) {
-                    Save();
-                }
-                return;
-            }
-        GebsfishLogger.Info("Generating settings file.", "JSON");
+    void Backfill() {
+        if (!GeneralSettings)          GeneralSettings = new GenSetConf;
+        if (!RecipeToggles)            RecipeToggles = new RecipeToggleConf;
+        if (!PredatorSettings)         PredatorSettings = new PredatorConf;
+        if (!WeatherSettings)          WeatherSettings = new WeatherConf;
+        // A per-action section that is entirely missing (fresh key never
+        // written, or hand-deleted) is re-seeded with working defaults. A
+        // section that exists but was emptied on purpose is left alone.
+        if (!BambooFishingNetSettings) SeedDefaultNetCatches();
+        if (!DigBugsSettings)          SeedDefaultDigBugsCatches();
+        if (!DigWormsSettings)         SeedDefaultDigWormsCatches();
+        if (!Predators)                SeedDefaultPredators();
+        if (!HookFromFishCatches || HookFromFishCatches.Count() == 0) SeedHookFromFish();
+    }
 
-        //Save config file version to file
-        ConfigVersion = CONFIG_VERSION;
-        //Save general settings to file
+    void SeedDefaults() {
+        ConfigVersion = VERSION_GEBSFISH;
         GeneralSettings = new GenSetConf;
         RecipeToggles = new RecipeToggleConf;
-        //Save predator config data to the file
         PredatorSettings = new PredatorConf;
-        // Weather catch buff settings. Per-species multipliers live inline
-        // on each FishConf class (Rain/Storm/Dawn/Day/Dusk/NightMultiplier).
         WeatherSettings = new WeatherConf;
-        Predators = new array<ref PredatorEntry>();
-        // Per-action settings (find chance + spawn table + any action-specific
-        // extras). Default Catches entries are seeded further down in Build().
         BambooFishingNetSettings = new BambooFishingNetConf;
         DigBugsSettings = new DigBugsConf;
         DigWormsSettings = new DigWormsConf;
-        // Per-bait fish-preference table. Seeded with biologically defensible
-        // multipliers so the system is "alive" out of the box; admins can
-        // tune by editing the JSON.
-        BaitPreferences = new array<ref BaitConfig>();
-        SeedDefaultBaitPreferences();
-        //Save fish config data to file
+        SeedHookFromFish();
+        SeedDefaultPredators();
+        SeedDefaultNetCatches();
+        SeedDefaultDigBugsCatches();
+        SeedDefaultDigWormsCatches();
+    }
 
-        Mackerel = new MackerelConf;
-        Carp = new CarpConf;
-        Sardines = new SardinesConf;
-        Bitterlings = new BitterlingsConf;
-        WalleyePollock = new WalleyePollockConf;
-        SteelheadTrout = new SteelheadTroutConf;
-        Shrimp = new ShrimpConf;
-        NorthernSnakeHead = new NorthernSnakeHeadConf;
-        NorthernPike = new NorthernPikeConf;
-        BarredMuskellunge = new BarredMuskellungeConf;
-        SpottedMuskellunge = new SpottedMuskellungeConf;
-        TigerMuskellunge = new TigerMuskellungeConf;
-        Muskellunge = new MuskellungeConf;
-        AlligatorGar = new AlligatorGarConf;
-        LargeMouthBass = new LargeMouthBassConf;
-        SmallMouthBass = new SmallMouthBassConf;
-        WallEye = new WallEyeConf;
-        SunFish = new SunFishConf;
-        WhiteBass = new WhiteBassConf;
-        StripedBass = new StripedBassConf;
-        NeoshoBass = new NeoshoBassConf;
-        BlackBass = new BlackBassConf;
-        RainbowTrout = new RainbowTroutConf;
-        BrownTrout = new BrownTroutConf;
-        BrookTrout = new BrookTroutConf;
-        LakeTrout = new LakeTroutConf;
-        CutThroatTrout = new CutThroatTroutConf;
-        LakeSturgeon = new LakeSturgeonConf;
-        YellowPerch = new YellowPerchConf;
-        FlatHeadCatFish = new FlatHeadCatFishConf;
-        FatHeadMinnow = new FatHeadMinnowConf;
-        AmericanBullFrog = new AmericanBullFrogConf;
-        RedSalamander = new RedSalamanderConf;
-        BlueGill = new BlueGillConf;
-        Sauger = new SaugerConf;
-        BowFin = new BowFinConf;
-        SlimySculpin = new SlimySculpinConf;
-        Severum = new SeverumConf;
-        SignalCrayFish = new SignalCrayFishConf;
-        EuropeanCrayFish = new EuropeanCrayFishConf;
-        CaveCrayFish = new CaveCrayFishConf;
-        FloridaCrayFish = new FloridaCrayFishConf;
-        MonongahelaCrayFish = new MonongahelaCrayFishConf;
-        RedSwampCrayFish = new RedSwampCrayFishConf;
-        RustyCrayFish = new RustyCrayFishConf;
-        MahiMahi = new MahiMahiConf;
-        AtlanticSailFish = new AtlanticSailFishConf;
-        AngelFish = new AngelFishConf;
-        AsianSeaBass = new AsianSeaBassConf;
-        AtlanticBlueMarlin = new AtlanticBlueMarlinConf;
-        Bonita = new BonitaConf;
-        CherrySalmon = new CherrySalmonConf;
-        ChinookSalmon = new ChinookSalmonConf;
-        SockEyeSalmon = new SockEyeSalmonConf;
-        FlatHeadMullet = new FlatHeadMulletConf;
-        LeopardShark = new LeopardSharkConf;
-        HammerHeadShark = new HammerHeadSharkConf;
-        PacificCod = new PacificCodConf;
-        RedHeadCichlid = new RedHeadCichlidConf;
-        RoughNeckRock = new RoughNeckRockConf;
-        BlueTang = new BlueTangConf;
-        LargeHeadHairTailFish = new LargeHeadHairTailFishConf;
-        HumpHeadWrasse = new HumpHeadWrasseConf;
-        SiameseTigerFish = new SiameseTigerFishConf;
-        GreatWhiteShark = new GreatWhiteSharkConf;
-        AngelShark = new AngelSharkConf;
-        YellowFinTuna = new YellowFinTunaConf;
-        WhiteGrunt = new WhiteGruntConf;
-        SouthernFlounder = new SouthernFlounderConf;
-        YellowSnapper = new YellowSnapperConf;
-        BloodClam = new BloodClamConf;
-        Mussel = new MusselConf;
-        BlackDevilSnail = new BlackDevilSnailConf;
-        StarFish = new StarFishConf;
-        KingCrab = new KingCrabConf;
-        SnowCrab = new SnowCrabConf;
-        BlueJellyFish = new BlueJellyFishConf;
-        AmericanLobster = new AmericanLobsterConf;
-        EuropeanLobster = new EuropeanLobsterConf;
+    void SeedHookFromFish() {
+        if (!HookFromFishCatches) HookFromFishCatches = new array<ref HookFromFishEntry>();
+        HookFromFishEntry h = new HookFromFishEntry();
+        h.Classname = "FishingHook"; h.Weight = 1.0; h.MinHealthLevel = 3; h.MaxHealthLevel = 3;
+        HookFromFishCatches.Insert(h);
+    }
 
-        Junk = new array<ref JunkEntry>();
-        ContainerJunk = new array<ref ContainerJunkEntry>();
+    // ---- default seed tables ----
+    void SeedDefaultPredators() {
+        if (!Predators) Predators = new array<ref PredatorEntry>();
+        PredatorEntry wolf = new PredatorEntry();
+        wolf.Classname = "Animal_CanisLupus_Grey"; wolf.SpawnChance = 0.6; wolf.MinCount = 1; wolf.MaxCount = 1; wolf.MinRadius = 50; wolf.MaxRadius = 200;
+        Predators.Insert(wolf);
+        PredatorEntry bear = new PredatorEntry();
+        bear.Classname = "Animal_UrsusArctos"; bear.SpawnChance = 0.3; bear.MinCount = 1; bear.MaxCount = 1; bear.MinRadius = 100; bear.MaxRadius = 300;
+        Predators.Insert(bear);
+    }
 
-        // Add default bug catcher / catch-bugs data to file.
+    void SeedDefaultNetCatches() {
+        if (!BambooFishingNetSettings) BambooFishingNetSettings = new BambooFishingNetConf;
+        if (!BambooFishingNetSettings.Catches) BambooFishingNetSettings.Catches = new array<ref NetEntry>();
+        NetEntry minnow = new NetEntry();     minnow.Classname = "geb_FatHeadMinnow";    minnow.CatchChance = 1.0;     minnow.Environment = 1;     BambooFishingNetSettings.Catches.Insert(minnow);
+        NetEntry frog = new NetEntry();       frog.Classname = "geb_AmericanBullFrog";   frog.CatchChance = 1.0;       frog.Environment = 1;       BambooFishingNetSettings.Catches.Insert(frog);
+        NetEntry salamander = new NetEntry(); salamander.Classname = "geb_RedSalamander"; salamander.CatchChance = 1.0; salamander.Environment = 1; BambooFishingNetSettings.Catches.Insert(salamander);
+    }
 
-        BugEntry FieldCricket = new BugEntry();
-        FieldCricket.Classname = "geb_FieldCricket";
-        FieldCricket.CatchChance = 0.25;
+    void SeedDefaultDigBugsCatches() {
+        if (!DigBugsSettings) DigBugsSettings = new DigBugsConf;
+        if (!DigBugsSettings.Catches) DigBugsSettings.Catches = new array<ref BugEntry>();
+        BugEntry cricket = new BugEntry(); cricket.Classname = "geb_FieldCricket"; cricket.CatchChance = 0.25; DigBugsSettings.Catches.Insert(cricket);
+        BugEntry hopper = new BugEntry();  hopper.Classname = "geb_GrassHopper";   hopper.CatchChance = 0.25;  DigBugsSettings.Catches.Insert(hopper);
+        BugEntry grub = new BugEntry();    grub.Classname = "geb_GrubWorm";        grub.CatchChance = 0.75;    DigBugsSettings.Catches.Insert(grub);
+        BugEntry worm = new BugEntry();    worm.Classname = "Worm";                worm.CatchChance = 0.25;    DigBugsSettings.Catches.Insert(worm);
+    }
 
-        BugEntry GrassHopper = new BugEntry();
-        GrassHopper.Classname = "geb_GrassHopper";
-        GrassHopper.CatchChance = 0.25;
+    void SeedDefaultDigWormsCatches() {
+        if (!DigWormsSettings) DigWormsSettings = new DigWormsConf;
+        if (!DigWormsSettings.Catches) DigWormsSettings.Catches = new array<ref BugEntry>();
+        BugEntry worm = new BugEntry(); worm.Classname = "Worm";         worm.CatchChance = 0.75; DigWormsSettings.Catches.Insert(worm);
+        BugEntry grub = new BugEntry(); grub.Classname = "geb_GrubWorm"; grub.CatchChance = 0.25; DigWormsSettings.Catches.Insert(grub);
+    }
 
-        BugEntry GrubWorm = new BugEntry();
-        GrubWorm.Classname = "geb_GrubWorm";
-        GrubWorm.CatchChance = 0.75;
+}
 
-        BugEntry Worm = new BugEntry();
-        Worm.Classname = "Worm";
-        Worm.CatchChance = 0.25;
+// Bait-preference block: the master toggle + its info live WITH the table they
+// control (parallel to BambooFishingNetSettings = FindChance + Catches).
+class BaitSettingsConf {
+    string ConfigVersionInfo = "Mod config version this file was written with. Do NOT edit -- used to migrate the file on mod updates.";
+    string ConfigVersion = "";
+    string EnableInfo = "Master toggle for the bait / lure preference system. Each entry in Preferences pairs a bait classname (Worm, geb_GrubWorm, geb_SpinnerBait1, etc.) with a list of per-fish multipliers that bias the weighted catch pick toward that fish when this bait is on the hook (e.g. a Worm makes BlueGill 2.0x more likely while making large saltwater fish 0.3x). Set to 0 to disable the bias entirely -- every bait becomes neutral 1.0x for every fish and only the underlying CatchProbability values drive the pick. Bait still functions mechanically (gets eaten/destroyed, hook still loses bait on a miss) -- this only disables the per-fish bias. Preferences still loads from JSON when disabled so a server can flip this on/off without losing tuned values. Useful when admins want bait to function but not influence catch outcomes, or for diagnosing whether unexpected fish are coming from bait bias vs weather/temperature/time-of-day multipliers.";
+    bool Enable = 1;
+    string PreferencesInfo = "Per-bait fish-preference table. Each entry pairs a bait/lure Classname with its own list of per-fish multipliers (the entry's Preferences array, each: a fish classname + a multiplier). Multiplier >1 = that fish is more likely on this bait, <1 = less, 1.0 = neutral. Only applied when Enable = 1.";
+    ref array<ref BaitConfig> Preferences;
 
-        DigBugsSettings.Catches.Insert(FieldCricket);
-        DigBugsSettings.Catches.Insert(GrassHopper);
-        DigBugsSettings.Catches.Insert(GrubWorm);
-        DigBugsSettings.Catches.Insert(Worm);
-
-        // Add default normal dig-worms data to file.
-        BugEntry DigWorm = new BugEntry();
-        DigWorm.Classname = "Worm";
-        DigWorm.CatchChance = 0.75;
-
-        BugEntry DigGrubWorm = new BugEntry();
-        DigGrubWorm.Classname = "geb_GrubWorm";
-        DigGrubWorm.CatchChance = 0.25;
-
-        DigWormsSettings.Catches.Insert(DigWorm);
-        DigWormsSettings.Catches.Insert(DigGrubWorm);
-
-        // Add default bamboo-fishing-net spawn table. Matches the previously
-        // hardcoded behaviour (equal chance minnow / frog / salamander) but is
-        // now editable by server admins. All three are freshwater so
-        // Environment = 1 (pond). Admins can add Environment=2 / 3 entries
-        // (e.g. Shrimp) for saltwater catches.
-        NetEntry NetMinnow = new NetEntry();
-        NetMinnow.Classname = "geb_FatHeadMinnow";
-        NetMinnow.CatchChance = 1.0;
-        NetMinnow.Environment = 1;
-
-        NetEntry NetBullFrog = new NetEntry();
-        NetBullFrog.Classname = "geb_AmericanBullFrog";
-        NetBullFrog.CatchChance = 1.0;
-        NetBullFrog.Environment = 1;
-
-        NetEntry NetSalamander = new NetEntry();
-        NetSalamander.Classname = "geb_RedSalamander";
-        NetSalamander.CatchChance = 1.0;
-        NetSalamander.Environment = 1;
-
-        BambooFishingNetSettings.Catches.Insert(NetMinnow);
-        BambooFishingNetSettings.Catches.Insert(NetBullFrog);
-        BambooFishingNetSettings.Catches.Insert(NetSalamander);
-
-        //Add default predator data to file
-
-        PredatorEntry Wolf = new PredatorEntry();
-        Wolf.Classname = "Animal_CanisLupus_Grey";
-        Wolf.SpawnChance = 0.6;
-        Wolf.MinCount = 1;
-        Wolf.MaxCount = 1;
-        Wolf.MinRadius = 50;
-        Wolf.MaxRadius = 200;
-
-        PredatorEntry Bear = new PredatorEntry();
-        Bear.Classname = "Animal_UrsusArctos";
-        Bear.SpawnChance = 0.3;
-        Bear.MinCount = 1;
-        Bear.MaxCount = 1;
-        Bear.MinRadius = 100;
-        Bear.MaxRadius = 300;
-
-        Predators.Insert(Wolf);
-        Predators.Insert(Bear);
-
-        JunkEntry Wellies_Brown = new JunkEntry();
-        Wellies_Brown.Classname = "Wellies_Brown";
-        Wellies_Brown.CatchProbability = 5;
-        Wellies_Brown.MinHealthLevel = 3;
-        Wellies_Brown.MaxHealthLevel = 3;
-
-        JunkEntry Wellies_Grey = new JunkEntry();
-        Wellies_Grey.Classname = "Wellies_Grey";
-        Wellies_Grey.CatchProbability = 5;
-        Wellies_Grey.MinHealthLevel = 3;
-        Wellies_Grey.MaxHealthLevel = 3;
-
-        JunkEntry Wellies_Green = new JunkEntry();
-        Wellies_Green.Classname = "Wellies_Green";
-        Wellies_Green.CatchProbability = 5;
-        Wellies_Green.MinHealthLevel = 3;
-        Wellies_Green.MaxHealthLevel = 3;
-
-        JunkEntry Wellies_Black = new JunkEntry();
-        Wellies_Black.Classname = "Wellies_Black";
-        Wellies_Black.CatchProbability = 5;
-        Wellies_Black.MinHealthLevel = 3;
-        Wellies_Black.MaxHealthLevel = 3;
-
-        Junk.Insert(Wellies_Brown);
-        Junk.Insert(Wellies_Grey);
-        Junk.Insert(Wellies_Green);
-        Junk.Insert(Wellies_Black);
-
-        ContainerJunkEntry Pot = new ContainerJunkEntry();
-        Pot.Classname = "Pot";
-        Pot.CatchProbability = 5;
-        Pot.MinHealthLevel = 3;
-        Pot.MaxHealthLevel = 3;
-
-        ContainerJunk.Insert(Pot);
-
-        // Default HookFromFish pool: one vanilla FishingHook at Badly Damaged.
-        // Mirrors the user-requested default ("1/250 chance, hook, badly
-        // damaged, on"). Admins can add lures/other variants and weight them.
-        HookFromFishCatches = new array<ref HookFromFishEntry>();
-        HookFromFishEntry defaultHook = new HookFromFishEntry();
-        defaultHook.Classname = "FishingHook";
-        defaultHook.Weight = 1.0;
-        defaultHook.MinHealthLevel = 3;
-        defaultHook.MaxHealthLevel = 3;
-        HookFromFishCatches.Insert(defaultHook);
-
-        //Save it
+    private const static string PATH = "$profile:Gebs/bait.json";
+    void Load() {
+        if (FileExist(PATH)) {
+            JsonFileLoader<BaitSettingsConf>.JsonLoadFile(PATH, this);
+            if (!Preferences) SeedDefaultPreferences();
+            // Files written before bait.json carried a version load as "" -- stamp
+            // them with the current version so future migrations can key off it.
+            if (ConfigVersion == "") ConfigVersion = VERSION_GEBSFISH;
+        }
+        else SeedDefaults();
         Save();
-        }
     }
-    void Save() {
-        if (!FileExist(ModFolder)) {
-            //if config folder doesn't exist, create it.
-            MakeDirectory(ModFolder);
-        }
-        //Save JSON Config
-        JsonFileLoader<gebsfishConfig>.JsonSaveFile(ModFolder + SettingsConfigFile, this);
-        GebsfishLogger.Info("Settings file generation complete", "JSON");
-
+    void Save() { JsonFileLoader<BaitSettingsConf>.JsonSaveFile(PATH, this); }
+    void SeedDefaults() {
+        ConfigVersion = VERSION_GEBSFISH;
+        Enable = true;
+        SeedDefaultPreferences();
     }
+    // Seed the default bait ecology. Each SeedBait row pairs a bait classname
+    // with its 13 category multipliers; the JSON output still lists every
+    // fish-bait pair so admins can tune individual entries.
+    void SeedDefaultPreferences() {
+        Preferences = new array<ref BaitConfig>();
+        EnsureCategories();
 
-    // Returns true if any missing section was created, false if the loaded
-    // config already had everything. Callers use the return value to decide
-    // whether to Save() -- a no-op pass should not rewrite the JSON on every
-    // server start. Existing values are always preserved; only missing
-    // object/array refs are created.
-    bool EnsureMissingConfigSections() {
-        bool changed = false;
-        if (!GeneralSettings)    { GeneralSettings = new GenSetConf;       changed = true; }
-        if (!RecipeToggles)      { RecipeToggles = new RecipeToggleConf;   changed = true; }
-        if (!PredatorSettings)   { PredatorSettings = new PredatorConf;    changed = true; }
-        if (!WeatherSettings)    { WeatherSettings = new WeatherConf;      changed = true; }
-        // Per-species multipliers now live on each FishConf class (Rain/Storm/
-        // Dawn/Day/Dusk/NightMultiplier), so nothing extra to seed here.
-        if (!Predators)          { Predators = new array<ref PredatorEntry>();           changed = true; }
+        // Column order: panfish, bass, pike/musky, walleye, trout/salmon,
+        // catfish/bottom, carp, amphibian, baitfish, saltwater-large,
+        // saltwater-med, saltwater-small, reef/tropical.
+        SeedBait("Worm",              2.0, 1.4, 0.6, 1.2, 1.6, 1.5, 2.0, 0.5, 1.2, 0.3, 0.5, 0.7, 0.6);
+        SeedBait("geb_GrassHopper",   1.5, 1.4, 0.4, 0.8, 2.0, 0.7, 1.0, 1.8, 0.9, 0.3, 0.4, 0.6, 0.6);
+        SeedBait("geb_FieldCricket",  1.5, 1.4, 0.4, 0.8, 2.0, 0.7, 1.0, 1.8, 0.9, 0.3, 0.4, 0.6, 0.6);
+        SeedBait("geb_GrubWorm",      2.0, 1.4, 0.5, 1.3, 1.8, 1.3, 1.4, 1.0, 1.1, 0.3, 0.5, 0.7, 0.7);
+        SeedBait("geb_RubberWorm",    0.6, 2.5, 1.3, 1.5, 0.7, 0.7, 0.4, 0.4, 0.6, 0.3, 0.4, 0.4, 0.4);
+        SeedBait("geb_FatHeadMinnow", 0.7, 2.0, 2.5, 2.5, 1.5, 1.8, 0.4, 1.0, 0.8, 1.0, 0.8, 0.5, 0.4);
+        SeedBait("geb_RedSalamander", 0.4, 2.0, 2.0, 1.5, 1.0, 2.5, 0.3, 0.4, 0.6, 0.5, 0.5, 0.4, 0.3);
 
-        // Per-action sections. If a section is missing (fresh install, or an
-        // admin removed it by hand-editing the JSON), allocate with the same
-        // defaults Build() uses so the action keeps working.
-        if (!BambooFishingNetSettings) {
-            BambooFishingNetSettings = new BambooFishingNetConf;
-
-            NetEntry netMinnow = new NetEntry();
-            netMinnow.Classname = "geb_FatHeadMinnow";
-            netMinnow.CatchChance = 1.0;
-            netMinnow.Environment = 1;
-
-            NetEntry netBullFrog = new NetEntry();
-            netBullFrog.Classname = "geb_AmericanBullFrog";
-            netBullFrog.CatchChance = 1.0;
-            netBullFrog.Environment = 1;
-
-            NetEntry netSalamander = new NetEntry();
-            netSalamander.Classname = "geb_RedSalamander";
-            netSalamander.CatchChance = 1.0;
-            netSalamander.Environment = 1;
-
-            BambooFishingNetSettings.Catches.Insert(netMinnow);
-            BambooFishingNetSettings.Catches.Insert(netBullFrog);
-            BambooFishingNetSettings.Catches.Insert(netSalamander);
-            changed = true;
-        }
-
-        if (!DigBugsSettings) {
-            DigBugsSettings = new DigBugsConf;
-
-            BugEntry fieldCricket = new BugEntry();
-            fieldCricket.Classname = "geb_FieldCricket";
-            fieldCricket.CatchChance = 0.25;
-
-            BugEntry grassHopper = new BugEntry();
-            grassHopper.Classname = "geb_GrassHopper";
-            grassHopper.CatchChance = 0.25;
-
-            BugEntry grubWorm = new BugEntry();
-            grubWorm.Classname = "geb_GrubWorm";
-            grubWorm.CatchChance = 0.75;
-
-            BugEntry vanillaWorm = new BugEntry();
-            vanillaWorm.Classname = "Worm";
-            vanillaWorm.CatchChance = 0.25;
-
-            DigBugsSettings.Catches.Insert(fieldCricket);
-            DigBugsSettings.Catches.Insert(grassHopper);
-            DigBugsSettings.Catches.Insert(grubWorm);
-            DigBugsSettings.Catches.Insert(vanillaWorm);
-            changed = true;
-        }
-
-        if (!DigWormsSettings) {
-            DigWormsSettings = new DigWormsConf;
-
-            BugEntry digWorm = new BugEntry();
-            digWorm.Classname = "Worm";
-            digWorm.CatchChance = 0.75;
-
-            BugEntry digGrubWorm = new BugEntry();
-            digGrubWorm.Classname = "geb_GrubWorm";
-            digGrubWorm.CatchChance = 0.25;
-
-            DigWormsSettings.Catches.Insert(digWorm);
-            DigWormsSettings.Catches.Insert(digGrubWorm);
-            changed = true;
-        }
-
-        if (!Junk)               { Junk = new array<ref JunkEntry>();                    changed = true; }
-        if (!ContainerJunk)      { ContainerJunk = new array<ref ContainerJunkEntry>();  changed = true; }
-
-        // Backfill the hook-from-fish pool when it's missing OR present-but-
-        // empty. The empty case happens when an admin deletes every entry to
-        // test ("does the system work without a pool?") -- without re-seeding,
-        // the feature is silently broken because TrySpawnHookFromFish bails
-        // on Count() == 0. Re-seeding the vanilla FishingHook gives them a
-        // working baseline back; if they want the feature truly off, the
-        // proper toggle is GeneralSettings.HookFromFishEnable = 0.
-        if (!HookFromFishCatches || HookFromFishCatches.Count() == 0) {
-            if (!HookFromFishCatches)
-                HookFromFishCatches = new array<ref HookFromFishEntry>();
-            HookFromFishEntry defaultHook = new HookFromFishEntry();
-            defaultHook.Classname = "FishingHook";
-            defaultHook.Weight = 1.0;
-            defaultHook.MinHealthLevel = 3;
-            defaultHook.MaxHealthLevel = 3;
-            HookFromFishCatches.Insert(defaultHook);
-            changed = true;
-        }
-
-        if (!BaitPreferences) {
-            BaitPreferences = new array<ref BaitConfig>();
-            SeedDefaultBaitPreferences();
-            changed = true;
-        }
-
-        // Do not auto-create individual fish config sections here. Prepare recipes
-        // intentionally fall back to 1 meat when their section is missing, and
-        // mission registration skips missing fish instead of crashing.
-        return changed;
+        // The numbered variants within a lure family share one tuning.
+        int i;
+        for (i = 1; i <= 4; i++) SeedBait("geb_SpinnerBait" + i,  0.8, 2.5, 2.3, 2.0, 1.5, 1.0, 0.3, 0.5, 1.0, 0.8, 1.0, 1.2, 0.6);
+        for (i = 1; i <= 4; i++) SeedBait("geb_SpoonLure" + i,    0.6, 1.5, 2.0, 1.8, 2.5, 0.8, 0.3, 0.4, 1.0, 1.8, 2.0, 1.5, 1.0);
+        for (i = 1; i <= 4; i++) SeedBait("geb_Lure" + i,         0.7, 2.0, 1.8, 1.8, 1.5, 1.0, 0.3, 0.5, 1.0, 1.3, 1.5, 1.0, 0.7);
+        for (i = 1; i <= 4; i++) SeedBait("geb_CurlyTailJig" + i, 1.5, 2.2, 1.3, 2.0, 1.0, 0.8, 0.5, 0.5, 1.0, 0.7, 1.0, 0.8, 0.6);
     }
 
-    // Walks the loaded config and clamps fields whose only valid range is
-    // tightly bounded by the engine or by callsite math. Hand-edited JSON
-    // can land outside those ranges (typo, copy-paste, deliberate test),
-    // and the resulting silent-wrong-behavior is hard to debug without
-    // log breadcrumbs. Each correction is logged so admins can see what
-    // their JSON tried to say and what the mod is actually running with.
-    //
-    // Returns true if any field was clamped so the caller can re-Save()
-    // the file -- if we ran the JSON through clamps but never persisted,
-    // the admin would re-open the file, see the out-of-range value still
-    // there, and wonder which value the mod is using. Saving makes the
-    // file match in-memory state.
-    bool ValidateAndClampLoadedConfig() {
-        bool changed = false;
-        bool localChanged;
+    // Fish-category buckets shared by every SeedBait row. Static so they are
+    // built once and never serialized into bait.json.
+    protected static ref array<string> s_CatPanfish;
+    protected static ref array<string> s_CatBass;
+    protected static ref array<string> s_CatPikeMusky;
+    protected static ref array<string> s_CatWalleye;
+    protected static ref array<string> s_CatTroutSalmon;
+    protected static ref array<string> s_CatCatfishBottom;
+    protected static ref array<string> s_CatCarp;
+    protected static ref array<string> s_CatAmphibian;
+    protected static ref array<string> s_CatBaitFish;
+    protected static ref array<string> s_CatSaltwaterLarge;
+    protected static ref array<string> s_CatSaltwaterMed;
+    protected static ref array<string> s_CatSaltwaterSmall;
+    protected static ref array<string> s_CatReefTropical;
 
-        if (WeatherSettings) {
-            // Hour fields -- valid range is [0, 23]. ResolveTimeWindow's
-            // comparisons silently misbehave outside this range: 25 looks
-            // unreachable (hour < 25 is always true), -1 looks always-true
-            // (hour >= -1 is always satisfied), and the wrong time-of-day
-            // multiplier gets applied.
-            //
-            // Pattern: helper returns the (possibly corrected) value AND a
-            // wasClamped out-flag. We OR every flag into `changed` so the
-            // caller can re-Save() exactly when something needed fixing.
-            // Going through a return value (not inout on a struct member)
-            // sidesteps Enforce parser pickiness about passing object
-            // fields as inout/out parameters.
-            WeatherSettings.DawnStartHour  = ClampHour(WeatherSettings.DawnStartHour,  "DawnStartHour",  localChanged); if (localChanged) changed = true;
-            WeatherSettings.DawnEndHour    = ClampHour(WeatherSettings.DawnEndHour,    "DawnEndHour",    localChanged); if (localChanged) changed = true;
-            WeatherSettings.DayStartHour   = ClampHour(WeatherSettings.DayStartHour,   "DayStartHour",   localChanged); if (localChanged) changed = true;
-            WeatherSettings.DayEndHour     = ClampHour(WeatherSettings.DayEndHour,     "DayEndHour",     localChanged); if (localChanged) changed = true;
-            WeatherSettings.DuskStartHour  = ClampHour(WeatherSettings.DuskStartHour,  "DuskStartHour",  localChanged); if (localChanged) changed = true;
-            WeatherSettings.DuskEndHour    = ClampHour(WeatherSettings.DuskEndHour,    "DuskEndHour",    localChanged); if (localChanged) changed = true;
-            WeatherSettings.NightStartHour = ClampHour(WeatherSettings.NightStartHour, "NightStartHour", localChanged); if (localChanged) changed = true;
-            WeatherSettings.NightEndHour   = ClampHour(WeatherSettings.NightEndHour,   "NightEndHour",   localChanged); if (localChanged) changed = true;
-
-            // Rain thresholds -- valid range is [0, 1] because they're
-            // compared against Weather.GetRain().GetActual() which is
-            // [0, 1]. >1 makes the threshold unreachable; <0 makes it
-            // always-triggered (rain >= -0.5 is always true).
-            WeatherSettings.RainThreshold  = ClampUnit(WeatherSettings.RainThreshold,  "RainThreshold",  localChanged); if (localChanged) changed = true;
-            WeatherSettings.StormThreshold = ClampUnit(WeatherSettings.StormThreshold, "StormThreshold", localChanged); if (localChanged) changed = true;
-        }
-
-        return changed;
+    protected static void EnsureCategories() {
+        if (s_CatPanfish)
+            return;
+        s_CatPanfish = {"geb_BlueGill", "geb_SunFish", "geb_YellowPerch", "Bitterlings"};
+        s_CatBass = {"geb_LargeMouthBass", "geb_SmallMouthBass", "geb_BlackBass", "geb_NeoshoBass", "geb_StripedBass", "geb_WhiteBass"};
+        s_CatPikeMusky = {"geb_NorthernPike", "geb_Muskellunge", "geb_BarredMuskellunge", "geb_SpottedMuskellunge", "geb_TigerMuskellunge", "geb_NorthernSnakeHead", "geb_BowFin"};
+        s_CatWalleye = {"geb_WallEye", "geb_Sauger"};
+        s_CatTroutSalmon = {"SteelheadTrout", "geb_BrookTrout", "geb_BrownTrout", "geb_RainbowTrout", "geb_CutThroatTrout", "geb_LakeTrout", "geb_ChinookSalmon", "geb_CherrySalmon", "geb_SockEyeSalmon"};
+        s_CatCatfishBottom = {"geb_FlatHeadCatFish", "geb_AlligatorGar", "geb_LakeSturgeon"};
+        s_CatCarp = {"Carp"};
+        s_CatAmphibian = {"geb_AmericanBullFrog", "geb_RedSalamander"};
+        s_CatBaitFish = {"geb_FatHeadMinnow", "geb_FlatHeadMullet", "geb_SlimySculpin"};
+        s_CatSaltwaterLarge = {"geb_GreatWhiteShark", "geb_HammerHeadShark", "geb_AngelShark", "geb_LeopardShark", "geb_AtlanticBlueMarlin", "geb_AtlanticSailFish", "geb_YellowFinTuna"};
+        s_CatSaltwaterMed = {"geb_AsianSeaBass", "geb_Bonita", "geb_MahiMahi", "geb_RoughNeckRock", "geb_SiameseTigerFish", "WalleyePollock", "geb_PacificCod", "geb_LargeHeadHairTailFish", "geb_SouthernFlounder"};
+        s_CatSaltwaterSmall = {"Mackerel", "Sardines", "geb_YellowSnapper", "geb_WhiteGrunt"};
+        s_CatReefTropical = {"geb_AngelFish", "geb_BlueTang", "geb_HumpHeadWrasse", "geb_Severum", "geb_RedHeadCichlid"};
     }
 
-    // Clamps an hour value to [0, 23]. Sets wasClamped=true if the input
-    // was out of range, false otherwise. Returns the corrected value.
-    protected int ClampHour(int value, string fieldName, out bool wasClamped) {
-        wasClamped = false;
-        if (value < 0) {
-            GebsfishLogger.Warn("WeatherSettings." + fieldName + " was " + value + " (must be 0-23). Clamping to 0.", "ConfigValidation");
-            wasClamped = true;
-            return 0;
-        }
-        if (value > 23) {
-            GebsfishLogger.Warn("WeatherSettings." + fieldName + " was " + value + " (must be 0-23). Clamping to 23.", "ConfigValidation");
-            wasClamped = true;
-            return 23;
-        }
-        return value;
+    // Builds one bait entry from its 13 category multipliers and inserts it.
+    protected void SeedBait(string baitName, float panfish, float bass, float pikeMusky, float walleye, float troutSalmon, float catfishBottom, float carp, float amphibian, float baitFish, float saltLarge, float saltMed, float saltSmall, float reefTropical) {
+        BaitConfig bait = new BaitConfig();
+        bait.BaitClassname = baitName;
+        AppendBaitPrefsByCategory(bait, s_CatPanfish, panfish);
+        AppendBaitPrefsByCategory(bait, s_CatBass, bass);
+        AppendBaitPrefsByCategory(bait, s_CatPikeMusky, pikeMusky);
+        AppendBaitPrefsByCategory(bait, s_CatWalleye, walleye);
+        AppendBaitPrefsByCategory(bait, s_CatTroutSalmon, troutSalmon);
+        AppendBaitPrefsByCategory(bait, s_CatCatfishBottom, catfishBottom);
+        AppendBaitPrefsByCategory(bait, s_CatCarp, carp);
+        AppendBaitPrefsByCategory(bait, s_CatAmphibian, amphibian);
+        AppendBaitPrefsByCategory(bait, s_CatBaitFish, baitFish);
+        AppendBaitPrefsByCategory(bait, s_CatSaltwaterLarge, saltLarge);
+        AppendBaitPrefsByCategory(bait, s_CatSaltwaterMed, saltMed);
+        AppendBaitPrefsByCategory(bait, s_CatSaltwaterSmall, saltSmall);
+        AppendBaitPrefsByCategory(bait, s_CatReefTropical, reefTropical);
+        Preferences.Insert(bait);
     }
-
-    // Clamps a float to [0.0, 1.0]. Used for rain / storm thresholds that
-    // compare against the engine's normalised rain value. Sets wasClamped
-    // accordingly. Returns the corrected value.
-    protected float ClampUnit(float value, string fieldName, out bool wasClamped) {
-        wasClamped = false;
-        if (value < 0.0) {
-            GebsfishLogger.Warn("WeatherSettings." + fieldName + " was " + value + " (must be 0.0-1.0). Clamping to 0.0.", "ConfigValidation");
-            wasClamped = true;
-            return 0.0;
-        }
-        if (value > 1.0) {
-            GebsfishLogger.Warn("WeatherSettings." + fieldName + " was " + value + " (must be 0.0-1.0). Clamping to 1.0.", "ConfigValidation");
-            wasClamped = true;
-            return 1.0;
-        }
-        return value;
-    }
-
-    // Default per-bait fish-preference table. Every bait lists every
-    // rod-eligible fish. Multiplier > 1.0 makes that fish more likely
-    // to be the selected catch; < 1.0 makes it less likely; 1.0 is
-    // neutral. Fish are bucketed into 15 ecological categories so the
-    // seed stays compact; the JSON output still shows every fish-bait
-    // pair explicitly so admins can tune individual entries.
-    protected void SeedDefaultBaitPreferences() {
-        ref array<string> catPanfish = new array<string>;
-        catPanfish.Insert("geb_BlueGill");
-        catPanfish.Insert("geb_SunFish");
-        catPanfish.Insert("geb_YellowPerch");
-        catPanfish.Insert("Bitterlings");
-
-        ref array<string> catBass = new array<string>;
-        catBass.Insert("geb_LargeMouthBass");
-        catBass.Insert("geb_SmallMouthBass");
-        catBass.Insert("geb_BlackBass");
-        catBass.Insert("geb_NeoshoBass");
-        catBass.Insert("geb_StripedBass");
-        catBass.Insert("geb_WhiteBass");
-
-        ref array<string> catPikeMusky = new array<string>;
-        catPikeMusky.Insert("geb_NorthernPike");
-        catPikeMusky.Insert("geb_Muskellunge");
-        catPikeMusky.Insert("geb_BarredMuskellunge");
-        catPikeMusky.Insert("geb_SpottedMuskellunge");
-        catPikeMusky.Insert("geb_TigerMuskellunge");
-        catPikeMusky.Insert("geb_NorthernSnakeHead");
-        catPikeMusky.Insert("geb_BowFin");
-
-        ref array<string> catWalleye = new array<string>;
-        catWalleye.Insert("geb_WallEye");
-        catWalleye.Insert("geb_Sauger");
-
-        ref array<string> catTroutSalmon = new array<string>;
-        catTroutSalmon.Insert("SteelheadTrout");
-        catTroutSalmon.Insert("geb_BrookTrout");
-        catTroutSalmon.Insert("geb_BrownTrout");
-        catTroutSalmon.Insert("geb_RainbowTrout");
-        catTroutSalmon.Insert("geb_CutThroatTrout");
-        catTroutSalmon.Insert("geb_LakeTrout");
-        catTroutSalmon.Insert("geb_ChinookSalmon");
-        catTroutSalmon.Insert("geb_CherrySalmon");
-        catTroutSalmon.Insert("geb_SockEyeSalmon");
-
-        ref array<string> catCatfishBottom = new array<string>;
-        catCatfishBottom.Insert("geb_FlatHeadCatFish");
-        catCatfishBottom.Insert("geb_AlligatorGar");
-        catCatfishBottom.Insert("geb_LakeSturgeon");
-
-        ref array<string> catCarp = new array<string>;
-        catCarp.Insert("Carp");
-
-        ref array<string> catAmphibian = new array<string>;
-        catAmphibian.Insert("geb_AmericanBullFrog");
-        catAmphibian.Insert("geb_RedSalamander");
-
-        ref array<string> catBaitFish = new array<string>;
-        catBaitFish.Insert("geb_FatHeadMinnow");
-        catBaitFish.Insert("geb_FlatHeadMullet");
-        catBaitFish.Insert("geb_SlimySculpin");
-
-
-        ref array<string> catSaltwaterLarge = new array<string>;
-        catSaltwaterLarge.Insert("geb_GreatWhiteShark");
-        catSaltwaterLarge.Insert("geb_HammerHeadShark");
-        catSaltwaterLarge.Insert("geb_AngelShark");
-        catSaltwaterLarge.Insert("geb_LeopardShark");
-        catSaltwaterLarge.Insert("geb_AtlanticBlueMarlin");
-        catSaltwaterLarge.Insert("geb_AtlanticSailFish");
-        catSaltwaterLarge.Insert("geb_YellowFinTuna");
-
-        ref array<string> catSaltwaterMed = new array<string>;
-        catSaltwaterMed.Insert("geb_AsianSeaBass");
-        catSaltwaterMed.Insert("geb_Bonita");
-        catSaltwaterMed.Insert("geb_MahiMahi");
-        catSaltwaterMed.Insert("geb_RoughNeckRock");
-        catSaltwaterMed.Insert("geb_SiameseTigerFish");
-        catSaltwaterMed.Insert("WalleyePollock");
-        catSaltwaterMed.Insert("geb_PacificCod");
-        catSaltwaterMed.Insert("geb_LargeHeadHairTailFish");
-        catSaltwaterMed.Insert("geb_SouthernFlounder");
-
-        ref array<string> catSaltwaterSmall = new array<string>;
-        catSaltwaterSmall.Insert("Mackerel");
-        catSaltwaterSmall.Insert("Sardines");
-        catSaltwaterSmall.Insert("geb_YellowSnapper");
-        catSaltwaterSmall.Insert("geb_WhiteGrunt");
-
-        ref array<string> catReefTropical = new array<string>;
-        catReefTropical.Insert("geb_AngelFish");
-        catReefTropical.Insert("geb_BlueTang");
-        catReefTropical.Insert("geb_HumpHeadWrasse");
-        catReefTropical.Insert("geb_Severum");
-        catReefTropical.Insert("geb_RedHeadCichlid");
-
-        BaitConfig bait;
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "Worm";
-        AppendBaitPrefsByCategory(bait, catPanfish, 2.0);
-        AppendBaitPrefsByCategory(bait, catBass, 1.4);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 0.6);
-        AppendBaitPrefsByCategory(bait, catWalleye, 1.2);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.6);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.5);
-        AppendBaitPrefsByCategory(bait, catCarp, 2.0);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 1.2);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.3);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.5);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.7);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_GrassHopper";
-        AppendBaitPrefsByCategory(bait, catPanfish, 1.5);
-        AppendBaitPrefsByCategory(bait, catBass, 1.4);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 0.4);
-        AppendBaitPrefsByCategory(bait, catWalleye, 0.8);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 2.0);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.7);
-        AppendBaitPrefsByCategory(bait, catCarp, 1.0);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 1.8);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 0.9);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.3);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.4);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.6);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_FieldCricket";
-        AppendBaitPrefsByCategory(bait, catPanfish, 1.5);
-        AppendBaitPrefsByCategory(bait, catBass, 1.4);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 0.4);
-        AppendBaitPrefsByCategory(bait, catWalleye, 0.8);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 2.0);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.7);
-        AppendBaitPrefsByCategory(bait, catCarp, 1.0);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 1.8);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 0.9);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.3);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.4);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.6);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_GrubWorm";
-        AppendBaitPrefsByCategory(bait, catPanfish, 2.0);
-        AppendBaitPrefsByCategory(bait, catBass, 1.4);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 0.5);
-        AppendBaitPrefsByCategory(bait, catWalleye, 1.3);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.8);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.3);
-        AppendBaitPrefsByCategory(bait, catCarp, 1.4);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 1.0);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 1.1);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.3);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.5);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.7);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.7);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_RubberWorm";
-        AppendBaitPrefsByCategory(bait, catPanfish, 0.6);
-        AppendBaitPrefsByCategory(bait, catBass, 2.5);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.3);
-        AppendBaitPrefsByCategory(bait, catWalleye, 1.5);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 0.7);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.7);
-        AppendBaitPrefsByCategory(bait, catCarp, 0.4);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 0.6);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.3);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.4);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.4);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.4);
-        BaitPreferences.Insert(bait);
-
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_FatHeadMinnow";
-        AppendBaitPrefsByCategory(bait, catPanfish, 0.7);
-        AppendBaitPrefsByCategory(bait, catBass, 2.0);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.5);
-        AppendBaitPrefsByCategory(bait, catWalleye, 2.5);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.8);
-        AppendBaitPrefsByCategory(bait, catCarp, 0.4);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 1.0);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 0.8);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.8);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.5);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.4);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_RedSalamander";
-        AppendBaitPrefsByCategory(bait, catPanfish, 0.4);
-        AppendBaitPrefsByCategory(bait, catBass, 2.0);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.0);
-        AppendBaitPrefsByCategory(bait, catWalleye, 1.5);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.0);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 2.5);
-        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 0.6);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.5);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 0.5);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.4);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.3);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_SpinnerBait1";
-        AppendBaitPrefsByCategory(bait, catPanfish, 0.8);
-        AppendBaitPrefsByCategory(bait, catBass, 2.5);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.3);
-        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
-        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.8);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.2);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_SpinnerBait2";
-        AppendBaitPrefsByCategory(bait, catPanfish, 0.8);
-        AppendBaitPrefsByCategory(bait, catBass, 2.5);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.3);
-        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
-        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.8);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.2);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_SpinnerBait3";
-        AppendBaitPrefsByCategory(bait, catPanfish, 0.8);
-        AppendBaitPrefsByCategory(bait, catBass, 2.5);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.3);
-        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
-        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.8);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.2);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_SpinnerBait4";
-        AppendBaitPrefsByCategory(bait, catPanfish, 0.8);
-        AppendBaitPrefsByCategory(bait, catBass, 2.5);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.3);
-        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
-        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.8);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.2);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_SpoonLure1";
-        AppendBaitPrefsByCategory(bait, catPanfish, 0.6);
-        AppendBaitPrefsByCategory(bait, catBass, 1.5);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.0);
-        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 2.5);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
-        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.8);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 2.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.5);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 1.0);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_SpoonLure2";
-        AppendBaitPrefsByCategory(bait, catPanfish, 0.6);
-        AppendBaitPrefsByCategory(bait, catBass, 1.5);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.0);
-        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 2.5);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
-        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.8);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 2.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.5);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 1.0);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_SpoonLure3";
-        AppendBaitPrefsByCategory(bait, catPanfish, 0.6);
-        AppendBaitPrefsByCategory(bait, catBass, 1.5);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.0);
-        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 2.5);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
-        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.8);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 2.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.5);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 1.0);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_SpoonLure4";
-        AppendBaitPrefsByCategory(bait, catPanfish, 0.6);
-        AppendBaitPrefsByCategory(bait, catBass, 1.5);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 2.0);
-        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 2.5);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
-        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 0.4);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.8);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 2.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.5);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 1.0);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_Lure1";
-        AppendBaitPrefsByCategory(bait, catPanfish, 0.7);
-        AppendBaitPrefsByCategory(bait, catBass, 2.0);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.8);
-        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
-        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.3);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.5);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.0);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.7);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_Lure2";
-        AppendBaitPrefsByCategory(bait, catPanfish, 0.7);
-        AppendBaitPrefsByCategory(bait, catBass, 2.0);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.8);
-        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
-        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.3);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.5);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.0);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.7);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_Lure3";
-        AppendBaitPrefsByCategory(bait, catPanfish, 0.7);
-        AppendBaitPrefsByCategory(bait, catBass, 2.0);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.8);
-        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
-        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.3);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.5);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.0);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.7);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_Lure4";
-        AppendBaitPrefsByCategory(bait, catPanfish, 0.7);
-        AppendBaitPrefsByCategory(bait, catBass, 2.0);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.8);
-        AppendBaitPrefsByCategory(bait, catWalleye, 1.8);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.5);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 1.0);
-        AppendBaitPrefsByCategory(bait, catCarp, 0.3);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 1.3);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.5);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 1.0);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.7);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_CurlyTailJig1";
-        AppendBaitPrefsByCategory(bait, catPanfish, 1.5);
-        AppendBaitPrefsByCategory(bait, catBass, 2.2);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.3);
-        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.0);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
-        AppendBaitPrefsByCategory(bait, catCarp, 0.5);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.7);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.8);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_CurlyTailJig2";
-        AppendBaitPrefsByCategory(bait, catPanfish, 1.5);
-        AppendBaitPrefsByCategory(bait, catBass, 2.2);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.3);
-        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.0);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
-        AppendBaitPrefsByCategory(bait, catCarp, 0.5);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.7);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.8);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_CurlyTailJig3";
-        AppendBaitPrefsByCategory(bait, catPanfish, 1.5);
-        AppendBaitPrefsByCategory(bait, catBass, 2.2);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.3);
-        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.0);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
-        AppendBaitPrefsByCategory(bait, catCarp, 0.5);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.7);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.8);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
-        BaitPreferences.Insert(bait);
-
-        bait = new BaitConfig();
-        bait.BaitClassname = "geb_CurlyTailJig4";
-        AppendBaitPrefsByCategory(bait, catPanfish, 1.5);
-        AppendBaitPrefsByCategory(bait, catBass, 2.2);
-        AppendBaitPrefsByCategory(bait, catPikeMusky, 1.3);
-        AppendBaitPrefsByCategory(bait, catWalleye, 2.0);
-        AppendBaitPrefsByCategory(bait, catTroutSalmon, 1.0);
-        AppendBaitPrefsByCategory(bait, catCatfishBottom, 0.8);
-        AppendBaitPrefsByCategory(bait, catCarp, 0.5);
-        AppendBaitPrefsByCategory(bait, catAmphibian, 0.5);
-        AppendBaitPrefsByCategory(bait, catBaitFish, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterLarge, 0.7);
-        AppendBaitPrefsByCategory(bait, catSaltwaterMed, 1.0);
-        AppendBaitPrefsByCategory(bait, catSaltwaterSmall, 0.8);
-        AppendBaitPrefsByCategory(bait, catReefTropical, 0.6);
-        BaitPreferences.Insert(bait);
-    }
-
     // Helper: append a BaitPreferenceEntry to `conf.Preferences` for
     // every fish classname in `fishList`, all with the same multiplier.
     // Lets SeedDefaultBaitPreferences emit per-category preferences in
@@ -1111,18 +261,269 @@ class gebsfishConfig {
             conf.Preferences.Insert(pref);
         }
     }
+}
 
-    // Per-species weather multipliers live inline on each FishConf class
-    // (RainMultiplier / StormMultiplier / DawnMultiplier / DayMultiplier /
-    // DuskMultiplier / NightMultiplier). They are read at yield-registration
-    // time by GebYieldFishBase.SetupYield in geb_yielditems.c and cached on
-    // the yield itself, mirroring how m_QualityBase / m_EnviroMask /
-    // m_MethodMask are already cached. The catching context then reads them
-    // off the GebYieldFishBase via GetRainMultiplier() etc.
-    //
-    // Adding a new fish: add the FishConf class with multiplier fields, then
-    // pass those fields to SetupYield in the matching geb_YieldXxx.Init().
-    // No code changes needed in this file beyond the FishConf class.
+// junk.json: world-junk + container-junk catch tables.
+class JunkConfig {
+    string ConfigVersionInfo = "Mod config version this file was written with. Do NOT edit.";
+    string ConfigVersion = "";
+    string JunkInfo = "Weighted table of 'junk' items a rod/trap can pull instead of a fish. Each entry: Classname = item to spawn; CatchProbability = 0-25 weight in the catch pool; MinHealthLevel/MaxHealthLevel = health range, 0 pristine .. 4 ruined (the spawned item's health is rolled in this range).";
+    ref array<ref JunkEntry>          Junk;
+    string ContainerJunkInfo = "Like Junk, but for 'container' junk -- items spawned holding cargo (e.g. a tin can). Same fields: Classname, CatchProbability (0-25), MinHealthLevel/MaxHealthLevel (0-4).";
+    ref array<ref ContainerJunkEntry> ContainerJunk;
+
+    private const static string PATH = "$profile:Gebs/junk.json";
+    void Load() {
+        if (FileExist(PATH)) { JsonFileLoader<JunkConfig>.JsonLoadFile(PATH, this); Backfill(); }
+        else SeedDefaults();
+        Save();
+    }
+    void Save() { JsonFileLoader<JunkConfig>.JsonSaveFile(PATH, this); }
+    void Backfill() {
+        if (!Junk)          SeedDefaultJunk();
+        if (!ContainerJunk) SeedDefaultContainerJunk();
+    }
+    void SeedDefaults() {
+        ConfigVersion = VERSION_GEBSFISH;
+        SeedDefaultJunk();
+        SeedDefaultContainerJunk();
+    }
+    void SeedDefaultJunk() {
+        if (!Junk) Junk = new array<ref JunkEntry>();
+        JunkEntry brown = new JunkEntry(); brown.Classname = "Wellies_Brown"; brown.CatchProbability = 5; brown.MinHealthLevel = 3; brown.MaxHealthLevel = 3; Junk.Insert(brown);
+        JunkEntry grey = new JunkEntry();  grey.Classname = "Wellies_Grey";   grey.CatchProbability = 5;  grey.MinHealthLevel = 3;  grey.MaxHealthLevel = 3;  Junk.Insert(grey);
+        JunkEntry green = new JunkEntry(); green.Classname = "Wellies_Green"; green.CatchProbability = 5; green.MinHealthLevel = 3; green.MaxHealthLevel = 3; Junk.Insert(green);
+        JunkEntry black = new JunkEntry(); black.Classname = "Wellies_Black"; black.CatchProbability = 5; black.MinHealthLevel = 3; black.MaxHealthLevel = 3; Junk.Insert(black);
+    }
+    void SeedDefaultContainerJunk() {
+        if (!ContainerJunk) ContainerJunk = new array<ref ContainerJunkEntry>();
+        ContainerJunkEntry pot = new ContainerJunkEntry(); pot.Classname = "Pot"; pot.CatchProbability = 5; pot.MinHealthLevel = 3; pot.MaxHealthLevel = 3; ContainerJunk.Insert(pot);
+    }
+}
+
+// ===========================================================================
+// FILE 4: fish.json  (just the Species table now)
+// ===========================================================================
+class FishConfig {
+    string ConfigVersionInfo = "Mod config version this file was written with. Do NOT edit -- used to migrate the file on mod updates.";
+    string ConfigVersion = "";
+    string SpeciesInfo = "One object per fish/catchable. The fields on each entry are: Classname = the catchable item classname (also the fillet-recipe ingredient), e.g. geb_YellowPerch or Carp. RecipeShape = recipe type: 0 = fillet only, 1 = caviar fish (gives a caviar at index 0 plus fillets; the caviar is chance-gated by GeneralSettings.CaviarChance), 2 = lobster (gives a tail at index 0 plus claws). ResultMain = the repeated fillet/claw result classname (leave '' for a catch-only species with no fillet recipe). ResultBonus = the single index-0 result (caviar for RecipeShape 1, tail for RecipeShape 2; '' otherwise). MeatMin / MeatMax = min/max count of ResultMain produced per fillet. Environment = where it's caught: 1 pond, 2 sea, 3 both. CatchMethod = gear bitmask: 1 rod, 2 largetrap, 4 smalltrap, added together (3 = rod+largetrap, 5 = rod+smalltrap, 6 = largetrap+smalltrap, 7 = all). CatchProbability = 0-25 abundance weight in the catch pool (0 = uncatchable, 25 = very common). RainMultiplier / StormMultiplier / DawnMultiplier / DayMultiplier / DuskMultiplier / NightMultiplier = per-species catch-bias multipliers (1.0 = no effect, >1 = more likely in that condition, <1 = less). TempOptimal / TempMin / TempMax = water-temperature preference in degrees Celsius (best near Optimal, nothing caught outside Min..Max). BiteSpeed = 24 hourly bite-speed values (index 0 = 12AM .. 23 = 11PM), each 0.0-1.0 where 1.0 = vanilla speed and lower = a slower bite that hour.";
+    ref array<ref FishConf>           Species;
+
+    private const static string PATH = "$profile:Gebs/fish.json";
+
+    FishConf Get(string classname) {
+        if (!Species) return null;
+        foreach (FishConf f : Species) if (f && f.Classname == classname) return f;
+        return null;
+    }
+
+    void Load() {
+        if (FileExist(PATH)) { JsonFileLoader<FishConfig>.JsonLoadFile(PATH, this); Backfill(); }
+        else SeedDefaults();
+        Save();
+    }
+    void Save() { JsonFileLoader<FishConfig>.JsonSaveFile(PATH, this); }
+
+    void Backfill() {
+        if (!Species || Species.Count() == 0) SeedSpecies();
+    }
+
+    void SeedDefaults() {
+        ConfigVersion = VERSION_GEBSFISH;
+        SeedSpecies();
+    }
+
+    void SeedSpecies() {
+        Species = new array<ref FishConf>();
+        SeedSpeciesA(); SeedSpeciesB(); SeedSpeciesC(); SeedSpeciesD(); SeedSpeciesE();
+    }
+    // ---- shared 24-hour BiteSpeed curves (index 0 = 12AM .. 23 = 11PM) ----
+    // Each helper returns a FRESH array so no two fish share one instance.
+    // Fastest 8PM-2AM, slowest midday -- catfish, crayfish, frogs, sharks, lobsters.
+    protected TFloatArray BiteNocturnal() {
+        TFloatArray a = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
+        return a;
+    }
+    // Sharp dawn + dusk peaks, slow night and midday -- bass, trout, salmon.
+    protected TFloatArray BiteCrepuscular() {
+        TFloatArray a = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
+        return a;
+    }
+    // Daytime cruiser: morning/evening peaks, holds ~0.85 midday -- tuna, marlin, mahi, cod.
+    protected TFloatArray BitePelagic() {
+        TFloatArray a = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
+        return a;
+    }
+    // Full daytime plateau, very slow nights -- bluegill, perch, sunfish, minnows.
+    protected TFloatArray BiteDiurnal() {
+        TFloatArray a = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
+        return a;
+    }
+    // Dawn/dusk peaks that stay strong into the night -- pike, muskies, walleye, sauger.
+    protected TFloatArray BiteTwilightNight() {
+        TFloatArray a = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
+        return a;
+    }
+    // Gentle all-day rhythm, 0.85-1.0 -- carp, mackerel, sturgeon, sculpin.
+    protected TFloatArray BiteSteady() {
+        TFloatArray a = {0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.95, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.95, 1, 1, 0.95, 0.95, 0.9, 0.9, 0.85};
+        return a;
+    }
+    // Near-flat ~0.85-0.95 -- filter feeders (blood clam, mussel).
+    protected TFloatArray BiteFilterFeeder() {
+        TFloatArray a = {0.95, 0.95, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.9, 0.9, 0.9, 0.95, 0.95, 0.95};
+        return a;
+    }
+    // Flat 1.0 around the clock -- starfish.
+    protected TFloatArray BiteConstant() {
+        TFloatArray a = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        return a;
+    }
+    void SeedSpeciesA() {
+        FishConf f;
+        // freshwater + vanilla
+        f = new FishConf("Mackerel"); f.RecipeShape=0; f.ResultMain="MackerelFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=3; f.CatchProbability=22; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.1; f.DayMultiplier=1.0; f.DuskMultiplier=1.1; f.NightMultiplier=1.0; f.TempOptimal=18.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteSteady(); Species.Insert(f);
+        f = new FishConf("Carp"); f.RecipeShape=0; f.ResultMain="CarpFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=22; f.RainMultiplier=0.9; f.StormMultiplier=0.8; f.DawnMultiplier=1.2; f.DayMultiplier=0.9; f.DuskMultiplier=1.2; f.NightMultiplier=0.9; f.TempOptimal=24.0; f.TempMin=14.0; f.TempMax=30.0; f.BiteSpeed=BiteSteady(); Species.Insert(f);
+        f = new FishConf("Sardines"); f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=6; f.CatchProbability=24; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=1.1; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=18.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new FishConf("Bitterlings"); f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=1; f.CatchMethod=6; f.CatchProbability=24; f.RainMultiplier=1.1; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.1; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new FishConf("WalleyePollock"); f.RecipeShape=0; f.ResultMain="WalleyePollockFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=3; f.CatchProbability=20; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.0; f.DuskMultiplier=1.1; f.NightMultiplier=1.1; f.TempOptimal=8.0; f.TempMin=1.0; f.TempMax=14.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new FishConf("SteelheadTrout"); f.RecipeShape=1; f.ResultMain="SteelheadTroutFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=9; f.RainMultiplier=1.4; f.StormMultiplier=1.3; f.DawnMultiplier=1.5; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=13.0; f.TempMin=4.0; f.TempMax=20.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new FishConf("Shrimp"); f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=6; f.CatchProbability=22; f.RainMultiplier=0.9; f.StormMultiplier=1.0; f.DawnMultiplier=0.9; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.3; f.TempOptimal=20.0; f.TempMin=12.0; f.TempMax=30.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_NorthernSnakeHead"); f.RecipeShape=0; f.ResultMain="geb_NorthernSnakeHeadFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=1; f.CatchMethod=1; f.CatchProbability=5; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.2; f.DayMultiplier=0.8; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=21.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_NorthernPike"); f.RecipeShape=1; f.ResultMain="geb_NorthernPikeFilletMeat"; f.ResultBonus="geb_YellowCaviar"; f.MeatMin=2; f.MeatMax=4; f.Environment=1; f.CatchMethod=1; f.CatchProbability=8; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.4; f.TempOptimal=18.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
+        f = new FishConf("geb_BarredMuskellunge"); f.RecipeShape=1; f.ResultMain="geb_BarredMuskellungeFilletMeat"; f.ResultBonus="geb_YellowCaviar"; f.MeatMin=2; f.MeatMax=4; f.Environment=1; f.CatchMethod=1; f.CatchProbability=3; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.4; f.TempOptimal=19.0; f.TempMin=10.0; f.TempMax=25.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
+        f = new FishConf("geb_SpottedMuskellunge"); f.RecipeShape=1; f.ResultMain="geb_SpottedMuskellungeFilletMeat"; f.ResultBonus="geb_YellowCaviar"; f.MeatMin=2; f.MeatMax=4; f.Environment=1; f.CatchMethod=1; f.CatchProbability=3; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.4; f.TempOptimal=19.0; f.TempMin=10.0; f.TempMax=25.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
+        f = new FishConf("geb_TigerMuskellunge"); f.RecipeShape=1; f.ResultMain="geb_TigerMuskellungeFilletMeat"; f.ResultBonus="geb_YellowCaviar"; f.MeatMin=2; f.MeatMax=4; f.Environment=1; f.CatchMethod=1; f.CatchProbability=3; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.4; f.TempOptimal=19.0; f.TempMin=10.0; f.TempMax=25.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
+        f = new FishConf("geb_Muskellunge"); f.RecipeShape=1; f.ResultMain="geb_MuskellungeFilletMeat"; f.ResultBonus="geb_YellowCaviar"; f.MeatMin=2; f.MeatMax=4; f.Environment=1; f.CatchMethod=1; f.CatchProbability=4; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.4; f.TempOptimal=19.0; f.TempMin=10.0; f.TempMax=25.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
+        f = new FishConf("geb_AlligatorGar"); f.RecipeShape=0; f.ResultMain="geb_AlligatorGarFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=3; f.CatchMethod=1; f.CatchProbability=4; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.2; f.DayMultiplier=0.8; f.DuskMultiplier=1.3; f.NightMultiplier=1.4; f.TempOptimal=26.0; f.TempMin=16.0; f.TempMax=32.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
+        f = new FishConf("geb_LargeMouthBass"); f.RecipeShape=0; f.ResultMain="geb_LargeMouthBassFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=14; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.4; f.NightMultiplier=1.1; f.TempOptimal=24.0; f.TempMin=14.0; f.TempMax=30.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new FishConf("geb_SmallMouthBass"); f.RecipeShape=0; f.ResultMain="geb_SmallMouthBassFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=13; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.4; f.NightMultiplier=1.1; f.TempOptimal=21.0; f.TempMin=12.0; f.TempMax=27.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+    }
+    void SeedSpeciesB() {
+        FishConf f;
+        f = new FishConf("geb_WallEye"); f.RecipeShape=0; f.ResultMain="geb_WallEyeFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=12; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.3; f.DayMultiplier=0.7; f.DuskMultiplier=1.5; f.NightMultiplier=1.5; f.TempOptimal=18.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
+        f = new FishConf("geb_SunFish"); f.RecipeShape=0; f.ResultMain="geb_SunFishFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=20; f.RainMultiplier=1.1; f.StormMultiplier=0.9; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=25.0; f.TempMin=15.0; f.TempMax=30.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new FishConf("geb_WhiteBass"); f.RecipeShape=0; f.ResultMain="geb_WhiteBassFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=11; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.2; f.DayMultiplier=1.0; f.DuskMultiplier=1.3; f.NightMultiplier=1.3; f.TempOptimal=21.0; f.TempMin=12.0; f.TempMax=27.0; f.BiteSpeed=BiteSteady(); Species.Insert(f);
+        f = new FishConf("geb_StripedBass"); f.RecipeShape=0; f.ResultMain="geb_StripedBassFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=10; f.RainMultiplier=1.0; f.StormMultiplier=1.4; f.DawnMultiplier=1.2; f.DayMultiplier=0.9; f.DuskMultiplier=1.4; f.NightMultiplier=1.3; f.TempOptimal=20.0; f.TempMin=10.0; f.TempMax=26.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
+        f = new FishConf("geb_NeoshoBass"); f.RecipeShape=0; f.ResultMain="geb_NeoshoBassFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=7; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=22.0; f.TempMin=13.0; f.TempMax=28.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new FishConf("geb_BlackBass"); f.RecipeShape=0; f.ResultMain="geb_BlackBassFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=13; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=23.0; f.TempMin=13.0; f.TempMax=29.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new FishConf("geb_RainbowTrout"); f.RecipeShape=1; f.ResultMain="geb_RainbowTroutFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=14; f.RainMultiplier=1.4; f.StormMultiplier=1.3; f.DawnMultiplier=1.5; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=14.0; f.TempMin=4.0; f.TempMax=21.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new FishConf("geb_BrownTrout"); f.RecipeShape=1; f.ResultMain="geb_BrownTroutFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=12; f.RainMultiplier=1.4; f.StormMultiplier=1.3; f.DawnMultiplier=1.5; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=14.0; f.TempMin=4.0; f.TempMax=21.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new FishConf("geb_BrookTrout"); f.RecipeShape=1; f.ResultMain="geb_BrookTroutFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=12; f.RainMultiplier=1.4; f.StormMultiplier=1.3; f.DawnMultiplier=1.5; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=13.0; f.TempMin=4.0; f.TempMax=20.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new FishConf("geb_LakeTrout"); f.RecipeShape=0; f.ResultMain="geb_LakeTroutFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=8; f.RainMultiplier=1.3; f.StormMultiplier=1.2; f.DawnMultiplier=1.3; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.1; f.TempOptimal=10.0; f.TempMin=2.0; f.TempMax=16.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new FishConf("geb_CutThroatTrout"); f.RecipeShape=1; f.ResultMain="geb_CutThroatTroutFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=9; f.RainMultiplier=1.4; f.StormMultiplier=1.3; f.DawnMultiplier=1.5; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=13.0; f.TempMin=4.0; f.TempMax=20.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new FishConf("geb_LakeSturgeon"); f.RecipeShape=1; f.ResultMain="geb_LakeSturgeonFilletMeat"; f.ResultBonus="geb_BlackCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=3; f.RainMultiplier=1.1; f.StormMultiplier=1.4; f.DawnMultiplier=1.1; f.DayMultiplier=0.9; f.DuskMultiplier=1.1; f.NightMultiplier=1.0; f.TempOptimal=15.0; f.TempMin=5.0; f.TempMax=22.0; f.BiteSpeed=BiteSteady(); Species.Insert(f);
+        f = new FishConf("geb_YellowPerch"); f.RecipeShape=0; f.ResultMain="geb_YellowPerchFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=21; f.RainMultiplier=1.1; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=19.0; f.TempMin=10.0; f.TempMax=25.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new FishConf("geb_FlatHeadCatFish"); f.RecipeShape=0; f.ResultMain="geb_FlatHeadCatFishFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=4; f.Environment=1; f.CatchMethod=3; f.CatchProbability=5; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.2; f.DayMultiplier=0.7; f.DuskMultiplier=1.4; f.NightMultiplier=1.6; f.TempOptimal=26.0; f.TempMin=16.0; f.TempMax=32.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_FatHeadMinnow"); f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=5; f.CatchProbability=25; f.RainMultiplier=1.2; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.1; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new FishConf("geb_AmericanBullFrog"); f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=5; f.CatchProbability=12; f.RainMultiplier=1.5; f.StormMultiplier=1.2; f.DawnMultiplier=1.4; f.DayMultiplier=1.0; f.DuskMultiplier=1.5; f.NightMultiplier=1.3; f.TempOptimal=25.0; f.TempMin=15.0; f.TempMax=32.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+    }
+    void SeedSpeciesC() {
+        FishConf f;
+        f = new FishConf("geb_RedSalamander"); f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=5; f.CatchProbability=7; f.RainMultiplier=1.6; f.StormMultiplier=1.3; f.DawnMultiplier=1.2; f.DayMultiplier=1.0; f.DuskMultiplier=1.3; f.NightMultiplier=1.2; f.TempOptimal=15.0; f.TempMin=6.0; f.TempMax=22.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_BlueGill"); f.RecipeShape=0; f.ResultMain="geb_BlueGillFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=22; f.RainMultiplier=1.1; f.StormMultiplier=0.9; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=25.0; f.TempMin=15.0; f.TempMax=30.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new FishConf("geb_Sauger"); f.RecipeShape=0; f.ResultMain="geb_SaugerFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=10; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.3; f.DayMultiplier=0.7; f.DuskMultiplier=1.5; f.NightMultiplier=1.5; f.TempOptimal=18.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
+        f = new FishConf("geb_BowFin"); f.RecipeShape=0; f.ResultMain="geb_BowFinFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=8; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.2; f.DayMultiplier=0.8; f.DuskMultiplier=1.3; f.NightMultiplier=1.4; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_SlimySculpin"); f.RecipeShape=0; f.ResultMain="geb_SlimySculpinFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=16; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=1.0; f.DuskMultiplier=1.0; f.NightMultiplier=1.2; f.TempOptimal=10.0; f.TempMin=2.0; f.TempMax=16.0; f.BiteSpeed=BiteSteady(); Species.Insert(f);
+        f = new FishConf("geb_Severum"); f.RecipeShape=0; f.ResultMain="geb_SeverumFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=3; f.RainMultiplier=1.1; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=1.0; f.TempOptimal=27.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new FishConf("geb_SignalCrayFish"); f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=18; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_EuropeanCrayFish"); f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=11; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_FloridaCrayFish"); f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=8; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=25.0; f.TempMin=15.0; f.TempMax=30.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_CaveCrayFish"); f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=2; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.0; f.DuskMultiplier=1.0; f.NightMultiplier=1.5; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=18.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_MonongahelaCrayFish"); f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=7; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_RedSwampCrayFish"); f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=18; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=24.0; f.TempMin=14.0; f.TempMax=30.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_RustyCrayFish"); f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=14; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        // saltwater
+        f = new FishConf("geb_MahiMahi"); f.RecipeShape=0; f.ResultMain="geb_MahiMahiFilletMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=7; f.Environment=2; f.CatchMethod=1; f.CatchProbability=10; f.RainMultiplier=1.2; f.StormMultiplier=1.5; f.DawnMultiplier=1.1; f.DayMultiplier=1.1; f.DuskMultiplier=1.0; f.NightMultiplier=1.0; f.TempOptimal=27.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new FishConf("geb_AtlanticSailFish"); f.RecipeShape=0; f.ResultMain="geb_AtlanticSailFishFilletMeat"; f.ResultBonus=""; f.MeatMin=4; f.MeatMax=7; f.Environment=2; f.CatchMethod=1; f.CatchProbability=4; f.RainMultiplier=1.2; f.StormMultiplier=1.4; f.DawnMultiplier=1.2; f.DayMultiplier=1.1; f.DuskMultiplier=1.2; f.NightMultiplier=1.0; f.TempOptimal=27.0; f.TempMin=21.0; f.TempMax=32.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new FishConf("geb_AngelFish"); f.RecipeShape=0; f.ResultMain="geb_AngelFishFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=1; f.CatchProbability=10; f.RainMultiplier=0.9; f.StormMultiplier=0.8; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=0.8; f.TempOptimal=27.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+    }
+    void SeedSpeciesD() {
+        FishConf f;
+        f = new FishConf("geb_AsianSeaBass"); f.RecipeShape=0; f.ResultMain="geb_AsianSeaBassFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=3; f.CatchMethod=3; f.CatchProbability=10; f.RainMultiplier=1.2; f.StormMultiplier=1.3; f.DawnMultiplier=1.2; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.2; f.TempOptimal=28.0; f.TempMin=20.0; f.TempMax=33.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new FishConf("geb_AtlanticBlueMarlin"); f.RecipeShape=0; f.ResultMain="geb_AtlanticBlueMarlinFilletMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=3; f.RainMultiplier=1.2; f.StormMultiplier=1.4; f.DawnMultiplier=1.2; f.DayMultiplier=1.0; f.DuskMultiplier=1.2; f.NightMultiplier=1.0; f.TempOptimal=26.0; f.TempMin=20.0; f.TempMax=30.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new FishConf("geb_Bonita"); f.RecipeShape=0; f.ResultMain="geb_BonitaFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=3; f.CatchProbability=10; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.2; f.DayMultiplier=1.0; f.DuskMultiplier=1.2; f.NightMultiplier=1.0; f.TempOptimal=22.0; f.TempMin=14.0; f.TempMax=28.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new FishConf("geb_CherrySalmon"); f.RecipeShape=1; f.ResultMain="geb_CherrySalmonFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=6; f.RainMultiplier=1.3; f.StormMultiplier=1.2; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.0; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=18.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new FishConf("geb_ChinookSalmon"); f.RecipeShape=1; f.ResultMain="geb_ChinookSalmonFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=8; f.RainMultiplier=1.3; f.StormMultiplier=1.2; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.0; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=18.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new FishConf("geb_SockEyeSalmon"); f.RecipeShape=1; f.ResultMain="geb_SockEyeSalmonFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=8; f.RainMultiplier=1.3; f.StormMultiplier=1.2; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.0; f.TempOptimal=13.0; f.TempMin=4.0; f.TempMax=18.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new FishConf("geb_FlatHeadMullet"); f.RecipeShape=0; f.ResultMain="geb_FlatHeadMulletFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=18; f.RainMultiplier=1.3; f.StormMultiplier=1.2; f.DawnMultiplier=1.3; f.DayMultiplier=1.1; f.DuskMultiplier=1.2; f.NightMultiplier=1.0; f.TempOptimal=25.0; f.TempMin=15.0; f.TempMax=30.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new FishConf("geb_LeopardShark"); f.RecipeShape=0; f.ResultMain="geb_LeopardSharkFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=2; f.CatchMethod=1; f.CatchProbability=9; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.2; f.NightMultiplier=1.4; f.TempOptimal=18.0; f.TempMin=10.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_HammerHeadShark"); f.RecipeShape=0; f.ResultMain="geb_HammerHeadSharkFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=2; f.CatchMethod=1; f.CatchProbability=5; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.1; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=26.0; f.TempMin=18.0; f.TempMax=30.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_PacificCod"); f.RecipeShape=0; f.ResultMain="geb_PacificCodFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=3; f.CatchProbability=16; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.1; f.DayMultiplier=1.0; f.DuskMultiplier=1.1; f.NightMultiplier=1.2; f.TempOptimal=8.0; f.TempMin=2.0; f.TempMax=14.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new FishConf("geb_RedHeadCichlid"); f.RecipeShape=0; f.ResultMain="geb_RedHeadCichlidFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=4; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.1; f.DuskMultiplier=1.0; f.NightMultiplier=1.0; f.TempOptimal=27.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new FishConf("geb_RoughNeckRock"); f.RecipeShape=0; f.ResultMain="geb_RoughNeckRockFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=3; f.CatchProbability=14; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.1; f.DayMultiplier=1.0; f.DuskMultiplier=1.2; f.NightMultiplier=1.2; f.TempOptimal=17.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new FishConf("geb_BlueTang"); f.RecipeShape=0; f.ResultMain="geb_BlueTangFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=3; f.CatchProbability=12; f.RainMultiplier=0.9; f.StormMultiplier=0.8; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=26.0; f.TempMin=20.0; f.TempMax=30.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new FishConf("geb_LargeHeadHairTailFish"); f.RecipeShape=0; f.ResultMain="geb_LargeHeadHairTailFishFilletMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=5; f.Environment=2; f.CatchMethod=3; f.CatchProbability=9; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.2; f.NightMultiplier=1.4; f.TempOptimal=17.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_HumpHeadWrasse"); f.RecipeShape=0; f.ResultMain="geb_HumpHeadWrasseFilletMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=5; f.Environment=2; f.CatchMethod=3; f.CatchProbability=4; f.RainMultiplier=0.9; f.StormMultiplier=0.8; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=0.8; f.TempOptimal=27.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new FishConf("geb_SiameseTigerFish"); f.RecipeShape=0; f.ResultMain="geb_SiameseTigerFishFilletMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=6; f.Environment=1; f.CatchMethod=3; f.CatchProbability=6; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.1; f.DayMultiplier=1.0; f.DuskMultiplier=1.2; f.NightMultiplier=1.2; f.TempOptimal=27.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+    }
+    void SeedSpeciesE() {
+        FishConf f;
+        f = new FishConf("geb_GreatWhiteShark"); f.RecipeShape=0; f.ResultMain="geb_GreatWhiteSharkFilletMeat"; f.ResultBonus=""; f.MeatMin=5; f.MeatMax=10; f.Environment=2; f.CatchMethod=1; f.CatchProbability=2; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.2; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.4; f.TempOptimal=17.0; f.TempMin=10.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_AngelShark"); f.RecipeShape=0; f.ResultMain="geb_AngelSharkFilletMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=8; f.Environment=2; f.CatchMethod=1; f.CatchProbability=7; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.2; f.NightMultiplier=1.5; f.TempOptimal=18.0; f.TempMin=10.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_YellowFinTuna"); f.RecipeShape=0; f.ResultMain="geb_YellowFinTunaFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=8; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.3; f.DayMultiplier=1.0; f.DuskMultiplier=1.3; f.NightMultiplier=1.0; f.TempOptimal=25.0; f.TempMin=18.0; f.TempMax=30.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new FishConf("geb_WhiteGrunt"); f.RecipeShape=0; f.ResultMain="geb_WhiteGruntFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=14; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.2; f.DayMultiplier=1.0; f.DuskMultiplier=1.2; f.NightMultiplier=1.2; f.TempOptimal=25.0; f.TempMin=18.0; f.TempMax=30.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new FishConf("geb_SouthernFlounder"); f.RecipeShape=0; f.ResultMain="geb_SouthernFlounderFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=11; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.2; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.4; f.TempOptimal=18.0; f.TempMin=10.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_YellowSnapper"); f.RecipeShape=0; f.ResultMain="geb_YellowSnapperFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=13; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=1.0; f.DuskMultiplier=1.3; f.NightMultiplier=1.3; f.TempOptimal=25.0; f.TempMin=18.0; f.TempMax=30.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        // shellfish / crustaceans
+        f = new FishConf("geb_BloodClam"); f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=4; f.CatchProbability=14; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=1.0; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=18.0; f.TempMin=4.0; f.TempMax=30.0; f.BiteSpeed=BiteFilterFeeder(); Species.Insert(f);
+        f = new FishConf("geb_Mussel"); f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=3; f.CatchMethod=6; f.CatchProbability=20; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=1.0; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=16.0; f.TempMin=4.0; f.TempMax=28.0; f.BiteSpeed=BiteFilterFeeder(); Species.Insert(f);
+        f = new FishConf("geb_BlackDevilSnail"); f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=1; f.CatchMethod=6; f.CatchProbability=10; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.0; f.NightMultiplier=1.2; f.TempOptimal=22.0; f.TempMin=10.0; f.TempMax=30.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_StarFish"); f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=6; f.CatchProbability=16; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.0; f.DuskMultiplier=1.0; f.NightMultiplier=1.0; f.TempOptimal=16.0; f.TempMin=4.0; f.TempMax=28.0; f.BiteSpeed=BiteConstant(); Species.Insert(f);
+        f = new FishConf("geb_KingCrab"); f.RecipeShape=0; f.ResultMain="geb_KingCrabLegs"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=6; f.CatchProbability=5; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.1; f.NightMultiplier=1.3; f.TempOptimal=5.0; f.TempMin=0.0; f.TempMax=12.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_SnowCrab"); f.RecipeShape=0; f.ResultMain="geb_SnowCrabLegs"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=6; f.CatchProbability=7; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.1; f.NightMultiplier=1.3; f.TempOptimal=4.0; f.TempMin=0.0; f.TempMax=10.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_BlueJellyFish"); f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=6; f.CatchProbability=12; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.0; f.NightMultiplier=1.4; f.TempOptimal=20.0; f.TempMin=8.0; f.TempMax=30.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_AmericanLobster"); f.RecipeShape=2; f.ResultMain="geb_AmericanLobsterClaw"; f.ResultBonus="geb_AmericanLobsterTail"; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=6; f.CatchProbability=9; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=18.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf("geb_EuropeanLobster"); f.RecipeShape=2; f.ResultMain="geb_EuropeanLobsterClaw"; f.ResultBonus="geb_EuropeanLobsterTail"; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=6; f.CatchProbability=9; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=14.0; f.TempMin=5.0; f.TempMax=20.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+    }
+}
+
+// ===========================================================================
+// FACADE + GLOBAL ACCESSORS
+// ===========================================================================
+class gebsfishConfig {
+    ref GeneralConfig     General;   // general.json
+    ref BaitSettingsConf  Bait;      // bait.json
+    ref JunkConfig        Junk;      // junk.json
+    ref FishConfig        Fish;      // fish.json
+
+    void LoadAll() {
+        General = new GeneralConfig();
+        Bait    = new BaitSettingsConf();
+        Junk    = new JunkConfig();
+        Fish    = new FishConfig();
+        if (!g_Game.IsServer())
+            return;   // server owns the files; clients receive values via RPC
+
+        General.Load();
+        Bait.Load();
+        Junk.Load();
+        Fish.Load();
+    }
+}
+
+ref gebsfishConfig m_gebsConfig;
+
+static gebsfishConfig GetGebSettingsConfig() {
+    if (!m_gebsConfig) {
+        GebsfishLogger.Info("Initializing gebsfish config.", "JSON");
+        m_gebsConfig = new gebsfishConfig;
+        m_gebsConfig.LoadAll();
+    }
+    return m_gebsConfig;
+}
+
+static void SetGebsfishConfig(gebsfishConfig config) {
+    GebsfishLogger.Info("Setting config from server (RPC).", "JSON");
+    m_gebsConfig = config;
+}
+
+// Null-safe debug level: 0 off, 1 normal, 2 (ELEVATED_DEBUG) verbose.
+static int GebGetDebugLevel() {
+    if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.GeneralSettings)
+        return 0;
+    return m_gebsConfig.General.GeneralSettings.DebugLogs;
 }
 
 //general settings config data
@@ -1246,31 +647,40 @@ class WeatherConf {
 }
 
 class PredatorEntry {
+    string ClassnameInfo = "Classname of the predator to spawn (e.g. Animal_CanisLupus_Grey for a grey wolf, Animal_UrsusArctos for a bear).";
     string Classname;   //Classname of predator
+    string SpawnChanceInfo = "Relative weight for this predator in the weighted pick (NOT a 0-1 percentage). The chance of this predator being chosen is its weight divided by the sum of all predator weights. Defaults: wolf 0.6 and bear 0.3 give the wolf 2/3 and the bear 1/3 of all spawns. This is Gate 2 of 3 -- see the comment above PredatorConf.";
     float SpawnChance;  //Spawn percentage chance
+    string MinCountInfo = "Minimum number of this predator to spawn at once (uniform random between MinCount and MaxCount). 1/1 means always exactly one.";
     int MinCount;       //Minimum count of predators spawned
+    string MaxCountInfo = "Maximum number of this predator to spawn at once (uniform random between MinCount and MaxCount). Raise above MinCount for a pack (e.g. 1/3 wolves).";
     int MaxCount;       //Maximum count of predators spawned
+    string MinRadiusInfo = "Closest distance, in metres, from the player that this predator may spawn. The spawner only uses points with land between MinRadius and MaxRadius, so a fully off-shore player may get no spawn.";
     float MinRadius;    //Minimum radius from player
+    string MaxRadiusInfo = "Farthest distance, in metres, from the player that this predator may spawn. Must be greater than MinRadius.";
     float MaxRadius;    //Maximum radius from player
 }
 
 //bug config data
 
 class BugEntry {
+    string ClassnameInfo = "Classname of the bug / worm this entry can produce (e.g. Worm, geb_GrubWorm, geb_FieldCricket, geb_GrassHopper).";
     string Classname;
+    string CatchChanceInfo = "Relative weight for this entry within the action's Catches table (NOT a 0-1 chance, and separate from the action's FindChance). Once the action decides it found something, the result is picked from all entries by weight: an entry's odds are its weight divided by the sum of all weights. Set to 0 (or below) to disable this entry without deleting it.";
     float CatchChance;
 }
 
 // Bamboo fishing net spawn-table entry. Mirrors BugEntry's Classname /
-// CatchChance contract so existing JSON migrates without edits (a server's
-// fishingsettings.json from before this split will deserialize cleanly), but
-// adds an Environment field so the same Catches array can hold both
-// freshwater and saltwater entries. 1=pond, 2=sea, 3=both. Entries whose
-// Environment doesn't match the current water surface are skipped before
-// the weighted roll.
+// CatchChance contract, but adds an Environment field so the same Catches
+// array can hold both freshwater and saltwater entries. 1=pond, 2=sea,
+// 3=both. Entries whose Environment doesn't match the current water surface
+// are skipped before the weighted roll.
 class NetEntry {
+    string ClassnameInfo = "Classname of the creature this net entry can produce (e.g. geb_FatHeadMinnow, geb_AmericanBullFrog, geb_RedSalamander).";
     string Classname;
+    string CatchChanceInfo = "Relative weight for this entry within the net's Catches table (NOT a 0-1 chance, and separate from the net's FindChance). Among the entries valid for the current water surface, an entry's odds are its weight divided by the sum of those weights. Set to 0 (or below) to disable this entry without deleting it.";
     float CatchChance;
+    string EnvironmentInfo = "Where this entry is allowed: 1 = pond/freshwater only, 2 = sea/saltwater only, 3 = both. Entries whose Environment doesn't match the water the net was cast in are skipped before the weighted pick.";
     int Environment = 1;
 }
 
@@ -1278,7 +688,9 @@ class NetEntry {
 // fish more likely to be the selected catch when this bait is on the hook;
 // < 1.0 makes it less likely. 1.0 = neutral, same as omitting the entry.
 class BaitPreferenceEntry {
+    string FishClassnameInfo = "Classname of the fish this bias applies to when the parent bait/lure is on the hook (e.g. geb_BlueGill, geb_LargeMouthBass, Carp).";
     string FishClassname;
+    string MultiplierInfo = "How strongly this bait favours this fish in the weighted catch pick. 1.0 = neutral (same as having no entry), above 1.0 makes the fish more likely (2.0 = twice as likely), below 1.0 makes it less likely (0.3 = much rarer), 0 effectively removes it. Only used while GeneralSettings.BaitPreferenceEnable is on.";
     float Multiplier = 1.0;
 }
 
@@ -1288,7 +700,9 @@ class BaitPreferenceEntry {
 // specific fish isn't listed. So admins can opt in incrementally without
 // listing every fish-bait pair.
 class BaitConfig {
+    string BaitClassnameInfo = "Classname of the bait or lure this preference table applies to (e.g. Worm, geb_GrubWorm, geb_SpinnerBait1). When this bait is on the hook, the fish multipliers below bias which fish gets caught.";
     string BaitClassname;
+    string PreferencesInfo = "List of per-fish biases for this bait: each entry pairs a fish classname with a multiplier. Fish not listed here default to 1.0 (no bias). Only used while GeneralSettings.BaitPreferenceEnable is on.";
     ref array<ref BaitPreferenceEntry> Preferences;
 
     void BaitConfig() {
@@ -1343,1806 +757,6 @@ class DigWormsConf {
     }
 }
 
-//fish config data
-class MackerelConf {
-    float TempOptimal = 18.0;
-    float TempMin = 8.0;
-    float TempMax = 24.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 22;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.1;
-    float DayMultiplier = 1.0;
-    float DuskMultiplier = 1.1;
-    float StormMultiplier = 1.2;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.95, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.95, 1, 1, 0.95, 0.95, 0.9, 0.9, 0.85};
-};
-class CarpConf {
-    float TempOptimal = 24.0;
-    float TempMin = 14.0;
-    float TempMax = 30.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 22;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 0.9;
-    float DawnMultiplier = 1.2;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.2;
-    float StormMultiplier = 0.8;
-    float NightMultiplier = 0.9;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.95, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.95, 1, 1, 0.95, 0.95, 0.9, 0.9, 0.85};
-};
-class SardinesConf {
-    float TempOptimal = 18.0;
-    float TempMin = 8.0;
-    float TempMax = 24.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 6;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 24;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 1.1;
-    float DuskMultiplier = 1.0;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 0.9;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
-};
-class BitterlingsConf {
-    float TempOptimal = 22.0;
-    float TempMin = 12.0;
-    float TempMax = 28.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 6;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 24;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.1;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 1.1;
-    float DuskMultiplier = 1.0;
-    float StormMultiplier = 1.0;
-    float NightMultiplier = 0.9;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
-};
-class WalleyePollockConf {
-    float TempOptimal = 8.0;
-    float TempMin = 1.0;
-    float TempMax = 14.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 20;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 1.0;
-    float DuskMultiplier = 1.1;
-    float StormMultiplier = 1.0;
-    float NightMultiplier = 1.1;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
-};
-class SteelheadTroutConf {
-    float TempOptimal = 13.0;
-    float TempMin = 4.0;
-    float TempMax = 20.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 3;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 9;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.4;
-    float DawnMultiplier = 1.5;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.4;
-    float StormMultiplier = 1.3;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
-};
-class ShrimpConf {
-    float TempOptimal = 20.0;
-    float TempMin = 12.0;
-    float TempMax = 30.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 6;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 22;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 0.9;
-    float DawnMultiplier = 0.9;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.1;
-    float StormMultiplier = 1.0;
-    float NightMultiplier = 1.3;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class NorthernSnakeHeadConf {
-    float TempOptimal = 21.0;
-    float TempMin = 12.0;
-    float TempMax = 28.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 1;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 2;
-    int MeatMax = 4;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 5;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.2;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.3;
-    float StormMultiplier = 1.0;
-    float NightMultiplier = 1.5;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class NorthernPikeConf {
-    float TempOptimal = 18.0;
-    float TempMin = 8.0;
-    float TempMax = 24.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 1;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 2;
-    int MeatMax = 4;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 8;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.3;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.4;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 1.4;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
-};
-class MuskellungeConf {
-    float TempOptimal = 19.0;
-    float TempMin = 10.0;
-    float TempMax = 25.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 1;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 2;
-    int MeatMax = 4;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 4;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.3;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.4;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 1.4;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
-};
-class SpottedMuskellungeConf {
-    float TempOptimal = 19.0;
-    float TempMin = 10.0;
-    float TempMax = 25.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 1;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 2;
-    int MeatMax = 4;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 3;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.3;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.4;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 1.4;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
-};
-class BarredMuskellungeConf {
-    float TempOptimal = 19.0;
-    float TempMin = 10.0;
-    float TempMax = 25.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 1;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 2;
-    int MeatMax = 4;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 3;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.3;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.4;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 1.4;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
-};
-class TigerMuskellungeConf {
-    float TempOptimal = 19.0;
-    float TempMin = 10.0;
-    float TempMax = 25.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 1;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 2;
-    int MeatMax = 4;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 3;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.3;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.4;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 1.4;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
-};
-class AlligatorGarConf {
-    float TempOptimal = 26.0;
-    float TempMin = 16.0;
-    float TempMax = 32.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 3;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 1;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 2;
-    int MeatMax = 4;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 4;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.2;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.3;
-    float StormMultiplier = 1.2;
-    float NightMultiplier = 1.4;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
-};
-class LargeMouthBassConf {
-    float TempOptimal = 24.0;
-    float TempMin = 14.0;
-    float TempMax = 30.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 14;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.1;
-    float DawnMultiplier = 1.4;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.4;
-    float StormMultiplier = 1.3;
-    float NightMultiplier = 1.1;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
-};
-class SmallMouthBassConf {
-    float TempOptimal = 21.0;
-    float TempMin = 12.0;
-    float TempMax = 27.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 13;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.1;
-    float DawnMultiplier = 1.4;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.4;
-    float StormMultiplier = 1.3;
-    float NightMultiplier = 1.1;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
-};
-class WallEyeConf {
-    float TempOptimal = 18.0;
-    float TempMin = 8.0;
-    float TempMax = 24.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 12;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.3;
-    float DayMultiplier = 0.7;
-    float DuskMultiplier = 1.5;
-    float StormMultiplier = 1.0;
-    float NightMultiplier = 1.5;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
-};
-class SunFishConf {
-    float TempOptimal = 25.0;
-    float TempMin = 15.0;
-    float TempMax = 30.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 20;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.1;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 1.2;
-    float DuskMultiplier = 1.0;
-    float StormMultiplier = 0.9;
-    float NightMultiplier = 0.9;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
-};
-class WhiteBassConf {
-    float TempOptimal = 21.0;
-    float TempMin = 12.0;
-    float TempMax = 27.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 11;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.2;
-    float DayMultiplier = 1.0;
-    float DuskMultiplier = 1.3;
-    float StormMultiplier = 1.2;
-    float NightMultiplier = 1.3;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.95, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.95, 1, 1, 0.95, 0.95, 0.9, 0.9, 0.85};
-};
-class BlackBassConf {
-    float TempOptimal = 23.0;
-    float TempMin = 13.0;
-    float TempMax = 29.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 13;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.1;
-    float DawnMultiplier = 1.4;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.4;
-    float StormMultiplier = 1.3;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
-};
-class StripedBassConf {
-    float TempOptimal = 20.0;
-    float TempMin = 10.0;
-    float TempMax = 26.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 3;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 10;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.2;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.4;
-    float StormMultiplier = 1.4;
-    float NightMultiplier = 1.3;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
-};
-class NeoshoBassConf {
-    float TempOptimal = 22.0;
-    float TempMin = 13.0;
-    float TempMax = 28.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 7;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.1;
-    float DawnMultiplier = 1.4;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.4;
-    float StormMultiplier = 1.3;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
-};
-class RainbowTroutConf {
-    float TempOptimal = 14.0;
-    float TempMin = 4.0;
-    float TempMax = 21.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 14;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.4;
-    float DawnMultiplier = 1.5;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.4;
-    float StormMultiplier = 1.3;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
-};
-class BrownTroutConf {
-    float TempOptimal = 14.0;
-    float TempMin = 4.0;
-    float TempMax = 21.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 12;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.4;
-    float DawnMultiplier = 1.5;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.4;
-    float StormMultiplier = 1.3;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
-};
-class BrookTroutConf {
-    float TempOptimal = 13.0;
-    float TempMin = 4.0;
-    float TempMax = 20.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 12;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.4;
-    float DawnMultiplier = 1.5;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.4;
-    float StormMultiplier = 1.3;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
-};
-class LakeTroutConf {
-    float TempOptimal = 10.0;
-    float TempMin = 2.0;
-    float TempMax = 16.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 8;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.3;
-    float DawnMultiplier = 1.3;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.3;
-    float StormMultiplier = 1.2;
-    float NightMultiplier = 1.1;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
-};
-class CutThroatTroutConf {
-    float TempOptimal = 13.0;
-    float TempMin = 4.0;
-    float TempMax = 20.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 9;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.4;
-    float DawnMultiplier = 1.5;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.4;
-    float StormMultiplier = 1.3;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
-};
-class LakeSturgeonConf {
-    float TempOptimal = 15.0;
-    float TempMin = 5.0;
-    float TempMax = 22.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 3;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.1;
-    float DawnMultiplier = 1.1;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.1;
-    float StormMultiplier = 1.4;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.95, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.95, 1, 1, 0.95, 0.95, 0.9, 0.9, 0.85};
-};
-class YellowPerchConf {
-    float TempOptimal = 19.0;
-    float TempMin = 10.0;
-    float TempMax = 25.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 21;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.1;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 1.2;
-    float DuskMultiplier = 1.0;
-    float StormMultiplier = 1.0;
-    float NightMultiplier = 0.9;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
-};
-class FlatHeadCatFishConf {
-    float TempOptimal = 26.0;
-    float TempMin = 16.0;
-    float TempMax = 32.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 4;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 5;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.2;
-    float DayMultiplier = 0.7;
-    float DuskMultiplier = 1.4;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 1.6;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class FatHeadMinnowConf {
-    float TempOptimal = 22.0;
-    float TempMin = 12.0;
-    float TempMax = 28.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 5;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 25;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.2;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 1.1;
-    float DuskMultiplier = 1.0;
-    float StormMultiplier = 1.0;
-    float NightMultiplier = 0.9;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
-};
-class AmericanBullFrogConf {
-    float TempOptimal = 25.0;
-    float TempMin = 15.0;
-    float TempMax = 32.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 5;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 12;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.5;
-    float DawnMultiplier = 1.4;
-    float DayMultiplier = 1.0;
-    float DuskMultiplier = 1.5;
-    float StormMultiplier = 1.2;
-    float NightMultiplier = 1.3;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class RedSalamanderConf {
-    float TempOptimal = 15.0;
-    float TempMin = 6.0;
-    float TempMax = 22.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 5;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 7;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.6;
-    float DawnMultiplier = 1.2;
-    float DayMultiplier = 1.0;
-    float DuskMultiplier = 1.3;
-    float StormMultiplier = 1.3;
-    float NightMultiplier = 1.2;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class BlueGillConf {
-    float TempOptimal = 25.0;
-    float TempMin = 15.0;
-    float TempMax = 30.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 22;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.1;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 1.2;
-    float DuskMultiplier = 1.0;
-    float StormMultiplier = 0.9;
-    float NightMultiplier = 0.9;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
-};
-class SaugerConf {
-    float TempOptimal = 18.0;
-    float TempMin = 8.0;
-    float TempMax = 24.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 10;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.3;
-    float DayMultiplier = 0.7;
-    float DuskMultiplier = 1.5;
-    float StormMultiplier = 1.0;
-    float NightMultiplier = 1.5;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.85, 0.8, 0.75, 0.7, 0.7, 0.9, 1, 1, 0.85, 0.7, 0.6, 0.5, 0.5, 0.5, 0.5, 0.6, 0.75, 0.9, 1, 1, 1, 0.95, 0.9, 0.85};
-};
-class BowFinConf {
-    float TempOptimal = 22.0;
-    float TempMin = 12.0;
-    float TempMax = 28.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 8;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.2;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.3;
-    float StormMultiplier = 1.2;
-    float NightMultiplier = 1.4;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class SlimySculpinConf {
-    float TempOptimal = 10.0;
-    float TempMin = 2.0;
-    float TempMax = 16.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 16;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 1.0;
-    float DuskMultiplier = 1.0;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 1.2;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.95, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.95, 1, 1, 0.95, 0.95, 0.9, 0.9, 0.85};
-};
-class SeverumConf {
-    float TempOptimal = 27.0;
-    float TempMin = 20.0;
-    float TempMax = 32.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 3;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.1;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 1.2;
-    float DuskMultiplier = 1.0;
-    float StormMultiplier = 1.0;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
-};
-class SignalCrayFishConf {
-    float TempOptimal = 22.0;
-    float TempMin = 12.0;
-    float TempMax = 28.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 4;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 18;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.1;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 1.4;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class EuropeanCrayFishConf {
-    float TempOptimal = 22.0;
-    float TempMin = 12.0;
-    float TempMax = 28.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 4;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 11;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.1;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 1.4;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class CaveCrayFishConf {
-    float TempOptimal = 12.0;
-    float TempMin = 4.0;
-    float TempMax = 18.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 4;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 2;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 1.0;
-    float DuskMultiplier = 1.0;
-    float StormMultiplier = 1.0;
-    float NightMultiplier = 1.5;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class FloridaCrayFishConf {
-    float TempOptimal = 25.0;
-    float TempMin = 15.0;
-    float TempMax = 30.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 4;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 8;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.1;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 1.4;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class MonongahelaCrayFishConf {
-    float TempOptimal = 22.0;
-    float TempMin = 12.0;
-    float TempMax = 28.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 4;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 7;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.1;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 1.4;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class RedSwampCrayFishConf {
-    float TempOptimal = 24.0;
-    float TempMin = 14.0;
-    float TempMax = 30.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 4;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 18;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.1;
-    float StormMultiplier = 1.2;
-    float NightMultiplier = 1.4;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class RustyCrayFishConf {
-    float TempOptimal = 22.0;
-    float TempMin = 12.0;
-    float TempMax = 28.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 4;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 14;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.1;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 1.4;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class MahiMahiConf {
-    float TempOptimal = 27.0;
-    float TempMin = 20.0;
-    float TempMax = 32.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 1;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 3;
-    int MeatMax = 7;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 10;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.2;
-    float DawnMultiplier = 1.1;
-    float DayMultiplier = 1.1;
-    float DuskMultiplier = 1.0;
-    float StormMultiplier = 1.5;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
-};
-class AtlanticSailFishConf {
-    float TempOptimal = 27.0;
-    float TempMin = 21.0;
-    float TempMax = 32.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 1;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 4;
-    int MeatMax = 7;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 4;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.2;
-    float DawnMultiplier = 1.2;
-    float DayMultiplier = 1.1;
-    float DuskMultiplier = 1.2;
-    float StormMultiplier = 1.4;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
-};
-class AngelFishConf {
-    float TempOptimal = 27.0;
-    float TempMin = 20.0;
-    float TempMax = 32.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 1;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 10;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 0.9;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 1.2;
-    float DuskMultiplier = 1.0;
-    float StormMultiplier = 0.8;
-    float NightMultiplier = 0.8;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
-};
-class AsianSeaBassConf {
-    float TempOptimal = 28.0;
-    float TempMin = 20.0;
-    float TempMax = 33.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 3;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 2;
-    int MeatMax = 4;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 10;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.2;
-    float DawnMultiplier = 1.2;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.3;
-    float StormMultiplier = 1.3;
-    float NightMultiplier = 1.2;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
-};
-class AtlanticBlueMarlinConf {
-    float TempOptimal = 26.0;
-    float TempMin = 20.0;
-    float TempMax = 30.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 1;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 3;
-    int MeatMax = 6;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 3;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.2;
-    float DawnMultiplier = 1.2;
-    float DayMultiplier = 1.0;
-    float DuskMultiplier = 1.2;
-    float StormMultiplier = 1.4;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
-};
-class BonitaConf {
-    float TempOptimal = 22.0;
-    float TempMin = 14.0;
-    float TempMax = 28.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 10;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.1;
-    float DawnMultiplier = 1.2;
-    float DayMultiplier = 1.0;
-    float DuskMultiplier = 1.2;
-    float StormMultiplier = 1.3;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
-};
-class CherrySalmonConf {
-    float TempOptimal = 12.0;
-    float TempMin = 4.0;
-    float TempMax = 18.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 3;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 6;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.3;
-    float DawnMultiplier = 1.4;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.3;
-    float StormMultiplier = 1.2;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
-};
-class ChinookSalmonConf {
-    float TempOptimal = 12.0;
-    float TempMin = 4.0;
-    float TempMax = 18.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 3;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 8;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.3;
-    float DawnMultiplier = 1.4;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.3;
-    float StormMultiplier = 1.2;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
-};
-class SockEyeSalmonConf {
-    float TempOptimal = 13.0;
-    float TempMin = 4.0;
-    float TempMax = 18.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 3;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 8;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.3;
-    float DawnMultiplier = 1.4;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.3;
-    float StormMultiplier = 1.2;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.6, 0.55, 0.5, 0.5, 0.55, 0.85, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55, 0.55, 0.55, 0.6, 0.7, 0.9, 1, 1, 0.95, 0.85, 0.75, 0.65};
-};
-class FlatHeadMulletConf {
-    float TempOptimal = 25.0;
-    float TempMin = 15.0;
-    float TempMax = 30.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 3;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 18;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.3;
-    float DawnMultiplier = 1.3;
-    float DayMultiplier = 1.1;
-    float DuskMultiplier = 1.2;
-    float StormMultiplier = 1.2;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
-};
-class LeopardSharkConf {
-    float TempOptimal = 18.0;
-    float TempMin = 10.0;
-    float TempMax = 24.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 1;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 2;
-    int MeatMax = 4;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 9;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.2;
-    float StormMultiplier = 1.0;
-    float NightMultiplier = 1.4;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class HammerHeadSharkConf {
-    float TempOptimal = 26.0;
-    float TempMin = 18.0;
-    float TempMax = 30.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 1;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 2;
-    int MeatMax = 4;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 5;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.1;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.3;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 1.5;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class PacificCodConf {
-    float TempOptimal = 8.0;
-    float TempMin = 2.0;
-    float TempMax = 14.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 16;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.1;
-    float DayMultiplier = 1.0;
-    float DuskMultiplier = 1.1;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 1.2;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
-};
-class RedHeadCichlidConf {
-    float TempOptimal = 27.0;
-    float TempMin = 20.0;
-    float TempMax = 32.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 4;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 1.1;
-    float DuskMultiplier = 1.0;
-    float StormMultiplier = 1.0;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
-};
-class RoughNeckRockConf {
-    float TempOptimal = 17.0;
-    float TempMin = 8.0;
-    float TempMax = 24.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 14;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.1;
-    float DayMultiplier = 1.0;
-    float DuskMultiplier = 1.2;
-    float StormMultiplier = 1.2;
-    float NightMultiplier = 1.2;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
-};
-class BlueTangConf {
-    float TempOptimal = 26.0;
-    float TempMin = 20.0;
-    float TempMax = 30.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 12;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 0.9;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 1.2;
-    float DuskMultiplier = 1.0;
-    float StormMultiplier = 0.8;
-    float NightMultiplier = 0.9;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
-};
-class LargeHeadHairTailFishConf {
-    float TempOptimal = 17.0;
-    float TempMin = 8.0;
-    float TempMax = 24.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 3;
-    int MeatMax = 5;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 9;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.2;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 1.4;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class HumpHeadWrasseConf {
-    float TempOptimal = 27.0;
-    float TempMin = 20.0;
-    float TempMax = 32.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 3;
-    int MeatMax = 5;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 4;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 0.9;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 1.2;
-    float DuskMultiplier = 1.0;
-    float StormMultiplier = 0.8;
-    float NightMultiplier = 0.8;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.4, 0.4, 0.4, 0.4, 0.45, 0.6, 0.75, 0.9, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.85, 0.75, 0.6, 0.5, 0.45, 0.4, 0.4, 0.4};
-};
-class SiameseTigerFishConf {
-    float TempOptimal = 27.0;
-    float TempMin = 20.0;
-    float TempMax = 32.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 3;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 3;
-    int MeatMax = 6;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 6;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.1;
-    float DawnMultiplier = 1.1;
-    float DayMultiplier = 1.0;
-    float DuskMultiplier = 1.2;
-    float StormMultiplier = 1.3;
-    float NightMultiplier = 1.2;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
-};
-class GreatWhiteSharkConf {
-    float TempOptimal = 17.0;
-    float TempMin = 10.0;
-    float TempMax = 24.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 1;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 5;
-    int MeatMax = 10;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 2;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.2;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.3;
-    float StormMultiplier = 1.2;
-    float NightMultiplier = 1.4;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class AngelSharkConf {
-    float TempOptimal = 18.0;
-    float TempMin = 10.0;
-    float TempMax = 24.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 1;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 3;
-    int MeatMax = 8;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 7;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.2;
-    float StormMultiplier = 1.0;
-    float NightMultiplier = 1.5;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class YellowFinTunaConf {
-    float TempOptimal = 25.0;
-    float TempMin = 18.0;
-    float TempMax = 30.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 1;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 2;
-    int MeatMax = 6;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 8;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.1;
-    float DawnMultiplier = 1.3;
-    float DayMultiplier = 1.0;
-    float DuskMultiplier = 1.3;
-    float StormMultiplier = 1.3;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
-};
-class YellowSnapperConf {
-    float TempOptimal = 25.0;
-    float TempMin = 18.0;
-    float TempMax = 30.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 1;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 2;
-    int MeatMax = 6;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 13;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.3;
-    float DayMultiplier = 1.0;
-    float DuskMultiplier = 1.3;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 1.3;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
-};
-class SouthernFlounderConf {
-    float TempOptimal = 18.0;
-    float TempMin = 10.0;
-    float TempMax = 24.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 1;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 2;
-    int MeatMax = 6;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 11;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.1;
-    float DawnMultiplier = 1.2;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.3;
-    float StormMultiplier = 1.3;
-    float NightMultiplier = 1.4;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class WhiteGruntConf {
-    float TempOptimal = 25.0;
-    float TempMin = 18.0;
-    float TempMax = 30.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 1;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 2;
-    int MeatMax = 6;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 14;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.2;
-    float DayMultiplier = 1.0;
-    float DuskMultiplier = 1.2;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 1.2;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.5, 0.5, 0.5, 0.55, 0.6, 0.75, 0.9, 1, 1, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.55};
-};
-class BloodClamConf {
-    float TempOptimal = 18.0;
-    float TempMin = 4.0;
-    float TempMax = 30.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 4;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 14;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 1.0;
-    float DuskMultiplier = 1.0;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 0.9;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.95, 0.95, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.9, 0.9, 0.9, 0.95, 0.95, 0.95};
-};
-class MusselConf {
-    float TempOptimal = 16.0;
-    float TempMin = 4.0;
-    float TempMax = 28.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 3;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 6;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 20;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 1.0;
-    float DuskMultiplier = 1.0;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 0.9;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {0.95, 0.95, 0.95, 0.9, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.9, 0.9, 0.9, 0.95, 0.95, 0.95};
-};
-class BlackDevilSnailConf {
-    float TempOptimal = 22.0;
-    float TempMin = 10.0;
-    float TempMax = 30.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 1;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 6;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 10;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.0;
-    float StormMultiplier = 1.0;
-    float NightMultiplier = 1.2;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class StarFishConf {
-    float TempOptimal = 16.0;
-    float TempMin = 4.0;
-    float TempMax = 28.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 6;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 16;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 1.0;
-    float DuskMultiplier = 1.0;
-    float StormMultiplier = 1.0;
-    float NightMultiplier = 1.0;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-};
-class KingCrabConf {
-    float TempOptimal = 5.0;
-    float TempMin = 0.0;
-    float TempMax = 12.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 6;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 5;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.1;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 1.3;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class SnowCrabConf {
-    float TempOptimal = 4.0;
-    float TempMin = 0.0;
-    float TempMax = 10.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 6;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 7;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.1;
-    float StormMultiplier = 1.1;
-    float NightMultiplier = 1.3;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class BlueJellyFishConf {
-    float TempOptimal = 20.0;
-    float TempMin = 8.0;
-    float TempMax = 30.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 6;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 12;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 0.9;
-    float DuskMultiplier = 1.0;
-    float StormMultiplier = 1.0;
-    float NightMultiplier = 1.4;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class AmericanLobsterConf {
-    float TempOptimal = 12.0;
-    float TempMin = 4.0;
-    float TempMax = 18.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 6;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 9;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.1;
-    float StormMultiplier = 1.0;
-    float NightMultiplier = 1.4;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-class EuropeanLobsterConf {
-    float TempOptimal = 14.0;
-    float TempMin = 5.0;
-    float TempMax = 20.0;
-    string EnvironmentInfo = "1 - pond, 2 - sea, 3 - both";
-    int Environment = 2;
-    string CatchMethodInfo = "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap";
-    int CatchMethod = 6;
-    string MeatInfo = "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.";
-    int MeatMin = 1;
-    int MeatMax = 2;
-    string CatchProbInfo = "0-25; 0 means no chance to catch fish, 25 means high chance";
-    int CatchProbability = 9;
-    string WeatherMultiplierInfo = "Per-species rain/storm/dawn/day/dusk/night multipliers, applied on top of WeatherSettings global multipliers. 1.0 = no effect, higher = bites more in that condition, lower = bites less.";
-    float RainMultiplier = 1.0;
-    float DawnMultiplier = 1.0;
-    float DayMultiplier = 0.8;
-    float DuskMultiplier = 1.1;
-    float StormMultiplier = 1.0;
-    float NightMultiplier = 1.4;
-    string BiteSpeedInfo = "Hour-of-day bite speed for the catch cycle, 24 values indexed 0=12AM ... 23=11PM. Range 0.0-1.0 where 1.0 = vanilla baseline (no slowdown) and lower = longer wait for that hour. Aggregated across all yields in the active pool, weighted by CatchProbability and time-of-day multiplier.";
-    autoptr TFloatArray BiteSpeed = {1, 1, 1, 0.95, 0.85, 0.75, 0.65, 0.55, 0.5, 0.45, 0.45, 0.45, 0.45, 0.45, 0.5, 0.55, 0.65, 0.75, 0.85, 0.9, 1, 1, 1, 1};
-};
-
-//Junk config data
-
 class JunkEntry {
     string ClassnameInfo = "Any classname for a junk item that's not a liquid container.";
     string Classname;
@@ -3176,37 +790,3 @@ class HookFromFishEntry {
     int MinHealthLevel = 3;
     int MaxHealthLevel = 3;
 };
-
-//Save config data
-protected ref gebsfishConfig m_gebsConfig;
-// Helper function to return config data storage object
-static gebsfishConfig GetGebSettingsConfig() {
-    if (!m_gebsConfig) {
-        GebsfishLogger.Info("Initializing gebsfish.", "JSON");
-        GebsfishLogger.Info("Loading JSON config file.", "JSON");
-        m_gebsConfig = new gebsfishConfig;
-
-        //Only load JSON config on the server
-        if (g_Game.IsServer()){
-            m_gebsConfig.Load();
-        }
-    }
-    return m_gebsConfig;
-}
-
-static void SetGebsfishConfig(gebsfishConfig config) {
-    GebsfishLogger.Info("Setting config settings from server config file.", "JSON");
-    m_gebsConfig = config;
-}
-
-// Null-safe accessor for the configured debug-log level. Returns 0 (logging
-// off) whenever the config or GeneralSettings hasn't loaded yet, so call sites
-// can gate logging with a single call instead of repeating the double
-// null-check. 0 = off, 1 = normal, 2 (ELEVATED_DEBUG) = verbose.
-static int GebGetDebugLevel() {
-    if (!m_gebsConfig || !m_gebsConfig.GeneralSettings)
-        return 0;
-    return m_gebsConfig.GeneralSettings.DebugLogs;
-}
-//Prevent double printing in log file since it loads the yield data twice
-bool gebsMissionLoaded = false;

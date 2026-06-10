@@ -42,8 +42,8 @@ class cfgVehicles {
 		scope = 0;
 		displayName = "Tackle Base";
 		descriptionShort = "Tackle Base Class";
-		model = "gebsfish\data\tackle\largetackle.p3d";
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\largetackle_red_co.paa"};
+		model = "\gebsfish\data\tackle\largetackle.p3d";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_red_co.paa"};
 		hiddenSelections[] = {"Camo"};
 		rotationFlags = 8;
 		weight = 140;
@@ -93,105 +93,105 @@ class cfgVehicles {
 		displayName = "$STR_tools_redtackle";
 		descriptionShort = "$STR_tools_tackle_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\largetackle_red_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_red_co.paa"};
 	};
 	class geb_YellowTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_yellowtackle";
 		descriptionShort = "$STR_tools_tackle_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] ={"gebsfish\data\tackle\largetackle_yellow_co.paa"};
+		hiddenSelectionsTextures[] ={"\gebsfish\data\tackle\largetackle_yellow_co.paa"};
 	};
 	class geb_BlueTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_bluetackle";
 		descriptionShort = "$STR_tools_tackle_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\largetackle_blue_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_blue_co.paa"};
 	};
 	class geb_OrangeTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_orangetackle";
 		descriptionShort = "$STR_tools_tackle_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\largetackle_orange_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_orange_co.paa"};
 	};
 	class geb_BrownTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_browntackle";
 		descriptionShort = "$STR_tools_tackle_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\largetackle_brown_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_brown_co.paa"};
 	};
 	class geb_PurpleTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_purpletackle";
 		descriptionShort = "$STR_tools_tackle_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\largetackle_purple_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_purple_co.paa"};
 	};
 	class geb_PinkTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_pinktackle";
 		descriptionShort = "$STR_tools_tackle_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\largetackle_pink_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_pink_co.paa"};
 	};
 	class geb_LimeTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_limetackle";
 		descriptionShort = "$STR_tools_tackle_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\largetackle_lime_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_lime_co.paa"};
 	};
 	class geb_LightBlueTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_lightbluetackle";
 		descriptionShort = "$STR_tools_tackle_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\largetackle_lightblue_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_lightblue_co.paa"};
 	};
 	class geb_GreenTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_greentackle";
 		descriptionShort = "$STR_tools_tackle_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\largetackle_green_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_green_co.paa"};
 	};
 	class geb_CamoTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_camotackle";
 		descriptionShort = "$STR_tools_tackle_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\largetackle_camo_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_camo_co.paa"};
 	};
 	class geb_FunYellowTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_funyellowtackle";
 		descriptionShort = "$STR_tools_tackle_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\largetackle_yellow_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_yellow_co.paa"};
 	};
 	class geb_FunRedTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_funredtackle";
 		descriptionShort = "$STR_tools_tackle_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\largetackle_red_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_red_co.paa"};
 	};
 	class geb_FunPurpleTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_funpurpletackle";
 		descriptionShort = "$STR_tools_tackle_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\largetackle_purple_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_purple_co.paa"};
 	};
 	class geb_FunGreenTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_fungreentackle";
 		descriptionShort = "$STR_tools_tackle_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\largetackle_green_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_green_co.paa"};
 	};
 	class geb_SmallTackle: Container_Base {
 		scope = 2;
@@ -321,77 +321,77 @@ class cfgVehicles {
 		displayName = "$STR_tools_redcooler";
 		descriptionShort = "$STR_tools_cooler_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_red_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_red_co.paa"};
 	};
 	class geb_YellowCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_yellowcooler";
 		descriptionShort = "$STR_tools_cooler_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_yellow_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_yellow_co.paa"};
 	};
 	class geb_BlueCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_bluecooler";
 		descriptionShort = "$STR_tools_cooler_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_blue_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_blue_co.paa"};
 	};
 	class geb_OrangeCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_orangecooler";
 		descriptionShort = "$STR_tools_cooler_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_orange_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_orange_co.paa"};
 	};
 	class geb_BrownCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_browncooler";
 		descriptionShort = "$STR_tools_cooler_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_brown_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_brown_co.paa"};
 	};
 	class geb_PurpleCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_purplecooler";
 		descriptionShort = "$STR_tools_cooler_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_purple_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_purple_co.paa"};
 	};
 	class geb_PinkCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_pinkcooler";
 		descriptionShort = "$STR_tools_cooler_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_pink_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_pink_co.paa"};
 	};
 	class geb_LimeCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_limecooler";
 		descriptionShort = "$STR_tools_cooler_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_lime_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_lime_co.paa"};
 	};
 	class geb_LightBlueCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_lightbluecooler";
 		descriptionShort = "$STR_tools_cooler_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_lightblue_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_lightblue_co.paa"};
 	};
 	class geb_GreenCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_greencooler";
 		descriptionShort = "$STR_tools_cooler_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_green_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_green_co.paa"};
 	};
 	class geb_CamoCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_camocooler";
 		descriptionShort = "$STR_tools_cooler_desc";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"gebsfish\data\tackle\cooler_camo_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_camo_co.paa"};
 	};
 
 	class geb_WormContainer: Container_Base {
