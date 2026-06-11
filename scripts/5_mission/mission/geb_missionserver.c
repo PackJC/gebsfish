@@ -31,76 +31,41 @@ modded class MissionServer {
 		super.OnGameplayDataHandlerLoad();
 		YieldsMap mGeb_YieldsMapAll;
 		mGeb_YieldsMapAll = g_Game.GetMission().GetWorldData().GetCatchYieldBank().GetYieldsMap();
-		if(m_gebsConfig && m_gebsConfig.GeneralSettings && m_gebsConfig.GeneralSettings.DebugLogs == ELEVATED_DEBUG){
+		if(GebGetDebugLevel() == ELEVATED_DEBUG){
 			GebsfishLogger.Debug("Start Dump:","YieldMap");
 			YieldItemBase yItem;
 			int count = mGeb_YieldsMapAll.Count();
 			for (int i = 0; i < count; i++) {
 				yItem = mGeb_YieldsMapAll.GetElement(i);
-				string gebDebugCatchMethod;
-				string gebDebugCatchEnviro;
-				switch(yItem.GetEnviroMask()) {
-					case 1:
-						gebDebugCatchEnviro = "Pond";
-						break;
-					case 2: 
-						gebDebugCatchEnviro = "Sea";
-						break;
-					case 3: 
-						gebDebugCatchEnviro = "Pond and Sea";
-						break;
-					case 4: 
-						gebDebugCatchEnviro = "Forest";
-						break;
-					case 8:
-						gebDebugCatchEnviro = "Field";
-						break;
-					default: 
-						gebDebugCatchEnviro = "Environment Unknown or Out of Range";
-						break;
-				}
-				switch(yItem.GetMethodMask()) {
-					case 1:
-						gebDebugCatchMethod = "Rod";
-						break;
-					case 2: 
-						gebDebugCatchMethod = "Large Trap";
-						break;
-					case 3: 
-						gebDebugCatchMethod = "Rod and Large Trap";
-						break;
-					case 4:
-						gebDebugCatchMethod = "Small Trap";
-						break;
-					case 5: 
-						gebDebugCatchMethod = "Rod and Small Trap";
-						break;
-					case 6: 
-						gebDebugCatchMethod = "Large Trap and Small Trap";
-						break;
-					case 7: 
-						gebDebugCatchMethod = "Rod, Large Trap, and Small Trap";
-						break;
-					case 8:
-						gebDebugCatchMethod = "Land Trap: Snare";
-						break;
-					default: 
-						gebDebugCatchMethod = "Catch Method Unknown or Out of Range";
-						break;
-				}
-
-				// GebsfishLogger.Debug("Yield Item " + i + " : " + yItem,"YieldMap");
-				// GebsfishLogger.Debug("Yield Item " + i + " Type: " + yItem.GetType(),"YieldMap");
-				// GebsfishLogger.Debug("Yield Item " + i + " Name: " + GetDisplayNameFromTypeName(yItem.GetType()),"YieldMap");
-				// GebsfishLogger.Debug("Yield Item " + i + " Catch Probability Weight: " + yItem.GebGetCatchProbability().ToString(),"YieldMap");
-				// GebsfishLogger.Debug("Yield Item " + i + " Catch Method: " + gebDebugCatchMethod,"YieldMap");
-				// GebsfishLogger.Debug("Yield Item " + i + " Catch Environment: " + gebDebugCatchEnviro,"YieldMap");
-
-				GebsfishLogger.Debug( "Item " + i + " " + yItem + ", Type: " + yItem.GetType() + ", Name: " + GetDisplayNameFromTypeName(yItem.GetType()) + ", Catch Probability Weight: " + yItem.GebGetCatchProbability().ToString() + ", Catch Method: " + gebDebugCatchMethod + ", Catch Environment: " + gebDebugCatchEnviro, "YieldMapItem");
-
+				GebsfishLogger.Debug("Item " + i + " " + yItem + ", Type: " + yItem.GetType() + ", Name: " + GetDisplayNameFromTypeName(yItem.GetType()) + ", Catch Probability Weight: " + yItem.GebGetCatchProbability().ToString() + ", Catch Method: " + GetMethodMaskName(yItem.GetMethodMask()) + ", Catch Environment: " + GetEnviroMaskName(yItem.GetEnviroMask()), "YieldMapItem");
 			}
 			GebsfishLogger.Debug("End Dump","YieldMap");
 		}
+	}
+
+	string GetEnviroMaskName(int mask) {
+		switch (mask) {
+			case 1: return "Pond";
+			case 2: return "Sea";
+			case 3: return "Pond and Sea";
+			case 4: return "Forest";
+			case 8: return "Field";
+		}
+		return "Environment Unknown or Out of Range";
+	}
+
+	string GetMethodMaskName(int mask) {
+		switch (mask) {
+			case 1: return "Rod";
+			case 2: return "Large Trap";
+			case 3: return "Rod and Large Trap";
+			case 4: return "Small Trap";
+			case 5: return "Rod and Small Trap";
+			case 6: return "Large Trap and Small Trap";
+			case 7: return "Rod, Large Trap, and Small Trap";
+			case 8: return "Land Trap: Snare";
+		}
+		return "Catch Method Unknown or Out of Range";
 	}
 
 	string GetDisplayNameFromTypeName(string typeName) {

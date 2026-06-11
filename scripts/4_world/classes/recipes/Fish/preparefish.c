@@ -25,14 +25,19 @@ modded class PrepareFish {
     // Recalculated every CanDo so swapping knives mid-session always reflects the
     // current tool, and so the multiplier scales from the vanilla baseline (never compounds).
     override bool CanDo(ItemBase ingredients[], PlayerBase player) {
+		// A frozen fish can't be filleted -- thaw it first. Mirrors vanilla's
+		// PrepareAnimal, which blocks skinning frozen carcasses the same way.
+		if (ingredients[0] && ingredients[0].GetIsFrozen())
+			return false;
+
 		ApplyFishKnifeSpeedBonus(ingredients);
 		return super.CanDo(ingredients, player);
 	}
 
     void ApplyFishKnifeSpeedBonus(ItemBase ingredients[]) {
 		float multiplier = 1.0;
-		if (m_gebsConfig && m_gebsConfig.GeneralSettings)
-			multiplier = m_gebsConfig.GeneralSettings.FishKnifeSpeedMultiplier;
+		if (m_gebsConfig && m_gebsConfig.General && m_gebsConfig.General.GeneralSettings)
+			multiplier = m_gebsConfig.General.GeneralSettings.FishKnifeSpeedMultiplier;
 
 		if (multiplier <= 0)
 			multiplier = 1.0;
@@ -58,8 +63,8 @@ modded class PrepareFish {
     // loop, warning sound RPC, and chat broadcast. Caller just provides the
     // player + chance value from config.
     void TrySpawnPredator(PlayerBase player) {
-        if (!m_gebsConfig || !m_gebsConfig.PredatorSettings) return;
-        GebsPredatorSpawner.TrySpawn(player, m_gebsConfig.PredatorSettings.PredatorSpawnChancePreparing, "PredatorSpawnPrepare");
+        if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.PredatorSettings) return;
+        GebsPredatorSpawner.TrySpawn(player, m_gebsConfig.General.PredatorSettings.PredatorSpawnChancePreparing, "PredatorSpawnPrepare");
     }
 
     // Damaged-hook-from-fish feature. Fires once per fillet action (one Do()
@@ -75,9 +80,9 @@ modded class PrepareFish {
     void TrySpawnHookFromFish(PlayerBase player) {
         if (!player) return;
         if (!g_Game.IsServer()) return;
-        if (!m_gebsConfig || !m_gebsConfig.GeneralSettings) return;
+        if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.GeneralSettings) return;
 
-        GenSetConf gs = m_gebsConfig.GeneralSettings;
+        GenSetConf gs = m_gebsConfig.General.GeneralSettings;
         if (!gs.HookFromFishEnable) return;
         if (gs.HookFromFishChance <= 0) return;
 
@@ -89,46 +94,30 @@ modded class PrepareFish {
             return;
         }
 
-        ref array<ref HookFromFishEntry> entries = m_gebsConfig.HookFromFishCatches;
+        ref array<ref HookFromFishEntry> entries = m_gebsConfig.General.HookFromFishCatches;
         if (!entries || entries.Count() == 0) {
             if (debugLevel >= 1)
                 GebsfishLogger.Debug("HookFromFish hit but Catches pool empty -- skipping", "HookFromFish");
             return;
         }
 
-        // Sum valid weights.
-        float totalWeight = 0;
-        foreach (HookFromFishEntry e1 : entries) {
-            if (!e1 || e1.Classname == "" || e1.Weight <= 0)
-                continue;
-            totalWeight += e1.Weight;
-        }
-
-        if (totalWeight <= 0) {
-            if (debugLevel >= 1)
-                GebsfishLogger.Debug("HookFromFish hit but totalWeight=0 after filter -- skipping", "HookFromFish");
-            return;
-        }
-
-        // Weighted pick.
-        float pickRoll = Math.RandomFloat(0.0, totalWeight);
-        float pickStart = pickRoll;
-        HookFromFishEntry picked = null;
+        // Filter to eligible hooks once, keeping a parallel ref list so the
+        // shared picker's index maps back to the entry (for its health range).
+        array<ref HookFromFishEntry> eligible = new array<ref HookFromFishEntry>();
+        TStringArray names = new TStringArray;
+        TFloatArray weights = new TFloatArray;
         foreach (HookFromFishEntry e : entries) {
             if (!e || e.Classname == "" || e.Weight <= 0)
                 continue;
-            if (pickRoll <= e.Weight) {
-                picked = e;
-                break;
-            }
-            pickRoll -= e.Weight;
+            eligible.Insert(e);
+            names.Insert(e.Classname);
+            weights.Insert(e.Weight);
         }
 
-        if (!picked) {
-            if (debugLevel >= 1)
-                GebsfishLogger.Debug("HookFromFish weighted walk exhausted (roll=" + pickStart + " total=" + totalWeight + ") -- skipping", "HookFromFish");
+        int pick = GebWeightedPick.Pick(names, weights, debugLevel, "HookFromFish");
+        if (pick < 0)
             return;
-        }
+        HookFromFishEntry picked = eligible[pick];
 
         // Random health level inside the configured range. Clamp to 0..4 in
         // case an admin typo'd a value -- SetHealthLevel above 4 silently no-ops
@@ -165,7 +154,7 @@ modded class PrepareFish {
             spawnedItem.SetHealthLevel(healthLevel, "");
 
         if (debugLevel >= 1) {
-            GebsfishLogger.Debug("HookFromFish hit: spawned=" + picked.Classname + " healthLevel=" + healthLevel + " roll=" + roll + " chance=" + gs.HookFromFishChance + " pickRoll=" + pickStart + " totalWeight=" + totalWeight, "HookFromFish");
+            GebsfishLogger.Debug("HookFromFish hit: spawned=" + picked.Classname + " healthLevel=" + healthLevel + " roll=" + roll + " chance=" + gs.HookFromFishChance, "HookFromFish");
         }
     }
 }

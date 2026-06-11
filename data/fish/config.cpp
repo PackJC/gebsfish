@@ -2185,29 +2185,29 @@ class cfgVehicles {
 	};
 	class geb_YellowCaviar: RedCaviar {
 		scope=2;
-		displayName="$STR_YellowCaviar";
-		descriptionShort="$STR_YellowCaviar_desc";
+		displayName="$STR_fish_YellowCaviar";
+		descriptionShort="$STR_fish_YellowCaviar_desc";
 		hiddenSelections[]=
 		{
 			"cs_raw"
 		};
 		hiddenSelectionsTextures[]=
 		{
-			"gebsfish\data\fish\pike_caviar_raw_CO.paa",
+			"\gebsfish\data\fish\pike_caviar_raw_CO.paa",
 			"dz\gear\food\data\red_caviar_rotten_CO.paa"
 		};
 	};
 	class geb_BlackCaviar: RedCaviar {
 		scope=2;
-		displayName="$STR_BlackCaviar";
-		descriptionShort="$STR_BlackCaviar_desc";
+		displayName="$STR_fish_BlackCaviar";
+		descriptionShort="$STR_fish_BlackCaviar_desc";
 		hiddenSelections[]=
 		{
 			"cs_raw"
 		};
 		hiddenSelectionsTextures[]=
 		{
-			"gebsfish\data\fish\sturgeon_caviar_raw_CO.paa",
+			"\gebsfish\data\fish\sturgeon_caviar_raw_CO.paa",
 			"dz\gear\food\data\red_caviar_rotten_CO.paa"
 		};
 	};

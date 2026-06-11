@@ -3,14 +3,29 @@
 // temperature multipliers, BiteSpeed cycle scaling, and all the diagnostic
 // logging gated by GeneralSettings.DebugLogs.
 modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
-    override void InitCatchingItemData() {
-		super.InitCatchingItemData();
+    override void Init(Param par) {
+		super.Init(par);
+		// Vanilla Init() runs InitCatchingItemData BEFORE SetupProbabilityArray,
+		// so the bite-speed aggregate (which reads m_ProbabilityArray) is a no-op
+		// during construction. Re-apply it here, now that the pool exists, so the
+		// FIRST signal cycle of the cast is scaled too -- not just cycles 2+ via
+		// UpdateCatchingItemData. No compounding: the next InitCatchingItemData
+		// resets the cycle targets to base (ClearCatchingItemData) before this
+		// rescales them.
+		ApplyBiteSpeedScaling();
+	}
 
-		// Per-fish bite-speed scaling. Aggregates the 24-hour BiteSpeed arrays
-		// off every yield in the current pool (weighted by CatchProbability x
-		// time-of-day multiplier), then stretches the cycle inversely. Lower
-		// aggregate -> longer wait. Skipped entirely when the buff is disabled
-		// in config so vanilla servers see no change.
+	override void InitCatchingItemData() {
+		super.InitCatchingItemData();
+		ApplyBiteSpeedScaling();
+	}
+
+	// Stretches the signal-cycle targets inversely to the aggregated BiteSpeed of
+	// the current pool (lower aggregate -> longer wait). No-op (biteSpeed=1.0)
+	// when the buff is disabled, the pool is empty, or all weights resolve to
+	// zero. Safe to call repeatedly: super.InitCatchingItemData resets the cycle
+	// targets to base each cycle, so this never compounds.
+	protected void ApplyBiteSpeedScaling() {
 		float cycleTargetBefore = m_SignalCycleTarget;
 		float cycleEndBefore = m_SignalCycleEndTarget;
 		float biteSpeed = ComputeAggregateBiteSpeed();
@@ -52,14 +67,14 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 	// per-fish breakdown row showing BiteSpeed, CatchProbability, weather
 	// multiplier, weight, and contribution to the numerator.
 	protected float ComputeAggregateBiteSpeed() {
-		if (!m_gebsConfig || !m_gebsConfig.WeatherSettings)
+		if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
 			return 1.0;
 		// Gate on BiteSpeedEnable (not WeatherCatchBoostEnable) so the three
 		// catch-modifying systems -- weather/time-of-day, moon, and BiteSpeed --
 		// are independently toggleable. The aggregate still uses
 		// GetSpeciesWeatherMultiplier internally for per-fish weighting, and
 		// that helper handles its own enable gating.
-		if (!m_gebsConfig.WeatherSettings.BiteSpeedEnable)
+		if (!m_gebsConfig.General.WeatherSettings.BiteSpeedEnable)
 			return 1.0;
 		if (!m_ProbabilityArray || m_ProbabilityArray.Count() == 0)
 			return 1.0;
@@ -185,9 +200,9 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     // multipliers automatically participates in the weighted pick. When the
     // feature is disabled, GenerateResult falls back to the uniform pick path.
     protected bool HasActiveSpeciesBuffs() {
-        if (!m_gebsConfig || !m_gebsConfig.WeatherSettings)
+        if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
             return false;
-        return m_gebsConfig.WeatherSettings.WeatherCatchBoostEnable;
+        return m_gebsConfig.General.WeatherSettings.WeatherCatchBoostEnable;
     }
 
     // Weighted random selection over m_ProbabilityArray, biased by per-species
@@ -283,16 +298,10 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         return "";
     }
 
-    // Null-safe accessor for the debug log level. Most call sites only need
-    // to know "is debug on" or "is elevated debug on", and the codepaths that
-    // read DebugLogs directly were crash-prone when GeneralSettings was
-    // unexpectedly null (mod load race, malformed JSON that wiped a section
-    // before backfill caught it). Returning 0 on any null link means logging
-    // is silently disabled rather than fatal.
+    // Null-safe debug-log level; delegates to the shared global accessor so
+    // the null-guard logic lives in exactly one place.
     protected int GetDebugLogLevel() {
-        if (!m_gebsConfig || !m_gebsConfig.GeneralSettings)
-            return 0;
-        return m_gebsConfig.GeneralSettings.DebugLogs;
+        return GebGetDebugLevel();
     }
 
     // Case-insensitive classname comparison. DayZ engine classnames are
@@ -330,15 +339,15 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     protected float GetBaitMultiplier(string fishClassname, string baitClassname) {
         if (baitClassname == "" || fishClassname == "")
             return 1.0;
-        if (!m_gebsConfig || !m_gebsConfig.BaitPreferences)
+        if (!m_gebsConfig || !m_gebsConfig.Bait || !m_gebsConfig.Bait.Preferences)
             return 1.0;
         // Master toggle: when disabled, every bait is neutral 1.0x for every
         // fish so only CatchProbability and the other multipliers (weather,
         // time-of-day, temperature, moon) drive the weighted pick.
-        if (!m_gebsConfig.BaitPreferenceEnable)
+        if (!m_gebsConfig.Bait.Enable)
             return 1.0;
 
-        foreach (BaitConfig bait : m_gebsConfig.BaitPreferences) {
+        foreach (BaitConfig bait : m_gebsConfig.Bait.Preferences) {
             // Case-insensitive on the classname match: m_Bait.GetType() comes
             // back in DayZ's canonical PascalCase, but admins hand-editing
             // the JSON sometimes type "worm" or "WORM" -- silently failing
@@ -376,8 +385,8 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     // returns a sensible mid-range neutral value.
     protected float GetCurrentWaterTemp() {
         float offset = 0.0;
-        if (m_gebsConfig && m_gebsConfig.WeatherSettings)
-            offset = m_gebsConfig.WeatherSettings.WaterTempOffset;
+        if (m_gebsConfig && m_gebsConfig.General && m_gebsConfig.General.WeatherSettings)
+            offset = m_gebsConfig.General.WeatherSettings.WaterTempOffset;
 
         if (!g_Game || !g_Game.GetMission())
             return 18.0 + offset;
@@ -398,9 +407,9 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     protected float GetSpeciesTempMultiplier(GebYieldFishBase gy) {
         if (!gy)
             return 1.0;
-        if (!m_gebsConfig || !m_gebsConfig.WeatherSettings)
+        if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
             return 1.0;
-        WeatherConf w = m_gebsConfig.WeatherSettings;
+        WeatherConf w = m_gebsConfig.General.WeatherSettings;
         if (!w.TemperatureEffectEnable)
             return 1.0;
 
@@ -461,10 +470,10 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 
         if (!gy)
             return 1.0;
-        if (!m_gebsConfig || !m_gebsConfig.WeatherSettings)
+        if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
             return 1.0;
 
-        WeatherConf w = m_gebsConfig.WeatherSettings;
+        WeatherConf w = m_gebsConfig.General.WeatherSettings;
         if (!w.WeatherCatchBoostEnable && !w.TemperatureEffectEnable)
             return 1.0;
 
@@ -485,12 +494,19 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
             Weather weather = g_Game.GetWeather();
             if (weather && weather.GetRain()) {
                 float rain = weather.GetRain().GetActual();
-                if (rain >= w.StormThreshold && speciesStorm != 1.0) {
+                // Band selection (storm vs rain) is decided purely by the
+                // thresholds; the != 1.0 no-op check must stay INSIDE the chosen
+                // band, otherwise a storm-neutral fish (StormMultiplier == 1.0)
+                // would fall through and wrongly get the rain multiplier applied
+                // during a storm.
+                if (rain >= w.StormThreshold) {
                     dbgRainStormMul = speciesStorm;
-                    multiplier = multiplier * speciesStorm;
-                } else if (rain >= w.RainThreshold && speciesRain != 1.0) {
+                    if (speciesStorm != 1.0)
+                        multiplier = multiplier * speciesStorm;
+                } else if (rain >= w.RainThreshold) {
                     dbgRainStormMul = speciesRain;
-                    multiplier = multiplier * speciesRain;
+                    if (speciesRain != 1.0)
+                        multiplier = multiplier * speciesRain;
                 }
             }
 
@@ -522,6 +538,15 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         dbgTempMul = tempMul;
         if (tempMul != 1.0)
             multiplier = multiplier * tempMul;
+
+        // Apply the same global stacking cap GetWeatherCatchMultiplier uses, so
+        // a species' rain/storm x time-of-day x temperature weighting can't
+        // compound past MaxStackedMultiplier and dominate the weighted pick.
+        if (w.MaxStackedMultiplier > 0 && multiplier > w.MaxStackedMultiplier) {
+            if (GetDebugLogLevel() >= 1)
+                GebsfishLogger.Debug("Species weather mul clamped: " + multiplier + " -> " + w.MaxStackedMultiplier + " (cap)", "GetSpeciesWeatherMultiplier");
+            multiplier = w.MaxStackedMultiplier;
+        }
 
         return multiplier;
     }
@@ -617,9 +642,9 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     // at new moon, smooth across quarter moons. Independent of
     // WeatherCatchBoostEnable so admins can run moon-only or weather-only.
     protected float GetMoonMultiplier() {
-        if (!m_gebsConfig || !m_gebsConfig.WeatherSettings)
+        if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
             return 1.0;
-        WeatherConf w = m_gebsConfig.WeatherSettings;
+        WeatherConf w = m_gebsConfig.General.WeatherSettings;
         if (!w.MoonPhaseEnable)
             return 1.0;
         if (w.FullMoonMultiplier == 1.0 && w.NewMoonMultiplier == 1.0)
@@ -657,17 +682,17 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     // weather-only. Combined result is clamped to MaxStackedMultiplier so a
     // stormy full-moon night never becomes a runaway printer.
     protected float GetWeatherCatchMultiplier() {
-        if (!m_gebsConfig || !m_gebsConfig.WeatherSettings)
+        if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
             return 1.0;
 
-        WeatherConf w = m_gebsConfig.WeatherSettings;
+        WeatherConf w = m_gebsConfig.General.WeatherSettings;
         // Bail out only if BOTH feature toggles are off -- moon is independent
         // of WeatherCatchBoostEnable.
         if (!w.WeatherCatchBoostEnable && !w.MoonPhaseEnable)
             return 1.0;
 
         int debugLevel = 0;
-        if (m_gebsConfig.GeneralSettings)
+        if (m_gebsConfig.General && m_gebsConfig.General.GeneralSettings)
             debugLevel = GetDebugLogLevel();
 
         float multiplier = 1.0;
@@ -680,12 +705,19 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
             Weather weather = g_Game.GetWeather();
             if (weather && weather.GetRain()) {
                 float rain = weather.GetRain().GetActual();
-                if (rain >= w.StormThreshold && w.StormCatchMultiplier != 1.0) {
+                // Band selection (storm vs rain) is decided purely by the
+                // thresholds; the != 1.0 no-op check stays INSIDE the chosen
+                // band so a storm-neutral config (StormCatchMultiplier == 1.0)
+                // can't fall through and wrongly apply the rain multiplier
+                // during a storm.
+                if (rain >= w.StormThreshold) {
                     dbgRainStorm = w.StormCatchMultiplier;
-                    multiplier = multiplier * w.StormCatchMultiplier;
-                } else if (rain >= w.RainThreshold && w.RainCatchMultiplier != 1.0) {
+                    if (w.StormCatchMultiplier != 1.0)
+                        multiplier = multiplier * w.StormCatchMultiplier;
+                } else if (rain >= w.RainThreshold) {
                     dbgRainStorm = w.RainCatchMultiplier;
-                    multiplier = multiplier * w.RainCatchMultiplier;
+                    if (w.RainCatchMultiplier != 1.0)
+                        multiplier = multiplier * w.RainCatchMultiplier;
                 }
             }
 

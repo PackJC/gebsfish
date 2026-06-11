@@ -57,7 +57,7 @@ class CraftHookFromWire extends RecipeBase {
 	}
 	
 	override bool CanDo(ItemBase ingredients[], PlayerBase player) {
-		if (m_gebsConfig && m_gebsConfig.RecipeToggles && !m_gebsConfig.RecipeToggles.CraftHookFromWire)
+		if (m_gebsConfig && m_gebsConfig.General && m_gebsConfig.General.RecipeToggles && !m_gebsConfig.General.RecipeToggles.CraftHookFromWire)
 			return false;
 
 		if (ingredients[0] && ingredients[0].GetInventory().IsAttachment())

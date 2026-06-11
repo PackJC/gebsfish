@@ -59,7 +59,7 @@ Built from the ground up for modded servers, it adds dozens of new fish species,
 
 ## Advanced Systems
 
-Gebsfish layers several configurable environmental systems on top of vanilla fishing. Each one can be toggled independently from `fishingsettings.json`.
+Gebsfish layers several configurable environmental systems on top of vanilla fishing. Each one can be toggled independently from the `$profile:Gebs/` config files — global toggles live in `general.json`, per-fish tuning in `fish.json`, and the bait matrix in `bait.json`.
 
 * **Per-fish weather and time-of-day behavior** — every species has its own Rain, Storm, Dawn, Day, Dusk, and Night multipliers. Bass quiet down at dawn, walleye and catfish wake up at night, trout chase the rain. Global multipliers stack with per-fish overrides and are capped by `MaxStackedMultiplier` so a stormy night never compounds into a runaway buff.
 

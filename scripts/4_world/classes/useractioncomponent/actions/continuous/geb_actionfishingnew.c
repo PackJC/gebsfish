@@ -12,7 +12,7 @@ modded class ActionFishingNew: ActionContinuousBase {
         if (!fad.m_Player || !g_Game.IsServer())
             return;
 
-        if (!m_gebsConfig || !m_gebsConfig.PredatorSettings)
+        if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.PredatorSettings)
             return;
 
         // Predator spawn chance is split by outcome:
@@ -23,30 +23,15 @@ modded class ActionFishingNew: ActionContinuousBase {
         // RPC, and chat broadcast. Caller just picks the right chance.
         float chance;
         if (fad.m_FishingResult == 1) {
-            chance = m_gebsConfig.PredatorSettings.PredatorSpawnChanceFishing;
+            chance = m_gebsConfig.General.PredatorSettings.PredatorSpawnChanceFishing;
         } else {
-            chance = m_gebsConfig.PredatorSettings.PredatorSpawnChanceFailCatch;
+            chance = m_gebsConfig.General.PredatorSettings.PredatorSpawnChanceFailCatch;
 
-            if (m_gebsConfig.GeneralSettings && m_gebsConfig.GeneralSettings.DebugLogs) {
+            if (GebGetDebugLevel() >= 1) {
                 GebsfishLogger.Debug("Cast failed; rolling fail-catch predator chance (" + chance + ").", "PredatorSpawnFishing");
             }
         }
 
         GebsPredatorSpawner.TrySpawn(fad.m_Player, chance, "PredatorSpawnFishing");
-    }
-
-    string GetDisplayNameFromTypeName(string typeName) {
-        // Find the display name in the config
-        string displayName = "";
-        if (g_Game.ConfigIsExisting("CfgVehicles " + typeName)) {
-            displayName = g_Game.ConfigGetTextOut("CfgVehicles " + typeName + " displayName");
-        }
-
-        // Return display name or fallback to type name if not found
-        if (displayName == "") {
-            return typeName;
-        }
-
-        return displayName;
     }
 }

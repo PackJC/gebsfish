@@ -1,76 +1,32 @@
 modded class ActionDigWorms {
 	string GetConfiguredDigWormSpawnType() {
-		int debugLevel = 0;
-		if (m_gebsConfig && m_gebsConfig.GeneralSettings)
-			debugLevel = m_gebsConfig.GeneralSettings.DebugLogs;
+		int debugLevel = GebGetDebugLevel();
 
-		if (!m_gebsConfig || !m_gebsConfig.DigWormsSettings) {
+		if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.DigWormsSettings) {
 			if (debugLevel >= 1)
 				GebsfishLogger.Debug("Dig-worms: config missing -- using fallback", "DigWorms");
 			return GetFallbackDigWormSpawnType();
 		}
-		ref array<ref BugEntry> catches = m_gebsConfig.DigWormsSettings.Catches;
+		ref array<ref BugEntry> catches = m_gebsConfig.General.DigWormsSettings.Catches;
 		if (!catches || catches.Count() == 0) {
 			if (debugLevel >= 1)
 				GebsfishLogger.Debug("Dig-worms: Catches table empty -- using fallback", "DigWorms");
 			return GetFallbackDigWormSpawnType();
 		}
 
-		if (debugLevel == ELEVATED_DEBUG) {
-			GebsfishLogger.Debug("---Dig-worms weighted pick---", "DigWorms");
-			GebsfishLogger.Debug("entry | classname | chance | included", "DigWorms");
-		}
-
-		float totalChance = 0.0;
-		int idx = 0;
-		foreach (BugEntry wormEntry1 : catches) {
-			bool included = true;
-			string reason = "";
-			if (!wormEntry1 || wormEntry1.Classname == "" || wormEntry1.CatchChance <= 0) {
-				included = false;
-				reason = "blank/zero";
-			}
-			if (debugLevel == ELEVATED_DEBUG) {
-				string entryCls = "<null>";
-				float entryChance = 0;
-				if (wormEntry1) {
-					entryCls = wormEntry1.Classname;
-					entryChance = wormEntry1.CatchChance;
-				}
-				string flag = "yes";
-				if (!included)
-					flag = "no (" + reason + ")";
-				GebsfishLogger.Debug("" + idx + " | " + entryCls + " | " + entryChance + " | " + flag, "DigWorms");
-			}
-			if (included)
-				totalChance += wormEntry1.CatchChance;
-			idx++;
-		}
-
-		if (totalChance <= 0) {
-			if (debugLevel >= 1)
-				GebsfishLogger.Debug("Dig-worms: totalChance=0 after filter -- using fallback", "DigWorms");
-			return GetFallbackDigWormSpawnType();
-		}
-
-		float roll = Math.RandomFloatInclusive(0.0, totalChance);
-		float rollStart = roll;
+		TStringArray names = new TStringArray;
+		TFloatArray weights = new TFloatArray;
 		foreach (BugEntry wormEntry : catches) {
 			if (!wormEntry || wormEntry.Classname == "" || wormEntry.CatchChance <= 0)
 				continue;
-
-			if (roll <= wormEntry.CatchChance) {
-				if (debugLevel >= 1)
-					GebsfishLogger.Debug("Dig-worms picked: " + wormEntry.Classname + " roll=" + rollStart + " totalChance=" + totalChance, "DigWorms");
-				return wormEntry.Classname;
-			}
-
-			roll -= wormEntry.CatchChance;
+			names.Insert(wormEntry.Classname);
+			weights.Insert(wormEntry.CatchChance);
 		}
 
-		if (debugLevel >= 1)
-			GebsfishLogger.Debug("Dig-worms: weighted walk exhausted -- using fallback", "DigWorms");
-		return GetFallbackDigWormSpawnType();
+		int pick = GebWeightedPick.Pick(names, weights, debugLevel, "DigWorms");
+		if (pick < 0)
+			return GetFallbackDigWormSpawnType();
+		return names[pick];
 	}
 
 	// Fallback used when the config is missing, empty, or has zero total weight.
@@ -86,23 +42,21 @@ modded class ActionDigWorms {
 	// vanilla-style behaviour) when the config is unavailable so missing
 	// config never blocks the action.
 	float GetDigWormsFindChance() {
-		if (!m_gebsConfig || !m_gebsConfig.DigWormsSettings)
+		if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.DigWormsSettings)
 			return 1.0;
 
-		float chance = m_gebsConfig.DigWormsSettings.FindChance;
+		float chance = m_gebsConfig.General.DigWormsSettings.FindChance;
 		if (chance < 0.0) chance = 0.0;
 		if (chance > 1.0) chance = 1.0;
 		return chance;
 	}
 
 	override void OnFinishProgressServer(ActionData action_data) {
-		PlayerBase player = action_data.m_Player;
-		if (!player || !action_data.m_MainItem || !action_data.m_Target)
+		if (!action_data || !action_data.m_Player || !action_data.m_MainItem || !action_data.m_Target)
 			return;
+		PlayerBase player = action_data.m_Player;
 
-		int debugLevel = 0;
-		if (m_gebsConfig && m_gebsConfig.GeneralSettings)
-			debugLevel = m_gebsConfig.GeneralSettings.DebugLogs;
+		int debugLevel = GebGetDebugLevel();
 
 		int amount = action_data.m_MainItem.GetOnDigWormsAmount();
 		float findChance = GetDigWormsFindChance();

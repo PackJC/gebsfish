@@ -181,8 +181,8 @@ class geb_LargeTackleBase : geb_FilteredContainerBase {
 	}
 };
 
-// Cooler container -- preserves fillets parented in its cargo. The
-// actual decay slowdown lives in the modded Edible_Base.ProcessDecay
+// Cooler container -- preserves the fish products parented in its cargo.
+// The actual decay stop lives in the modded Edible_Base.ProcessDecay
 // override (see edible_base/geb_ediblebase.c). This class only handles
 // cargo filtering + nesting prevention.
 //
@@ -192,17 +192,93 @@ class geb_LargeTackleBase : geb_FilteredContainerBase {
 // script class at instantiation, so every variant gets the same cargo
 // filter and decay-preservation behavior automatically.
 //
-// Allow list keys on the two vanilla fillet base classes (CarpFilletMeat
-// and MackerelFilletMeat). All gebsfish fillet variants extend one of
-// those (see data/fish/config.cpp -- geb_FreshWater_Fillet_* extend
-// CarpFilletMeat, geb_SaltWater_Fillet_* + lobster parts extend
-// MackerelFilletMeat) so IsKindOf catches every current and future
-// fillet without listing every species individually.
+// The allow list is a single key: every food and drink item in the game
+// (whole fish, fillets, caviar, fruit, vegetables, meat, cans, drinks)
+// descends from the vanilla Edible_Base config class, so IsKindOf on it
+// admits all of them -- including liquid containers like canteens and
+// pots, which extend Bottle_Base -> Edible_Base. Non-food gear stays out.
 class geb_Cooler_base : geb_FilteredContainerBase {
-	static ref TStringArray s_Allowed = { "CarpFilletMeat", "MackerelFilletMeat" };
+	static ref TStringArray s_Allowed = { "Edible_Base" };
 
 	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
+	}
+
+	// Active chilling: every tick, cargo items step toward COOLING_TARGET_C,
+	// so contents visibly go chilly, then cold (the inventory temperature
+	// tint follows the value down), and -- because the target sits below the
+	// per-item freeze threshold -- eventually FROZEN. Freezing is gradual
+	// and vanilla-driven: SetTemperature parks the item at its freeze
+	// threshold (0C for food) while vanilla's freeze progression runs, then
+	// flips it frozen and lets it sink to the target. Frozen food must thaw
+	// (campfire, or just outside the cooler) before it can be eaten or
+	// filleted -- that's the gameplay trade-off of long-term storage.
+	//   COOLING_TARGET_C  = temperature contents settle at (below 0 = freezer)
+	//   COOLING_STEP_C    = degrees moved per tick
+	//   COOLING_TICK_SECS = seconds between ticks
+	protected const float COOLING_TARGET_C  = -5.0;
+	protected const float COOLING_STEP_C    = 1.5;
+	protected const float COOLING_TICK_SECS = 60.0;
+
+	protected ref Timer m_CoolingTimer;
+
+	// Vanilla skips ambient temperature processing for any item whose
+	// hierarchy ROOT self-adjusts (EntityAI.ProcessVariables and
+	// ItemBase.ProcessItemTemperature both gate on it). Claiming it here
+	// hands the cooler full control of its cargo's temperature while it
+	// sits in the world. Inside a vehicle/tent the root is no longer the
+	// cooler so vanilla ambient drift competes, but the tick re-chills
+	// every minute and stays ahead.
+	override bool IsSelfAdjustingTemperature() {
+		return true;
+	}
+
+	override void EEInit() {
+		super.EEInit();
+		if (g_Game.IsServer()) {
+			m_CoolingTimer = new Timer(CALL_CATEGORY_SYSTEM);
+			m_CoolingTimer.Run(COOLING_TICK_SECS, this, "OnCoolingTick", null, true);
+		}
+	}
+
+	override void EEDelete(EntityAI parent) {
+		super.EEDelete(parent);
+		if (m_CoolingTimer)
+			m_CoolingTimer.Stop();
+	}
+
+	// Steps every cargo item toward the cooling target. While an unfrozen
+	// item's requested temperature is below its freeze threshold, vanilla
+	// holds the shown value AT the threshold and accumulates freeze progress
+	// instead -- so the repeated calls during that phase are what drive the
+	// item from cold to frozen.
+	void OnCoolingTick() {
+		CargoBase cargo = GetInventory().GetCargo();
+		if (!cargo)
+			return;
+
+		for (int i = 0; i < cargo.GetItemCount(); i++) {
+			ItemBase item = ItemBase.Cast(cargo.GetItem(i));
+			if (!item || !item.CanHaveTemperature())
+				continue;
+
+			float current = item.GetTemperature();
+			if (!item.GetIsFrozen() && current <= item.GetTemperatureFreezeThreshold()) {
+				// Parked at the threshold while freeze progress accumulates:
+				// keep requesting the target so the progression keeps running.
+				item.SetTemperature(COOLING_TARGET_C);
+				continue;
+			}
+			if (Math.AbsFloat(current - COOLING_TARGET_C) < 0.01)
+				continue;
+
+			float next;
+			if (current > COOLING_TARGET_C)
+				next = Math.Max(COOLING_TARGET_C, current - COOLING_STEP_C);
+			else
+				next = Math.Min(COOLING_TARGET_C, current + COOLING_STEP_C);
+			item.SetTemperature(next);
+		}
 	}
 
 	override bool IsContainer() {

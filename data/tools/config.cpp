@@ -136,7 +136,7 @@ class cfgVehicles {
         //      between KitchenKnife (150) and KukriKnife (250) -- a "premium
         //      fishing tool" feel without being the strongest blade in the game.
         //   2. Filleting speed: 10% faster than vanilla via the
-        //      GeneralSettings.FishKnifeSpeedMultiplier knob in fishingsettings.json
+        //      GeneralSettings.FishKnifeSpeedMultiplier knob in general.json
         //      (default 0.9). The bonus only applies when the recipe's
         //      ApplyFishKnifeSpeedBonus detects a geb_FishKnife_Base derivative
         //      in the ingredient slot; a vanilla knife still cuts at vanilla

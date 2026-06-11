@@ -48,7 +48,7 @@ class RepairBambooFishingNet : RecipeBase {
 	}
 
 	override bool CanDo(ItemBase ingredients[], PlayerBase player) {
-		if (m_gebsConfig && m_gebsConfig.RecipeToggles && !m_gebsConfig.RecipeToggles.RepairBambooFishingNet)
+		if (m_gebsConfig && m_gebsConfig.General && m_gebsConfig.General.RecipeToggles && !m_gebsConfig.General.RecipeToggles.RepairBambooFishingNet)
 			return false;
 		return true;
 	}
