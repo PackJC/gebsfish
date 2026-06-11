@@ -25,6 +25,11 @@ modded class PrepareFish {
     // Recalculated every CanDo so swapping knives mid-session always reflects the
     // current tool, and so the multiplier scales from the vanilla baseline (never compounds).
     override bool CanDo(ItemBase ingredients[], PlayerBase player) {
+		// A frozen fish can't be filleted -- thaw it first. Mirrors vanilla's
+		// PrepareAnimal, which blocks skinning frozen carcasses the same way.
+		if (ingredients[0] && ingredients[0].GetIsFrozen())
+			return false;
+
 		ApplyFishKnifeSpeedBonus(ingredients);
 		return super.CanDo(ingredients, player);
 	}

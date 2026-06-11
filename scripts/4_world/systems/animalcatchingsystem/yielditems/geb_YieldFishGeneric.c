@@ -21,7 +21,7 @@ class geb_YieldFishGeneric : GebYieldFishBase {
         SetupYield(m_Conf.Classname, m_Conf.Environment, m_Conf.CatchMethod,
                    m_Conf.RainMultiplier, m_Conf.StormMultiplier, m_Conf.NightMultiplier,
                    m_Conf.DawnMultiplier, m_Conf.DayMultiplier, m_Conf.DuskMultiplier,
-                   m_Conf.CatchProbability, m_Conf.BiteSpeed);
+                   m_Conf.CatchProbability, m_Conf.GetBiteSpeedArray());
         SetTemperature(m_Conf.TempOptimal, m_Conf.TempMin, m_Conf.TempMax);
     }
 }

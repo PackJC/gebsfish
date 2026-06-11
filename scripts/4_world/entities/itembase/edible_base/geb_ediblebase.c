@@ -150,11 +150,13 @@ modded class Edible_Base {
 	protected const float GEBSFISH_COOLER_DECAY_MULTIPLIER = 0.0;
 
 	override void ProcessDecay(float delta, bool hasRootAsPlayer) {
-		// Only intervene when the item is inside one of our coolers. Every
-		// other code path passes through untouched so vanilla / other mods'
-		// decay tuning still applies normally.
+		// Only intervene when the item is inside one of our preserving
+		// containers. Every other code path passes through untouched so
+		// vanilla / other mods' decay tuning still applies normally.
 		if (GebsfishIsInsideCooler())
 			delta = delta * GEBSFISH_COOLER_DECAY_MULTIPLIER;
+		else if (GebsfishIsInsideBaitContainer())
+			delta = 0;   // worm/bug/minnow containers keep live bait fresh
 
 		super.ProcessDecay(delta, hasRootAsPlayer);
 	}
@@ -175,6 +177,80 @@ modded class Edible_Base {
 		while (parent) {
 			geb_Cooler_base cooler;
 			if (Class.CastTo(cooler, parent))
+				return true;
+			parent = parent.GetHierarchyParent();
+		}
+		return false;
+	}
+
+	// Same hierarchy walk for the dedicated bait containers. Tackle boxes are
+	// deliberately NOT in this list -- stashing bait in a tackle box is allowed
+	// but doesn't keep it fresh, so the dedicated containers stay worth carrying.
+	protected bool GebsfishIsInsideBaitContainer() {
+		EntityAI parent = GetHierarchyParent();
+		while (parent) {
+			geb_WormContainer wormContainer;
+			geb_BugContainer bugContainer;
+			geb_MinnowBucket minnowBucket;
+			if (Class.CastTo(wormContainer, parent) || Class.CastTo(bugContainer, parent) || Class.CastTo(minnowBucket, parent))
+				return true;
+			parent = parent.GetHierarchyParent();
+		}
+		return false;
+	}
+}
+
+// Live bait dies over time. The geb insect baits (geb_GrassHopper,
+// geb_FieldCricket, geb_GrubWorm) all config-extend vanilla Worm, so this one
+// modded class ages every live bait in the mod plus vanilla worms. The
+// artificial geb_RubberWorm also extends Worm and is explicitly exempted.
+//
+// Aging drains item health in steps; at Ruined the bait is dead. It pauses
+// while the bait sits in a worm/bug container (its natural habitat) or a
+// cooler (refrigerated bait keeps, like real anglers do with worms). Tackle
+// boxes do NOT pause it -- the dedicated containers are the point.
+//   BAIT_LIFETIME_SECS   = real seconds from pristine to ruined when exposed
+//   BAIT_AGING_TICK_SECS = seconds between aging steps
+modded class Worm {
+	protected const float BAIT_LIFETIME_SECS   = 5400.0;  // 90 minutes
+	protected const float BAIT_AGING_TICK_SECS = 300.0;   // 5 minutes
+
+	protected ref Timer m_GebAgingTimer;
+
+	override void EEInit() {
+		super.EEInit();
+		if (!g_Game.IsServer())
+			return;
+		// Artificial lure: never dies.
+		if (IsKindOf("geb_RubberWorm"))
+			return;
+		m_GebAgingTimer = new Timer(CALL_CATEGORY_SYSTEM);
+		m_GebAgingTimer.Run(BAIT_AGING_TICK_SECS, this, "OnGebBaitAgingTick", null, true);
+	}
+
+	override void EEDelete(EntityAI parent) {
+		super.EEDelete(parent);
+		if (m_GebAgingTimer)
+			m_GebAgingTimer.Stop();
+	}
+
+	void OnGebBaitAgingTick() {
+		if (IsRuined())
+			return;
+		if (GebsfishIsBaitPreserved())
+			return;
+
+		float step = GetMaxHealth("", "") * (BAIT_AGING_TICK_SECS / BAIT_LIFETIME_SECS);
+		DecreaseHealth("", "", step);
+	}
+
+	protected bool GebsfishIsBaitPreserved() {
+		EntityAI parent = GetHierarchyParent();
+		while (parent) {
+			geb_WormContainer wormContainer;
+			geb_BugContainer bugContainer;
+			geb_Cooler_base cooler;
+			if (Class.CastTo(wormContainer, parent) || Class.CastTo(bugContainer, parent) || Class.CastTo(cooler, parent))
 				return true;
 			parent = parent.GetHierarchyParent();
 		}
