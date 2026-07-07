@@ -16,6 +16,19 @@ modded class ChernarusPlusData {
     }
 }
 
+#ifdef Deadfall_Data
+//Credits and huge thank you to DapperDan for figuring out world data classname
+modded class DeadfallData
+{
+    override void InitYieldBank()
+    {
+        super.InitYieldBank();
+        GetDayZGame().GetYieldDataInitInvoker().Invoke(m_YieldBank);
+    }
+};
+
+#endif
+
 #ifdef BANOVMAP
 
 modded class banovData {
