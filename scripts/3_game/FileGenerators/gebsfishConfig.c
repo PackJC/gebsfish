@@ -185,6 +185,8 @@ class BaitSettingsConf {
     string EnableInfo = "Master toggle for the bait / lure preference system. Each entry in Preferences pairs a bait classname (Worm, geb_GrubWorm, geb_SpinnerBait1, etc.) with a list of per-fish multipliers that bias the weighted catch pick toward that fish when this bait is on the hook (e.g. a Worm makes BlueGill 2.0x more likely while making large saltwater fish 0.3x). Set to 0 to disable the bias entirely -- every bait becomes neutral 1.0x for every fish and only the underlying CatchProbability values drive the pick. Bait still functions mechanically (gets eaten/destroyed, hook still loses bait on a miss) -- this only disables the per-fish bias. Preferences still loads from JSON when disabled so a server can flip this on/off without losing tuned values. Useful when admins want bait to function but not influence catch outcomes, or for diagnosing whether unexpected fish are coming from bait bias vs weather/temperature/time-of-day multipliers.";
     bool Enable = 1;
     string PreferencesInfo = "Per-bait fish-preference table. Each entry pairs a bait/lure Classname with its own list of per-fish multipliers (the entry's Preferences array, each: a fish classname + a multiplier). Multiplier >1 = that fish is more likely on this bait, <1 = less, 1.0 = neutral. Only applied when Enable = 1.";
+    // Multiplier semantics documented once here, not on every bait or fish entry.
+    string MultiplierInfo = "How strongly this bait favours this fish in the weighted catch pick. 1.0 = neutral (same as having no entry), above 1.0 makes the fish more likely (2.0 = twice as likely), below 1.0 makes it less likely (0.3 = much rarer), 0 effectively removes it. Only used while GeneralSettings.BaitPreferenceEnable is on.";
     ref array<ref BaitConfig> Preferences;
 
     private const static string PATH = "$profile:Gebs/bait.json";
@@ -729,9 +731,7 @@ class NetEntry {
 // fish more likely to be the selected catch when this bait is on the hook;
 // < 1.0 makes it less likely. 1.0 = neutral, same as omitting the entry.
 class BaitPreferenceEntry {
-    string FishClassnameInfo = "Classname of the fish this bias applies to when the parent bait/lure is on the hook (e.g. geb_BlueGill, geb_LargeMouthBass, Carp).";
     string FishClassname;
-    string MultiplierInfo = "How strongly this bait favours this fish in the weighted catch pick. 1.0 = neutral (same as having no entry), above 1.0 makes the fish more likely (2.0 = twice as likely), below 1.0 makes it less likely (0.3 = much rarer), 0 effectively removes it. Only used while GeneralSettings.BaitPreferenceEnable is on.";
     float Multiplier = 1.0;
 }
 
@@ -741,9 +741,7 @@ class BaitPreferenceEntry {
 // specific fish isn't listed. So admins can opt in incrementally without
 // listing every fish-bait pair.
 class BaitConfig {
-    string BaitClassnameInfo = "Classname of the bait or lure this preference table applies to (e.g. Worm, geb_GrubWorm, geb_SpinnerBait1). When this bait is on the hook, the fish multipliers below bias which fish gets caught.";
     string BaitClassname;
-    string PreferencesInfo = "List of per-fish biases for this bait: each entry pairs a fish classname with a multiplier. Fish not listed here default to 1.0 (no bias). Only used while GeneralSettings.BaitPreferenceEnable is on.";
     ref array<ref BaitPreferenceEntry> Preferences;
 
     void BaitConfig() {
