@@ -30,8 +30,8 @@ class cfgVehicles {
 	class Driver;
     class geb_jonboat_base : Boat_01_ColorBase {
         scope = 0;
-        displayName = "$STR_cfgvehicle_Boat010";
-        descriptionShort = "$STR_cfgvehicle_Boat011";
+        displayName = "$STR_vehicles_jonboat";
+        descriptionShort = "$STR_vehicles_jonboat_desc";
 		model="\gebsfish\data\vehicles\geb_jonboat.p3d";
         fuelCapacity = 25;
         fuelConsumption = 5.5;

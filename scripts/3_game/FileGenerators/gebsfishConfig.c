@@ -182,9 +182,9 @@ class GeneralConfig {
 class BaitSettingsConf {
     string ConfigVersionInfo = "Mod config version this file was written with. Do NOT edit -- used to migrate the file on mod updates.";
     string ConfigVersion = "";
-    string EnableInfo = "Master toggle for the bait / lure preference system. Each entry in Preferences pairs a bait classname (Worm, geb_GrubWorm, geb_SpinnerBait1, etc.) with a list of per-fish multipliers that bias the weighted catch pick toward that fish when this bait is on the hook (e.g. a Worm makes BlueGill 2.0x more likely while making large saltwater fish 0.3x). Set to 0 to disable the bias entirely -- every bait becomes neutral 1.0x for every fish and only the underlying CatchProbability values drive the pick. Bait still functions mechanically (gets eaten/destroyed, hook still loses bait on a miss) -- this only disables the per-fish bias. Preferences still loads from JSON when disabled so a server can flip this on/off without losing tuned values. Useful when admins want bait to function but not influence catch outcomes, or for diagnosing whether unexpected fish are coming from bait bias vs weather/temperature/time-of-day multipliers.";
+    string EnableInfo = "Master toggle for the bait / lure preference system. Each entry in Preferences pairs a bait classname (Worm, geb_GrubWorm, geb_SpinnerBait, etc.) with a list of per-fish multipliers that bias the weighted catch pick toward that fish when this bait is on the hook (e.g. a Worm makes BlueGill 2.0x more likely while making large saltwater fish 0.3x). Set to 0 to disable the bias entirely -- every bait becomes neutral 1.0x for every fish and only the underlying CatchProbability values drive the pick. Bait still functions mechanically (gets eaten/destroyed, hook still loses bait on a miss) -- this only disables the per-fish bias. Preferences still loads from JSON when disabled so a server can flip this on/off without losing tuned values. Useful when admins want bait to function but not influence catch outcomes, or for diagnosing whether unexpected fish are coming from bait bias vs weather/temperature/time-of-day multipliers.";
     bool Enable = 1;
-    string PreferencesInfo = "Per-bait fish-preference table. Each entry pairs a bait/lure Classname with its own list of per-fish multipliers (the entry's Preferences array, each: a fish classname + a multiplier). Multiplier >1 = that fish is more likely on this bait, <1 = less, 1.0 = neutral. Only applied when Enable = 1.";
+    string PreferencesInfo = "Per-bait fish-preference table. Each entry pairs a bait/lure Classname with its own list of per-fish multipliers (the entry's Preferences array, each: a fish classname + a multiplier). Multiplier >1 = that fish is more likely on this bait, <1 = less, 1.0 = neutral. A Classname without a trailing number also covers its numbered variants (geb_SpinnerBait matches geb_SpinnerBait1 through geb_SpinnerBait4) -- add an entry with the exact numbered classname to tune one variant separately; the exact entry wins. Multipliers are rounded to the nearest 0.01 when this file is written. Only applied when Enable = 1.";
     // Multiplier semantics documented once here, not on every bait or fish entry.
     string MultiplierInfo = "How strongly this bait favours this fish in the weighted catch pick. 1.0 = neutral (same as having no entry), above 1.0 makes the fish more likely (2.0 = twice as likely), below 1.0 makes it less likely (0.3 = much rarer), 0 effectively removes it. Only used while GeneralSettings.BaitPreferenceEnable is on.";
     ref array<ref BaitConfig> Preferences;
@@ -204,7 +204,61 @@ class BaitSettingsConf {
         }
         if (changed) Save();
     }
-    void Save() { JsonFileLoader<BaitSettingsConf>.JsonSaveFile(PATH, this); }
+    void Save() {
+        JsonFileLoader<BaitSettingsConf>.JsonSaveFile(PATH, this);
+        RoundMultiplierLines();
+    }
+    // JsonSaveFile serializes floats at full double precision, so a seeded
+    // 1.4 lands in the file as "1.399999976158142". Rewrite every
+    // "Multiplier": line with the value rounded to the nearest 0.01 to keep
+    // the generated file hand-editable. Line-based on purpose: JsonSaveFile
+    // emits one field per line and Multiplier is the only float in this file.
+    protected void RoundMultiplierLines() {
+        string key = "\"Multiplier\":";
+        FileHandle fr = OpenFile(PATH, FileMode.READ);
+        if (!fr)
+            return;
+        array<string> lines = new array<string>();
+        string line;
+        while (FGets(fr, line) != -1) {
+            int idx = line.IndexOf(key);
+            if (idx != -1) {
+                int valueStart = idx + key.Length();
+                string value = line.Substring(valueStart, line.Length() - valueStart);
+                bool hadComma = value.IndexOf(",") != -1;
+                value.Replace(",", "");
+                value.TrimInPlace();
+                // Round in integer hundredths so the rebuilt text can't
+                // reintroduce float noise. Negative values clamp to 0.0,
+                // matching the floor in GetBaitMultiplier.
+                int hundredths = Math.Round(value.ToFloat() * 100.0);
+                if (hundredths < 0)
+                    hundredths = 0;
+                int whole = hundredths / 100;
+                int frac = hundredths % 100;
+                string fracText;
+                if (frac % 10 == 0) {
+                    int fracTenth = frac / 10;
+                    fracText = fracTenth.ToString();         // 1.4, 2.0
+                } else if (frac < 10)
+                    fracText = "0" + frac.ToString();        // 0.05
+                else
+                    fracText = frac.ToString();              // 0.25
+                line = line.Substring(0, valueStart) + " " + whole.ToString() + "." + fracText;
+                if (hadComma)
+                    line += ",";
+            }
+            lines.Insert(line);
+        }
+        CloseFile(fr);
+
+        FileHandle fw = OpenFile(PATH, FileMode.WRITE);
+        if (!fw)
+            return;
+        foreach (string outLine : lines)
+            FPrintln(fw, outLine);
+        CloseFile(fw);
+    }
     void SeedDefaults() {
         ConfigVersion = VERSION_GEBSFISH;
         Enable = true;
@@ -228,12 +282,13 @@ class BaitSettingsConf {
         SeedBait("geb_FatHeadMinnow", 0.7, 2.0, 2.5, 2.5, 1.5, 1.8, 0.4, 1.0, 0.8, 1.0, 0.8, 0.5, 0.4);
         SeedBait("geb_RedSalamander", 0.4, 2.0, 2.0, 1.5, 1.0, 2.5, 0.3, 0.4, 0.6, 0.5, 0.5, 0.4, 0.3);
 
-        // The numbered variants within a lure family share one tuning.
-        int i;
-        for (i = 1; i <= 4; i++) SeedBait("geb_SpinnerBait" + i,  0.8, 2.5, 2.3, 2.0, 1.5, 1.0, 0.3, 0.5, 1.0, 0.8, 1.0, 1.2, 0.6);
-        for (i = 1; i <= 4; i++) SeedBait("geb_SpoonLure" + i,    0.6, 1.5, 2.0, 1.8, 2.5, 0.8, 0.3, 0.4, 1.0, 1.8, 2.0, 1.5, 1.0);
-        for (i = 1; i <= 4; i++) SeedBait("geb_Lure" + i,         0.7, 2.0, 1.8, 1.8, 1.5, 1.0, 0.3, 0.5, 1.0, 1.3, 1.5, 1.0, 0.7);
-        for (i = 1; i <= 4; i++) SeedBait("geb_CurlyTailJig" + i, 1.5, 2.2, 1.3, 2.0, 1.0, 0.8, 0.5, 0.5, 1.0, 0.7, 1.0, 0.8, 0.6);
+        // One row per lure family: GetBaitMultiplier's trailing-digit
+        // fallback resolves geb_SpinnerBait1..4 etc. to these rows, and an
+        // exact numbered entry (e.g. geb_SpinnerBait2) still overrides.
+        SeedBait("geb_SpinnerBait",  0.8, 2.5, 2.3, 2.0, 1.5, 1.0, 0.3, 0.5, 1.0, 0.8, 1.0, 1.2, 0.6);
+        SeedBait("geb_SpoonLure",    0.6, 1.5, 2.0, 1.8, 2.5, 0.8, 0.3, 0.4, 1.0, 1.8, 2.0, 1.5, 1.0);
+        SeedBait("geb_Lure",         0.7, 2.0, 1.8, 1.8, 1.5, 1.0, 0.3, 0.5, 1.0, 1.3, 1.5, 1.0, 0.7);
+        SeedBait("geb_CurlyTailJig", 1.5, 2.2, 1.3, 2.0, 1.0, 0.8, 0.5, 0.5, 1.0, 0.7, 1.0, 0.8, 0.6);
     }
 
     // Fish-category buckets shared by every SeedBait row. Static so they are

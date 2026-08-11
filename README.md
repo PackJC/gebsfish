@@ -30,6 +30,10 @@
 Gebsfish completely overhauls DayZ's fishing system into a deep, rewarding, and fully customizable experience.
 Built from the ground up for modded servers, it adds dozens of new fish species, dynamic environmental systems, and powerful configuration tools for server owners.
 
+## Requirements
+
+* **[Community Framework (CF)](https://steamcommunity.com/sharedfiles/filedetails/?id=1559212036)** is a required mod — it must be loaded alongside Gebsfish on both server and client.
+
 ## Key Features
 
 * **79 catchable yields** including fish, crustaceans, marine invertebrates, and amphibians.

@@ -330,11 +330,12 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         return "none";
     }
 
-    // Per-bait fish-preference multiplier. Walks BaitPreferences for an
-    // entry matching the current bait classname, then walks that entry's
-    // Preferences for a row matching the fish classname. Returns 1.0 (no
-    // bias) when the bait isn't configured at all, when the fish isn't in
-    // the bait's preference list, or when the config is missing -- so the
+    // Per-bait fish-preference multiplier. Resolves the exact bait classname
+    // first, then falls back to the lure-family row keyed by the classname
+    // without its trailing digits (geb_SpinnerBait3 -> geb_SpinnerBait), so
+    // the config only needs one row per lure family instead of one per
+    // numbered variant. Returns 1.0 (no bias) when neither lookup resolves,
+    // when the fish isn't listed, or when the config is missing -- so the
     // system is fully opt-in and a partial config can never block catches.
     protected float GetBaitMultiplier(string fishClassname, string baitClassname) {
         if (baitClassname == "" || fishClassname == "")
@@ -347,16 +348,32 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         if (!m_gebsConfig.Bait.Enable)
             return 1.0;
 
+        float mul;
+        if (FindBaitMultiplier(baitClassname, fishClassname, mul))
+            return mul;
+        // Family fallback. Runs second so an admin can still add an exact
+        // numbered entry (geb_SpinnerBait2) to tune one variant separately.
+        string family = StripTrailingDigits(baitClassname);
+        if (family != "" && family != baitClassname && FindBaitMultiplier(family, fishClassname, mul))
+            return mul;
+
+        return 1.0;  // bait not in config at all -- neutral
+    }
+
+    // Walks Preferences for a bait row matching `baitClassname`, then that
+    // row's fish list. True only when the (bait, fish) pair resolved -- a
+    // matching bait row that doesn't list the fish returns false so the
+    // caller can fall back to the lure-family row.
+    protected bool FindBaitMultiplier(string baitClassname, string fishClassname, out float mul) {
+        mul = 1.0;
         foreach (BaitConfig bait : m_gebsConfig.Bait.Preferences) {
             // Case-insensitive on the classname match: m_Bait.GetType() comes
             // back in DayZ's canonical PascalCase, but admins hand-editing
             // the JSON sometimes type "worm" or "WORM" -- silently failing
             // those lookups would make the entire bait-preference system
             // look broken on what's really a typo.
-            if (!bait || !ClassnamesMatch(bait.BaitClassname, baitClassname))
+            if (!bait || !bait.Preferences || !ClassnamesMatch(bait.BaitClassname, baitClassname))
                 continue;
-            if (!bait.Preferences)
-                return 1.0;
             foreach (BaitPreferenceEntry pref : bait.Preferences) {
                 if (pref && ClassnamesMatch(pref.FishClassname, fishClassname)) {
                     // Floor at 0 so an admin typo (-2.0) can't drag the
@@ -365,14 +382,24 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
                     // source means future refactors of the pick math can
                     // trust the multipliers are non-negative.
                     if (pref.Multiplier < 0.0)
-                        return 0.0;
-                    return pref.Multiplier;
+                        mul = 0.0;
+                    else
+                        mul = pref.Multiplier;
+                    return true;
                 }
             }
-            return 1.0;  // matched bait but fish not listed -- neutral
         }
+        return false;
+    }
 
-        return 1.0;  // bait not in config at all -- neutral
+    // "geb_SpinnerBait3" -> "geb_SpinnerBait". Returns the input unchanged
+    // when it doesn't end in digits.
+    protected string StripTrailingDigits(string s) {
+        string digits = "0123456789";
+        int end = s.Length();
+        while (end > 0 && digits.Contains(s.Substring(end - 1, 1)))
+            end--;
+        return s.Substring(0, end);
     }
 
     // Returns the current water temperature in degrees Celsius. Uses ambient

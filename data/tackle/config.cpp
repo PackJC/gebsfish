@@ -482,8 +482,8 @@ class cfgVehicles {
 	};
 	class geb_MinnowBucket: WaterBottle {
 		scope = 2;
-		displayName = "$STR_tools_minnowcontainer";
-		descriptionShort = "$STR_tools_minnowcontainer_desc";
+		displayName = "$STR_tools_baitbucket";
+		descriptionShort = "$STR_tools_baitbucket_desc";
 		model = "\gebsfish\data\tackle\baitbucket.p3d";
 		debug_ItemCategory = 6;
 		weight = 25;
