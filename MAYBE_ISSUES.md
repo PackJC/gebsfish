@@ -43,58 +43,8 @@ predates these; a build from current master would ship them.
 
 ## Design / logic issues (decide intent, then fix)
 
-- **Bait + temperature gated behind weather toggle** — `GenerateResult` only runs the
-  weighted pick when `WeatherCatchBoostEnable` is on (`geb_CatchingContextFishingRodAction.c:202-206`,
-  `:812-813`), so with it off, bait preferences and the temperature curve do nothing —
-  contradicting three config descriptions that call them independent.
-- **CatchProbability applied twice in the BiteSpeed aggregate** (`geb_CatchingContextFishingRodAction.c:103-114`) —
-  the vanilla probability array already repeats each yield by weight; multiplying by
-  `GetCatchProbability()` again makes the effective weight probability².
-  (`PickWeightedYieldIndex` gets this right.)
-- **types.xml generator emits duplicates/collisions** (`typesxml.c:96-98`) — one <type>
-  per species for Classname/ResultMain/ResultBonus with no dedup: RedCaviar x8,
-  geb_YellowCaviar x5; vanilla classnames (Carp, Mackerel, Sardines, Bitterlings, Shrimp,
-  SteelheadTrout, WalleyePollock, RedCaviar) also emitted and collide with mission types.xml.
 - **geb_KingCrab / geb_SnowCrab IK registration still missing** (`geb_dayzplayercfgbase.c:48-49`) —
   both are live catchables with fillet results.
-- **Latent recipe-results overflow** (`geb_preparefishbase.c:44-58`) — results = 1 + MeatMax,
-  vanilla AddResult has no bounds check against MAXIMUM_RESULTS=10; GreatWhiteShark
-  (MeatMax=10) sits exactly at the cap; a hand-edited fish.json above that overflows.
-- **`== ELEVATED_DEBUG` gating** — DebugLogs=3 silently disables verbose logging
-  (10 sites in geb_CatchingContextFishingRodAction.c).
-- **Per-cast log I/O** — GebsfishLogger opens/closes the log file per line, and the pool
-  dump iterates the duplicate-expanded probability array (one row per weight point).
-- **`GetSpeciesWeatherMultiplier` recomputed per duplicate array entry** rather than per
-  species (`geb_CatchingContextFishingRodAction.c:234-257`).
-- **Deadfall double-init** (`gebsfish.c:25`) — Deadfall's InitYieldBank calls super (which
-  itself invokes the yield-init invoker); the six other worlds deliberately don't.
-- **ClearAllRegisteredItems leaves stale sync indices** (`geb_missionbase.c:13,20`) —
-  vanilla clear empties the map but not m_OrderedHashes; 15 vanilla registration indices remain.
-
----
-
-## Docs — README / CHANGELOG stale
-
-- README documents `GeneralSettings.BaitPreferenceEnable` (README:153-155) — field does
-  not exist; the real toggle is `Enable` at top level of bait.json. The same stale name is
-  baked into generated bait.json via `MultiplierInfo` (`gebsfishConfig.c:189`).
-- README fish.json example (README:86-109) is the pre-refactor schema: keyed object
-  instead of Species array, per-entry *Info fields that no longer exist, missing
-  Classname/RecipeShape/ResultMain/ResultBonus, and `BiteSpeed` shown as a JSON float
-  array — copying that crashes JsonFileLoader (must be a space-separated string).
-- README:72 — "~1,800 bait/fish pairings" now 682 (11 bait rows x 62 fish); "shrimp
-  attract reef fish" — no Shrimp bait row exists.
-- README:74 — net "catches ... shrimp depending on water environment" — seeder has no
-  shrimp/sea entries; all three seeds are Environment=1 (pond).
-- README:64/70 — bass dawn claim inverted (BiteCrepuscular peaks at dawn, DawnMultiplier
-  1.4); muskie midnight claim inverted (BiteTwilightNight hour-0 = 0.85, slowest 11:00-14:00).
-- README:12-13 badges (Mod v3.3.0 / DayZ 1.28) vs CHANGELOG newest section v4.0.0 /
-  "1.29 compatibility" — disagree on both numbers.
-- CHANGELOG v4.0.0: "predator spawn chance 25% -> 5%" (actual defaults 1%); "BaitPreferences[]
-  on the global config" (named Preferences, lives in bait.json); "24 baits ... 1,896-entry
-  table" (now 11 rows / 682); "Spotted Bass (replaces Black Bass)" (geb_SpottedBass exists
-  nowhere; geb_BlackBass shipped, and the next line contradicts it); Known Issues claims
-  faster knife timing and storm/night/bait buffs are disabled (all are live and on by default).
 
 ---
 

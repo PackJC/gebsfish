@@ -9,15 +9,40 @@
 */
 
 modded class MissionBase {
-	override void InitWorldYieldDataDefaults(CatchYieldBank bank) {
-		super.InitWorldYieldDataDefaults(bank);
+	// Bank instance the guard below has already registered into. A fresh
+	// mission load builds a new bank (new instance), so re-registration
+	// happens naturally; only repeat calls for the same bank are skipped.
+	protected static CatchYieldBank s_GebInitializedBank;
 
+	override void InitWorldYieldDataDefaults(CatchYieldBank bank) {
+		// Deliberately NOT calling super, and NOT calling
+		// ClearAllRegisteredItems(): vanilla's only job in this method is
+		// registering its 15 default yields, which we previously registered
+		// and then immediately cleared. Vanilla's clear only empties the
+		// yields MAP -- not the private m_OrderedHashes sync list -- so that
+		// register-then-clear dance stranded 15 dead registration indices
+		// (0-14) at the front of the bank. Never registering the defaults
+		// leaves both structures empty and in sync, with our yields starting
+		// at index 0. Vanilla species stay catchable via our own Species
+		// table (Carp, Mackerel, ... are registered by RegisterFishYieldData).
 		if (!bank)
 			return;
 
-		GetGebSettingsConfig();
+		// Re-entry guard: some world-init paths invoke this method twice per
+		// boot for the SAME bank (see the double "Initializing yield data"
+		// in server logs). With the old register-then-clear flow a second
+		// pass self-corrected; now that nothing clears the bank, it would
+		// append ~90 duplicate hashes to the sync list. Guard on the bank
+		// INSTANCE -- not on "bank is non-empty" -- so a custom map's
+		// WorldData that registers its own animals before this chain still
+		// gets our yields added alongside them instead of being skipped.
+		if (bank == s_GebInitializedBank) {
+			GebsfishLogger.Info("Yield data already initialized for this bank -- skipping duplicate init.", "MissionBase");
+			return;
+		}
+		s_GebInitializedBank = bank;
 
-		bank.ClearAllRegisteredItems();
+		GetGebSettingsConfig();
 
 		GebsfishLogger.Info("Initializing yield data.", "MissionBase");
 

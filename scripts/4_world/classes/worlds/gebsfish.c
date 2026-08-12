@@ -18,11 +18,15 @@ modded class ChernarusPlusData {
 
 #ifdef Deadfall_Data
 //Credits and huge thank you to DapperDan for figuring out world data classname
+// No super call, matching every other world override here: vanilla's
+// InitYieldBank only fires this same invoker (the bank is created separately
+// in CreateYieldBank), so super + a second Invoke ran the yield registration
+// twice per boot -- and if the map's own InitYieldBank clears the bank, the
+// re-entry guard in geb_missionbase would leave that clear unrepaired.
 modded class DeadfallData
 {
     override void InitYieldBank()
     {
-        super.InitYieldBank();
         GetDayZGame().GetYieldDataInitInvoker().Invoke(m_YieldBank);
     }
 };

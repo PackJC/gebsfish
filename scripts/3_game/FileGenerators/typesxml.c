@@ -91,13 +91,29 @@ class gebsfishTypes {
 
         gebsfishConfig cfg = GetGebSettingsConfig();
         if (cfg && cfg.Fish && cfg.Fish.Species) {
+            // Result classnames are shared across species (8 fish produce
+            // RedCaviar) but types.xml needs each classname declared once.
+            map<string, bool> written = new map<string, bool>();
             foreach (FishConf f : cfg.Fish.Species) {
                 if (!f || f.Classname == "") continue;
-                WriteType(file, f.Classname, 0, 14400, 0, 0, 10, 100, 100, "food", false);
-                if (f.ResultMain != "")  WriteType(file, f.ResultMain, 0, 14400, 0, 0, 10, 100, 100, "food", false);
-                if (f.ResultBonus != "") WriteType(file, f.ResultBonus, 0, 14400, 0, 0, 10, 100, 100, "food", false);
+                WriteTypeOnce(file, written, f.Classname);
+                if (f.ResultMain != "")  WriteTypeOnce(file, written, f.ResultMain);
+                if (f.ResultBonus != "") WriteTypeOnce(file, written, f.ResultBonus);
             }
         }
+    }
+
+    protected void WriteTypeOnce(FileHandle file, map<string, bool> written, string name) {
+        // Only emit classnames this mod owns (geb_ prefix). Vanilla species
+        // in the table (Carp, Mackerel, RedCaviar, the fillet meats, ...)
+        // are already defined by the mission's own types.xml -- re-declaring
+        // them creates colliding definitions when admins merge this file.
+        if (name.IndexOf("geb_") != 0)
+            return;
+        if (written.Contains(name))
+            return;
+        written.Insert(name, true);
+        WriteType(file, name, 0, 14400, 0, 0, 10, 100, 100, "food", false);
     }
 
     protected void WriteGearSection(FileHandle file) {

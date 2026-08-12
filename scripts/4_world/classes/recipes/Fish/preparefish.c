@@ -86,7 +86,7 @@ modded class PrepareFish {
         if (!gs.HookFromFishEnable) return;
         if (gs.HookFromFishChance <= 0) return;
 
-        int debugLevel = gs.DebugLogs;
+        int debugLevel = GebGetDebugLevel(); // shared accessor, clamps 3+ to ELEVATED_DEBUG
         float roll = Math.RandomFloat01();
         if (roll > gs.HookFromFishChance) {
             if (debugLevel == ELEVATED_DEBUG)

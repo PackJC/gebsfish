@@ -100,9 +100,19 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 
 		int n = m_ProbabilityArray.Count();
 		int contributors = 0;
+		// The probability array repeats each yield once per weight point, and
+		// the explicit GetCatchProbability() factor in `weight` below already
+		// encodes abundance -- iterating every duplicate would apply it twice
+		// (a prob-25 fish: 25 copies x weight 25 = 625 effective, squaring
+		// the intended ratio). Process each unique yield exactly once.
+		map<int, bool> seenKeys = new map<int, bool>();
 		for (int i = 0; i < n; i++) {
+			int key = m_ProbabilityArray[i];
+			if (seenKeys.Contains(key))
+				continue;
+			seenKeys.Insert(key, true);
 			YieldItemBase y;
-			if (!Class.CastTo(y, m_YieldsMapAll.Get(m_ProbabilityArray[i])) || !y)
+			if (!Class.CastTo(y, m_YieldsMapAll.Get(key)) || !y)
 				continue;
 			GebYieldFishBase gy;
 			if (!Class.CastTo(gy, y) || !gy)
@@ -195,14 +205,20 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 		return true;
     }
 
-    // True when the weather catch buff feature is enabled in config. Per-species
-    // multipliers live inline on each FishConf now, so any fish with non-1.0
-    // multipliers automatically participates in the weighted pick. When the
-    // feature is disabled, GenerateResult falls back to the uniform pick path.
+    // True when ANY of the three pick-biasing systems is enabled: weather/
+    // time-of-day, temperature curve, or bait preferences. All three apply
+    // inside PickWeightedYieldIndex and each one self-gates (its multiplier
+    // resolves to 1.0 when its own toggle is off), so the weighted pick must
+    // run if any of them is on -- gating on WeatherCatchBoostEnable alone
+    // silently disabled bait and temperature, contradicting their config
+    // docs which promise independent toggles. Only when all three are off
+    // does GenerateResult fall back to the uniform pick path.
     protected bool HasActiveSpeciesBuffs() {
+        bool baitEnabled = m_gebsConfig && m_gebsConfig.Bait && m_gebsConfig.Bait.Enable;
         if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
-            return false;
-        return m_gebsConfig.General.WeatherSettings.WeatherCatchBoostEnable;
+            return baitEnabled;
+        WeatherConf w = m_gebsConfig.General.WeatherSettings;
+        return w.WeatherCatchBoostEnable || w.TemperatureEffectEnable || baitEnabled;
     }
 
     // Weighted random selection over m_ProbabilityArray, biased by per-species
@@ -231,25 +247,36 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
             GebsfishLogger.Debug("species | rain/storm | window | timeMul | tempMul | weatherMul | baitMul | scaled", "GenerateResult");
         }
 
+        // The probability array is duplicate-expanded (one entry per weight
+        // point), but the weather/bait multipliers depend only on the
+        // species -- memoize per key so each species computes (and debug-
+        // logs) once instead of once per duplicate. The scaled[] contents,
+        // total, and roll mapping below are identical to the unmemoized
+        // loop, which keeps the synced-RNG pick in client/server lockstep.
+        map<int, int> weightByKey = new map<int, int>();
         for (int i = 0; i < n; i++) {
-            YieldItemBase y;
-            int weight = SCALE;  // baseline weight when no buff applies
+            int key = m_ProbabilityArray[i];
+            int weight;
+            if (!weightByKey.Find(key, weight)) {
+                weight = SCALE;  // baseline weight when no buff applies
+                YieldItemBase y;
+                if (Class.CastTo(y, m_YieldsMapAll.Get(key)) && y) {
+                    GebYieldFishBase gy;
+                    if (Class.CastTo(gy, y) && gy) {
+                        float dbgRainStorm, dbgTimeMul, dbgTempMul;
+                        int dbgWindow;
+                        float weatherMul = GetSpeciesWeatherMultiplier(gy, dbgRainStorm, dbgWindow, dbgTimeMul, dbgTempMul);
+                        float baitMul = GetBaitMultiplier(gy.GetSpeciesClassname(), baitClassname);
+                        weight = Math.Round(SCALE * weatherMul * baitMul);
+                        if (weight < 0)
+                            weight = 0;
 
-            if (Class.CastTo(y, m_YieldsMapAll.Get(m_ProbabilityArray[i])) && y) {
-                GebYieldFishBase gy;
-                if (Class.CastTo(gy, y) && gy) {
-                    float dbgRainStorm, dbgTimeMul, dbgTempMul;
-                    int dbgWindow;
-                    float weatherMul = GetSpeciesWeatherMultiplier(gy, dbgRainStorm, dbgWindow, dbgTimeMul, dbgTempMul);
-                    float baitMul = GetBaitMultiplier(gy.GetSpeciesClassname(), baitClassname);
-                    weight = Math.Round(SCALE * weatherMul * baitMul);
-                    if (weight < 0)
-                        weight = 0;
-
-                    if (debugLevel == ELEVATED_DEBUG) {
-                        GebsfishLogger.Debug(gy.GetSpeciesClassname() + " | " + dbgRainStorm + " | " + WindowToString(dbgWindow) + " | " + dbgTimeMul + " | " + dbgTempMul + " | " + weatherMul + " | " + baitMul + " | " + weight, "GenerateResult");
+                        if (debugLevel == ELEVATED_DEBUG) {
+                            GebsfishLogger.Debug(gy.GetSpeciesClassname() + " | " + dbgRainStorm + " | " + WindowToString(dbgWindow) + " | " + dbgTimeMul + " | " + dbgTempMul + " | " + weatherMul + " | " + baitMul + " | " + weight, "GenerateResult");
+                        }
                     }
                 }
+                weightByKey.Insert(key, weight);
             }
 
             scaled.Insert(weight);
@@ -886,20 +913,39 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 			return;
 		}
 
+		// The probability array is duplicate-expanded -- each yield appears
+		// once per weight point (CatchProbability 25 -> 25 copies) -- so
+		// collapse to unique yields first. One table row / list entry per
+		// species with its duplicate count as the weight, instead of one row
+		// per copy and a species list naming every duplicate.
+		array<int> uniqueKeys = new array<int>();
+		map<int, int> weightByKey = new map<int, int>();
+		for (int i = 0; i < n; i++) {
+			int key = arr.Get(i);
+			int seen;
+			if (weightByKey.Find(key, seen)) {
+				weightByKey.Set(key, seen + 1);
+			} else {
+				weightByKey.Insert(key, 1);
+				uniqueKeys.Insert(key);
+			}
+		}
+
+		int u = uniqueKeys.Count();
 		if (debugLevel == ELEVATED_DEBUG) {
-			GebsfishLogger.Debug("Probability pool [count=" + n + "]:", "PoolAssembly");
-			GebsfishLogger.Debug("idx | key | classname | envMask | methodMask | catchProb", "PoolAssembly");
+			GebsfishLogger.Debug("Probability pool [entries=" + n + " unique=" + u + "]:", "PoolAssembly");
+			GebsfishLogger.Debug("key | classname | weight | envMask | methodMask | catchProb", "PoolAssembly");
 		}
 
 		string compact = "";
-		for (int i = 0; i < n; i++) {
-			int key = arr.Get(i);
+		for (int j = 0; j < u; j++) {
+			int uKey = uniqueKeys.Get(j);
 			string clsName = "<unresolved>";
 			int envMask = -1;
 			int methodMask = -1;
 			int catchProb = -1;
 			YieldItemBase y;
-			if (m_YieldsMapAll && Class.CastTo(y, m_YieldsMapAll.Get(key)) && y) {
+			if (m_YieldsMapAll && Class.CastTo(y, m_YieldsMapAll.Get(uKey)) && y) {
 				GebYieldFishBase gy;
 				if (Class.CastTo(gy, y) && gy) {
 					clsName = gy.GetSpeciesClassname();
@@ -910,7 +956,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 			}
 
 			if (debugLevel == ELEVATED_DEBUG) {
-				GebsfishLogger.Debug("" + i + " | " + key + " | " + clsName + " | " + envMask + " | " + methodMask + " | " + catchProb, "PoolAssembly");
+				GebsfishLogger.Debug("" + uKey + " | " + clsName + " | " + weightByKey.Get(uKey) + " | " + envMask + " | " + methodMask + " | " + catchProb, "PoolAssembly");
 			}
 
 			if (compact != "")
@@ -920,7 +966,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 
 		// Always-on (DebugLogs >= 1) one-liner: comma-separated species list so
 		// "is fish X in the pool" is answerable at the lower debug level too.
-		GebsfishLogger.Debug("Pool species (" + n + "): " + compact, "PoolAssembly");
+		GebsfishLogger.Debug("Pool species (" + u + " unique, " + n + " weighted entries): " + compact, "PoolAssembly");
 	}
 
     override float RandomizeSignalDuration() {

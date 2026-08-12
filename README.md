@@ -65,17 +65,17 @@ Built from the ground up for modded servers, it adds dozens of new fish species,
 
 Gebsfish layers several configurable environmental systems on top of vanilla fishing. Each one can be toggled independently from the `$profile:Gebs/` config files — global toggles live in `general.json`, per-fish tuning in `fish.json`, and the bait matrix in `bait.json`.
 
-* **Per-fish weather and time-of-day behavior** — every species has its own Rain, Storm, Dawn, Day, Dusk, and Night multipliers. Bass quiet down at dawn, walleye and catfish wake up at night, trout chase the rain. Global multipliers stack with per-fish overrides and are capped by `MaxStackedMultiplier` so a stormy night never compounds into a runaway buff.
+* **Per-fish weather and time-of-day behavior** — every species has its own Rain, Storm, Dawn, Day, Dusk, and Night multipliers. Bass fire up at dawn and dusk, walleye and catfish wake up at night, trout chase the rain. Global multipliers stack with per-fish overrides and are capped by `MaxStackedMultiplier` so a stormy night never compounds into a runaway buff.
 
 * **Moon phase system** — accurate synodic moon-phase calculation (Meeus algorithm) from the in-game date drives a small night-only catch buff. Full-moon nights bite up to **+20%**, new-moon nights up to **-10%**. Independent toggle in config; runs even if the rain/time-of-day buffs are disabled.
 
 * **Water temperature simulation** — each species has `TempOptimal`, `TempMin`, and `TempMax` fields (in degrees Celsius). Bass and sunfish dominate hot summer days, trout and salmon take over in cold weather, tropical species stay active year-round in warm saltwater. A `WaterTempOffset` admin knob shifts the whole curve globally for cold-themed maps (e.g. Sakhal: `-5`, frozen lake roleplay: `-10`) or tropical mods (`+5`) without editing every fish.
 
-* **Bite-speed cycle scaling** — every fish has a 24-hour `BiteSpeed` array tuned to its real-world circadian pattern. The catching system aggregates this across the active fish pool to drive how long you wait between bites, weighted by per-fish abundance and the current time-of-day multiplier. Catfish bite slow at noon; muskie bite slow at midnight.
+* **Bite-speed cycle scaling** — every fish has a 24-hour `BiteSpeed` array tuned to its real-world circadian pattern. The catching system aggregates this across the active fish pool to drive how long you wait between bites, weighted by per-fish abundance and the current time-of-day multiplier. Catfish bite slow at noon; panfish bite slow at midnight.
 
-* **Per-bait fish preference matrix** — 20+ baits and lures each carry a per-fish multiplier table. Worms catch bluegill 2× more readily than bass and ignore large saltwater fish. Spinnerbaits attract bass, spoons attract pike, shrimp attract reef fish. Roughly 1,800 bait/fish pairings — all overridable in JSON.
+* **Per-bait fish preference matrix** — 23 baits and lures each carry a per-fish multiplier table (the numbered lure variants share one entry per family, e.g. `geb_SpinnerBait` covers `geb_SpinnerBait1-4`). Worms catch bluegill 2× more readily than bass and ignore large saltwater fish. Spinnerbaits attract bass, spoons attract trout and pike, live minnows attract pike and walleye. Roughly 700 seeded bait/fish pairings — all overridable in JSON.
 
-* **Bamboo fishing net** — craftable, repairable net with cargo storage. Catches minnows, frogs, salamanders, or shrimp depending on water environment. Configurable spawn table with per-environment filtering (pond vs. sea) and an independent find-chance roll.
+* **Bamboo fishing net** — craftable, repairable net with cargo storage. Catches minnows, frogs, and salamanders out of the box. Configurable spawn table with per-environment filtering (pond vs. sea) and an independent find-chance roll.
 
 * **Predator spawn system** — configurable predators spawn around the player when fishing, gutting a fish, missing a catch, or using the bamboo net. Each action has its own chance value so you can keep predators on for fishing without applying them to filleting. Land-only spawn search — no underwater wolves. Per-predator `MinCount`, `MaxCount`, `MinRadius`, and `MaxRadius`. Optional warning sound RPC to nearby players and configurable chat-message broadcast with color options.
 
@@ -87,31 +87,36 @@ Gebsfish layers several configurable environmental systems on top of vanilla fis
 
 All configuration options are located in the `Gebs` folder inside your server's profile folder. A few examples below.
 
-**Fish entry — full set of modern fields:**
+**Fish entry — one object per species in the `Species` array of `fish.json`** (field docs live in the `SpeciesInfo` string at the top of the file):
 
 ```json
-"Mackerel": {
-    "TempOptimal": 18.0,
-    "TempMin": 8.0,
-    "TempMax": 24.0,
-    "EnvironmentInfo": "1 - pond, 2 - sea, 3 - both",
-    "Environment": 2,
-    "CatchMethodInfo": "1 - rod, 2 - largetrap, 3 - rod and largetrap, 4 - smalltrap, 5 - rod and smalltrap, 6 - largetrap and smalltrap, 7 - rod, largetrap and smalltrap",
-    "CatchMethod": 3,
-    "MeatInfo": "MeatMin and MeatMax determine the minimum and maximum meat pieces for the fillet action. DayZ has a hard limit of 10 fillets max.",
-    "MeatMin": 1,
-    "MeatMax": 2,
-    "CatchProbInfo": "0-25; 0 means no chance to catch fish, 25 means high chance",
-    "CatchProbability": 22,
-    "RainMultiplier": 1.0,
-    "DawnMultiplier": 1.1,
-    "DayMultiplier": 1.0,
-    "DuskMultiplier": 1.1,
-    "StormMultiplier": 1.2,
-    "NightMultiplier": 1.0,
-    "BiteSpeed": [0.85, 0.85, 0.85, 0.85, 0.9, 0.95, 1, 1, 0.95, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.95, 1, 1, 0.95, 0.95, 0.9, 0.9, 0.85]
-}
+"Species": [
+    {
+        "Classname": "Mackerel",
+        "RecipeShape": 0,
+        "ResultMain": "MackerelFilletMeat",
+        "ResultBonus": "",
+        "MeatMin": 1,
+        "MeatMax": 2,
+        "Environment": 2,
+        "CatchMethod": 3,
+        "CatchProbability": 22,
+        "RainMultiplier": 1.0,
+        "StormMultiplier": 1.2,
+        "DawnMultiplier": 1.1,
+        "DayMultiplier": 1.0,
+        "DuskMultiplier": 1.1,
+        "NightMultiplier": 1.0,
+        "TempOptimal": 18.0,
+        "TempMin": 8.0,
+        "TempMax": 24.0,
+        "BiteSpeed": "0.85 0.85 0.85 0.85 0.9 0.95 1 1 0.95 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.95 1 1 0.95 0.95 0.9 0.9 0.85"
+    }
+]
 ```
+
+> **Note**
+> `BiteSpeed` is a single **space-separated string** of 24 hourly values (index 0 = 12AM), not a JSON array — DayZ's JSON loader crashes on nested float arrays, so keep the string format when editing.
 
 **Weather + moon + temperature toggles (top-level):**
 
@@ -151,12 +156,15 @@ All configuration options are located in the `Gebs` folder inside your server's 
 
 **Disabling individual systems:**
 
-Each major subsystem can be turned off independently — set the toggle to `0` and the per-fish/per-bait/per-hour values stay in JSON for tuning but have no in-game effect:
+Each major subsystem can be turned off independently — set the toggle to `0` and the per-fish/per-bait/per-hour values stay in JSON for tuning but have no in-game effect. The bait system's master toggle is `Enable` at the top of `bait.json`; the rest live in `general.json` under `WeatherSettings`:
 
 ```json
-"GeneralSettings": {
-    "BaitPreferenceEnable": 1
-},
+// bait.json (top level)
+"Enable": 1
+```
+
+```json
+// general.json
 "WeatherSettings": {
     "WeatherCatchBoostEnable": 1,
     "MoonPhaseEnable": 1,

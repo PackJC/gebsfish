@@ -186,7 +186,7 @@ class BaitSettingsConf {
     bool Enable = 1;
     string PreferencesInfo = "Per-bait fish-preference table. Each entry pairs a bait/lure Classname with its own list of per-fish multipliers (the entry's Preferences array, each: a fish classname + a multiplier). Multiplier >1 = that fish is more likely on this bait, <1 = less, 1.0 = neutral. A Classname without a trailing number also covers its numbered variants (geb_SpinnerBait matches geb_SpinnerBait1 through geb_SpinnerBait4) -- add an entry with the exact numbered classname to tune one variant separately; the exact entry wins. Multipliers are rounded to the nearest 0.01 when this file is written. Only applied when Enable = 1.";
     // Multiplier semantics documented once here, not on every bait or fish entry.
-    string MultiplierInfo = "How strongly this bait favours this fish in the weighted catch pick. 1.0 = neutral (same as having no entry), above 1.0 makes the fish more likely (2.0 = twice as likely), below 1.0 makes it less likely (0.3 = much rarer), 0 effectively removes it. Only used while GeneralSettings.BaitPreferenceEnable is on.";
+    string MultiplierInfo = "How strongly this bait favours this fish in the weighted catch pick. 1.0 = neutral (same as having no entry), above 1.0 makes the fish more likely (2.0 = twice as likely), below 1.0 makes it less likely (0.3 = much rarer), 0 effectively removes it. Only used while the Enable toggle at the top of this file is on.";
     ref array<ref BaitConfig> Preferences;
 
     private const static string PATH = "$profile:Gebs/bait.json";
@@ -621,7 +621,13 @@ static void SetGebsfishConfig(gebsfishConfig config) {
 static int GebGetDebugLevel() {
     if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.GeneralSettings)
         return 0;
-    return m_gebsConfig.General.GeneralSettings.DebugLogs;
+    int lvl = m_gebsConfig.General.GeneralSettings.DebugLogs;
+    // Admins reasonably assume higher = more logging, but the verbose sites
+    // gate with `== ELEVATED_DEBUG` -- clamp 3+ down to 2 so cranking the
+    // value up can never silently turn elevated logging OFF.
+    if (lvl > ELEVATED_DEBUG)
+        lvl = ELEVATED_DEBUG;
+    return lvl;
 }
 
 //general settings config data

@@ -21,6 +21,13 @@ class GebPrepareFishBase extends PrepareFish {
 	}
 
 	void AddRepeatedResults(string resultType, int count, int startIndex = 0) {
+		// Vanilla RecipeBase stores results in fixed [MAXIMUM_RESULTS] arrays
+		// and AddResult has no bounds check -- an over-large MeatMax in a
+		// hand-edited fish.json would write out of bounds. Clamp so the
+		// total result count (bonus at index 0 included via startIndex)
+		// never exceeds the engine cap.
+		if (startIndex + count > MAXIMUM_RESULTS)
+			count = MAXIMUM_RESULTS - startIndex;
 		for (int i = 0; i < count; ++i) {
 			AddDefaultResultAtIndex(resultType, startIndex + i);
 		}

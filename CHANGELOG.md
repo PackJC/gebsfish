@@ -1,114 +1,74 @@
 # Changelog
 
-## v4.0.0
+## v4.0.0 — Unreleased
 
-### Added or Changed
+### Requirements & Compatibility
 
-- 1.29 compatibility
-- Community Framework (CF) now a required dependency; RPC system migrated to CF
-- `DZ_Weapons_Melee` added as a required addon
-- All fish now have melee functionality (matching vanilla)
-- All p3ds now use a `Camo` hidden selection to support retexturing
-- Added skinning action to Neosho Bass and Striped Bass
-- Renamed `Sturgeon` -> `LakeSturgeon`
-- Renamed `OldTackle` -> `MediumTackle` (class names finalized next wipe)
-- Bug Container moved from `data/tools/` to `data/tackle/`
-- Default predator spawn chance reduced from 25% to 5%
-- 30% chance of caviar when filleting Trout or Salmon
-- Small crustaceans and minnows can now be caught in large traps
-- Adjusted bait bucket size
-- Added cargo to the jonboat
-- AmericanBullFrog and RedSalamander added to net catches (equal chance for now)
-- Added stringtables for: Hammerhead Shark, Sturgeon, Cooler, Wooden Fish Mount, Craft Metal Hook, Rougheye Rock
-- Sahrani, Artseinen, and MelkartV2 yield support
-- **Weather catch buff system**
-    * Global rain / storm / night multipliers, configurable in `WeatherSettings`
-    * Per-fish `RainMultiplier` / `StormMultiplier` / `NightMultiplier` on every fish section in the config
-    * Stacked-multiplier cap prevents storm + night from compounding past 2.0x
-    * Default species sensitivities: trout / salmon favour rain, walleye / pike / catfish favour night, sturgeon favours storms, carp / reef fish are penalised
-    * Fishing rod description hints at the mechanic
-- **Per-action settings sections**
-    * Each "find something" action now has its own consolidated config section: `BambooFishingNetSettings`, `DigBugsSettings`, `DigWormsSettings`
-    * Each section owns its `FindChance` (0-1 per-attempt probability of finding anything) and a weighted `Catches[]` spawn table
-    * The bamboo net section also owns `PredatorSpawnChance` for predators spawning after the action
-    * Replaces the earlier scattered `ForageSettings.*FindChance` fields, top-level `Bugs[]` / `DigWorms[]` / `NetItems[]` arrays, and `PredatorSettings.PredatorSpawnChanceFishingNet`
-    * Tool wear still applies on a miss
-- **Configurable fishing net catches**
-    * `BambooFishingNetSettings.Catches[]` uses a new `NetEntry` type (Classname + CatchChance + Environment) so the same table can hold freshwater and saltwater entries
-    * `Environment` is 1=pond, 2=sea, 3=both -- entries that don't match the cast surface are skipped
-    * Replaces the previously hardcoded minnow / frog / salamander switch
-    * Seeded with the three previous classnames at equal weights (all Environment=1) so vanilla behaviour is preserved
-    * Net catches now spawn into the net's cargo first (4x4), fall back to the player's feet when the net is full
-    * Cargo whitelist extended to include the bullfrog and salamander so the net can hold its own catches
-- **Realistic catch probabilities**
-    * All 79 fish `CatchProbability` defaults updated to reflect real-world abundance and bite habit
-    * Bait / abundant 20-25, common gamefish 12-18, uncommon 7-11, trophy / rare 2-5
-- **Bait-fish preference system**
-    * Per-bait `BaitPreferences[]` table on the global config — every bait/lure carries a list of fish it favours
-    * 24 baits (`Worm`, `geb_GrassHopper`, `geb_FieldCricket`, `geb_GrubWorm`, `geb_RubberWorm`, `Shrimp`, `geb_FatHeadMinnow`, `geb_RedSalamander`, `geb_SpinnerBait1-4`, `geb_SpoonLure1-4`, `geb_Lure1-4`, `geb_CurlyTailJig1-4`) × every one of the 79 fish = a fully populated 1,896-entry preference table seeded with biologically defensible defaults
-    * Multiplier > 1.0 makes that fish more likely to be the selected catch when this bait is on the hook; < 1.0 makes it less likely; 1.0 is neutral. Default range 0.3-2.5
-    * Layered on top of the per-species weather + time-of-day multipliers in `PickWeightedYieldIndex`, so final weight = CatchProbability × WeatherSpeciesMul × TimeOfDayMul × BaitMul
-    * Detection: rod's `m_Bait` slot (worms / live bait) is preferred; falls back to `m_Hook` (gebsfish lures self-identify as hooks via `hookType`). Unknown baits and empty hooks default to a neutral 1.0 across all fish so the system is fully opt-in
-    * Worms and insects favour panfish & trout, soft-plastic worms favour bass, live minnow & salamander favour pike / musky / walleye / catfish, spinnerbaits favour bass / pike / musky, spoons favour trout & salmon, jigs favour bass / walleye
-    * `DebugLogs = 2` (elevated) prints a per-cast table: `species | weatherMul | baitMul | scaled` for each fish in the pool
-- **Ecology pass: bait-preference category audit + fish Environment corrections**
-    * `geb_WhiteBass` moved from `PANFISH` to `BASS` bucket — behaviorally identical to other bass (schools chasing shad, hits spinners / jigs / minnows aggressively); the panfish weights were severely underweighting its lure response
-    * `geb_BowFin` moved from `CATFISH_BOTTOM` to `PIKE_MUSKY` bucket — aggressive ambush predators that smash spinnerbaits and lures, far more pike-like than catfish-like in feeding
-    * 12 fish `Environment` values corrected to match real-world ecology. `Environment` is a bitmask: `1` = pond, `2` = sea, `3` = both. Anadromous and catadromous species now correctly use `3` so they appear in both freshwater and saltwater rod pools
-    * `Environment = 3` (both) now: `SteelheadTrout`, `CherrySalmon`, `ChinookSalmon`, `SockEyeSalmon` (all anadromous Pacific salmonids), `StripedBass` (anadromous), `AsianSeaBass` (Barramundi, catadromous), `FlatHeadMullet` (mullets routinely enter brackish/fresh), `AlligatorGar` (tolerates brackish coastal water), `Mussel` (both freshwater and marine species)
-    * Three saltwater-misclassified fish corrected to `Environment = 1` (pond): `RedHeadCichlid`, `SiameseTigerFish`, `BlackDevilSnail` — all freshwater species in real life
-- **Realistic fish weights**
-    * 63 fish entity `weight` values rebalanced against real-world adult catch sizes. Previously many panfish/reef fish were 1.7-3 kg (too heavy) and trophy pelagic species were 1.7-3.7 kg (drastically too light)
-    * Smaller fish dropped to realistic sizes: `BlueGill` / `SunFish` 1700 → 400 g, `YellowPerch` 3000 → 500 g, `AngelFish` 2500 → 300 g, `BlueTang` 2000 → 500 g, `Severum` 3600 → 600 g, `RedHeadCichlid` 3000 → 500 g, `StarFish` 2500 → 400 g, `SlimySculpin` 300 → 80 g
-    * Trophy fish bumped to real-world proportions (still capped well below biological maximums for encumbrance playability): `GreatWhiteShark` 3700 → 20000 g, `AtlanticBlueMarlin` 3700 → 15000 g, `HumpHeadWrasse` / `YellowFinTuna` / `HammerHeadShark` → 12000 g, `AtlanticSailFish` 3700 → 10000 g, `AlligatorGar` 4000 → 8000 g, `ChinookSalmon` 1700 → 6000 g, `LakeSturgeon` 1700 → 5000 g
-    * Pike / Muskellunge family tiered (4000 g flat → `Muskellunge` 6000, `Barred` 5500, `Spotted` 5000, `NorthernPike` 4500) so the size hierarchy reflects reality
-    * Trout / salmon tiered by species (`BrookTrout` 1000 < `RainbowTrout` 1700 < `BrownTrout` 2000 < `LakeTrout` 3500 < `ChinookSalmon` 6000)
-    * `AmericanBullFrog` 100 → 400 g (bullfrogs are 200-500 g)
-    * Players landing the largest pelagic fish (sharks, marlin, tuna) will now have significant encumbrance — by design. Cleaning on-site or using boat / vehicle transport for trophy catches becomes meaningful gameplay
+- DayZ 1.29 compatibility
+- **Community Framework (CF) is now a required dependency** — the RPC system migrated to CF's RPCManager
+- `DZ_Weapons_Melee` added as a required addon; all fish now have melee functionality (matching vanilla)
+- New map yield support: Sahrani, Artseinen, MelkartV2, and Deadfall (credits: DapperDan)
 
-#### New Fish & Creatures
+### New Systems
+
+- **Weather catch buffs** — global rain / storm / time-of-day multipliers in `WeatherSettings`, plus per-fish Rain/Storm/Dawn/Day/Dusk/Night multipliers on every species (trout favour rain, walleye / pike / catfish favour night, sturgeon favours storms). A stacked-multiplier cap prevents storm + night from compounding past 2.0x. Fishing rod description hints at the mechanic
+- **Moon phase** — accurate synodic phase (Meeus Julian Date algorithm) computed from the in-game date drives a night-only catch buff: full-moon nights up to +20%, new-moon nights down to -10%. Independently toggleable
+- **Water temperature** — per-fish `TempOptimal` / `TempMin` / `TempMax` (degrees C) form a bell curve seeded from ecological buckets (cold deepwater, cold, cool, warm, tropical). Ambient air temperature serves as the water proxy, and a global `WaterTempOffset` shifts the whole curve for winter maps (e.g. Sakhal `-5`) or tropical servers (`+5`) without editing every fish
+- **Bite-speed cycle scaling** — every fish carries a 24-hour `BiteSpeed` curve tuned to its real-world circadian pattern; the catching system aggregates the active pool (weighted by abundance and time of day) to drive how long you wait between bites
+- **Bait / lure preference matrix** — every bait and lure carries per-fish multipliers that bias which fish takes the hook: worms and insects favour panfish and trout, soft-plastic worms favour bass, live minnow and salamander favour pike / musky / walleye, spinnerbaits favour bass / pike / musky, spoons favour trout and salmon, jigs favour bass / walleye. Numbered lure variants share one family entry (`geb_SpinnerBait` covers `geb_SpinnerBait1-4`; an exact numbered entry still overrides). Roughly 700 seeded pairings, all overridable in JSON, master `Enable` toggle at the top of `bait.json`. Final pick weight = CatchProbability x weather x time-of-day x bait
+- **Hook-from-fish recovery** — filleting a fish has a small configurable chance (default ~1/250) to recover a damaged hook or lure "stuck in the fish"; the hook pool, weights, and health range are admin-tunable
+- **Cooler freezer system** — coolers keep contents cold, live bait is perishable, and a frozen-fillet guard prevents prep on frozen fillets
+- **Predator spawn rework** — three independent gates (per-action chance, weighted predator pick, per-predator min/max count) with separate chance values for fishing, filleting, failed casts, and net use. Land-only spawn search (no underwater wolves), optional warning sound RPC, configurable chat warning
+- **Per-action config sections** — `BambooFishingNetSettings`, `DigBugsSettings`, `DigWormsSettings`, each owning its `FindChance` (per-attempt probability of finding anything) and a weighted `Catches[]` table. Tool wear still applies on a miss
+- **Configurable net catches** — net spawn table entries carry an `Environment` field (1 pond, 2 sea, 3 both) for per-environment filtering; catches spawn into the net's cargo (4x4) first, falling back to the player's feet when full. New bamboo net repair recipe: one Netting + a damaged net restores it to Worn
+
+### Config Overhaul
+
+- `fishingsettings.json` replaced by four self-documenting files in `$profile:Gebs/`: `general.json`, `bait.json`, `junk.json`, `fish.json`. **Clean break — no migration**: servers regenerate fresh defaults and re-apply their custom tuning by hand
+- Fish are fully data-driven: one `Species` row per fish (classname, recipe shape, fillet/caviar/lobster results, meat counts, environment, catch method, catch probability, weather multipliers, temperature preference, BiteSpeed curve) feeds a single generic yield + fillet-recipe pipeline
+- Master enable toggles for every catch-modifying system — disabled systems keep their tuned JSON values with no in-game effect
+- Bait multipliers are written rounded to the nearest 0.01, so the file shows clean values instead of float noise
+- Missing config sections re-seed with fully populated defaults; all four files carry a `ConfigVersion` stamp for future migrations
+- Detailed admin-facing documentation strings on every field, kept under the engine's JSON string-length crash ceiling
+
+### New Fish & Creatures
+
 - Hammerhead Shark
-- Lake Sturgeon (with roe -> Black Caviar)
-- Northern Pike (with roe -> Yellow Caviar) - new model
+- Lake Sturgeon (with roe -> new Black Caviar item)
 - Alligator Gar
-- Spotted Bass (replaces Black Bass)
-- Black Bass + fillet
-- Bonito
-- Brown Trout, Brook Trout, Rainbow Trout, Cut Throat Trout (new models)
-- Lake Trout (new model)
-- Bowfin
-- Neosho Bass, Striped Bass
 - Muskellunge, Barred Muskellunge, Tiger Muskellunge, Spotted Muskellunge
 - Northern Snakehead
+- Neosho Bass, Striped Bass
 - White Grunt, Southern Flounder, Yellow Snapper
 - American Bullfrog, Red Salamander
-- Red Breast Sunfish, new Bluegill model
-- Slimy Sculpin
-- Pacific Cod, Perch, Severum
-- Asian Sea Bass, Siamese Tigerfish, Angelfish
-- Blue Marlin, Blue Tang
-- Red Head Cichlid
-- Snow Crab + Snow Crab Legs
-- Fathead Minnow (new model)
-- Yellow Perch (new model)
-- Rougheye Rock
-- Walleye, White Bass, Yellowfin Tuna
-- Sockeye Salmon, Chinook Salmon
-- Sauger
-- Sailfish, Humphead Wrasse
-- Mussel, Starfish, Blood Clam (new models)
-- Blue Jellyfish
-- Black Devil Snail
-- Large Mouth Bass, Small Mouth Bass (new models)
-- New Crayfish variants
+- New Crayfish variants: Cave, Florida, Monongahela, Red Swamp, Rusty
+- Northern Pike gains roe -> new Yellow Caviar item
 
-#### New Items & Crafting
+### New & Reworked Models
+
+Major art pass across the existing roster — new or reworked models and textures for:
+
+- Northern Pike, Bluegill, Red Breast Sunfish, Yellow Perch, Fathead Minnow, Sauger, Walleye
+- Brown / Brook / Rainbow / Cut Throat Trout, Lake Trout, Chinook Salmon
+- Black Bass, Bonito, Bowfin, Large Mouth Bass, Small Mouth Bass, White Bass
+- Blue Marlin, Sailfish, Humphead Wrasse, Yellowfin Tuna
+- Asian Sea Bass, Siamese Tigerfish, Angelfish, Pacific Cod, Perch, Severum, Rougheye Rock, Red Head Cichlid, Blue Tang
+- Snow Crab + Snow Crab Legs, Blue Jellyfish, Black Devil Snail, Mussel, Starfish, Blood Clam
+
+### New Vehicle
+
+- **Jon boat** — new drivable flat-bottomed boat with five variants (green aluminum, gray aluminum, desert / snow / forest camo), custom damage zones (chassis, engine, three floaters), SparkPlug slot, and cargo space. More boat content coming in a future update
+
+### New Items & Crafting
+
 - Grub Worm (chance to find when digging for worms)
-- Cooler
-- Wooden Fish Mount
+- Coolers in 12 colors (with the freezer system)
 - Craft metal hook from metal wire + pliers
+- Bamboo net repair recipe (Netting + damaged net -> Worn)
+- New Bamboo Fishing Net model and full texture set
 
-#### New Tackle & Lures
+### New Tackle & Lures
+
 - 4 Spoon Lures
 - 4 Curly Tail Jigs
 - Spinner Baits 1-4 (new models)
@@ -117,63 +77,85 @@
 - New Small Tackle and Large Tackle models
 - New Worm Container and Bait Bucket models
 
-#### Code & System Changes
+### Balance
+
+- **Realistic catch probabilities** — all 79 fish `CatchProbability` defaults reflect real-world abundance and bite habit: bait / abundant 20-25, common gamefish 12-18, uncommon 7-11, trophy / rare 2-5
+- **Realistic fish weights** — 63 fish `weight` values rebalanced against real-world adult catch sizes: panfish / reef fish dropped (BlueGill 1700 -> 400 g), trophy pelagics raised (GreatWhiteShark 3700 -> 20000 g, Blue Marlin -> 15000 g), pike / muskellunge and trout / salmon families tiered by species. Landing the largest pelagics now carries real encumbrance — by design
+- **Ecology pass** — White Bass and Bowfin moved to behaviorally correct bait-preference buckets; 12 fish `Environment` values corrected (anadromous salmonids, Striped Bass, Barramundi, mullet, and gar now appear in both fresh and salt water; three freshwater species un-misclassified from saltwater)
+- Default predator spawn chance reduced from 25% to 1% per action
+- Geb fish knives: +54% durability over vanilla HuntingKnife and 10% faster filleting (configurable via `FishKnifeSpeedMultiplier`)
+- 30% keep-chance for caviar when filleting roe fish (configurable via `CaviarChance`)
+- Small crustaceans and minnows can now be caught in large traps
+- Fishing rods repair to Worn at best; Ruined tools can no longer be repaired
+- Adjusted bait bucket size
+
+### Localization
+
+- New stringtable entries: Hammerhead Shark, Lake Sturgeon, Cooler, Wooden Fish Mount, Craft Metal Hook, Rougheye Rock
+- Jon boats now display "Jon Boat" with a proper description in all 14 languages (previously vanilla "Rubber Boat" and a missing description key)
+- Minnow Container renamed to Bait Bucket, name retranslated in all 14 languages
+- Orphaned rows pruned (fillet keys for species without fillet items, superseded king crab tail, generic clothing descriptions replaced by per-color keys, unused tackle box name)
+
+### Code & Internals
+
 - Replaced all `GetGame()` calls with `g_Game` for consistency
 - Removed invalid `ref` keywords from RPC handler parameters (CF compatibility)
-- Refactored fish config to remove duplication and improve maintainability
-- Consolidated repeated classes into shared base files
-- Sorted large files by category for easier navigation
-- Standardized brace style across the codebase
-- XML regeneration fixes - version detection now reads multiple lines, files no longer regenerate every server restart, server-only guard added
+- Data-driven pipeline: one generic catch yield and one generic fillet recipe seeded per Species row replace 79 per-fish yield classes and per-fish recipe classes (vanilla fish keep their modded Prepare* overrides)
+- BiteSpeed data consolidated from 79 inline 24-hour arrays into 8 named circadian curves
+- Weighted-pick logic consolidated into a shared `GebWeightedPick` helper; the catch pick memoizes per-species weather/bait multipliers instead of recomputing per pool entry
+- Yield bank init no longer registers vanilla's 15 default yields just to clear them (vanilla's clear leaves stale sync indices); re-entry guard prevents double registration on worlds that fire the init twice
+- XML generators: types.xml emits each classname exactly once and only geb_-prefixed entries (no more collisions with the mission's own types.xml); spawnabletypes chance values formatted correctly; generation batched, version detection hardened, files no longer regenerate every restart, server-only guard
+- Logger: session-lifetime file handle (no more open/close per line), filename sanitization, `Reset()`, initialization fix; `DebugLogs` values above 2 clamp to elevated instead of silently disabling verbose logs
+- In-hands IK registrations collapsed to three name-array loops
+- Consolidated repeated classes into shared base files; sorted large files by category; standardized brace style
 - Replaced `Param3` usage with `XmlTypeEntry` class for clarity
-- Logger: fixed initialization bug, added `Reset()`, filename sanitization, improved formatting consistency
 - Added base classes and inheritance cleanup for containers
+- Renamed `Sturgeon` -> `LakeSturgeon`; `OldTackle` model files -> `MediumTackle` (class names finalized next wipe); Bug Container moved from `data/tools/` to `data/tackle/`
+- All p3ds now use a `Camo` hidden selection to support retexturing
+- Asset naming pass: tool and clothing textures renamed to engine conventions (`_co` / `_normals` / `_smdi`); fish knife and big-game fishing line materials updated
+- Added skinning action to Neosho Bass and Striped Bass
 
 ### Fixed
 
+- XML generator crash at startup: `FPrint` without newlines produced a single-line 85 KB file that overflowed the engine's line-read buffer as fish were added — generators now emit proper line breaks
+- Bait preferences and the temperature curve now apply independently of `WeatherCatchBoostEnable` — previously the weighted catch pick only ran when the weather toggle was on, silently disabling both systems despite their own toggles
+- BiteSpeed aggregate no longer applies `CatchProbability` twice (the probability pool already repeats each fish by its weight) — abundant fish were quadratically dominating the bite-cycle timing over rare ones
+- Dug bugs now spawn as networked objects (were server-local and invisible to players); dig-bugs also wears the tool and trains soft skills on every completed dig, matching dig-worms
+- Generated spawnabletypes chance attributes were the literal text `.2f` instead of numbers
+- Predator warning chat message sends once through the first enabled color instead of once per enabled color
+- Recipe result count clamped to the engine cap so an oversized `MeatMax` in a hand-edited fish.json can't corrupt memory
 - Multiplayer check in `TryDamageItems`
 - Config sync and predator sound RPCs
 - Net not taking damage when used
-- Grub worm digging
-- Sturgeon rvmat typo
-- Blue Marlin normals
-- Tacklebox normals
-- Hammerhead Shark materials mapping
-- Fillet textures (Chinook Salmon, Sailfish, Humphead Wrasse, others)
-- Fillets showing as wrong fish or blank
-- Old extra Bluegill fillet texture
-- Fathead Minnow rotten fillet bug
-- Crayfish position in inventory
-- Crayfish becoming invisible after cooking
-- Lobster Tail on ground / in inventory / in hand
-- Bonito hand position
+- Grub worm digging; vanilla worm fallback when the grub entry is removed from config
+- Sauger normal map re-enabled; Sturgeon rvmat typo; Blue Marlin normals; Tacklebox normals; Hammerhead Shark materials mapping
+- Fillet textures (Chinook Salmon, Sailfish, Humphead Wrasse, others); fillets showing as wrong fish or blank; old extra Bluegill fillet texture; Fathead Minnow rotten fillet bug
+- Crayfish position in inventory; crayfish becoming invisible after cooking; fixed crayfish rotten texture
+- Lobster Tail on ground / in inventory / in hand; lobster can be cut on the ground
+- Bonito hand position; two-hand fish positioning (mostly — slight inventory orientation issue remains)
 - Scope on base classes so they no longer spawn in
-- Two-hand fish positioning (mostly - slight inventory orientation issue remains)
-- p3d selections renamed to `Camo` where missing
-- `FlatHeadMullet` classname typo
-- Grasshopper texture naming convention
+- p3d selections renamed to `Camo` where missing; `FlatHeadMullet` classname typo; Grasshopper texture naming convention
 - Missing semicolons causing config parse errors
-- Boat sound issue
-- Mahi Mahi LOD texture disappearing at distance
-- Duplicate bamboo net recipe removed
-- Crafting hook from wires
-- Repeated tackles removed from spawnable types
-- Missing clothes added to typesxml
+- Boat sound issue; Mahi Mahi LOD texture disappearing at distance
+- Duplicate bamboo net recipe removed; crafting hook from wires
+- Repeated tackles removed from spawnable types; missing clothes added to typesxml
 
 ### Removed
 
+- `fishingsettings.json` and its one-time migration (replaced by the four-file config, clean break)
+- Bundled trader/economy support files (`Expansion` market configs, TraderPlus configs, Dr. Jones price list, classnames list, pricing calculator)
 - Old expansion files
 - Old README
 - Fishing Calc (outdated)
-- Old trader files from types
 - Old `newtackle` textures
 - Old lure models (replaced by crank/popper variants)
+- Unreferenced normal-map textures (6.4 MB)
 
 ### Known Issues
 
 - Two-hand fish inventory orientation is slightly angled
-- Faster knife timing temporarily disabled while errors are worked out
-- Storm/night/bait buff system is experimental and not yet enabled
+- King Crab and Snow Crab have no in-hands carry pose yet
+- Unreleased-build regressions under investigation (tracked in MAYBE_ISSUES.md): the data-driven yield and recipe registration runs before each entry's config row is attached, and rods take double durability damage per catch event
 
 ## v3.3.0
 

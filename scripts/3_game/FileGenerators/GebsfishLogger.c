@@ -10,6 +10,11 @@ class GebsfishLogger {
     private static string m_SessionFilePath = "";
     private static GebsfishLogLevel m_MinLevel = GebsfishLogLevel.DEBUG;
     private static bool m_Initialized = false;
+    // Session-lifetime handle. Kept open on purpose: at elevated debug a
+    // single cast can emit hundreds of lines, and an open/append/close
+    // round-trip per line stalls the server main thread. The OS closes the
+    // handle at process exit; Reset() closes it for an explicit new session.
+    private static FileHandle m_File = 0;
 
     static void Init(string tag = "gebsfish") {
         if (m_Initialized)
@@ -23,8 +28,8 @@ class GebsfishLogger {
 
         m_SessionFilePath = LOG_DIR + "/" + BuildDateTimeCompact() + "_" + safeTag + ".log";
 
-        FileHandle file = OpenFile(m_SessionFilePath, FileMode.WRITE);
-        if (file == 0) {
+        m_File = OpenFile(m_SessionFilePath, FileMode.WRITE);
+        if (m_File == 0) {
             m_SessionFilePath = "";
             return;
         }
@@ -32,15 +37,14 @@ class GebsfishLogger {
         string side = GetExecutionSide();
         string worldName = GetWorldNameSafe();
 
-        FPrintln(file, "==================== LOGGING SESSION START ====================");
-        FPrintln(file, "World: " + worldName);
-        FPrintln(file, "Log Type: " + side);
-        FPrintln(file, "Time: " + BuildDateTimeReadable());
-        FPrintln(file, "File: " + m_SessionFilePath);
-        FPrintln(file, "Gebsfish Version: " + VERSION_GEBSFISH);
-        FPrintln(file, "===============================================================");
+        FPrintln(m_File, "==================== LOGGING SESSION START ====================");
+        FPrintln(m_File, "World: " + worldName);
+        FPrintln(m_File, "Log Type: " + side);
+        FPrintln(m_File, "Time: " + BuildDateTimeReadable());
+        FPrintln(m_File, "File: " + m_SessionFilePath);
+        FPrintln(m_File, "Gebsfish Version: " + VERSION_GEBSFISH);
+        FPrintln(m_File, "===============================================================");
 
-        CloseFile(file);
         m_Initialized = true;
     }
 
@@ -71,11 +75,7 @@ class GebsfishLogger {
         if (!m_Initialized)
             Init();
 
-        if (!m_Initialized || m_SessionFilePath == string.Empty)
-            return;
-
-        FileHandle file = OpenFile(m_SessionFilePath, FileMode.APPEND);
-        if (file == 0)
+        if (!m_Initialized || m_File == 0)
             return;
 
         string line = "[" + BuildDateTimeReadable() + "][" + GetExecutionSide() + "][" + LevelToString(level) + "] ";
@@ -84,12 +84,14 @@ class GebsfishLogger {
 
         line += message;
 
-        FPrintln(file, line);
-        CloseFile(file);
+        FPrintln(m_File, line);
     }
 
     // Optional helper in case you ever want to force a new log file per session / reload.
     static void Reset() {
+        if (m_File != 0)
+            CloseFile(m_File);
+        m_File = 0;
         m_SessionFilePath = "";
         m_Initialized = false;
     }
