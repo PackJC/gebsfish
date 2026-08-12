@@ -10,4 +10,4 @@ logoSmall = "gebsfish/data/logo.paa";						// icon next to mod name when descrip
 logo = "gebsfish/data/logo.paa";							// logo below game menu
 logoOver = "gebsfish/data/logo_hover.paa";					// on mouse hover over logo
 tooltip = "Gebs Fishing Expansion";							// tool tip on mouse hover
-action = "https://discord.gg/9dhXCbDJq4";					// link
+action = "https://discord.gg/G8uSGZ8yyf";					// link

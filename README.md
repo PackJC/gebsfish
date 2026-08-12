@@ -12,9 +12,11 @@
   <img alt="Mod Version" src="https://img.shields.io/badge/Mod-v3.3.0-blue?style=for-the-badge">
   <img alt="DayZ Version" src="https://img.shields.io/badge/DayZ-v1.28-teal?style=for-the-badge">
   <img alt="Workshop Subscribers" src="https://img.shields.io/steam/subscriptions/2757509117?style=for-the-badge&color=purple&label=Workshop%20Subs">
+  <a href="https://packjc.github.io/gebsfish/"><img alt="Website" src="https://img.shields.io/badge/Website-Gebsfish%20Wiki-ff8c00?style=for-the-badge"></a>
 </p>
 
 <p align="center">
+  <a href="https://packjc.github.io/gebsfish/">Website</a> •
   <a href="#key-features">Key Features</a> •
   <a href="#advanced-systems">Advanced Systems</a> •
   <a href="#configuration-examples">Configuration Examples</a> •
