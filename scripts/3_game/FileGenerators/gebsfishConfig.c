@@ -86,7 +86,13 @@ class GeneralConfig {
             if (!JsonFileLoader<GeneralConfig>.LoadFile(PATH, this, err))
                 GebsfishLogger.Error("general.json failed to load: " + err, "Config");
             changed = Backfill();
-            if (ConfigVersion != VERSION_GEBSFISH) { ConfigVersion = VERSION_GEBSFISH; changed = true; }
+            if (ConfigVersion != VERSION_GEBSFISH) {
+                int added = MergeNewDefaults();
+                if (added > 0)
+                    GebsfishLogger.Info("general.json: added " + added.ToString() + " new default entries (update '" + ConfigVersion + "' -> '" + VERSION_GEBSFISH + "'). Existing entries untouched.", "Migrate");
+                ConfigVersion = VERSION_GEBSFISH;
+                changed = true;
+            }
         } else {
             SeedDefaults();
             changed = true;
@@ -115,6 +121,63 @@ class GeneralConfig {
         if (!Predators)                { SeedDefaultPredators();        changed = true; }
         if (!HookFromFishCatches || HookFromFishCatches.Count() == 0) { SeedHookFromFish(); changed = true; }
         return changed;
+    }
+
+    // Additive update merge (version-change only, see Load): insert default
+    // entries missing from the loaded arrays; never modify existing ones.
+    // Runs after Backfill so sections exist; a Catches array that is null is
+    // skipped (respects a section an admin gutted on purpose). To disable an
+    // entry permanently use weight/chance 0 instead of deleting it.
+    int MergeNewDefaults() {
+        GeneralConfig defaults = new GeneralConfig();
+        defaults.SeedDefaults();
+        int added = 0;
+        if (Predators && defaults.Predators) {
+            foreach (PredatorEntry dp : defaults.Predators) {
+                if (dp && !HasPredator(dp.Classname)) { Predators.Insert(dp); added++; }
+            }
+        }
+        if (BambooFishingNetSettings && BambooFishingNetSettings.Catches && defaults.BambooFishingNetSettings && defaults.BambooFishingNetSettings.Catches) {
+            foreach (NetEntry dn : defaults.BambooFishingNetSettings.Catches) {
+                if (dn && !HasNetCatch(dn.Classname)) { BambooFishingNetSettings.Catches.Insert(dn); added++; }
+            }
+        }
+        if (DigBugsSettings && defaults.DigBugsSettings)
+            added += MergeBugCatches(DigBugsSettings.Catches, defaults.DigBugsSettings.Catches);
+        if (DigWormsSettings && defaults.DigWormsSettings)
+            added += MergeBugCatches(DigWormsSettings.Catches, defaults.DigWormsSettings.Catches);
+        if (HookFromFishCatches && defaults.HookFromFishCatches) {
+            foreach (HookFromFishEntry dh : defaults.HookFromFishCatches) {
+                if (dh && !HasHookCatch(dh.Classname)) { HookFromFishCatches.Insert(dh); added++; }
+            }
+        }
+        return added;
+    }
+    protected bool HasPredator(string classname) {
+        foreach (PredatorEntry e : Predators) if (e && e.Classname == classname) return true;
+        return false;
+    }
+    protected bool HasNetCatch(string classname) {
+        foreach (NetEntry e : BambooFishingNetSettings.Catches) if (e && e.Classname == classname) return true;
+        return false;
+    }
+    protected bool HasHookCatch(string classname) {
+        foreach (HookFromFishEntry e : HookFromFishCatches) if (e && e.Classname == classname) return true;
+        return false;
+    }
+    protected static int MergeBugCatches(array<ref BugEntry> into, array<ref BugEntry> defs) {
+        if (!into || !defs)
+            return 0;
+        int added = 0;
+        foreach (BugEntry d : defs) {
+            if (!d) continue;
+            bool found = false;
+            foreach (BugEntry e : into) {
+                if (e && e.Classname == d.Classname) { found = true; break; }
+            }
+            if (!found) { into.Insert(d); added++; }
+        }
+        return added;
     }
 
     void SeedDefaults() {
@@ -197,7 +260,13 @@ class BaitSettingsConf {
             if (!JsonFileLoader<BaitSettingsConf>.LoadFile(PATH, this, err))
                 GebsfishLogger.Error("bait.json failed to load: " + err, "Config");
             if (!Preferences) { SeedDefaultPreferences(); changed = true; }
-            if (ConfigVersion != VERSION_GEBSFISH) { ConfigVersion = VERSION_GEBSFISH; changed = true; }
+            if (ConfigVersion != VERSION_GEBSFISH) {
+                int added = MergeNewDefaults();
+                if (added > 0)
+                    GebsfishLogger.Info("bait.json: added " + added.ToString() + " new default bait rows / fish preferences (update '" + ConfigVersion + "' -> '" + VERSION_GEBSFISH + "'). Existing multipliers untouched.", "Migrate");
+                ConfigVersion = VERSION_GEBSFISH;
+                changed = true;
+            }
         } else {
             SeedDefaults();
             changed = true;
@@ -263,6 +332,50 @@ class BaitSettingsConf {
         ConfigVersion = VERSION_GEBSFISH;
         Enable = true;
         SeedDefaultPreferences();
+    }
+
+    // Additive update merge (version-change only, see Load). Two levels:
+    //   1. a default bait/lure row missing entirely -> whole row inserted
+    //   2. a default per-fish preference missing from an existing row (e.g.
+    //      a fish added this update) -> just that preference inserted
+    // Existing multipliers are never modified; a row whose Preferences array
+    // an admin nulled/gutted is skipped. Numbered lure variants stay covered
+    // by their family row (GetBaitMultiplier's trailing-digit fallback), and
+    // an exact numbered entry still wins.
+    int MergeNewDefaults() {
+        if (!Preferences)
+            return 0;
+        BaitSettingsConf defaults = new BaitSettingsConf();
+        defaults.SeedDefaultPreferences();
+        int added = 0;
+        foreach (BaitConfig db : defaults.Preferences) {
+            if (!db)
+                continue;
+            BaitConfig mine = FindBait(db.BaitClassname);
+            if (!mine) {
+                Preferences.Insert(db);
+                added++;
+                continue;
+            }
+            if (!mine.Preferences || !db.Preferences)
+                continue;
+            foreach (BaitPreferenceEntry dp : db.Preferences) {
+                if (!dp)
+                    continue;
+                bool found = false;
+                foreach (BaitPreferenceEntry mp : mine.Preferences) {
+                    if (mp && mp.FishClassname == dp.FishClassname) { found = true; break; }
+                }
+                if (!found) { mine.Preferences.Insert(dp); added++; }
+            }
+        }
+        return added;
+    }
+    protected BaitConfig FindBait(string baitClassname) {
+        foreach (BaitConfig b : Preferences) {
+            if (b && b.BaitClassname == baitClassname) return b;
+        }
+        return null;
     }
     // Seed the default bait ecology. Each SeedBait row pairs a bait classname
     // with its 13 category multipliers; the JSON output still lists every
@@ -375,7 +488,13 @@ class JunkConfig {
             if (!JsonFileLoader<JunkConfig>.LoadFile(PATH, this, err))
                 GebsfishLogger.Error("junk.json failed to load: " + err, "Config");
             changed = Backfill();
-            if (ConfigVersion != VERSION_GEBSFISH) { ConfigVersion = VERSION_GEBSFISH; changed = true; }
+            if (ConfigVersion != VERSION_GEBSFISH) {
+                int added = MergeNewDefaults();
+                if (added > 0)
+                    GebsfishLogger.Info("junk.json: added " + added.ToString() + " new default entries (update '" + ConfigVersion + "' -> '" + VERSION_GEBSFISH + "'). Existing entries untouched.", "Migrate");
+                ConfigVersion = VERSION_GEBSFISH;
+                changed = true;
+            }
         } else {
             SeedDefaults();
             changed = true;
@@ -388,6 +507,35 @@ class JunkConfig {
         if (!Junk)          { SeedDefaultJunk();          changed = true; }
         if (!ContainerJunk) { SeedDefaultContainerJunk(); changed = true; }
         return changed;
+    }
+
+    // Additive update merge (version-change only, see Load): insert default
+    // entries missing from the loaded tables; never modify existing ones.
+    // Permanently remove an entry by setting CatchProbability 0, not deletion.
+    int MergeNewDefaults() {
+        JunkConfig defaults = new JunkConfig();
+        defaults.SeedDefaultJunk();
+        defaults.SeedDefaultContainerJunk();
+        int added = 0;
+        if (Junk && defaults.Junk) {
+            foreach (JunkEntry dj : defaults.Junk) {
+                if (dj && !HasJunk(dj.Classname)) { Junk.Insert(dj); added++; }
+            }
+        }
+        if (ContainerJunk && defaults.ContainerJunk) {
+            foreach (ContainerJunkEntry dc : defaults.ContainerJunk) {
+                if (dc && !HasContainerJunk(dc.Classname)) { ContainerJunk.Insert(dc); added++; }
+            }
+        }
+        return added;
+    }
+    protected bool HasJunk(string classname) {
+        foreach (JunkEntry e : Junk) if (e && e.Classname == classname) return true;
+        return false;
+    }
+    protected bool HasContainerJunk(string classname) {
+        foreach (ContainerJunkEntry e : ContainerJunk) if (e && e.Classname == classname) return true;
+        return false;
     }
     void SeedDefaults() {
         ConfigVersion = VERSION_GEBSFISH;
@@ -437,7 +585,13 @@ class FishConfig {
             if (!JsonFileLoader<FishConfig>.LoadFile(PATH, this, err))
                 GebsfishLogger.Error("fish.json failed to load: " + err, "Config");
             changed = Backfill();
-            if (ConfigVersion != VERSION_GEBSFISH) { ConfigVersion = VERSION_GEBSFISH; changed = true; }
+            if (ConfigVersion != VERSION_GEBSFISH) {
+                int added = MergeNewDefaults();
+                if (added > 0)
+                    GebsfishLogger.Info("fish.json: added " + added.ToString() + " new default species (update '" + ConfigVersion + "' -> '" + VERSION_GEBSFISH + "'). Existing entries untouched.", "Migrate");
+                ConfigVersion = VERSION_GEBSFISH;
+                changed = true;
+            }
         } else {
             SeedDefaults();
             changed = true;
@@ -449,6 +603,23 @@ class FishConfig {
     bool Backfill() {
         if (!Species || Species.Count() == 0) { SeedSpecies(); return true; }
         return false;
+    }
+
+    // Additive update merge: any species the compiled defaults have but the
+    // loaded file lacks is inserted. Runs only on a version change (see
+    // Load), so in-version admin deletions are respected until the next mod
+    // update; existing rows are never modified. To remove a species
+    // permanently, set its CatchProbability to 0 instead of deleting it.
+    int MergeNewDefaults() {
+        if (!Species)
+            return 0;
+        FishConfig defaults = new FishConfig();
+        defaults.SeedSpecies();
+        int added = 0;
+        foreach (FishConf def : defaults.Species) {
+            if (def && !Get(def.Classname)) { Species.Insert(def); added++; }
+        }
+        return added;
     }
 
     void SeedDefaults() {
@@ -593,6 +764,10 @@ class gebsfishConfig {
         Fish    = new FishConfig();
         if (!g_Game.IsServer())
             return;   // server owns the files; clients receive values via RPC
+
+        // Sweep pre-3.3 layout files into Gebs/gebs_oldfiles before loading,
+        // so an upgraded server never mixes old and new config files.
+        GebsfishMigration.ArchiveOldFiles();
 
         General.Load();
         Bait.Load();
