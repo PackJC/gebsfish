@@ -14,7 +14,9 @@ class GebsfishLogger {
     // single cast can emit hundreds of lines, and an open/append/close
     // round-trip per line stalls the server main thread. The OS closes the
     // handle at process exit; Reset() closes it for an explicit new session.
-    private static FileHandle m_File = 0;
+    // No `= 0` initializer -- FileHandle is plain data to Enforce, which
+    // only allows null initializers there; statics zero-init by default.
+    private static FileHandle m_File;
 
     static void Init(string tag = "gebsfish") {
         if (m_Initialized)
