@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gebsfish Wiki — The Ultimate Fishing Expansion for DayZ</title>
+<style>
+  :root {
+    --bg: #0d1520;
+    --bg2: #131e2d;
+    --card: #1a2739;
+    --card2: #21314a;
+    --border: #2c3e58;
+    --text: #dce6f2;
+    --dim: #8fa3bc;
+    --accent: #4db8ff;
+    --accent2: #35d0a0;
+    --gold: #e8c15a;
+    --red: #e87070;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: "Segoe UI", system-ui, sans-serif; line-height: 1.6; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  header { background: linear-gradient(180deg, #0a1a2e 0%, var(--bg) 100%); border-bottom: 1px solid var(--border); padding: 40px 20px 24px; text-align: center; }
+  header h1 { font-size: 2.4rem; letter-spacing: 1px; }
+  header h1 span { color: var(--accent); }
+  header p.tag { color: var(--dim); margin-top: 4px; }
+  .badges { margin-top: 14px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .badges img { height: 24px; }
+
+  nav { position: sticky; top: 0; z-index: 50; background: var(--bg2); border-bottom: 1px solid var(--border); display: flex; justify-content: center; flex-wrap: wrap; }
+  nav button { background: none; border: none; color: var(--dim); font-size: 0.95rem; padding: 13px 18px; cursor: pointer; border-bottom: 3px solid transparent; font-family: inherit; }
+  nav button:hover { color: var(--text); }
+  nav button.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 16px 80px; }
+  section.tab { display: none; }
+  section.tab.active { display: block; }
+  h2 { margin: 8px 0 16px; font-size: 1.5rem; }
+  h3 { margin: 22px 0 10px; color: var(--accent); font-size: 1.1rem; }
+  p.lead { color: var(--dim); margin-bottom: 18px; }
+
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+  .controls input, .controls select { background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; font-size: 0.92rem; font-family: inherit; }
+  .controls input { flex: 1 1 220px; }
+  .controls input:focus, .controls select:focus { outline: none; border-color: var(--accent); }
+  .count { color: var(--dim); font-size: 0.85rem; margin-bottom: 10px; }
+
+  .tblwrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 760px; }
+  thead th { background: var(--card2); text-align: left; padding: 10px 12px; cursor: pointer; user-select: none; white-space: nowrap; position: sticky; top: 0; }
+  thead th:hover { color: var(--accent); }
+  thead th .arrow { font-size: 0.7rem; opacity: 0.8; }
+  tbody td { padding: 9px 12px; border-top: 1px solid var(--border); }
+  tbody tr.row { cursor: pointer; }
+  tbody tr.row:hover { background: var(--card); }
+  tr.detail td { background: var(--bg2); padding: 14px 18px; font-size: 0.87rem; }
+  .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px 22px; }
+  .detail-grid b { color: var(--dim); font-weight: 600; }
+
+  .pill { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 0.76rem; font-weight: 600; }
+  .pill.pond { background: #14432f; color: #6fe0a8; }
+  .pill.sea { background: #14324c; color: #6fbce0; }
+  .pill.both { background: #3b3054; color: #c1a3f0; }
+  .pill.abundant { background: #14432f; color: #6fe0a8; }
+  .pill.common { background: #14324c; color: #6fbce0; }
+  .pill.uncommon { background: #4c3a14; color: #e0c46f; }
+  .pill.rare { background: #4c1d1d; color: #e08a8a; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .card h4 { color: var(--accent2); margin-bottom: 8px; font-size: 1rem; }
+  .card ul { list-style: none; }
+  .card li { padding: 3px 0; color: var(--dim); font-size: 0.88rem; }
+  .card li b { color: var(--text); font-weight: 600; }
+  .card p { color: var(--dim); font-size: 0.88rem; }
+
+  .faq-item { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+  .faq-item summary { padding: 13px 16px; cursor: pointer; background: var(--card); font-weight: 600; list-style: none; }
+  .faq-item summary::before { content: "▸ "; color: var(--accent); }
+  .faq-item[open] summary::before { content: "▾ "; }
+  .faq-item div { padding: 12px 18px 16px; color: var(--dim); font-size: 0.93rem; }
+  .faq-item code, .card code, td code, .detail-grid code { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; font-size: 0.84em; color: var(--gold); }
+
+  .chg h3 { color: var(--gold); }
+  .chg ul { margin: 0 0 14px 22px; color: var(--dim); font-size: 0.92rem; }
+  .chg li { margin-bottom: 4px; }
+  .chg li b { color: var(--text); }
+  .banner { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--gold); border-radius: 8px; padding: 12px 16px; color: var(--dim); font-size: 0.9rem; margin-bottom: 20px; }
+
+  footer { border-top: 1px solid var(--border); text-align: center; color: var(--dim); font-size: 0.82rem; padding: 24px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎣 Gebs<span>fish</span> Wiki</h1>
+  <p class="tag">The Ultimate Fishing Expansion for DayZ — 79 catchable species, living bait, real ecology</p>
+  <div class="badges">
+    <img alt="Workshop Subscribers" src="https://img.shields.io/steam/subscriptions/2757509117?style=for-the-badge&color=purple&label=Workshop%20Subs">
+    <img alt="Mod Version" src="https://img.shields.io/badge/Mod-v3.3.0-blue?style=for-the-badge">
+  </div>
+  <div class="badges">
+    <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117">Steam Workshop</a> ·
+    <a href="https://discord.gg/G8uSGZ8yyf">Discord</a> ·
+    <a href="https://github.com/PackJC/gebsfish">GitHub</a>
+  </div>
+</header>
+
+<nav id="nav">
+  <button data-tab="fish" class="active">🐟 Fish Database</button>
+  <button data-tab="items">🧰 Items &amp; Gear</button>
+  <button data-tab="baits">🪱 Baits &amp; Lures</button>
+  <button data-tab="systems">⚙️ Systems</button>
+  <button data-tab="faq">❓ FAQ</button>
+  <button data-tab="changelog">📜 Changelog</button>
+</nav>
+
+<main>
+
+<!-- ============ FISH DATABASE ============ -->
+<section class="tab active" id="tab-fish">
+  <h2>Fish Database</h2>
+  <p class="lead">Every catchable species with its default stats. Click a row for full details — weather multipliers, temperature preferences, and prep results. Values shown are the mod defaults; server owners can retune everything in <code>fish.json</code>.</p>
+  <div class="controls">
+    <input id="search" type="text" placeholder="Search by name or classname...">
+    <select id="f-env">
+      <option value="">All waters</option>
+      <option value="1">Freshwater (pond)</option>
+      <option value="2">Saltwater (sea)</option>
+      <option value="3">Both</option>
+    </select>
+    <select id="f-method">
+      <option value="">All catch methods</option>
+      <option value="rod">Fishing rod</option>
+      <option value="large">Large trap</option>
+      <option value="small">Small trap</option>
+    </select>
+    <select id="f-rarity">
+      <option value="">All rarities</option>
+      <option value="abundant">Abundant</option>
+      <option value="common">Common</option>
+      <option value="uncommon">Uncommon</option>
+      <option value="rare">Rare</option>
+    </select>
+  </div>
+  <div class="count" id="count"></div>
+  <div class="tblwrap">
+    <table id="fishtable">
+      <thead>
+        <tr>
+          <th data-k="n">Name <span class="arrow"></span></th>
+          <th data-k="env">Water <span class="arrow"></span></th>
+          <th data-k="m">Method <span class="arrow"></span></th>
+          <th data-k="p">Rarity <span class="arrow"></span></th>
+          <th data-k="to">Optimal °C <span class="arrow"></span></th>
+          <th data-k="mx">Meat <span class="arrow"></span></th>
+          <th data-k="bite">Activity <span class="arrow"></span></th>
+        </tr>
+      </thead>
+      <tbody id="fishbody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ ITEMS ============ -->
+<section class="tab" id="tab-items">
+  <h2>Items &amp; Gear</h2>
+  <p class="lead">Everything the mod adds beyond the fish themselves.</p>
+  <div class="cards">
+    <div class="card"><h4>🎣 Fishing Rods</h4>
+      <ul><li><b>Colored rods</b> — Red, Green, Blue, Purple</li>
+      <li>Repairable with the <b>Fishing Rod Repair Kit</b> (max Worn)</li>
+      <li>Wear on every catch outcome — success or fail</li></ul></div>
+    <div class="card"><h4>🔪 Fish Knives</h4>
+      <ul><li>6 colors: Blue, Orange, Green, Yellow, Red, Purple</li>
+      <li><b>+54% durability</b> vs vanilla HuntingKnife</li>
+      <li><b>10% faster</b> filleting (configurable)</li></ul></div>
+    <div class="card"><h4>🧰 Tackle Boxes</h4>
+      <ul><li><b>Small Tackle</b> — compact, holds lures, bait &amp; tools</li>
+      <li><b>Large Tackle</b> — 12 colors, bigger cargo, holds knives too</li>
+      <li><b>Medium Tackle</b> — 4 colors</li>
+      <li>Fun Tackle variants — Purple, Yellow, Green, Red</li></ul></div>
+    <div class="card"><h4>🪣 Bait Containers</h4>
+      <ul><li><b>Worm Container</b> — keeps worms &amp; grubs alive</li>
+      <li><b>Bug Container</b> — keeps insects alive, dig-bugs action</li>
+      <li><b>Bait Bucket</b> — keeps minnows, crayfish, shrimp, frogs &amp; salamanders fresh</li></ul></div>
+    <div class="card"><h4>🧊 Coolers</h4>
+      <ul><li><b>12 colors</b></li>
+      <li>Chills cargo toward <b>-5°C</b> — food freezes, rot stops</li>
+      <li>Pauses live-bait death too</li></ul></div>
+    <div class="card"><h4>🕸 Bamboo Fishing Net</h4>
+      <ul><li>Craftable &amp; repairable with Netting</li>
+      <li>Catches minnows, frogs, salamanders</li>
+      <li>Catches land in its own 4×4 cargo</li></ul></div>
+    <div class="card"><h4>🛶 Jon Boat</h4>
+      <ul><li>Drivable flat-bottomed boat, <b>5 variants</b></li>
+      <li>Green/gray aluminum + desert, snow, forest camo</li>
+      <li>Cargo space, chassis/engine/floater damage zones</li>
+      <li><i>More boat content coming</i></li></ul></div>
+    <div class="card"><h4>👕 Angler Clothing</h4>
+      <ul><li><b>Fishing Hats</b> — Blue, Red, Green, Purple</li>
+      <li><b>Fishing Shirts</b> — Red, Green, Blue, Purple</li>
+      <li><b>Fishing Gloves</b> — Orange, Blue</li></ul></div>
+    <div class="card"><h4>🥚 Delicacies</h4>
+      <ul><li><b>Red Caviar</b> — trout &amp; salmon roe</li>
+      <li><b>Black Caviar</b> — Lake Sturgeon roe</li>
+      <li><b>Yellow Caviar</b> — Northern Pike roe</li>
+      <li><b>Lobster Tail &amp; Claws</b>, <b>King/Snow Crab Legs</b></li></ul></div>
+    <div class="card"><h4>🔧 Crafting</h4>
+      <ul><li>Craft a <b>metal hook</b> from wire + pliers</li>
+      <li>Craft the <b>bamboo net</b></li>
+      <li>Repair rods &amp; nets (repairs cap at Worn; Ruined is gone for good)</li></ul></div>
+  </div>
+</section>
+
+<!-- ============ BAITS ============ -->
+<section class="tab" id="tab-baits">
+  <h2>Baits &amp; Lures</h2>
+  <p class="lead">Every bait and lure carries a per-fish preference table that biases which fish takes your hook. Live bait dies about 90 minutes after you find it unless stored in a bait container or cooler — the rubber worm never dies. All multipliers are tunable in <code>bait.json</code>.</p>
+  <h3>What should I put on the hook?</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Bait / Lure</th><th>How you get it</th><th>Best for</th><th>Weak against</th></tr></thead>
+    <tbody>
+      <tr><td><b>Worm</b></td><td>Dig worms (85% find)</td><td>Panfish ×2.0, Carp ×2.0, Trout ×1.6</td><td>Large saltwater ×0.3</td></tr>
+      <tr><td><b>Grub Worm</b></td><td>Digging worms or bugs</td><td>Panfish ×2.0, Trout &amp; Salmon ×1.8</td><td>Large saltwater ×0.3</td></tr>
+      <tr><td><b>Grasshopper / Cricket</b></td><td>Dig bugs (65% find)</td><td>Trout &amp; Salmon ×2.0, Frogs/Salamanders ×1.8</td><td>Pike ×0.4</td></tr>
+      <tr><td><b>Rubber Worm</b></td><td>Loot (never dies)</td><td>Bass ×2.5</td><td>Panfish ×0.6, Carp ×0.4</td></tr>
+      <tr><td><b>Live Minnow</b></td><td>Net or Bait Bucket</td><td>Pike/Musky ×2.5, Walleye ×2.5, Bass ×2.0</td><td>Carp ×0.4</td></tr>
+      <tr><td><b>Red Salamander</b></td><td>Net catch</td><td>Catfish &amp; bottom feeders ×2.5, Bass/Pike ×2.0</td><td>Panfish ×0.4</td></tr>
+      <tr><td><b>Spinner Baits</b> (4)</td><td>Loot</td><td>Bass ×2.5, Pike/Musky ×2.3, Walleye ×2.0</td><td>Carp ×0.3</td></tr>
+      <tr><td><b>Spoon Lures</b> (4)</td><td>Loot</td><td>Trout &amp; Salmon ×2.5, Saltwater ×1.8–2.0</td><td>Carp ×0.3</td></tr>
+      <tr><td><b>Crank / Popper Lures</b> (4)</td><td>Loot</td><td>All-rounder — Bass ×2.0, Pike ×1.8</td><td>Carp ×0.3</td></tr>
+      <tr><td><b>Curly Tail Jigs</b> (4)</td><td>Loot</td><td>Bass ×2.2, Walleye ×2.0, Panfish ×1.5</td><td>Amphibians ×0.5</td></tr>
+    </tbody>
+  </table></div>
+  <h3>How the preference system works</h3>
+  <p class="lead">When you cast, the mod builds a weighted pool of every fish eligible for your water and method. Each fish's weight is <code>CatchProbability × weather × time-of-day × temperature × bait</code> — so a worm at dawn in a warm pond makes bluegill dramatically more likely than a shark. Unlisted bait/fish pairs default to a neutral ×1.0, and the whole system can be disabled with <code>Enable: 0</code> in <code>bait.json</code> without losing your tuning.</p>
+</section>
+
+<!-- ============ SYSTEMS ============ -->
+<section class="tab" id="tab-systems">
+  <h2>Systems</h2>
+  <p class="lead">Every system is independently toggleable in the <code>$profile:Gebs/</code> config files. Disabled systems keep their tuned values in JSON with no in-game effect.</p>
+  <div class="cards">
+    <div class="card"><h4>🌦 Weather &amp; Time of Day</h4><p>Per-species Rain/Storm/Dawn/Day/Dusk/Night multipliers. Bass fire up at dawn and dusk, walleye and catfish wake at night, trout chase the rain. Stacked buffs are capped so a stormy night never runs away.</p></div>
+    <div class="card"><h4>🌕 Moon Phases</h4><p>Real synodic moon-phase math (Meeus algorithm) from the in-game date. Full-moon nights bite up to +20%, new-moon nights down to -10%. Night-only, independently toggleable.</p></div>
+    <div class="card"><h4>🌡 Water Temperature</h4><p>Every species has an optimal temperature and a survivable range. Bass own hot summer days; trout and salmon take over in the cold. A global <code>WaterTempOffset</code> adapts the whole curve to winter or tropical maps.</p></div>
+    <div class="card"><h4>🕐 Bite-Speed Cycles</h4><p>Each fish has a 24-hour circadian activity curve. The active pool's aggregate drives how long you wait between bites — night fishing for catfish feels different from noon panfishing.</p></div>
+    <div class="card"><h4>🪱 Living Bait</h4><p>Live bait perishes ~90 minutes after you find it. Worm/Bug Containers, the Bait Bucket, and coolers pause the clock. Artificial lures never die.</p></div>
+    <div class="card"><h4>🧊 Cooler &amp; Freezer</h4><p>Coolers actively chill cargo to -5°C: rot stops, food freezes. Frozen fish can't be filleted until thawed.</p></div>
+    <div class="card"><h4>🐺 Predators</h4><p>Fishing, filleting, failed casts, and net use can each draw wolves or bears (~1% per action by default, per-action configurable). Land-only spawns, optional warning sound for everyone nearby, and a chat warning for whoever caused it.</p></div>
+    <div class="card"><h4>🪝 Hook Recovery</h4><p>Roughly 1 in 250 fillets recovers a damaged hook or lure "stuck in the fish." Pool and damage range are configurable.</p></div>
+    <div class="card"><h4>🥫 Junk Catches</h4><p>Rods and nets can pull configurable junk — wellies, pots, anything you add — with weighted chances and spawn-damage ranges.</p></div>
+    <div class="card"><h4>📊 Admin Logging</h4><p>Timestamped session logs in <code>$profile:Gebs/logs/</code>. Debug level 1 gives per-cast summaries; level 2 prints full per-fish breakdown tables that answer "why isn't fish X spawning."</p></div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="tab" id="tab-faq">
+  <h2>Frequently Asked Questions</h2>
+  <details class="faq-item"><summary>What do I need to run Gebsfish?</summary><div>Gebsfish plus <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=1559212036">Community Framework (CF)</a>, loaded on both server and client. That's it — everything else is optional tuning.</div></details>
+  <details class="faq-item"><summary>Where are the config files?</summary><div>In your server profile folder: <code>$profile:Gebs/general.json</code> (global settings, weather, predators), <code>fish.json</code> (all 79 species), <code>bait.json</code> (the bait preference matrix), and <code>junk.json</code> (junk catches). Delete any of them and the server regenerates fresh defaults on next start. Every file documents its own fields in built-in <code>...Info</code> strings.</div></details>
+  <details class="faq-item"><summary>I'm upgrading from an older version — where did fishingsettings.json go?</summary><div>The old single-file config was replaced by the four files above. It's a clean break: there is no automatic migration, so the server generates fresh defaults and you re-apply your custom tuning by hand. Keep a backup of your old file for reference.</div></details>
+  <details class="faq-item"><summary>Why isn't fish X spawning?</summary><div>Three usual suspects: its <code>Environment</code> doesn't match where you're fishing (1 = pond, 2 = sea, 3 = both), its <code>CatchMethod</code> doesn't include your method (1 = rod, 2 = large trap, 4 = small trap, added together), or its <code>CatchProbability</code> is 0. Set <code>DebugLogs: 2</code> in general.json and the server log will print the full pool for every cast — including exactly why each fish was or wasn't eligible.</div></details>
+  <details class="faq-item"><summary>Can I turn off the weather / moon / temperature / bait systems?</summary><div>Yes, each independently. <code>WeatherCatchBoostEnable</code>, <code>MoonPhaseEnable</code>, <code>TemperatureEffectEnable</code>, and <code>BiteSpeedEnable</code> live in general.json under WeatherSettings; the bait system's master toggle is <code>Enable</code> at the top of bait.json. Your tuned values stay in the file while a system is off.</div></details>
+  <details class="faq-item"><summary>I edited BiteSpeed and my server crashed on startup. What happened?</summary><div>BiteSpeed must be a single <b>space-separated string</b> of 24 hourly values (<code>"0.85 0.9 1 ..."</code>), not a JSON array — DayZ's JSON loader crashes on nested float arrays. Also keep any single string value in the configs under ~900 characters; the engine's reader hard-crashes past ~1024.</div></details>
+  <details class="faq-item"><summary>Do the fish work with trader mods?</summary><div>Yes. Fish quality defaults to 1.0 (full) specifically because popular traders (DayZ-Expansion-Market, TraderPlus, Dr. Jones) only accept full-quality items. If your trader scales price by quality, you can lower <code>FishQuality</code> in general.json.</div></details>
+  <details class="faq-item"><summary>How do I add the fish to my server's economy?</summary><div>The mod generates <code>gebsfish-types.xml</code> and <code>gebsfish-spawnabletypes.xml</code> into <code>$profile:Gebs/mpmissions/</code> on server start — merge those into your mission's economy files. The generated types contain only Gebsfish classnames; vanilla fish are already in your mission's own types.xml.</div></details>
+  <details class="faq-item"><summary>How do I keep my bait alive?</summary><div>Live bait (worms, crickets, grasshoppers, grubs) dies about 90 minutes after you find it. Store it in a Worm Container, Bug Container, or cooler to pause the clock. Minnows, crayfish, shrimp, frogs, and salamanders stay fresh in the Bait Bucket. The rubber worm is artificial and never dies. Tackle boxes do <i>not</i> preserve bait — the dedicated containers are the point.</div></details>
+  <details class="faq-item"><summary>Why did my rod break? Can I repair it?</summary><div>Rods and hooks wear a little on every catch outcome — success or fail. Repair rods with the Fishing Rod Repair Kit and the bamboo net with Netting, but repairs cap at <b>Worn</b> and Ruined tools cannot be repaired, so retire gear before it's too late.</div></details>
+  <details class="faq-item"><summary>Can I turn predators off (or up)?</summary><div>Fully configurable in general.json: a per-action chance for fishing, filleting, failed casts, and net use (default ~1% each), the predator list with weights and counts, spawn radius, the warning sound, and the chat warning. Set the chances to 0 to disable, or crank them for a high-stakes server.</div></details>
+  <details class="faq-item"><summary>Does Gebsfish work on custom maps?</summary><div>Yes — Chernarus, Livonia, Sakhal, Banov, Namalsk, Deer Isle, Lux, NavalPlus, Sahrani, Artseinen, MelkartV2, and Deadfall are supported out of the box. If your map's fishing doesn't work, open a ticket in the Discord and we'll issue a hotfix for that map.</div></details>
+  <details class="faq-item"><summary>Can I put Gebsfish in my server pack / mod pack?</summary><div><b>No.</b> Repacking is not permitted under any circumstances — use a Steam Collection to include the mod on your server. See the <a href="https://github.com/PackJC/gebsfish?tab=readme-ov-file#usage--terms">Usage &amp; Terms</a>.</div></details>
+  <details class="faq-item"><summary>Can I monetize my server while running Gebsfish?</summary><div>Yes, provided you follow the <a href="https://www.bohemia.net/monetization">DayZ Server Monetization agreement</a> and have permission from Bohemia.</div></details>
+</section>
+
+<!-- ============ CHANGELOG ============ -->
+<section class="tab" id="tab-changelog">
+  <h2>Changelog</h2>
+  <div class="banner">⚠️ <b>v4.0.0 is in development</b> — the current Workshop release is v3.3.0. Everything below ships with the next update. Full history in <a href="https://github.com/PackJC/gebsfish/blob/master/CHANGELOG.md">CHANGELOG.md</a>.</div>
+  <div class="chg">
+    <h3>Requirements &amp; Compatibility</h3>
+    <ul>
+      <li>DayZ 1.29 compatibility</li>
+      <li><b>Community Framework (CF) is now required</b> — the RPC system migrated to CF</li>
+      <li>All fish now have melee functionality (matching vanilla)</li>
+      <li>New map support: Sahrani, Artseinen, MelkartV2, and Deadfall</li>
+    </ul>
+    <h3>New Systems</h3>
+    <ul>
+      <li><b>Weather catch buffs</b> — global + per-fish rain/storm/time multipliers with a stacking cap</li>
+      <li><b>Moon phases</b> — night-only buff from real synodic phase math (+20% full, -10% new)</li>
+      <li><b>Water temperature</b> — per-fish preference curves with a global offset for winter/tropical maps</li>
+      <li><b>Bite-speed cycles</b> — 24-hour circadian activity curves drive wait times between bites</li>
+      <li><b>Bait preference matrix</b> — ~700 seeded bait/fish pairings, lure families share entries, fully tunable</li>
+      <li><b>Hook-from-fish recovery</b> — ~1/250 fillets recover a damaged hook</li>
+      <li><b>Cooler freezer system</b> — active chilling to -5°C, perishable live bait, frozen-fillet guard</li>
+      <li><b>Predator spawn rework</b> — per-action chances, weighted picks, land-only spawns</li>
+      <li><b>Configurable net catches</b> — per-environment tables, catches land in the net's cargo, net repair recipe</li>
+    </ul>
+    <h3>Config Overhaul</h3>
+    <ul>
+      <li><code>fishingsettings.json</code> replaced by four self-documenting files: <code>general.json</code>, <code>bait.json</code>, <code>junk.json</code>, <code>fish.json</code> — <b>clean break, no migration</b></li>
+      <li>Fish are fully data-driven: one Species row per fish feeds a generic yield + recipe pipeline</li>
+      <li>Master toggles for every catch-modifying system</li>
+    </ul>
+    <h3>New Content</h3>
+    <ul>
+      <li><b>14 new species</b> — Hammerhead Shark, Lake Sturgeon, Alligator Gar, 4 Muskellunge variants, Northern Snakehead, Neosho &amp; Striped Bass, White Grunt, Southern Flounder, Yellow Snapper, American Bullfrog, Red Salamander — plus 5 new crayfish</li>
+      <li><b>Jon Boat</b> — drivable, 5 variants, cargo, custom damage zones</li>
+      <li>Black &amp; Yellow Caviar, Coolers in 12 colors, Grub Worm, metal hook crafting, net repair</li>
+      <li>4 Spoon Lures, 4 Curly Tail Jigs, new Spinner Bait / crank / popper models</li>
+      <li>Major art pass: new or reworked models for 30+ existing species</li>
+    </ul>
+    <h3>Balance</h3>
+    <ul>
+      <li>Realistic catch probabilities (abundance-based) and fish weights (real-world sizes — trophy pelagics are heavy now, by design)</li>
+      <li>Ecology pass: corrected environments for anadromous species; predator chance now ~1% per action</li>
+      <li>Fish knives: +54% durability, 10% faster filleting; repairs cap at Worn</li>
+      <li>Rods no longer take double durability damage per catch (was wearing at 2× the intended rate)</li>
+    </ul>
+    <h3>Fixed (highlights)</h3>
+    <ul>
+      <li>Bait preferences and temperature now work independently of the weather toggle</li>
+      <li>Bite-speed weighting no longer double-counts abundance</li>
+      <li>Dug bugs are visible to all players (were spawning server-side only)</li>
+      <li>XML generator crash fix, duplicate economy entries removed, dozens of texture/model fixes</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  Gebsfish © Smoky Mountain Software 2022-2026 · <a href="https://github.com/PackJC/gebsfish/blob/master/LICENSE">CC BY-NC-ND 4.0</a> · Not affiliated with Bohemia Interactive<br>
+  Data on this page reflects the mod's default configuration; individual servers may differ.
+</footer>
+
+<script>
+const FISH = [{"n":"Mackerel","c":"Mackerel","env":2,"m":3,"p":22,"shape":0,"rm":"MackerelFilletMeat","rb":"","mn":1,"mx":2,"to":18,"tmin":8,"tmax":24,"bite":"Steady","rain":1,"storm":1.2,"dawn":1.1,"day":1,"dusk":1.1,"night":1},{"n":"Carp","c":"Carp","env":1,"m":3,"p":22,"shape":0,"rm":"CarpFilletMeat","rb":"","mn":1,"mx":2,"to":24,"tmin":14,"tmax":30,"bite":"Steady","rain":0.9,"storm":0.8,"dawn":1.2,"day":0.9,"dusk":1.2,"night":0.9},{"n":"Sardines","c":"Sardines","env":2,"m":6,"p":24,"shape":0,"rm":"","rb":"","mn":1,"mx":1,"to":18,"tmin":8,"tmax":24,"bite":"Diurnal","rain":1,"storm":1.1,"dawn":1,"day":1.1,"dusk":1,"night":0.9},{"n":"Bitterlings","c":"Bitterlings","env":1,"m":6,"p":24,"shape":0,"rm":"","rb":"","mn":1,"mx":1,"to":22,"tmin":12,"tmax":28,"bite":"Diurnal","rain":1.1,"storm":1,"dawn":1,"day":1.1,"dusk":1,"night":0.9},{"n":"Walleye Pollock","c":"WalleyePollock","env":2,"m":3,"p":20,"shape":0,"rm":"WalleyePollockFilletMeat","rb":"","mn":1,"mx":2,"to":8,"tmin":1,"tmax":14,"bite":"Pelagic","rain":1,"storm":1,"dawn":1,"day":1,"dusk":1.1,"night":1.1},{"n":"Steelhead Trout","c":"SteelheadTrout","env":3,"m":3,"p":9,"shape":1,"rm":"SteelheadTroutFilletMeat","rb":"RedCaviar","mn":1,"mx":2,"to":13,"tmin":4,"tmax":20,"bite":"Crepuscular","rain":1.4,"storm":1.3,"dawn":1.5,"day":0.8,"dusk":1.4,"night":1},{"n":"Shrimp","c":"Shrimp","env":2,"m":6,"p":22,"shape":0,"rm":"","rb":"","mn":1,"mx":1,"to":20,"tmin":12,"tmax":30,"bite":"Nocturnal","rain":0.9,"storm":1,"dawn":0.9,"day":0.8,"dusk":1.1,"night":1.3},{"n":"Northern Snakehead","c":"geb_NorthernSnakeHead","env":1,"m":1,"p":5,"shape":0,"rm":"geb_NorthernSnakeHeadFilletMeat","rb":"","mn":2,"mx":4,"to":21,"tmin":12,"tmax":28,"bite":"Nocturnal","rain":1,"storm":1,"dawn":1.2,"day":0.8,"dusk":1.3,"night":1.5},{"n":"Northern Pike","c":"geb_NorthernPike","env":1,"m":1,"p":8,"shape":1,"rm":"geb_NorthernPikeFilletMeat","rb":"geb_YellowCaviar","mn":2,"mx":4,"to":18,"tmin":8,"tmax":24,"bite":"TwilightNight","rain":1,"storm":1.1,"dawn":1.3,"day":0.8,"dusk":1.4,"night":1.4},{"n":"Barred Muskellunge","c":"geb_BarredMuskellunge","env":1,"m":1,"p":3,"shape":1,"rm":"geb_BarredMuskellungeFilletMeat","rb":"geb_YellowCaviar","mn":2,"mx":4,"to":19,"tmin":10,"tmax":25,"bite":"TwilightNight","rain":1,"storm":1.1,"dawn":1.3,"day":0.8,"dusk":1.4,"night":1.4},{"n":"Spotted Muskellunge","c":"geb_SpottedMuskellunge","env":1,"m":1,"p":3,"shape":1,"rm":"geb_SpottedMuskellungeFilletMeat","rb":"geb_YellowCaviar","mn":2,"mx":4,"to":19,"tmin":10,"tmax":25,"bite":"TwilightNight","rain":1,"storm":1.1,"dawn":1.3,"day":0.8,"dusk":1.4,"night":1.4},{"n":"Tiger Muskellunge","c":"geb_TigerMuskellunge","env":1,"m":1,"p":3,"shape":1,"rm":"geb_TigerMuskellungeFilletMeat","rb":"geb_YellowCaviar","mn":2,"mx":4,"to":19,"tmin":10,"tmax":25,"bite":"TwilightNight","rain":1,"storm":1.1,"dawn":1.3,"day":0.8,"dusk":1.4,"night":1.4},{"n":"Muskellunge","c":"geb_Muskellunge","env":1,"m":1,"p":4,"shape":1,"rm":"geb_MuskellungeFilletMeat","rb":"geb_YellowCaviar","mn":2,"mx":4,"to":19,"tmin":10,"tmax":25,"bite":"TwilightNight","rain":1,"storm":1.1,"dawn":1.3,"day":0.8,"dusk":1.4,"night":1.4},{"n":"Alligator Gar","c":"geb_AlligatorGar","env":3,"m":1,"p":4,"shape":0,"rm":"geb_AlligatorGarFilletMeat","rb":"","mn":2,"mx":4,"to":26,"tmin":16,"tmax":32,"bite":"TwilightNight","rain":1,"storm":1.2,"dawn":1.2,"day":0.8,"dusk":1.3,"night":1.4},{"n":"Largemouth Bass","c":"geb_LargeMouthBass","env":1,"m":3,"p":14,"shape":0,"rm":"geb_LargeMouthBassFilletMeat","rb":"","mn":1,"mx":2,"to":24,"tmin":14,"tmax":30,"bite":"Crepuscular","rain":1.1,"storm":1.3,"dawn":1.4,"day":0.9,"dusk":1.4,"night":1.1},{"n":"Smallmouth Bass","c":"geb_SmallMouthBass","env":1,"m":3,"p":13,"shape":0,"rm":"geb_SmallMouthBassFilletMeat","rb":"","mn":1,"mx":2,"to":21,"tmin":12,"tmax":27,"bite":"Crepuscular","rain":1.1,"storm":1.3,"dawn":1.4,"day":0.9,"dusk":1.4,"night":1.1},{"n":"Walleye","c":"geb_WallEye","env":1,"m":3,"p":12,"shape":0,"rm":"geb_WallEyeFilletMeat","rb":"","mn":1,"mx":2,"to":18,"tmin":8,"tmax":24,"bite":"TwilightNight","rain":1,"storm":1,"dawn":1.3,"day":0.7,"dusk":1.5,"night":1.5},{"n":"Sun Fish","c":"geb_SunFish","env":1,"m":3,"p":20,"shape":0,"rm":"geb_SunFishFilletMeat","rb":"","mn":1,"mx":2,"to":25,"tmin":15,"tmax":30,"bite":"Diurnal","rain":1.1,"storm":0.9,"dawn":1,"day":1.2,"dusk":1,"night":0.9},{"n":"White Bass","c":"geb_WhiteBass","env":1,"m":3,"p":11,"shape":0,"rm":"geb_WhiteBassFilletMeat","rb":"","mn":1,"mx":2,"to":21,"tmin":12,"tmax":27,"bite":"Steady","rain":1,"storm":1.2,"dawn":1.2,"day":1,"dusk":1.3,"night":1.3},{"n":"Striped Bass","c":"geb_StripedBass","env":3,"m":3,"p":10,"shape":0,"rm":"geb_StripedBassFilletMeat","rb":"","mn":1,"mx":2,"to":20,"tmin":10,"tmax":26,"bite":"TwilightNight","rain":1,"storm":1.4,"dawn":1.2,"day":0.9,"dusk":1.4,"night":1.3},{"n":"Neosho Bass","c":"geb_NeoshoBass","env":1,"m":3,"p":7,"shape":0,"rm":"geb_NeoshoBassFilletMeat","rb":"","mn":1,"mx":2,"to":22,"tmin":13,"tmax":28,"bite":"Crepuscular","rain":1.1,"storm":1.3,"dawn":1.4,"day":0.9,"dusk":1.4,"night":1},{"n":"Black Bass","c":"geb_BlackBass","env":1,"m":3,"p":13,"shape":0,"rm":"geb_BlackBassFilletMeat","rb":"","mn":1,"mx":2,"to":23,"tmin":13,"tmax":29,"bite":"Crepuscular","rain":1.1,"storm":1.3,"dawn":1.4,"day":0.9,"dusk":1.4,"night":1},{"n":"Rainbow Trout","c":"geb_RainbowTrout","env":1,"m":3,"p":14,"shape":1,"rm":"geb_RainbowTroutFilletMeat","rb":"RedCaviar","mn":1,"mx":2,"to":14,"tmin":4,"tmax":21,"bite":"Crepuscular","rain":1.4,"storm":1.3,"dawn":1.5,"day":0.8,"dusk":1.4,"night":1},{"n":"Brown Trout","c":"geb_BrownTrout","env":1,"m":3,"p":12,"shape":1,"rm":"geb_BrownTroutFilletMeat","rb":"RedCaviar","mn":1,"mx":2,"to":14,"tmin":4,"tmax":21,"bite":"Crepuscular","rain":1.4,"storm":1.3,"dawn":1.5,"day":0.8,"dusk":1.4,"night":1},{"n":"Brook Trout","c":"geb_BrookTrout","env":1,"m":3,"p":12,"shape":1,"rm":"geb_BrookTroutFilletMeat","rb":"RedCaviar","mn":1,"mx":2,"to":13,"tmin":4,"tmax":20,"bite":"Crepuscular","rain":1.4,"storm":1.3,"dawn":1.5,"day":0.8,"dusk":1.4,"night":1},{"n":"Lake Trout","c":"geb_LakeTrout","env":1,"m":3,"p":8,"shape":0,"rm":"geb_LakeTroutFilletMeat","rb":"","mn":1,"mx":2,"to":10,"tmin":2,"tmax":16,"bite":"Crepuscular","rain":1.3,"storm":1.2,"dawn":1.3,"day":0.9,"dusk":1.3,"night":1.1},{"n":"Cutthroat Trout","c":"geb_CutThroatTrout","env":1,"m":3,"p":9,"shape":1,"rm":"geb_CutThroatTroutFilletMeat","rb":"RedCaviar","mn":1,"mx":2,"to":13,"tmin":4,"tmax":20,"bite":"Crepuscular","rain":1.4,"storm":1.3,"dawn":1.5,"day":0.8,"dusk":1.4,"night":1},{"n":"Lake Sturgeon","c":"geb_LakeSturgeon","env":1,"m":3,"p":3,"shape":1,"rm":"geb_LakeSturgeonFilletMeat","rb":"geb_BlackCaviar","mn":1,"mx":2,"to":15,"tmin":5,"tmax":22,"bite":"Steady","rain":1.1,"storm":1.4,"dawn":1.1,"day":0.9,"dusk":1.1,"night":1},{"n":"Yellow Perch","c":"geb_YellowPerch","env":1,"m":3,"p":21,"shape":0,"rm":"geb_YellowPerchFilletMeat","rb":"","mn":1,"mx":2,"to":19,"tmin":10,"tmax":25,"bite":"Diurnal","rain":1.1,"storm":1,"dawn":1,"day":1.2,"dusk":1,"night":0.9},{"n":"Flathead Catfish","c":"geb_FlatHeadCatFish","env":1,"m":3,"p":5,"shape":0,"rm":"geb_FlatHeadCatFishFilletMeat","rb":"","mn":1,"mx":4,"to":26,"tmin":16,"tmax":32,"bite":"Nocturnal","rain":1,"storm":1.1,"dawn":1.2,"day":0.7,"dusk":1.4,"night":1.6},{"n":"Fathead Minnow","c":"geb_FatHeadMinnow","env":1,"m":5,"p":25,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":22,"tmin":12,"tmax":28,"bite":"Diurnal","rain":1.2,"storm":1,"dawn":1,"day":1.1,"dusk":1,"night":0.9},{"n":"American Bull Frog","c":"geb_AmericanBullFrog","env":1,"m":5,"p":12,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":25,"tmin":15,"tmax":32,"bite":"Nocturnal","rain":1.5,"storm":1.2,"dawn":1.4,"day":1,"dusk":1.5,"night":1.3},{"n":"Red Salamander","c":"geb_RedSalamander","env":1,"m":5,"p":7,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":15,"tmin":6,"tmax":22,"bite":"Nocturnal","rain":1.6,"storm":1.3,"dawn":1.2,"day":1,"dusk":1.3,"night":1.2},{"n":"Bluegill","c":"geb_BlueGill","env":1,"m":3,"p":22,"shape":0,"rm":"geb_BlueGillFilletMeat","rb":"","mn":1,"mx":2,"to":25,"tmin":15,"tmax":30,"bite":"Diurnal","rain":1.1,"storm":0.9,"dawn":1,"day":1.2,"dusk":1,"night":0.9},{"n":"Sauger","c":"geb_Sauger","env":1,"m":3,"p":10,"shape":0,"rm":"geb_SaugerFilletMeat","rb":"","mn":1,"mx":2,"to":18,"tmin":8,"tmax":24,"bite":"TwilightNight","rain":1,"storm":1,"dawn":1.3,"day":0.7,"dusk":1.5,"night":1.5},{"n":"Bowfin","c":"geb_BowFin","env":1,"m":3,"p":8,"shape":0,"rm":"geb_BowFinFilletMeat","rb":"","mn":1,"mx":2,"to":22,"tmin":12,"tmax":28,"bite":"Nocturnal","rain":1,"storm":1.2,"dawn":1.2,"day":0.8,"dusk":1.3,"night":1.4},{"n":"Slimy Sculpin","c":"geb_SlimySculpin","env":1,"m":3,"p":16,"shape":0,"rm":"geb_SlimySculpinFilletMeat","rb":"","mn":1,"mx":2,"to":10,"tmin":2,"tmax":16,"bite":"Steady","rain":1,"storm":1.1,"dawn":1,"day":1,"dusk":1,"night":1.2},{"n":"Severum","c":"geb_Severum","env":1,"m":3,"p":3,"shape":0,"rm":"geb_SeverumFilletMeat","rb":"","mn":1,"mx":2,"to":27,"tmin":20,"tmax":32,"bite":"Diurnal","rain":1.1,"storm":1,"dawn":1,"day":1.2,"dusk":1,"night":1},{"n":"Signal Crayfish","c":"geb_SignalCrayFish","env":1,"m":4,"p":18,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":22,"tmin":12,"tmax":28,"bite":"Nocturnal","rain":1,"storm":1.1,"dawn":1,"day":0.8,"dusk":1.1,"night":1.4},{"n":"European Crayfish","c":"geb_EuropeanCrayFish","env":1,"m":4,"p":11,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":22,"tmin":12,"tmax":28,"bite":"Nocturnal","rain":1,"storm":1.1,"dawn":1,"day":0.8,"dusk":1.1,"night":1.4},{"n":"Florida Crayfish","c":"geb_FloridaCrayFish","env":1,"m":4,"p":8,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":25,"tmin":15,"tmax":30,"bite":"Nocturnal","rain":1,"storm":1.1,"dawn":1,"day":0.8,"dusk":1.1,"night":1.4},{"n":"Cave Crayfish","c":"geb_CaveCrayFish","env":1,"m":4,"p":2,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":12,"tmin":4,"tmax":18,"bite":"Nocturnal","rain":1,"storm":1,"dawn":1,"day":1,"dusk":1,"night":1.5},{"n":"Monongahela Crayfish","c":"geb_MonongahelaCrayFish","env":1,"m":4,"p":7,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":22,"tmin":12,"tmax":28,"bite":"Nocturnal","rain":1,"storm":1.1,"dawn":1,"day":0.8,"dusk":1.1,"night":1.4},{"n":"Red Swamp Crayfish","c":"geb_RedSwampCrayFish","env":1,"m":4,"p":18,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":24,"tmin":14,"tmax":30,"bite":"Nocturnal","rain":1,"storm":1.2,"dawn":1,"day":0.9,"dusk":1.1,"night":1.4},{"n":"Rusty Crayfish","c":"geb_RustyCrayFish","env":1,"m":4,"p":14,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":22,"tmin":12,"tmax":28,"bite":"Nocturnal","rain":1,"storm":1.1,"dawn":1,"day":0.8,"dusk":1.1,"night":1.4},{"n":"Mahi Mahi","c":"geb_MahiMahi","env":2,"m":1,"p":10,"shape":0,"rm":"geb_MahiMahiFilletMeat","rb":"","mn":3,"mx":7,"to":27,"tmin":20,"tmax":32,"bite":"Pelagic","rain":1.2,"storm":1.5,"dawn":1.1,"day":1.1,"dusk":1,"night":1},{"n":"Atlantic Sailfish","c":"geb_AtlanticSailFish","env":2,"m":1,"p":4,"shape":0,"rm":"geb_AtlanticSailFishFilletMeat","rb":"","mn":4,"mx":7,"to":27,"tmin":21,"tmax":32,"bite":"Pelagic","rain":1.2,"storm":1.4,"dawn":1.2,"day":1.1,"dusk":1.2,"night":1},{"n":"Angelfish","c":"geb_AngelFish","env":2,"m":1,"p":10,"shape":0,"rm":"geb_AngelFishFilletMeat","rb":"","mn":1,"mx":2,"to":27,"tmin":20,"tmax":32,"bite":"Diurnal","rain":0.9,"storm":0.8,"dawn":1,"day":1.2,"dusk":1,"night":0.8},{"n":"Asian Seabass","c":"geb_AsianSeaBass","env":3,"m":3,"p":10,"shape":0,"rm":"geb_AsianSeaBassFilletMeat","rb":"","mn":2,"mx":4,"to":28,"tmin":20,"tmax":33,"bite":"Pelagic","rain":1.2,"storm":1.3,"dawn":1.2,"day":0.9,"dusk":1.3,"night":1.2},{"n":"Atlantic Blue Marlin","c":"geb_AtlanticBlueMarlin","env":2,"m":1,"p":3,"shape":0,"rm":"geb_AtlanticBlueMarlinFilletMeat","rb":"","mn":3,"mx":6,"to":26,"tmin":20,"tmax":30,"bite":"Pelagic","rain":1.2,"storm":1.4,"dawn":1.2,"day":1,"dusk":1.2,"night":1},{"n":"Bonita","c":"geb_Bonita","env":2,"m":3,"p":10,"shape":0,"rm":"geb_BonitaFilletMeat","rb":"","mn":1,"mx":2,"to":22,"tmin":14,"tmax":28,"bite":"Pelagic","rain":1.1,"storm":1.3,"dawn":1.2,"day":1,"dusk":1.2,"night":1},{"n":"Cherry Salmon","c":"geb_CherrySalmon","env":3,"m":3,"p":6,"shape":1,"rm":"geb_CherrySalmonFilletMeat","rb":"RedCaviar","mn":1,"mx":2,"to":12,"tmin":4,"tmax":18,"bite":"Crepuscular","rain":1.3,"storm":1.2,"dawn":1.4,"day":0.9,"dusk":1.3,"night":1},{"n":"Chinook Salmon","c":"geb_ChinookSalmon","env":3,"m":3,"p":8,"shape":1,"rm":"geb_ChinookSalmonFilletMeat","rb":"RedCaviar","mn":1,"mx":2,"to":12,"tmin":4,"tmax":18,"bite":"Crepuscular","rain":1.3,"storm":1.2,"dawn":1.4,"day":0.9,"dusk":1.3,"night":1},{"n":"Sockeye Salmon","c":"geb_SockEyeSalmon","env":3,"m":3,"p":8,"shape":1,"rm":"geb_SockEyeSalmonFilletMeat","rb":"RedCaviar","mn":1,"mx":2,"to":13,"tmin":4,"tmax":18,"bite":"Crepuscular","rain":1.3,"storm":1.2,"dawn":1.4,"day":0.9,"dusk":1.3,"night":1},{"n":"Flathead Mullet","c":"geb_FlatHeadMullet","env":3,"m":3,"p":18,"shape":0,"rm":"geb_FlatHeadMulletFilletMeat","rb":"","mn":1,"mx":2,"to":25,"tmin":15,"tmax":30,"bite":"Pelagic","rain":1.3,"storm":1.2,"dawn":1.3,"day":1.1,"dusk":1.2,"night":1},{"n":"Leopard Shark","c":"geb_LeopardShark","env":2,"m":1,"p":9,"shape":0,"rm":"geb_LeopardSharkFilletMeat","rb":"","mn":2,"mx":4,"to":18,"tmin":10,"tmax":24,"bite":"Nocturnal","rain":1,"storm":1,"dawn":1,"day":0.9,"dusk":1.2,"night":1.4},{"n":"Hammerhead Shark","c":"geb_HammerHeadShark","env":2,"m":1,"p":5,"shape":0,"rm":"geb_HammerHeadSharkFilletMeat","rb":"","mn":2,"mx":4,"to":26,"tmin":18,"tmax":30,"bite":"Nocturnal","rain":1,"storm":1.1,"dawn":1.1,"day":0.9,"dusk":1.3,"night":1.5},{"n":"Pacific Cod","c":"geb_PacificCod","env":2,"m":3,"p":16,"shape":0,"rm":"geb_PacificCodFilletMeat","rb":"","mn":1,"mx":2,"to":8,"tmin":2,"tmax":14,"bite":"Pelagic","rain":1,"storm":1.1,"dawn":1.1,"day":1,"dusk":1.1,"night":1.2},{"n":"Readhead Cichlid","c":"geb_RedHeadCichlid","env":1,"m":3,"p":4,"shape":0,"rm":"geb_RedHeadCichlidFilletMeat","rb":"","mn":1,"mx":2,"to":27,"tmin":20,"tmax":32,"bite":"Diurnal","rain":1,"storm":1,"dawn":1,"day":1.1,"dusk":1,"night":1},{"n":"Rough Neck Rock","c":"geb_RoughNeckRock","env":2,"m":3,"p":14,"shape":0,"rm":"geb_RoughNeckRockFilletMeat","rb":"","mn":1,"mx":2,"to":17,"tmin":8,"tmax":24,"bite":"Pelagic","rain":1,"storm":1.2,"dawn":1.1,"day":1,"dusk":1.2,"night":1.2},{"n":"Blue Tang","c":"geb_BlueTang","env":2,"m":3,"p":12,"shape":0,"rm":"geb_BlueTangFilletMeat","rb":"","mn":1,"mx":2,"to":26,"tmin":20,"tmax":30,"bite":"Diurnal","rain":0.9,"storm":0.8,"dawn":1,"day":1.2,"dusk":1,"night":0.9},{"n":"Largehead Hairtail","c":"geb_LargeHeadHairTailFish","env":2,"m":3,"p":9,"shape":0,"rm":"geb_LargeHeadHairTailFishFilletMeat","rb":"","mn":3,"mx":5,"to":17,"tmin":8,"tmax":24,"bite":"Nocturnal","rain":1,"storm":1.1,"dawn":1,"day":0.9,"dusk":1.2,"night":1.4},{"n":"Humphead Wrasse","c":"geb_HumpHeadWrasse","env":2,"m":3,"p":4,"shape":0,"rm":"geb_HumpHeadWrasseFilletMeat","rb":"","mn":3,"mx":5,"to":27,"tmin":20,"tmax":32,"bite":"Diurnal","rain":0.9,"storm":0.8,"dawn":1,"day":1.2,"dusk":1,"night":0.8},{"n":"Siamese Tigerfish","c":"geb_SiameseTigerFish","env":1,"m":3,"p":6,"shape":0,"rm":"geb_SiameseTigerFishFilletMeat","rb":"","mn":3,"mx":6,"to":27,"tmin":20,"tmax":32,"bite":"Pelagic","rain":1.1,"storm":1.3,"dawn":1.1,"day":1,"dusk":1.2,"night":1.2},{"n":"Great White Shark","c":"geb_GreatWhiteShark","env":2,"m":1,"p":2,"shape":0,"rm":"geb_GreatWhiteSharkFilletMeat","rb":"","mn":5,"mx":10,"to":17,"tmin":10,"tmax":24,"bite":"Nocturnal","rain":1,"storm":1.2,"dawn":1.2,"day":0.9,"dusk":1.3,"night":1.4},{"n":"Angel Shark","c":"geb_AngelShark","env":2,"m":1,"p":7,"shape":0,"rm":"geb_AngelSharkFilletMeat","rb":"","mn":3,"mx":8,"to":18,"tmin":10,"tmax":24,"bite":"Nocturnal","rain":1,"storm":1,"dawn":1,"day":0.8,"dusk":1.2,"night":1.5},{"n":"Yellowfin Tuna","c":"geb_YellowFinTuna","env":2,"m":1,"p":8,"shape":0,"rm":"geb_YellowFinTunaFilletMeat","rb":"","mn":2,"mx":6,"to":25,"tmin":18,"tmax":30,"bite":"Pelagic","rain":1.1,"storm":1.3,"dawn":1.3,"day":1,"dusk":1.3,"night":1},{"n":"White Grunt","c":"geb_WhiteGrunt","env":2,"m":1,"p":14,"shape":0,"rm":"geb_WhiteGruntFilletMeat","rb":"","mn":2,"mx":6,"to":25,"tmin":18,"tmax":30,"bite":"Pelagic","rain":1,"storm":1.1,"dawn":1.2,"day":1,"dusk":1.2,"night":1.2},{"n":"Southern Flounder","c":"geb_SouthernFlounder","env":2,"m":1,"p":11,"shape":0,"rm":"geb_SouthernFlounderFilletMeat","rb":"","mn":2,"mx":6,"to":18,"tmin":10,"tmax":24,"bite":"Nocturnal","rain":1.1,"storm":1.3,"dawn":1.2,"day":0.9,"dusk":1.3,"night":1.4},{"n":"Yellow Snapper","c":"geb_YellowSnapper","env":2,"m":1,"p":13,"shape":0,"rm":"geb_YellowSnapperFilletMeat","rb":"","mn":2,"mx":6,"to":25,"tmin":18,"tmax":30,"bite":"Pelagic","rain":1,"storm":1.1,"dawn":1.3,"day":1,"dusk":1.3,"night":1.3},{"n":"Blood Clam","c":"geb_BloodClam","env":2,"m":4,"p":14,"shape":0,"rm":"","rb":"","mn":1,"mx":1,"to":18,"tmin":4,"tmax":30,"bite":"FilterFeeder","rain":1,"storm":1.1,"dawn":1,"day":1,"dusk":1,"night":0.9},{"n":"Mussel","c":"geb_Mussel","env":3,"m":6,"p":20,"shape":0,"rm":"","rb":"","mn":1,"mx":1,"to":16,"tmin":4,"tmax":28,"bite":"FilterFeeder","rain":1,"storm":1.1,"dawn":1,"day":1,"dusk":1,"night":0.9},{"n":"Black Devil Snail","c":"geb_BlackDevilSnail","env":1,"m":6,"p":10,"shape":0,"rm":"","rb":"","mn":1,"mx":1,"to":22,"tmin":10,"tmax":30,"bite":"Nocturnal","rain":1,"storm":1,"dawn":1,"day":0.9,"dusk":1,"night":1.2},{"n":"Starfish","c":"geb_StarFish","env":2,"m":6,"p":16,"shape":0,"rm":"","rb":"","mn":1,"mx":1,"to":16,"tmin":4,"tmax":28,"bite":"Constant","rain":1,"storm":1,"dawn":1,"day":1,"dusk":1,"night":1},{"n":"King Crab","c":"geb_KingCrab","env":2,"m":6,"p":5,"shape":0,"rm":"geb_KingCrabLegs","rb":"","mn":1,"mx":2,"to":5,"tmin":0,"tmax":12,"bite":"Nocturnal","rain":1,"storm":1.1,"dawn":1,"day":0.9,"dusk":1.1,"night":1.3},{"n":"Snow Crab","c":"geb_SnowCrab","env":2,"m":6,"p":7,"shape":0,"rm":"geb_SnowCrabLegs","rb":"","mn":1,"mx":2,"to":4,"tmin":0,"tmax":10,"bite":"Nocturnal","rain":1,"storm":1.1,"dawn":1,"day":0.9,"dusk":1.1,"night":1.3},{"n":"Blue Jellyfish","c":"geb_BlueJellyFish","env":2,"m":6,"p":12,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":20,"tmin":8,"tmax":30,"bite":"Nocturnal","rain":1,"storm":1,"dawn":1,"day":0.9,"dusk":1,"night":1.4},{"n":"American Lobster","c":"geb_AmericanLobster","env":2,"m":6,"p":9,"shape":2,"rm":"geb_AmericanLobsterClaw","rb":"geb_AmericanLobsterTail","mn":1,"mx":2,"to":12,"tmin":4,"tmax":18,"bite":"Nocturnal","rain":1,"storm":1,"dawn":1,"day":0.8,"dusk":1.1,"night":1.4},{"n":"European Lobster","c":"geb_EuropeanLobster","env":2,"m":6,"p":9,"shape":2,"rm":"geb_EuropeanLobsterClaw","rb":"geb_EuropeanLobsterTail","mn":1,"mx":2,"to":14,"tmin":5,"tmax":20,"bite":"Nocturnal","rain":1,"storm":1,"dawn":1,"day":0.8,"dusk":1.1,"night":1.4}];
+
+const ENV = {1:["Freshwater","pond"],2:["Saltwater","sea"],3:["Both","both"]};
+const BITE = {Nocturnal:"Nocturnal",Crepuscular:"Dawn & dusk",Pelagic:"Open-water",Diurnal:"Daytime",TwilightNight:"Twilight & night",Steady:"Steady",FilterFeeder:"Filter feeder",Constant:"Always active"};
+function methodNames(m){const a=[];if(m&1)a.push("Rod");if(m&2)a.push("Large trap");if(m&4)a.push("Small trap");return a;}
+function rarity(p){if(p>=20)return["Abundant","abundant"];if(p>=12)return["Common","common"];if(p>=7)return["Uncommon","uncommon"];return["Rare","rare"];}
+function recipeDesc(f){
+  if(!f.rm)return "Catch only — no fillet recipe";
+  const meat=f.mn===f.mx?f.mn:(f.mn+"–"+f.mx);
+  if(f.shape===1)return f.rb+" + "+meat+" × "+f.rm+" (caviar keep-chance applies)";
+  if(f.shape===2)return f.rb+" (tail) + "+meat+" × "+f.rm+" (claws)";
+  return meat+" × "+f.rm;
+}
+
+let sortKey="n",sortAsc=true,openRow=null;
+function render(){
+  const q=document.getElementById("search").value.toLowerCase();
+  const fe=document.getElementById("f-env").value;
+  const fm=document.getElementById("f-method").value;
+  const fr=document.getElementById("f-rarity").value;
+  let rows=FISH.filter(f=>{
+    if(q&&!(f.n.toLowerCase().includes(q)||f.c.toLowerCase().includes(q)))return false;
+    if(fe&&f.env!==+fe)return false;
+    if(fm==="rod"&&!(f.m&1))return false;
+    if(fm==="large"&&!(f.m&2))return false;
+    if(fm==="small"&&!(f.m&4))return false;
+    if(fr&&rarity(f.p)[1]!==fr)return false;
+    return true;
+  });
+  rows.sort((a,b)=>{
+    let x=a[sortKey],y=b[sortKey];
+    if(typeof x==="string"){x=x.toLowerCase();y=y.toLowerCase();}
+    return (x<y?-1:x>y?1:0)*(sortAsc?1:-1);
+  });
+  document.getElementById("count").textContent=rows.length+" of "+FISH.length+" species";
+  const tb=document.getElementById("fishbody");
+  tb.innerHTML="";
+  for(const f of rows){
+    const [envName,envCls]=ENV[f.env]||["?",""];
+    const [rarName,rarCls]=rarity(f.p);
+    const tr=document.createElement("tr");
+    tr.className="row";
+    tr.innerHTML="<td><b>"+f.n+"</b></td>"+
+      "<td><span class='pill "+envCls+"'>"+envName+"</span></td>"+
+      "<td>"+methodNames(f.m).join(", ")+"</td>"+
+      "<td><span class='pill "+rarCls+"'>"+rarName+"</span></td>"+
+      "<td>"+f.to+"°</td>"+
+      "<td>"+(f.rm?(f.mn===f.mx?f.mn:f.mn+"–"+f.mx):"—")+"</td>"+
+      "<td>"+(BITE[f.bite]||f.bite)+"</td>";
+    tr.addEventListener("click",()=>toggleDetail(tr,f));
+    tb.appendChild(tr);
+  }
+  updateArrows();
+}
+function toggleDetail(tr,f){
+  if(openRow&&openRow.anchor===tr){openRow.el.remove();openRow=null;return;}
+  if(openRow){openRow.el.remove();openRow=null;}
+  const d=document.createElement("tr");
+  d.className="detail";
+  d.innerHTML="<td colspan='7'><div class='detail-grid'>"+
+    "<div><b>Classname</b><br><code>"+f.c+"</code></div>"+
+    "<div><b>Prep result</b><br>"+recipeDesc(f)+"</div>"+
+    "<div><b>Temperature</b><br>"+f.tmin+"° to "+f.tmax+"° (best "+f.to+"°)</div>"+
+    "<div><b>Weather bias</b><br>Rain ×"+f.rain+" · Storm ×"+f.storm+"</div>"+
+    "<div><b>Time of day</b><br>Dawn ×"+f.dawn+" · Day ×"+f.day+" · Dusk ×"+f.dusk+" · Night ×"+f.night+"</div>"+
+    "<div><b>Catch weight</b><br>"+f.p+" / 25</div>"+
+    "</div></td>";
+  tr.after(d);
+  openRow={anchor:tr,el:d};
+}
+function updateArrows(){
+  document.querySelectorAll("#fishtable thead th").forEach(th=>{
+    th.querySelector(".arrow").textContent=th.dataset.k===sortKey?(sortAsc?"▲":"▼"):"";
+  });
+}
+document.querySelectorAll("#fishtable thead th").forEach(th=>{
+  th.addEventListener("click",()=>{
+    const k=th.dataset.k;
+    if(sortKey===k)sortAsc=!sortAsc;else{sortKey=k;sortAsc=true;}
+    render();
+  });
+});
+["search","f-env","f-method","f-rarity"].forEach(id=>{
+  document.getElementById(id).addEventListener("input",render);
+});
+
+document.querySelectorAll("#nav button").forEach(b=>{
+  b.addEventListener("click",()=>{
+    document.querySelectorAll("#nav button").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll("section.tab").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    document.getElementById("tab-"+b.dataset.tab).classList.add("active");
+    window.scrollTo({top:0});
+  });
+});
+
+render();
+</script>
+</body>
+</html>
