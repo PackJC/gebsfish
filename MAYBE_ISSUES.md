@@ -39,22 +39,6 @@ predates these; a build from current master would ship them.
 - Both sites call the identical single-arg `m_MainItem.AddHealth(-DAMAGE_HOOK)`. The
   comment claims the first call is the 3-arg form; it is not. Rods wear at 2x rate.
 
-### 4. Generated spawnabletypes chance attributes are malformed (VERIFIED)
-- `scripts/3_game/FileGenerators/spawnabletypesxml.c:193-195`
-- `string.Format("%.2f", chance)` — Enforce Format only supports positional %1..%9,
-  so every `chance="..."` in the generated XML is the literal text `%.2f`.
-
-### 5. Dug bugs spawn as local (non-networked) objects (VERIFIED)
-- `scripts/4_world/classes/useractioncomponent/actions/continuous/geb_actiondigbugs.c:157`
-- `g_Game.CreateObject(selectedBug, pos, ECE_PLACE_ON_SURFACE)` — the third param is
-  `bool create_local`; the ECE_ flag coerces to true. Siblings use `CreateObjectEx`
-  correctly (geb_actiondigworms.c:88, geb_actionfishingnet.c:216).
-
-### 6. Two config Info strings sit in the JSON-reader crash margin (VERIFIED)
-- `gebsfishConfig.c` — `BiteSpeedEnableInfo` = 955 chars, bait `EnableInfo` = 932 chars.
-- The file's own rule (and project memory): keep every string literal under ~900; DayZ's
-  JSON reader hard-crashes at ~1024, including on the compiled-in default. No margin left.
-
 ---
 
 ## Design / logic issues (decide intent, then fix)

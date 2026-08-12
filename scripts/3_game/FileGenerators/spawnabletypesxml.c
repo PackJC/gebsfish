@@ -190,8 +190,23 @@ class gebsfishSpawnableTypes {
         FPrintln(file, "        </cargo>");
     }
 
+    // Enforce's string.Format has no printf-style %.2f (only %1..%9
+    // positional args -- "%.2f" emits the literal text ".2f"), so build the
+    // 2-decimal string by hand in integer space. Chance is a 0..1
+    // probability; clamp so a bad table value can't emit an out-of-range
+    // attribute.
     protected string FormatChance(float chance) {
-        return string.Format("%.2f", chance);
+        int hundredths = Math.Round(chance * 100);
+        if (hundredths < 0)
+            hundredths = 0;
+        if (hundredths > 100)
+            hundredths = 100;
+        int whole = hundredths / 100;
+        int frac = hundredths % 100;
+        string fracText = frac.ToString();
+        if (frac < 10)
+            fracText = "0" + fracText;
+        return whole.ToString() + "." + fracText;
     }
 }
 

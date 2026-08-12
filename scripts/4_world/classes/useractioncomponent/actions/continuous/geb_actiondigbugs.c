@@ -153,8 +153,11 @@ class ActionDigBugs : ActionContinuousBase {
 		string selectedBug = names[pick];
 
 		// Spawn the selected bug. Quantity 1 -- one bug per successful dig.
+		// CreateObjectEx, NOT CreateObject: CreateObject's third param is
+		// `bool create_local` (a flag there silently coerces to true and the
+		// object never networks to clients); only CreateObjectEx takes ECE_ flags.
 		if (selectedBug != "") {
-			ItemBase bugs = ItemBase.Cast(g_Game.CreateObject(selectedBug, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
+			ItemBase bugs = ItemBase.Cast(g_Game.CreateObjectEx(selectedBug, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
 			if (bugs) {
 				bugs.SetQuantity(1, false);
 			}
