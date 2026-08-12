@@ -93,7 +93,7 @@ class GebsfishLogger {
     static void Reset() {
         if (m_File != 0)
             CloseFile(m_File);
-        m_File = 0;
+        m_File = null;   // FileHandle is plain data -- only null assignment is legal
         m_SessionFilePath = "";
         m_Initialized = false;
     }
