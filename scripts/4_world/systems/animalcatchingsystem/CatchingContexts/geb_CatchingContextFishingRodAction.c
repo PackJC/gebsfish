@@ -1067,22 +1067,14 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 					GebsfishLogger.Debug("Applying damage to hook: type=" + hookType + " hpBefore=" + hookHpBefore + " dmg=" + UAFishingConstants.DAMAGE_HOOK,"TryDamageItems");
 				}
 				m_Hook.AddHealth("","Health",-UAFishingConstants.DAMAGE_HOOK);
-				// First AddHealth on the rod (the 3-arg form lands on hooks
-				// just fine but silently no-ops on rods, so we still call the
-				// single-arg form below). Guard m_MainItem here -- the player
-				// could have dropped the rod mid-action and the later
-				// `if (m_MainItem)` block guards only its own usage, not this
-				// line.
-				if (m_MainItem)
-                    m_MainItem.AddHealth(-UAFishingConstants.DAMAGE_HOOK);
 				if (GetDebugLogLevel()) {
 					GebsfishLogger.Debug("Hook HP after: type=" + hookType + " hpAfter=" + m_Hook.GetHealth("","Health"),"TryDamageItems");
 				}
-				// Vanilla's old ActionFishingNew used the single-arg form
-				// (AddHealth(-1.5)) on the rod, not the 3-arg form. The rod's
-				// damage system seems to require it -- the 3-arg form lands on
-				// hooks just fine but silently no-ops on rods. Matching vanilla's
-				// exact signature here.
+				// Single-arg AddHealth on purpose: vanilla's old ActionFishingNew
+				// used it on the rod (AddHealth(-1.5)), and the 3-arg form
+				// silently no-ops on rods. Exactly ONE rod hit per catch outcome
+				// -- a second, unlogged single-arg call used to sit above the
+				// hook-after log and made rods wear at double the intended rate.
 				if (m_MainItem) {
 					float rodHpBefore = m_MainItem.GetHealth("","Health");
 					string rodType = m_MainItem.GetType();

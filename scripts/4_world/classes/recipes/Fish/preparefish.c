@@ -48,6 +48,98 @@ modded class PrepareFish {
 			m_AnimationLength = m_BaseAnimationLength;
 	}
 
+	// ---- Shared recipe-construction helpers ----
+	// Used by GebPrepareFishBase (the data-driven pipeline) AND the modded
+	// vanilla-fish recipes in geb_preparefishbase.c. They live here on
+	// PrepareFish because the vanilla recipes (modded PrepareCarp etc.)
+	// extend PrepareFish directly and can't reach helpers declared on
+	// GebPrepareFishBase.
+
+	void SetupFishRecipe(string ingredientType) {
+		InsertIngredient(0, ingredientType);
+		m_IngredientAddHealth[0] = 0;
+		m_IngredientSetHealth[0] = -1;
+		m_IngredientAddQuantity[0] = 0;
+		m_IngredientDestroy[0] = true;
+		m_IngredientAddHealth[1] = -4;
+	}
+
+	void AddDefaultResultAtIndex(string resultType, int index) {
+		AddResult(resultType);
+		m_ResultSetFullQuantity[index] = false;
+		m_ResultSetQuantity[index] = -1;
+		m_ResultSetHealth[index] = -1;
+		m_ResultInheritsHealth[index] = 0;
+		m_ResultInheritsColor[index] = -1;
+		m_ResultToInventory[index] = -2;
+		m_ResultUseSoftSkills[index] = false;
+		m_ResultReplacesIngredient[index] = 0;
+	}
+
+	void AddRepeatedResults(string resultType, int count, int startIndex = 0) {
+		// Vanilla RecipeBase stores results in fixed [MAXIMUM_RESULTS] arrays
+		// and AddResult has no bounds check -- an over-large MeatMax in a
+		// hand-edited fish.json would write out of bounds. Clamp so the
+		// total result count (bonus at index 0 included via startIndex)
+		// never exceeds the engine cap.
+		if (startIndex + count > MAXIMUM_RESULTS)
+			count = MAXIMUM_RESULTS - startIndex;
+		for (int i = 0; i < count; ++i) {
+			AddDefaultResultAtIndex(resultType, startIndex + i);
+		}
+	}
+
+	int GetInclusiveRandom(int min, int max) {
+		if (max < min)
+			max = min;
+
+		return Math.RandomInt(min, max + 1);
+	}
+
+	// Fillet recipe for a vanilla fish, reading MeatMin/MeatMax from the live
+	// Species row. A missing config row falls back to one meat piece so the
+	// recipe stays registered instead of crashing Init(). When a bonus
+	// (caviar) classname is given it occupies result index 0 and the meats
+	// start at index 1.
+	void SetupVanillaFilletRecipe(string fishClassname, string filletClassname, string bonusClassname = "") {
+		SetupFishRecipe(fishClassname);
+		int startIndex = 0;
+		if (bonusClassname != "") {
+			AddDefaultResultAtIndex(bonusClassname, 0);
+			startIndex = 1;
+		}
+		int minMeat = 1;
+		int maxMeat = 1;
+		if (m_gebsConfig && m_gebsConfig.Fish && m_gebsConfig.Fish.Get(fishClassname)) {
+			FishConf c = m_gebsConfig.Fish.Get(fishClassname);
+			minMeat = c.MeatMin;
+			maxMeat = c.MeatMax;
+		}
+		// GetInclusiveRandom guards MeatMin > MeatMax inversion;
+		// AddRepeatedResults clamps the total to MAXIMUM_RESULTS.
+		AddRepeatedResults(filletClassname, GetInclusiveRandom(minMeat, maxMeat), startIndex);
+	}
+
+	float GetConfiguredCaviarChance() {
+		if (m_gebsConfig && m_gebsConfig.General && m_gebsConfig.General.GeneralSettings) {
+			return m_gebsConfig.General.GeneralSettings.CaviarChance;
+		}
+
+		return 0.3;
+	}
+
+	void ApplyConfiguredCaviarChance(array<ItemBase> results) {
+		float chance = GetConfiguredCaviarChance();
+
+		if (chance >= 1.0)
+			return;
+
+		if (chance <= 0.0 || Math.RandomFloat(0, 1) > chance) {
+			if (results && results.Count() > 0 && results[0])
+				results[0].Delete();
+		}
+	}
+
     //Called upon recipe's completion
     override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		// Adjusts quantity of results to the quantity of the 1st ingredient
@@ -60,7 +152,7 @@ modded class PrepareFish {
 
     // Predator spawn after filleting succeeds. Delegates to GebsPredatorSpawner,
     // which owns the chance roll, predator selection, position search, multi-spawn
-    // loop, warning sound RPC, and chat broadcast. Caller just provides the
+    // loop, warning sound RPC, and player chat warning. Caller just provides the
     // player + chance value from config.
     void TrySpawnPredator(PlayerBase player) {
         if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.PredatorSettings) return;

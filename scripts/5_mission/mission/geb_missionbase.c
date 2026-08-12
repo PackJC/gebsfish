@@ -79,6 +79,14 @@ modded class MissionBase {
 	}
 
 	protected void RegisterJunkYieldData(CatchYieldBank bank) {
+		// Same graceful exit RegisterFishYieldData uses -- without it, a
+		// config that failed to load crashes the server here at mission init
+		// instead of logging and disabling junk catches.
+		if (!m_gebsConfig) {
+			GebsfishLogger.Error("Gebsfish config was missing. Skipping junk yield registration.", "MissionBase");
+			return;
+		}
+
 		GebsfishLogger.Info("Adding junk to the yield data.", "MissionBase");
 
 		int i;

@@ -60,7 +60,7 @@ class CraftHookFromWire extends RecipeBase {
 		if (m_gebsConfig && m_gebsConfig.General && m_gebsConfig.General.RecipeToggles && !m_gebsConfig.General.RecipeToggles.CraftHookFromWire)
 			return false;
 
-		if (ingredients[0] && ingredients[0].GetInventory().IsAttachment())
+		if (ingredients[0] && ingredients[0].GetInventory() && ingredients[0].GetInventory().IsAttachment())
 			return false;
 		
 		return true;

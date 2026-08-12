@@ -9,9 +9,9 @@
 <h3 align="center">The Ultimate Fishing Expansion for DayZ</h3>
 
 <p align="center">
-  <img alt="Mode Version" src="https://img.shields.io/badge/Mod-v3.3.0-blue?style=for-the-badge">
+  <img alt="Mod Version" src="https://img.shields.io/badge/Mod-v3.3.0-blue?style=for-the-badge">
   <img alt="DayZ Version" src="https://img.shields.io/badge/DayZ-v1.28-teal?style=for-the-badge">
-  <img alt="Workshop Subscribers" src="https://img.shields.io/badge/Workshop Subs-923K-purple?style=for-the-badge">
+  <img alt="Workshop Subscribers" src="https://img.shields.io/steam/subscriptions/2757509117?style=for-the-badge&color=purple&label=Workshop%20Subs">
 </p>
 
 <p align="center">
@@ -22,8 +22,6 @@
   <a href="#license">License & Terms</a> •
   <a href='CHANGELOG.md'>Change Log</a>
 </p>
-
-<!-- ![screenshot](https://raw.githubusercontent.com/amitmerchant1990/electron-markdownify/master/app/img/markdownify.gif) -->
 
 ## Information
 
@@ -42,6 +40,7 @@ Built from the ground up for modded servers, it adds dozens of new fish species,
 * Extensive config system allows complete customizability to fit your server:
   - Full configuration of fish (water type, rarity, fishing method, meat yield, behavior).
   - Full configuration of junk (rarity, item).
+  - Full configuration of the bait/lure preference matrix (per-fish multipliers for every bait).
   - Full configuration of the predator spawn system (chance, classnames, spawn radius, warning sound, chat message).
   - Master enable toggles for every major catch-modifying system so you can run as much or as little of the mod as you want without losing your tuned values.
 * Fully compatible with custom maps; if you have issues with the map you use working, make a ticket and we will issue a hotfix for that map if needed.
@@ -75,13 +74,29 @@ Gebsfish layers several configurable environmental systems on top of vanilla fis
 
 * **Per-bait fish preference matrix** — 23 baits and lures each carry a per-fish multiplier table (the numbered lure variants share one entry per family, e.g. `geb_SpinnerBait` covers `geb_SpinnerBait1-4`). Worms catch bluegill 2× more readily than bass and ignore large saltwater fish. Spinnerbaits attract bass, spoons attract trout and pike, live minnows attract pike and walleye. Roughly 700 seeded bait/fish pairings — all overridable in JSON.
 
-* **Bamboo fishing net** — craftable, repairable net with cargo storage. Catches minnows, frogs, and salamanders out of the box. Configurable spawn table with per-environment filtering (pond vs. sea) and an independent find-chance roll.
+* **Bamboo fishing net** — craftable, repairable net with cargo storage. Catches minnows, frogs, and salamanders out of the box, and catches land directly in the net's cargo (4×4) with overflow falling at your feet. Configurable spawn table with per-environment filtering (pond vs. sea) and an independent find-chance roll.
 
-* **Predator spawn system** — configurable predators spawn around the player when fishing, gutting a fish, missing a catch, or using the bamboo net. Each action has its own chance value so you can keep predators on for fishing without applying them to filleting. Land-only spawn search — no underwater wolves. Per-predator `MinCount`, `MaxCount`, `MinRadius`, and `MaxRadius`. Optional warning sound RPC to nearby players and configurable chat-message broadcast with color options.
+* **Foraging for bait** — dig for worms (85% find chance per attempt) or bugs (65%) with dedicated actions, each rolling against its own weighted catch table (worms and grubs from digging worms; crickets, grasshoppers, grubs, and worms from digging bugs). Tools wear on misses too, and every completed dig trains soft skills.
+
+* **Live bait that dies** — worms, crickets, grasshoppers, and grubs are *alive*, and live bait perishes roughly 90 minutes after you find it. Stashing it in a Worm Container, Bug Container, or a cooler pauses the clock — the dedicated containers are worth carrying. The artificial rubber worm never dies. The Bait Bucket does the same job for small aquatic catches: minnows, crayfish, shrimp, frogs, and salamanders stay fresh inside it.
+
+* **Cooler & freezer system** — coolers in 12 colors actively chill their cargo toward **-5°C**, cold enough that food eventually freezes solid, and rot stops entirely inside. The flip side: a frozen fish can't be filleted — thaw it by fire or time before prepping. Coolers refuse to nest inside other coolers.
+
+* **Caviar & specialty yields** — roe fish produce caviar alongside their fillets, with a configurable keep-chance (default 30% via `CaviarChance`): trout and salmon give Red Caviar, Lake Sturgeon gives Black Caviar, Northern Pike gives Yellow Caviar. Lobsters yield a tail plus claws instead of standard fillets.
+
+* **Hook-from-fish recovery** — roughly 1 in 250 fillet actions recovers a damaged hook or lure "stuck in the fish." The pool of recoverable hooks, their weights, and the damage range they spawn at are all admin-configurable; the hook lands in your inventory, or at your feet if it's full.
+
+* **Configurable junk catches** — rods and nets can pull junk instead of fish: a weighted table of items (wellies, pots, anything you add) with per-entry spawn-damage ranges, plus a separate table for container junk that spawns holding cargo. Fully tunable in `junk.json`.
+
+* **Repairs with consequences** — fishing rods repair with the Fishing Rod Repair Kit and the bamboo net repairs with Netting, but repairs cap at **Worn** — no restoring gear to factory-fresh — and Ruined tools are gone for good.
+
+* **Predator spawn system** — configurable predators spawn around the player when fishing, gutting a fish, missing a catch, or using the bamboo net. Each action has its own chance value so you can keep predators on for fishing without applying them to filleting. Land-only spawn search — no underwater wolves. Per-predator `MinCount`, `MaxCount`, `MinRadius`, and `MaxRadius`. Optional warning sound RPC to nearby players and a configurable chat warning to the triggering player with color options.
 
 * **Geb fish knife buffs** — modded fish knives carry **+54% durability** (200 HP vs vanilla `HuntingKnife`'s 130) and fillet fish **10% faster** than vanilla. Speed bonus is configurable via `FishKnifeSpeedMultiplier`; durability sits between `KitchenKnife` and `KukriKnife` so it feels like a premium tool without dominating.
 
 * **Trader compatibility** — fish quality defaults to `1.0` so popular trader mods (DayZ-Expansion-Market, TraderPlus, Dr. Jones, etc.) accept them at full value out of the box. Configurable if your trader scales by quality.
+
+* **Admin logging** — every session writes a timestamped log to `$profile:Gebs/logs/`. `DebugLogs` has three levels: `0` off, `1` per-cast summaries (pool composition, bite-speed aggregate, weighted pick results), `2` elevated — full per-fish breakdown tables showing exactly why each fish was or wasn't favored this cast. Built for answering "why isn't fish X spawning" without guesswork.
 
 ## Configuration Examples
 
@@ -158,13 +173,15 @@ All configuration options are located in the `Gebs` folder inside your server's 
 
 Each major subsystem can be turned off independently — set the toggle to `0` and the per-fish/per-bait/per-hour values stay in JSON for tuning but have no in-game effect. The bait system's master toggle is `Enable` at the top of `bait.json`; the rest live in `general.json` under `WeatherSettings`:
 
+In `bait.json` (top level):
+
 ```json
-// bait.json (top level)
 "Enable": 1
 ```
 
+In `general.json`:
+
 ```json
-// general.json
 "WeatherSettings": {
     "WeatherCatchBoostEnable": 1,
     "MoonPhaseEnable": 1,
@@ -205,7 +222,7 @@ If you like this project and think it has improved your server in any way, consi
 This item is NOT authorized (strictly forbidden) for any of these conditions:
 - posting on Steam, except under the Steam account Cole.
 - hosting on any download server other than gebsfish current workshop download.
-- hosting on any launcher for distribution other than gebsfish  current workshop download.
+- hosting on any launcher for distribution other than gebsfish current workshop download.
 - to be packaged in any form other than gebsfish current workshop download.
 - to create derivative works.
 
@@ -218,4 +235,4 @@ You are hereby given monetization approval under the conditions that you follow 
 ## Donations
 We accept donations at https://www.paypal.com/paypalme/packjc every dollar counts and we greatly appreciate any contributions!
 
-### Copyright © Smoky Mountain Software 2022-2025
+### Copyright © Smoky Mountain Software 2022-2026

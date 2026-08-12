@@ -5,9 +5,7 @@ modded class MissionServer {
 			GebsfishLogger.Info("Version " + VERSION_GEBSFISH + " loaded successfully!", "MissionServer Init");
 		}
 
-		// RPCs are now registered in DayZGame.DeferredInit() to ensure they're registered on both client and server
-		// GetRPCManager().AddRPC("gebsfish", "ConfigSync", g_Game, SingleplayerExecutionType.Client);
-		// GetRPCManager().AddRPC("gebsfish", "PlayPredatorSound", g_Game, SingleplayerExecutionType.Client);
+		// RPCs are registered in DayZGame.DeferredInit() so they exist on both client and server.
 
 		gebsfishTypes fishTypesGenerator = new gebsfishTypes();
     	fishTypesGenerator.GenerateTypesXML();
@@ -29,9 +27,16 @@ modded class MissionServer {
 
 	override void OnGameplayDataHandlerLoad() {
 		super.OnGameplayDataHandlerLoad();
-		YieldsMap mGeb_YieldsMapAll;
-		mGeb_YieldsMapAll = g_Game.GetMission().GetWorldData().GetCatchYieldBank().GetYieldsMap();
 		if(GebGetDebugLevel() == ELEVATED_DEBUG){
+			// Resolve the yield map only when the dump will actually run,
+			// and null-guard each link -- the old unconditional 3-deep chain
+			// ran on every load and crashed if any link was null.
+			WorldData wd = g_Game.GetMission().GetWorldData();
+			if (!wd || !wd.GetCatchYieldBank())
+				return;
+			YieldsMap mGeb_YieldsMapAll = wd.GetCatchYieldBank().GetYieldsMap();
+			if (!mGeb_YieldsMapAll)
+				return;
 			GebsfishLogger.Debug("Start Dump:","YieldMap");
 			YieldItemBase yItem;
 			int count = mGeb_YieldsMapAll.Count();

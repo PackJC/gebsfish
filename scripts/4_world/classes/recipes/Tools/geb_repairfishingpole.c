@@ -45,11 +45,15 @@ class RepairFishingPole : RecipeBase {
 			return false;
 
 		PluginRepairing moduleRepairing = PluginRepairing.Cast(GetPlugin(PluginRepairing));
+		if (!moduleRepairing)
+			return false;   // plugin missing -- repair unavailable, not a crash
 		return moduleRepairing.CanRepair(ingredients[0], ingredients[1]);
 	}
 
 	override void Do(ItemBase ingredients[], PlayerBase player,array<ItemBase> results, float specialty_weight) {
 		PluginRepairing moduleRepairing = PluginRepairing.Cast(GetPlugin(PluginRepairing));
+		if (!moduleRepairing)
+			return;
 		moduleRepairing.Repair(player, ingredients[0], ingredients[1], m_Specialty);
 
 		// Cap the result at Worn (HealthLevel 1) instead of letting

@@ -22,7 +22,7 @@
 //   - Land-only spawn-position search (avoids spawning predators in water)
 //   - Spawning N instances per the predator's MinCount/MaxCount
 //   - Warning sound RPC to nearby players (PredatorWarningSoundEnable)
-//   - Chat-message broadcast (PredatorWarningMessageEnable + color flags)
+//   - Chat warning to the triggering player (PredatorWarningMessageEnable + color flags)
 //
 // Returns true if at least one predator was spawned, false otherwise.
 class GebsPredatorSpawner {
@@ -91,7 +91,7 @@ class GebsPredatorSpawner {
         }
 
         if (anySpawned)
-            BroadcastPredatorMessage(cfg, player);
+            SendPredatorMessageToPlayer(cfg, player);
         return anySpawned;
     }
 
@@ -222,10 +222,10 @@ class GebsPredatorSpawner {
         soundPlayed = true;
     }
 
-    // Sends the configured chat-message broadcast to the triggering player.
-    // Only fires if PredatorWarningMessageEnable is on, then routes via the
-    // first color flag that's set.
-    protected static void BroadcastPredatorMessage(gebsfishConfig cfg, PlayerBase player) {
+    // Sends the configured chat warning to the triggering player only (not
+    // a server-wide broadcast). Only fires if PredatorWarningMessageEnable
+    // is on, then routes via the first color flag that's set.
+    protected static void SendPredatorMessageToPlayer(gebsfishConfig cfg, PlayerBase player) {
         if (!cfg.General.PredatorSettings.PredatorWarningMessageEnable)
             return;
 

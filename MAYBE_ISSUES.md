@@ -34,11 +34,6 @@ predates these; a build from current master would ship them.
   and PluginRecipesManager keys `m_RecipeNamesList` by classname, so all registrations
   collide on one key.
 
-### 3. Rods take double damage per catch/pass event (VERIFIED)
-- `geb_CatchingContextFishingRodAction.c:1030-1031` and `:1046`
-- Both sites call the identical single-arg `m_MainItem.AddHealth(-DAMAGE_HOOK)`. The
-  comment claims the first call is the 3-arg form; it is not. Rods wear at 2x rate.
-
 ---
 
 ## Design / logic issues (decide intent, then fix)
@@ -50,30 +45,14 @@ predates these; a build from current master would ship them.
 
 ## Cleanup / dead code
 
-- `scripts/4_world/entities/vehicles/inheritedboats/geb_jonboat.c` — entire file is one
-  commented-out block (with a SparkPlug/Sparkplug mismatch inside it).
 - `GebsAsciiArt.Write` never called; `GebsfishRPC` enum unused (CF string-named RPCs used
   instead); `GebsfishLogger.SetMinLevel` / `Reset` never called.
-- `geb_preparefishbase.c` — no-op `CanDo`/`Do` overrides that only `return super...`;
-  `PrepareCarp`/`PrepareMackerel`/`PrepareWalleyePollock` Init() bodies are near-identical
-  40-line copies not using the shared helpers.
-- Duplicated "is it in a preserving container" hierarchy walk drifted
-  (`geb_ediblebase.c:189-200` vs `:247-258` — one includes geb_MinnowBucket, one doesn't).
-- `geb_actionfishingnet.c:222-223` comment says net predator chance "much lower than
-  fishing (0.01 vs 0.05)" — both defaults are 0.01.
-- `geb_predatorspawner.c:228-241` — `BroadcastPredatorMessage` only messages the
-  triggering player, name/docs say broadcast.
-- `geb_catchyielditembase.c:3-6` — modded constructor re-runs `m_BaseWeight = ...; Init();`
-  on top of the vanilla ctor chain, so Init() executes twice per yield item.
+- The two "is it in a preserving container" hierarchy walks in `geb_ediblebase.c` differ:
+  the Edible_Base rot-pause list includes geb_MinnowBucket, the Worm aging-pause list
+  doesn't. NOT a live bug — the bucket's allow list rejects worms/insects, so the aging
+  walk can never encounter one there. A defensive add only; decide if wanted.
 - `geb_catchingcontextbase.c:36` — `!= ""` check can never be false (accessor returns
   "<unresolved>", never "").
-- Commented-out leftovers: `geb_missionserver.c:8-10` (RPC registration),
-  `gebsfish.c:82-90` (AlteriaData block); unused local `player` in `geb_actiondigworms.c:57`;
-  mangled header URL in `containers.c:8`.
-- `containers.c:118-124` — geb_MinnowBucket lacks the IsContainer()/self-nesting guards
-  its three sibling containers have; allow list uniquely includes "Shrimp".
-- Null-guard gaps (edge-case): `geb_missionbase.c:60,75`; `containers.c:256`;
-  `geb_crafthookfromwire.c:63`; `geb_repairfishingpole.c:47-53`; `geb_missionserver.c:32-33`.
 
 ---
 

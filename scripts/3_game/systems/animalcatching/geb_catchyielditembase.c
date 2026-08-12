@@ -1,9 +1,9 @@
 modded class YieldItemBase {
 
-    void YieldItemBase(int baseWeight) {
-		m_BaseWeight = baseWeight;
-		Init();
-	}
+    // No modded constructor on purpose: modded ctors STACK on the vanilla
+    // one (both bodies run), they don't replace it. The old copy of the
+    // vanilla ctor here made every yield item set m_BaseWeight and run
+    // Init() twice per construction.
 
     override void Init(){
         super.Init();

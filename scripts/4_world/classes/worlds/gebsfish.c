@@ -83,12 +83,3 @@ modded class NavalPlusData {
 
 #endif
 
-// #ifdef AlteriaScripts no world data for alteria yet. 
-
-// modded class AlteriaData {
-//     override void InitYieldBank() {
-// 		    GetDayZGame().GetYieldDataInitInvoker().Invoke(m_YieldBank);
-//     }
-// }
-
-// #endif

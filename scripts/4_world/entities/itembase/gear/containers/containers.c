@@ -5,7 +5,7 @@
   https://github.com/PackJC/gebsfish
   https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
   https://discord.com/invite/G8uSGZ8yyf
-  https://www.smokymountainsoftware.com/Contributions welcome via github
+  https://www.smokymountainsoftware.com/ Contributions welcome via github
 
 */
 
@@ -55,6 +55,17 @@ class geb_WormContainer : geb_FilteredContainerBase {
 	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
 	}
+
+	override bool CanPutInCargo(EntityAI parent) {
+		if (!super.CanPutInCargo(parent))
+			return false;
+		// Self-nesting guard, matching the other geb containers. The allow
+		// list already blocks this on the receiving side, but vanilla does
+		// not route every inventory move through the same check.
+		if (parent && parent.IsKindOf("geb_WormContainer"))
+			return false;
+		return true;
+	}
 };
 
 class geb_BugContainer : geb_FilteredContainerBase {
@@ -64,9 +75,7 @@ class geb_BugContainer : geb_FilteredContainerBase {
 		return s_Allowed;
 	}
 
-	override bool IsContainer() {
-		return true;
-	}
+	// No IsContainer() override: vanilla Container_Base already returns true.
 
 	override bool CanPutInCargo(EntityAI parent) {
 		if (!super.CanPutInCargo(parent))
@@ -93,10 +102,6 @@ class geb_BambooFishingNet : geb_FilteredContainerBase {
 		return s_Allowed;
 	}
 
-	override bool IsContainer() {
-		return true;
-	}
-
 	override bool CanPutInCargo(EntityAI parent) {
 		if (!super.CanPutInCargo(parent))
 			return false;
@@ -120,6 +125,15 @@ class geb_MinnowBucket : geb_FilteredContainerBase {
 
 	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
+	}
+
+	override bool CanPutInCargo(EntityAI parent) {
+		if (!super.CanPutInCargo(parent))
+			return false;
+		// Self-nesting guard, matching the other geb containers.
+		if (parent && parent.IsKindOf("geb_MinnowBucket"))
+			return false;
+		return true;
 	}
 };
 
@@ -253,6 +267,10 @@ class geb_Cooler_base : geb_FilteredContainerBase {
 	// instead -- so the repeated calls during that phase are what drive the
 	// item from cold to frozen.
 	void OnCoolingTick() {
+		// Timer can fire while the entity is mid-delete / not yet
+		// initialized, where GetInventory() itself is null.
+		if (!GetInventory())
+			return;
 		CargoBase cargo = GetInventory().GetCargo();
 		if (!cargo)
 			return;
@@ -279,10 +297,6 @@ class geb_Cooler_base : geb_FilteredContainerBase {
 				next = Math.Min(COOLING_TARGET_C, current + COOLING_STEP_C);
 			item.SetTemperature(next);
 		}
-	}
-
-	override bool IsContainer() {
-		return true;
 	}
 
 	override bool CanPutInCargo(EntityAI parent) {

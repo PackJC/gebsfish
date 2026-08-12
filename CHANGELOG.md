@@ -109,8 +109,11 @@ Major art pass across the existing roster — new or reworked models and texture
 - In-hands IK registrations collapsed to three name-array loops
 - Consolidated repeated classes into shared base files; sorted large files by category; standardized brace style
 - Replaced `Param3` usage with `XmlTypeEntry` class for clarity
-- Added base classes and inheritance cleanup for containers
+- Added base classes and inheritance cleanup for containers; all four bait containers now share the same self-nesting guard, and redundant `IsContainer()` overrides (vanilla `Container_Base` already returns true) were removed
+- Vanilla-fish fillet recipes (Carp / SteelheadTrout / Mackerel / WalleyePollock) collapsed from four near-identical ~40-line Init bodies into one shared `SetupVanillaFilletRecipe` helper on `PrepareFish` — they now get the same MeatMin/MeatMax inversion guard, `MAXIMUM_RESULTS` clamp, and caviar-chance logic as every other fish; no-op `CanDo`/`Do` overrides deleted
 - Renamed `Sturgeon` -> `LakeSturgeon`; `OldTackle` model files -> `MediumTackle` (class names finalized next wipe); Bug Container moved from `data/tools/` to `data/tackle/`
+- Predator chat-warning code and docs renamed to match reality: the message goes to the triggering player only (the warning sound is what nearby players hear)
+- Removed a redundant modded `YieldItemBase` constructor that made every yield item run `Init()` twice per construction
 - All p3ds now use a `Camo` hidden selection to support retexturing
 - Asset naming pass: tool and clothing textures renamed to engine conventions (`_co` / `_normals` / `_smdi`); fish knife and big-game fishing line materials updated
 - Added skinning action to Neosho Bass and Striped Bass
@@ -120,6 +123,8 @@ Major art pass across the existing roster — new or reworked models and texture
 - XML generator crash at startup: `FPrint` without newlines produced a single-line 85 KB file that overflowed the engine's line-read buffer as fish were added — generators now emit proper line breaks
 - Bait preferences and the temperature curve now apply independently of `WeatherCatchBoostEnable` — previously the weighted catch pick only ran when the weather toggle was on, silently disabling both systems despite their own toggles
 - BiteSpeed aggregate no longer applies `CatchProbability` twice (the probability pool already repeats each fish by its weight) — abundant fish were quadratically dominating the bite-cycle timing over rare ones
+- Rods no longer take double durability damage per catch outcome — a leftover duplicate `AddHealth` call made rods wear at 2x the intended 1.5 HP
+- Hardened edge-case null handling: junk-yield registration now logs and skips (instead of crashing at mission init) when the config failed to load; cooler tick, hook-crafting check, rod-repair plugin lookups, and the debug yield dump all guard references that could be null in broken states
 - Dug bugs now spawn as networked objects (were server-local and invisible to players); dig-bugs also wears the tool and trains soft skills on every completed dig, matching dig-worms
 - Generated spawnabletypes chance attributes were the literal text `.2f` instead of numbers
 - Predator warning chat message sends once through the first enabled color instead of once per enabled color
@@ -150,12 +155,13 @@ Major art pass across the existing roster — new or reworked models and texture
 - Old `newtackle` textures
 - Old lure models (replaced by crank/popper variants)
 - Unreferenced normal-map textures (6.4 MB)
+- Dead code purge: fully commented-out jon boat script file, Alteria world-data placeholder block, commented-out RPC registrations, unused locals, and no-op recipe overrides
 
 ### Known Issues
 
 - Two-hand fish inventory orientation is slightly angled
 - King Crab and Snow Crab have no in-hands carry pose yet
-- Unreleased-build regressions under investigation (tracked in MAYBE_ISSUES.md): the data-driven yield and recipe registration runs before each entry's config row is attached, and rods take double durability damage per catch event
+- Unreleased-build regressions under investigation (tracked in MAYBE_ISSUES.md): the data-driven yield and recipe registration runs before each entry's config row is attached
 
 ## v3.3.0
 

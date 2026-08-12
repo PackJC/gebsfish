@@ -20,7 +20,7 @@ modded class ActionFishingNew: ActionContinuousBase {
         //   - Cast caught nothing -> PredatorSpawnChanceFailCatch
         // GebsPredatorSpawner.TrySpawn handles the chance roll, predator
         // selection, position search, multi-instance spawning, warning sound
-        // RPC, and chat broadcast. Caller just picks the right chance.
+        // RPC, and player chat warning. Caller just picks the right chance.
         float chance;
         if (fad.m_FishingResult == 1) {
             chance = m_gebsConfig.General.PredatorSettings.PredatorSpawnChanceFishing;

@@ -54,7 +54,6 @@ modded class ActionDigWorms {
 	override void OnFinishProgressServer(ActionData action_data) {
 		if (!action_data || !action_data.m_Player || !action_data.m_MainItem || !action_data.m_Target)
 			return;
-		PlayerBase player = action_data.m_Player;
 
 		int debugLevel = GebGetDebugLevel();
 
