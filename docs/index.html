@@ -23,17 +23,19 @@
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: var(--bg); color: var(--text); font-family: "Segoe UI", system-ui, sans-serif; line-height: 1.6; }
+  #waterbg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  header, main, footer { position: relative; z-index: 1; }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
 
-  header { background: linear-gradient(180deg, #0a1a2e 0%, var(--bg) 100%); border-bottom: 1px solid var(--border); padding: 28px 20px 24px; text-align: center; }
+  header { background: linear-gradient(180deg, rgba(10,26,46,.55) 0%, rgba(13,21,32,.15) 100%); border-bottom: 1px solid var(--border); padding: 28px 20px 24px; text-align: center; }
   header img.logo { width: min(340px, 78vw); height: auto; margin: -34px auto -44px; display: block; filter: drop-shadow(0 6px 24px rgba(0,0,0,.55)); }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
   header p.tag { color: var(--dim); margin-top: 4px; }
   .badges { margin-top: 14px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
   .badges img { height: 24px; }
 
-  nav { position: sticky; top: 0; z-index: 50; background: var(--bg2); border-bottom: 1px solid var(--border); display: flex; justify-content: center; flex-wrap: wrap; }
+  nav { position: sticky; top: 0; z-index: 50; background: rgba(19,30,45,.88); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); display: flex; justify-content: center; flex-wrap: wrap; }
   nav button { background: none; border: none; color: var(--dim); font-size: 0.95rem; padding: 13px 18px; cursor: pointer; border-bottom: 3px solid transparent; font-family: inherit; }
   nav button:hover { color: var(--text); }
   nav button.active { color: var(--accent); border-bottom-color: var(--accent); }
@@ -97,6 +99,8 @@
 </style>
 </head>
 <body>
+
+<canvas id="waterbg" aria-hidden="true"></canvas>
 
 <header>
   <img class="logo" src="logo.png" alt="Gebsfish" width="1024" height="1024">
@@ -441,6 +445,158 @@ document.querySelectorAll("#nav button").forEach(b=>{
 });
 
 render();
+</script>
+
+<script>
+/* Underwater background: gradient, light rays, bubbles, swimming fish. */
+(() => {
+  const canvas = document.getElementById("waterbg");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W, H, fish = [], bubbles = [], rays = [];
+
+  const rand = (a, b) => a + Math.random() * (b - a);
+
+  function makeFish(x) {
+    const depth = Math.random(); // 0 = far, 1 = near
+    return {
+      x: x !== undefined ? x : rand(-100, W + 100),
+      y: rand(H * 0.08, H * 0.95),
+      dir: Math.random() < 0.5 ? -1 : 1,
+      depth,
+      size: 14 + depth * 46,
+      speed: (14 + depth * 34) * rand(0.75, 1.25),
+      wag: rand(0, Math.PI * 2),
+      wagSpeed: rand(3, 5.2),
+      bob: rand(0, Math.PI * 2),
+      hue: rand(196, 214),
+      sat: rand(28, 45),
+      light: rand(52, 68)
+    };
+  }
+
+  function populate() {
+    const n = Math.round(Math.min(18, Math.max(8, (W * H) / 90000)));
+    fish = Array.from({ length: n }, () => makeFish()).sort((a, b) => a.depth - b.depth);
+    bubbles = Array.from({ length: Math.round(n * 1.6) }, () => ({
+      x: rand(0, W), y: rand(0, H), r: rand(1, 3.4), s: rand(12, 30), wob: rand(0, Math.PI * 2)
+    }));
+    rays = Array.from({ length: 4 }, (_, i) => ({
+      x: ((i + 0.5) * W) / 4 + rand(-60, 60), w: rand(60, 140),
+      lean: rand(-0.18, 0.18), phase: rand(0, Math.PI * 2)
+    }));
+  }
+
+  function resize() {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    populate();
+    if (reduced) drawFrame(0);
+  }
+
+  function drawWater() {
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#0c2036");
+    g.addColorStop(0.45, "#0a1727");
+    g.addColorStop(1, "#060d17");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  function drawRays(t) {
+    for (const r of rays) {
+      const sway = Math.sin(t * 0.12 + r.phase);
+      const alpha = 0.026 + 0.02 * (0.5 + 0.5 * Math.sin(t * 0.2 + r.phase));
+      const topX = r.x + sway * 24;
+      const botX = topX + (r.lean + sway * 0.04) * H;
+      const g = ctx.createLinearGradient(0, 0, 0, H * 0.9);
+      g.addColorStop(0, `rgba(140,190,235,${alpha})`);
+      g.addColorStop(1, "rgba(140,190,235,0)");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.moveTo(topX - r.w / 2, -10);
+      ctx.lineTo(topX + r.w / 2, -10);
+      ctx.lineTo(botX + r.w * 1.3, H * 0.9);
+      ctx.lineTo(botX - r.w * 1.3, H * 0.9);
+      ctx.closePath();
+      ctx.fill();
+    }
+  }
+
+  function drawFish(f, t) {
+    const L = f.size, h = L * 0.38;
+    const alpha = 0.1 + f.depth * 0.22;
+    const wag = Math.sin(t * f.wagSpeed + f.wag);
+    ctx.save();
+    ctx.translate(f.x, f.y + Math.sin(t * 0.7 + f.bob) * L * 0.12);
+    ctx.scale(f.dir, 1);
+    ctx.fillStyle = `hsla(${f.hue}, ${f.sat}%, ${f.light}%, ${alpha})`;
+    ctx.beginPath();
+    ctx.moveTo(L * 0.5, 0);
+    ctx.quadraticCurveTo(L * 0.1, -h * 0.95, -L * 0.32, -h * 0.28);
+    ctx.quadraticCurveTo(-L * 0.46, 0, -L * 0.32, h * 0.28);
+    ctx.quadraticCurveTo(L * 0.1, h * 0.95, L * 0.5, 0);
+    ctx.closePath();
+    ctx.fill();
+    const swing = wag * h * 0.35;
+    ctx.beginPath();
+    ctx.moveTo(-L * 0.3, 0);
+    ctx.lineTo(-L * 0.62, -h * 0.5 + swing);
+    ctx.lineTo(-L * 0.56, swing * 0.4);
+    ctx.lineTo(-L * 0.62, h * 0.5 + swing);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = `rgba(6,13,23,${Math.min(0.55, alpha + 0.25)})`;
+    ctx.beginPath();
+    ctx.arc(L * 0.3, -h * 0.08, Math.max(1, L * 0.045), 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawBubble(b, t) {
+    ctx.beginPath();
+    ctx.arc(b.x + Math.sin(t * 1.3 + b.wob) * 6, b.y, b.r, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(160,205,240,.22)";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  function drawFrame(t) {
+    drawWater();
+    drawRays(t);
+    for (const f of fish) drawFish(f, t);
+    for (const b of bubbles) drawBubble(b, t);
+  }
+
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+    const t = now / 1000;
+    drawWater();
+    drawRays(t);
+    for (const f of fish) {
+      f.x += f.dir * f.speed * dt;
+      const margin = f.size * 1.5;
+      if (f.dir > 0 && f.x > W + margin) { Object.assign(f, makeFish()); f.dir = 1; f.x = -f.size * 1.5; }
+      else if (f.dir < 0 && f.x < -margin) { Object.assign(f, makeFish()); f.dir = -1; f.x = W + f.size * 1.5; }
+      drawFish(f, t);
+    }
+    for (const b of bubbles) {
+      b.y -= b.s * dt;
+      if (b.y < -8) { b.y = H + 8; b.x = rand(0, W); }
+      drawBubble(b, t);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  addEventListener("resize", resize);
+  resize();
+  if (!reduced) requestAnimationFrame(frame);
+})();
 </script>
 </body>
 </html>
