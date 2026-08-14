@@ -62,6 +62,16 @@
   tbody tr.row { cursor: pointer; }
   tbody tr.row:hover { background: var(--card); }
   tr.detail td { background: var(--bg2); padding: 14px 18px; font-size: 0.87rem; }
+  .detail-wrap { display: flex; gap: 20px; align-items: flex-start; }
+  .detail-img { flex: 0 0 auto; width: 240px; padding: 10px; border: 1px solid var(--border); border-radius: 10px;
+                background: radial-gradient(circle at 50% 40%, #16344e, #0b1725 70%); }
+  .detail-img img { display: block; width: 100%; height: auto; }
+  .detail-body { flex: 1 1 340px; min-width: 240px; }
+  .detail-desc { color: var(--dim); line-height: 1.6; margin-bottom: 14px; }
+  @media (max-width: 720px) {
+    .detail-wrap { flex-direction: column; }
+    .detail-img { width: 100%; max-width: 320px; align-self: center; }
+  }
   .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px 22px; }
   .detail-grid b { color: var(--dim); font-weight: 600; }
 
@@ -192,9 +202,10 @@
       <li><b>Medium Tackle</b> — 4 colors</li>
       <li>Fun Tackle variants — Purple, Yellow, Green, Red</li></ul></div>
     <div class="card"><h4>🪣 Bait Containers</h4>
-      <ul><li><b>Worm Container</b> — keeps worms &amp; grubs alive</li>
-      <li><b>Bug Container</b> — keeps insects alive, dig-bugs action</li>
-      <li><b>Bait Bucket</b> — keeps minnows, crayfish, shrimp, frogs &amp; salamanders fresh</li></ul></div>
+      <ul><li><b>Worm Container</b> — worms &amp; grubs only; stops them dying</li>
+      <li><b>Bug Container</b> — insects only; stops them dying, dig-bugs action</li>
+      <li><b>Bait Bucket</b> — aquatic catches only (minnows, crayfish, shrimp, frogs, salamanders); stops them rotting. Does <i>not</i> hold worms or insects</li>
+      <li>Tackle boxes can carry bait but preserve nothing</li></ul></div>
     <div class="card"><h4>🧊 Coolers</h4>
       <ul><li><b>12 colors</b></li>
       <li>Chills cargo toward <b>-5°C</b> — food freezes, rot stops</li>
@@ -257,7 +268,7 @@
     <div class="card"><h4>🌕 Moon Phases</h4><p>Real synodic moon-phase math (Meeus algorithm) from the in-game date. Full-moon nights bite up to +20%, new-moon nights down to -10%. Night-only, independently toggleable.</p></div>
     <div class="card"><h4>🌡 Water Temperature</h4><p>Every species has an optimal temperature and a survivable range. Bass own hot summer days; trout and salmon take over in the cold. A global <code>WaterTempOffset</code> adapts the whole curve to winter or tropical maps.</p></div>
     <div class="card"><h4>🕐 Bite-Speed Cycles</h4><p>Each fish has a 24-hour circadian activity curve. The active pool's aggregate drives how long you wait between bites — night fishing for catfish feels different from noon panfishing.</p></div>
-    <div class="card"><h4>🪱 Living Bait</h4><p>Live bait perishes ~90 minutes after you find it. Worm/Bug Containers, the Bait Bucket, and coolers pause the clock. Artificial lures never die.</p></div>
+    <div class="card"><h4>🪱 Living Bait</h4><p>Worms, grubs, crickets and grasshoppers die about 90 minutes after you find them. Only a Worm Container, a Bug Container or a cooler pauses that clock — tackle boxes and the Bait Bucket do not. Artificial lures never die.</p></div>
     <div class="card"><h4>🧊 Cooler &amp; Freezer</h4><p>Coolers actively chill cargo to -5°C: rot stops, food freezes. Frozen fish can't be filleted until thawed.</p></div>
     <div class="card"><h4>🐺 Predators</h4><p>Fishing, filleting, failed casts, and net use can each draw wolves or bears (~1% per action by default, per-action configurable). Land-only spawns, optional warning sound for everyone nearby, and a chat warning for whoever caused it.</p></div>
     <div class="card"><h4>🪝 Hook Recovery</h4><p>Roughly 1 in 250 fillets recovers a damaged hook or lure "stuck in the fish." Pool and damage range are configurable.</p></div>
@@ -277,7 +288,7 @@
   <details class="faq-item"><summary>I edited BiteSpeed and my server crashed on startup. What happened?</summary><div>BiteSpeed must be a single <b>space-separated string</b> of 24 hourly values (<code>"0.85 0.9 1 ..."</code>), not a JSON array — DayZ's JSON loader crashes on nested float arrays. Also keep any single string value in the configs under ~900 characters; the engine's reader hard-crashes past ~1024.</div></details>
   <details class="faq-item"><summary>Do the fish work with trader mods?</summary><div>Yes. Fish quality defaults to 1.0 (full) specifically because popular traders (DayZ-Expansion-Market, TraderPlus, Dr. Jones) only accept full-quality items. If your trader scales price by quality, you can lower <code>FishQuality</code> in general.json.</div></details>
   <details class="faq-item"><summary>How do I add the fish to my server's economy?</summary><div>The mod generates <code>gebsfish-types.xml</code> and <code>gebsfish-spawnabletypes.xml</code> into <code>$profile:Gebs/mpmissions/</code> on server start — merge those into your mission's economy files. The generated types contain only Gebsfish classnames; vanilla fish are already in your mission's own types.xml.</div></details>
-  <details class="faq-item"><summary>How do I keep my bait alive?</summary><div>Live bait (worms, crickets, grasshoppers, grubs) dies about 90 minutes after you find it. Store it in a Worm Container, Bug Container, or cooler to pause the clock. Minnows, crayfish, shrimp, frogs, and salamanders stay fresh in the Bait Bucket. The rubber worm is artificial and never dies. Tackle boxes do <i>not</i> preserve bait — the dedicated containers are the point.</div></details>
+  <details class="faq-item"><summary>How do I keep my bait alive?</summary><div>Live bait (worms, crickets, grasshoppers, grubs) dies about 90 minutes after you find it. Store it in a <b>Worm Container</b>, <b>Bug Container</b> or a <b>cooler</b> to pause that clock. The rubber worm is artificial and never dies.<br><br>The <b>Bait Bucket</b> is a different job: it holds small aquatic catches — minnows, crayfish, shrimp, frogs and salamanders — and stops them rotting. It will not accept worms or insects, and it is not where you keep live bait alive. <b>Tackle boxes</b> can carry bait but preserve nothing, which is what makes the dedicated containers worth the space.</div></details>
   <details class="faq-item"><summary>Why did my rod break? Can I repair it?</summary><div>Rods and hooks wear a little on every catch outcome — success or fail. Repair rods with the Fishing Rod Repair Kit and the bamboo net with Netting, but repairs cap at <b>Worn</b> and Ruined tools cannot be repaired, so retire gear before it's too late.</div></details>
   <details class="faq-item"><summary>Can I turn predators off (or up)?</summary><div>Fully configurable in general.json: a per-action chance for fishing, filleting, failed casts, and net use (default ~1% each), the predator list with weights and counts, spawn radius, the warning sound, and the chat warning. Set the chances to 0 to disable, or crank them for a high-stakes server.</div></details>
   <details class="faq-item"><summary>Does Gebsfish work on custom maps?</summary><div>Yes — Chernarus, Livonia, Sakhal, Banov, Namalsk, Deer Isle, Lux, NavalPlus, Sahrani, Artseinen, MelkartV2, and Deadfall are supported out of the box. If your map's fishing doesn't work, open a ticket in the Discord and we'll issue a hotfix for that map.</div></details>

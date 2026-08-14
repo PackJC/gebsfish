@@ -153,6 +153,13 @@ class gebsfishTypes {
         foreach (XmlTypeEntry gearEntry : gearItems) {
             WriteType(file, gearEntry.Name, gearEntry.Nominal, 7200, 0, gearEntry.Min, 0, 100, 200, "tools", true);
         }
+
+        // The fish mount is a placed structure, not pocket loot: it gets the
+        // tent/barrel lifetime (45 days untouched) instead of the 2-hour
+        // gear lifetime, so wall trophies persist like any base fixture and
+        // abandoned ones decay away on the same schedule as tents.
+        FPrintln(file, "    <!-- Placed structures -->");
+        WriteType(file, "geb_WoodenFishMount", 3, 3888000, 0, 1, 0, 100, 200, "tools", true);
     }
 
     protected void InsertGearBatch(array<ref XmlTypeEntry> gearItems, TStringArray names, int nominal, int min) {

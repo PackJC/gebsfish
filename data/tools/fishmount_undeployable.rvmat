@@ -1,0 +1,83 @@
+// Placement hologram, blocked position -- the dark ghost.
+// Mirrors vanilla's dz\gear\camping\data\tent_medium_undeployable.rvmat. Note that
+// vanilla signals "can't place here" by going DARK, not red, so this matches the
+// rest of the game rather than inventing its own colour. Stages 1-6 are identical
+// to the deployable pair; only the colour block and Stage7 differ.
+ambient[] = { 0, 0, 0, 0.25 };
+diffuse[] = { 0, 0, 0, 0.25 };
+forcedDiffuse[] = { 0, 0, 0, 0 };
+emmisive[] = { 0.04, 0.04, 0.04, 0.25 };
+specular[] = { 0.275, 0.275, 0.275, 1 };
+specularPower = 80;
+PixelShaderID = "Super";
+VertexShaderID = "Super";
+class Stage1 {
+	texture = "gebsfish\data\tools\fishmount_normals.paa";
+	uvSource = "tex";
+	class uvTransform {
+		aside[] = { 1, 0, 0 };
+		up[] = { 0, 1, 0 };
+		dir[] = { 0, 0, 0 };
+		pos[] = { 0, 0, 0 };
+	};
+};
+class Stage2 {
+	texture = "#(argb,8,8,3)color(0.5,0.5,0.5,0.5,DT)";
+	uvSource = "tex";
+	class uvTransform {
+		aside[] = { 1, 0, 0 };
+		up[] = { 0, 1, 0 };
+		dir[] = { 0, 0, 0 };
+		pos[] = { 0, 0, 0 };
+	};
+};
+class Stage3 {
+	texture = "#(argb,8,8,3)color(0,0,0,0,MC)";
+	uvSource = "tex";
+	class uvTransform {
+		aside[] = { 1, 0, 0 };
+		up[] = { 0, 1, 0 };
+		dir[] = { 0, 0, 0 };
+		pos[] = { 0, 0, 0 };
+	};
+};
+class Stage4 {
+	texture = "#(argb,8,8,3)color(0.7,0.7,0.7,1,AS)";
+	uvSource = "tex";
+	class uvTransform {
+		aside[] = { 1, 0, 0 };
+		up[] = { 0, 1, 0 };
+		dir[] = { 0, 0, 0 };
+		pos[] = { 0, 0, 0 };
+	};
+};
+class Stage5 {
+	texture = "gebsfish\data\tools\fishmount_smdi.paa";
+	uvSource = "tex";
+	class uvTransform {
+		aside[] = { 1, 0, 0 };
+		up[] = { 0, 1, 0 };
+		dir[] = { 0, 0, 0 };
+		pos[] = { 0, 0, 0 };
+	};
+};
+class Stage6 {
+	texture = "#(ai,64,64,2)fresnel(0.67,0.001)";
+	uvSource = "tex";
+	class uvTransform {
+		aside[] = { 1, 0, 0 };
+		up[] = { 0, 1, 0 };
+		dir[] = { 0, 0, 0 };
+		pos[] = { 0, 0, 0 };
+	};
+};
+class Stage7 {
+	texture = "#(argb,8,8,3)color(1,1,1,1,CO)";
+	uvSource = "tex";
+	class uvTransform {
+		aside[] = { 1, 0, 0 };
+		up[] = { 0, 1, 0 };
+		dir[] = { 0, 0, 0 };
+		pos[] = { 0, 0, 0 };
+	};
+};

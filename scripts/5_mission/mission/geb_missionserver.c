@@ -1,6 +1,12 @@
 modded class MissionServer {
-	override void OnInit() {		
+	override void OnInit() {
 		super.OnInit();
+		// Banner only when the admin has debug logging on -- a production
+		// server's log stays clean. Safe to call here: the config is loaded
+		// by now, so GebGetDebugLevel() reports the real setting.
+		if (GebGetDebugLevel() > 0) {
+			GebsfishLogger.WriteBanner();
+		}
 		if(m_gebsConfig) {
 			GebsfishLogger.Info("Version " + VERSION_GEBSFISH + " loaded successfully!", "MissionServer Init");
 		}

@@ -157,6 +157,8 @@ modded class Edible_Base {
 			delta = delta * GEBSFISH_COOLER_DECAY_MULTIPLIER;
 		else if (GebsfishIsInsideBaitContainer())
 			delta = 0;   // worm/bug/minnow containers keep live bait fresh
+		else if (GebsfishIsMountedTrophy())
+			delta = 0;   // taxidermy: a fish on the wall mount never rots
 
 		super.ProcessDecay(delta, hasRootAsPlayer);
 	}
@@ -181,6 +183,12 @@ modded class Edible_Base {
 			parent = parent.GetHierarchyParent();
 		}
 		return false;
+	}
+
+	// Trophy check: the fish attaches directly to the plaque, so a single
+	// parent hop is enough -- no full hierarchy walk needed.
+	protected bool GebsfishIsMountedTrophy() {
+		return geb_WoodenFishMount.Cast(GetHierarchyParent()) != null;
 	}
 
 	// Same hierarchy walk for the dedicated bait containers. Tackle boxes are
@@ -244,6 +252,13 @@ modded class Worm {
 		DecreaseHealth("", "", step);
 	}
 
+	// geb_MinnowBucket is deliberately NOT listed here, even though the rot
+	// walk in Edible_Base does list it. The bucket is for small aquatic
+	// catches (minnows, crayfish, shrimp, frogs, salamanders) and its cargo
+	// filter rejects worms and insects by design, so live bait can never be
+	// inside one and there is nothing for this check to catch. Don't "fix"
+	// the asymmetry by adding it -- that would only matter if the bucket
+	// started accepting insects, which it should not.
 	protected bool GebsfishIsBaitPreserved() {
 		EntityAI parent = GetHierarchyParent();
 		while (parent) {

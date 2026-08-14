@@ -10,13 +10,11 @@ class GebsfishLogger {
     private static string m_SessionFilePath = "";
     private static GebsfishLogLevel m_MinLevel = GebsfishLogLevel.DEBUG;
     private static bool m_Initialized = false;
-    // Session-lifetime handle. Kept open on purpose: at elevated debug a
-    // single cast can emit hundreds of lines, and an open/append/close
-    // round-trip per line stalls the server main thread. The OS closes the
-    // handle at process exit; Reset() closes it for an explicit new session.
-    // No `= 0` initializer -- FileHandle is plain data to Enforce, which
-    // only allows null initializers there; statics zero-init by default.
-    private static FileHandle m_File;
+    // No session-lifetime handle on purpose. Enforce exposes no flush, so
+    // CloseFile is the only thing that commits bytes to disk: opening and
+    // closing around each write means a hard crash can never take the tail
+    // of the log with it, and it leaves the file unlocked so it can be read
+    // or moved while the server is running.
 
     static void Init(string tag = "gebsfish") {
         if (m_Initialized)
@@ -30,8 +28,8 @@ class GebsfishLogger {
 
         m_SessionFilePath = LOG_DIR + "/" + BuildDateTimeCompact() + "_" + safeTag + ".log";
 
-        m_File = OpenFile(m_SessionFilePath, FileMode.WRITE);
-        if (m_File == 0) {
+        FileHandle file = OpenFile(m_SessionFilePath, FileMode.WRITE);
+        if (file == 0) {
             m_SessionFilePath = "";
             return;
         }
@@ -39,19 +37,34 @@ class GebsfishLogger {
         string side = GetExecutionSide();
         string worldName = GetWorldNameSafe();
 
-        FPrintln(m_File, "==================== LOGGING SESSION START ====================");
-        FPrintln(m_File, "World: " + worldName);
-        FPrintln(m_File, "Log Type: " + side);
-        FPrintln(m_File, "Time: " + BuildDateTimeReadable());
-        FPrintln(m_File, "File: " + m_SessionFilePath);
-        FPrintln(m_File, "Gebsfish Version: " + VERSION_GEBSFISH);
-        FPrintln(m_File, "===============================================================");
+        FPrintln(file, "==================== LOGGING SESSION START ====================");
+        FPrintln(file, "World: " + worldName);
+        FPrintln(file, "Log Type: " + side);
+        FPrintln(file, "Time: " + BuildDateTimeReadable());
+        FPrintln(file, "File: " + m_SessionFilePath);
+        FPrintln(file, "Gebsfish Version: " + VERSION_GEBSFISH);
+        FPrintln(file, "===============================================================");
 
+        CloseFile(file);
         m_Initialized = true;
     }
 
-    static void SetMinLevel(GebsfishLogLevel level) {
-        m_MinLevel = level;
+    // Banner for the top of the log. Deliberately NOT written from Init():
+    // the logger initialises lazily on its first write, which happens while
+    // the config is still loading, so DebugLogs isn't known yet. The caller
+    // (MissionServer.OnInit) fires this once the config is up and only when
+    // debug logging is enabled.
+    static void WriteBanner() {
+        if (!m_Initialized)
+            Init();
+        if (!m_Initialized || m_SessionFilePath == string.Empty)
+            return;
+
+        FileHandle file = OpenFile(m_SessionFilePath, FileMode.APPEND);
+        if (file == 0)
+            return;
+        GebsAsciiArt.Write(file);
+        CloseFile(file);
     }
 
     static void Debug(string msg, string category = "") {
@@ -77,7 +90,11 @@ class GebsfishLogger {
         if (!m_Initialized)
             Init();
 
-        if (!m_Initialized || m_File == 0)
+        if (!m_Initialized || m_SessionFilePath == string.Empty)
+            return;
+
+        FileHandle file = OpenFile(m_SessionFilePath, FileMode.APPEND);
+        if (file == 0)
             return;
 
         string line = "[" + BuildDateTimeReadable() + "][" + GetExecutionSide() + "][" + LevelToString(level) + "] ";
@@ -86,14 +103,12 @@ class GebsfishLogger {
 
         line += message;
 
-        FPrintln(m_File, line);
+        FPrintln(file, line);
+        CloseFile(file);
     }
 
     // Optional helper in case you ever want to force a new log file per session / reload.
     static void Reset() {
-        if (m_File != 0)
-            CloseFile(m_File);
-        m_File = null;   // FileHandle is plain data -- only null assignment is legal
         m_SessionFilePath = "";
         m_Initialized = false;
     }

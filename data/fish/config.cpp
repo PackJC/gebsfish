@@ -75,7 +75,7 @@ class cfgVehicles {
 				range = 2.8;
 			};
 		};
-		inventorySlot[] = {"TrapPrey_1"};
+		inventorySlot[] = {"TrapPrey_1", "GebFishMount"};
 		hiddenSelections[] = {"cs_raw"};
 		hiddenSelectionsTextures[] = {"dz\gear\food\data\carp_live_co.paa","dz\gear\food\data\carp_live_co.paa"};
 		hiddenSelectionsMaterials[] = {"dz\gear\food\data\carp_live.rvmat","dz\gear\food\data\carp_live.rvmat"};
@@ -154,7 +154,7 @@ class cfgVehicles {
 				range = 2.8;
 			};
 		};
-		inventorySlot[] = {"TrapPrey_1"};
+		inventorySlot[] = {"TrapPrey_1", "GebFishMount"};
 		hiddenSelections[] = {"cs_raw"};
 		hiddenSelectionsTextures[] = {"dz\gear\food\data\mackerel_live_co.paa","dz\gear\food\data\mackerel_live_co.paa"};
 		hiddenSelectionsMaterials[] = {"dz\gear\food\data\mackerel_live.rvmat","dz\gear\food\data\mackerel_live.rvmat"};
@@ -232,7 +232,7 @@ class cfgVehicles {
 				range = 2.8;
 			};
 		};
-		inventorySlot[] = {"TrapPrey_1"};
+		inventorySlot[] = {"TrapPrey_1", "GebFishMount"};
 		hiddenSelections[] = {"cs_raw"};
 		hiddenSelectionsTextures[] = {"dz\gear\food\data\mackerel_live_co.paa","dz\gear\food\data\mackerel_live_co.paa"};
 		hiddenSelectionsMaterials[] = {"dz\gear\food\data\mackerel_live.rvmat","dz\gear\food\data\mackerel_live.rvmat"};
@@ -359,6 +359,7 @@ class cfgVehicles {
 		model = "\gebsfish\data\fish\crayfish.p3d";
 		itemSize[] = {2,1};
 		weight = 200;
+		inventorySlot[] += {"GebFishMount"};
 		hiddenSelections[] =
         {
             "Camo"
@@ -674,7 +675,8 @@ class cfgVehicles {
 			"Trap_Bait",
 			"Bait",
 			"Trap_Bait_1",
-			"Trap_Bait_2"
+			"Trap_Bait_2",
+			"GebFishMount"
 		};
 		class Food
         {
@@ -767,7 +769,8 @@ class cfgVehicles {
 			"Trap_Bait",
 			"Bait",
 			"Trap_Bait_1",
-			"Trap_Bait_2"
+			"Trap_Bait_2",
+			"GebFishMount"
 		};
 		class Food
         {
@@ -860,7 +863,8 @@ class cfgVehicles {
 			"Trap_Bait",
 			"Bait",
 			"Trap_Bait_1",
-			"Trap_Bait_2"
+			"Trap_Bait_2",
+			"GebFishMount"
 		};
 		class Food
         {
@@ -1336,6 +1340,7 @@ class cfgVehicles {
 		model = "\gebsfish\data\fish\bloodclam.p3d";
 		weight = 80;
 		itemSize[] = {1,1};
+		inventorySlot[] += {"GebFishMount"};
 	};
 	//Needs to be renamed geb_BlueMussel next wipe
 	class geb_Mussel: Shrimp {
@@ -1345,6 +1350,7 @@ class cfgVehicles {
 		model = "\gebsfish\data\fish\mussel.p3d";
 		weight = 80;
 		itemSize[] = {1,1};
+		inventorySlot[] += {"GebFishMount"};
 	};
 	class geb_BlackDevilSnail: Shrimp {
 		scope = 2;
@@ -1353,6 +1359,7 @@ class cfgVehicles {
 		model = "\gebsfish\data\fish\blackdevilsnail.p3d";
 		weight = 30;
 		itemSize[] = {1,1};
+		inventorySlot[] += {"GebFishMount"};
 	};
 	class geb_StarFish: Shrimp {
 		scope = 2;
@@ -1361,6 +1368,7 @@ class cfgVehicles {
 		model = "\gebsfish\data\fish\starfish.p3d";
 		weight = 400;
 		itemSize[] = {2,2};
+		inventorySlot[] += {"GebFishMount"};
 	};
 	class geb_BlueJellyFish: Shrimp {
 		scope = 2;
@@ -1369,6 +1377,7 @@ class cfgVehicles {
 		model = "\gebsfish\data\fish\bluejellyfish.p3d";
 		weight = 300;
 		itemSize[] = {2,2};
+		inventorySlot[] += {"GebFishMount"};
 	};
 	class geb_AmericanLobster: geb_Lobster_Base {
 		scope = 2;

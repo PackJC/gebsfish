@@ -10,11 +10,27 @@ class geb_YieldFishGeneric : GebYieldFishBase {
     // constructor, so callers do `new geb_YieldFishGeneric(catchProb)` and the
     // arg forwards straight to the base.
     // The FishConf row can't ride in the constructor (its type wouldn't match
-    // the base's int prototype), so it comes through this setter, which MUST be
-    // called BEFORE RegisterYieldItem() -- that's what triggers Init().
-    void SetConf(FishConf conf) { m_Conf = conf; }
+    // the base's int prototype), so it comes through this setter.
+    //
+    // CRITICAL ORDERING: vanilla YieldItemBase's constructor calls Init()
+    // itself (3_Game/DayZ/Systems/AnimalCatching/CatchYieldItemBase.c), so
+    // Init() has ALREADY run -- with m_Conf still null -- before this setter
+    // can be called, and CatchYieldBank.RegisterYieldItem never calls it
+    // again (it only assigns a registration index and does a map insert).
+    // So the setup has to be applied from here. Without this, SetupYield never
+    // runs, m_Type stays "" and the enviro/method masks stay 0: the bank keys
+    // on GetType().Hash(), so all 79 species collapse onto one empty entry
+    // that matches no environment or catch method -- you catch only junk.
+    void SetConf(FishConf conf) {
+        m_Conf = conf;
+        ApplyConf();
+    }
 
     override void Init() {
+        ApplyConf();   // no-op during construction: m_Conf isn't set yet
+    }
+
+    protected void ApplyConf() {
         if (!m_Conf) return;
         // Careful with SetupYield's param order: night is the 3rd multiplier
         // (rain, storm, night, then dawn/day/dusk).

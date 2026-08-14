@@ -12,9 +12,22 @@ modded class PluginRecipesManager {
 	override void RegisterRecipies() {
 		super.RegisterRecipies();
 
+		//Tools
+		// Registered BEFORE the data-driven fish loop on purpose. RegisterRecipe
+		// hands out sequential IDs and actions send that ID over the network, so
+		// client and server must agree. Anything registered after a variable-length
+		// loop shifts by however many species that side happened to register --
+		// keep the fixed recipes first so their IDs never move.
+		RegisterRecipe(new CraftBambooFishingNet);
+		RegisterRecipe(new RepairFishingPole);
+		RegisterRecipe(new RepairBambooFishingNet);
+		RegisterRecipe(new CraftHookFromWire);
+
 		// Fish fillet/caviar/lobster recipes -- data-driven from the live Species table.
 		// One generic recipe per row that has a ResultMain; the 4 vanilla fish
 		// (Carp/SteelheadTrout/Mackerel/WalleyePollock) stay as their own modded classes.
+		// Clients seed the compiled defaults in gebsfishConfig.LoadAll so this loop
+		// registers the same set here as it does on the server.
 		gebsfishConfig cfg = GetGebSettingsConfig();
 		if (cfg && cfg.Fish && cfg.Fish.Species) {
 			GebPrepareFishData recipe;
@@ -25,12 +38,8 @@ modded class PluginRecipesManager {
 				recipe.SetConf(f);
 				RegisterRecipe(recipe);
 			}
+		} else {
+			GebsfishLogger.Error("Species table unavailable at recipe registration -- no fish fillet recipes were registered (fish will have no Gut action).", "Recipes");
 		}
-
-		//Tools
-		RegisterRecipe(new CraftBambooFishingNet);
-		RegisterRecipe(new RepairFishingPole);
-		RegisterRecipe(new RepairBambooFishingNet);
-		RegisterRecipe(new CraftHookFromWire);
 	}
 };

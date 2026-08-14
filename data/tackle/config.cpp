@@ -39,6 +39,8 @@ class cfgVehicles {
 
 	*/
 	class geb_Tackle_Base: Container_Base {
+		// Deck-mountable on the jon boat (see data/vehicles/config.cpp).
+		inventorySlot[] = {"GebBoatDeck1", "GebBoatDeck2"};
 		scope = 0;
 		displayName = "Tackle Base";
 		descriptionShort = "Tackle Base Class";
@@ -194,6 +196,8 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_green_co.paa"};
 	};
 	class geb_SmallTackle: Container_Base {
+		// Deck-mountable on the jon boat (see data/vehicles/config.cpp).
+		inventorySlot[] = {"GebBoatDeck1", "GebBoatDeck2"};
 		scope = 2;
 		displayName = "$STR_tools_smalltackle";
 		descriptionShort = "$STR_tools_smalltackle_desc";
@@ -264,6 +268,8 @@ class cfgVehicles {
 		when the asset is ready.
 	*/
 	class geb_Cooler_base: Container_Base {
+		// Deck-mountable on the jon boat (see data/vehicles/config.cpp).
+		inventorySlot[] = {"GebBoatDeck1", "GebBoatDeck2"};
 		scope = 0;  // bump to 2 once the model + textures + stringtable are in place
 		displayName = "$STR_tools_cooler";
 		descriptionShort = "$STR_tools_cooler_desc";
@@ -552,6 +558,8 @@ class cfgVehicles {
 		};
 	};
 	class geb_OldTackleBase: Container_Base {
+		// Deck-mountable on the jon boat (see data/vehicles/config.cpp).
+		inventorySlot[] = {"GebBoatDeck1", "GebBoatDeck2"};
 		scope = 0;
 		displayName = "$STR_tools_oldgreentackle";
 		descriptionShort = "$STR_tools_tackle_desc";

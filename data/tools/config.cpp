@@ -10,16 +10,41 @@
 
 class CfgNonAIVehicles {
 	class StaticObject;
+	class ProxyAttachment;
+	// Attachment proxy for the fish mount slot. The class name must be
+	// "Proxy" + the proxy p3d's filename. The plaque model places a proxy
+	// named gebfishmount in its resolution LODs -- the attached fish renders
+	// at that proxy's position/rotation. The proxy p3d itself is never
+	// rendered; any tiny placeholder p3d renamed to gebfishmount.p3d works.
+	class Proxygebfishmount: ProxyAttachment {
+		scope = 2;
+		inventorySlot = "GebFishMount";
+		model = "\gebsfish\data\proxy\gebfishmount.p3d";
+	};
 };
 
 class CfgPatches {
-	class gebsToolsCfgPatches { 	
+	class gebsToolsCfgPatches {
 		//Never Use same name for patch, because conflict message.
 		requiredAddons[] = {
 		"DZ_Data",
 		"DZ_Scripts",
 		"DZ_Weapons_Melee"
 		};
+	};
+};
+
+class CfgSlots {
+	// One slot shared by every catchable -- the mounted trophy IS the caught
+	// fish (weight/quality persist via normal attachment save). Fish opt in
+	// via inventorySlot[] on the fish config bases in data/fish/config.cpp.
+	class Slot_GebFishMount {
+		name = "GebFishMount";
+		displayName = "$STR_tools_fishmount";
+		// Resolves to "set:dayz_inventory image:hook" -- ghostIcon must name
+		// an imageset entry, not a texture path. Swap for a gebsfish set once
+		// fishmount_ghost.paa is registered as an imageset in Workbench.
+		ghostIcon = "hook";
 	};
 };
 
@@ -36,6 +61,39 @@ class cfgVehicles {
 		TOOLS
 
 	*/
+
+	// Wooden trophy mount. One item covers every fish: the plaque has a
+	// single GebFishMount attachment slot and the player attaches the actual
+	// caught fish -- its model renders on the plaque via the gebfishmount
+	// proxy, and its weight/quality persist like any attachment. Wall
+	// placement comes from the modded Hologram in
+	// scripts/4_world/entities/itembase/gear/geb_fishmount.c.
+	// The plaque p3d still needs its gebfishmount proxy added in Object
+	// Builder before an attached fish will render on it.
+	class geb_WoodenFishMount: Inventory_Base {
+		scope = 2;
+		displayName = "$STR_tools_fishmount";
+		descriptionShort = "$STR_tools_fishmount_desc";
+		model = "\gebsfish\data\tools\fishmount.p3d";
+		weight = 1200;
+		itemSize[] = {3,3};
+		attachments[] = {"GebFishMount"};
+		rotationFlags = 2;
+		physLayer = "item_large";
+		// Placement hologram. Without a hiddenSelection the engine has no
+		// slot to swap the ghost material into and the projection renders as
+		// the normal textured plaque; "placing" is the selection the p3d
+		// carries over the whole board. The material pair is resolved as
+		// <hologramMaterialPath>\<hologramMaterial>_deployable.rvmat and
+		// ..._undeployable.rvmat.
+		hiddenSelections[] = {"placing"};
+		hologramMaterial = "fishmount";
+		hologramMaterialPath = "gebsfish\data\tools";
+		// Don't force ground alignment -- the modded Hologram builds the
+		// orientation from the wall normal when the player aims at a wall.
+		alignHologramToTerrain = 0;
+		yawPitchRollLimit[] = {89,89,89};
+	};
 
 	class geb_FishingRodRepairKit: Inventory_Base {
 		scope = 2;

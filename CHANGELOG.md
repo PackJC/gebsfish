@@ -18,6 +18,12 @@
 - **Bait / lure preference matrix** — every bait and lure carries per-fish multipliers that bias which fish takes the hook: worms and insects favour panfish and trout, soft-plastic worms favour bass, live minnow and salamander favour pike / musky / walleye, spinnerbaits favour bass / pike / musky, spoons favour trout and salmon, jigs favour bass / walleye. Numbered lure variants share one family entry (`geb_SpinnerBait` covers `geb_SpinnerBait1-4`; an exact numbered entry still overrides). Roughly 700 seeded pairings, all overridable in JSON, master `Enable` toggle at the top of `bait.json`. Final pick weight = CatchProbability x weather x time-of-day x bait
 - **Hook-from-fish recovery** — filleting a fish has a small configurable chance (default ~1/250) to recover a damaged hook or lure "stuck in the fish"; the hook pool, weights, and health range are admin-tunable
 - **Cooler freezer system** — coolers keep contents cold, live bait is perishable, and a frozen-fillet guard prevents prep on frozen fillets
+- **Bait freshness rules** — each container has one job, and they do not overlap:
+    * **Worm Container / Bug Container** — hold worms, grubs and insects, and pause the ~90 minute live-bait death timer
+    * **Cooler** — pauses both food rot and the live-bait timer for anything inside
+    * **Bait Bucket** — holds small aquatic catches only (minnows, crayfish, shrimp, frogs, salamanders) and stops them rotting. It does not accept worms or insects and is not a live-bait keeper
+    * **Tackle boxes** — can carry bait for convenience but preserve nothing
+    * Artificial lures (rubber worm and all hard baits) never perish
 - **Predator spawn rework** — three independent gates (per-action chance, weighted predator pick, per-predator min/max count) with separate chance values for fishing, filleting, failed casts, and net use. Land-only spawn search (no underwater wolves), optional warning sound RPC, configurable chat warning
 - **Per-action config sections** — `BambooFishingNetSettings`, `DigBugsSettings`, `DigWormsSettings`, each owning its `FindChance` (per-attempt probability of finding anything) and a weighted `Catches[]` table. Tool wear still applies on a miss
 - **Configurable net catches** — net spawn table entries carry an `Environment` field (1 pond, 2 sea, 3 both) for per-environment filtering; catches spawn into the net's cargo (4x4) first, falling back to the player's feet when full. New bamboo net repair recipe: one Netting + a damaged net restores it to Worn
@@ -63,6 +69,7 @@ Major art pass across the existing roster — new or reworked models and texture
 
 - Grub Worm (chance to find when digging for worms)
 - Coolers in 12 colors (with the freezer system)
+- **Wooden Fish Mount** — wall-snapping trophy plaque with one attachment slot that accepts any catchable; the mounted trophy is the actual caught fish (weight and quality persist) and it never rots on the wall. Placeholder model until the plaque p3d lands
 - Craft metal hook from metal wire + pliers
 - Bamboo net repair recipe (Netting + damaged net -> Worn)
 - New Bamboo Fishing Net model and full texture set
@@ -73,7 +80,7 @@ Major art pass across the existing roster — new or reworked models and texture
 - 4 Curly Tail Jigs
 - Spinner Baits 1-4 (new models)
 - Squarebill Lure (replaces Lure4)
-- Yellow Crank, Green Crank, Popper lures (replace old lures)
+- Yellow Crank, Purple Crank, Popper lures (replace old lures)
 - New Small Tackle and Large Tackle models
 - New Worm Container and Bait Bucket models
 

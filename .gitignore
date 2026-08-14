@@ -1,8 +1,10 @@
-.vs
+﻿.vs
 .idea
+.claude
 *.ini
 *.bin
 *.vs
 .DS_Store
 /.rules
 /CF
+*.webp

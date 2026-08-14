@@ -12,6 +12,22 @@ class CfgNonAIVehicles {
 	class StaticObject;
 };
 
+class CfgSlots {
+	// Two general-purpose deck spots on the jon boat. Both accept the same
+	// item families (coolers, tackle boxes, jerry cans) so a player can pick
+	// any combination rather than being forced into one of each.
+	class Slot_GebBoatDeck1 {
+		name = "GebBoatDeck1";
+		displayName = "$STR_vehicles_jonboat_deck";
+		ghostIcon = "missing";
+	};
+	class Slot_GebBoatDeck2 {
+		name = "GebBoatDeck2";
+		displayName = "$STR_vehicles_jonboat_deck";
+		ghostIcon = "missing";
+	};
+};
+
 class CfgPatches {
 	class gebsVehiclesCfgPatches { 	
 		//Never Use same name for patch, because conflict message.
@@ -24,10 +40,41 @@ class CfgPatches {
 	};
 };
 
-class cfgVehicles {		
+class cfgVehicles {
 	class Boat_01_ColorBase;
 	class Crew;
 	class Driver;
+	class Bottle_Base;
+	class ProxyAttachment;
+
+	// Attachment proxies for the two deck slots -- THIS is what makes an attached
+	// item actually render on the boat. Same pattern as Proxygebfishmount in
+	// data/tools/config.cpp: the class name must be "Proxy" + the proxy p3d's
+	// filename, and inventorySlot binds that proxy to the slot. Without these
+	// entries the slots still accept items and show them in the vehicle inventory
+	// panel, but nothing appears on the deck: the model carries the proxies and
+	// the config declares the slots, yet the engine has nothing tying the two
+	// together, so it never places the attached entity. The proxy p3d itself is
+	// never drawn; it only supplies the position and rotation.
+	class Proxygebboatdeck1: ProxyAttachment {
+		scope = 2;
+		inventorySlot = "GebBoatDeck1";
+		model = "\gebsfish\data\proxy\gebboatdeck1.p3d";
+	};
+	class Proxygebboatdeck2: ProxyAttachment {
+		scope = 2;
+		inventorySlot = "GebBoatDeck2";
+		model = "\gebsfish\data\proxy\gebboatdeck2.p3d";
+	};
+
+	// Vanilla jerry can opted into the deck slots. The gebsfish coolers and
+	// tackle boxes get the same treatment where they are defined, in
+	// data/tackle/config.cpp, so this stays independent of config load order.
+	// Base must match vanilla exactly (dz\vehicles\parts\config.cpp) -- reopening
+	// a class under a different parent reparents it.
+	class CanisterGasoline: Bottle_Base {
+		inventorySlot[] += {"GebBoatDeck1", "GebBoatDeck2"};
+	};
     class geb_jonboat_base : Boat_01_ColorBase {
         scope = 0;
         displayName = "$STR_vehicles_jonboat";
@@ -37,7 +84,9 @@ class cfgVehicles {
         fuelConsumption = 5.5;
         animPhysDetachSpeed = 5;
         attachments[] = {
-            "SparkPlug"
+            "SparkPlug",
+            "GebBoatDeck1",
+            "GebBoatDeck2"
         };
 		class Cargo
 		{
@@ -271,6 +320,18 @@ class cfgVehicles {
                 icon = "set:dayz_inventory image:cat_vehicle_engine";
                 attachmentSlots[] = {
                     "SparkPlug"
+                };
+            };
+            // The vehicle inventory panel draws attachment slots per category
+            // here -- a slot listed only in attachments[] above gets no visible
+            // spot to drop an item on. Both deck slots need to appear in one.
+            class Deck {
+                name = "$STR_vehicles_jonboat_deck";
+                description = "";
+                icon = "set:dayz_inventory image:cat_vehicle_body";
+                attachmentSlots[] = {
+                    "GebBoatDeck1",
+                    "GebBoatDeck2"
                 };
             };
         };

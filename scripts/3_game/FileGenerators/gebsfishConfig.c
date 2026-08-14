@@ -762,8 +762,20 @@ class gebsfishConfig {
         Bait    = new BaitSettingsConf();
         Junk    = new JunkConfig();
         Fish    = new FishConfig();
-        if (!g_Game.IsServer())
-            return;   // server owns the files; clients receive values via RPC
+        if (!g_Game.IsServer()) {
+            // Server owns the files; clients receive values via RPC -- but the
+            // Species table can't wait for that RPC. PluginRecipesManager
+            // registers the fillet recipes at plugin init, which happens while
+            // the client is still loading the mission, BEFORE ConfigSync lands.
+            // With Species still null the registration loop silently registers
+            // ZERO fish recipes, so no fish offers a Gut action on that client,
+            // and every recipe registered after the loop lands on a different
+            // ID than the server's. Seeding the compiled defaults keeps both
+            // sides identical; ConfigSync then replaces these values with the
+            // server's real file (recipe execution is server-side anyway).
+            Fish.SeedDefaults();
+            return;
+        }
 
         // Sweep pre-3.3 layout files into Gebs/gebs_oldfiles before loading,
         // so an upgraded server never mixes old and new config files.

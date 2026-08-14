@@ -1,6 +1,8 @@
 // File: scripts/3_Game/GebsAsciiArt.c
 // Purpose: Dedicated helper to print the ASCII banner into an open FileHandle.
-// Usage:   GebsAsciiArt.Write(fh);
+// Usage:   Call GebsfishLogger.WriteBanner() rather than this directly -- the
+//          logger owns the session file handle. MissionServer.OnInit fires it
+//          once per boot, and only when GeneralSettings.DebugLogs is above 0.
 
 class GebsAsciiArt {
 	static void Write(FileHandle fh) {

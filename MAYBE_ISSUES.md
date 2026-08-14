@@ -36,27 +36,3 @@ predates these; a build from current master would ship them.
 
 ---
 
-## Design / logic issues (decide intent, then fix)
-
-- **geb_KingCrab / geb_SnowCrab IK registration still missing** (`geb_dayzplayercfgbase.c:48-49`) —
-  both are live catchables with fillet results.
-
----
-
-## Cleanup / dead code
-
-- `GebsAsciiArt.Write` never called; `GebsfishRPC` enum unused (CF string-named RPCs used
-  instead); `GebsfishLogger.SetMinLevel` / `Reset` never called.
-- The two "is it in a preserving container" hierarchy walks in `geb_ediblebase.c` differ:
-  the Edible_Base rot-pause list includes geb_MinnowBucket, the Worm aging-pause list
-  doesn't. NOT a live bug — the bucket's allow list rejects worms/insects, so the aging
-  walk can never encounter one there. A defensive add only; decide if wanted.
-- `geb_catchingcontextbase.c:36` — `!= ""` check can never be false (accessor returns
-  "<unresolved>", never "").
-
----
-
-## Not audited
-
-- Config/asset cross-check (model/texture/rvmat paths vs files on disk, scope-2 classes
-  missing displayName, orphaned assets) — that audit pass was stopped before it ran.
