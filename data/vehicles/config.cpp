@@ -10,6 +10,31 @@
 
 class CfgNonAIVehicles {
 	class StaticObject;
+	class ProxyAttachment;
+	// Attachment proxies for the two deck slots -- THIS is what makes an attached
+	// item actually render on the boat. Same pattern as Proxygebfishmount in
+	// data/tools/config.cpp: the class name must be "Proxy" + the proxy p3d's
+	// filename, and inventorySlot binds that proxy to the slot. Without these
+	// entries the slots still accept items and show them in the vehicle inventory
+	// panel, but nothing appears on the deck: the model carries the proxies and
+	// the config declares the slots, yet the engine has nothing tying the two
+	// together, so it never places the attached entity. The proxy p3d itself is
+	// never drawn; it only supplies the position and rotation.
+	//
+	// These MUST live in CfgNonAIVehicles, not cfgVehicles. Putting them in
+	// cfgVehicles makes ProxyAttachment resolve to a new empty class there and
+	// turns these into bogus vehicle entries, which breaks the jon boat's crew
+	// config -- you can't board as driver or passenger.
+	class Proxygebboatdeck1: ProxyAttachment {
+		scope = 2;
+		inventorySlot = "GebBoatDeck1";
+		model = "\gebsfish\data\proxy\gebboatdeck1.p3d";
+	};
+	class Proxygebboatdeck2: ProxyAttachment {
+		scope = 2;
+		inventorySlot = "GebBoatDeck2";
+		model = "\gebsfish\data\proxy\gebboatdeck2.p3d";
+	};
 };
 
 class CfgSlots {
@@ -45,27 +70,6 @@ class cfgVehicles {
 	class Crew;
 	class Driver;
 	class Bottle_Base;
-	class ProxyAttachment;
-
-	// Attachment proxies for the two deck slots -- THIS is what makes an attached
-	// item actually render on the boat. Same pattern as Proxygebfishmount in
-	// data/tools/config.cpp: the class name must be "Proxy" + the proxy p3d's
-	// filename, and inventorySlot binds that proxy to the slot. Without these
-	// entries the slots still accept items and show them in the vehicle inventory
-	// panel, but nothing appears on the deck: the model carries the proxies and
-	// the config declares the slots, yet the engine has nothing tying the two
-	// together, so it never places the attached entity. The proxy p3d itself is
-	// never drawn; it only supplies the position and rotation.
-	class Proxygebboatdeck1: ProxyAttachment {
-		scope = 2;
-		inventorySlot = "GebBoatDeck1";
-		model = "\gebsfish\data\proxy\gebboatdeck1.p3d";
-	};
-	class Proxygebboatdeck2: ProxyAttachment {
-		scope = 2;
-		inventorySlot = "GebBoatDeck2";
-		model = "\gebsfish\data\proxy\gebboatdeck2.p3d";
-	};
 
 	// Vanilla jerry can opted into the deck slots. The gebsfish coolers and
 	// tackle boxes get the same treatment where they are defined, in
