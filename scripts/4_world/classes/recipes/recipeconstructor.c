@@ -22,6 +22,7 @@ modded class PluginRecipesManager {
 		RegisterRecipe(new RepairFishingPole);
 		RegisterRecipe(new RepairBambooFishingNet);
 		RegisterRecipe(new CraftHookFromWire);
+		RegisterRecipe(new CraftFishMount);
 
 		// Fish fillet/caviar/lobster recipes -- data-driven from the live Species table.
 		// One generic recipe per row that has a ResultMain; the 4 vanilla fish

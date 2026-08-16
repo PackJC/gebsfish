@@ -87,12 +87,23 @@ class cfgVehicles {
 		// <hologramMaterialPath>\<hologramMaterial>_deployable.rvmat and
 		// ..._undeployable.rvmat.
 		hiddenSelections[] = {"placing"};
+		// A hidden selection that is also declared as a section in Model.cfg gets
+		// its texture and material from these lists -- leaving them out doesn't
+		// mean "keep the model's own", it means "no texture", and the plaque
+		// renders invisible. Point them at its normal appearance; the hologram
+		// swaps its own material over the top only while placing.
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishmount_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishmount.rvmat"};
 		hologramMaterial = "fishmount";
 		hologramMaterialPath = "gebsfish\data\tools";
 		// Don't force ground alignment -- the modded Hologram builds the
 		// orientation from the wall normal when the player aims at a wall.
 		alignHologramToTerrain = 0;
-		yawPitchRollLimit[] = {89,89,89};
+		// Hologram.IsCollidingAngle rejects placement when |pitch| or |roll|
+		// exceeds these limits. Flat against a vertical wall is ~90 degrees of
+		// pitch, so the old 89 blocked the exact orientation this item exists
+		// for. Opened up -- the plaque is meant to hang at any wall angle.
+		yawPitchRollLimit[] = {180,180,180};
 	};
 
 	class geb_FishingRodRepairKit: Inventory_Base {

@@ -9,6 +9,11 @@
 //   Gebs/fishingsettings.json      old monolithic config
 //   Gebs/Fish/Logs/*               old logger output   (new: Gebs/logs/)
 //   Gebs/extras/mpmissions/*       old xml output      (new: Gebs/mpmissions/)
+//
+// Once the files are out, the emptied Fish/ and extras/ trees (including their
+// child folders) are removed too, deepest-first. Enforce has no remove-directory
+// call, so that last step depends on the engine's DeleteFile accepting an empty
+// directory; when it refuses, the paths are logged for manual cleanup instead.
 // ============================================================================
 class GebsfishMigration {
     private const static string BASE    = "$profile:Gebs/";
@@ -34,8 +39,81 @@ class GebsfishMigration {
         if (hasExtras)
             moved += MoveDirFiles(BASE + "extras/mpmissions/", ARCHIVE + "mpmissions/");
 
+        // Now that the files are out, try to take the emptied folders with them.
+        // Deepest-first: a parent can only go once its child is gone.
+        array<string> stale = new array<string>();
+        if (hasFishDir) {
+            stale.Insert(BASE + "Fish/Logs");
+            stale.Insert(BASE + "Fish");
+        }
+        if (hasExtras) {
+            stale.Insert(BASE + "extras/mpmissions");
+            stale.Insert(BASE + "extras");
+        }
+
+        array<string> leftover = new array<string>();
+        int removed = RemoveEmptyDirs(stale, leftover);
+
         if (moved > 0)
-            GebsfishLogger.Info("Archived " + moved + " old-layout file(s) into gebs_oldfiles. The emptied old folders (Fish/, extras/) are safe to delete manually -- scripts cannot remove directories.", "Migrate");
+            GebsfishLogger.Info("Archived " + moved + " old-layout file(s) into gebs_oldfiles.", "Migrate");
+        if (removed > 0)
+            GebsfishLogger.Info("Removed " + removed + " emptied old-layout folder(s).", "Migrate");
+        if (leftover.Count() > 0) {
+            string list = "";
+            foreach (string s : leftover) {
+                if (list != "") list = list + ", ";
+                list = list + s;
+            }
+            GebsfishLogger.Info("These emptied old folders could not be removed and are safe to delete by hand: " + list, "Migrate");
+        }
+    }
+
+    // Enforce exposes MakeDirectory but no matching remove-directory call, and
+    // DeleteFile is documented as deleting a FILE (1_Core/DayZ/proto/EnSystem.c).
+    // Whether it also drops an empty directory is up to the engine's native, so
+    // just try it: on builds where it works the migration cleans up after itself,
+    // and on builds where it doesn't the caller reports the paths instead.
+    //
+    // A directory is only ever attempted once it is confirmed empty -- we are
+    // calling a delete primitive on a path, so nothing that still holds a file
+    // (an admin's stray notes, a log the move could not archive) gets passed to it.
+    // leftover is filled in place -- array is a reference type, so no `out` needed.
+    protected static int RemoveEmptyDirs(array<string> dirs, array<string> leftover) {
+        int removed = 0;
+        foreach (string dir : dirs) {
+            if (!FileExist(dir))
+                continue;             // already gone, or never existed
+            if (!IsDirEmpty(dir)) {
+                leftover.Insert(dir); // still holds something -- leave it alone
+                continue;
+            }
+            if (DeleteFile(dir) && !FileExist(dir))
+                removed++;
+            else
+                leftover.Insert(dir);
+        }
+        return removed;
+    }
+
+    protected static bool IsDirEmpty(string dir) {
+        string fileName;
+        FileAttr attr;
+        FindFileHandle handle = FindFile(dir + "/*", fileName, attr, FindFileFlags.ALL);
+        if (!handle)
+            return true;              // nothing matched at all
+
+        bool empty = true;
+        bool more = true;
+        while (more) {
+            // "." / ".." show up on some platforms and are not real contents
+            if (fileName != "" && fileName != "." && fileName != "..") {
+                empty = false;
+                break;
+            }
+            more = FindNextFile(handle, fileName, attr);
+        }
+        CloseFindFile(handle);
+        return empty;
     }
 
     // Copy-then-delete; never deletes the source unless the copy succeeded.

@@ -97,11 +97,18 @@ modded class Hologram {
 		vector normal = m_ContactDir;
 		if (normal.Length() > 0 && Math.AbsFloat(normal[1]) < GEB_MOUNT_WALL_MAX_NY) {
 			normal.Normalize();
-			// Plaque model: +Y is the face, +Z the width axis. Against a wall
-			// the face follows the wall normal and the width stands upright,
-			// so build that basis directly instead of guessing yaw/pitch.
+			// Hang it like a picture: the plaque's face points straight out along
+			// the wall normal, and its top stays world-up so it never lands
+			// rotated or upside down on a sloped wall.
+			//
+			// Argument order matters and is easy to get backwards.
+			// DirectionAndUpMatrix(dir, up, mat) puts `dir` on the Z axis and
+			// `up` on the Y axis (see the worked example on the proto, and
+			// vanilla's own PluginCharPlacement call which passes the facing
+			// direction first and "0 1 0" second). Passing the wall normal as
+			// `up` instead of as `dir` rolls the plaque 90 degrees onto its side.
 			vector mat[4];
-			Math3D.DirectionAndUpMatrix("0 1 0", normal, mat);
+			Math3D.DirectionAndUpMatrix(normal, "0 1 0", mat);
 			vector rot[3];
 			rot[0] = mat[0];
 			rot[1] = mat[1];
@@ -125,6 +132,56 @@ modded class Hologram {
 		if (m_Parent && m_Parent.IsInherited(geb_WoodenFishMount))
 			return false;
 		return super.IsCollidingBBox(action_item);
+	}
+
+	// The box test's twin, and the reason the plaque wouldn't go on buildings.
+	// IsCollidingBBox only covers the simple bounding box; player-built and map
+	// structures are geometry proxies, which get this separate sweep. Sitting
+	// flush against a wall is a collision to it by definition, so a mount that
+	// placed fine on a lone surface was refused on anything proxy-based.
+	override bool IsCollidingGeometryProxy(ItemBase action_item = null) {
+		if (m_Parent && m_Parent.IsInherited(geb_WoodenFishMount))
+			return false;
+		return super.IsCollidingGeometryProxy(action_item);
+	}
+
+	// ---- the rest of EvaluateCollision's ground-placement assumptions ----
+	// EvaluateCollision runs a long chain of tests, and nearly all of them are
+	// written for something being set down on the ground. A plaque hanging on a
+	// wall fails them by definition, so each one below has to opt out for the
+	// mount or the hologram stays red and placement is refused. Everything NOT
+	// listed here still applies -- player collision, permitted-area, underwater
+	// and in-terrain all remain in force, so this doesn't become a free pass.
+
+	// Nothing underneath a wall mount: that IS the point, not an error.
+	override bool IsFloating() {
+		if (m_Parent && m_Parent.IsInherited(geb_WoodenFishMount))
+			return false;
+		return super.IsFloating();
+	}
+
+	// Same reason -- there is no ground surface below the plaque to qualify.
+	override bool IsBaseViable() {
+		if (m_Parent && m_Parent.IsInherited(geb_WoodenFishMount))
+			return true;
+		return super.IsBaseViable();
+	}
+
+	// Mounting on an interior wall means there is a ceiling overhead; the roof
+	// clipping guard exists to stop things being stuck to the underside of a
+	// floor, which is not what is happening here.
+	override bool IsClippingRoof() {
+		if (m_Parent && m_Parent.IsInherited(geb_WoodenFishMount))
+			return false;
+		return super.IsClippingRoof();
+	}
+
+	// Vanilla limits how far above or below the player an object can be placed.
+	// A trophy belongs at eye level or higher on the wall, which trips it.
+	override bool HeightPlacementCheck() {
+		if (m_Parent && m_Parent.IsInherited(geb_WoodenFishMount))
+			return true;
+		return super.HeightPlacementCheck();
 	}
 
 }

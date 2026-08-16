@@ -36,6 +36,13 @@
 - Bait multipliers are written rounded to the nearest 0.01, so the file shows clean values instead of float noise
 - Missing config sections re-seed with fully populated defaults; all four files carry a `ConfigVersion` stamp for future migrations
 - Detailed admin-facing documentation strings on every field, kept under the engine's JSON string-length crash ceiling
+- **How the config updates itself** — worth reading once before you tune anything, because it decides which of your edits survive a mod update:
+    * Each of the four files carries its own `ConfigVersion`. On startup a file is only rewritten if something actually changed: a fresh generation, a section that had to be re-seeded, or a version bump. An up-to-date file is left completely alone — no rewrite, no modified timestamp
+    * **A version bump rewrites all four files, not just the one that changed.** The stamp is per-file and every file compares it, so bumping the mod version touches `general`, `bait`, `junk` and `fish` even when only one of them gained anything. Your values are carried through untouched — the file is re-serialized from what was loaded, not regenerated from defaults
+    * **Your existing values are never overwritten.** The update is strictly additive: default entries missing from a list get inserted, entries already there are left exactly as you set them
+    * **Deleting an entry is not how you disable it.** A row you remove is treated as missing and gets re-added on the next version bump. To retire something permanently set its weight / chance / `CatchProbability` to `0` — that survives every update. A whole section emptied on purpose is respected; a section that is entirely absent gets re-seeded
+    * **New on/off toggles are re-applied during migration.** The engine's JSON loader zeroes any field your file doesn't mention rather than using the built-in default, so a toggle introduced in a later version would otherwise arrive switched off on every existing server. Migrating from a version older than the one that added it restores the intended default; once your file is stamped at or past that version, a toggle you turned off stays off through every future update
+    * Pre-3.3 layout files (`fishingsettings.json`, `Fish/Logs/`, `extras/mpmissions/`) are swept into `$profile:Gebs/gebs_oldfiles/` on first start so old and new never sit mixed together, and the emptied folders are removed afterwards. Nothing from the old monolithic config is migrated into the new files — it is archived so you can still read your old tuning
 
 ### New Fish & Creatures
 
@@ -64,12 +71,20 @@ Major art pass across the existing roster — new or reworked models and texture
 ### New Vehicle
 
 - **Jon boat** — new drivable flat-bottomed boat with five variants (green aluminum, gray aluminum, desert / snow / forest camo), custom damage zones (chassis, engine, three floaters), SparkPlug slot, and cargo space. More boat content coming in a future update
+- **Jon boat deck mounts** — two deck slots that take any cooler or tackle box and show it sitting on the deck. Both accept the same families so you can run two coolers, two boxes, or one of each. The vanilla jerry can is deliberately not included: a proxy gives one position and rotation to everything attached to it, and the can's model axes don't match the gebsfish containers, so no single orientation suits both
 
 ### New Items & Crafting
 
 - Grub Worm (chance to find when digging for worms)
 - Coolers in 12 colors (with the freezer system)
-- **Wooden Fish Mount** — wall-snapping trophy plaque with one attachment slot that accepts any catchable; the mounted trophy is the actual caught fish (weight and quality persist) and it never rots on the wall. Placeholder model until the plaque p3d lands
+- **Wooden Fish Mount** — a trophy plaque you hang on a wall and mount your catch on:
+    * **Crafted** from **1 Wooden Plank + 1 Metal Wire**, with a **Hacksaw** on you. Combine the plank and wire; the saw isn't consumed but takes durability, and the craft is refused without one. (DayZ caps recipes at two ingredients, so the saw is enforced as a tool rather than a third slot.) Disable it with `RecipeToggles.CraftFishMount` in `general.json`
+    * **Placed on walls** — hold to place and it snaps flat against any near-vertical surface, hanging face-out like a picture. Aim somewhere without a wall and it falls back to normal ground placement
+    * **The trophy is the actual fish** you caught, not a generic model — its weight and quality persist through the attachment, so a personal-best catch stays a personal-best on the wall
+    * **Mounting is permanent.** Once a fish is on the plaque it can't be detached, dragged out, or taken to hands. Ruined and rotten fish are refused up front. The only way to recover a mounted fish is to destroy the mount, which drops its attachment like any ruined container — this is deliberate, so the plaque can't double as a free never-rots fish locker
+    * **Mounted fish never rot.** Decay is paused entirely while the fish is on the plaque, so a trophy is taxidermy rather than a countdown
+    * **The plaque itself lasts 45 days** untouched — the same lifetime as tents and barrels rather than the 2-hour gear lifetime, so wall trophies persist like a base fixture and abandoned ones clean themselves up on the same schedule
+    * Placeholder model until the final plaque p3d lands
 - Craft metal hook from metal wire + pliers
 - Bamboo net repair recipe (Netting + damaged net -> Worn)
 - New Bamboo Fishing Net model and full texture set
@@ -112,7 +127,11 @@ Major art pass across the existing roster — new or reworked models and texture
 - Weighted-pick logic consolidated into a shared `GebWeightedPick` helper; the catch pick memoizes per-species weather/bait multipliers instead of recomputing per pool entry
 - Yield bank init no longer registers vanilla's 15 default yields just to clear them (vanilla's clear leaves stale sync indices); re-entry guard prevents double registration on worlds that fire the init twice
 - XML generators: types.xml emits each classname exactly once and only geb_-prefixed entries (no more collisions with the mission's own types.xml); spawnabletypes chance values formatted correctly; generation batched, version detection hardened, files no longer regenerate every restart, server-only guard
-- Logger: session-lifetime file handle (no more open/close per line), filename sanitization, `Reset()`, initialization fix; `DebugLogs` values above 2 clamp to elevated instead of silently disabling verbose logs
+- Logger: filename sanitization, `Reset()`, initialization fix; `DebugLogs` values above 2 clamp to elevated instead of silently disabling verbose logs
+- Logger no longer holds the session file handle open. Enforce exposes no flush, so `CloseFile` is the only thing that commits bytes to disk — opening and closing around each write means a hard crash can't take the tail of the log with it, and the file stays unlocked so it can be read or moved while the server is running
+- Log retention: session logs older than 3 days are deleted at startup, so an unattended server stops accumulating one file per restart. Age is read from the filename (the generator owns the `YYYYMMDD-HHMMSS_tag.log` format) because Enforce's file API exposes no modification time; anything that doesn't parse as that format is left untouched, and the live session file is never a candidate
+- Old-layout migration now removes the folders it empties. After sweeping `fishingsettings.json`, `Fish/Logs/` and `extras/mpmissions/` into `gebs_oldfiles`, the emptied `Fish/` and `extras/` trees are deleted deepest-first. Enforce has no remove-directory call, so this depends on the engine accepting an empty directory — each folder is confirmed empty before the attempt, and any that survive are logged by path for manual cleanup instead of a blanket "delete these yourself" message
+- Craft and repair recipes (bamboo net, fishing pole, hook from wire) now register before the data-driven fish loop. `RegisterRecipe` hands out sequential IDs and actions send that ID over the network, so anything registered after a variable-length loop shifted by however many species that side happened to register
 - In-hands IK registrations collapsed to three name-array loops
 - Consolidated repeated classes into shared base files; sorted large files by category; standardized brace style
 - Replaced `Param3` usage with `XmlTypeEntry` class for clarity
@@ -127,6 +146,12 @@ Major art pass across the existing roster — new or reworked models and texture
 
 ### Fixed
 
+- **Fish catches and modded-fish filleting were both broken.** Vanilla's `YieldItemBase` and `RecipeBase` constructors call `Init()` themselves, so `Init()` ran before the per-species row could be handed over and bailed on its null guard — and registration never runs it again. Every fish yield registered with an empty type and zero environment/method masks, and since the yield bank keys on the type hash, all 79 species collapsed onto one empty entry matching nothing: junk was the only possible catch. The data-driven fillet recipes likewise registered with no ingredients and no results, so no modded fish offered a Gut action (the four vanilla fish kept working through their own `Prepare*` overrides). Setup now applies from the setter instead of relying on constructor-time `Init()`
+- Clients registered zero fillet recipes: the config left the Species table null on clients until the `ConfigSync` RPC, which lands after `PluginRecipesManager` has already registered. Clients now seed the compiled defaults in memory, and the RPC still overwrites them with the server's file
+- Jon boat deck attachments were invisible — the model carried the proxies and the config declared the slots, but nothing tied the two together. Added the `ProxyAttachment` entries that bind each proxy to its slot. They must live in `CfgNonAIVehicles`; in `cfgVehicles` the base class resolves to a new empty one and the malformed entries break the boat's crew config, locking players out of both seats
+- Wooden Fish Mount placement hologram rendered as the normal textured plaque instead of the white ghost: `placing` was listed in `hiddenSelections[]` but never declared as a section in `Model.cfg`, so the hologram material had no swappable selection to land on. The deployable/undeployable materials also needed vanilla's `Super` shader and full stage chain — flat `Normal`/`Basic` with no stages loses the fresnel sheen that makes a hologram read as one
+- Wooden Fish Mount couldn't be placed on walls despite the wall-snapping logic working: `EvaluateCollision` rejected it through `IsFloating`, `IsBaseViable`, `IsClippingRoof` and `HeightPlacementCheck`, all of which assume ground placement, and `yawPitchRollLimit` capped pitch at 89 degrees — one short of flat against a vertical wall. Player collision, permitted-area, underwater and in-terrain checks still apply
+- Jon boat no longer plays the vanilla rubber boat's engine shutdown sound when the engine cuts, including when stepping out of the driver seat. `BoatScript` hardcodes Boat_01 soundsets for every boat, so the jon boat now has its own script class that suppresses it
 - XML generator crash at startup: `FPrint` without newlines produced a single-line 85 KB file that overflowed the engine's line-read buffer as fish were added — generators now emit proper line breaks
 - Bait preferences and the temperature curve now apply independently of `WeatherCatchBoostEnable` — previously the weighted catch pick only ran when the weather toggle was on, silently disabling both systems despite their own toggles
 - BiteSpeed aggregate no longer applies `CatchProbability` twice (the probability pool already repeats each fish by its weight) — abundant fish were quadratically dominating the bite-cycle timing over rare ones

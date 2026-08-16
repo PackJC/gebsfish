@@ -39,8 +39,8 @@ class CfgNonAIVehicles {
 
 class CfgSlots {
 	// Two general-purpose deck spots on the jon boat. Both accept the same
-	// item families (coolers, tackle boxes, jerry cans) so a player can pick
-	// any combination rather than being forced into one of each.
+	// item families (coolers and tackle boxes) so a player can pick any
+	// combination rather than being forced into one of each.
 	class Slot_GebBoatDeck1 {
 		name = "GebBoatDeck1";
 		displayName = "$STR_vehicles_jonboat_deck";
@@ -69,16 +69,14 @@ class cfgVehicles {
 	class Boat_01_ColorBase;
 	class Crew;
 	class Driver;
-	class Bottle_Base;
 
-	// Vanilla jerry can opted into the deck slots. The gebsfish coolers and
-	// tackle boxes get the same treatment where they are defined, in
-	// data/tackle/config.cpp, so this stays independent of config load order.
-	// Base must match vanilla exactly (dz\vehicles\parts\config.cpp) -- reopening
-	// a class under a different parent reparents it.
-	class CanisterGasoline: Bottle_Base {
-		inventorySlot[] += {"GebBoatDeck1", "GebBoatDeck2"};
-	};
+	// The vanilla jerry can (CanisterGasoline) deliberately does NOT opt into the
+	// deck slots. A proxy supplies one position and rotation for everything that
+	// lands on it, and the gebsfish coolers and tackle boxes all share an axis
+	// convention the jerry can doesn't -- one orientation cannot suit both. The
+	// deck proxies are aimed at the 27 gebsfish containers; adding the can back
+	// would put it back to sitting wrong. If it's wanted later it needs its own
+	// slot and its own proxy, not a share of these.
     class geb_jonboat_base : Boat_01_ColorBase {
         scope = 0;
         displayName = "$STR_vehicles_jonboat";

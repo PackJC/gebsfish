@@ -151,7 +151,25 @@ class GeneralConfig {
                 if (dh && !HasHookCatch(dh.Classname)) { HookFromFishCatches.Insert(dh); added++; }
             }
         }
+
+        // Recipe toggles need re-asserting, unlike the arrays above.
+        // JsonFileLoader ZEROES any member the file doesn't mention -- it does not
+        // leave it at the class initializer -- so a bool toggle added in a later
+        // version loads as 0 (disabled) on every server whose config predates it,
+        // and a bool gives us no way to tell that apart from an admin deliberately
+        // switching it off. Fix it where we do have that information: during a
+        // migration FROM a version that shipped before the toggle existed. Configs
+        // already stamped 3.3.1 or newer are left alone, so a genuine admin "off"
+        // survives every future version bump.
+        if (RecipeToggles && IsPre331(ConfigVersion))
+            RecipeToggles.CraftFishMount = true;   // added in 3.3.1
+
         return added;
+    }
+
+    // ConfigVersion values written by every release before CraftFishMount existed.
+    protected bool IsPre331(string v) {
+        return v == "" || v == "3.3" || v == "3.2" || v == "3.1" || v == "3.0";
     }
     protected bool HasPredator(string classname) {
         foreach (PredatorEntry e : Predators) if (e && e.Classname == classname) return true;
@@ -836,6 +854,7 @@ class RecipeToggleConf {
     string RecipeToggleInfo = "Enables(1) or disables(0) Gebsfish non-fish-prep recipes. Fish prepare/fillet recipes are not controlled here.";
     bool CraftBambooFishingNet = 1;
     bool CraftHookFromWire = 1;
+    bool CraftFishMount = 1;
     bool RepairFishingPole = 1;
     bool RepairBambooFishingNet = 1;
 };
