@@ -417,7 +417,7 @@
   <p><b>Bite speed</b> is separate from <i>what</i> you catch — it controls <i>how long you wait</i>. Each species carries a 24-hour activity curve, and the active pool's aggregate sets the delay between bites. Night fishing for catfish genuinely feels different from midday panfishing.</p>
 
   <h3 id="guide-tools">3. Tools &amp; Gear — what each one is for</h3>
-  <p>The <a href="#" onclick="document.querySelector('#nav button[data-tab=items]').click();return false;">Items &amp; Gear</a> tab lists everything the mod adds. This section is about what each piece actually <i>does</i> for you, and when it's worth the inventory space.</p>
+  <p>The <a href="#items">Items &amp; Gear</a> tab lists everything the mod adds. This section is about what each piece actually <i>does</i> for you, and when it's worth the inventory space.</p>
 
   <h4>🎣 Fishing rods</h4>
   <p>Four coloured rods on top of the vanilla one. They're cosmetic in performance but <b>wear on every catch outcome — success or failure alike</b>, so a long unlucky session costs the same durability as a good one. A rod can be repaired back up to <b>Worn</b>, never to pristine.</p>
@@ -569,56 +569,316 @@
 <!-- ============ CHANGELOG ============ -->
 <section class="tab" id="tab-changelog">
   <h2>Changelog</h2>
-  <div class="banner">⚠️ <b>v4.0.0 is in development</b> — the current Workshop release is v3.3.0. Everything below ships with the next update. Full history in <a href="https://github.com/PackJC/gebsfish/blob/master/CHANGELOG.md">CHANGELOG.md</a>.</div>
-  <div class="chg">
+  <div class="banner">⚠️ <b>v4.0.0 is in development</b> — the current Workshop release is v3.3.0. The newest entry below ships with the next update; older releases are collapsed. Source of truth is <a href="https://github.com/PackJC/gebsfish/blob/master/CHANGELOG.md">CHANGELOG.md</a> — this tab is generated from it by <code>tools/build_changelog_html.py</code>.</div>
+<!-- CHANGELOG:START -->
+  <details class="faq-item" open><summary>v4.0.0 — Unreleased</summary><div class="chg">
     <h3>Requirements &amp; Compatibility</h3>
     <ul>
       <li>DayZ 1.29 compatibility</li>
-      <li><b>Community Framework (CF) is now required</b> — the RPC system migrated to CF</li>
-      <li>All fish now have melee functionality (matching vanilla)</li>
-      <li>New map support: Sahrani, Artseinen, MelkartV2, and Deadfall</li>
+      <li><b>Community Framework (CF) is now a required dependency</b> — the RPC system migrated to CF's RPCManager</li>
+      <li><code>DZ_Weapons_Melee</code> added as a required addon; all fish now have melee functionality (matching vanilla)</li>
+      <li>New map yield support: Sahrani, Artseinen, MelkartV2, and Deadfall (credits: DapperDan)</li>
     </ul>
     <h3>New Systems</h3>
     <ul>
-      <li><b>Weather catch buffs</b> — global + per-fish rain/storm/time multipliers with a stacking cap</li>
-      <li><b>Moon phases</b> — night-only buff from real synodic phase math (+20% full, -10% new)</li>
-      <li><b>Water temperature</b> — per-fish preference curves with a global offset for winter/tropical maps</li>
-      <li><b>Bite-speed cycles</b> — 24-hour circadian activity curves drive wait times between bites</li>
-      <li><b>Bait preference matrix</b> — ~700 seeded bait/fish pairings, lure families share entries, fully tunable</li>
-      <li><b>Hook-from-fish recovery</b> — ~1/250 fillets recover a damaged hook</li>
-      <li><b>Cooler freezer system</b> — active chilling to -5°C, perishable live bait, frozen-fillet guard</li>
-      <li><b>Predator spawn rework</b> — per-action chances, weighted picks, land-only spawns</li>
-      <li><b>Configurable net catches</b> — per-environment tables, catches land in the net's cargo, net repair recipe</li>
+      <li><b>Weather catch buffs</b> — global rain / storm / time-of-day multipliers in <code>WeatherSettings</code>, plus per-fish Rain/Storm/Dawn/Day/Dusk/Night multipliers on every species (trout favour rain, walleye / pike / catfish favour night, sturgeon favours storms). A stacked-multiplier cap prevents storm + night from compounding past 2.0x. Fishing rod description hints at the mechanic</li>
+      <li><b>Moon phase</b> — accurate synodic phase (Meeus Julian Date algorithm) computed from the in-game date drives a night-only catch buff: full-moon nights up to +20%, new-moon nights down to -10%. Independently toggleable</li>
+      <li><b>Water temperature</b> — per-fish <code>TempOptimal</code> / <code>TempMin</code> / <code>TempMax</code> (degrees C) form a bell curve seeded from ecological buckets (cold deepwater, cold, cool, warm, tropical). Ambient air temperature serves as the water proxy, and a global <code>WaterTempOffset</code> shifts the whole curve for winter maps (e.g. Sakhal <code>-5</code>) or tropical servers (<code>+5</code>) without editing every fish</li>
+      <li><b>Bite-speed cycle scaling</b> — every fish carries a 24-hour <code>BiteSpeed</code> curve tuned to its real-world circadian pattern; the catching system aggregates the active pool (weighted by abundance and time of day) to drive how long you wait between bites</li>
+      <li><b>Bait / lure preference matrix</b> — every bait and lure carries per-fish multipliers that bias which fish takes the hook: worms and insects favour panfish and trout, soft-plastic worms favour bass, live minnow and salamander favour pike / musky / walleye, spinnerbaits favour bass / pike / musky, spoons favour trout and salmon, jigs favour bass / walleye. Numbered lure variants share one family entry (<code>geb_SpinnerBait</code> covers <code>geb_SpinnerBait1-4</code>; an exact numbered entry still overrides). Roughly 700 seeded pairings, all overridable in JSON, master <code>Enable</code> toggle at the top of <code>bait.json</code>. Final pick weight = CatchProbability x weather x time-of-day x bait</li>
+      <li><b>Hook-from-fish recovery</b> — filleting a fish has a small configurable chance (default ~1/250) to recover a damaged hook or lure "stuck in the fish"; the hook pool, weights, and health range are admin-tunable</li>
+      <li><b>Cooler freezer system</b> — coolers keep contents cold, live bait is perishable, and a frozen-fillet guard prevents prep on frozen fillets</li>
+      <li><b>Bait freshness rules</b> — each container has one job, and they do not overlap:
+        <ul>
+          <li><b>Worm Container / Bug Container</b> — hold worms, grubs and insects, and pause the ~90 minute live-bait death timer</li>
+          <li><b>Cooler</b> — pauses both food rot and the live-bait timer for anything inside</li>
+          <li><b>Bait Bucket</b> — holds small aquatic catches only (minnows, crayfish, shrimp, frogs, salamanders) and stops them rotting. It does not accept worms or insects and is not a live-bait keeper</li>
+          <li><b>Tackle boxes</b> — can carry bait for convenience but preserve nothing</li>
+          <li>Artificial lures (rubber worm and all hard baits) never perish</li>
+        </ul>
+      </li>
+      <li><b>Predator spawn rework</b> — three independent gates (per-action chance, weighted predator pick, per-predator min/max count) with separate chance values for fishing, filleting, failed casts, and net use. Land-only spawn search (no underwater wolves), optional warning sound RPC, configurable chat warning</li>
+      <li><b>Per-action config sections</b> — <code>BambooFishingNetSettings</code>, <code>DigBugsSettings</code>, <code>DigWormsSettings</code>, each owning its <code>FindChance</code> (per-attempt probability of finding anything) and a weighted <code>Catches[]</code> table. Tool wear still applies on a miss</li>
+      <li><b>Configurable net catches</b> — net spawn table entries carry an <code>Environment</code> field (1 pond, 2 sea, 3 both) for per-environment filtering; catches spawn into the net's cargo (4x4) first, falling back to the player's feet when full. New bamboo net repair recipe: one Netting + a damaged net restores it to Worn</li>
     </ul>
     <h3>Config Overhaul</h3>
     <ul>
-      <li><code>fishingsettings.json</code> replaced by four self-documenting files: <code>general.json</code>, <code>bait.json</code>, <code>junk.json</code>, <code>fish.json</code> — <b>clean break, no migration</b></li>
-      <li>Fish are fully data-driven: one Species row per fish feeds a generic yield + recipe pipeline</li>
-      <li>Master toggles for every catch-modifying system</li>
+      <li><code>fishingsettings.json</code> replaced by four self-documenting files in <code>$profile:Gebs/</code>: <code>general.json</code>, <code>bait.json</code>, <code>junk.json</code>, <code>fish.json</code>. <b>Clean break — no migration</b>: servers regenerate fresh defaults and re-apply their custom tuning by hand</li>
+      <li>Fish are fully data-driven: one <code>Species</code> row per fish (classname, recipe shape, fillet/caviar/lobster results, meat counts, environment, catch method, catch probability, weather multipliers, temperature preference, BiteSpeed curve) feeds a single generic yield + fillet-recipe pipeline</li>
+      <li>Master enable toggles for every catch-modifying system — disabled systems keep their tuned JSON values with no in-game effect</li>
+      <li>Bait multipliers are written rounded to the nearest 0.01, so the file shows clean values instead of float noise</li>
+      <li>Missing config sections re-seed with fully populated defaults; all four files carry a <code>ConfigVersion</code> stamp for future migrations</li>
+      <li>Detailed admin-facing documentation strings on every field, kept under the engine's JSON string-length crash ceiling</li>
+      <li><b>How the config updates itself</b> — worth reading once before you tune anything, because it decides which of your edits survive a mod update:
+        <ul>
+          <li>Each of the four files carries its own <code>ConfigVersion</code>. On startup a file is only rewritten if something actually changed: a fresh generation, a section that had to be re-seeded, or a version bump. An up-to-date file is left completely alone — no rewrite, no modified timestamp</li>
+          <li><b>A version bump rewrites all four files, not just the one that changed.</b> The stamp is per-file and every file compares it, so bumping the mod version touches <code>general</code>, <code>bait</code>, <code>junk</code> and <code>fish</code> even when only one of them gained anything. Your values are carried through untouched — the file is re-serialized from what was loaded, not regenerated from defaults</li>
+          <li><b>Your existing values are never overwritten.</b> The update is strictly additive: default entries missing from a list get inserted, entries already there are left exactly as you set them</li>
+          <li><b>Deleting an entry is not how you disable it.</b> A row you remove is treated as missing and gets re-added on the next version bump. To retire something permanently set its weight / chance / <code>CatchProbability</code> to <code>0</code> — that survives every update. A whole section emptied on purpose is respected; a section that is entirely absent gets re-seeded</li>
+          <li><b>New on/off toggles are re-applied during migration.</b> The engine's JSON loader zeroes any field your file doesn't mention rather than using the built-in default, so a toggle introduced in a later version would otherwise arrive switched off on every existing server. Migrating from a version older than the one that added it restores the intended default; once your file is stamped at or past that version, a toggle you turned off stays off through every future update</li>
+          <li>Pre-3.3 layout files (<code>fishingsettings.json</code>, <code>Fish/Logs/</code>, <code>extras/mpmissions/</code>) are swept into <code>$profile:Gebs/gebs_oldfiles/</code> on first start so old and new never sit mixed together, and the emptied folders are removed afterwards. Nothing from the old monolithic config is migrated into the new files — it is archived so you can still read your old tuning</li>
+        </ul>
+      </li>
     </ul>
-    <h3>New Content</h3>
+    <h3>New Fish &amp; Creatures</h3>
     <ul>
-      <li><b>14 new species</b> — Hammerhead Shark, Lake Sturgeon, Alligator Gar, 4 Muskellunge variants, Northern Snakehead, Neosho &amp; Striped Bass, White Grunt, Southern Flounder, Yellow Snapper, American Bullfrog, Red Salamander — plus 5 new crayfish</li>
-      <li><b>Jon Boat</b> — drivable, 5 variants, cargo, custom damage zones</li>
-      <li>Black &amp; Yellow Caviar, Coolers in 12 colors, Grub Worm, metal hook crafting, net repair</li>
-      <li>4 Spoon Lures, 4 Curly Tail Jigs, new Spinner Bait / crank / popper models</li>
-      <li>Major art pass: new or reworked models for 30+ existing species</li>
+      <li>Hammerhead Shark</li>
+      <li>Lake Sturgeon (with roe -&gt; new Black Caviar item)</li>
+      <li>Alligator Gar</li>
+      <li>Muskellunge, Barred Muskellunge, Tiger Muskellunge, Spotted Muskellunge</li>
+      <li>Northern Snakehead</li>
+      <li>Neosho Bass, Striped Bass</li>
+      <li>White Grunt, Southern Flounder, Yellow Snapper</li>
+      <li>American Bullfrog, Red Salamander</li>
+      <li>New Crayfish variants: Cave, Florida, Monongahela, Red Swamp, Rusty</li>
+      <li>Northern Pike gains roe -&gt; new Yellow Caviar item</li>
+    </ul>
+    <h3>New &amp; Reworked Models</h3>
+    <ul>
+      <li>Northern Pike, Bluegill, Red Breast Sunfish, Yellow Perch, Fathead Minnow, Sauger, Walleye</li>
+      <li>Brown / Brook / Rainbow / Cut Throat Trout, Lake Trout, Chinook Salmon</li>
+      <li>Black Bass, Bonito, Bowfin, Large Mouth Bass, Small Mouth Bass, White Bass</li>
+      <li>Blue Marlin, Sailfish, Humphead Wrasse, Yellowfin Tuna</li>
+      <li>Asian Sea Bass, Siamese Tigerfish, Angelfish, Pacific Cod, Perch, Severum, Rougheye Rock, Red Head Cichlid, Blue Tang</li>
+      <li>Snow Crab + Snow Crab Legs, Blue Jellyfish, Black Devil Snail, Mussel, Starfish, Blood Clam</li>
+    </ul>
+    <h3>New Vehicle</h3>
+    <ul>
+      <li><b>Jon boat</b> — new drivable flat-bottomed boat with five variants (green aluminum, gray aluminum, desert / snow / forest camo), custom damage zones (chassis, engine, three floaters), SparkPlug slot, and cargo space. More boat content coming in a future update</li>
+      <li><b>Jon boat deck mounts</b> — two deck slots that take any cooler or tackle box and show it sitting on the deck. Both accept the same families so you can run two coolers, two boxes, or one of each. The vanilla jerry can is deliberately not included: a proxy gives one position and rotation to everything attached to it, and the can's model axes don't match the gebsfish containers, so no single orientation suits both</li>
+    </ul>
+    <h3>New Items &amp; Crafting</h3>
+    <ul>
+      <li>Grub Worm (chance to find when digging for worms)</li>
+      <li>Coolers in 12 colors (with the freezer system)</li>
+      <li><b>Wooden Fish Mount</b> — a trophy plaque you hang on a wall and mount your catch on:
+        <ul>
+          <li><b>Crafted</b> from <b>1 Wooden Plank + 1 Metal Wire</b>, with a <b>Hacksaw</b> on you. Combine the plank and wire; the saw isn't consumed but takes durability, and the craft is refused without one. (DayZ caps recipes at two ingredients, so the saw is enforced as a tool rather than a third slot.) Disable it with <code>RecipeToggles.CraftFishMount</code> in <code>general.json</code></li>
+          <li><b>Placed on walls</b> — hold to place and it snaps flat against any near-vertical surface, hanging face-out like a picture. Aim somewhere without a wall and it falls back to normal ground placement</li>
+          <li><b>The trophy is the actual fish</b> you caught, not a generic model — its weight and quality persist through the attachment, so a personal-best catch stays a personal-best on the wall</li>
+          <li><b>Mounting is permanent.</b> Once a fish is on the plaque it can't be detached, dragged out, or taken to hands. Ruined and rotten fish are refused up front. The only way to recover a mounted fish is to destroy the mount, which drops its attachment like any ruined container — this is deliberate, so the plaque can't double as a free never-rots fish locker</li>
+          <li><b>Mounted fish never rot.</b> Decay is paused entirely while the fish is on the plaque, so a trophy is taxidermy rather than a countdown</li>
+          <li><b>The plaque itself lasts 45 days</b> untouched — the same lifetime as tents and barrels rather than the 2-hour gear lifetime, so wall trophies persist like a base fixture and abandoned ones clean themselves up on the same schedule</li>
+          <li>Placeholder model until the final plaque p3d lands</li>
+        </ul>
+      </li>
+      <li>Craft metal hook from metal wire + pliers</li>
+      <li>Bamboo net repair recipe (Netting + damaged net -&gt; Worn)</li>
+      <li>New Bamboo Fishing Net model and full texture set</li>
+    </ul>
+    <h3>New Tackle &amp; Lures</h3>
+    <ul>
+      <li>4 Spoon Lures</li>
+      <li>4 Curly Tail Jigs</li>
+      <li>Spinner Baits 1-4 (new models)</li>
+      <li>Squarebill Lure (replaces Lure4)</li>
+      <li>Yellow Crank, Purple Crank, Popper lures (replace old lures)</li>
+      <li>New Small Tackle and Large Tackle models</li>
+      <li>New Worm Container and Bait Bucket models</li>
     </ul>
     <h3>Balance</h3>
     <ul>
-      <li>Realistic catch probabilities (abundance-based) and fish weights (real-world sizes — trophy pelagics are heavy now, by design)</li>
-      <li>Ecology pass: corrected environments for anadromous species; predator chance now ~1% per action</li>
-      <li>Fish knives: +54% durability, 10% faster filleting; repairs cap at Worn</li>
-      <li>Rods no longer take double durability damage per catch (was wearing at 2× the intended rate)</li>
+      <li><b>Realistic catch probabilities</b> — all 79 fish <code>CatchProbability</code> defaults reflect real-world abundance and bite habit: bait / abundant 20-25, common gamefish 12-18, uncommon 7-11, trophy / rare 2-5</li>
+      <li><b>Realistic fish weights</b> — 63 fish <code>weight</code> values rebalanced against real-world adult catch sizes: panfish / reef fish dropped (BlueGill 1700 -&gt; 400 g), trophy pelagics raised (GreatWhiteShark 3700 -&gt; 20000 g, Blue Marlin -&gt; 15000 g), pike / muskellunge and trout / salmon families tiered by species. Landing the largest pelagics now carries real encumbrance — by design</li>
+      <li><b>Ecology pass</b> — White Bass and Bowfin moved to behaviorally correct bait-preference buckets; 12 fish <code>Environment</code> values corrected (anadromous salmonids, Striped Bass, Barramundi, mullet, and gar now appear in both fresh and salt water; three freshwater species un-misclassified from saltwater)</li>
+      <li>Default predator spawn chance reduced from 25% to 1% per action</li>
+      <li>Geb fish knives: +54% durability over vanilla HuntingKnife and 10% faster filleting (configurable via <code>FishKnifeSpeedMultiplier</code>)</li>
+      <li>30% keep-chance for caviar when filleting roe fish (configurable via <code>CaviarChance</code>)</li>
+      <li>Small crustaceans and minnows can now be caught in large traps</li>
+      <li>Fishing rods repair to Worn at best; Ruined tools can no longer be repaired</li>
+      <li>Adjusted bait bucket size</li>
     </ul>
-    <h3>Fixed (highlights)</h3>
+    <h3>Localization</h3>
     <ul>
-      <li>Bait preferences and temperature now work independently of the weather toggle</li>
-      <li>Bite-speed weighting no longer double-counts abundance</li>
-      <li>Dug bugs are visible to all players (were spawning server-side only)</li>
-      <li>XML generator crash fix, duplicate economy entries removed, dozens of texture/model fixes</li>
+      <li>New stringtable entries: Hammerhead Shark, Lake Sturgeon, Cooler, Wooden Fish Mount, Craft Metal Hook, Rougheye Rock</li>
+      <li>Jon boats now display "Jon Boat" with a proper description in all 14 languages (previously vanilla "Rubber Boat" and a missing description key)</li>
+      <li>Minnow Container renamed to Bait Bucket, name retranslated in all 14 languages</li>
+      <li>Orphaned rows pruned (fillet keys for species without fillet items, superseded king crab tail, generic clothing descriptions replaced by per-color keys, unused tackle box name)</li>
     </ul>
-  </div>
+    <h3>Code &amp; Internals</h3>
+    <ul>
+      <li>Replaced all <code>GetGame()</code> calls with <code>g_Game</code> for consistency</li>
+      <li>Removed invalid <code>ref</code> keywords from RPC handler parameters (CF compatibility)</li>
+      <li>Data-driven pipeline: one generic catch yield and one generic fillet recipe seeded per Species row replace 79 per-fish yield classes and per-fish recipe classes (vanilla fish keep their modded Prepare* overrides)</li>
+      <li>BiteSpeed data consolidated from 79 inline 24-hour arrays into 8 named circadian curves</li>
+      <li>Weighted-pick logic consolidated into a shared <code>GebWeightedPick</code> helper; the catch pick memoizes per-species weather/bait multipliers instead of recomputing per pool entry</li>
+      <li>Yield bank init no longer registers vanilla's 15 default yields just to clear them (vanilla's clear leaves stale sync indices); re-entry guard prevents double registration on worlds that fire the init twice</li>
+      <li>XML generators: types.xml emits each classname exactly once and only geb_-prefixed entries (no more collisions with the mission's own types.xml); spawnabletypes chance values formatted correctly; generation batched, version detection hardened, files no longer regenerate every restart, server-only guard</li>
+      <li>Logger: filename sanitization, <code>Reset()</code>, initialization fix; <code>DebugLogs</code> values above 2 clamp to elevated instead of silently disabling verbose logs</li>
+      <li>Logger no longer holds the session file handle open. Enforce exposes no flush, so <code>CloseFile</code> is the only thing that commits bytes to disk — opening and closing around each write means a hard crash can't take the tail of the log with it, and the file stays unlocked so it can be read or moved while the server is running</li>
+      <li>Log retention: session logs older than 3 days are deleted at startup, so an unattended server stops accumulating one file per restart. Age is read from the filename (the generator owns the <code>YYYYMMDD-HHMMSS_tag.log</code> format) because Enforce's file API exposes no modification time; anything that doesn't parse as that format is left untouched, and the live session file is never a candidate</li>
+      <li>Old-layout migration now removes the folders it empties. After sweeping <code>fishingsettings.json</code>, <code>Fish/Logs/</code> and <code>extras/mpmissions/</code> into <code>gebs_oldfiles</code>, the emptied <code>Fish/</code> and <code>extras/</code> trees are deleted deepest-first. Enforce has no remove-directory call, so this depends on the engine accepting an empty directory — each folder is confirmed empty before the attempt, and any that survive are logged by path for manual cleanup instead of a blanket "delete these yourself" message</li>
+      <li>Craft and repair recipes (bamboo net, fishing pole, hook from wire) now register before the data-driven fish loop. <code>RegisterRecipe</code> hands out sequential IDs and actions send that ID over the network, so anything registered after a variable-length loop shifted by however many species that side happened to register</li>
+      <li>In-hands IK registrations collapsed to three name-array loops</li>
+      <li>Consolidated repeated classes into shared base files; sorted large files by category; standardized brace style</li>
+      <li>Replaced <code>Param3</code> usage with <code>XmlTypeEntry</code> class for clarity</li>
+      <li>Added base classes and inheritance cleanup for containers; all four bait containers now share the same self-nesting guard, and redundant <code>IsContainer()</code> overrides (vanilla <code>Container_Base</code> already returns true) were removed</li>
+      <li>Vanilla-fish fillet recipes (Carp / SteelheadTrout / Mackerel / WalleyePollock) collapsed from four near-identical ~40-line Init bodies into one shared <code>SetupVanillaFilletRecipe</code> helper on <code>PrepareFish</code> — they now get the same MeatMin/MeatMax inversion guard, <code>MAXIMUM_RESULTS</code> clamp, and caviar-chance logic as every other fish; no-op <code>CanDo</code>/<code>Do</code> overrides deleted</li>
+      <li>Renamed <code>Sturgeon</code> -&gt; <code>LakeSturgeon</code>; <code>OldTackle</code> model files -&gt; <code>MediumTackle</code> (class names finalized next wipe); Bug Container moved from <code>data/tools/</code> to <code>data/tackle/</code></li>
+      <li>Predator chat-warning code and docs renamed to match reality: the message goes to the triggering player only (the warning sound is what nearby players hear)</li>
+      <li>Removed a redundant modded <code>YieldItemBase</code> constructor that made every yield item run <code>Init()</code> twice per construction</li>
+      <li>All p3ds now use a <code>Camo</code> hidden selection to support retexturing</li>
+      <li>Asset naming pass: tool and clothing textures renamed to engine conventions (<code>_co</code> / <code>_normals</code> / <code>_smdi</code>); fish knife and big-game fishing line materials updated</li>
+      <li>Added skinning action to Neosho Bass and Striped Bass</li>
+    </ul>
+    <h3>Fixed</h3>
+    <ul>
+      <li><b>Fish catches and modded-fish filleting were both broken.</b> Vanilla's <code>YieldItemBase</code> and <code>RecipeBase</code> constructors call <code>Init()</code> themselves, so <code>Init()</code> ran before the per-species row could be handed over and bailed on its null guard — and registration never runs it again. Every fish yield registered with an empty type and zero environment/method masks, and since the yield bank keys on the type hash, all 79 species collapsed onto one empty entry matching nothing: junk was the only possible catch. The data-driven fillet recipes likewise registered with no ingredients and no results, so no modded fish offered a Gut action (the four vanilla fish kept working through their own <code>Prepare*</code> overrides). Setup now applies from the setter instead of relying on constructor-time <code>Init()</code></li>
+      <li>Clients registered zero fillet recipes: the config left the Species table null on clients until the <code>ConfigSync</code> RPC, which lands after <code>PluginRecipesManager</code> has already registered. Clients now seed the compiled defaults in memory, and the RPC still overwrites them with the server's file</li>
+      <li>Jon boat deck attachments were invisible — the model carried the proxies and the config declared the slots, but nothing tied the two together. Added the <code>ProxyAttachment</code> entries that bind each proxy to its slot. They must live in <code>CfgNonAIVehicles</code>; in <code>cfgVehicles</code> the base class resolves to a new empty one and the malformed entries break the boat's crew config, locking players out of both seats</li>
+      <li>Wooden Fish Mount placement hologram rendered as the normal textured plaque instead of the white ghost: <code>placing</code> was listed in <code>hiddenSelections[]</code> but never declared as a section in <code>Model.cfg</code>, so the hologram material had no swappable selection to land on. The deployable/undeployable materials also needed vanilla's <code>Super</code> shader and full stage chain — flat <code>Normal</code>/<code>Basic</code> with no stages loses the fresnel sheen that makes a hologram read as one</li>
+      <li>Wooden Fish Mount couldn't be placed on walls despite the wall-snapping logic working: <code>EvaluateCollision</code> rejected it through <code>IsFloating</code>, <code>IsBaseViable</code>, <code>IsClippingRoof</code> and <code>HeightPlacementCheck</code>, all of which assume ground placement, and <code>yawPitchRollLimit</code> capped pitch at 89 degrees — one short of flat against a vertical wall. Player collision, permitted-area, underwater and in-terrain checks still apply</li>
+      <li>Jon boat no longer plays the vanilla rubber boat's engine shutdown sound when the engine cuts, including when stepping out of the driver seat. <code>BoatScript</code> hardcodes Boat_01 soundsets for every boat, so the jon boat now has its own script class that suppresses it</li>
+      <li>XML generator crash at startup: <code>FPrint</code> without newlines produced a single-line 85 KB file that overflowed the engine's line-read buffer as fish were added — generators now emit proper line breaks</li>
+      <li>Bait preferences and the temperature curve now apply independently of <code>WeatherCatchBoostEnable</code> — previously the weighted catch pick only ran when the weather toggle was on, silently disabling both systems despite their own toggles</li>
+      <li>BiteSpeed aggregate no longer applies <code>CatchProbability</code> twice (the probability pool already repeats each fish by its weight) — abundant fish were quadratically dominating the bite-cycle timing over rare ones</li>
+      <li>Rods no longer take double durability damage per catch outcome — a leftover duplicate <code>AddHealth</code> call made rods wear at 2x the intended 1.5 HP</li>
+      <li>Hardened edge-case null handling: junk-yield registration now logs and skips (instead of crashing at mission init) when the config failed to load; cooler tick, hook-crafting check, rod-repair plugin lookups, and the debug yield dump all guard references that could be null in broken states</li>
+      <li>Dug bugs now spawn as networked objects (were server-local and invisible to players); dig-bugs also wears the tool and trains soft skills on every completed dig, matching dig-worms</li>
+      <li>Generated spawnabletypes chance attributes were the literal text <code>.2f</code> instead of numbers</li>
+      <li>Predator warning chat message sends once through the first enabled color instead of once per enabled color</li>
+      <li>Recipe result count clamped to the engine cap so an oversized <code>MeatMax</code> in a hand-edited fish.json can't corrupt memory</li>
+      <li>Multiplayer check in <code>TryDamageItems</code></li>
+      <li>Config sync and predator sound RPCs</li>
+      <li>Net not taking damage when used</li>
+      <li>Grub worm digging; vanilla worm fallback when the grub entry is removed from config</li>
+      <li>Sauger normal map re-enabled; Sturgeon rvmat typo; Blue Marlin normals; Tacklebox normals; Hammerhead Shark materials mapping</li>
+      <li>Fillet textures (Chinook Salmon, Sailfish, Humphead Wrasse, others); fillets showing as wrong fish or blank; old extra Bluegill fillet texture; Fathead Minnow rotten fillet bug</li>
+      <li>Crayfish position in inventory; crayfish becoming invisible after cooking; fixed crayfish rotten texture</li>
+      <li>Lobster Tail on ground / in inventory / in hand; lobster can be cut on the ground</li>
+      <li>Bonito hand position; two-hand fish positioning (mostly — slight inventory orientation issue remains)</li>
+      <li>Scope on base classes so they no longer spawn in</li>
+      <li>p3d selections renamed to <code>Camo</code> where missing; <code>FlatHeadMullet</code> classname typo; Grasshopper texture naming convention</li>
+      <li>Missing semicolons causing config parse errors</li>
+      <li>Boat sound issue; Mahi Mahi LOD texture disappearing at distance</li>
+      <li>Duplicate bamboo net recipe removed; crafting hook from wires</li>
+      <li>Repeated tackles removed from spawnable types; missing clothes added to typesxml</li>
+    </ul>
+    <h3>Removed</h3>
+    <ul>
+      <li><code>fishingsettings.json</code> and its one-time migration (replaced by the four-file config, clean break)</li>
+      <li>Bundled trader/economy support files (<code>Expansion</code> market configs, TraderPlus configs, Dr. Jones price list, classnames list, pricing calculator)</li>
+      <li>Old expansion files</li>
+      <li>Old README</li>
+      <li>Fishing Calc (outdated)</li>
+      <li>Old <code>newtackle</code> textures</li>
+      <li>Old lure models (replaced by crank/popper variants)</li>
+      <li>Unreferenced normal-map textures (6.4 MB)</li>
+      <li>Dead code purge: fully commented-out jon boat script file, Alteria world-data placeholder block, commented-out RPC registrations, unused locals, and no-op recipe overrides</li>
+    </ul>
+    <h3>Known Issues</h3>
+    <ul>
+      <li>Two-hand fish inventory orientation is slightly angled</li>
+      <li>King Crab and Snow Crab have no in-hands carry pose yet</li>
+      <li>Unreleased-build regressions under investigation (tracked in MAYBE_ISSUES.md): the data-driven yield and recipe registration runs before each entry's config row is attached</li>
+    </ul>
+  </div></details>
+  <details class="faq-item"><summary>v3.3.0</summary><div class="chg">
+    <h3>Added or Changed</h3>
+    <ul>
+      <li>New Creatures
+        <ul>
+          <li>American Lobster</li>
+          <li>European Lobster</li>
+          <li>Snow Crab</li>
+          <li>Signal Crayfish</li>
+          <li>European Crayfish</li>
+        </ul>
+      </li>
+      <li>Updated stringtables to add new items and remove items</li>
+      <li>Updated yield script to include super</li>
+      <li>Added small crustaceans to be allowed in the minnow bucket</li>
+      <li>New LODs, RVMATs, and normals to every fish</li>
+      <li>Added versioning to the xml generation</li>
+      <li>Added repair kit for fishing rods</li>
+      <li>New models for:
+        <ul>
+          <li>Old Tackle Box</li>
+          <li>Great White Shark</li>
+          <li>Large Mouth Bass</li>
+          <li>Small Mouth Bass</li>
+        </ul>
+      </li>
+      <li>Added bone min/mzx for crustaceans</li>
+      <li>Added new worm and grub textures</li>
+      <li>New licence for the mod</li>
+      <li>Crayfish, Mussels, and Bloodclams are now food that can be eaten raw or cooked</li>
+      <li>Changed sizing on crayfish to fit the model better</li>
+      <li>Config update to change min/max to intergers instead of floats</li>
+      <li>Recipe name change from CraftWoodNet to CraftBambooNet</li>
+      <li>Updated the Types&amp;classnames folder to .types within the mod folder</li>
+    </ul>
+    <h3>Removed</h3>
+    <ul>
+    </ul>
+    <h3>Known Issues</h3>
+    <ul>
+      <li>Grub Worm and Rubber Worm show as regualr worm when on hook</li>
+    </ul>
+  </div></details>
+  <details class="faq-item"><summary>v3.2.1</summary><div class="chg">
+    <h3>Hotfix 1</h3>
+    <ul>
+      <li>RPC bug fix (thanks DannyDoomNo1 for direction)</li>
+      <li>Fixed mispelling of AtlanticSailfish meat</li>
+    </ul>
+  </div></details>
+  <details class="faq-item"><summary>v3.2.0</summary><div class="chg">
+    <h3>Added or Changed</h3>
+    <ul>
+      <li>Updated config to reflect classname changes in last update that we overlooked</li>
+      <li>Revamped the junk config to add probability to it to change each junk items rarity</li>
+      <li>Added predator messages to stingtable for proper localization</li>
+      <li>Fixed client-server config sync</li>
+      <li>New debugging messages to help troubleshoot issues on servers</li>
+      <li>Revamped several textures for fish and items</li>
+      <li>Reworked the predator spawn system to prevent predators being spawned under water</li>
+      <li>Fixed an issue with minnows being able to be used as infinite bait. Minnows are now removed like other bait</li>
+      <li>Types and Spawnable types now generate in $profiles/Geb/Extras/</li>
+      <li>Added map support for:
+        <ul>
+          <li>Banov</li>
+          <li>Namalsk</li>
+          <li>Lux</li>
+          <li>Deer Isle</li>
+          <li>Sahinkaya</li>
+        </ul>
+      </li>
+    </ul>
+  </div></details>
+  <details class="faq-item"><summary>v3.1.0</summary><div class="chg">
+    <h3>Added or Changed</h3>
+    <ul>
+      <li>New models for Blue Tang, Blood Clam, and Mussel</li>
+      <li>Classname updates
+        <ul>
+          <li>Catfish -&gt; FlatheadCatfish</li>
+          <li>Trout -&gt; RainbowTrout</li>
+          <li>Perch -&gt; YellowPerch</li>
+          <li>Minnow -&gt; FatheadMinnow</li>
+        </ul>
+      </li>
+      <li>Stringtable fixes for Simplified Chinese</li>
+      <li>Fixed implementation for Livonia and Sakhal maps</li>
+      <li>Moved config location from $profiles/gebsfish to $profiles/Geb to standardize files as we rework older mods</li>
+      <li>Config updates</li>
+      <li>General code cleanup and refactoring to make it more extensible and easier to maintain in the future.</li>
+    </ul>
+  </div></details>
+  <details class="faq-item"><summary>v3.0.0</summary><div class="chg">
+    <h3>Complete New Fishing System</h3>
+    <ul>
+      <li>Reworked all the gear to work with the new system.</li>
+      <li>Added minnows as bait</li>
+      <li>Fixed knife model positions in the hand</li>
+      <li>New predator system to make fishing less safe</li>
+      <li>New fish config to control catch rate and meat when processed</li>
+      <li>New junk config to configure your own junk items easily</li>
+      <li>Logging system for troubleshooting</li>
+      <li>Overall code imporvements</li>
+    </ul>
+  </div></details>
+  <!-- CHANGELOG:END -->
 </section>
 
 </main>
@@ -736,17 +996,49 @@ document.querySelectorAll("#fishtable thead th").forEach(th=>{
   document.getElementById(id).addEventListener("input",render);
 });
 
+/* ---- Tabs + deep links ----------------------------------------------------
+   Every tab is addressable, so any part of the wiki can be linked directly:
+
+     index.html#guide            opens the Full Guide tab
+     index.html#crafting         opens Crafting
+     index.html#guide-caveats    opens Full Guide AND scrolls to Caveats & Gotchas
+
+   A hash naming a tab selects it. Any other hash is looked up as an element id,
+   and whichever tab contains it is opened before scrolling — so every heading
+   carrying an id is linkable without maintaining a separate list of them.
+--------------------------------------------------------------------------- */
+function activateTab(name,updateHash){
+  const btn=document.querySelector('#nav button[data-tab="'+name+'"]');
+  const sec=document.getElementById("tab-"+name);
+  if(!btn||!sec)return false;
+  document.querySelectorAll("#nav button").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll("section.tab").forEach(x=>x.classList.remove("active"));
+  btn.classList.add("active");
+  sec.classList.add("active");
+  if(updateHash&&history.replaceState)history.replaceState(null,"","#"+name);
+  return true;
+}
+function applyHash(){
+  const raw=decodeURIComponent((location.hash||"").replace(/^#/,""));
+  if(!raw)return;
+  if(activateTab(raw,false)){window.scrollTo({top:0});return;}
+  const el=document.getElementById(raw);
+  if(!el)return;
+  const sec=el.closest("section.tab");
+  if(sec)activateTab(sec.id.replace(/^tab-/,""),false);
+  // wait for the tab to become visible before measuring where to scroll
+  requestAnimationFrame(()=>el.scrollIntoView({block:"start"}));
+}
 document.querySelectorAll("#nav button").forEach(b=>{
   b.addEventListener("click",()=>{
-    document.querySelectorAll("#nav button").forEach(x=>x.classList.remove("active"));
-    document.querySelectorAll("section.tab").forEach(x=>x.classList.remove("active"));
-    b.classList.add("active");
-    document.getElementById("tab-"+b.dataset.tab).classList.add("active");
+    activateTab(b.dataset.tab,true);
     window.scrollTo({top:0});
   });
 });
+window.addEventListener("hashchange",applyHash);
 
 render();
+applyHash();
 </script>
 
 <script>
