@@ -43,6 +43,36 @@ class geb_WoodenFishMount : ItemBase {
 		return false;
 	}
 
+	// The trophy dies with the plaque. Vanilla hands a ruined container's
+	// attachments back, which would make "smash the mount" the recovery route
+	// CanReleaseAttachment exists to prevent -- and would turn the plaque into a
+	// never-rots fish locker with one extra step. Destroying the fish outright
+	// keeps mounting genuinely permanent: the decision to mount a catch is final.
+	//
+	// Same hook and the same STATE_RUINED check vanilla's ImprovisedExplosive
+	// uses to ruin its attachments; this deletes rather than ruins so a smashed
+	// plaque doesn't leave a worthless fish lying on the ground.
+	override void EEHealthLevelChanged(int oldLevel, int newLevel, string zone) {
+		super.EEHealthLevelChanged(oldLevel, newLevel, zone);
+
+		if (g_Game.IsServer() && newLevel == GameConstants.STATE_RUINED)
+			DestroyMountedFish();
+	}
+
+	// Counting down: deleting shrinks the attachment list, so walking up would
+	// skip entries. The mount only has the one slot today, but this stays
+	// correct if it ever gains another.
+	protected void DestroyMountedFish() {
+		if (!g_Game.IsServer() || !GetInventory())
+			return;
+
+		for (int i = GetInventory().AttachmentCount() - 1; i >= 0; --i) {
+			EntityAI attachment = GetInventory().GetAttachmentFromIndex(i);
+			if (attachment)
+				attachment.Delete();
+		}
+	}
+
 	// Placement. ItemBase.IsDeployable() is false by default, so without
 	// this the hold-to-place hologram never appears at all and the modded
 	// Hologram below never gets a chance to run its wall snapping.

@@ -9,8 +9,8 @@
 <h3 align="center">The Ultimate Fishing Expansion for DayZ</h3>
 
 <p align="center">
-  <img alt="Mod Version" src="https://img.shields.io/badge/Mod-v3.3.0-blue?style=for-the-badge">
-  <img alt="DayZ Version" src="https://img.shields.io/badge/DayZ-v1.28-teal?style=for-the-badge">
+  <img alt="Mod Version" src="https://img.shields.io/badge/Mod-v3.3.2-blue?style=for-the-badge">
+  <img alt="DayZ Version" src="https://img.shields.io/badge/DayZ-v1.29-teal?style=for-the-badge">
   <img alt="Workshop Subscribers" src="https://img.shields.io/steam/subscriptions/2757509117?style=for-the-badge&color=purple&label=Workshop%20Subs">
   <a href="https://packjc.github.io/gebsfish/"><img alt="Website" src="https://img.shields.io/badge/Website-Gebsfish%20Wiki-ff8c00?style=for-the-badge"></a>
 </p>
@@ -20,6 +20,7 @@
   <a href="#key-features">Key Features</a> •
   <a href="#advanced-systems">Advanced Systems</a> •
   <a href="#configuration-examples">Configuration Examples</a> •
+  <a href="#how-config-updates-work">Config Updates</a> •
   <a href="#credits">Credits</a> •
   <a href="#license">License & Terms</a> •
   <a href='CHANGELOG.md'>Change Log</a>
@@ -42,6 +43,7 @@ Built from the ground up for modded servers, it adds dozens of new fish species,
 * Extensive config system allows complete customizability to fit your server:
   - Full configuration of fish (water type, rarity, fishing method, meat yield, behavior).
   - Full configuration of junk (rarity, item).
+  - Full configuration of the ultra-rare treasure system (which containers spawn, what can be inside them, how rare it is, and what it costs your rod).
   - Full configuration of the bait/lure preference matrix (per-fish multipliers for every bait).
   - Full configuration of the predator spawn system (chance, classnames, spawn radius, warning sound, chat message).
   - Master enable toggles for every major catch-modifying system so you can run as much or as little of the mod as you want without losing your tuned values.
@@ -88,6 +90,12 @@ Gebsfish layers several configurable environmental systems on top of vanilla fis
 
 * **Hook-from-fish recovery** — roughly 1 in 250 fillet actions recovers a damaged hook or lure "stuck in the fish." The pool of recoverable hooks, their weights, and the damage range they spawn at are all admin-configurable; the hook lands in your inventory, or at your feet if it's full.
 
+* **Ultra-rare treasure catches** — an extremely rare roll on a successful catch pulls up a container full of loot instead of a fish. Two independent admin-defined pools: `TreasureContainers` decides what it arrives as (each with its own weight, health range, and item count) and `TreasureLoot` decides what goes inside (weight, health range, and a quantity range for stackables). Every item slot rolls the loot pool separately, so no two hauls are the same even from the same container. Default `Chance` is `0.0002` — about **1 in 5000 catches**, not casts. Treasure only bites on a **proper fishing rod** — the crafted improvised rod never rolls (`RequireRealRod`) — and hauling one up costs the rod a third of its max health, so **three treasures ruin a pristine rod** (`RodCatchesToRuin`, `0` for no wear). Seeded with plain vanilla classnames so it works out of the box, and designed to be replaced with whatever your server considers a prize. Disable with `TreasureSettings.Enable: 0`.
+
+* **Wooden Fish Mount** — a craftable trophy plaque (1 Wooden Plank + 1 Metal Wire, with a Hacksaw on you) that hangs flat on any wall. The mounted trophy is the *actual fish you caught* — its weight and quality persist — and decay is paused entirely while it's on the plaque. Mounting is permanent by design: the fish can't be detached, and destroying the mount destroys the trophy with it rather than handing it back — so the plaque can't double as a never-rots fish locker. The plaque itself carries a 45-day untouched lifetime, the same tier as tents and barrels.
+
+* **Jon boat** — a drivable flat-bottomed boat in five variants with its own damage zones, spark plug slot, and cargo. Two deck slots take any cooler or tackle box and display it sitting on the deck, so you can run two coolers, two boxes, or one of each.
+
 * **Configurable junk catches** — rods and nets can pull junk instead of fish: a weighted table of items (wellies, pots, anything you add) with per-entry spawn-damage ranges, plus a separate table for container junk that spawns holding cargo. Fully tunable in `junk.json`.
 
 * **Repairs with consequences** — fishing rods repair with the Fishing Rod Repair Kit and the bamboo net repairs with Netting, but repairs cap at **Worn** — no restoring gear to factory-fresh — and Ruined tools are gone for good.
@@ -98,7 +106,7 @@ Gebsfish layers several configurable environmental systems on top of vanilla fis
 
 * **Trader compatibility** — fish quality defaults to `1.0` so popular trader mods (DayZ-Expansion-Market, TraderPlus, Dr. Jones, etc.) accept them at full value out of the box. Configurable if your trader scales by quality.
 
-* **Admin logging** — every session writes a timestamped log to `$profile:Gebs/logs/`. `DebugLogs` has three levels: `0` off, `1` per-cast summaries (pool composition, bite-speed aggregate, weighted pick results), `2` elevated — full per-fish breakdown tables showing exactly why each fish was or wasn't favored this cast. Built for answering "why isn't fish X spawning" without guesswork.
+* **Admin logging** — every session writes a timestamped log to `$profile:Gebs/logs/`. `DebugLogs` has three levels: `0` off, `1` per-cast summaries (pool composition, bite-speed aggregate, weighted pick results), `2` elevated — full per-fish breakdown tables showing exactly why each fish was or wasn't favored this cast. Built for answering "why isn't fish X spawning" without guesswork. Logs older than 3 days are deleted automatically at startup so an unattended server doesn't accumulate one file per restart.
 
 ## Configuration Examples
 
@@ -170,6 +178,38 @@ All configuration options are located in the `Gebs` folder inside your server's 
     ]
 }
 ```
+
+**Treasure pools (in `general.json`):**
+
+```json
+"TreasureSettings": {
+    "Enable": 1,
+    "Chance": 0.0002,
+    "Announce": 1,
+    "RequireRealRod": 1,
+    "RodCatchesToRuin": 3
+},
+"TreasureContainers": [
+    { "Classname": "SeaChest", "Weight": 1.0, "MinHealthLevel": 1, "MaxHealthLevel": 3, "MinItems": 3, "MaxItems": 6 }
+],
+"TreasureLoot": [
+    { "Classname": "Nail", "Weight": 5.0, "MinHealthLevel": 1, "MaxHealthLevel": 3, "MinQuantity": 5, "MaxQuantity": 30 },
+    { "Classname": "Compass", "Weight": 1.0, "MinHealthLevel": 0, "MaxHealthLevel": 2 }
+]
+```
+
+> **Note**
+> `Chance` is per **successful catch**, not per cast. `0.0002` is roughly 1 in 5000 catches; `0.0005` is about 1 in 2000. Setting `Chance` to `0` disables the feature just as `Enable: 0` does. `RequireRealRod` restricts treasure to rods inheriting from `FishingRod` (the vanilla rod and the gebsfish colour variants) — the crafted `ImprovisedFishingRod` never rolls. `RodCatchesToRuin` is how many pulls ruin a pristine rod: each treasure removes `maxHealth / RodCatchesToRuin`, so the default `3` costs 50 of a stock rod's 150 HP per haul; `0` disables the wear.
+
+## How Config Updates Work
+
+Worth knowing before you hand-tune anything, because it decides which of your edits survive a mod update:
+
+* Each of the four files carries its own `ConfigVersion`. A file is only rewritten when something actually changed — a fresh generation, a re-seeded section, or a version bump. An up-to-date file is left completely alone.
+* **A version bump rewrites all four files**, even if only one gained anything. Your values are carried through untouched — the file is re-serialized from what was loaded, not regenerated from defaults. Timestamps changing on all four is expected, not data loss.
+* **Your existing values are never overwritten.** Updates are strictly additive: default entries missing from a list get inserted, entries already there are left exactly as you set them.
+* **Deleting an entry is not how you disable it.** A row you remove counts as missing and gets re-added on the next version bump. Set its weight, chance, or `CatchProbability` to `0` instead — that survives every update. A section you empty on purpose is respected; a section that's entirely absent gets re-seeded with working defaults.
+* Upgrading from pre-3.3 sweeps the old layout (`fishingsettings.json`, `Fish/Logs/`, `extras/mpmissions/`) into `$profile:Gebs/gebs_oldfiles/` and removes the emptied folders. Nothing is migrated *from* the old monolithic config — it's archived so you can still read your old tuning.
 
 **Disabling individual systems:**
 

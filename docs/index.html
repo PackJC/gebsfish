@@ -108,6 +108,12 @@
   .banner.good { border-left-color: #6fe0a8; }
   .banner b { color: var(--text); }
 
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 12px; margin: 14px 0 22px; }
+  .gitem { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px 8px; text-align: center; }
+  .gitem img { width: 100%; height: 92px; object-fit: contain; display: block; }
+  .gitem b { display: block; margin-top: 8px; color: var(--text); font-size: 0.8rem; line-height: 1.3; }
+  .gallery-note { color: var(--dim); font-size: 0.85rem; margin-bottom: 4px; }
+
   .guide h3 { color: var(--accent); margin: 30px 0 10px; font-size: 1.15rem; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
   .guide h4 { color: var(--accent2); margin: 20px 0 8px; font-size: 1rem; }
   .guide p, .guide li { color: var(--dim); font-size: 0.92rem; line-height: 1.65; }
@@ -116,6 +122,50 @@
   .guide b { color: var(--text); font-weight: 600; }
   .guide .tblwrap { margin: 10px 0 14px; }
   .guide table { min-width: 520px; }
+
+  /* ---- probability section: formulas, charts, stacked bars ---- */
+  .formula { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent);
+             border-radius: 8px; padding: 14px 16px; margin: 12px 0 16px; overflow-x: auto;
+             font-family: "Cascadia Code", Consolas, ui-monospace, monospace; font-size: 0.85rem;
+             line-height: 1.9; color: var(--text); white-space: pre; }
+  .formula .op { color: var(--accent); }
+  .formula .num { color: var(--gold); }
+  .formula .cmt { color: var(--dim); font-style: italic; }
+
+  figure.fig { margin: 16px 0 22px; }
+  figure.fig .figbody { background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+                        padding: 14px 12px 8px; overflow-x: auto; }
+  figure.fig svg { display: block; width: 100%; min-width: 480px; height: auto; }
+  figure.fig figcaption { color: var(--dim); font-size: 0.83rem; margin-top: 9px; line-height: 1.55; }
+  figure.fig figcaption b { color: var(--text); }
+
+  .chartgrid { stroke: var(--border); stroke-width: 1; }
+  .chartaxis { fill: var(--dim); font-size: 11px; font-family: "Segoe UI", system-ui, sans-serif; }
+  .chartline { fill: none; stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+  .chartlabel { font-size: 11px; font-weight: 600; font-family: "Segoe UI", system-ui, sans-serif; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 10px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; color: var(--dim); font-size: 0.82rem; }
+  .legend i { width: 14px; height: 3px; border-radius: 2px; flex: 0 0 auto; }
+
+  .stack { display: flex; height: 30px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border);
+           margin: 10px 0 4px; background: var(--bg2); }
+  .stack span { display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600;
+                color: #0d1520; overflow: hidden; white-space: nowrap; min-width: 0; }
+  .stack span.j { background: repeating-linear-gradient(45deg, #7d5a2a, #7d5a2a 5px, #6a4c22 5px, #6a4c22 10px);
+                  color: #f0d9a8; }
+
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 14px 0 18px; }
+  .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 13px 15px; }
+  .kpi b { display: block; color: var(--gold); font-size: 1.45rem; line-height: 1.2; font-weight: 700; }
+  .kpi span { display: block; color: var(--dim); font-size: 0.8rem; margin-top: 3px; }
+
+  .guide table.calc { min-width: 460px; font-size: 0.86rem; }
+  .guide table.calc td:first-child { color: var(--text); font-weight: 600; white-space: nowrap; }
+  .guide table.calc td.n { font-family: Consolas, ui-monospace, monospace; color: var(--gold); text-align: right;
+                           white-space: nowrap; }
+  .guide table.calc tr.sum td { border-top: 2px solid var(--accent); }
+  .guide table.calc tr.sum td.n { color: var(--accent2); font-weight: 700; }
 
   footer { border-top: 1px solid var(--border); text-align: center; color: var(--dim); font-size: 0.82rem; padding: 24px; }
 </style>
@@ -200,6 +250,8 @@
 <!-- ============ ITEMS ============ -->
 <section class="tab" id="tab-items">
   <h2>Items &amp; Gear</h2>
+  <p class="gallery-note">Hover any item for its in-game description.</p>
+  <div class="gallery" data-cats="gear,boat"></div>
   <p class="lead">Everything the mod adds beyond the fish themselves.</p>
   <div class="cards">
     <div class="card"><h4>🎣 Fishing Rods</h4>
@@ -253,6 +305,8 @@
 <section class="tab" id="tab-baits">
   <h2>Baits &amp; Lures</h2>
   <p class="lead">Every bait and lure carries a per-fish preference table that biases which fish takes your hook. Live bait dies about 90 minutes after you find it unless stored in a bait container or cooler — the rubber worm never dies. All multipliers are tunable in <code>bait.json</code>.</p>
+  <p class="gallery-note">Hover any bait or lure for its in-game description.</p>
+  <div class="gallery" data-cats="bait,lure"></div>
   <h3>What should I put on the hook?</h3>
   <div class="tblwrap"><table>
     <thead><tr><th>Bait / Lure</th><th>How you get it</th><th>Best for</th><th>Weak against</th></tr></thead>
@@ -287,6 +341,7 @@
     <div class="card"><h4>🐺 Predators</h4><p>Fishing, filleting, failed casts, and net use can each draw wolves or bears (~1% per action by default, per-action configurable). Land-only spawns, optional warning sound for everyone nearby, and a chat warning for whoever caused it.</p></div>
     <div class="card"><h4>🪝 Hook Recovery</h4><p>Roughly 1 in 250 fillets recovers a damaged hook or lure "stuck in the fish." Pool and damage range are configurable.</p></div>
     <div class="card"><h4>🥫 Junk Catches</h4><p>Rods and nets can pull configurable junk — wellies, pots, anything you add — with weighted chances and spawn-damage ranges.</p></div>
+    <div class="card"><h4>💰 Treasure</h4><p>Roughly 1 in 5000 catches pulls up a container full of loot. Real fishing rods only — the improvised rod never rolls — and each haul costs the rod a third of its health. Admins define the containers and contents; every slot rolls separately so no two hauls match. Off with a single toggle.</p></div>
     <div class="card"><h4>📊 Admin Logging</h4><p>Timestamped session logs in <code>$profile:Gebs/logs/</code>. Debug level 1 gives per-cast summaries; level 2 prints full per-fish breakdown tables that answer "why isn't fish X spawning."</p></div>
   </div>
 </section>
@@ -382,7 +437,7 @@
 <!-- ============ FULL GUIDE ============ -->
 <section class="tab guide" id="tab-guide">
   <h2>Full Guide</h2>
-  <p class="lead">Everything the mod does, how it fits together, and every gotcha worth knowing before it surprises you. If you only read one part, read <a href="#guide-caveats"><b>Caveats &amp; Gotchas</b></a> at the bottom.</p>
+  <p class="lead">Everything the mod does, how it fits together, and every gotcha worth knowing before it surprises you. If you only read one part, read <a href="#guide-caveats"><b>Caveats &amp; Gotchas</b></a> at the bottom. If you want to know exactly why you caught what you caught, read <a href="#guide-odds"><b>The Odds, In Detail</b></a>.</p>
 
   <h3 id="guide-start">1. Getting Started</h3>
   <p>Gebsfish needs <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=1559212036">Community Framework (CF)</a> loaded alongside it, <b>on both the server and the client</b>. Nothing else is required.</p>
@@ -411,12 +466,396 @@
     <li><b>Weather</b> — per-species rain and storm multipliers.</li>
     <li><b>Time of day</b> — separate dawn / day / dusk / night multipliers.</li>
     <li><b>Moon phase</b> — real synodic math from the in-game date. Full moon nights up to +20%, new moon down to −10%. Night only.</li>
-    <li><b>Water temperature</b> — each species has an optimal temperature and a survivable range. Outside the range it stops biting entirely.</li>
+    <li><b>Water temperature</b> — each species has an optimal temperature and a survivable range. Outside that range it drops to a tenth of its normal odds — heavily suppressed, but never quite zero.</li>
     <li><b>Bait</b> — roughly 700 seeded bait/lure-to-fish pairings bias which fish takes the hook.</li>
   </ul>
   <p><b>Bite speed</b> is separate from <i>what</i> you catch — it controls <i>how long you wait</i>. Each species carries a 24-hour activity curve, and the active pool's aggregate sets the delay between bites. Night fishing for catfish genuinely feels different from midday panfishing.</p>
+  <div class="banner">Want the actual arithmetic — every formula, the real per-species percentages, and where the numbers come from? That's the next section: <a href="#guide-odds"><b>The Odds, In Detail</b></a>.</div>
 
-  <h3 id="guide-tools">3. Tools &amp; Gear — what each one is for</h3>
+  <h3 id="guide-odds">3. The Odds, In Detail</h3>
+  <p>This section is the arithmetic behind every catch — the real formulas, the real percentages, and the reasoning that produces them. Every number here is computed from the <b>shipped default config</b>, so if you have edited <code>fish.json</code> or <code>junk.json</code> your server's numbers will differ. The <i>method</i> is identical either way.</p>
+
+  <h4 id="odds-two-systems">The one thing to understand first</h4>
+  <p>Two completely separate systems are running, and almost every "the multipliers don't work" report comes from conflating them:</p>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>Question</th><th>Answered by</th><th>Uses</th><th>Rolled</th></tr></thead>
+      <tbody>
+        <tr><td><b>How long until something bites?</b></td><td><code>ModifySignalProbability</code></td><td>The <b>global</b> multipliers in <code>WeatherSettings</code> — one set of numbers for the whole server</td><td>Every signal cycle, continuously</td></tr>
+        <tr><td><b>What is on the end of the line?</b></td><td><code>GenerateResult</code></td><td>The <b>per-species</b> multipliers in <code>fish.json</code>, plus bait</td><td><b>Once, the moment you cast</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="banner"><b>The fish is decided when you cast, not when you reel in.</b> The pool is assembled and drawn from at the start of the action, and that result is locked in — the bite timing that follows only determines <i>whether you get it</i>. Nothing you do mid-cast changes which species is waiting.</div>
+
+  <figure class="fig">
+    <div class="figbody">
+      <svg viewBox="0 0 720 336" role="img" aria-label="Flowchart of a single cast: the species is picked once at cast time, while bite timing is rolled repeatedly, and a successful reel-in triggers one treasure roll.">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#8fa3bc"/>
+          </marker>
+        </defs>
+        <!-- cast -->
+        <rect x="100" y="8" width="520" height="34" rx="8" fill="#21314a" stroke="#4db8ff" stroke-width="1.5"/>
+        <text x="360" y="30" text-anchor="middle" class="chartlabel" fill="#dce6f2">You cast — both tracks below start here</text>
+        <path d="M300,42 L190,62" stroke="#8fa3bc" stroke-width="1.3" fill="none" marker-end="url(#ar)"/>
+        <path d="M420,42 L530,62" stroke="#8fa3bc" stroke-width="1.3" fill="none" marker-end="url(#ar)"/>
+        <!-- column headers -->
+        <text x="190" y="78" text-anchor="middle" class="chartlabel" fill="#35d0a0">WHAT you will catch</text>
+        <text x="190" y="93" text-anchor="middle" class="chartaxis">decided once, right now</text>
+        <text x="530" y="78" text-anchor="middle" class="chartlabel" fill="#e8c15a">WHEN it bites</text>
+        <text x="530" y="93" text-anchor="middle" class="chartaxis">re-rolled every cycle</text>
+        <!-- left lane -->
+        <rect x="40" y="104" width="300" height="46" rx="7" fill="#1a2739" stroke="#2c3e58"/>
+        <text x="190" y="123" text-anchor="middle" class="chartlabel" fill="#dce6f2">1. Eligibility gates</text>
+        <text x="190" y="139" text-anchor="middle" class="chartaxis">environment, catch method, probability &gt; 0</text>
+        <rect x="40" y="162" width="300" height="46" rx="7" fill="#1a2739" stroke="#2c3e58"/>
+        <text x="190" y="181" text-anchor="middle" class="chartlabel" fill="#dce6f2">2. Weight every survivor</text>
+        <text x="190" y="197" text-anchor="middle" class="chartaxis">1000 × conditions × bait</text>
+        <rect x="40" y="220" width="300" height="46" rx="7" fill="#1a2739" stroke="#35d0a0"/>
+        <text x="190" y="239" text-anchor="middle" class="chartlabel" fill="#35d0a0">3. One weighted draw</text>
+        <text x="190" y="255" text-anchor="middle" class="chartaxis">species locked in</text>
+        <path d="M190,150 L190,160" stroke="#8fa3bc" stroke-width="1.3" marker-end="url(#ar)"/>
+        <path d="M190,208 L190,218" stroke="#8fa3bc" stroke-width="1.3" marker-end="url(#ar)"/>
+        <!-- right lane -->
+        <rect x="380" y="104" width="300" height="46" rx="7" fill="#1a2739" stroke="#2c3e58"/>
+        <text x="530" y="123" text-anchor="middle" class="chartlabel" fill="#dce6f2">Global multiplier</text>
+        <text x="530" y="139" text-anchor="middle" class="chartaxis">rain/storm × window × moon, capped at 2.0</text>
+        <rect x="380" y="162" width="300" height="46" rx="7" fill="#1a2739" stroke="#2c3e58"/>
+        <text x="530" y="181" text-anchor="middle" class="chartlabel" fill="#dce6f2">Easing curve</text>
+        <text x="530" y="197" text-anchor="middle" class="chartaxis">odds climb as the cycle progresses</text>
+        <rect x="380" y="220" width="300" height="46" rx="7" fill="#1a2739" stroke="#e8c15a"/>
+        <text x="530" y="239" text-anchor="middle" class="chartlabel" fill="#e8c15a">Roll each cycle</text>
+        <text x="530" y="255" text-anchor="middle" class="chartaxis">bite, or keep waiting</text>
+        <path d="M530,150 L530,160" stroke="#8fa3bc" stroke-width="1.3" marker-end="url(#ar)"/>
+        <path d="M530,208 L530,218" stroke="#8fa3bc" stroke-width="1.3" marker-end="url(#ar)"/>
+        <!-- join -->
+        <path d="M190,266 L190,282 L330,282" stroke="#8fa3bc" stroke-width="1.3" fill="none"/>
+        <path d="M530,266 L530,282 L390,282" stroke="#8fa3bc" stroke-width="1.3" fill="none"/>
+        <path d="M360,282 L360,292" stroke="#8fa3bc" stroke-width="1.3" marker-end="url(#ar)"/>
+        <rect x="130" y="296" width="460" height="34" rx="8" fill="#21314a" stroke="#4db8ff" stroke-width="1.5"/>
+        <text x="360" y="318" text-anchor="middle" class="chartlabel" fill="#dce6f2">Reel in → the locked-in species spawns → one treasure roll</text>
+      </svg>
+    </div>
+    <figcaption>A single cast. The left track runs once and is finished before the first bite signal; the right track loops until you hook something or give up. <b>Only a successful catch on a real rod rolls for treasure</b> — the improvised rod never rolls, and a failed cast costs you nothing but time and rod durability. See <a href="#odds-treasure">Treasure, decomposed</a> for what a hit costs the rod.</figcaption>
+  </figure>
+
+  <h4 id="odds-formula">The weight formula</h4>
+  <p>Every eligible species gets an integer weight. That weight is what the draw actually uses:</p>
+  <div class="formula"><span class="cmt">// per species, recomputed every cast</span>
+speciesMul <span class="op">=</span> min( rainOrStorm <span class="op">×</span> timeOfDay <span class="op">×</span> temperature , MaxStackedMultiplier )
+weight     <span class="op">=</span> round( <span class="num">1000</span> <span class="op">×</span> speciesMul <span class="op">×</span> baitMul )
+
+<span class="cmt">// the pool: each species contributes its weight once per abundance point</span>
+poolTotal  <span class="op">=</span> Σ CatchProbability(i) <span class="op">×</span> weight(i)
+P(species) <span class="op">=</span> CatchProbability <span class="op">×</span> weight <span class="op">÷</span> poolTotal</div>
+  <p>Three things about this are worth pausing on, because they explain most surprising results:</p>
+  <ul>
+    <li><b>The <code>1000</code> is just fixed-point arithmetic.</b> The draw uses the synchronised integer RNG so client and server stay in lockstep, so float multipliers are scaled to integers. It has no effect on the odds.</li>
+    <li><b><code>CatchProbability</code> and the multipliers do different jobs.</b> Probability is a whole-number abundance count (0–25); the multipliers are a continuous scale on top. A probability-3 fish with a 2.0× multiplier still loses to a probability-22 fish sitting at 1.0×.</li>
+    <li><b>Bait is applied <i>after</i> the cap.</b> <code>MaxStackedMultiplier</code> clamps the weather × time × temperature product, then bait multiplies on top of the clamped value. With the default 2.0 cap and a 2.5× bait, one species can reach <b>5×</b> — bait is the single strongest lever in the system.</li>
+  </ul>
+
+  <h4 id="odds-baseline">The baseline pool</h4>
+  <p>With every multiplier neutral, the odds are just abundance ÷ total abundance. This is the floor everything else moves away from:</p>
+  <div class="kpis">
+    <div class="kpi"><b>40</b><span>species reachable by rod in fresh water</span></div>
+    <div class="kpi"><b>28</b><span>species reachable by rod in salt water</span></div>
+    <div class="kpi"><b>433</b><span>total pond weight (408 fish + 25 junk)</span></div>
+    <div class="kpi"><b>301</b><span>total sea weight (276 fish + 25 junk)</span></div>
+  </div>
+  <p>Sea water has a smaller pool, so every individual sea species is proportionally <i>more</i> likely than a freshwater one of the same abundance — and junk is too, at 8.31% versus 5.77%.</p>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>Fresh water, rod</th><th>Abundance</th><th>Odds</th><th>Salt water, rod</th><th>Abundance</th><th>Odds</th></tr></thead>
+      <tbody>
+        <tr><td>Fathead Minnow</td><td>25</td><td>5.77%</td><td>Mackerel</td><td>22</td><td>7.31%</td></tr>
+        <tr><td>Carp</td><td>22</td><td>5.08%</td><td>Walleye Pollock</td><td>20</td><td>6.64%</td></tr>
+        <tr><td>Bluegill</td><td>22</td><td>5.08%</td><td>Flathead Mullet</td><td>18</td><td>5.98%</td></tr>
+        <tr><td>Yellow Perch</td><td>21</td><td>4.85%</td><td>Pacific Cod</td><td>16</td><td>5.32%</td></tr>
+        <tr><td>Sunfish</td><td>20</td><td>4.62%</td><td>Roughneck Rock / White Grunt</td><td>14</td><td>4.65%</td></tr>
+        <tr><td><i>…33 more species…</i></td><td>—</td><td>—</td><td><i>…22 more species…</i></td><td>—</td><td>—</td></tr>
+        <tr><td>Lake Sturgeon, Severum, both rare muskies</td><td>3</td><td>0.69%</td><td>Atlantic Blue Marlin</td><td>3</td><td>1.00%</td></tr>
+        <tr><td>—</td><td>—</td><td>—</td><td><b>Great White Shark</b></td><td>2</td><td><b>0.66%</b></td></tr>
+        <tr><td><b>Junk</b> (4 wellies + 1 pot)</td><td>25</td><td><b>5.77%</b></td><td><b>Junk</b> (same table)</td><td>25</td><td><b>8.31%</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 id="odds-temperature">Water temperature: the strongest natural filter</h4>
+  <p>Temperature is a piecewise-linear tent per species: <code>1.0</code> at <code>TempOptimal</code>, falling away linearly in both directions, and flattening to a floor of <code>0.1</code> once you pass <code>TempMin</code> or <code>TempMax</code>.</p>
+  <div class="formula">water <span class="op">≤</span> TempMin  <span class="op">→</span> <span class="num">0.1</span>          <span class="cmt">// MinTempMultiplier</span>
+water <span class="op">&lt;</span> TempOptimal  <span class="op">→</span> lerp( <span class="num">0.1</span> <span class="op">→</span> <span class="num">1.0</span> ) across TempMin..TempOptimal
+water <span class="op">=</span> TempOptimal  <span class="op">→</span> <span class="num">1.0</span>
+water <span class="op">&gt;</span> TempOptimal  <span class="op">→</span> lerp( <span class="num">1.0</span> <span class="op">→</span> <span class="num">0.1</span> ) across TempOptimal..TempMax
+water <span class="op">≥</span> TempMax  <span class="op">→</span> <span class="num">0.1</span>          <span class="cmt">// MaxTempMultiplier</span></div>
+  <div class="banner warn"><b>Out of range is a 10× penalty, not a ban.</b> The floor is <code>0.1</code>, not <code>0</code> — you can still land a bluegill in near-freezing water, it is just ten times harder. Set <code>MinTempMultiplier</code> / <code>MaxTempMultiplier</code> to <code>0</code> yourself if you want a hard seasonal lockout.</div>
+
+  <figure class="fig">
+    <div class="figbody">
+      <svg viewBox="0 0 720 260" role="img" aria-label="Line chart of the temperature multiplier from 0 to 33 degrees Celsius for four species, each peaking at 1.0 at its optimal temperature and flattening to 0.1 outside its range.">
+        <line class="chartgrid" x1="48" y1="14" x2="708" y2="14"/>
+        <line class="chartgrid" x1="48" y1="67" x2="708" y2="67"/>
+        <line class="chartgrid" x1="48" y1="120" x2="708" y2="120"/>
+        <line class="chartgrid" x1="48" y1="173" x2="708" y2="173"/>
+        <line class="chartgrid" x1="48" y1="226" x2="708" y2="226"/>
+        <line class="chartgrid" x1="48" y1="204.8" x2="708" y2="204.8" stroke-dasharray="4 4"/>
+        <text class="chartaxis" x="42" y="18" text-anchor="end">1.0</text>
+        <text class="chartaxis" x="42" y="71" text-anchor="end">0.75</text>
+        <text class="chartaxis" x="42" y="124" text-anchor="end">0.5</text>
+        <text class="chartaxis" x="42" y="177" text-anchor="end">0.25</text>
+        <text class="chartaxis" x="42" y="208" text-anchor="end">0.1</text>
+        <text class="chartaxis" x="48" y="244">0°C</text>
+        <text class="chartaxis" x="148" y="244" text-anchor="middle">5</text>
+        <text class="chartaxis" x="248" y="244" text-anchor="middle">10</text>
+        <text class="chartaxis" x="348" y="244" text-anchor="middle">15</text>
+        <text class="chartaxis" x="448" y="244" text-anchor="middle">20</text>
+        <text class="chartaxis" x="548" y="244" text-anchor="middle">25</text>
+        <text class="chartaxis" x="648" y="244" text-anchor="middle">30</text>
+        <polyline class="chartline" stroke="#6fbce0" points="48,204.8 88,204.8 248,14 368,204.8 708,204.8"/>
+        <polyline class="chartline" stroke="#35d0a0" points="48,204.8 128,204.8 308,14 448,204.8 708,204.8"/>
+        <polyline class="chartline" stroke="#e8c15a" points="48,204.8 348,204.8 548,14 648,204.8 708,204.8"/>
+        <polyline class="chartline" stroke="#e87070" points="48,204.8 368,204.8 568,14 688,204.8 708,204.8"/>
+      </svg>
+      <div class="legend">
+        <span><i style="background:#6fbce0"></i>Slimy Sculpin — optimal 10°C</span>
+        <span><i style="background:#35d0a0"></i>Brook Trout — optimal 13°C</span>
+        <span><i style="background:#e8c15a"></i>Bluegill — optimal 25°C</span>
+        <span><i style="background:#e87070"></i>Flathead Catfish — optimal 26°C</span>
+      </div>
+    </div>
+    <figcaption>Four species' temperature response, exactly as the game computes it. Note how little overlap there is near the peaks: at <b>10&nbsp;°C</b> the sculpin is at full strength while the bluegill sits on the floor, and at <b>25&nbsp;°C</b> that reverses. Water temperature is <code>GetBaseEnvTemperature()</code> plus your <code>WaterTempOffset</code>, so one config value shifts every one of these curves together.</figcaption>
+  </figure>
+
+  <h4 id="odds-timeofday">Time of day, and the cap that actually bites</h4>
+  <p>The day is cut into four windows. Exactly one applies at any moment — they never overlap or stack with each other.</p>
+  <figure class="fig">
+    <div class="figbody">
+      <svg viewBox="0 0 720 118" role="img" aria-label="A 24-hour bar divided into night from midnight to 5, dawn 5 to 7, day 7 to 17, dusk 17 to 20, and night again from 20 to midnight, with each window's global multiplier.">
+        <rect x="48" y="20" width="137.5" height="40" fill="#16233a" stroke="#2c3e58"/>
+        <rect x="185.5" y="20" width="55" height="40" fill="#3a3350" stroke="#2c3e58"/>
+        <rect x="240.5" y="20" width="275" height="40" fill="#2b3f52" stroke="#2c3e58"/>
+        <rect x="515.5" y="20" width="82.5" height="40" fill="#4a3a2a" stroke="#2c3e58"/>
+        <rect x="598" y="20" width="110" height="40" fill="#16233a" stroke="#2c3e58"/>
+        <text x="116" y="38" text-anchor="middle" class="chartlabel" fill="#8fa3bc">Night</text>
+        <text x="116" y="53" text-anchor="middle" class="chartaxis" fill="#e8c15a">1.15×</text>
+        <text x="213" y="38" text-anchor="middle" class="chartlabel" fill="#c1a3f0">Dawn</text>
+        <text x="213" y="53" text-anchor="middle" class="chartaxis" fill="#e8c15a">1.10×</text>
+        <text x="378" y="38" text-anchor="middle" class="chartlabel" fill="#6fbce0">Day</text>
+        <text x="378" y="53" text-anchor="middle" class="chartaxis" fill="#8fa3bc">1.00×</text>
+        <text x="557" y="38" text-anchor="middle" class="chartlabel" fill="#e0c46f">Dusk</text>
+        <text x="557" y="53" text-anchor="middle" class="chartaxis" fill="#e8c15a">1.10×</text>
+        <text x="653" y="38" text-anchor="middle" class="chartlabel" fill="#8fa3bc">Night</text>
+        <text x="653" y="53" text-anchor="middle" class="chartaxis" fill="#e8c15a">1.15×</text>
+        <text class="chartaxis" x="48" y="78">00:00</text>
+        <text class="chartaxis" x="185.5" y="78" text-anchor="middle">05</text>
+        <text class="chartaxis" x="240.5" y="78" text-anchor="middle">07</text>
+        <text class="chartaxis" x="515.5" y="78" text-anchor="middle">17</text>
+        <text class="chartaxis" x="598" y="78" text-anchor="middle">20</text>
+        <text class="chartaxis" x="708" y="78" text-anchor="end">24:00</text>
+        <line class="chartgrid" x1="598" y1="88" x2="708" y2="88" stroke="#e8c15a" stroke-width="2"/>
+        <line class="chartgrid" x1="48" y1="88" x2="185.5" y2="88" stroke="#e8c15a" stroke-width="2"/>
+        <text class="chartaxis" x="378" y="92" text-anchor="middle" fill="#e8c15a">moon phase applies only inside the night window</text>
+      </svg>
+    </div>
+    <figcaption>The four windows and their <b>global</b> bite-rate multipliers, with the default hour boundaries. Moon phase is night-only by design, which is why it can never stack with dawn or dusk.</figcaption>
+  </figure>
+  <p>Rain and storm are mutually exclusive — a storm <i>replaces</i> rain rather than adding to it. What <i>does</i> stack is rain/storm × window × moon, and that product is clamped by <code>MaxStackedMultiplier</code> (default <code>2.0</code>). Here is every interesting combination, with the raw product and what the game actually uses:</p>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>Conditions</th><th>Components</th><th>Raw</th><th>Applied</th></tr></thead>
+      <tbody>
+        <tr><td>Clear day</td><td>1.00</td><td>1.000</td><td>1.000×</td></tr>
+        <tr><td>Rainy day</td><td>1.25 × 1.00</td><td>1.250</td><td>1.250×</td></tr>
+        <tr><td>Stormy day</td><td>1.50 × 1.00</td><td>1.500</td><td>1.500×</td></tr>
+        <tr><td>Clear night, new moon</td><td>1.15 × 0.90</td><td>1.035</td><td>1.035×</td></tr>
+        <tr><td>Clear night, full moon</td><td>1.15 × 1.20</td><td>1.380</td><td>1.380×</td></tr>
+        <tr><td>Stormy dawn</td><td>1.50 × 1.10</td><td>1.650</td><td>1.650×</td></tr>
+        <tr><td>Rainy night, full moon</td><td>1.25 × 1.15 × 1.20</td><td>1.725</td><td>1.725×</td></tr>
+        <tr><td><b>Stormy night, full moon</b></td><td>1.50 × 1.15 × 1.20</td><td><b>2.070</b></td><td><b>2.000× — clamped</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>So the cap engages in exactly one situation on default settings: a <b>stormy full-moon night</b>, where it clips <code>0.07</code> off the multiplier. That is the best-conditions ceiling — and it is also the single most productive time to fish, at <b>double</b> the clear-day bite rate.</p>
+
+  <h4 id="odds-example">Worked example: one bluegill, start to finish</h4>
+  <p>Conditions: <b>fresh water, rod, midday, light rain, water at 25&nbsp;°C, worm on the hook.</b> The bluegill's row in <code>fish.json</code> gives abundance 22, rain 1.1, day 1.2, optimal 25&nbsp;°C over a 15–30&nbsp;°C range.</p>
+  <div class="tblwrap">
+    <table class="calc">
+      <tbody>
+        <tr><td>Rain band</td><td>rainfall 0.4 clears <code>RainThreshold</code> 0.3 but not <code>StormThreshold</code> 0.7 → rain applies</td><td class="n">× 1.10</td></tr>
+        <tr><td>Time window</td><td>hour 12 falls in Day (07–17) → the species' own day multiplier</td><td class="n">× 1.20</td></tr>
+        <tr><td>Temperature</td><td>25&nbsp;°C <i>is</i> its optimum — peak of the tent</td><td class="n">× 1.00</td></tr>
+        <tr class="sum"><td>speciesMul</td><td>1.10 × 1.20 × 1.00 = 1.32, under the 2.0 cap</td><td class="n">1.32</td></tr>
+        <tr><td>Bait</td><td>worm vs. the panfish category — its joint best pairing</td><td class="n">× 2.00</td></tr>
+        <tr class="sum"><td>weight</td><td>round(1000 × 1.32 × 2.00)</td><td class="n">2640</td></tr>
+        <tr><td>Contribution</td><td>22 abundance points × 2640</td><td class="n">58 080</td></tr>
+        <tr class="sum"><td>Odds</td><td>58 080 ÷ 327 929 pool total</td><td class="n">17.71%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The bluegill starts as the joint second-most-likely pond catch at 5.08% and ends up <b>first, at 17.71%</b> — a 3.5× improvement, and better than one catch in six. Meanwhile the lake sturgeon, a cold-water fish, has collapsed from 0.69% to <b>0.14%</b> in the same water:</p>
+  <div class="gallery-note">Baseline — all multipliers neutral</div>
+  <div class="stack">
+    <span style="width:5.08%;background:#e8c15a">5.1</span>
+    <span style="width:4.62%;background:#c9a94e">4.6</span>
+    <span style="width:84.53%;background:#2b3f52;color:#8fa3bc">all other pond species</span>
+    <span class="j" style="width:5.77%">5.8</span>
+  </div>
+  <div class="gallery-note">Midday, light rain, 25&nbsp;°C, worm</div>
+  <div class="stack">
+    <span style="width:17.71%;background:#e8c15a">17.7</span>
+    <span style="width:16.10%;background:#c9a94e">16.1</span>
+    <span style="width:58.57%;background:#2b3f52;color:#8fa3bc">all other pond species</span>
+    <span class="j" style="width:7.62%">7.6</span>
+  </div>
+  <div class="legend">
+    <span><i style="background:#e8c15a"></i>Bluegill</span>
+    <span><i style="background:#c9a94e"></i>Sunfish</span>
+    <span><i style="background:#2b3f52"></i>Other species</span>
+    <span><i style="background:#7d5a2a"></i>Junk</span>
+  </div>
+  <p>Sunfish move with the bluegill because they share the panfish bait category and near-identical temperature preferences. <b>This is what "targeting a species" means mechanically</b> — you are not raising one fish, you are raising a whole ecological guild and letting everything else fall away.</p>
+
+  <h4 id="odds-junk">Why you sometimes catch nothing but boots</h4>
+  <p>Junk is registered in the same pool as fish, with the same 0–25 abundance scale — but junk is not a fish, so <b>none of the multipliers touch it</b>. Its weight is a flat 1000 forever. Fish weights move; junk's does not.</p>
+  <div class="formula">fish weight <span class="op">=</span> <span class="num">1000</span> <span class="op">×</span> speciesMul <span class="op">×</span> baitMul   <span class="cmt">// 100 … 5000</span>
+junk weight <span class="op">=</span> <span class="num">1000</span>                        <span class="cmt">// always</span></div>
+  <p>The consequence is not obvious and it matters: <b>junk's share of your catches is a direct readout of how hostile the water is.</b> When conditions push every fish toward the 0.1 floor, junk keeps its full weight and inherits the pool.</p>
+
+  <figure class="fig">
+    <div class="figbody">
+      <svg viewBox="0 0 720 260" role="img" aria-label="A U-shaped curve showing junk's share of pond catches falling from 39 percent at freezing to a minimum of 10.3 percent at 22 degrees, then rising back to 39 percent at 33 degrees.">
+        <line class="chartgrid" x1="48" y1="14" x2="708" y2="14"/>
+        <line class="chartgrid" x1="48" y1="67" x2="708" y2="67"/>
+        <line class="chartgrid" x1="48" y1="120" x2="708" y2="120"/>
+        <line class="chartgrid" x1="48" y1="173" x2="708" y2="173"/>
+        <line class="chartgrid" x1="48" y1="226" x2="708" y2="226"/>
+        <text class="chartaxis" x="42" y="18" text-anchor="end">45%</text>
+        <text class="chartaxis" x="42" y="71" text-anchor="end">34%</text>
+        <text class="chartaxis" x="42" y="124" text-anchor="end">22%</text>
+        <text class="chartaxis" x="42" y="177" text-anchor="end">11%</text>
+        <text class="chartaxis" x="42" y="230" text-anchor="end">0%</text>
+        <text class="chartaxis" x="48" y="244">0°C</text>
+        <text class="chartaxis" x="148" y="244" text-anchor="middle">5</text>
+        <text class="chartaxis" x="248" y="244" text-anchor="middle">10</text>
+        <text class="chartaxis" x="348" y="244" text-anchor="middle">15</text>
+        <text class="chartaxis" x="448" y="244" text-anchor="middle">20</text>
+        <text class="chartaxis" x="548" y="244" text-anchor="middle">25</text>
+        <text class="chartaxis" x="648" y="244" text-anchor="middle">30</text>
+        <polyline class="chartline" stroke="#e87070" points="48,41 68,41 88,41 108,48.3 128,55.1 148,74.9 168,90.9 188,104.8 208,116 228,127.1 248,136.1 268,142.6 288,148.2 308,154.2 328,157 348,159.1 368,162.8 388,167.3 408,171.3 428,174.3 448,175.1 468,176.6 488,177.3 508,176.2 528,174.5 548,171.5 568,163.2 588,151.8 608,134.6 628,111.5 648,76.3 668,62.4 688,45.6 708,41"/>
+        <line class="chartgrid" x1="48" y1="198.6" x2="708" y2="198.6" stroke="#8fa3bc" stroke-dasharray="4 4"/>
+        <text class="chartaxis" x="150" y="193" fill="#8fa3bc">5.8% — junk with weather and temperature switched off</text>
+        <circle cx="488" cy="177.3" r="4" fill="#35d0a0"/>
+        <line class="chartgrid" x1="488" y1="182" x2="488" y2="209" stroke="#35d0a0"/>
+        <text class="chartaxis" x="488" y="221" text-anchor="middle" fill="#35d0a0">best water: 22°C, 10.3% junk</text>
+      </svg>
+    </div>
+    <figcaption>Junk's share of freshwater rod catches against water temperature, clear midday, no bait. It bottoms out at <b>10.3% around 22&nbsp;°C</b> and climbs to <b>39% at freezing</b> — nearly four in ten catches. The dashed line is the 5.8% you would get with the weather and temperature systems switched off entirely.</figcaption>
+  </figure>
+  <p>Two practical readings of that curve:</p>
+  <ul>
+    <li><b>Players:</b> a run of boots is information, not bad luck. The water is outside what the local fish tolerate — move to different water, wait for a different season, or fish at a different hour.</li>
+    <li><b>Admins:</b> turning the temperature system on <i>raises</i> junk rates on cold maps, because nothing scales junk down alongside the fish. On a winter map, either lower the junk entries' <code>CatchProbability</code> or set a positive <code>WaterTempOffset</code> to bring the whole curve back into range.</li>
+  </ul>
+  <p>Bait pushes the other way. Because bait raises fish weights and leaves junk untouched, a well-matched bait <b>suppresses junk as a side effect</b> — the worked example above drops junk from 10.31% to 7.62% purely by adding a worm.</p>
+
+  <h4 id="odds-rarity">Rare things, and how long they really take</h4>
+  <p>Every roll is independent — nothing accumulates, nothing is "due". The chance of seeing something with per-catch probability <i>p</i> at least once in <i>n</i> catches is:</p>
+  <div class="formula">P(at least one in n) <span class="op">=</span> <span class="num">1</span> <span class="op">−</span> (<span class="num">1</span> <span class="op">−</span> p)<sup>n</sup></div>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>Event</th><th>Per catch</th><th>100</th><th>500</th><th>1 000</th><th>5 000</th><th>10 000</th></tr></thead>
+      <tbody>
+        <tr><td>Bluegill (pond, baseline)</td><td>5.08%</td><td>99.5%</td><td>~100%</td><td>~100%</td><td>~100%</td><td>~100%</td></tr>
+        <tr><td>Great White Shark (sea)</td><td>0.66%</td><td>48.6%</td><td>96.4%</td><td>99.9%</td><td>~100%</td><td>~100%</td></tr>
+        <tr><td>Lake Sturgeon (pond)</td><td>0.69%</td><td>50.1%</td><td>96.9%</td><td>99.9%</td><td>~100%</td><td>~100%</td></tr>
+        <tr><td>Hook stuck in a fish <i>(per fillet)</i></td><td>0.40%</td><td>33.0%</td><td>86.5%</td><td>98.2%</td><td>~100%</td><td>~100%</td></tr>
+        <tr><td><b>Treasure</b></td><td><b>0.02%</b></td><td>2.0%</td><td>9.5%</td><td>18.1%</td><td>63.2%</td><td>86.5%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="banner"><b>The mean and the median are not the same number, and the median is the honest one.</b> Treasure averages one per 5 000 catches, but the <i>median</i> wait is only <b>3 465</b> — half of all players find their first treasure sooner than that. The average is dragged upward by the unlucky tail. Same story everywhere: a great white averages 151 sea catches but has a median of 104.</div>
+
+  <figure class="fig">
+    <div class="figbody">
+      <svg viewBox="0 0 720 260" role="img" aria-label="A rising curve showing the cumulative chance of finding at least one treasure, reaching 50 percent at about 3465 catches and 86 percent at 10000 catches.">
+        <line class="chartgrid" x1="48" y1="14" x2="708" y2="14"/>
+        <line class="chartgrid" x1="48" y1="67" x2="708" y2="67"/>
+        <line class="chartgrid" x1="48" y1="120" x2="708" y2="120"/>
+        <line class="chartgrid" x1="48" y1="173" x2="708" y2="173"/>
+        <line class="chartgrid" x1="48" y1="226" x2="708" y2="226"/>
+        <text class="chartaxis" x="42" y="18" text-anchor="end">100%</text>
+        <text class="chartaxis" x="42" y="71" text-anchor="end">75%</text>
+        <text class="chartaxis" x="42" y="124" text-anchor="end">50%</text>
+        <text class="chartaxis" x="42" y="177" text-anchor="end">25%</text>
+        <text class="chartaxis" x="42" y="230" text-anchor="end">0%</text>
+        <text class="chartaxis" x="48" y="244">0</text>
+        <text class="chartaxis" x="213" y="244" text-anchor="middle">2 500</text>
+        <text class="chartaxis" x="378" y="244" text-anchor="middle">5 000</text>
+        <text class="chartaxis" x="543" y="244" text-anchor="middle">7 500</text>
+        <text class="chartaxis" x="708" y="244" text-anchor="end">10 000 catches</text>
+        <polyline class="chartline" stroke="#e8c15a" points="48,226 61.2,217.7 74.4,209.7 87.6,202 100.8,194.7 114,187.6 127.2,180.8 140.4,174.2 153.6,167.9 166.8,161.9 180,156.1 193.2,150.5 206.4,145.2 219.6,140 232.8,135.1 246,130.3 259.2,125.8 272.4,121.4 285.6,117.2 298.8,113.1 312,109.3 325.2,105.5 338.4,101.9 351.6,98.5 364.8,95.2 378,92 391.2,88.9 404.4,86 417.6,83.2 430.8,80.5 444,77.8 457.2,75.3 470.4,72.9 483.6,70.6 496.8,68.4 510,66.3 523.2,64.2 536.4,62.3 549.6,60.4 562.8,58.5 576,56.8 589.2,55.1 602.4,53.5 615.6,52 628.8,50.5 642,49 655.2,47.7 668.4,46.3 681.6,45.1 694.8,43.9 708,42.7"/>
+        <line class="chartgrid" x1="276.7" y1="14" x2="276.7" y2="226" stroke="#35d0a0" stroke-dasharray="4 4"/>
+        <circle cx="276.7" cy="120" r="4" fill="#35d0a0"/>
+        <text class="chartaxis" x="284" y="190" fill="#35d0a0">median — 3 465 catches (50%)</text>
+        <line class="chartgrid" x1="378" y1="14" x2="378" y2="226" stroke="#8fa3bc" stroke-dasharray="4 4"/>
+        <text class="chartaxis" x="386" y="212" fill="#8fa3bc">mean — 5 000 (63.2%)</text>
+      </svg>
+    </div>
+    <figcaption>Cumulative chance of a first treasure. The curve is steepest early and flattens badly — going from 63% to 87% costs another <b>5 000 catches</b>. This is why it reads as a story rather than a farm.</figcaption>
+  </figure>
+
+  <h4 id="odds-treasure">Treasure, decomposed</h4>
+  <p>A treasure hit is a gate plus three nested random choices. First the rod check, then the trigger roll, then the container, how many slots it has, and each slot independently.</p>
+  <div class="formula"><span class="num">0.</span> Right rod?        improvised rod <span class="op">→</span> no roll at all      <span class="cmt">// RequireRealRod, before the chance</span>
+<span class="num">1.</span> Does it happen?   roll <span class="op">≤</span> <span class="num">0.0002</span>                     <span class="cmt">// once per successful catch</span>
+<span class="num">2.</span> Which container?  weighted pick from TreasureContainers
+<span class="num">3.</span> How many slots?   random in that container's MinItems..MaxItems
+<span class="num">4.</span> What is in it?    <span class="cmt">per slot</span>, weighted pick from TreasureLoot</div>
+  <p>The gate runs <i>before</i> the trigger roll, so casting with the crafted improvised rod never even burns a chance — the 1-in-5000 only ticks on a proper rod. And the win is paid for in tackle: every successful pull removes <code>maxHealth ÷ RodCatchesToRuin</code> from the rod — a third of its health at the default <code>3</code> — so a pristine rod affords exactly three treasures before it's ruined. Step 4 running <i>per slot</i> rather than once is what makes two identical containers hold different things. The shipped containers:</p>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>Container</th><th>Weight</th><th>Chance</th><th>Slots</th><th>Mean slots</th></tr></thead>
+      <tbody>
+        <tr><td>Dry Bag (black)</td><td>3.0</td><td>50.0%</td><td>1–3</td><td>2.0</td></tr>
+        <tr><td>Wooden Crate</td><td>2.0</td><td>33.3%</td><td>2–4</td><td>3.0</td></tr>
+        <tr><td>Sea Chest</td><td>1.0</td><td>16.7%</td><td>3–6</td><td>4.5</td></tr>
+        <tr class="sum"><td colspan="4"><b>Expected items per treasure</b></td><td><b>2.75</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The rarest container is deliberately the most generous, so the good outcome is doubly lucky. Loot weights total <b>29.0</b>, and each slot draws from that independently:</p>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>Item</th><th>Weight</th><th>Per slot</th><th>Appears in a haul</th></tr></thead>
+      <tbody>
+        <tr><td>Rag</td><td>6.0</td><td>20.7%</td><td>46.1%</td></tr>
+        <tr><td>Nails <i>(5–30)</i></td><td>5.0</td><td>17.2%</td><td>39.8%</td></tr>
+        <tr><td>Rope</td><td>4.0</td><td>13.8%</td><td>32.9%</td></tr>
+        <tr><td>Duct Tape</td><td>3.0</td><td>10.3%</td><td>25.6%</td></tr>
+        <tr><td>Fishing Hook</td><td>3.0</td><td>10.3%</td><td>25.6%</td></tr>
+        <tr><td>Canteen / Screwdriver / Matchbox</td><td>2.0 each</td><td>6.9%</td><td>17.7%</td></tr>
+        <tr><td>Compass</td><td>1.0</td><td>3.4%</td><td>9.2%</td></tr>
+        <tr><td><b>Binoculars</b> / <b>Black Caviar</b></td><td>0.5 each</td><td>1.7%</td><td><b>4.7%</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The last column is <code>1 − (1 − w/29)^slots</code> averaged over the container mix — the chance an item shows up <i>somewhere</i> in a haul rather than in one specific slot. Multiply by the 0.02% hit rate for the true rarity: black caviar from treasure lands at roughly <b>1 in 107 000 catches</b>.</p>
+  <div class="banner good"><b>Every number in this subsection is a config value, not a constant.</b> Weights are pure ratios, so doubling one entry doubles its share and everything else re-normalises automatically — you never have to make the column sum to anything. Setting a weight to <code>0</code> retires an entry while keeping it in the file, which is what you want, because a deleted row gets re-added on the next version bump.</div>
+
+  <h4 id="odds-debug">Reading the numbers off your own server</h4>
+  <p>You do not have to take any of this on faith. <code>DebugLogs: 2</code> in <code>general.json</code> prints the whole computation to <code>$profile:Gebs/logs/</code> for every cast:</p>
+  <ul>
+    <li><b>A per-species table</b> with columns for rain/storm, window, time multiplier, temperature multiplier, combined weather multiplier, bait multiplier and final scaled weight — the exact inputs to the formula above.</li>
+    <li><b>The assembled pool</b>, listing every eligible species with its weight, environment mask, method mask and abundance. This answers "why isn't fish X spawning" directly, because a fish absent from the list failed a gate.</li>
+    <li><b>Every clamp</b>, logged the moment it happens, so a multiplier that isn't behaving is visible rather than inferred.</li>
+    <li><b>The draw itself</b> — roll, pool total, and which species won.</li>
+  </ul>
+  <div class="banner warn">Level 2 is genuinely verbose — it writes several dozen lines per cast. Use it to answer a specific question and then turn it back down; leave it on and a busy server will produce enormous logs. Logs older than 3 days are pruned automatically, which limits the damage but does not eliminate it.</div>
+
+  <h3 id="guide-tools">4. Tools &amp; Gear — what each one is for</h3>
   <p>The <a href="#items">Items &amp; Gear</a> tab lists everything the mod adds. This section is about what each piece actually <i>does</i> for you, and when it's worth the inventory space.</p>
 
   <h4>🎣 Fishing rods</h4>
@@ -450,7 +889,7 @@
   <h4>👕 Angler clothing</h4>
   <p>Fishing hats, shirts and gloves in several colours. Cosmetic — they carry no fishing bonus.</p>
 
-  <h3 id="guide-bait">4. Bait &amp; Containers</h3>
+  <h3 id="guide-bait">5. Bait &amp; Containers</h3>
   <p>Live bait — worms, grubs, crickets, grasshoppers — <b>dies about 90 minutes after you find it</b>. Artificial lures never perish. Which container you use is the whole game here, and the containers do not overlap:</p>
   <div class="tblwrap">
     <table>
@@ -466,7 +905,7 @@
   </div>
   <div class="banner warn"><b>The Bait Bucket will not accept worms or insects.</b> It is for aquatic catches, not for keeping bait alive. This trips up nearly everyone once.</div>
 
-  <h3 id="guide-catch">5. Handling Your Catch</h3>
+  <h3 id="guide-catch">6. Handling Your Catch</h3>
   <p>Gut a fish with any knife to get fillets. Some species also yield a bonus: caviar from roe-bearing fish, tails and claws from lobsters and crabs. Fillets cook like any vanilla meat.</p>
   <div class="banner warn"><b>18 species cannot be gutted at all</b> — by design, not a bug. They are bait and curiosities, not food:<br>
   Bitterlings, Sardines, Shrimp, American Bull Frog, Black Devil Snail, Blood Clam, Blue Jellyfish, Cave Crayfish, European Crayfish, Fathead Minnow, Florida Crayfish, Monongahela Crayfish, Mussel, Red Salamander, Red Swamp Crayfish, Rusty Crayfish, Signal Crayfish, Starfish.</div>
@@ -476,7 +915,21 @@
   <h4>Predators</h4>
   <p>Fishing, filleting, a failed cast, and net use can each attract wolves or bears — about 1% per action by default, configurable per action. Spawns are land-only, so no underwater wolves. Everyone nearby may hear a warning sound; the player who caused it also gets a chat warning.</p>
 
-  <h3 id="guide-mount">6. Trophy Mounts</h3>
+  <h3 id="guide-treasure">7. Treasure</h3>
+  <p>Very occasionally a catch brings up something other than a fish: a container, full of loot.</p>
+  <ul>
+    <li><b>Roughly 1 in 5000 catches</b> by default. That's <i>catches</i>, not casts — failed casts cost you nothing. A session that lands 60 fish has about a 1.2% chance of seeing one</li>
+    <li><b>Only on a real fishing rod.</b> The crafted improvised rod is a stick and a length of rope — it never even rolls. The vanilla rod and all four gebsfish colour rods qualify</li>
+    <li><b>It wrecks your rod.</b> Winching a loaded container up costs the rod a third of its maximum health — three treasures ruin a pristine rod, and one already worn from ordinary fishing gives out sooner. Bring a repair kit or a spare</li>
+    <li><b>The container appears at your feet</b>, since they're generally too big for a pocket, and a message tells you it happened</li>
+    <li><b>Contents differ every time.</b> Each slot in the container rolls the loot pool independently, so two identical chests won't hold the same things</li>
+  </ul>
+  <p>Server owners define both halves in <code>general.json</code>. <code>TreasureContainers</code> lists what the treasure can arrive as — each entry with its own weight, health range and item count, so a rarer container can be made to hold more. <code>TreasureLoot</code> lists what can be inside, each with a weight, health range and quantity range for stackables. Set any entry's weight to <code>0</code> to retire it without deleting it.</p>
+  <p>It ships seeded with plain vanilla classnames so it works immediately, but the pools are meant to be replaced — this is the one feature where the whole point is that you decide what's worth finding.</p>
+  <div class="banner">Turn it off entirely with <code>TreasureSettings.Enable: 0</code>, or by setting <code>Chance</code> to <code>0</code>. Tune the rarity with <code>Chance</code> — <code>0.0005</code> is about 1 in 2000, <code>0.00005</code> about 1 in 20000. <code>RequireRealRod: 0</code> lets the improvised rod find treasure too, and <code>RodCatchesToRuin</code> sets how many pulls ruin a pristine rod (<code>0</code> = no rod wear).</div>
+  <p>For the full decomposition — the container odds, expected item counts, per-item chances and how long a first find actually takes — see <a href="#odds-treasure"><b>Treasure, decomposed</b></a>.</p>
+
+  <h3 id="guide-mount">8. Trophy Mounts</h3>
   <p>The <b>Wooden Fish Mount</b> is a plaque you hang on a wall and display a real catch on.</p>
   <ul>
     <li><b>Craft it</b> from <b>1 Wooden Plank + 1 Metal Wire</b>, with a <b>Hacksaw</b> on you. Combine the plank and wire; the saw is not consumed but does take durability, and the craft is refused without one.</li>
@@ -484,14 +937,14 @@
     <li><b>The trophy is the actual fish you caught</b>, not a generic model. Its weight and quality persist, so a personal best stays a personal best.</li>
     <li><b>Mounted fish never rot.</b> Decay is paused entirely while the fish is on the plaque.</li>
   </ul>
-  <div class="banner warn"><b>Mounting is permanent.</b> Once a fish is on the plaque you cannot detach it, drag it out, or take it to hands. The only way to recover a mounted fish is to destroy the mount, which drops it like any ruined container. This is deliberate — otherwise the plaque would be a free never-rots fish locker.<br><br>Ruined and rotten fish are refused up front. And note the two separate timers: the <b>fish</b> never rots, but the <b>plaque itself</b> lasts 45 days untouched, the same as a tent or barrel.</div>
+  <div class="banner warn"><b>Mounting is permanent.</b> Once a fish is on the plaque you cannot detach it, drag it out, or take it to hands. Destroying the mount does <b>not</b> give the fish back: the trophy is destroyed along with the plaque. Mounting a catch is a one-way decision — otherwise the plaque would be a free never-rots fish locker.<br><br>Ruined and rotten fish are refused up front. And note the two separate timers: the <b>fish</b> never rots, but the <b>plaque itself</b> lasts 45 days untouched, the same as a tent or barrel.</div>
 
-  <h3 id="guide-boat">7. The Jon Boat</h3>
+  <h3 id="guide-boat">9. The Jon Boat</h3>
   <p>A drivable flat-bottomed boat in five variants — green aluminum, gray aluminum, and desert, snow and forest camo. It has its own damage zones (chassis, engine, three floaters), a spark plug slot, and cargo space.</p>
   <p><b>Deck mounts:</b> two deck slots each take a <b>cooler or a tackle box</b> and show it sitting on the deck. Both slots accept the same families, so run two coolers, two boxes, or one of each.</p>
   <div class="banner">The vanilla jerry can is deliberately <b>not</b> deck-mountable. A deck slot gives one fixed position and rotation to everything attached to it, and the jerry can's model axes do not match the gebsfish containers — no single orientation suits both. More boat content is coming in a future update.</div>
 
-  <h3 id="guide-admin">8. Server Admin Guide</h3>
+  <h3 id="guide-admin">10. Server Admin Guide</h3>
 
   <h4>The four config files</h4>
   <p>Everything lives in <code>$profile:Gebs/</code>. Each file documents its own fields in built-in <code>...Info</code> strings, so the file is its own reference:</p>
@@ -517,7 +970,7 @@
   <h4>Logging and debugging</h4>
   <p>Timestamped session logs go to <code>$profile:Gebs/logs/</code>. <code>DebugLogs: 1</code> gives per-cast summaries; <code>DebugLogs: 2</code> prints full per-fish breakdown tables that answer "why isn't fish X spawning." Logs older than <b>3 days are deleted automatically</b> at startup so an unattended server does not accumulate one file per restart.</p>
 
-  <h3 id="guide-caveats">9. Caveats &amp; Gotchas</h3>
+  <h3 id="guide-caveats">11. Caveats &amp; Gotchas</h3>
   <p>Everything below is intended behaviour that commonly reads as a bug.</p>
 
   <h4>For players</h4>
@@ -554,10 +1007,14 @@
   <details class="faq-item"><summary>Where are the config files?</summary><div>In your server profile folder: <code>$profile:Gebs/general.json</code> (global settings, weather, predators), <code>fish.json</code> (all 79 species), <code>bait.json</code> (the bait preference matrix), and <code>junk.json</code> (junk catches). Delete any of them and the server regenerates fresh defaults on next start. Every file documents its own fields in built-in <code>...Info</code> strings.</div></details>
   <details class="faq-item"><summary>I'm upgrading from an older version — where did fishingsettings.json go?</summary><div>The old single-file config was replaced by the four files above. It's a clean break: there is no automatic migration, so the server generates fresh defaults and you re-apply your custom tuning by hand. Keep a backup of your old file for reference.</div></details>
   <details class="faq-item"><summary>Why isn't fish X spawning?</summary><div>Three usual suspects: its <code>Environment</code> doesn't match where you're fishing (1 = pond, 2 = sea, 3 = both), its <code>CatchMethod</code> doesn't include your method (1 = rod, 2 = large trap, 4 = small trap, added together), or its <code>CatchProbability</code> is 0. Set <code>DebugLogs: 2</code> in general.json and the server log will print the full pool for every cast — including exactly why each fish was or wasn't eligible.</div></details>
+  <details class="faq-item"><summary>What are the actual odds of catching a specific fish?</summary><div>In fresh water with a rod, the pool is 40 species with a combined weight of 408, plus 25 for junk — so an average-abundance fish sits somewhere between <b>0.7% and 5.8%</b> per catch at baseline. Salt water has a smaller pool (28 species, weight 276), which makes every individual sea species proportionally more likely.<br><br>Those baseline numbers then move a lot: weather, time of day, water temperature and bait all multiply a species' weight, and a well-matched bait on a good day can take one fish from 5% to nearly 18%. <a href="#guide-odds"><b>The Odds, In Detail</b></a> in the Full Guide has every formula, the real percentages and a full worked example with charts.</div></details>
+  <details class="faq-item"><summary>Why am I only catching boots?</summary><div>Because junk is the one thing in the pool that <b>no multiplier touches</b>. Fish weights scale up and down with conditions; junk's weight is fixed forever. So when the water is far outside what the local fish tolerate, every fish drops toward a tenth of its normal weight while junk keeps all of its — and junk's share climbs from its 5.8% baseline to as much as <b>39%</b> in near-freezing water.<br><br>A run of boots is therefore information, not bad luck: the water is wrong for the fish that live there. Move to different water, fish a different hour, or wait for the season to turn. Adding well-matched bait also helps directly, because raising fish weights pushes junk's share back down. See <a href="#odds-junk"><b>Why you sometimes catch nothing but boots</b></a> for the curve.</div></details>
   <details class="faq-item"><summary>Can I turn off the weather / moon / temperature / bait systems?</summary><div>Yes, each independently. <code>WeatherCatchBoostEnable</code>, <code>MoonPhaseEnable</code>, <code>TemperatureEffectEnable</code>, and <code>BiteSpeedEnable</code> live in general.json under WeatherSettings; the bait system's master toggle is <code>Enable</code> at the top of bait.json. Your tuned values stay in the file while a system is off.</div></details>
   <details class="faq-item"><summary>I edited BiteSpeed and my server crashed on startup. What happened?</summary><div>BiteSpeed must be a single <b>space-separated string</b> of 24 hourly values (<code>"0.85 0.9 1 ..."</code>), not a JSON array — DayZ's JSON loader crashes on nested float arrays. Also keep any single string value in the configs under ~900 characters; the engine's reader hard-crashes past ~1024.</div></details>
   <details class="faq-item"><summary>Do the fish work with trader mods?</summary><div>Yes. Fish quality defaults to 1.0 (full) specifically because popular traders (DayZ-Expansion-Market, TraderPlus, Dr. Jones) only accept full-quality items. If your trader scales price by quality, you can lower <code>FishQuality</code> in general.json.</div></details>
   <details class="faq-item"><summary>How do I add the fish to my server's economy?</summary><div>The mod generates <code>gebsfish-types.xml</code> and <code>gebsfish-spawnabletypes.xml</code> into <code>$profile:Gebs/mpmissions/</code> on server start — merge those into your mission's economy files. The generated types contain only Gebsfish classnames; vanilla fish are already in your mission's own types.xml.</div></details>
+  <details class="faq-item"><summary>What is the treasure catch, and how rare is it really?</summary><div>A very rare chance on a <b>successful catch</b> to pull up a container full of loot instead of a fish. Default is <code>0.0002</code> — about <b>1 in 5000 catches</b>. Note that is catches, not casts, so failed casts cost you nothing: a session that lands 60 fish has roughly a 1.2% chance of seeing one, and a few hundred fish still very probably turns up nothing. That is deliberate — it is meant to be a story someone tells, not something you can farm.<br><br>Two catches: it only bites on a <b>real fishing rod</b> — the crafted improvised rod never rolls — and winching a loaded container up costs the rod <b>a third of its maximum health</b>, so three treasures ruin a pristine rod. Admins can relax both (<code>RequireRealRod</code>, <code>RodCatchesToRuin</code>).<br><br>The container appears at your feet (they are usually too big to pocket) and its contents are rolled fresh every time, so two identical chests will not hold the same things.</div></details>
+  <details class="faq-item"><summary>How do I change what treasure contains, or turn it off?</summary><div>Two pools in <code>general.json</code>, both entirely yours to define:<br><br><b><code>TreasureContainers</code></b> — what the treasure arrives as. Each entry has a <code>Weight</code>, a health range, and its own <code>MinItems</code>/<code>MaxItems</code>, so a rarer container can be made to hold more.<br><b><code>TreasureLoot</code></b> — what can be inside. Each entry has a <code>Weight</code>, a health range, and a <code>MinQuantity</code>/<code>MaxQuantity</code> for stackables like ammo or nails.<br><br>Every item slot rolls the loot pool independently. Any classname on your server works, including ones from other mods. Set an entry's <code>Weight</code> to <code>0</code> to retire it rather than deleting it — deleted rows come back on the next version bump.<br><br>It ships seeded with plain vanilla items so it works immediately; those are placeholders and meant to be replaced. To switch it off entirely set <code>TreasureSettings.Enable</code> to <code>0</code> (or <code>Chance</code> to <code>0</code>). To retune, <code>0.0005</code> is about 1 in 2000 and <code>0.00005</code> about 1 in 20000.</div></details>
   <details class="faq-item"><summary>How do I keep my bait alive?</summary><div>Live bait (worms, crickets, grasshoppers, grubs) dies about 90 minutes after you find it. Store it in a <b>Worm Container</b>, <b>Bug Container</b> or a <b>cooler</b> to pause that clock. The rubber worm is artificial and never dies.<br><br>The <b>Bait Bucket</b> is a different job: it holds small aquatic catches — minnows, crayfish, shrimp, frogs and salamanders — and stops them rotting. It will not accept worms or insects, and it is not where you keep live bait alive. <b>Tackle boxes</b> can carry bait but preserve nothing, which is what makes the dedicated containers worth the space.</div></details>
   <details class="faq-item"><summary>Why did my rod break? Can I repair it?</summary><div>Rods and hooks wear a little on every catch outcome — success or fail. Repair rods with the Fishing Rod Repair Kit and the bamboo net with Netting, but repairs cap at <b>Worn</b> and Ruined tools cannot be repaired, so retire gear before it's too late.</div></details>
   <details class="faq-item"><summary>Can I turn predators off (or up)?</summary><div>Fully configurable in general.json: a per-action chance for fishing, filleting, failed casts, and net use (default ~1% each), the predator list with weights and counts, spawn radius, the warning sound, and the chat warning. Set the chances to 0 to disable, or crank them for a high-stakes server.</div></details>
@@ -587,6 +1044,7 @@
       <li><b>Bite-speed cycle scaling</b> — every fish carries a 24-hour <code>BiteSpeed</code> curve tuned to its real-world circadian pattern; the catching system aggregates the active pool (weighted by abundance and time of day) to drive how long you wait between bites</li>
       <li><b>Bait / lure preference matrix</b> — every bait and lure carries per-fish multipliers that bias which fish takes the hook: worms and insects favour panfish and trout, soft-plastic worms favour bass, live minnow and salamander favour pike / musky / walleye, spinnerbaits favour bass / pike / musky, spoons favour trout and salmon, jigs favour bass / walleye. Numbered lure variants share one family entry (<code>geb_SpinnerBait</code> covers <code>geb_SpinnerBait1-4</code>; an exact numbered entry still overrides). Roughly 700 seeded pairings, all overridable in JSON, master <code>Enable</code> toggle at the top of <code>bait.json</code>. Final pick weight = CatchProbability x weather x time-of-day x bait</li>
       <li><b>Hook-from-fish recovery</b> — filleting a fish has a small configurable chance (default ~1/250) to recover a damaged hook or lure "stuck in the fish"; the hook pool, weights, and health range are admin-tunable</li>
+      <li><b>Ultra-rare treasure catches</b> — an extremely rare chance on a successful catch to pull up a container full of loot. Two independent admin-defined pools: <code>TreasureContainers</code> decides what the treasure arrives as (weight, health range, and its own item count), <code>TreasureLoot</code> decides what goes inside (weight, health range, quantity range for stackables). Every item slot rolls the loot pool separately, so no two hauls match even from the same container. Default chance is <code>0.0002</code> — roughly <b>1 in 5000 catches</b>, not casts, so a session landing 60 fish has about a 1.2% chance of seeing one. Treasure only bites on a <b>proper fishing rod</b> — the crafted improvised rod never rolls (<code>RequireRealRod</code>, on by default) — and winching a haul up is brutal on tackle: each pull costs the rod a third of its maximum health, ruining a pristine rod in <b>three treasures</b> (<code>RodCatchesToRuin</code>, <code>0</code> disables the wear). Seeded with plain vanilla classnames so it works out of the box, and meant to be replaced. Toggle with <code>TreasureSettings.Enable</code>, or set <code>Chance</code> to 0</li>
       <li><b>Cooler freezer system</b> — coolers keep contents cold, live bait is perishable, and a frozen-fillet guard prevents prep on frozen fillets</li>
       <li><b>Bait freshness rules</b> — each container has one job, and they do not overlap:
         <ul>
@@ -656,7 +1114,7 @@
           <li><b>Crafted</b> from <b>1 Wooden Plank + 1 Metal Wire</b>, with a <b>Hacksaw</b> on you. Combine the plank and wire; the saw isn't consumed but takes durability, and the craft is refused without one. (DayZ caps recipes at two ingredients, so the saw is enforced as a tool rather than a third slot.) Disable it with <code>RecipeToggles.CraftFishMount</code> in <code>general.json</code></li>
           <li><b>Placed on walls</b> — hold to place and it snaps flat against any near-vertical surface, hanging face-out like a picture. Aim somewhere without a wall and it falls back to normal ground placement</li>
           <li><b>The trophy is the actual fish</b> you caught, not a generic model — its weight and quality persist through the attachment, so a personal-best catch stays a personal-best on the wall</li>
-          <li><b>Mounting is permanent.</b> Once a fish is on the plaque it can't be detached, dragged out, or taken to hands. Ruined and rotten fish are refused up front. The only way to recover a mounted fish is to destroy the mount, which drops its attachment like any ruined container — this is deliberate, so the plaque can't double as a free never-rots fish locker</li>
+          <li><b>Mounting is permanent.</b> Once a fish is on the plaque it can't be detached, dragged out, or taken to hands. Ruined and rotten fish are refused up front. Destroying the mount does <b>not</b> give the fish back — the trophy is destroyed along with the plaque. Mounting a catch is a one-way decision, which is what stops the plaque doubling as a free never-rots fish locker</li>
           <li><b>Mounted fish never rot.</b> Decay is paused entirely while the fish is on the plaque, so a trophy is taxidermy rather than a countdown</li>
           <li><b>The plaque itself lasts 45 days</b> untouched — the same lifetime as tents and barrels rather than the 2-hour gear lifetime, so wall trophies persist like a base fixture and abandoned ones clean themselves up on the same schedule</li>
           <li>Placeholder model until the final plaque p3d lands</li>
@@ -890,6 +1348,7 @@
 
 <!-- Per-species artwork + descriptions, generated by tools/build_wiki_assets.py -->
 <script src="fish-details.js"></script>
+<script src="item-details.js"></script>
 <script>
 const FISH = [{"n":"Mackerel","c":"Mackerel","env":2,"m":3,"p":22,"shape":0,"rm":"MackerelFilletMeat","rb":"","mn":1,"mx":2,"to":18,"tmin":8,"tmax":24,"bite":"Steady","rain":1,"storm":1.2,"dawn":1.1,"day":1,"dusk":1.1,"night":1},{"n":"Carp","c":"Carp","env":1,"m":3,"p":22,"shape":0,"rm":"CarpFilletMeat","rb":"","mn":1,"mx":2,"to":24,"tmin":14,"tmax":30,"bite":"Steady","rain":0.9,"storm":0.8,"dawn":1.2,"day":0.9,"dusk":1.2,"night":0.9},{"n":"Sardines","c":"Sardines","env":2,"m":6,"p":24,"shape":0,"rm":"","rb":"","mn":1,"mx":1,"to":18,"tmin":8,"tmax":24,"bite":"Diurnal","rain":1,"storm":1.1,"dawn":1,"day":1.1,"dusk":1,"night":0.9},{"n":"Bitterlings","c":"Bitterlings","env":1,"m":6,"p":24,"shape":0,"rm":"","rb":"","mn":1,"mx":1,"to":22,"tmin":12,"tmax":28,"bite":"Diurnal","rain":1.1,"storm":1,"dawn":1,"day":1.1,"dusk":1,"night":0.9},{"n":"Walleye Pollock","c":"WalleyePollock","env":2,"m":3,"p":20,"shape":0,"rm":"WalleyePollockFilletMeat","rb":"","mn":1,"mx":2,"to":8,"tmin":1,"tmax":14,"bite":"Pelagic","rain":1,"storm":1,"dawn":1,"day":1,"dusk":1.1,"night":1.1},{"n":"Steelhead Trout","c":"SteelheadTrout","env":3,"m":3,"p":9,"shape":1,"rm":"SteelheadTroutFilletMeat","rb":"RedCaviar","mn":1,"mx":2,"to":13,"tmin":4,"tmax":20,"bite":"Crepuscular","rain":1.4,"storm":1.3,"dawn":1.5,"day":0.8,"dusk":1.4,"night":1},{"n":"Shrimp","c":"Shrimp","env":2,"m":6,"p":22,"shape":0,"rm":"","rb":"","mn":1,"mx":1,"to":20,"tmin":12,"tmax":30,"bite":"Nocturnal","rain":0.9,"storm":1,"dawn":0.9,"day":0.8,"dusk":1.1,"night":1.3},{"n":"Northern Snakehead","c":"geb_NorthernSnakeHead","env":1,"m":1,"p":5,"shape":0,"rm":"geb_NorthernSnakeHeadFilletMeat","rb":"","mn":2,"mx":4,"to":21,"tmin":12,"tmax":28,"bite":"Nocturnal","rain":1,"storm":1,"dawn":1.2,"day":0.8,"dusk":1.3,"night":1.5},{"n":"Northern Pike","c":"geb_NorthernPike","env":1,"m":1,"p":8,"shape":1,"rm":"geb_NorthernPikeFilletMeat","rb":"geb_YellowCaviar","mn":2,"mx":4,"to":18,"tmin":8,"tmax":24,"bite":"TwilightNight","rain":1,"storm":1.1,"dawn":1.3,"day":0.8,"dusk":1.4,"night":1.4},{"n":"Barred Muskellunge","c":"geb_BarredMuskellunge","env":1,"m":1,"p":3,"shape":1,"rm":"geb_BarredMuskellungeFilletMeat","rb":"geb_YellowCaviar","mn":2,"mx":4,"to":19,"tmin":10,"tmax":25,"bite":"TwilightNight","rain":1,"storm":1.1,"dawn":1.3,"day":0.8,"dusk":1.4,"night":1.4},{"n":"Spotted Muskellunge","c":"geb_SpottedMuskellunge","env":1,"m":1,"p":3,"shape":1,"rm":"geb_SpottedMuskellungeFilletMeat","rb":"geb_YellowCaviar","mn":2,"mx":4,"to":19,"tmin":10,"tmax":25,"bite":"TwilightNight","rain":1,"storm":1.1,"dawn":1.3,"day":0.8,"dusk":1.4,"night":1.4},{"n":"Tiger Muskellunge","c":"geb_TigerMuskellunge","env":1,"m":1,"p":3,"shape":1,"rm":"geb_TigerMuskellungeFilletMeat","rb":"geb_YellowCaviar","mn":2,"mx":4,"to":19,"tmin":10,"tmax":25,"bite":"TwilightNight","rain":1,"storm":1.1,"dawn":1.3,"day":0.8,"dusk":1.4,"night":1.4},{"n":"Muskellunge","c":"geb_Muskellunge","env":1,"m":1,"p":4,"shape":1,"rm":"geb_MuskellungeFilletMeat","rb":"geb_YellowCaviar","mn":2,"mx":4,"to":19,"tmin":10,"tmax":25,"bite":"TwilightNight","rain":1,"storm":1.1,"dawn":1.3,"day":0.8,"dusk":1.4,"night":1.4},{"n":"Alligator Gar","c":"geb_AlligatorGar","env":3,"m":1,"p":4,"shape":0,"rm":"geb_AlligatorGarFilletMeat","rb":"","mn":2,"mx":4,"to":26,"tmin":16,"tmax":32,"bite":"TwilightNight","rain":1,"storm":1.2,"dawn":1.2,"day":0.8,"dusk":1.3,"night":1.4},{"n":"Largemouth Bass","c":"geb_LargeMouthBass","env":1,"m":3,"p":14,"shape":0,"rm":"geb_LargeMouthBassFilletMeat","rb":"","mn":1,"mx":2,"to":24,"tmin":14,"tmax":30,"bite":"Crepuscular","rain":1.1,"storm":1.3,"dawn":1.4,"day":0.9,"dusk":1.4,"night":1.1},{"n":"Smallmouth Bass","c":"geb_SmallMouthBass","env":1,"m":3,"p":13,"shape":0,"rm":"geb_SmallMouthBassFilletMeat","rb":"","mn":1,"mx":2,"to":21,"tmin":12,"tmax":27,"bite":"Crepuscular","rain":1.1,"storm":1.3,"dawn":1.4,"day":0.9,"dusk":1.4,"night":1.1},{"n":"Walleye","c":"geb_WallEye","env":1,"m":3,"p":12,"shape":0,"rm":"geb_WallEyeFilletMeat","rb":"","mn":1,"mx":2,"to":18,"tmin":8,"tmax":24,"bite":"TwilightNight","rain":1,"storm":1,"dawn":1.3,"day":0.7,"dusk":1.5,"night":1.5},{"n":"Sun Fish","c":"geb_SunFish","env":1,"m":3,"p":20,"shape":0,"rm":"geb_SunFishFilletMeat","rb":"","mn":1,"mx":2,"to":25,"tmin":15,"tmax":30,"bite":"Diurnal","rain":1.1,"storm":0.9,"dawn":1,"day":1.2,"dusk":1,"night":0.9},{"n":"White Bass","c":"geb_WhiteBass","env":1,"m":3,"p":11,"shape":0,"rm":"geb_WhiteBassFilletMeat","rb":"","mn":1,"mx":2,"to":21,"tmin":12,"tmax":27,"bite":"Steady","rain":1,"storm":1.2,"dawn":1.2,"day":1,"dusk":1.3,"night":1.3},{"n":"Striped Bass","c":"geb_StripedBass","env":3,"m":3,"p":10,"shape":0,"rm":"geb_StripedBassFilletMeat","rb":"","mn":1,"mx":2,"to":20,"tmin":10,"tmax":26,"bite":"TwilightNight","rain":1,"storm":1.4,"dawn":1.2,"day":0.9,"dusk":1.4,"night":1.3},{"n":"Neosho Bass","c":"geb_NeoshoBass","env":1,"m":3,"p":7,"shape":0,"rm":"geb_NeoshoBassFilletMeat","rb":"","mn":1,"mx":2,"to":22,"tmin":13,"tmax":28,"bite":"Crepuscular","rain":1.1,"storm":1.3,"dawn":1.4,"day":0.9,"dusk":1.4,"night":1},{"n":"Black Bass","c":"geb_BlackBass","env":1,"m":3,"p":13,"shape":0,"rm":"geb_BlackBassFilletMeat","rb":"","mn":1,"mx":2,"to":23,"tmin":13,"tmax":29,"bite":"Crepuscular","rain":1.1,"storm":1.3,"dawn":1.4,"day":0.9,"dusk":1.4,"night":1},{"n":"Rainbow Trout","c":"geb_RainbowTrout","env":1,"m":3,"p":14,"shape":1,"rm":"geb_RainbowTroutFilletMeat","rb":"RedCaviar","mn":1,"mx":2,"to":14,"tmin":4,"tmax":21,"bite":"Crepuscular","rain":1.4,"storm":1.3,"dawn":1.5,"day":0.8,"dusk":1.4,"night":1},{"n":"Brown Trout","c":"geb_BrownTrout","env":1,"m":3,"p":12,"shape":1,"rm":"geb_BrownTroutFilletMeat","rb":"RedCaviar","mn":1,"mx":2,"to":14,"tmin":4,"tmax":21,"bite":"Crepuscular","rain":1.4,"storm":1.3,"dawn":1.5,"day":0.8,"dusk":1.4,"night":1},{"n":"Brook Trout","c":"geb_BrookTrout","env":1,"m":3,"p":12,"shape":1,"rm":"geb_BrookTroutFilletMeat","rb":"RedCaviar","mn":1,"mx":2,"to":13,"tmin":4,"tmax":20,"bite":"Crepuscular","rain":1.4,"storm":1.3,"dawn":1.5,"day":0.8,"dusk":1.4,"night":1},{"n":"Lake Trout","c":"geb_LakeTrout","env":1,"m":3,"p":8,"shape":0,"rm":"geb_LakeTroutFilletMeat","rb":"","mn":1,"mx":2,"to":10,"tmin":2,"tmax":16,"bite":"Crepuscular","rain":1.3,"storm":1.2,"dawn":1.3,"day":0.9,"dusk":1.3,"night":1.1},{"n":"Cutthroat Trout","c":"geb_CutThroatTrout","env":1,"m":3,"p":9,"shape":1,"rm":"geb_CutThroatTroutFilletMeat","rb":"RedCaviar","mn":1,"mx":2,"to":13,"tmin":4,"tmax":20,"bite":"Crepuscular","rain":1.4,"storm":1.3,"dawn":1.5,"day":0.8,"dusk":1.4,"night":1},{"n":"Lake Sturgeon","c":"geb_LakeSturgeon","env":1,"m":3,"p":3,"shape":1,"rm":"geb_LakeSturgeonFilletMeat","rb":"geb_BlackCaviar","mn":1,"mx":2,"to":15,"tmin":5,"tmax":22,"bite":"Steady","rain":1.1,"storm":1.4,"dawn":1.1,"day":0.9,"dusk":1.1,"night":1},{"n":"Yellow Perch","c":"geb_YellowPerch","env":1,"m":3,"p":21,"shape":0,"rm":"geb_YellowPerchFilletMeat","rb":"","mn":1,"mx":2,"to":19,"tmin":10,"tmax":25,"bite":"Diurnal","rain":1.1,"storm":1,"dawn":1,"day":1.2,"dusk":1,"night":0.9},{"n":"Flathead Catfish","c":"geb_FlatHeadCatFish","env":1,"m":3,"p":5,"shape":0,"rm":"geb_FlatHeadCatFishFilletMeat","rb":"","mn":1,"mx":4,"to":26,"tmin":16,"tmax":32,"bite":"Nocturnal","rain":1,"storm":1.1,"dawn":1.2,"day":0.7,"dusk":1.4,"night":1.6},{"n":"Fathead Minnow","c":"geb_FatHeadMinnow","env":1,"m":5,"p":25,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":22,"tmin":12,"tmax":28,"bite":"Diurnal","rain":1.2,"storm":1,"dawn":1,"day":1.1,"dusk":1,"night":0.9},{"n":"American Bull Frog","c":"geb_AmericanBullFrog","env":1,"m":5,"p":12,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":25,"tmin":15,"tmax":32,"bite":"Nocturnal","rain":1.5,"storm":1.2,"dawn":1.4,"day":1,"dusk":1.5,"night":1.3},{"n":"Red Salamander","c":"geb_RedSalamander","env":1,"m":5,"p":7,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":15,"tmin":6,"tmax":22,"bite":"Nocturnal","rain":1.6,"storm":1.3,"dawn":1.2,"day":1,"dusk":1.3,"night":1.2},{"n":"Bluegill","c":"geb_BlueGill","env":1,"m":3,"p":22,"shape":0,"rm":"geb_BlueGillFilletMeat","rb":"","mn":1,"mx":2,"to":25,"tmin":15,"tmax":30,"bite":"Diurnal","rain":1.1,"storm":0.9,"dawn":1,"day":1.2,"dusk":1,"night":0.9},{"n":"Sauger","c":"geb_Sauger","env":1,"m":3,"p":10,"shape":0,"rm":"geb_SaugerFilletMeat","rb":"","mn":1,"mx":2,"to":18,"tmin":8,"tmax":24,"bite":"TwilightNight","rain":1,"storm":1,"dawn":1.3,"day":0.7,"dusk":1.5,"night":1.5},{"n":"Bowfin","c":"geb_BowFin","env":1,"m":3,"p":8,"shape":0,"rm":"geb_BowFinFilletMeat","rb":"","mn":1,"mx":2,"to":22,"tmin":12,"tmax":28,"bite":"Nocturnal","rain":1,"storm":1.2,"dawn":1.2,"day":0.8,"dusk":1.3,"night":1.4},{"n":"Slimy Sculpin","c":"geb_SlimySculpin","env":1,"m":3,"p":16,"shape":0,"rm":"geb_SlimySculpinFilletMeat","rb":"","mn":1,"mx":2,"to":10,"tmin":2,"tmax":16,"bite":"Steady","rain":1,"storm":1.1,"dawn":1,"day":1,"dusk":1,"night":1.2},{"n":"Severum","c":"geb_Severum","env":1,"m":3,"p":3,"shape":0,"rm":"geb_SeverumFilletMeat","rb":"","mn":1,"mx":2,"to":27,"tmin":20,"tmax":32,"bite":"Diurnal","rain":1.1,"storm":1,"dawn":1,"day":1.2,"dusk":1,"night":1},{"n":"Signal Crayfish","c":"geb_SignalCrayFish","env":1,"m":4,"p":18,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":22,"tmin":12,"tmax":28,"bite":"Nocturnal","rain":1,"storm":1.1,"dawn":1,"day":0.8,"dusk":1.1,"night":1.4},{"n":"European Crayfish","c":"geb_EuropeanCrayFish","env":1,"m":4,"p":11,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":22,"tmin":12,"tmax":28,"bite":"Nocturnal","rain":1,"storm":1.1,"dawn":1,"day":0.8,"dusk":1.1,"night":1.4},{"n":"Florida Crayfish","c":"geb_FloridaCrayFish","env":1,"m":4,"p":8,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":25,"tmin":15,"tmax":30,"bite":"Nocturnal","rain":1,"storm":1.1,"dawn":1,"day":0.8,"dusk":1.1,"night":1.4},{"n":"Cave Crayfish","c":"geb_CaveCrayFish","env":1,"m":4,"p":2,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":12,"tmin":4,"tmax":18,"bite":"Nocturnal","rain":1,"storm":1,"dawn":1,"day":1,"dusk":1,"night":1.5},{"n":"Monongahela Crayfish","c":"geb_MonongahelaCrayFish","env":1,"m":4,"p":7,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":22,"tmin":12,"tmax":28,"bite":"Nocturnal","rain":1,"storm":1.1,"dawn":1,"day":0.8,"dusk":1.1,"night":1.4},{"n":"Red Swamp Crayfish","c":"geb_RedSwampCrayFish","env":1,"m":4,"p":18,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":24,"tmin":14,"tmax":30,"bite":"Nocturnal","rain":1,"storm":1.2,"dawn":1,"day":0.9,"dusk":1.1,"night":1.4},{"n":"Rusty Crayfish","c":"geb_RustyCrayFish","env":1,"m":4,"p":14,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":22,"tmin":12,"tmax":28,"bite":"Nocturnal","rain":1,"storm":1.1,"dawn":1,"day":0.8,"dusk":1.1,"night":1.4},{"n":"Mahi Mahi","c":"geb_MahiMahi","env":2,"m":1,"p":10,"shape":0,"rm":"geb_MahiMahiFilletMeat","rb":"","mn":3,"mx":7,"to":27,"tmin":20,"tmax":32,"bite":"Pelagic","rain":1.2,"storm":1.5,"dawn":1.1,"day":1.1,"dusk":1,"night":1},{"n":"Atlantic Sailfish","c":"geb_AtlanticSailFish","env":2,"m":1,"p":4,"shape":0,"rm":"geb_AtlanticSailFishFilletMeat","rb":"","mn":4,"mx":7,"to":27,"tmin":21,"tmax":32,"bite":"Pelagic","rain":1.2,"storm":1.4,"dawn":1.2,"day":1.1,"dusk":1.2,"night":1},{"n":"Angelfish","c":"geb_AngelFish","env":2,"m":1,"p":10,"shape":0,"rm":"geb_AngelFishFilletMeat","rb":"","mn":1,"mx":2,"to":27,"tmin":20,"tmax":32,"bite":"Diurnal","rain":0.9,"storm":0.8,"dawn":1,"day":1.2,"dusk":1,"night":0.8},{"n":"Asian Seabass","c":"geb_AsianSeaBass","env":3,"m":3,"p":10,"shape":0,"rm":"geb_AsianSeaBassFilletMeat","rb":"","mn":2,"mx":4,"to":28,"tmin":20,"tmax":33,"bite":"Pelagic","rain":1.2,"storm":1.3,"dawn":1.2,"day":0.9,"dusk":1.3,"night":1.2},{"n":"Atlantic Blue Marlin","c":"geb_AtlanticBlueMarlin","env":2,"m":1,"p":3,"shape":0,"rm":"geb_AtlanticBlueMarlinFilletMeat","rb":"","mn":3,"mx":6,"to":26,"tmin":20,"tmax":30,"bite":"Pelagic","rain":1.2,"storm":1.4,"dawn":1.2,"day":1,"dusk":1.2,"night":1},{"n":"Bonita","c":"geb_Bonita","env":2,"m":3,"p":10,"shape":0,"rm":"geb_BonitaFilletMeat","rb":"","mn":1,"mx":2,"to":22,"tmin":14,"tmax":28,"bite":"Pelagic","rain":1.1,"storm":1.3,"dawn":1.2,"day":1,"dusk":1.2,"night":1},{"n":"Cherry Salmon","c":"geb_CherrySalmon","env":3,"m":3,"p":6,"shape":1,"rm":"geb_CherrySalmonFilletMeat","rb":"RedCaviar","mn":1,"mx":2,"to":12,"tmin":4,"tmax":18,"bite":"Crepuscular","rain":1.3,"storm":1.2,"dawn":1.4,"day":0.9,"dusk":1.3,"night":1},{"n":"Chinook Salmon","c":"geb_ChinookSalmon","env":3,"m":3,"p":8,"shape":1,"rm":"geb_ChinookSalmonFilletMeat","rb":"RedCaviar","mn":1,"mx":2,"to":12,"tmin":4,"tmax":18,"bite":"Crepuscular","rain":1.3,"storm":1.2,"dawn":1.4,"day":0.9,"dusk":1.3,"night":1},{"n":"Sockeye Salmon","c":"geb_SockEyeSalmon","env":3,"m":3,"p":8,"shape":1,"rm":"geb_SockEyeSalmonFilletMeat","rb":"RedCaviar","mn":1,"mx":2,"to":13,"tmin":4,"tmax":18,"bite":"Crepuscular","rain":1.3,"storm":1.2,"dawn":1.4,"day":0.9,"dusk":1.3,"night":1},{"n":"Flathead Mullet","c":"geb_FlatHeadMullet","env":3,"m":3,"p":18,"shape":0,"rm":"geb_FlatHeadMulletFilletMeat","rb":"","mn":1,"mx":2,"to":25,"tmin":15,"tmax":30,"bite":"Pelagic","rain":1.3,"storm":1.2,"dawn":1.3,"day":1.1,"dusk":1.2,"night":1},{"n":"Leopard Shark","c":"geb_LeopardShark","env":2,"m":1,"p":9,"shape":0,"rm":"geb_LeopardSharkFilletMeat","rb":"","mn":2,"mx":4,"to":18,"tmin":10,"tmax":24,"bite":"Nocturnal","rain":1,"storm":1,"dawn":1,"day":0.9,"dusk":1.2,"night":1.4},{"n":"Hammerhead Shark","c":"geb_HammerHeadShark","env":2,"m":1,"p":5,"shape":0,"rm":"geb_HammerHeadSharkFilletMeat","rb":"","mn":2,"mx":4,"to":26,"tmin":18,"tmax":30,"bite":"Nocturnal","rain":1,"storm":1.1,"dawn":1.1,"day":0.9,"dusk":1.3,"night":1.5},{"n":"Pacific Cod","c":"geb_PacificCod","env":2,"m":3,"p":16,"shape":0,"rm":"geb_PacificCodFilletMeat","rb":"","mn":1,"mx":2,"to":8,"tmin":2,"tmax":14,"bite":"Pelagic","rain":1,"storm":1.1,"dawn":1.1,"day":1,"dusk":1.1,"night":1.2},{"n":"Readhead Cichlid","c":"geb_RedHeadCichlid","env":1,"m":3,"p":4,"shape":0,"rm":"geb_RedHeadCichlidFilletMeat","rb":"","mn":1,"mx":2,"to":27,"tmin":20,"tmax":32,"bite":"Diurnal","rain":1,"storm":1,"dawn":1,"day":1.1,"dusk":1,"night":1},{"n":"Rough Neck Rock","c":"geb_RoughNeckRock","env":2,"m":3,"p":14,"shape":0,"rm":"geb_RoughNeckRockFilletMeat","rb":"","mn":1,"mx":2,"to":17,"tmin":8,"tmax":24,"bite":"Pelagic","rain":1,"storm":1.2,"dawn":1.1,"day":1,"dusk":1.2,"night":1.2},{"n":"Blue Tang","c":"geb_BlueTang","env":2,"m":3,"p":12,"shape":0,"rm":"geb_BlueTangFilletMeat","rb":"","mn":1,"mx":2,"to":26,"tmin":20,"tmax":30,"bite":"Diurnal","rain":0.9,"storm":0.8,"dawn":1,"day":1.2,"dusk":1,"night":0.9},{"n":"Largehead Hairtail","c":"geb_LargeHeadHairTailFish","env":2,"m":3,"p":9,"shape":0,"rm":"geb_LargeHeadHairTailFishFilletMeat","rb":"","mn":3,"mx":5,"to":17,"tmin":8,"tmax":24,"bite":"Nocturnal","rain":1,"storm":1.1,"dawn":1,"day":0.9,"dusk":1.2,"night":1.4},{"n":"Humphead Wrasse","c":"geb_HumpHeadWrasse","env":2,"m":3,"p":4,"shape":0,"rm":"geb_HumpHeadWrasseFilletMeat","rb":"","mn":3,"mx":5,"to":27,"tmin":20,"tmax":32,"bite":"Diurnal","rain":0.9,"storm":0.8,"dawn":1,"day":1.2,"dusk":1,"night":0.8},{"n":"Siamese Tigerfish","c":"geb_SiameseTigerFish","env":1,"m":3,"p":6,"shape":0,"rm":"geb_SiameseTigerFishFilletMeat","rb":"","mn":3,"mx":6,"to":27,"tmin":20,"tmax":32,"bite":"Pelagic","rain":1.1,"storm":1.3,"dawn":1.1,"day":1,"dusk":1.2,"night":1.2},{"n":"Great White Shark","c":"geb_GreatWhiteShark","env":2,"m":1,"p":2,"shape":0,"rm":"geb_GreatWhiteSharkFilletMeat","rb":"","mn":5,"mx":10,"to":17,"tmin":10,"tmax":24,"bite":"Nocturnal","rain":1,"storm":1.2,"dawn":1.2,"day":0.9,"dusk":1.3,"night":1.4},{"n":"Angel Shark","c":"geb_AngelShark","env":2,"m":1,"p":7,"shape":0,"rm":"geb_AngelSharkFilletMeat","rb":"","mn":3,"mx":8,"to":18,"tmin":10,"tmax":24,"bite":"Nocturnal","rain":1,"storm":1,"dawn":1,"day":0.8,"dusk":1.2,"night":1.5},{"n":"Yellowfin Tuna","c":"geb_YellowFinTuna","env":2,"m":1,"p":8,"shape":0,"rm":"geb_YellowFinTunaFilletMeat","rb":"","mn":2,"mx":6,"to":25,"tmin":18,"tmax":30,"bite":"Pelagic","rain":1.1,"storm":1.3,"dawn":1.3,"day":1,"dusk":1.3,"night":1},{"n":"White Grunt","c":"geb_WhiteGrunt","env":2,"m":1,"p":14,"shape":0,"rm":"geb_WhiteGruntFilletMeat","rb":"","mn":2,"mx":6,"to":25,"tmin":18,"tmax":30,"bite":"Pelagic","rain":1,"storm":1.1,"dawn":1.2,"day":1,"dusk":1.2,"night":1.2},{"n":"Southern Flounder","c":"geb_SouthernFlounder","env":2,"m":1,"p":11,"shape":0,"rm":"geb_SouthernFlounderFilletMeat","rb":"","mn":2,"mx":6,"to":18,"tmin":10,"tmax":24,"bite":"Nocturnal","rain":1.1,"storm":1.3,"dawn":1.2,"day":0.9,"dusk":1.3,"night":1.4},{"n":"Yellow Snapper","c":"geb_YellowSnapper","env":2,"m":1,"p":13,"shape":0,"rm":"geb_YellowSnapperFilletMeat","rb":"","mn":2,"mx":6,"to":25,"tmin":18,"tmax":30,"bite":"Pelagic","rain":1,"storm":1.1,"dawn":1.3,"day":1,"dusk":1.3,"night":1.3},{"n":"Blood Clam","c":"geb_BloodClam","env":2,"m":4,"p":14,"shape":0,"rm":"","rb":"","mn":1,"mx":1,"to":18,"tmin":4,"tmax":30,"bite":"FilterFeeder","rain":1,"storm":1.1,"dawn":1,"day":1,"dusk":1,"night":0.9},{"n":"Mussel","c":"geb_Mussel","env":3,"m":6,"p":20,"shape":0,"rm":"","rb":"","mn":1,"mx":1,"to":16,"tmin":4,"tmax":28,"bite":"FilterFeeder","rain":1,"storm":1.1,"dawn":1,"day":1,"dusk":1,"night":0.9},{"n":"Black Devil Snail","c":"geb_BlackDevilSnail","env":1,"m":6,"p":10,"shape":0,"rm":"","rb":"","mn":1,"mx":1,"to":22,"tmin":10,"tmax":30,"bite":"Nocturnal","rain":1,"storm":1,"dawn":1,"day":0.9,"dusk":1,"night":1.2},{"n":"Starfish","c":"geb_StarFish","env":2,"m":6,"p":16,"shape":0,"rm":"","rb":"","mn":1,"mx":1,"to":16,"tmin":4,"tmax":28,"bite":"Constant","rain":1,"storm":1,"dawn":1,"day":1,"dusk":1,"night":1},{"n":"King Crab","c":"geb_KingCrab","env":2,"m":6,"p":5,"shape":0,"rm":"geb_KingCrabLegs","rb":"","mn":1,"mx":2,"to":5,"tmin":0,"tmax":12,"bite":"Nocturnal","rain":1,"storm":1.1,"dawn":1,"day":0.9,"dusk":1.1,"night":1.3},{"n":"Snow Crab","c":"geb_SnowCrab","env":2,"m":6,"p":7,"shape":0,"rm":"geb_SnowCrabLegs","rb":"","mn":1,"mx":2,"to":4,"tmin":0,"tmax":10,"bite":"Nocturnal","rain":1,"storm":1.1,"dawn":1,"day":0.9,"dusk":1.1,"night":1.3},{"n":"Blue Jellyfish","c":"geb_BlueJellyFish","env":2,"m":6,"p":12,"shape":0,"rm":"","rb":"","mn":1,"mx":2,"to":20,"tmin":8,"tmax":30,"bite":"Nocturnal","rain":1,"storm":1,"dawn":1,"day":0.9,"dusk":1,"night":1.4},{"n":"American Lobster","c":"geb_AmericanLobster","env":2,"m":6,"p":9,"shape":2,"rm":"geb_AmericanLobsterClaw","rb":"geb_AmericanLobsterTail","mn":1,"mx":2,"to":12,"tmin":4,"tmax":18,"bite":"Nocturnal","rain":1,"storm":1,"dawn":1,"day":0.8,"dusk":1.1,"night":1.4},{"n":"European Lobster","c":"geb_EuropeanLobster","env":2,"m":6,"p":9,"shape":2,"rm":"geb_EuropeanLobsterClaw","rb":"geb_EuropeanLobsterTail","mn":1,"mx":2,"to":14,"tmin":5,"tmax":20,"bite":"Nocturnal","rain":1,"storm":1,"dawn":1,"day":0.8,"dusk":1.1,"night":1.4}];
 
@@ -972,7 +1431,10 @@ function toggleDetail(tr,f){
     body="<div class='detail-wrap'>"+
       "<div class='detail-img'><img src='fish/"+f.c+".webp' alt='"+escapeHtml(f.n)+"' loading='lazy' "+
       "onerror=\"this.closest('.detail-img').remove()\"></div>"+
-      "<div class='detail-body'><p class='detail-desc'>"+escapeHtml(det.desc)+"</p>"+stats+"</div>"+
+      // desc arrives already HTML-escaped from tools/build_wiki_assets.py.
+      // Escaping it a second time here would print a literal &#x27; on the page
+      // wherever a description contains an apostrophe or a quote.
+      "<div class='detail-body'><p class='detail-desc'>"+det.desc+"</p>"+stats+"</div>"+
       "</div>";
   }
 
@@ -995,6 +1457,27 @@ document.querySelectorAll("#fishtable thead th").forEach(th=>{
 ["search","f-env","f-method","f-rarity"].forEach(id=>{
   document.getElementById(id).addEventListener("input",render);
 });
+
+/* Item galleries: built from item-details.js (generated by tools/build_wiki_items.py).
+   Each tile is image + name, with the item's real in-game description as the
+   hover title -- the tabs already carry the prose, so the gallery's job is
+   visual identification rather than repeating it. An image that fails to load
+   hides itself rather than leaving a broken-image box. */
+(function(){
+  if (typeof ITEMDETAIL === "undefined") return;
+  document.querySelectorAll(".gallery[data-cats]").forEach(function(g){
+    var cats = g.dataset.cats.split(",");
+    var keys = Object.keys(ITEMDETAIL).filter(function(k){ return cats.indexOf(ITEMDETAIL[k].cat) !== -1; });
+    keys.sort(function(a,b){ return ITEMDETAIL[a].name.localeCompare(ITEMDETAIL[b].name); });
+    g.innerHTML = keys.map(function(k){
+      var it = ITEMDETAIL[k];
+      return "<div class='gitem' title=\"" + (it.desc || it.name) + "\">" +
+             "<img src='" + it.img + "' alt='" + it.name + "' loading='lazy' " +
+             "onerror=\"this.style.display='none'\">" +
+             "<b>" + it.name + "</b></div>";
+    }).join("");
+  });
+})();
 
 /* ---- Tabs + deep links ----------------------------------------------------
    Every tab is addressable, so any part of the wiki can be linked directly:

@@ -55,6 +55,44 @@ class FishConf {
 // ===========================================================================
 // FILE 1: general.json
 // ===========================================================================
+// ---------------------------------------------------------------------------
+// Was a setting actually written in the file on disk?
+//
+// The deserializer cannot tell us. JsonFileLoader turns a member the file does
+// not mention into 0 / false rather than leaving the class default, so once a
+// config is loaded, "this server has never had this setting" and "the admin
+// deliberately set it to 0" look identical. That is what makes a newly added
+// bool or float ship switched OFF on every existing server.
+//
+// Reading the raw text answers the question directly. Unlike a list of old
+// version numbers it never needs maintaining: it keeps working however many
+// releases go by, and adding the next setting needs no new code at all.
+//
+// Line-based on purpose -- JsonSaveFile writes one field per line, the same
+// assumption BaitSettingsConf.RoundMultiplierLines already relies on. The key
+// is matched WITH its quotes so the field names mentioned in prose inside the
+// self-documenting ...Info strings can't cause a false positive.
+static bool GebJsonFileHasKey(string path, string key) {
+    if (!FileExist(path))
+        return false;
+
+    FileHandle fr = OpenFile(path, FileMode.READ);
+    if (!fr)
+        return false;
+
+    string needle = "\"" + key + "\"";
+    string line;
+    bool found = false;
+    while (FGets(fr, line) != -1) {
+        if (line.IndexOf(needle) != -1) {
+            found = true;
+            break;
+        }
+    }
+    CloseFile(fr);
+    return found;
+}
+
 class GeneralConfig {
     string ConfigVersionInfo = "Mod config version this file was written with. Do NOT edit -- used to migrate the file on mod updates.";
     string ConfigVersion = "";
@@ -64,6 +102,12 @@ class GeneralConfig {
     ref RecipeToggleConf              RecipeToggles;
     string HookFromFishCatchesInfo = "Weighted pool of hooks 'found' stuck in a fish while filleting (gated by GeneralSettings.HookFromFishEnable/Chance). Each entry: Classname (hook/lure to give), Weight (relative odds; 0 disables that entry), MinHealthLevel/MaxHealthLevel (0 pristine .. 4 ruined).";
     ref array<ref HookFromFishEntry>  HookFromFishCatches;
+    string TreasureSettingsInfo = "Switches for the ultra-rare treasure catch. The pools it draws from are TreasureContainers and TreasureLoot below.";
+    ref TreasureConf                  TreasureSettings;
+    string TreasureContainersInfo = "Weighted pool of CONTAINERS an ultra-rare treasure catch can arrive as (gated by TreasureSettings). One is picked per treasure, then filled from TreasureLoot. Give a container a bigger MinItems/MaxItems to make it worth more.";
+    ref array<ref TreasureContainerEntry> TreasureContainers;
+    string TreasureLootInfo = "Weighted pool of ITEMS that can appear inside a treasure container. Each of the container's item slots rolls this pool independently, so contents differ every time. Add anything you like -- including modded classnames.";
+    ref array<ref TreasureLootEntry>  TreasureLoot;
     string PredatorSettingsInfo = "Predator-spawn settings: per-activity chances, enable toggle, and warning sound/message options (each field has its own *Info).";
     ref PredatorConf                  PredatorSettings;
     string PredatorsInfo = "Weighted pool of predators that can spawn. Each entry: Classname (animal), SpawnChance (relative weight), MinCount/MaxCount (how many), MinRadius/MaxRadius (metres from the player to spawn).";
@@ -112,6 +156,23 @@ class GeneralConfig {
         if (!RecipeToggles)            { RecipeToggles = new RecipeToggleConf;   changed = true; }
         if (!PredatorSettings)         { PredatorSettings = new PredatorConf;    changed = true; }
         if (!WeatherSettings)          { WeatherSettings = new WeatherConf;      changed = true; }
+        if (!TreasureSettings)         { TreasureSettings = new TreasureConf;    changed = true; }
+        // Settings added to an EXISTING section can't be caught by a null check --
+        // the section is there, the field just isn't. Ask the file directly, so a
+        // server that never had the toggle gets the intended default while one
+        // that has it keeps the admin's choice, including a deliberate 0.
+        if (RecipeToggles && !GebJsonFileHasKey(PATH, "CraftFishMount")) {
+            RecipeToggles.CraftFishMount = true;
+            changed = true;
+        }
+        if (TreasureSettings && !GebJsonFileHasKey(PATH, "RequireRealRod")) {
+            TreasureSettings.RequireRealRod = true;
+            changed = true;
+        }
+        if (TreasureSettings && !GebJsonFileHasKey(PATH, "RodCatchesToRuin")) {
+            TreasureSettings.RodCatchesToRuin = 3;
+            changed = true;
+        }
         // A per-action section that is entirely missing (fresh key never
         // written, or hand-deleted) is re-seeded with working defaults. A
         // section that exists but was emptied on purpose is left alone.
@@ -120,6 +181,8 @@ class GeneralConfig {
         if (!DigWormsSettings)         { SeedDefaultDigWormsCatches();  changed = true; }
         if (!Predators)                { SeedDefaultPredators();        changed = true; }
         if (!HookFromFishCatches || HookFromFishCatches.Count() == 0) { SeedHookFromFish(); changed = true; }
+        if (!TreasureContainers || TreasureContainers.Count() == 0) { SeedTreasureContainers(); changed = true; }
+        if (!TreasureLoot || TreasureLoot.Count() == 0) { SeedTreasureLoot(); changed = true; }
         return changed;
     }
 
@@ -151,6 +214,16 @@ class GeneralConfig {
                 if (dh && !HasHookCatch(dh.Classname)) { HookFromFishCatches.Insert(dh); added++; }
             }
         }
+        if (TreasureContainers && defaults.TreasureContainers) {
+            foreach (TreasureContainerEntry dc : defaults.TreasureContainers) {
+                if (dc && !HasTreasureContainer(dc.Classname)) { TreasureContainers.Insert(dc); added++; }
+            }
+        }
+        if (TreasureLoot && defaults.TreasureLoot) {
+            foreach (TreasureLootEntry dl : defaults.TreasureLoot) {
+                if (dl && !HasTreasureLoot(dl.Classname)) { TreasureLoot.Insert(dl); added++; }
+            }
+        }
 
         // Recipe toggles need re-asserting, unlike the arrays above.
         // JsonFileLoader ZEROES any member the file doesn't mention -- it does not
@@ -161,15 +234,7 @@ class GeneralConfig {
         // migration FROM a version that shipped before the toggle existed. Configs
         // already stamped 3.3.1 or newer are left alone, so a genuine admin "off"
         // survives every future version bump.
-        if (RecipeToggles && IsPre331(ConfigVersion))
-            RecipeToggles.CraftFishMount = true;   // added in 3.3.1
-
         return added;
-    }
-
-    // ConfigVersion values written by every release before CraftFishMount existed.
-    protected bool IsPre331(string v) {
-        return v == "" || v == "3.3" || v == "3.2" || v == "3.1" || v == "3.0";
     }
     protected bool HasPredator(string classname) {
         foreach (PredatorEntry e : Predators) if (e && e.Classname == classname) return true;
@@ -181,6 +246,18 @@ class GeneralConfig {
     }
     protected bool HasHookCatch(string classname) {
         foreach (HookFromFishEntry e : HookFromFishCatches) if (e && e.Classname == classname) return true;
+        return false;
+    }
+
+    bool HasTreasureContainer(string classname) {
+        if (!TreasureContainers) return false;
+        foreach (TreasureContainerEntry c : TreasureContainers) if (c && c.Classname == classname) return true;
+        return false;
+    }
+
+    bool HasTreasureLoot(string classname) {
+        if (!TreasureLoot) return false;
+        foreach (TreasureLootEntry l : TreasureLoot) if (l && l.Classname == classname) return true;
         return false;
     }
     protected static int MergeBugCatches(array<ref BugEntry> into, array<ref BugEntry> defs) {
@@ -208,6 +285,9 @@ class GeneralConfig {
         DigBugsSettings = new DigBugsConf;
         DigWormsSettings = new DigWormsConf;
         SeedHookFromFish();
+        TreasureSettings = new TreasureConf;
+        SeedTreasureContainers();
+        SeedTreasureLoot();
         SeedDefaultPredators();
         SeedDefaultNetCatches();
         SeedDefaultDigBugsCatches();
@@ -219,6 +299,40 @@ class GeneralConfig {
         HookFromFishEntry h = new HookFromFishEntry();
         h.Classname = "FishingHook"; h.Weight = 1.0; h.MinHealthLevel = 3; h.MaxHealthLevel = 3;
         HookFromFishCatches.Insert(h);
+    }
+
+    // Deliberately small starting pools of plain vanilla classnames -- every
+    // server has them, so treasure works out of the box without depending on
+    // another mod. They are meant to be replaced: this is the one feature where
+    // the whole point is that the admin decides what is worth finding.
+    void SeedTreasureContainers() {
+        if (!TreasureContainers) TreasureContainers = new array<ref TreasureContainerEntry>();
+        TreasureContainerEntry c;
+        c = new TreasureContainerEntry();
+        c.Classname = "SeaChest";    c.Weight = 1.0;  c.MinHealthLevel = 1; c.MaxHealthLevel = 3; c.MinItems = 3; c.MaxItems = 6;
+        TreasureContainers.Insert(c);
+        c = new TreasureContainerEntry();
+        c.Classname = "WoodenCrate"; c.Weight = 2.0;  c.MinHealthLevel = 2; c.MaxHealthLevel = 3; c.MinItems = 2; c.MaxItems = 4;
+        TreasureContainers.Insert(c);
+        c = new TreasureContainerEntry();
+        c.Classname = "DryBag_Black"; c.Weight = 3.0; c.MinHealthLevel = 1; c.MaxHealthLevel = 3; c.MinItems = 1; c.MaxItems = 3;
+        TreasureContainers.Insert(c);
+    }
+
+    void SeedTreasureLoot() {
+        if (!TreasureLoot) TreasureLoot = new array<ref TreasureLootEntry>();
+        TreasureLootEntry l;
+        l = new TreasureLootEntry(); l.Classname = "Rag";              l.Weight = 6.0; l.MinHealthLevel = 2; l.MaxHealthLevel = 4; TreasureLoot.Insert(l);
+        l = new TreasureLootEntry(); l.Classname = "Nail";             l.Weight = 5.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; l.MinQuantity = 5; l.MaxQuantity = 30; TreasureLoot.Insert(l);
+        l = new TreasureLootEntry(); l.Classname = "Rope";             l.Weight = 4.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
+        l = new TreasureLootEntry(); l.Classname = "DuctTape";         l.Weight = 3.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
+        l = new TreasureLootEntry(); l.Classname = "FishingHook";      l.Weight = 3.0; l.MinHealthLevel = 0; l.MaxHealthLevel = 2; TreasureLoot.Insert(l);
+        l = new TreasureLootEntry(); l.Classname = "Canteen";          l.Weight = 2.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
+        l = new TreasureLootEntry(); l.Classname = "Screwdriver";      l.Weight = 2.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
+        l = new TreasureLootEntry(); l.Classname = "Matchbox";         l.Weight = 2.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
+        l = new TreasureLootEntry(); l.Classname = "Compass";          l.Weight = 1.0; l.MinHealthLevel = 0; l.MaxHealthLevel = 2; TreasureLoot.Insert(l);
+        l = new TreasureLootEntry(); l.Classname = "Binoculars";       l.Weight = 0.5; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
+        l = new TreasureLootEntry(); l.Classname = "geb_BlackCaviar";  l.Weight = 0.5; l.MinHealthLevel = 0; l.MaxHealthLevel = 1; TreasureLoot.Insert(l);
     }
 
     // ---- default seed tables ----
@@ -1095,4 +1209,55 @@ class HookFromFishEntry {
     string HealthLevelInfo = "Health level range. 0 pristine, 1 worn, 2 damaged, 3 badly damaged, 4 ruined. Defaults to 3/3 (fixed Badly Damaged).";
     int MinHealthLevel = 3;
     int MaxHealthLevel = 3;
+};
+
+// ---------------------------------------------------------------------------
+// TREASURE
+// A very rare "you pulled up something worth keeping" catch. One weighted pick
+// chooses the CONTAINER, then that container is filled with a random number of
+// items rolled independently from the loot pool -- so no two hauls match.
+// Both pools are entirely admin-defined; nothing here is hardcoded in script.
+// ---------------------------------------------------------------------------
+// Treasure feature switches. Its own section on purpose: Backfill null-checks
+// each section, and an object the file doesn't mention loads as null (which is
+// detectable) whereas a loose bool/float would load as 0 (which is not). That is
+// why every switchable system here is a section rather than scalars on
+// GeneralSettings -- it is what makes a new feature default correctly on servers
+// whose config predates it, with no version checks anywhere.
+class TreasureConf {
+    string TreasureInfo = "Ultra-rare treasure catch. On a SUCCESSFUL catch (not a failed cast) this rolls once: on a hit, one container is picked from the top-level TreasureContainers pool and filled with a random number of items rolled independently from TreasureLoot, so no two hauls are the same. Enable set to 0 turns the feature off entirely; Chance is the per-catch probability and 0 also disables it. Default 0.0002 is about 1 in 5000 CATCHES -- that is catches, not casts, so a session landing 60 fish has roughly a 1.2 percent chance of seeing one. For reference: 0.0005 is ~1 in 2000, 0.002 is ~1 in 500, 0.00005 is ~1 in 20000. Keep it low -- this is meant to be a story someone tells, not a farm. The container spawns at the player's feet (they are usually too big for a pocket). Edit the TreasureContainers / TreasureLoot pools rather than this line to change what actually appears.";
+    bool Enable = 1;
+    float Chance = 0.0002;
+    string AnnounceInfo = "Send the lucky player a chat message when a treasure is pulled up. Purely cosmetic -- set to 0 for a silent find.";
+    bool Announce = 1;
+    string RequireRealRodInfo = "Restrict treasure to a proper fishing rod. The crafted ImprovisedFishingRod is a stick and a piece of rope, so it is excluded, as is any rod that does not inherit from FishingRod. The vanilla rod and the four gebsfish colour variants all qualify. Set to 0 to let any rod find treasure.";
+    bool RequireRealRod = 1;
+    string RodCatchesToRuinInfo = "How many treasure pulls it takes to ruin a PRISTINE rod -- winching a loaded container up is brutal on tackle. Each pull removes this fraction of the rod maximum health, so the default 3 costs 50 of a stock rod 150 HP. A rod already worn from ordinary fishing gives out sooner, and the damage rescales on its own if the hitpoints are retuned or another mod rod is used. Set to 0 to leave the rod undamaged.";
+    int RodCatchesToRuin = 3;
+};
+
+class TreasureContainerEntry {
+    string ClassnameInfo = "Container classname the treasure spawns as. Anything with cargo works -- SeaChest, WoodenCrate, Fur_Backpack, a barrel, an ammo box. Items are placed into its cargo, so a container with no cargo space will arrive empty.";
+    string Classname;
+    string WeightInfo = "Relative weight among containers. 0 disables this entry without deleting it (deleting gets it re-added on the next version bump).";
+    float Weight = 1.0;
+    string HealthLevelInfo = "Health level the container spawns at: 0 pristine .. 4 ruined. A range rolls per spawn -- 1/3 gives anything from worn to badly damaged.";
+    int MinHealthLevel = 1;
+    int MaxHealthLevel = 3;
+    string ItemCountInfo = "How many loot rolls this container gets. Each roll picks independently from TreasureLoot, so a bigger container can be made to hold more.";
+    int MinItems = 2;
+    int MaxItems = 5;
+};
+
+class TreasureLootEntry {
+    string ClassnameInfo = "Item classname that can appear inside a treasure container. Any classname on the server is valid, including items from other mods.";
+    string Classname;
+    string WeightInfo = "Relative weight in the loot pick. 0 disables this entry without deleting it. Pure ratios -- a 0.1 entry is a tenth as likely as a 1.0 entry.";
+    float Weight = 1.0;
+    string HealthLevelInfo = "Health level range for this item: 0 pristine .. 4 ruined. Rolled per item.";
+    int MinHealthLevel = 1;
+    int MaxHealthLevel = 3;
+    string QuantityInfo = "Quantity range for stackable items (ammo, nails). Rolled per item and clamped to what the item actually allows. Leave 0/0 to let the item spawn at its own default.";
+    int MinQuantity = 0;
+    int MaxQuantity = 0;
 };

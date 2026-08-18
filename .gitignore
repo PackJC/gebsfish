@@ -1,6 +1,7 @@
-﻿.vs
+.vs
 .idea
 .claude
+__pycache__/
 *.ini
 *.bin
 *.vs
@@ -8,3 +9,7 @@
 /.rules
 /CF
 *.webp
+# ...but everything the wiki serves must ship: GitHub Pages publishes
+# docs/, so fish renders, item renders and anything added later need to
+# be tracked or they 404 on the site.
+!docs/**/*.webp

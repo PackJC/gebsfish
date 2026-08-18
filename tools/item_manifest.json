@@ -1,0 +1,376 @@
+[
+  {
+    "name": "geb_BambooFishingNet",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tools\\bamboofishingnet.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tools\\bamboofishingnet_co.paa",
+    "view": "ISO"
+  },
+  {
+    "name": "geb_BlueCooler",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler_blue_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_BlueFishKnife",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tools\\fishknife.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tools\\fishknife_blue_co.paa"
+  },
+  {
+    "name": "geb_BlueTackle",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle_blue_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_BrownCooler",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler_brown_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_BrownTackle",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle_brown_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_BugContainer",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\bugcontainer.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\bugcontainer_co.paa",
+    "view": "ISO"
+  },
+  {
+    "name": "geb_CamoCooler",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler_camo_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_CamoTackle",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle_camo_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_CurlyTailJig1",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\curlytailjig.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\curlytailjig_blue_co.paa"
+  },
+  {
+    "name": "geb_CurlyTailJig2",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\curlytailjig.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\curlytailjig_green_co.paa"
+  },
+  {
+    "name": "geb_CurlyTailJig3",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\curlytailjig.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\curlytailjig_red_co.paa"
+  },
+  {
+    "name": "geb_CurlyTailJig4",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\curlytailjig.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\curlytailjig_purple_co.paa"
+  },
+  {
+    "name": "geb_FieldCricket",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\fieldcricket.p3d",
+    "texture": null
+  },
+  {
+    "name": "geb_FishingRodRepairKit",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tools\\fishingline_biggame.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tools\\fishingline_biggame_co.paa",
+    "view": "ISO"
+  },
+  {
+    "name": "geb_FunGreenTackle",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle_green_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_FunPurpleTackle",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle_purple_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_FunRedTackle",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle_red_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_FunYellowTackle",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle_yellow_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_GrassHopper",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\grasshopper.p3d",
+    "texture": null,
+    "flip_h": true
+  },
+  {
+    "name": "geb_GreenCooler",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler_green_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_GreenFishKnife",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tools\\fishknife.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tools\\fishknife_green_co.paa"
+  },
+  {
+    "name": "geb_GrubWorm",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\grub.p3d",
+    "texture": null,
+    "flip_h": true,
+    "flip_v": true
+  },
+  {
+    "name": "geb_LightBlueCooler",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler_lightblue_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_LightBlueTackle",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle_lightblue_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_LimeCooler",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler_lime_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_LimeTackle",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle_lime_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_Lure1",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\popper.p3d",
+    "texture": null
+  },
+  {
+    "name": "geb_Lure2",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\redcrank.p3d",
+    "texture": null
+  },
+  {
+    "name": "geb_Lure3",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\yellowcrank.p3d",
+    "texture": null
+  },
+  {
+    "name": "geb_Lure4",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\squarebill.p3d",
+    "texture": null
+  },
+  {
+    "name": "geb_MinnowBucket",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\baitbucket.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\baitbucket_co.paa",
+    "view": "ISO"
+  },
+  {
+    "name": "geb_OldBlueTackle",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\mediumtackle.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\mediumtackle_blue.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_OldGreenTackle",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\mediumtackle.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\mediumtackle_green.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_OldPurpleTackle",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\mediumtackle.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\mediumtackle_purple.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_OldRedTackle",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\mediumtackle.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\mediumtackle_red.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_OrangeCooler",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler_orange_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_OrangeFishKnife",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tools\\fishknife.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tools\\fishknife_orange_co.paa"
+  },
+  {
+    "name": "geb_OrangeTackle",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle_orange_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_PinkCooler",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler_pink_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_PinkTackle",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\largetackle_pink_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_PurpleCooler",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler_purple_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_PurpleFishKnife",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tools\\fishknife.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tools\\fishknife_purple_co.paa"
+  },
+  {
+    "name": "geb_RedCooler",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler_red_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_RedFishKnife",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tools\\fishknife.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tools\\fishknife_red_co.paa"
+  },
+  {
+    "name": "geb_SmallTackle",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\smalltackle.p3d",
+    "texture": null,
+    "view": "ISO"
+  },
+  {
+    "name": "geb_SpinnerBait1",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\spinner.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\spinner1_co.paa",
+    "view": "MID"
+  },
+  {
+    "name": "geb_SpinnerBait2",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\spinner.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\spinner2_co.paa",
+    "view": "MID"
+  },
+  {
+    "name": "geb_SpinnerBait3",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\spinner.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\spinner3_co.paa",
+    "view": "MID"
+  },
+  {
+    "name": "geb_SpinnerBait4",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\spinner.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\spinner4_co.paa",
+    "view": "MID"
+  },
+  {
+    "name": "geb_SpoonLure1",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\spoonlure.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\spoonlure_blue_co.paa"
+  },
+  {
+    "name": "geb_SpoonLure2",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\spoonlure.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\spoonlure_white_co.paa"
+  },
+  {
+    "name": "geb_SpoonLure3",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\spoonlure.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\spoonlure_red_co.paa"
+  },
+  {
+    "name": "geb_SpoonLure4",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\spoonlure.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\spoonlure_yellow_co.paa"
+  },
+  {
+    "name": "geb_WormContainer",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\wormcontainer.p3d",
+    "texture": null,
+    "view": "ISO:Z"
+  },
+  {
+    "name": "geb_YellowCooler",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tackle\\cooler_yellow_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_YellowFishKnife",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tools\\fishknife.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\tools\\fishknife_yellow_co.paa"
+  },
+  {
+    "name": "geb_jonboat_camo_desert",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\vehicles\\geb_jonboat.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\vehicles\\geb_jonboat_desertcamo.paa",
+    "textures": [
+      "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\vehicles\\geb_jonboat_motor_black.paa",
+      "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\vehicles\\geb_jonboat_desertcamo.paa"
+    ],
+    "view": "ISO:Z"
+  },
+  {
+    "name": "geb_jonboat_camo_forest",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\vehicles\\geb_jonboat.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\vehicles\\geb_jonboat_forestcamo.paa",
+    "textures": [
+      "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\vehicles\\geb_jonboat_motor_black.paa",
+      "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\vehicles\\geb_jonboat_forestcamo.paa"
+    ],
+    "view": "ISO:Z"
+  },
+  {
+    "name": "geb_jonboat_camo_snow",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\vehicles\\geb_jonboat.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\vehicles\\geb_jonboat_snowcamo.paa",
+    "textures": [
+      "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\vehicles\\geb_jonboat_motor_black.paa",
+      "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\vehicles\\geb_jonboat_snowcamo.paa"
+    ],
+    "view": "ISO:Z"
+  },
+  {
+    "name": "geb_jonboat_grayaluminum",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\vehicles\\geb_jonboat.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\vehicles\\geb_jonboat_grayaluminum.paa",
+    "textures": [
+      "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\vehicles\\geb_jonboat_motor_white.paa",
+      "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\vehicles\\geb_jonboat_grayaluminum.paa"
+    ],
+    "view": "ISO:Z"
+  },
+  {
+    "name": "geb_jonboat_greenaluminum",
+    "p3d": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\vehicles\\geb_jonboat.p3d",
+    "texture": "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\vehicles\\geb_jonboat_greenaluminum.paa",
+    "textures": [
+      "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\vehicles\\geb_jonboat_motor_white.paa",
+      "C:\\Users\\ECHO\\Documents\\DayZ Projects\\gebsfish\\data\\vehicles\\geb_jonboat_greenaluminum.paa"
+    ],
+    "view": "ISO:Z"
+  }
+]

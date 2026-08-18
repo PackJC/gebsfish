@@ -33,5 +33,13 @@ modded class ActionFishingNew: ActionContinuousBase {
         }
 
         GebsPredatorSpawner.TrySpawn(fad.m_Player, chance, "PredatorSpawnFishing");
+
+        // Ultra-rare treasure, rolled only on a successful catch -- a failed cast
+        // shouldn't hand out loot. Deliberately independent of the fish pool: it
+        // has its own probability rather than being a yield competing with the 79
+        // species, so tuning it never quietly starves anything else, and it can be
+        // set far finer than the catch pool's 0-25 integer weights allow.
+        if (fad.m_FishingResult == 1)
+            GebsTreasureSpawner.TryPull(fad.m_Player, fad.m_MainItem, "Treasure");
     }
 }
