@@ -243,29 +243,15 @@ class cfgVehicles {
 		};
 	};
 	/*
-		SKELETON: geb_Cooler
+		geb_Cooler -- config side of the cooler system.
 
-		Cargo container intended to slow / freeze the spoilage cycle on
-		fish fillets stored inside it. The config block below ships the
-		visual + inventory framework (cargo slots, weight, durability,
-		repair, melee, anim sounds) so the item is fully spawnable and
-		usable as a regular container today. The actual "keeps fillets
-		from rotting" mechanic is NOT wired up yet -- it needs a script
-		hook to either:
-		  A) periodically reset Foodstage.GetFoodStageTime on items
-		     parented to this cooler, OR
-		  B) override Edible_Base.GetDecayCoef when the item's
-		     hierarchy parent is a geb_Cooler so the natural decay tick
-		     multiplies by ~0 (or a configurable slow-down).
-		Option B is cleaner because it piggybacks on the existing decay
-		system; option A is more brute-force but easier to verify.
-		See also data/tools/config.cpp (geb_BambooFishingNet) for the
-		cargo-filtering pattern -- the cooler should be restricted to
-		fish, fillets, and bait items via a containers.c s_Allowed entry
-		so players can't use it as a bullet-proof cooler for unrelated
-		loot. Stringtable keys ($STR_tools_cooler*) and the model path
-		below are placeholders -- swap in the real p3d / .paa / strings
-		when the asset is ready.
+		The script half lives elsewhere; this block is only the container
+		framework (cargo, weight, durability, repair, melee, anim sounds):
+		  - decay pause: modded Edible_Base hook in
+		    scripts/4_world/entities/itembase/edible_base/geb_ediblebase.c
+		    (walks the parent chain, so bagged fillets inside still count)
+		  - cargo filtering: geb_Cooler_base : geb_FilteredContainerBase in
+		    scripts/4_world/entities/itembase/gear/containers/containers.c
 	*/
 	class geb_Cooler_base: Container_Base {
 		// Deck-mountable on the jon boat (see data/vehicles/config.cpp).
