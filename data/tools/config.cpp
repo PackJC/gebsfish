@@ -29,7 +29,8 @@ class CfgPatches {
 		requiredAddons[] = {
 		"DZ_Data",
 		"DZ_Scripts",
-		"DZ_Weapons_Melee"
+		"DZ_Weapons_Melee",
+		"DZ_Gear_Crafting"
 		};
 	};
 };
@@ -46,15 +47,35 @@ class CfgSlots {
 		// fishmount_ghost.paa is registered as an imageset in Workbench.
 		ghostIcon = "hook";
 	};
+
+	// Carried-catch slot for the vanilla spears (see the class Spear override
+	// below). Fish opt in via inventorySlot[] on the fresh/salt fish bases in
+	// data/fish/config.cpp -- deliberately NOT on geb_LargeFish_Base, spearing
+	// is a medium/small-fish mechanic.
+	class Slot_GebSpearedFish {
+		name = "GebSpearedFish";
+		displayName = "$STR_tools_spearedfish";
+		ghostIcon = "hook";
+	};
 };
 
-class cfgVehicles {		
+class cfgVehicles {
 	//Instantiate Needed Classes
 	class HuntingKnife;
 	class Container_Base;
 	class Inventory_Base;
 	class FishingRod_Base;
 	class ItemBase;
+
+	// Vanilla spears (SpearStone / SpearBone inherit from this) gain a slot to
+	// carry one speared fish -- ActionSpearFish attaches the chum-school fish
+	// here. The vanilla advanced_spear.p3d has no attachment proxy, so the
+	// fish shows on the spear in the inventory screen but does not render on
+	// the spear model in the world; rendering it would need a gebspearedfish
+	// proxy in a custom spear p3d, the same trick the fish mount uses.
+	class Spear: Inventory_Base {
+		attachments[] = {"GebSpearedFish"};
+	};
 
     /*
 

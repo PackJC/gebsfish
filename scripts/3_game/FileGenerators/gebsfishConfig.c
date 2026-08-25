@@ -114,6 +114,8 @@ class GeneralConfig {
     ref array<ref PredatorEntry>      Predators;
     string BambooFishingNetSettingsInfo = "Bamboo-net action: FindChance (0-1 per cast), PredatorSpawnChance, and a Catches table (each entry: Classname, CatchChance, Environment 1 pond/2 sea/3 both).";
     ref BambooFishingNetConf          BambooFishingNetSettings;
+    string ChumSettingsInfo = "Chum-the-water system: use (or throw) guts at half health or better into deep enough water and a short-lived school of spearable fish spawns. Gates, school size/duration, and the weighted Catches table live inside (each field has its own *Info).";
+    ref ChumConf                      ChumSettings;
     string DigBugsSettingsInfo = "Dig-for-bugs action: FindChance (0-1) plus a Catches table (each entry: Classname, CatchChance).";
     ref DigBugsConf                   DigBugsSettings;
     string DigWormsSettingsInfo = "Dig-for-worms action: FindChance (0-1) plus a Catches table (each entry: Classname, CatchChance).";
@@ -177,6 +179,7 @@ class GeneralConfig {
         // written, or hand-deleted) is re-seeded with working defaults. A
         // section that exists but was emptied on purpose is left alone.
         if (!BambooFishingNetSettings) { SeedDefaultNetCatches();       changed = true; }
+        if (!ChumSettings)             { SeedDefaultChumCatches();      changed = true; }
         if (!DigBugsSettings)          { SeedDefaultDigBugsCatches();   changed = true; }
         if (!DigWormsSettings)         { SeedDefaultDigWormsCatches();  changed = true; }
         if (!Predators)                { SeedDefaultPredators();        changed = true; }
@@ -203,6 +206,11 @@ class GeneralConfig {
         if (BambooFishingNetSettings && BambooFishingNetSettings.Catches && defaults.BambooFishingNetSettings && defaults.BambooFishingNetSettings.Catches) {
             foreach (NetEntry dn : defaults.BambooFishingNetSettings.Catches) {
                 if (dn && !HasNetCatch(dn.Classname)) { BambooFishingNetSettings.Catches.Insert(dn); added++; }
+            }
+        }
+        if (ChumSettings && ChumSettings.Catches && defaults.ChumSettings && defaults.ChumSettings.Catches) {
+            foreach (NetEntry dchum : defaults.ChumSettings.Catches) {
+                if (dchum && !HasChumCatch(dchum.Classname)) { ChumSettings.Catches.Insert(dchum); added++; }
             }
         }
         if (DigBugsSettings && defaults.DigBugsSettings)
@@ -242,6 +250,10 @@ class GeneralConfig {
     }
     protected bool HasNetCatch(string classname) {
         foreach (NetEntry e : BambooFishingNetSettings.Catches) if (e && e.Classname == classname) return true;
+        return false;
+    }
+    protected bool HasChumCatch(string classname) {
+        foreach (NetEntry e : ChumSettings.Catches) if (e && e.Classname == classname) return true;
         return false;
     }
     protected bool HasHookCatch(string classname) {
@@ -284,6 +296,7 @@ class GeneralConfig {
         BambooFishingNetSettings = new BambooFishingNetConf;
         DigBugsSettings = new DigBugsConf;
         DigWormsSettings = new DigWormsConf;
+        SeedDefaultChumCatches();
         SeedHookFromFish();
         TreasureSettings = new TreasureConf;
         SeedTreasureContainers();
@@ -352,6 +365,27 @@ class GeneralConfig {
         NetEntry minnow = new NetEntry();     minnow.Classname = "geb_FatHeadMinnow";    minnow.CatchChance = 1.0;     minnow.Environment = 1;     BambooFishingNetSettings.Catches.Insert(minnow);
         NetEntry frog = new NetEntry();       frog.Classname = "geb_AmericanBullFrog";   frog.CatchChance = 1.0;       frog.Environment = 1;       BambooFishingNetSettings.Catches.Insert(frog);
         NetEntry salamander = new NetEntry(); salamander.Classname = "geb_RedSalamander"; salamander.CatchChance = 1.0; salamander.Environment = 1; BambooFishingNetSettings.Catches.Insert(salamander);
+    }
+
+    // Medium/small species only -- the two-handed trophy fish are deliberately
+    // not spearable (they also don't carry the GebSpearedFish inventory slot,
+    // which lives on the fresh/salt fish bases but NOT geb_LargeFish_Base).
+    void SeedDefaultChumCatches() {
+        if (!ChumSettings) ChumSettings = new ChumConf;
+        if (!ChumSettings.Catches) ChumSettings.Catches = new array<ref NetEntry>();
+        NetEntry c;
+        c = new NetEntry(); c.Classname = "geb_BlueGill";       c.CatchChance = 1.0; c.Environment = 1; ChumSettings.Catches.Insert(c);
+        c = new NetEntry(); c.Classname = "geb_YellowPerch";    c.CatchChance = 1.0; c.Environment = 1; ChumSettings.Catches.Insert(c);
+        c = new NetEntry(); c.Classname = "geb_LargeMouthBass"; c.CatchChance = 0.8; c.Environment = 1; ChumSettings.Catches.Insert(c);
+        c = new NetEntry(); c.Classname = "geb_SmallMouthBass"; c.CatchChance = 0.8; c.Environment = 1; ChumSettings.Catches.Insert(c);
+        c = new NetEntry(); c.Classname = "geb_RainbowTrout";   c.CatchChance = 0.8; c.Environment = 1; ChumSettings.Catches.Insert(c);
+        c = new NetEntry(); c.Classname = "geb_WallEye";        c.CatchChance = 0.6; c.Environment = 1; ChumSettings.Catches.Insert(c);
+        c = new NetEntry(); c.Classname = "geb_FlatHeadMullet"; c.CatchChance = 1.0; c.Environment = 2; ChumSettings.Catches.Insert(c);
+        c = new NetEntry(); c.Classname = "geb_WhiteGrunt";     c.CatchChance = 1.0; c.Environment = 2; ChumSettings.Catches.Insert(c);
+        c = new NetEntry(); c.Classname = "geb_YellowSnapper";  c.CatchChance = 0.9; c.Environment = 2; ChumSettings.Catches.Insert(c);
+        c = new NetEntry(); c.Classname = "geb_PacificCod";     c.CatchChance = 0.8; c.Environment = 2; ChumSettings.Catches.Insert(c);
+        c = new NetEntry(); c.Classname = "geb_Bonita";         c.CatchChance = 0.7; c.Environment = 2; ChumSettings.Catches.Insert(c);
+        c = new NetEntry(); c.Classname = "geb_AsianSeaBass";   c.CatchChance = 0.6; c.Environment = 2; ChumSettings.Catches.Insert(c);
     }
 
     void SeedDefaultDigBugsCatches() {
@@ -1144,6 +1178,33 @@ class BambooFishingNetConf {
     ref array<ref NetEntry> Catches;
 
     void BambooFishingNetConf() {
+        // Allocate so consumers can iterate without an extra null guard.
+        Catches = new array<ref NetEntry>();
+    }
+}
+
+// Settings for the chum-the-water system (guts -> temporary fish school ->
+// spear). ActionChumWater and thrown guts consume the guts item and spawn a
+// short-lived school of swimming fish via GebsChumSystem; ActionSpearFish (on
+// the vanilla spears) turns one school fish into a carried catch.
+class ChumConf {
+    string EnableInfo = "Master toggle for the chum system. 0 removes the Chum action, disables thrown-guts detection, and disables spear-fishing on chum schools. Values in this section are kept for tuning while disabled.";
+    bool Enable = 1;
+    string GutsMinHealthPercentInfo = "Minimum health percent (0-100) the guts item needs to chum. Below this the action is hidden and thrown guts just sink. Default 50 = half health or better.";
+    float GutsMinHealthPercent = 50;
+    string MinWaterDepthInfo = "Minimum water-column depth in metres at the chum point before a school will spawn. Default 1.8 (about 6 feet). Shallower water ignores the chum.";
+    float MinWaterDepth = 1.8;
+    string FishCountInfo = "How many fish spawn per school, uniform random between FishCountMin and FishCountMax.";
+    int FishCountMin = 4;
+    int FishCountMax = 5;
+    string DurationSecondsInfo = "How long the school swims before the remaining fish despawn, in seconds. Default 180 (3 minutes).";
+    int DurationSeconds = 180;
+    string SwimRadiusInfo = "How far, in metres, school members roam around the chum point.";
+    float SwimRadius = 4.0;
+    string CatchesInfo = "Weighted table of fish a chum school can contain. Environment: 1=pond, 2=sea, 3=both -- entries that don't match the chummed water are skipped before the pick. Keep this to medium/small species: the two-handed trophy fish don't carry the GebSpearedFish slot, so they can't ride the spear.";
+    ref array<ref NetEntry> Catches;
+
+    void ChumConf() {
         // Allocate so consumers can iterate without an extra null guard.
         Catches = new array<ref NetEntry>();
     }

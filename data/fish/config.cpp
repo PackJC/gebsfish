@@ -75,7 +75,7 @@ class cfgVehicles {
 				range = 2.8;
 			};
 		};
-		inventorySlot[] = {"TrapPrey_1", "GebFishMount"};
+		inventorySlot[] = {"TrapPrey_1", "GebFishMount", "GebSpearedFish"};
 		hiddenSelections[] = {"cs_raw"};
 		hiddenSelectionsTextures[] = {"dz\gear\food\data\carp_live_co.paa","dz\gear\food\data\carp_live_co.paa"};
 		hiddenSelectionsMaterials[] = {"dz\gear\food\data\carp_live.rvmat","dz\gear\food\data\carp_live.rvmat"};
@@ -154,7 +154,9 @@ class cfgVehicles {
 				range = 2.8;
 			};
 		};
-		inventorySlot[] = {"TrapPrey_1", "GebFishMount"};
+		// GebSpearedFish rides on the fresh/salt bases but deliberately NOT on
+		// geb_LargeFish_Base -- the two-handed trophy fish can't ride a spear.
+		inventorySlot[] = {"TrapPrey_1", "GebFishMount", "GebSpearedFish"};
 		hiddenSelections[] = {"cs_raw"};
 		hiddenSelectionsTextures[] = {"dz\gear\food\data\mackerel_live_co.paa","dz\gear\food\data\mackerel_live_co.paa"};
 		hiddenSelectionsMaterials[] = {"dz\gear\food\data\mackerel_live.rvmat","dz\gear\food\data\mackerel_live.rvmat"};
