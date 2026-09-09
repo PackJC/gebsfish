@@ -86,8 +86,8 @@ class GebsPredatorSpawner {
                     GebsfishLogger.Debug("Skipping predator spawn -- no land found within [" + selected.MinRadius + "m, " + selected.MaxRadius + "m] of player. Likely too far from shore.", logTag);
                 continue;
             }
-            SpawnOneAt(selected.Classname, spawnPos, player, cfg, debugLogs, logTag, soundPlayed);
-            anySpawned = true;
+            if (SpawnOneAt(selected.Classname, spawnPos, player, cfg, debugLogs, logTag, soundPlayed))
+                anySpawned = true;
         }
 
         if (anySpawned)
@@ -176,12 +176,12 @@ class GebsPredatorSpawner {
     // Spawns one predator entity at the given position. On the first successful
     // spawn within a single TrySpawn call, also fires the warning-sound RPC to
     // nearby players if PredatorWarningSoundEnable is on.
-    protected static void SpawnOneAt(string classname, vector position, PlayerBase triggeringPlayer, gebsfishConfig cfg, int debugLogs, string logTag, out bool soundPlayed) {
+    protected static bool SpawnOneAt(string classname, vector position, PlayerBase triggeringPlayer, gebsfishConfig cfg, int debugLogs, string logTag, out bool soundPlayed) {
         Object predator = g_Game.CreateObject(classname, position, false, true);
         if (!predator) {
             if (debugLogs)
                 GebsfishLogger.Debug("Failed to spawn " + classname + ".", logTag);
-            return;
+            return false;
         }
 
         if (debugLogs)
@@ -189,7 +189,7 @@ class GebsPredatorSpawner {
 
         // Warning sound RPC, fired once per TrySpawn call (the `out bool` flag).
         if (!cfg.General.PredatorSettings.PredatorWarningSoundEnable || soundPlayed)
-            return;
+            return true;
 
         PlayerIdentity triggeringIdentity = triggeringPlayer.GetIdentity();
         string triggeringPlayerName = "unknown player";
@@ -220,6 +220,7 @@ class GebsPredatorSpawner {
         }
 
         soundPlayed = true;
+        return true;
     }
 
     // Sends the configured chat warning to the triggering player only (not

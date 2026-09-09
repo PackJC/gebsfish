@@ -8,6 +8,14 @@
 
 */
 
+class GebFishingNetActionData : ActionData {
+    int m_GebEnvironment;
+}
+
+class GebFishingNetReceiveData : ActionReciveData {
+    int m_GebEnvironment;
+}
+
 class ActionBambooFishingNetCB : ActionContinuousBaseCB {
 	override void CreateActionComponent() {
 		float time_spent;
@@ -43,18 +51,45 @@ class ActionBambooFishingNet : ActionContinuousBase {
 		m_ConditionTarget = new CCTSurface(UAMaxDistances.DEFAULT);
 	}
 
-	// Client-only water-surface validation. Pulled into a helper so callers
-	// stay readable, but the actual ActionCondition still trusts the
-	// dedicated server (returns true) -- server-side SurfaceIsPond/Sea
-	// against target.GetCursorHitPos() is unreliable here and rejecting
-	// valid casts leaves the client waiting forever for action confirmation.
-	bool IsValidFishingNetSurface(ActionTarget target) {
-		if (!target)
-			return false;
+    // Classify on the casting peer and carry the result in the action payload,
+    // as vanilla ActionFishingNew does. Zero is invalid, never an implicit pond.
+    int GetFishingNetEnvironment(ActionTarget target) {
+        if (!target) return 0;
+        vector position = target.GetCursorHitPos();
+        if (g_Game.SurfaceIsSea(position[0], position[2])) return 2;
+        if (g_Game.SurfaceIsPond(position[0], position[2])) return 1;
+        return 0;
+    }
 
-		vector position = target.GetCursorHitPos();
-		return g_Game.SurfaceIsPond(position[0], position[2]) || g_Game.SurfaceIsSea(position[0], position[2]);
-	}
+    bool IsValidFishingNetSurface(ActionTarget target) {
+        return GetFishingNetEnvironment(target) != 0;
+    }
+
+    override ActionData CreateActionData() {
+        return new GebFishingNetActionData();
+    }
+
+    override void WriteToContext(ParamsWriteContext ctx, ActionData action_data) {
+        super.WriteToContext(ctx, action_data);
+        GebFishingNetActionData data = GebFishingNetActionData.Cast(action_data);
+        ctx.Write(data.m_GebEnvironment);
+    }
+
+    override bool ReadFromContext(ParamsReadContext ctx, out ActionReciveData action_recive_data) {
+        if (!action_recive_data)
+            action_recive_data = new GebFishingNetReceiveData();
+        if (!super.ReadFromContext(ctx, action_recive_data)) return false;
+        GebFishingNetReceiveData received = GebFishingNetReceiveData.Cast(action_recive_data);
+        if (!received || !ctx.Read(received.m_GebEnvironment)) return false;
+        return received.m_GebEnvironment == 1 || received.m_GebEnvironment == 2;
+    }
+
+    override void HandleReciveData(ActionReciveData action_recive_data, ActionData action_data) {
+        super.HandleReciveData(action_recive_data, action_data);
+        GebFishingNetReceiveData received = GebFishingNetReceiveData.Cast(action_recive_data);
+        GebFishingNetActionData data = GebFishingNetActionData.Cast(action_data);
+        if (received && data) data.m_GebEnvironment = received.m_GebEnvironment;
+    }
 
 	override bool ActionCondition( PlayerBase player, ActionTarget target, ItemBase item ) {
 		if ( player.IsPlacingLocal() )
@@ -68,8 +103,8 @@ class ActionBambooFishingNet : ActionContinuousBase {
 		if ( height > 0.4 )
 			return false; // Player is not standing on ground
 
-		// Dedicated server trusts the client's surface validation. See helper
-		// comment for why server-side validation breaks here.
+        // Dedicated server uses the water type carried in the action payload.
+        // Keep the existing trust model; do not re-query its cursor surface.
 		if (g_Game.IsDedicatedServer())
 			return true;
 
@@ -82,6 +117,11 @@ class ActionBambooFishingNet : ActionContinuousBase {
 
 	override bool SetupAction( PlayerBase player, ActionTarget target, ItemBase item, out ActionData action_data, Param extra_data = NULL ) {
 		if( super.SetupAction( player, target, item, action_data, extra_data ) ) {
+            GebFishingNetActionData data = GebFishingNetActionData.Cast(action_data);
+            if (!data) return false;
+            // Super already applied the received payload on the server.
+            if (data.m_GebEnvironment == 0 && !g_Game.IsDedicatedServer())
+                data.m_GebEnvironment = GetFishingNetEnvironment(target);
 			if ( item ) {
 				SetDiggingAnimation( item );
 			}
@@ -165,6 +205,11 @@ class ActionBambooFishingNet : ActionContinuousBase {
 			return;
 		}
 
+        GebFishingNetActionData netData = GebFishingNetActionData.Cast(action_data);
+        if (!netData || (netData.m_GebEnvironment != 1 && netData.m_GebEnvironment != 2)) {
+            GebsfishLogger.Error("Missing valid net water type; skipping catch.", "NetSpawn");
+            return;
+        }
 		PlayerBase player = action_data.m_Player;
 		ItemBase net = action_data.m_MainItem;
 
@@ -177,7 +222,7 @@ class ActionBambooFishingNet : ActionContinuousBase {
 			foundSomething = true;
 		} else {
 			findRoll = Math.RandomFloat01();
-			foundSomething = (findRoll <= findChance);
+			foundSomething = (findRoll < findChance);
 		}
 
 		if (debugLevel >= 1) {
@@ -185,18 +230,7 @@ class ActionBambooFishingNet : ActionContinuousBase {
 		}
 
 		if (foundSomething) {
-			// Determine which water type the cast is over so the Catches
-			// table can be filtered by Environment (1=pond, 2=sea, 3=both).
-			// Falls back to pond if the target's surface query comes back
-			// empty.
-			int environment = 1;
-			if (action_data.m_Target) {
-				vector targetPos = action_data.m_Target.GetCursorHitPos();
-				if (g_Game.SurfaceIsSea(targetPos[0], targetPos[2]))
-					environment = 2;
-				else if (g_Game.SurfaceIsPond(targetPos[0], targetPos[2]))
-					environment = 1;
-			}
+            int environment = netData.m_GebEnvironment;
 
 			string spawnType = GetConfiguredNetSpawnType(environment);
 			if (spawnType != "") {

@@ -12,7 +12,28 @@ modded class MissionBase {
 	// Bank instance the guard below has already registered into. A fresh
 	// mission load builds a new bank (new instance), so re-registration
 	// happens naturally; only repeat calls for the same bank are skipped.
-	protected static CatchYieldBank s_GebInitializedBank;
+	protected CatchYieldBank s_GebInitializedBank;
+	protected gebsfishConfig m_GebRegisteredConfig;
+
+	void MissionBase() {
+		GebGetConfigReadyInvoker().Insert(GebOnConfigReceived);
+	}
+
+	void GebOnConfigReceived() {
+		if (s_GebInitializedBank)
+			InitWorldYieldDataDefaults(s_GebInitializedBank);
+	}
+
+	void ~MissionBase() {
+		GebGetConfigReadyInvoker().Remove(GebOnConfigReceived);
+		if (g_GebYieldBank == s_GebInitializedBank) {
+			g_GebYieldBank = null;
+			if (!g_Game.IsServer()) {
+				g_GebConfigReceived = false;
+				m_gebsConfig = null;
+			}
+		}
+	}
 
 	override void InitWorldYieldDataDefaults(CatchYieldBank bank) {
 		// Deliberately NOT calling super, and NOT calling
@@ -36,19 +57,23 @@ modded class MissionBase {
 		// INSTANCE -- not on "bank is non-empty" -- so a custom map's
 		// WorldData that registers its own animals before this chain still
 		// gets our yields added alongside them instead of being skipped.
-		if (bank == s_GebInitializedBank) {
+		if (bank == s_GebInitializedBank && m_GebRegisteredConfig == m_gebsConfig) {
 			GebsfishLogger.Info("Yield data already initialized for this bank -- skipping duplicate init.", "MissionBase");
 			return;
 		}
 		s_GebInitializedBank = bank;
 
 		GetGebSettingsConfig();
+		g_GebYieldBank = bank;
+		m_GebRegisteredConfig = m_gebsConfig;
+		bank.GebBeginRegistration();
 
 		GebsfishLogger.Info("Initializing yield data.", "MissionBase");
 
 		RegisterFishYieldData(bank);
 		RegisterJunkYieldData(bank);
 		RegisterTrapAnimalYieldData(bank);
+		bank.GebEndRegistration();
 
 		GebsfishLogger.Info("Initialization of yield data complete.", "MissionBase");
 	}
@@ -64,13 +89,13 @@ modded class MissionBase {
 		if (m_gebsConfig && m_gebsConfig.Fish && m_gebsConfig.Fish.Species) {
 			geb_YieldFishGeneric fishYield;
 			foreach (FishConf f : m_gebsConfig.Fish.Species) {
-				if (f && f.Classname != "") {
+				if (f && f.Classname != "" && !bank.GetYieldsMap().Contains(f.Classname.Hash())) {
 					// The int (catch probability) is REQUIRED by the vanilla base
 					// constructor (FishYieldItemBase) -- it's the weight the bank
 					// uses for selection. The rest of the row rides in via SetConf.
 					fishYield = new geb_YieldFishGeneric(f.CatchProbability);
 					fishYield.SetConf(f);
-					bank.RegisterYieldItem(fishYield);
+					GebRegisterUniqueYield(bank, fishYield);
 				}
 			}
 		}
@@ -96,12 +121,12 @@ modded class MissionBase {
 			for (i = 0; i < m_gebsConfig.Junk.Junk.Count(); i++)
 			{
 				junkItem = m_gebsConfig.Junk.Junk[i];
-				if (!junkItem || junkItem.Classname == "")
+				if (!junkItem || junkItem.Classname == "" || !g_Game.ConfigIsExisting("CfgVehicles " + junkItem.Classname) || bank.GetYieldsMap().Contains(junkItem.Classname.Hash()))
 					continue;
 
-				YieldItemJunk junkYield = new YieldItemJunk(junkItem.CatchProbability, junkItem.Classname);
+				YieldItemJunk junkYield = new YieldItemJunk(Math.Clamp(junkItem.CatchProbability, 0, 25), junkItem.Classname);
 				junkYield.GebSetHealthLevelRange(junkItem.MinHealthLevel, junkItem.MaxHealthLevel);
-				bank.RegisterYieldItem(junkYield);
+				GebRegisterUniqueYield(bank, junkYield);
 			}
 		}
 
@@ -111,24 +136,30 @@ modded class MissionBase {
 			for (i = 0; i < m_gebsConfig.Junk.ContainerJunk.Count(); i++)
 			{
 				containerJunkItem = m_gebsConfig.Junk.ContainerJunk[i];
-				if (!containerJunkItem || containerJunkItem.Classname == "")
+				if (!containerJunkItem || containerJunkItem.Classname == "" || !g_Game.ConfigIsExisting("CfgVehicles " + containerJunkItem.Classname) || bank.GetYieldsMap().Contains(containerJunkItem.Classname.Hash()))
 					continue;
 
-				YieldItemJunkEmpty containerJunkYield = new YieldItemJunkEmpty(containerJunkItem.CatchProbability, containerJunkItem.Classname);
+				YieldItemJunkEmpty containerJunkYield = new YieldItemJunkEmpty(Math.Clamp(containerJunkItem.CatchProbability, 0, 25), containerJunkItem.Classname);
 				containerJunkYield.GebSetHealthLevelRange(containerJunkItem.MinHealthLevel, containerJunkItem.MaxHealthLevel);
-				bank.RegisterYieldItem(containerJunkYield);
+				GebRegisterUniqueYield(bank, containerJunkYield);
 			}
 		}
 
 		GebsfishLogger.Info("Registering junk items complete.", "MissionBase");
 	}
 
+    protected void GebRegisterUniqueYield(CatchYieldBank bank, YieldItemBase data) {
+        if (!data || bank.GetYieldsMap().Contains(data.GetType().Hash()))
+            return;
+        bank.RegisterYieldItem(data);
+    }
+
 	protected void RegisterTrapAnimalYieldData(CatchYieldBank bank) {
-		bank.RegisterYieldItem(new YieldItemDeadRabbit(4));
-		bank.RegisterYieldItem(new YieldItemDeadRooster(1));
-		bank.RegisterYieldItem(new YieldItemDeadChicken_White(1));
-		bank.RegisterYieldItem(new YieldItemDeadChicken_Spotted(1));
-		bank.RegisterYieldItem(new YieldItemDeadChicken_Brown(1));
-		bank.RegisterYieldItem(new YieldItemDeadFox(2));
+		GebRegisterUniqueYield(bank, new YieldItemDeadRabbit(4));
+		GebRegisterUniqueYield(bank, new YieldItemDeadRooster(1));
+		GebRegisterUniqueYield(bank, new YieldItemDeadChicken_White(1));
+		GebRegisterUniqueYield(bank, new YieldItemDeadChicken_Spotted(1));
+		GebRegisterUniqueYield(bank, new YieldItemDeadChicken_Brown(1));
+		GebRegisterUniqueYield(bank, new YieldItemDeadFox(2));
 	}
 };

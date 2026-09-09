@@ -1,4 +1,13 @@
 modded class ActionFishingNew: ActionContinuousBase {
+    override bool SetupAction(PlayerBase player, ActionTarget target, ItemBase item, out ActionData action_data, Param extra_data = null) {
+        if (!GebCatchConfigReady())
+            return false;
+        if (!super.SetupAction(player, target, item, action_data, extra_data))
+            return false;
+        FishingActionData data = FishingActionData.Cast(action_data);
+        return data && data.m_ContextData && data.m_ContextData.IsValid();
+    }
+
     override void OnEnd(ActionData action_data){
         super.OnEnd(action_data);
 
@@ -6,13 +15,17 @@ modded class ActionFishingNew: ActionContinuousBase {
         if (!Class.CastTo(fad, action_data))
             return;
 
-        // Animate the rod as a fallback.
-        fad.AnimateRod(false, true);
+        // Vanilla OnEnd already resets the rod animation.
 
         if (!fad.m_Player || !g_Game.IsServer())
             return;
 
         if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.PredatorSettings)
+            return;
+
+        // -1 means no evaluated reel-in (for example, an interrupted cast).
+        // Only completed outcomes qualify for predator or treasure rolls.
+        if (fad.m_FishingResult != 0 && fad.m_FishingResult != 1)
             return;
 
         // Predator spawn chance is split by outcome:
@@ -41,5 +54,22 @@ modded class ActionFishingNew: ActionContinuousBase {
         // set far finer than the catch pool's 0-25 integer weights allow.
         if (fad.m_FishingResult == 1)
             GebsTreasureSpawner.TryPull(fad.m_Player, fad.m_MainItem, "Treasure");
+    }
+}
+
+// A trap can synchronize before configuration or carry an invalid index.
+// Skip cosmetic effects until its yield can be resolved.
+modded class TrapSpawnBase {
+    override protected void PlayCatchSound(YieldItemBase yItem) {
+        if (GebCatchConfigReady() && yItem)
+            super.PlayCatchSound(yItem);
+    }
+    override protected void PlayCatchNoise(YieldItemBase yItem) {
+        if (yItem)
+            super.PlayCatchNoise(yItem);
+    }
+    override protected void PlayCatchParticleSynced(YieldItemBase yItem) {
+        if (yItem)
+            super.PlayCatchParticleSynced(yItem);
     }
 }

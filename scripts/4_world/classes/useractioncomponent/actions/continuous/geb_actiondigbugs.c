@@ -128,7 +128,7 @@ class ActionDigBugs : ActionContinuousBase {
 		bool foundSomething = true;
 		if (findChance < 1.0) {
 			findRoll = Math.RandomFloat01();
-			foundSomething = (findRoll <= findChance);
+			foundSomething = (findRoll < findChance);
 		}
 		if (debugLevel >= 1) {
 			GebsfishLogger.Debug("Dig-bugs find-chance gate: findChance=" + findChance + " roll=" + findRoll + " result=" + foundSomething, "DigBugs");
