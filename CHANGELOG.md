@@ -24,7 +24,7 @@
     * **Cooler** — pauses both food rot and the live-bait timer for anything inside
     * **Bait Bucket** — holds small aquatic catches only (minnows, crayfish, shrimp, frogs, salamanders) and stops them rotting. It does not accept worms or insects and is not a live-bait keeper
     * **Tackle boxes** — can carry bait for convenience but preserve nothing
-    * Artificial lures (rubber worm and all hard baits) never perish
+    * Artificial lures (rubber worm and all hard baits) never spoil - they have no freshness timer. They still take hook wear on every catch and can be lost like any hook
 - **Predator spawn rework** — three independent gates (per-action chance, weighted predator pick, per-predator min/max count) with separate chance values for fishing, filleting, failed casts, and net use. Land-only spawn search (no underwater wolves), optional warning sound RPC, configurable chat warning
 - **Per-action config sections** — `BambooFishingNetSettings`, `DigBugsSettings`, `DigWormsSettings`, each owning its `FindChance` (per-attempt probability of finding anything) and a weighted `Catches[]` table. Tool wear still applies on a miss
 - **Configurable net catches** — net spawn table entries carry an `Environment` field (1 pond, 2 sea, 3 both) for per-environment filtering; catches spawn into the net's cargo (4x4) first, falling back to the player's feet when full. New bamboo net repair recipe: one Netting + a damaged net restores it to Worn

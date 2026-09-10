@@ -82,7 +82,7 @@ Gebsfish layers several configurable environmental systems on top of vanilla fis
 
 * **Foraging for bait** — dig for worms (85% find chance per attempt) or bugs (65%) with dedicated actions, each rolling against its own weighted catch table (worms and grubs from digging worms; crickets, grasshoppers, grubs, and worms from digging bugs). Tools wear on misses too, and every completed dig trains soft skills.
 
-* **Live bait that dies** — worms, crickets, grasshoppers, and grubs are *alive*, and live bait perishes roughly 90 minutes after you find it. Stashing it in a Worm Container, Bug Container, or a cooler pauses the clock — the dedicated containers are worth carrying. The artificial rubber worm never dies. The Bait Bucket does the same job for small aquatic catches: minnows, crayfish, shrimp, frogs, and salamanders stay fresh inside it.
+* **Live bait that dies** — worms, crickets, grasshoppers, and grubs are *alive*, and live bait perishes roughly 90 minutes after you find it. Stashing it in a Worm Container, Bug Container, or a cooler pauses the clock — the dedicated containers are worth carrying. The artificial rubber worm never spoils. The Bait Bucket does the same job for small aquatic catches: minnows, crayfish, shrimp, frogs, and salamanders stay fresh inside it.
 
 * **Cooler & freezer system** — coolers in 12 colors actively chill their cargo toward **-5°C**, cold enough that food eventually freezes solid, and rot stops entirely inside. The flip side: a frozen fish can't be filleted — thaw it by fire or time before prepping. Coolers refuse to nest inside other coolers.
 
