@@ -221,83 +221,61 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         return w.WeatherCatchBoostEnable || w.TemperatureEffectEnable || baitEnabled;
     }
 
-    // Weighted random selection over m_ProbabilityArray, biased by per-species
-    // weather/time-of-day multipliers and the per-bait fish-preference table.
-    // Each yield's final weight is SCALE * speciesWeatherMul * baitMul.
-    // Returns -1 on any error condition (zero total weight, cast failures, etc.)
-    // so the caller falls back to the existing uniform pick. Stays sync-safe by
-    // using GetRandomInRange against an integer-scaled cumulative weight.
+    // Normalize floating weights before summation. Keep tiny positive weights
+    // and avoid integer overflow; duplicate entries still encode abundance.
     protected int PickWeightedYieldIndex() {
         int n = m_ProbabilityArray.Count();
-        if (n <= 0)
-            return -1;
-
-        // Scale floats to ints (x1000) so weighted-random can use the integer
-        // sync RNG, keeping client and server in lockstep.
-        const int SCALE = 1000;
-        ref array<int> scaled = new array<int>;
-        scaled.Reserve(n);
-        int total = 0;
-        int debugLevel = GetDebugLogLevel();
-        string baitSource = "";
-        string baitClassname = GetCurrentBaitClassname(baitSource);
-
-        if (debugLevel == ELEVATED_DEBUG) {
-            GebsfishLogger.Debug("---PickWeightedYieldIndex (bait=" + baitClassname + " source=" + baitSource + ")---", "GenerateResult");
-            GebsfishLogger.Debug("species | rain/storm | window | timeMul | tempMul | weatherMul | baitMul | scaled", "GenerateResult");
-        }
-
-        // The probability array is duplicate-expanded (one entry per weight
-        // point), but the weather/bait multipliers depend only on the
-        // species -- memoize per key so each species computes (and debug-
-        // logs) once instead of once per duplicate. The scaled[] contents,
-        // total, and roll mapping below are identical to the unmemoized
-        // loop, which keeps the synced-RNG pick in client/server lockstep.
-        map<int, int> weightByKey = new map<int, int>();
+        array<float> weights = new array<float>();
+        map<int, float> byKey = new map<int, float>();
+        float maximum = 0;
+        string source;
+        string bait = GetCurrentBaitClassname(source);
         for (int i = 0; i < n; i++) {
             int key = m_ProbabilityArray[i];
-            int weight;
-            if (!weightByKey.Find(key, weight)) {
-                weight = SCALE;  // baseline weight when no buff applies
-                YieldItemBase y;
-                if (Class.CastTo(y, m_YieldsMapAll.Get(key)) && y) {
-                    GebYieldFishBase gy;
-                    if (Class.CastTo(gy, y) && gy) {
-                        float dbgRainStorm, dbgTimeMul, dbgTempMul;
-                        int dbgWindow;
-                        float weatherMul = GetSpeciesWeatherMultiplier(gy, dbgRainStorm, dbgWindow, dbgTimeMul, dbgTempMul);
-                        float baitMul = GetBaitMultiplier(gy.GetSpeciesClassname(), baitClassname);
-                        weight = Math.Round(SCALE * weatherMul * baitMul);
-                        if (weight < 0)
-                            weight = 0;
-
-                        if (debugLevel == ELEVATED_DEBUG) {
-                            GebsfishLogger.Debug(gy.GetSpeciesClassname() + " | " + dbgRainStorm + " | " + WindowToString(dbgWindow) + " | " + dbgTimeMul + " | " + dbgTempMul + " | " + weatherMul + " | " + baitMul + " | " + weight, "GenerateResult");
-                        }
-                    }
+            float weight;
+            if (!byKey.Find(key, weight)) {
+                weight = 1.0;
+                GebYieldFishBase fish = GebYieldFishBase.Cast(m_YieldsMapAll.Get(key));
+                if (fish) {
+                    float rain, time, temperature;
+                    int window;
+                    float weather = GetSpeciesWeatherMultiplier(fish, rain, window, time, temperature);
+                    float preference = GetBaitMultiplier(fish.GetSpeciesClassname(), bait);
+                    // Bound each factor before multiplication, including non-finite input.
+                    weather = GebBoundCatchFactor(weather);
+                    preference = GebBoundCatchFactor(preference);
+                    weight = weather * preference;
                 }
-                weightByKey.Insert(key, weight);
+                byKey.Insert(key, weight);
             }
-
-            scaled.Insert(weight);
-            total += weight;
+            weights.Insert(weight);
+            maximum = Math.Max(maximum, weight);
         }
-
-        if (total <= 0)
+        if (maximum <= 0)
             return -1;
-
-        int roll = m_Player.GetRandomGeneratorSyncManager().GetRandomInRange(RandomGeneratorSyncUsage.RGSAnimalCatching, 0, total - 1);
-        int cumul = 0;
+        float total = 0;
         for (int j = 0; j < n; j++) {
-            cumul += scaled[j];
-            if (roll < cumul) {
-                if (debugLevel == ELEVATED_DEBUG) {
-                    GebsfishLogger.Debug("Weighted yield pick: idx=" + j + " roll=" + roll + " total=" + total, "GenerateResult");
-                }
-                return j;
-            }
+            weights[j] = weights[j] / maximum;
+            total += weights[j];
         }
-        return n - 1;  // floating-point edge case; clamp to last
+        float roll = m_Player.GetRandomGeneratorSyncManager().GetRandomInRange(RandomGeneratorSyncUsage.RGSAnimalCatching, 0, total);
+        float cumulative = 0;
+        int lastPositive = -1;
+        for (int k = 0; k < n; k++) {
+            if (weights[k] <= 0)
+                continue;
+            lastPositive = k;
+            cumulative += weights[k];
+            if (roll < cumulative)
+                return k;
+        }
+        return lastPositive;
+    }
+
+    protected float GebBoundCatchFactor(float value) {
+        if (!(value >= 0)) // also rejects NaN
+            return 0;
+        return Math.Min(value, 1000000.0);
     }
 
     // Returns the classname currently on the rod's hook. Prefers m_Bait (a
@@ -820,6 +798,9 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     }
 
     override void GenerateResult() {
+		m_IsValid = false;
+		if (m_Result)
+			m_Result.SetYieldItem(null);
 		// A fully disabled or malformed yield config can leave this empty.
 		// Guard before random selection so the range never becomes 0..-1.
 		if (!m_ProbabilityArray || m_ProbabilityArray.Count() == 0) {
@@ -832,15 +813,14 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 		YieldItemBase yItem;
 		int idx = -1;
 
-		// If per-species weather buffs are configured, pick weighted instead of
-		// uniformly so the buff actually biases WHICH fish is selected. The
-		// helper returns -1 when buffs are absent / zero / disabled, in which
-		// case we fall through to the existing uniform-random path.
-		if (HasActiveSpeciesBuffs())
-			idx = PickWeightedYieldIndex();
-
-		if (idx < 0)
-			idx = m_Player.GetRandomGeneratorSyncManager().GetRandomInRange(RandomGeneratorSyncUsage.RGSAnimalCatching,0,m_ProbabilityArray.Count() - 1);
+        if (HasActiveSpeciesBuffs()) {
+            idx = PickWeightedYieldIndex();
+            if (idx < 0)
+                return; // All eligible weights are zero: never fall back to uniform.
+        } else {
+            idx = m_Player.GetRandomGeneratorSyncManager().GetRandomInRange(RandomGeneratorSyncUsage.RGSAnimalCatching, 0, m_ProbabilityArray.Count());
+            idx = Math.Clamp(idx, 0, m_ProbabilityArray.Count() - 1);
+        }
 
 		// The probability array stores keys into the yield map, so resolve the
 		// selected entry before setting it as the active fishing result.
@@ -852,6 +832,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 		}
 
 		m_Result.SetYieldItem(yItem);
+		m_IsValid = true;
 
         if (GetDebugLogLevel()) {
 			// Resolve the yield's species classname for the log instead of
@@ -868,7 +849,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 
 			GebsfishLogger.Debug("---------------------Starting New Fishing Session---------------------","GenerateResult");
 			GebsfishLogger.Debug("---Generating Fishing Result---","GenerateResult");
-            GebsfishLogger.Debug("Random number rolled: " + idx, "GenerateResult");
+            GebsfishLogger.Debug("Chosen pool index: " + idx, "GenerateResult");
             GebsfishLogger.Debug("Yield Item Selected: " + yieldClassname, "GenerateResult");
 			// Wording note: this fish is locked in at GenerateResult time --
 			// the catching context picks once at fishing start, before any

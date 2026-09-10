@@ -123,12 +123,14 @@ class GeneralConfig {
 
     private const static string PATH = "$profile:Gebs/general.json";
 
-    void Load() {
+    bool Load() {
         bool changed = false;
         if (FileExist(PATH)) {
             string err;
-            if (!JsonFileLoader<GeneralConfig>.LoadFile(PATH, this, err))
-                GebsfishLogger.Error("general.json failed to load: " + err, "Config");
+            if (!JsonFileLoader<GeneralConfig>.LoadFile(PATH, this, err)) {
+                GebsfishLogger.Error("general.json failed to load; file preserved, using defaults for this session: " + err, "Config");
+                return false;
+            }
             changed = Backfill();
             if (ConfigVersion != VERSION_GEBSFISH) {
                 int added = MergeNewDefaults();
@@ -145,6 +147,7 @@ class GeneralConfig {
         // generation, a backfilled section, or a version bump). A valid,
         // up-to-date file is left untouched -- no rewrite, no mtime change.
         if (changed) Save();
+        return true;
     }
     void Save() { JsonFileLoader<GeneralConfig>.JsonSaveFile(PATH, this); }
 
@@ -183,6 +186,28 @@ class GeneralConfig {
         if (!HookFromFishCatches || HookFromFishCatches.Count() == 0) { SeedHookFromFish(); changed = true; }
         if (!TreasureContainers || TreasureContainers.Count() == 0) { SeedTreasureContainers(); changed = true; }
         if (!TreasureLoot || TreasureLoot.Count() == 0) { SeedTreasureLoot(); changed = true; }
+        if (CorrectLegacyHookClassnames()) changed = true;
+        return changed;
+    }
+
+    // Earlier defaults used FishingHook, but the vanilla item is Hook.
+    // Keep that name if another loaded mod actually defines it.
+    protected bool CorrectLegacyHookClassnames() {
+        if (g_Game.ConfigIsExisting("CfgVehicles FishingHook"))
+            return false;
+        bool changed = false;
+        foreach (HookFromFishEntry hook : HookFromFishCatches) {
+            if (hook && hook.Classname == "FishingHook") {
+                hook.Classname = "Hook";
+                changed = true;
+            }
+        }
+        foreach (TreasureLootEntry loot : TreasureLoot) {
+            if (loot && loot.Classname == "FishingHook") {
+                loot.Classname = "Hook";
+                changed = true;
+            }
+        }
         return changed;
     }
 
@@ -225,15 +250,17 @@ class GeneralConfig {
             }
         }
 
-        // Recipe toggles need re-asserting, unlike the arrays above.
-        // JsonFileLoader ZEROES any member the file doesn't mention -- it does not
-        // leave it at the class initializer -- so a bool toggle added in a later
-        // version loads as 0 (disabled) on every server whose config predates it,
-        // and a bool gives us no way to tell that apart from an admin deliberately
-        // switching it off. Fix it where we do have that information: during a
-        // migration FROM a version that shipped before the toggle existed. Configs
-        // already stamped 3.3.1 or newer are left alone, so a genuine admin "off"
-        // survives every future version bump.
+        // Recipe toggles are NOT handled here. A bool can't be backfilled by a
+        // null check the way the arrays above can: JsonFileLoader ZEROES any
+        // member the file doesn't mention (it does not leave the class
+        // initializer), so a bool toggle added in a later version loads as 0 on
+        // every server whose config predates it -- indistinguishable from an
+        // admin deliberately switching it off. That case is resolved in
+        // Backfill() via the version-independent GebJsonFileHasKey raw-text
+        // scan, which asks "did the file actually contain this key?" -- never by
+        // version number (see the file header). A new RecipeToggleConf bool
+        // needs its own GebJsonFileHasKey line in Backfill(); copy the
+        // CraftFishMount block there.
         return added;
     }
     protected bool HasPredator(string classname) {
@@ -297,7 +324,7 @@ class GeneralConfig {
     void SeedHookFromFish() {
         if (!HookFromFishCatches) HookFromFishCatches = new array<ref HookFromFishEntry>();
         HookFromFishEntry h = new HookFromFishEntry();
-        h.Classname = "FishingHook"; h.Weight = 1.0; h.MinHealthLevel = 3; h.MaxHealthLevel = 3;
+        h.Classname = "Hook"; h.Weight = 1.0; h.MinHealthLevel = 3; h.MaxHealthLevel = 3;
         HookFromFishCatches.Insert(h);
     }
 
@@ -326,7 +353,7 @@ class GeneralConfig {
         l = new TreasureLootEntry(); l.Classname = "Nail";             l.Weight = 5.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; l.MinQuantity = 5; l.MaxQuantity = 30; TreasureLoot.Insert(l);
         l = new TreasureLootEntry(); l.Classname = "Rope";             l.Weight = 4.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
         l = new TreasureLootEntry(); l.Classname = "DuctTape";         l.Weight = 3.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
-        l = new TreasureLootEntry(); l.Classname = "FishingHook";      l.Weight = 3.0; l.MinHealthLevel = 0; l.MaxHealthLevel = 2; TreasureLoot.Insert(l);
+        l = new TreasureLootEntry(); l.Classname = "Hook";      l.Weight = 3.0; l.MinHealthLevel = 0; l.MaxHealthLevel = 2; TreasureLoot.Insert(l);
         l = new TreasureLootEntry(); l.Classname = "Canteen";          l.Weight = 2.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
         l = new TreasureLootEntry(); l.Classname = "Screwdriver";      l.Weight = 2.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
         l = new TreasureLootEntry(); l.Classname = "Matchbox";         l.Weight = 2.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
@@ -385,12 +412,14 @@ class BaitSettingsConf {
     ref array<ref BaitConfig> Preferences;
 
     private const static string PATH = "$profile:Gebs/bait.json";
-    void Load() {
+    bool Load() {
         bool changed = false;
         if (FileExist(PATH)) {
             string err;
-            if (!JsonFileLoader<BaitSettingsConf>.LoadFile(PATH, this, err))
-                GebsfishLogger.Error("bait.json failed to load: " + err, "Config");
+            if (!JsonFileLoader<BaitSettingsConf>.LoadFile(PATH, this, err)) {
+                GebsfishLogger.Error("bait.json failed to load; file preserved, using defaults for this session: " + err, "Config");
+                return false;
+            }
             if (!Preferences) { SeedDefaultPreferences(); changed = true; }
             if (ConfigVersion != VERSION_GEBSFISH) {
                 int added = MergeNewDefaults();
@@ -404,6 +433,7 @@ class BaitSettingsConf {
             changed = true;
         }
         if (changed) Save();
+        return true;
     }
     void Save() {
         JsonFileLoader<BaitSettingsConf>.JsonSaveFile(PATH, this);
@@ -526,6 +556,9 @@ class BaitSettingsConf {
         SeedBait("geb_RubberWorm",    0.6, 2.5, 1.3, 1.5, 0.7, 0.7, 0.4, 0.4, 0.6, 0.3, 0.4, 0.4, 0.4);
         SeedBait("geb_FatHeadMinnow", 0.7, 2.0, 2.5, 2.5, 1.5, 1.8, 0.4, 1.0, 0.8, 1.0, 0.8, 0.5, 0.4);
         SeedBait("geb_RedSalamander", 0.4, 2.0, 2.0, 1.5, 1.0, 2.5, 0.3, 0.4, 0.6, 0.5, 0.5, 0.4, 0.3);
+        // Shrimp is the signature reef/tropical bait -- the one bucket no
+        // other bait favors -- and a strong general saltwater live bait.
+        SeedBait("Shrimp",            1.0, 1.2, 0.5, 0.8, 0.8, 1.4, 0.8, 0.4, 0.9, 0.7, 1.5, 1.8, 2.5);
 
         // One row per lure family: GetBaitMultiplier's trailing-digit
         // fallback resolves geb_SpinnerBait1..4 etc. to these rows, and an
@@ -613,12 +646,14 @@ class JunkConfig {
     ref array<ref ContainerJunkEntry> ContainerJunk;
 
     private const static string PATH = "$profile:Gebs/junk.json";
-    void Load() {
+    bool Load() {
         bool changed = false;
         if (FileExist(PATH)) {
             string err;
-            if (!JsonFileLoader<JunkConfig>.LoadFile(PATH, this, err))
-                GebsfishLogger.Error("junk.json failed to load: " + err, "Config");
+            if (!JsonFileLoader<JunkConfig>.LoadFile(PATH, this, err)) {
+                GebsfishLogger.Error("junk.json failed to load; file preserved, using defaults for this session: " + err, "Config");
+                return false;
+            }
             changed = Backfill();
             if (ConfigVersion != VERSION_GEBSFISH) {
                 int added = MergeNewDefaults();
@@ -632,6 +667,7 @@ class JunkConfig {
             changed = true;
         }
         if (changed) Save();
+        return true;
     }
     void Save() { JsonFileLoader<JunkConfig>.JsonSaveFile(PATH, this); }
     bool Backfill() {
@@ -710,12 +746,14 @@ class FishConfig {
         return null;
     }
 
-    void Load() {
+    bool Load() {
         bool changed = false;
         if (FileExist(PATH)) {
             string err;
-            if (!JsonFileLoader<FishConfig>.LoadFile(PATH, this, err))
-                GebsfishLogger.Error("fish.json failed to load: " + err, "Config");
+            if (!JsonFileLoader<FishConfig>.LoadFile(PATH, this, err)) {
+                GebsfishLogger.Error("fish.json failed to load; file preserved, using defaults for this session: " + err, "Config");
+                return false;
+            }
             changed = Backfill();
             if (ConfigVersion != VERSION_GEBSFISH) {
                 int added = MergeNewDefaults();
@@ -729,11 +767,12 @@ class FishConfig {
             changed = true;
         }
         if (changed) Save();
+        return true;
     }
     void Save() { JsonFileLoader<FishConfig>.JsonSaveFile(PATH, this); }
 
     bool Backfill() {
-        if (!Species || Species.Count() == 0) { SeedSpecies(); return true; }
+        if (!Species) { SeedSpecies(); return true; }
         return false;
     }
 
@@ -895,16 +934,9 @@ class gebsfishConfig {
         Junk    = new JunkConfig();
         Fish    = new FishConfig();
         if (!g_Game.IsServer()) {
-            // Server owns the files; clients receive values via RPC -- but the
-            // Species table can't wait for that RPC. PluginRecipesManager
-            // registers the fillet recipes at plugin init, which happens while
-            // the client is still loading the mission, BEFORE ConfigSync lands.
-            // With Species still null the registration loop silently registers
-            // ZERO fish recipes, so no fish offers a Gut action on that client,
-            // and every recipe registered after the loop lands on a different
-            // ID than the server's. Seeding the compiled defaults keeps both
-            // sides identical; ConfigSync then replaces these values with the
-            // server's real file (recipe execution is server-side anyway).
+            // Server owns disk config; clients receive it by RPC.
+            // Defaults provide provisional catch data during mission loading.
+            // Recipe IDs no longer depend on Species membership or order.
             Fish.SeedDefaults();
             return;
         }
@@ -913,10 +945,27 @@ class gebsfishConfig {
         // so an upgraded server never mixes old and new config files.
         GebsfishMigration.ArchiveOldFiles();
 
-        General.Load();
-        Bait.Load();
-        Junk.Load();
-        Fish.Load();
+        if (!General.Load()) {
+            // Discard any partially deserialized state; never save over a failed load.
+            General = new GeneralConfig();
+            General.SeedDefaults();
+        }
+        if (!Bait.Load()) {
+            // Discard any partially deserialized state; never save over a failed load.
+            Bait = new BaitSettingsConf();
+            Bait.SeedDefaults();
+        }
+        if (!Junk.Load()) {
+            // Discard any partially deserialized state; never save over a failed load.
+            Junk = new JunkConfig();
+            Junk.SeedDefaults();
+        }
+        if (!Fish.Load()) {
+            // Discard any partially deserialized state; never save over a failed load.
+            Fish = new FishConfig();
+            Fish.SeedDefaults();
+        }
+        GebValidateFishConfig(Fish);
     }
 }
 
@@ -1202,7 +1251,7 @@ class ContainerJunkEntry {
 // HookFromFishChance). MinHealthLevel/MaxHealthLevel work the same way as the
 // junk entries: 0 pristine, 1 worn, 2 damaged, 3 badly damaged, 4 ruined.
 class HookFromFishEntry {
-    string ClassnameInfo = "Hook classname to spawn (e.g. FishingHook for vanilla, or any gebsfish lure/hook).";
+    string ClassnameInfo = "Hook classname to spawn (e.g. Hook for vanilla, or any gebsfish lure/hook).";
     string Classname;
     string WeightInfo = "Relative weight in the weighted pick. Set to 0 to disable an entry without deleting it. Pure ratios -- 2.0 is twice as likely as 1.0.";
     float Weight = 1.0;
@@ -1261,3 +1310,85 @@ class TreasureLootEntry {
     int MinQuantity = 0;
     int MaxQuantity = 0;
 };
+// Runtime validation deliberately leaves the administrator's JSON unchanged.
+static float GebValidateNumber(float value, float minimum, float maximum, string field) {
+    float fixedValue;
+    if (!(value >= minimum))
+        fixedValue = minimum;
+    else
+        fixedValue = Math.Min(value, maximum);
+    if (fixedValue != value)
+        GebsfishLogger.Error("Runtime correction: " + field + " -> " + fixedValue, "ConfigValidation");
+    return fixedValue;
+}
+
+static void GebValidateFishConfig(FishConfig config) {
+    if (!config || !config.Species)
+        return;
+    map<int, string> seen = new map<int, string>();
+    int removed = 0;
+    for (int i = 0; i < config.Species.Count(); i++) {
+        FishConf f = config.Species[i];
+        if (!f || f.Classname == "" || !g_Game.ConfigIsExisting("CfgVehicles " + f.Classname)) {
+            GebsfishLogger.Error("Skipping invalid fish.json Species row " + i, "ConfigValidation");
+            config.Species.RemoveOrdered(i);
+            i--;
+            removed++;
+            continue;
+        }
+        int key = f.Classname.Hash();
+        if (seen.Contains(key)) {
+            GebsfishLogger.Error("Skipping duplicate classname/hash: " + f.Classname + " conflicts with " + seen.Get(key), "ConfigValidation");
+            config.Species.RemoveOrdered(i);
+            i--;
+            removed++;
+            continue;
+        }
+        seen.Insert(key, f.Classname);
+        string field = "fish.json/" + f.Classname + "/";
+        f.CatchProbability = GebValidateNumber(f.CatchProbability, 0, 25, field + "CatchProbability");
+        if (f.Environment < 0 || f.Environment > 3) {
+            GebsfishLogger.Error(field + "Environment invalid; disabling habitat eligibility.", "ConfigValidation");
+            f.Environment = 0;
+        }
+        if (f.CatchMethod < 0 || f.CatchMethod > 7) {
+            GebsfishLogger.Error(field + "CatchMethod invalid; disabling method eligibility.", "ConfigValidation");
+            f.CatchMethod = 0;
+        }
+        f.RecipeShape = GebValidateNumber(f.RecipeShape, 0, 2, field + "RecipeShape");
+        f.MeatMin = GebValidateNumber(f.MeatMin, 0, 10, field + "MeatMin");
+        f.MeatMax = GebValidateNumber(f.MeatMax, f.MeatMin, 10, field + "MeatMax");
+        f.RainMultiplier = GebValidateNumber(f.RainMultiplier, 0, 1000, field + "RainMultiplier");
+        f.StormMultiplier = GebValidateNumber(f.StormMultiplier, 0, 1000, field + "StormMultiplier");
+        f.DawnMultiplier = GebValidateNumber(f.DawnMultiplier, 0, 1000, field + "DawnMultiplier");
+        f.DayMultiplier = GebValidateNumber(f.DayMultiplier, 0, 1000, field + "DayMultiplier");
+        f.DuskMultiplier = GebValidateNumber(f.DuskMultiplier, 0, 1000, field + "DuskMultiplier");
+        f.NightMultiplier = GebValidateNumber(f.NightMultiplier, 0, 1000, field + "NightMultiplier");
+        f.TempMin = GebValidateNumber(f.TempMin, -100, 100, field + "TempMin");
+        f.TempMax = GebValidateNumber(f.TempMax, f.TempMin, 100, field + "TempMax");
+        f.TempOptimal = GebValidateNumber(f.TempOptimal, f.TempMin, f.TempMax, field + "TempOptimal");
+        TFloatArray speeds = f.GetBiteSpeedArray();
+        if (speeds.Count() != 24) {
+            GebsfishLogger.Error(field + "BiteSpeed must contain 24 values; using 1 for every hour.", "ConfigValidation");
+            speeds.Clear();
+            for (int h = 0; h < 24; h++)
+                speeds.Insert(1);
+        }
+        f.BiteSpeed = "";
+        for (int hour = 0; hour < 24; hour++) {
+            float speed = GebValidateNumber(speeds[hour], 0, 1, field + "BiteSpeed/" + hour);
+            if (hour > 0)
+                f.BiteSpeed += " ";
+            f.BiteSpeed += speed.ToString();
+        }
+        if (f.ResultMain != "" && !g_Game.ConfigIsExisting("CfgVehicles " + f.ResultMain)) {
+            GebsfishLogger.Error(field + "ResultMain does not exist; disabling its recipe.", "ConfigValidation");
+            f.ResultMain = "";
+        }
+        if (f.RecipeShape != 0 && !g_Game.ConfigIsExisting("CfgVehicles " + f.ResultBonus)) {
+            GebsfishLogger.Error(field + "ResultBonus does not exist; disabling its recipe.", "ConfigValidation");
+            f.ResultMain = "";
+        }
+    }
+    GebsfishLogger.Info("Validated " + config.Species.Count() + " species; skipped " + removed + " invalid/duplicate rows. JSON preserved.", "ConfigValidation");
+}

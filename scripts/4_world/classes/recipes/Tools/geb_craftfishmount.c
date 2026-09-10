@@ -32,7 +32,7 @@ class CraftFishMount extends RecipeBase {
 		m_MinDamageIngredient[0] = -1;
 		m_MaxDamageIngredient[0] = 3;// anything short of ruined
 
-		m_MinQuantityIngredient[0] = -1;
+		m_MinQuantityIngredient[0] = 1;
 		m_MaxQuantityIngredient[0] = -1;
 
 		m_MinDamageIngredient[1] = -1;
@@ -48,8 +48,8 @@ class CraftFishMount extends RecipeBase {
 
 		m_IngredientAddHealth[0] = 0;
 		m_IngredientSetHealth[0] = -1;
-		m_IngredientAddQuantity[0] = 0;
-		m_IngredientDestroy[0] = true;
+		m_IngredientAddQuantity[0] = -1;
+		m_IngredientDestroy[0] = false; // consume one plank, preserve the remaining stack
 		m_IngredientUseSoftSkills[0] = false;
 
 		//ingredient 2 -- the hanging wire

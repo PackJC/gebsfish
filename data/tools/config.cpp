@@ -29,7 +29,12 @@ class CfgPatches {
 		requiredAddons[] = {
 		"DZ_Data",
 		"DZ_Scripts",
-		"DZ_Weapons_Melee"
+		"DZ_Weapons_Melee",
+		// Defines FishingRod. Without it the load order against
+		// gear_tools.pbo is undefined, and whenever vanilla loaded after us
+		// its plain inventorySlot[]={"Backpack_1"} wiped the Shoulder/Melee
+		// slots we add -- the long-standing "rod bug".
+		"DZ_Gear_Tools"
 		};
 	};
 };
@@ -53,7 +58,7 @@ class cfgVehicles {
 	class HuntingKnife;
 	class Container_Base;
 	class Inventory_Base;
-	class FishingRod_Base;
+	class FishingRod_Base_New;
 	class ItemBase;
 
     /*
@@ -276,23 +281,6 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishknife_purple_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishknife.rvmat"};
 	};
-	class FishingRod_Base_New : FishingRod_Base {
-	inventorySlot[] += {
-			"Shoulder",
-			"Melee",
-			"fishingpole",
-			"fishingrod1",
-			"fishingrod2",
-			"fishingrod3",
-			"fishingrod4",
-			"fishingrod5",
-			"fishingrod6",
-			"fishingrod7",
-			"fishingrod8",
-			"fishingrod9",
-			"fishingrod10"
-		};
-	}; 
 	// Restated DamageSystem block on the modded FishingRod base so every
 	// rod variant (vanilla FishingRod + geb_RedFishingRod / Green / Blue /
 	// Purple) shares a single source of truth for HP and visual-state
@@ -302,7 +290,13 @@ class cfgVehicles {
 	// behaves the same with or without gebsfish loaded.
 	class FishingRod : FishingRod_Base_New
     {
-		inventorySlot[]+={"Shoulder", "Melee", "fishingpole", "fishingrod1", "fishingrod2", "fishingrod3", "fishingrod4", "fishingrod5", "fishingrod6", "fishingrod7", "fishingrod8", "fishingrod9", "fishingrod10"};
+		// Rod on the back like a rifle. Vanilla only has the backpack rod
+		// loop ("Backpack_1"), restated here because this plain assignment
+		// replaces the list. Plain on purpose: += made the result depend on
+		// merge order against vanilla gear_tools (see DZ_Gear_Tools in
+		// requiredAddons). fishingpole/fishingrod1-10 are cross-mod
+		// rod-holder compat, inert without such a mod (MAYBE_ISSUES.md #4).
+		inventorySlot[] = {"Backpack_1", "Shoulder", "Melee", "fishingpole", "fishingrod1", "fishingrod2", "fishingrod3", "fishingrod4", "fishingrod5", "fishingrod6", "fishingrod7", "fishingrod8", "fishingrod9", "fishingrod10"};
         hiddenSelections[]={"zbytek"};
 		repairableWithKits[] = {33033};  // Use the same repairKitType as above
 		repairCosts[] = {0.1};          // 10% quantity used per full repair
@@ -322,6 +316,15 @@ class cfgVehicles {
 			};
 		};
     };
+	// Crafted improvised rod carries on the back too. Vanilla already lists
+	// Shoulder + Melee, but the mod restates it (plain assignment, pinned by
+	// DZ_Gear_Tools in requiredAddons) so load order can't drop it, and adds
+	// the same fishingpole/fishingrod1-10 rod-holder compat slots the real
+	// rods carry. No Backpack_1: that is the vanilla rod's own bag slot, which
+	// the improvised rod does not have.
+	class ImprovisedFishingRod : FishingRod_Base_New {
+		inventorySlot[] = {"Shoulder", "Melee", "fishingpole", "fishingrod1", "fishingrod2", "fishingrod3", "fishingrod4", "fishingrod5", "fishingrod6", "fishingrod7", "fishingrod8", "fishingrod9", "fishingrod10"};
+	};
 	class geb_RedFishingRod: FishingRod {
 		scope = 2;
 		displayName = "$STR_tools_redrod";

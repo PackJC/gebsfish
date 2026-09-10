@@ -100,6 +100,8 @@ class GebYieldFishBase extends FishYieldItemBase {
 			return 1.0;
 		if (hour < 0 || hour > 23)
 			return 1.0;
-		return m_BiteSpeed[hour];
+		if (!(m_BiteSpeed[hour] >= 0))
+			return 0;
+		return Math.Clamp(m_BiteSpeed[hour], 0, 1);
 	}
 };

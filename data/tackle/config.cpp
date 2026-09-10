@@ -256,12 +256,12 @@ class cfgVehicles {
 	class geb_Cooler_base: Container_Base {
 		// Deck-mountable on the jon boat (see data/vehicles/config.cpp).
 		inventorySlot[] = {"GebBoatDeck1", "GebBoatDeck2"};
-		scope = 0;  // bump to 2 once the model + textures + stringtable are in place
+		scope = 0;  // base class stays non-spawnable; the color variants below are scope = 2
 		displayName = "$STR_tools_cooler";
 		descriptionShort = "$STR_tools_cooler_desc";
-		model = "\gebsfish\data\tackle\cooler.p3d";  // placeholder -- replace when the cooler model is added
+		model = "\gebsfish\data\tackle\cooler.p3d";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_blue_co.paa"};  // placeholder texture path
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_blue_co.paa"};  // base default; each color variant overrides this
 		rotationFlags = 8;
 		weight = 1200;  // a cooler is heavier than a tackle box -- ~1.2kg empty
 		itemSize[] = {4,3};
@@ -305,9 +305,6 @@ class cfgVehicles {
 	// geb_Cooler_base -- including the cargo filter on the script side
 	// (containers.c geb_Cooler_base) since DayZ falls back to the config
 	// parent's script class when a derived class doesn't define its own.
-	// Texture paths (cooler_<color>_co.paa) and stringtable keys
-	// ($STR_tools_<color>cooler) are placeholders -- swap in real assets
-	// when the textures land.
 	class geb_RedCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_redcooler";

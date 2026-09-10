@@ -72,7 +72,7 @@ modded class ActionDigWorms {
 			float perRoll = -1;
 			if (findChance < 1.0) {
 				perRoll = Math.RandomFloat01();
-				if (perRoll > findChance) {
+				if (perRoll >= findChance) {
 					misses++;
 					if (debugLevel == ELEVATED_DEBUG)
 						GebsfishLogger.Debug("Dig-worms slot " + i + ": miss (roll=" + perRoll + ")", "DigWorms");

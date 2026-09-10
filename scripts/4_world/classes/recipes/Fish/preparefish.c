@@ -1,6 +1,67 @@
 modded class PrepareFish {
     // Vanilla baseline so the knife-speed multiplier never compounds across CanDo calls.
     protected float m_BaseAnimationLength;
+    protected bool m_GebConfiguredRecipe;
+    protected string m_GebFallbackSpecies;
+    protected string m_GebFallbackMain;
+    protected string m_GebFallbackBonus;
+    protected bool m_GebCaviarResult;
+
+    protected FishConf GebResolveRecipe(ItemBase fish) {
+        if (!fish) return null;
+        if (m_gebsConfig && m_gebsConfig.Fish) {
+            FishConf configured = m_gebsConfig.Fish.Get(fish.GetType());
+            if (configured) return configured;
+        }
+        if (m_GebFallbackSpecies == "" || fish.GetType() != m_GebFallbackSpecies)
+            return null;
+        FishConf fallback = new FishConf();
+        fallback.Classname = m_GebFallbackSpecies;
+        fallback.ResultMain = m_GebFallbackMain;
+        fallback.ResultBonus = m_GebFallbackBonus;
+        fallback.MeatMin = 1;
+        fallback.MeatMax = 1;
+        if (m_GebFallbackBonus != "") fallback.RecipeShape = 1;
+        return fallback;
+    }
+
+    protected bool GebHasValidResults(FishConf conf) {
+        if (!conf || conf.ResultMain == "") return false;
+        if (!g_Game.ConfigIsExisting("CfgVehicles " + conf.ResultMain)) return false;
+        if (conf.RecipeShape == 1 || conf.RecipeShape == 2) {
+            if (conf.ResultBonus == "" || !g_Game.ConfigIsExisting("CfgVehicles " + conf.ResultBonus))
+                return false;
+        }
+        return true;
+    }
+
+    // RecipeBase spawns results before modifying them or calling Do().
+    // Rebuild here once per execution, never during CanDo/registration.
+    override void SpawnItems(ItemBase ingredients[], PlayerBase player, array<ItemBase> spawned_objects) {
+        if (m_GebConfiguredRecipe) {
+            FishConf conf = GebResolveRecipe(ingredients[0]);
+            m_NumberOfResults = 0;
+            m_GebCaviarResult = false;
+            if (GebHasValidResults(conf)) {
+                int bonusCount = 0;
+                if (conf.RecipeShape == 1 || conf.RecipeShape == 2) {
+                    AddDefaultResultAtIndex(conf.ResultBonus, 0);
+                    bonusCount = 1;
+                    m_GebCaviarResult = conf.RecipeShape == 1;
+                }
+                int capacity = MAXIMUM_RESULTS - bonusCount;
+                int minCount = conf.MeatMin;
+                int maxCount = conf.MeatMax;
+                if (minCount < 0) minCount = 0;
+                if (minCount > capacity) minCount = capacity;
+                if (maxCount < minCount) maxCount = minCount;
+                if (maxCount > capacity) maxCount = capacity;
+                int count = Math.RandomInt(minCount, maxCount + 1);
+                AddRepeatedResults(conf.ResultMain, count, bonusCount);
+            }
+        }
+        super.SpawnItems(ingredients, player, spawned_objects);
+    }
 
     override void Init() {
 		super.Init();
@@ -25,6 +86,9 @@ modded class PrepareFish {
     // Recalculated every CanDo so swapping knives mid-session always reflects the
     // current tool, and so the multiplier scales from the vanilla baseline (never compounds).
     override bool CanDo(ItemBase ingredients[], PlayerBase player) {
+        if (!ingredients[0] || !ingredients[1]) return false;
+        if (m_GebConfiguredRecipe && !GebHasValidResults(GebResolveRecipe(ingredients[0])))
+            return false;
 		// A frozen fish can't be filleted -- thaw it first. Mirrors vanilla's
 		// PrepareAnimal, which blocks skinning frozen carcasses the same way.
 		if (ingredients[0] && ingredients[0].GetIsFrozen())
@@ -96,29 +160,16 @@ modded class PrepareFish {
 		return Math.RandomInt(min, max + 1);
 	}
 
-	// Fillet recipe for a vanilla fish, reading MeatMin/MeatMax from the live
-	// Species row. A missing config row falls back to one meat piece so the
-	// recipe stays registered instead of crashing Init(). When a bonus
-	// (caviar) classname is given it occupies result index 0 and the meats
-	// start at index 1.
-	void SetupVanillaFilletRecipe(string fishClassname, string filletClassname, string bonusClassname = "") {
-		SetupFishRecipe(fishClassname);
-		int startIndex = 0;
-		if (bonusClassname != "") {
-			AddDefaultResultAtIndex(bonusClassname, 0);
-			startIndex = 1;
-		}
-		int minMeat = 1;
-		int maxMeat = 1;
-		if (m_gebsConfig && m_gebsConfig.Fish && m_gebsConfig.Fish.Get(fishClassname)) {
-			FishConf c = m_gebsConfig.Fish.Get(fishClassname);
-			minMeat = c.MeatMin;
-			maxMeat = c.MeatMax;
-		}
-		// GetInclusiveRandom guards MeatMin > MeatMax inversion;
-		// AddRepeatedResults clamps the total to MAXIMUM_RESULTS.
-		AddRepeatedResults(filletClassname, GetInclusiveRandom(minMeat, maxMeat), startIndex);
-	}
+    // Vanilla recipes keep their own stable IDs, but resolve live tuning
+    // when executed. Clear vanilla's pre-added results to avoid duplication.
+    void SetupVanillaFilletRecipe(string fishClassname, string filletClassname, string bonusClassname = "") {
+        m_GebConfiguredRecipe = true;
+        m_GebFallbackSpecies = fishClassname;
+        m_GebFallbackMain = filletClassname;
+        m_GebFallbackBonus = bonusClassname;
+        m_NumberOfResults = 0;
+        SetupFishRecipe(fishClassname);
+    }
 
 	float GetConfiguredCaviarChance() {
 		if (m_gebsConfig && m_gebsConfig.General && m_gebsConfig.General.GeneralSettings) {
@@ -143,7 +194,16 @@ modded class PrepareFish {
     //Called upon recipe's completion
     override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight) {
 		// Adjusts quantity of results to the quantity of the 1st ingredient
+        // Failed spawns must not reach PrepareAnimal.Do's unchecked dereferences.
+        ItemBase caviar;
+        if (m_GebCaviarResult && results && results.Count() > 0)
+            caviar = results[0];
+        for (int resultIndex = results.Count() - 1; resultIndex >= 0; --resultIndex) {
+            if (!results[resultIndex]) results.Remove(resultIndex);
+        }
 		super.Do(ingredients, player, results, specialty_weight);
+        if (caviar)
+            ApplyConfiguredCaviarChance(results);
         // Trigger predator spawning
 		TrySpawnPredator(player);
 		// Roll for a damaged hook 'stuck in the fish'
