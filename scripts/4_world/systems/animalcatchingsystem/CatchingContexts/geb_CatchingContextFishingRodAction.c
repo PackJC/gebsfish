@@ -849,7 +849,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 
 			GebsfishLogger.Debug("---------------------Starting New Fishing Session---------------------","GenerateResult");
 			GebsfishLogger.Debug("---Generating Fishing Result---","GenerateResult");
-            GebsfishLogger.Debug("Random number rolled: " + idx, "GenerateResult");
+            GebsfishLogger.Debug("Chosen pool index: " + idx, "GenerateResult");
             GebsfishLogger.Debug("Yield Item Selected: " + yieldClassname, "GenerateResult");
 			// Wording note: this fish is locked in at GenerateResult time --
 			// the catching context picks once at fishing start, before any

@@ -13,11 +13,15 @@ class CfgNonAIVehicles {
 };
 
 class CfgPatches {
-	class gebsFishCfgPatches { 	
+	class gebsFishCfgPatches {
 		//Never Use same name for patch, because conflict message.
 		requiredAddons[] = {
 		"DZ_Data",
-		"DZ_Scripts"
+		"DZ_Scripts",
+		// Defines Shrimp. Without it the load order against gear_food.pbo is
+		// undefined and the Shrimp override below can be wiped by vanilla
+		// loading after us.
+		"DZ_Gear_Food"
 		};
 	};
 };
@@ -25,7 +29,6 @@ class CfgPatches {
 class cfgVehicles {		
 	//Instantiate Needed Classes
 	class Carp;
-	class Shrimp;
 	class NotCookable;
 	class Edible_Base;
 	class CarpFilletMeat;
@@ -39,6 +42,24 @@ class cfgVehicles {
 	class Dried;
 	class Burned;
 	class RedCaviar;
+
+	// Vanilla Shrimp override: net-caught shrimp double as hook bait (the
+	// vanilla Hook's attachment slot is "Bait"), trap bait, and a mountable
+	// trophy -- the same slot set as geb_FatHeadMinnow. += appends to
+	// vanilla's cooking/smoking slots; DZ_Gear_Food in requiredAddons
+	// guarantees the vanilla definition loads first, which is what makes the
+	// append deterministic. The invertebrates that inherit from Shrimp
+	// (crayfish, clam, mussel, snail, starfish, jellyfish) must NOT become
+	// hookable, so they restate their slot list in full instead of using +=.
+	class Shrimp: Edible_Base {
+		inventorySlot[] += {
+			"Trap_Bait",
+			"Bait",
+			"Trap_Bait_1",
+			"Trap_Bait_2",
+			"GebFishMount"
+		};
+	};
 
 	//Base classes for fish
 	class geb_FreshFish_Base: Edible_Base {
@@ -359,7 +380,7 @@ class cfgVehicles {
 		model = "\gebsfish\data\fish\crayfish.p3d";
 		itemSize[] = {2,1};
 		weight = 200;
-		inventorySlot[] += {"GebFishMount"};
+		inventorySlot[] = {"DirectCookingA", "DirectCookingB", "DirectCookingC", "SmokingA", "SmokingB", "SmokingC", "SmokingD", "GebFishMount"};
 		hiddenSelections[] =
         {
             "Camo"
@@ -1340,7 +1361,7 @@ class cfgVehicles {
 		model = "\gebsfish\data\fish\bloodclam.p3d";
 		weight = 80;
 		itemSize[] = {1,1};
-		inventorySlot[] += {"GebFishMount"};
+		inventorySlot[] = {"DirectCookingA", "DirectCookingB", "DirectCookingC", "SmokingA", "SmokingB", "SmokingC", "SmokingD", "GebFishMount"};
 	};
 	//Needs to be renamed geb_BlueMussel next wipe
 	class geb_Mussel: Shrimp {
@@ -1350,7 +1371,7 @@ class cfgVehicles {
 		model = "\gebsfish\data\fish\mussel.p3d";
 		weight = 80;
 		itemSize[] = {1,1};
-		inventorySlot[] += {"GebFishMount"};
+		inventorySlot[] = {"DirectCookingA", "DirectCookingB", "DirectCookingC", "SmokingA", "SmokingB", "SmokingC", "SmokingD", "GebFishMount"};
 	};
 	class geb_BlackDevilSnail: Shrimp {
 		scope = 2;
@@ -1359,7 +1380,7 @@ class cfgVehicles {
 		model = "\gebsfish\data\fish\blackdevilsnail.p3d";
 		weight = 30;
 		itemSize[] = {1,1};
-		inventorySlot[] += {"GebFishMount"};
+		inventorySlot[] = {"DirectCookingA", "DirectCookingB", "DirectCookingC", "SmokingA", "SmokingB", "SmokingC", "SmokingD", "GebFishMount"};
 	};
 	class geb_StarFish: Shrimp {
 		scope = 2;
@@ -1368,7 +1389,7 @@ class cfgVehicles {
 		model = "\gebsfish\data\fish\starfish.p3d";
 		weight = 400;
 		itemSize[] = {2,2};
-		inventorySlot[] += {"GebFishMount"};
+		inventorySlot[] = {"DirectCookingA", "DirectCookingB", "DirectCookingC", "SmokingA", "SmokingB", "SmokingC", "SmokingD", "GebFishMount"};
 	};
 	class geb_BlueJellyFish: Shrimp {
 		scope = 2;
@@ -1377,7 +1398,7 @@ class cfgVehicles {
 		model = "\gebsfish\data\fish\bluejellyfish.p3d";
 		weight = 300;
 		itemSize[] = {2,2};
-		inventorySlot[] += {"GebFishMount"};
+		inventorySlot[] = {"DirectCookingA", "DirectCookingB", "DirectCookingC", "SmokingA", "SmokingB", "SmokingC", "SmokingD", "GebFishMount"};
 	};
 	class geb_AmericanLobster: geb_Lobster_Base {
 		scope = 2;
@@ -2131,7 +2152,7 @@ class cfgVehicles {
 		descriptionShort = "$STR_fish_snowcrab_desc";
 		model = "\gebsfish\data\fish\snowcrablegs.p3d";
 		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\kingcrab_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
+			"\gebsfish\data\fish\snowcrab_co.paa","dz\gear\food\data\mackerel_fillet_baked_CO.paa","dz\gear\food\data\mackerel_fillet_boiled_CO.paa","dz\gear\food\data\mackerel_fillet_dried_CO.paa","dz\gear\food\data\mackerel_fillet_burnt_CO.paa"
 		};
 		class Food: Food
 		{

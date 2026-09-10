@@ -250,15 +250,17 @@ class GeneralConfig {
             }
         }
 
-        // Recipe toggles need re-asserting, unlike the arrays above.
-        // JsonFileLoader ZEROES any member the file doesn't mention -- it does not
-        // leave it at the class initializer -- so a bool toggle added in a later
-        // version loads as 0 (disabled) on every server whose config predates it,
-        // and a bool gives us no way to tell that apart from an admin deliberately
-        // switching it off. Fix it where we do have that information: during a
-        // migration FROM a version that shipped before the toggle existed. Configs
-        // already stamped 3.3.1 or newer are left alone, so a genuine admin "off"
-        // survives every future version bump.
+        // Recipe toggles are NOT handled here. A bool can't be backfilled by a
+        // null check the way the arrays above can: JsonFileLoader ZEROES any
+        // member the file doesn't mention (it does not leave the class
+        // initializer), so a bool toggle added in a later version loads as 0 on
+        // every server whose config predates it -- indistinguishable from an
+        // admin deliberately switching it off. That case is resolved in
+        // Backfill() via the version-independent GebJsonFileHasKey raw-text
+        // scan, which asks "did the file actually contain this key?" -- never by
+        // version number (see the file header). A new RecipeToggleConf bool
+        // needs its own GebJsonFileHasKey line in Backfill(); copy the
+        // CraftFishMount block there.
         return added;
     }
     protected bool HasPredator(string classname) {
@@ -554,6 +556,9 @@ class BaitSettingsConf {
         SeedBait("geb_RubberWorm",    0.6, 2.5, 1.3, 1.5, 0.7, 0.7, 0.4, 0.4, 0.6, 0.3, 0.4, 0.4, 0.4);
         SeedBait("geb_FatHeadMinnow", 0.7, 2.0, 2.5, 2.5, 1.5, 1.8, 0.4, 1.0, 0.8, 1.0, 0.8, 0.5, 0.4);
         SeedBait("geb_RedSalamander", 0.4, 2.0, 2.0, 1.5, 1.0, 2.5, 0.3, 0.4, 0.6, 0.5, 0.5, 0.4, 0.3);
+        // Shrimp is the signature reef/tropical bait -- the one bucket no
+        // other bait favors -- and a strong general saltwater live bait.
+        SeedBait("Shrimp",            1.0, 1.2, 0.5, 0.8, 0.8, 1.4, 0.8, 0.4, 0.9, 0.7, 1.5, 1.8, 2.5);
 
         // One row per lure family: GetBaitMultiplier's trailing-digit
         // fallback resolves geb_SpinnerBait1..4 etc. to these rows, and an

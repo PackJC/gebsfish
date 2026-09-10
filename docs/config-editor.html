@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gebsfish Config Editor — visual server tuning, no text editor needed</title>
+<link rel="icon" type="image/png" href="logo.png">
+<meta property="og:title" content="Gebsfish Config Editor">
+<meta property="og:description" content="Drop in the JSON files from your server's Gebs folder, tune everything visually, download them back. No text editor needed.">
+<meta property="og:image" content="https://raw.githubusercontent.com/PackJC/gebsfish/master/.github/logo.png">
+<style>
+  :root {
+    --bg: #0d1520;
+    --bg2: #131e2d;
+    --card: #1a2739;
+    --card2: #21314a;
+    --border: #2c3e58;
+    --text: #dce6f2;
+    --dim: #8fa3bc;
+    --accent: #4db8ff;
+    --accent2: #35d0a0;
+    --gold: #e8c15a;
+    --red: #e87070;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: "Segoe UI", system-ui, sans-serif; line-height: 1.6; }
+  #waterbg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  header, nav, main, footer, #dlbar { position: relative; z-index: 1; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  button { font-family: inherit; }
+
+  header { background: linear-gradient(180deg, rgba(10,26,46,.55) 0%, rgba(13,21,32,.15) 100%); border-bottom: 1px solid var(--border); padding: 18px 20px 14px; text-align: center; }
+  header img.logo { width: min(220px, 60vw); height: auto; margin: -20px auto -28px; display: block; filter: drop-shadow(0 6px 24px rgba(0,0,0,.55)); }
+  header h1 { font-size: 1.25rem; margin-top: 10px; }
+  header p.tag { color: var(--dim); font-size: 0.92rem; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+  nav { position: sticky; top: 0; z-index: 50; background: rgba(19,30,45,.88); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); display: flex; justify-content: center; flex-wrap: wrap; }
+  nav button, nav a.navlink { background: none; border: none; color: var(--dim); font-size: 0.95rem; padding: 13px 16px; cursor: pointer; border-bottom: 3px solid transparent; }
+  nav button:hover, nav a.navlink:hover { color: var(--text); text-decoration: none; }
+  nav button.active { color: var(--accent); border-bottom-color: var(--accent); }
+  nav button .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent2); margin-left: 6px; vertical-align: middle; opacity: 0; transition: opacity .2s; }
+  nav button.loaded .dot { opacity: 1; }
+  nav button.dirty .dot { background: var(--gold); }
+
+  main { max-width: 1100px; margin: 0 auto; padding: 26px 16px 130px; }
+  section.tab { display: none; }
+  section.tab.active { display: block; }
+  h2 { margin: 8px 0 6px; font-size: 1.45rem; }
+  p.lead { color: var(--dim); margin-bottom: 18px; }
+
+  /* ---------- load tab ---------- */
+  #dropzone { border: 2px dashed var(--border); border-radius: 16px; background: rgba(26,39,57,.55); padding: 44px 24px; text-align: center; cursor: pointer; transition: border-color .15s, background .15s, transform .1s; }
+  #dropzone:hover, #dropzone:focus-visible { border-color: var(--accent); }
+  #dropzone.drag { border-color: var(--accent2); background: rgba(53,208,160,.08); transform: scale(1.005); }
+  #dropzone .big { font-size: 2.6rem; line-height: 1.2; }
+  #dropzone b { font-size: 1.1rem; display: block; margin-top: 8px; }
+  #dropzone span.hint { color: var(--dim); font-size: 0.9rem; display: block; margin-top: 4px; }
+  #dropzone kbd { background: var(--bg2); border: 1px solid var(--border); border-radius: 5px; padding: 1px 7px; font-family: Consolas, ui-monospace, monospace; font-size: 0.82em; color: var(--gold); }
+
+  .filecards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin: 18px 0; }
+  .filecard { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; gap: 12px; align-items: center; }
+  .filecard .ico { font-size: 1.7rem; flex: 0 0 auto; }
+  .filecard b { display: block; font-size: 0.95rem; }
+  .filecard small { color: var(--dim); display: block; line-height: 1.4; }
+  .filecard.loaded { border-color: rgba(53,208,160,.55); }
+  .filecard .go { margin-left: auto; flex: 0 0 auto; background: var(--card2); color: var(--accent); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.85rem; }
+  .filecard .go:disabled { opacity: 0.35; cursor: default; }
+
+  .banner { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--gold); border-radius: 8px; padding: 12px 16px; color: var(--dim); font-size: 0.9rem; margin: 14px 0; }
+  .banner.good { border-left-color: #6fe0a8; }
+  .banner b { color: var(--text); }
+  .banner code, .card code, td code, .help code { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; font-size: 0.84em; color: var(--gold); font-family: Consolas, ui-monospace, monospace; }
+
+  .pathbox { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; font-family: Consolas, ui-monospace, monospace; font-size: 0.88rem; margin: 12px 0 20px; overflow-x: auto; white-space: nowrap; }
+  .pathbox .dim { color: var(--dim); }
+  .pathbox .f { color: var(--accent2); }
+
+  /* ---------- shared editor chrome ---------- */
+  .toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin: 4px 0 14px; align-items: center; }
+  .toolbar input[type=search], .toolbar select { background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 0.92rem; font-family: inherit; }
+  .toolbar input[type=search] { flex: 1 1 200px; }
+  .toolbar input:focus-visible, .toolbar select:focus-visible { outline: none; border-color: var(--accent); }
+  .count { color: var(--dim); font-size: 0.85rem; }
+
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
+  .card > h3 { color: var(--accent2); font-size: 1.02rem; margin-bottom: 4px; }
+  .card > p.sub { color: var(--dim); font-size: 0.86rem; margin-bottom: 12px; }
+
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0 26px; }
+
+  .field { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid rgba(44,62,88,.45); flex-wrap: wrap; }
+  .field:last-child { border-bottom: none; }
+  .field > label { flex: 1 1 150px; font-size: 0.9rem; }
+  .field .val { min-width: 52px; text-align: right; font-variant-numeric: tabular-nums; color: var(--accent); font-weight: 600; font-size: 0.9rem; }
+  .field .sub2 { flex-basis: 100%; color: var(--dim); font-size: 0.78rem; margin-top: -4px; }
+
+  input[type=range] { flex: 2 1 130px; accent-color: var(--accent); height: 22px; cursor: pointer; }
+  input[type=number], input[type=text].cfg { background: var(--bg2); color: var(--text); border: 1px solid var(--border); border-radius: 7px; padding: 5px 8px; font-size: 0.9rem; width: 90px; font-family: inherit; }
+  input[type=text].cfg { width: 200px; }
+  input[type=number]:focus-visible, input[type=text].cfg:focus-visible { outline: none; border-color: var(--accent); }
+  select.cfg { background: var(--bg2); color: var(--text); border: 1px solid var(--border); border-radius: 7px; padding: 5px 8px; font-size: 0.88rem; font-family: inherit; }
+
+  /* toggle switch */
+  .switch { position: relative; display: inline-block; width: 46px; height: 24px; flex: 0 0 auto; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .switch i { position: absolute; inset: 0; background: var(--bg2); border: 1px solid var(--border); border-radius: 24px; transition: .15s; }
+  .switch i::before { content: ""; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: var(--dim); border-radius: 50%; transition: .15s; }
+  .switch input:checked + i { background: rgba(53,208,160,.25); border-color: var(--accent2); }
+  .switch input:checked + i::before { transform: translateX(22px); background: var(--accent2); }
+  .switch input:focus-visible + i { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* help popover */
+  .helpbtn { background: none; border: 1px solid var(--border); color: var(--dim); width: 20px; height: 20px; border-radius: 50%; font-size: 0.72rem; cursor: pointer; line-height: 1; flex: 0 0 auto; }
+  .helpbtn:hover { color: var(--accent); border-color: var(--accent); }
+  .help { flex-basis: 100%; background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 10px 13px; color: var(--dim); font-size: 0.82rem; line-height: 1.55; margin: 6px 0 4px; display: none; }
+  .help.open { display: block; }
+
+  .pill { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 0.74rem; font-weight: 600; white-space: nowrap; }
+  .pill.pond { background: #14432f; color: #6fe0a8; }
+  .pill.sea { background: #14324c; color: #6fbce0; }
+  .pill.both { background: #3b3054; color: #c1a3f0; }
+  .pill.abundant { background: #14432f; color: #6fe0a8; }
+  .pill.common { background: #14324c; color: #6fbce0; }
+  .pill.uncommon { background: #4c3a14; color: #e0c46f; }
+  .pill.rare { background: #4c1d1d; color: #e08a8a; }
+
+  /* ---------- fish list ---------- */
+  .fishrow { background: var(--card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+  .fishrow > .head { display: flex; align-items: center; gap: 14px; padding: 10px 14px; cursor: pointer; flex-wrap: wrap; }
+  .fishrow > .head:hover { background: var(--card2); }
+  .fishrow.open > .head { background: var(--card2); }
+  .thumb { width: 74px; height: 46px; flex: 0 0 auto; border-radius: 8px; background: radial-gradient(circle at 50% 40%, #16344e, #0b1725 78%); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .thumb img { width: 100%; height: 100%; object-fit: contain; }
+  .thumb.mini { width: 46px; height: 32px; border-radius: 6px; }
+  .thumb .emoji { font-size: 1.5rem; }
+  .thumb.mini .emoji { font-size: 1.05rem; }
+  .fishrow .names { flex: 1 1 160px; min-width: 130px; }
+  .fishrow .names b { display: block; font-size: 0.97rem; }
+  .fishrow .names small { color: var(--dim); font-family: Consolas, ui-monospace, monospace; font-size: 0.72rem; }
+  .fishrow .quick { flex: 2 1 240px; display: flex; align-items: center; gap: 10px; min-width: 210px; }
+  .fishrow .quick label { color: var(--dim); font-size: 0.78rem; white-space: nowrap; }
+  .fishrow .caret { color: var(--dim); flex: 0 0 auto; transition: transform .15s; }
+  .fishrow.open .caret { transform: rotate(90deg); }
+  .fishrow .body { display: none; border-top: 1px solid var(--border); padding: 16px; background: var(--bg2); }
+  .fishrow.open .body { display: block; }
+
+  .detailflex { display: flex; gap: 22px; flex-wrap: wrap; }
+  .detailflex .art { flex: 0 0 230px; }
+  .detailflex .art .thumb { width: 230px; height: 140px; border-radius: 10px; }
+  .detailflex .art .thumb .emoji { font-size: 4rem; }
+  .detailflex .forms { flex: 1 1 380px; min-width: 300px; }
+
+  /* bitespeed painter */
+  .bitewrap { margin-top: 6px; }
+  .bitechart { display: flex; align-items: flex-end; gap: 2px; height: 96px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 6px 6px 2px; touch-action: none; cursor: crosshair; }
+  .bitechart .bar { flex: 1; background: linear-gradient(180deg, var(--accent), #2a6ea6); border-radius: 3px 3px 0 0; min-height: 3px; position: relative; }
+  .bitechart .bar.night { background: linear-gradient(180deg, #7f6ce0, #4a3f8c); }
+  .bitechart:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .bitechart .bar.cur { outline: 2px solid var(--gold); outline-offset: 1px; }
+  .bitelabels { display: flex; gap: 2px; margin-top: 3px; }
+  .bitelabels span { flex: 1; text-align: center; color: var(--dim); font-size: 0.6rem; }
+  .bitehint { color: var(--dim); font-size: 0.78rem; margin-top: 5px; }
+
+  .btn { background: var(--card2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 7px 14px; cursor: pointer; font-size: 0.88rem; }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #06131f; font-weight: 600; }
+  .btn.primary:hover { filter: brightness(1.1); color: #06131f; }
+  .btn.small { padding: 3px 9px; font-size: 0.78rem; }
+  .btn.danger:hover { border-color: var(--red); color: var(--red); }
+
+  /* ---------- bait tab ---------- */
+  .baitstrip { display: grid; grid-template-columns: repeat(auto-fill, minmax(108px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .baitcard { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 8px 6px 7px; text-align: center; cursor: pointer; }
+  .baitcard:hover { border-color: var(--accent); }
+  .baitcard.sel { border-color: var(--accent2); background: rgba(53,208,160,.08); }
+  .baitcard .thumb { width: 100%; height: 54px; margin-bottom: 6px; }
+  .baitcard b { font-size: 0.74rem; line-height: 1.25; display: block; }
+  .prefrow { display: flex; align-items: center; gap: 12px; padding: 6px 10px; border-bottom: 1px solid rgba(44,62,88,.45); flex-wrap: wrap; }
+  .prefrow:hover { background: rgba(33,49,74,.5); }
+  .prefrow .names { flex: 1 1 140px; min-width: 120px; font-size: 0.88rem; }
+  .prefrow .names small { display: block; color: var(--dim); font-family: Consolas, ui-monospace, monospace; font-size: 0.68rem; }
+  .prefrow input[type=range] { flex: 2 1 140px; }
+  .prefrow .mul { width: 62px; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .mul.up { color: var(--accent2); }
+  .mul.down { color: var(--red); }
+  .mul.neutral { color: var(--dim); }
+
+  /* ---------- tables ---------- */
+  .tblwrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; margin: 8px 0 6px; }
+  table.edit { width: 100%; border-collapse: collapse; font-size: 0.87rem; min-width: 560px; }
+  table.edit thead th { background: var(--card2); text-align: left; padding: 8px 10px; white-space: nowrap; font-size: 0.8rem; }
+  table.edit td { padding: 6px 10px; border-top: 1px solid var(--border); vertical-align: middle; }
+  table.edit input[type=number] { width: 74px; }
+  table.edit input[type=text].cfg { width: 180px; font-family: Consolas, ui-monospace, monospace; font-size: 0.82rem; }
+  .tblnote { color: var(--dim); font-size: 0.78rem; margin: 4px 2px 0; }
+
+  /* ---------- download bar ---------- */
+  #dlbar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 60; background: rgba(19,30,45,.94); backdrop-filter: blur(10px); border-top: 1px solid var(--border); padding: 10px 14px; display: none; }
+  #dlbar.show { display: block; }
+  #dlbar .inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  #dlbar .lbl { color: var(--dim); font-size: 0.85rem; margin-right: 4px; }
+  #dlbar .btn .b { display: inline-block; min-width: 8px; min-height: 8px; border-radius: 50%; background: var(--gold); margin-left: 7px; vertical-align: middle; visibility: hidden; }
+  #dlbar .btn.dirty { border-color: var(--gold); }
+  #dlbar .btn.dirty .b { visibility: visible; }
+
+  /* toast */
+  #toasts { position: fixed; top: 60px; right: 16px; z-index: 100; display: flex; flex-direction: column; gap: 8px; max-width: 340px; }
+  .toast { background: var(--card2); border: 1px solid var(--accent2); border-radius: 10px; padding: 10px 14px; font-size: 0.88rem; box-shadow: 0 6px 24px rgba(0,0,0,.4); animation: tin .2s ease-out; }
+  .toast.err { border-color: var(--red); }
+  @keyframes tin { from { opacity: 0; transform: translateY(-8px); } }
+
+  footer { text-align: center; color: var(--dim); font-size: 0.82rem; padding: 26px 16px 40px; border-top: 1px solid var(--border); margin-top: 40px; }
+
+  .placeholder { text-align: center; color: var(--dim); padding: 50px 20px; }
+  .placeholder .big { font-size: 2.4rem; }
+
+  @media (max-width: 620px) {
+    .fishrow .quick { flex-basis: 100%; }
+    .detailflex .art { flex-basis: 100%; }
+    .detailflex .art .thumb { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<canvas id="waterbg" aria-hidden="true"></canvas>
+
+<header>
+  <a href="index.html"><img class="logo" src="logo.png" alt="Gebsfish"></a>
+  <h1>🛠️ Server Config Editor</h1>
+  <p class="tag">Drop in the JSON files from your server's <code style="color:var(--gold)">Gebs</code> folder, tune everything visually, download them back. No text editor needed.</p>
+</header>
+
+<nav aria-label="Editor sections">
+  <button data-tab="load" class="active">📥 Load Files</button>
+  <button data-tab="fish" id="nav-fish">🐟 Fish<span class="dot"></span></button>
+  <button data-tab="bait" id="nav-bait">🪱 Bait &amp; Lures<span class="dot"></span></button>
+  <button data-tab="general" id="nav-general">⚙️ General<span class="dot"></span></button>
+  <button data-tab="junk" id="nav-junk">🗑️ Junk<span class="dot"></span></button>
+  <a class="navlink" href="index.html">↩ Back to Wiki</a>
+</nav>
+
+<main>
+
+<!-- ============================ LOAD TAB ============================ -->
+<section class="tab active" id="tab-load">
+  <h2>Load your config files</h2>
+  <p class="lead">Everything happens in your browser — nothing is uploaded to any server, and your files never leave your computer.</p>
+
+  <div id="dropzone" role="button" tabindex="0" aria-label="Drop JSON config files here or press Enter to browse">
+    <div class="big">🎣</div>
+    <b>Drag &amp; drop your JSON files here</b>
+    <span class="hint">or click to browse — load one file or all four at once</span>
+    <span class="hint" style="margin-top:10px"><kbd>fish.json</kbd> <kbd>bait.json</kbd> <kbd>general.json</kbd> <kbd>junk.json</kbd></span>
+  </div>
+  <input type="file" id="fileinput" accept=".json,application/json" multiple hidden aria-hidden="true">
+
+  <div class="filecards" id="filecards"></div>
+
+  <div class="banner">
+    <b>Where do these files live?</b> The mod generates them on first server start, inside your server's <b>profile</b> folder
+    (the directory named by your server's <code>-profiles=</code> launch parameter):
+  </div>
+  <div class="pathbox"><span class="dim">…\YourDayZServer\</span>profiles<span class="dim">\</span><b>Gebs</b><span class="dim">\</span>  →  <span class="f">general.json</span>  <span class="f">bait.json</span>  <span class="f">fish.json</span>  <span class="f">junk.json</span></div>
+
+  <div class="banner good">
+    <b>Safe to edit.</b> This editor only changes the values you touch. Every other field — including the built-in
+    <code>…Info</code> documentation and the <code>ConfigVersion</code> stamp — is preserved exactly, so the mod's
+    additive update system keeps working. Fields from newer mod versions that this editor doesn't know about yet
+    are kept untouched too.
+  </div>
+</section>
+
+<!-- ============================ FISH TAB ============================ -->
+<section class="tab" id="tab-fish">
+  <h2>🐟 Fish — <code style="font-size:1rem;color:var(--gold)">fish.json</code></h2>
+  <p class="lead">Per-species tuning: how common each fish is, where and how it's caught, meat yield, weather &amp; temperature behavior, and its 24-hour bite rhythm.</p>
+  <div id="fish-editor"></div>
+</section>
+
+<!-- ============================ BAIT TAB ============================ -->
+<section class="tab" id="tab-bait">
+  <h2>🪱 Bait &amp; Lures — <code style="font-size:1rem;color:var(--gold)">bait.json</code></h2>
+  <p class="lead">Pick a bait, then set how strongly it attracts each fish. <b>1.0 is neutral</b> — higher means that fish loves this bait, lower means it ignores it.</p>
+  <div id="bait-editor"></div>
+</section>
+
+<!-- ============================ GENERAL TAB ============================ -->
+<section class="tab" id="tab-general">
+  <h2>⚙️ General — <code style="font-size:1rem;color:var(--gold)">general.json</code></h2>
+  <p class="lead">Global systems: weather &amp; time-of-day buffs, moon phase, water temperature, treasure, predators, foraging, recipes, and logging.</p>
+  <div id="general-editor"></div>
+</section>
+
+<!-- ============================ JUNK TAB ============================ -->
+<section class="tab" id="tab-junk">
+  <h2>🗑️ Junk — <code style="font-size:1rem;color:var(--gold)">junk.json</code></h2>
+  <p class="lead">Items a rod or trap can drag up instead of a fish. Weighted 0–25 like fish probabilities; health is rolled in the min–max range.</p>
+  <div id="junk-editor"></div>
+</section>
+
+</main>
+
+<div id="dlbar" aria-label="Download edited files">
+  <div class="inner">
+    <span class="lbl">💾 Download:</span>
+    <button class="btn" data-dl="fish" hidden>fish.json<span class="b"></span></button>
+    <button class="btn" data-dl="bait" hidden>bait.json<span class="b"></span></button>
+    <button class="btn" data-dl="general" hidden>general.json<span class="b"></span></button>
+    <button class="btn" data-dl="junk" hidden>junk.json<span class="b"></span></button>
+    <button class="btn primary" id="dl-all" hidden>⬇ Download all edited</button>
+    <span class="lbl" id="dl-hint" style="margin-left:auto"></span>
+  </div>
+</div>
+
+<div id="toasts" aria-live="polite"></div>
+
+<footer>
+  Gebsfish Config Editor · runs entirely in your browser · files are never uploaded anywhere ·
+  <a href="index.html">Gebsfish Wiki</a> · <a href="https://github.com/PackJC/gebsfish">GitHub</a>
+</footer>
+
+<script src="fish-details.js"></script>
+<script src="item-details.js"></script>
+<script>
+"use strict";
+/* =========================================================================
+   Gebsfish Config Editor
+   Loads the four $profile:Gebs/*.json files, edits them in place, and
+   serializes the SAME objects back out — so every field the editor does
+   not know about (Info strings, ConfigVersion, future additions) survives
+   the round trip untouched.
+   ========================================================================= */
+
+/* ---------- display names ---------- */
+const FISHNAME = {
+  "Mackerel":"Mackerel","Carp":"Carp","Sardines":"Sardines","Bitterlings":"Bitterlings",
+  "WalleyePollock":"Walleye Pollock","SteelheadTrout":"Steelhead Trout","Shrimp":"Shrimp",
+  "geb_NorthernSnakeHead":"Northern Snakehead","geb_NorthernPike":"Northern Pike",
+  "geb_BarredMuskellunge":"Barred Muskellunge","geb_SpottedMuskellunge":"Spotted Muskellunge",
+  "geb_TigerMuskellunge":"Tiger Muskellunge","geb_Muskellunge":"Muskellunge",
+  "geb_AlligatorGar":"Alligator Gar","geb_LargeMouthBass":"Largemouth Bass",
+  "geb_SmallMouthBass":"Smallmouth Bass","geb_WallEye":"Walleye","geb_SunFish":"Sun Fish",
+  "geb_WhiteBass":"White Bass","geb_StripedBass":"Striped Bass","geb_NeoshoBass":"Neosho Bass",
+  "geb_BlackBass":"Black Bass","geb_RainbowTrout":"Rainbow Trout","geb_BrownTrout":"Brown Trout",
+  "geb_BrookTrout":"Brook Trout","geb_LakeTrout":"Lake Trout","geb_CutThroatTrout":"Cutthroat Trout",
+  "geb_LakeSturgeon":"Lake Sturgeon","geb_YellowPerch":"Yellow Perch",
+  "geb_FlatHeadCatFish":"Flathead Catfish","geb_FatHeadMinnow":"Fathead Minnow",
+  "geb_AmericanBullFrog":"American Bullfrog","geb_RedSalamander":"Red Salamander",
+  "geb_BlueGill":"Bluegill","geb_Sauger":"Sauger","geb_BowFin":"Bowfin",
+  "geb_SlimySculpin":"Slimy Sculpin","geb_Severum":"Severum",
+  "geb_SignalCrayFish":"Signal Crayfish","geb_EuropeanCrayFish":"European Crayfish",
+  "geb_FloridaCrayFish":"Florida Crayfish","geb_CaveCrayFish":"Cave Crayfish",
+  "geb_MonongahelaCrayFish":"Monongahela Crayfish","geb_RedSwampCrayFish":"Red Swamp Crayfish",
+  "geb_RustyCrayFish":"Rusty Crayfish","geb_MahiMahi":"Mahi Mahi",
+  "geb_AtlanticSailFish":"Atlantic Sailfish","geb_AngelFish":"Angelfish",
+  "geb_AsianSeaBass":"Asian Seabass","geb_AtlanticBlueMarlin":"Atlantic Blue Marlin",
+  "geb_Bonita":"Bonita","geb_CherrySalmon":"Cherry Salmon","geb_ChinookSalmon":"Chinook Salmon",
+  "geb_SockEyeSalmon":"Sockeye Salmon","geb_FlatHeadMullet":"Flathead Mullet",
+  "geb_LeopardShark":"Leopard Shark","geb_HammerHeadShark":"Hammerhead Shark",
+  "geb_PacificCod":"Pacific Cod","geb_RedHeadCichlid":"Redhead Cichlid",
+  "geb_RoughNeckRock":"Rough Neck Rock","geb_BlueTang":"Blue Tang",
+  "geb_LargeHeadHairTailFish":"Largehead Hairtail","geb_HumpHeadWrasse":"Humphead Wrasse",
+  "geb_SiameseTigerFish":"Siamese Tigerfish","geb_GreatWhiteShark":"Great White Shark",
+  "geb_AngelShark":"Angel Shark","geb_YellowFinTuna":"Yellowfin Tuna","geb_WhiteGrunt":"White Grunt",
+  "geb_SouthernFlounder":"Southern Flounder","geb_YellowSnapper":"Yellow Snapper",
+  "geb_BloodClam":"Blood Clam","geb_Mussel":"Mussel","geb_BlackDevilSnail":"Black Devil Snail",
+  "geb_StarFish":"Starfish","geb_KingCrab":"King Crab","geb_SnowCrab":"Snow Crab",
+  "geb_BlueJellyFish":"Blue Jellyfish","geb_AmericanLobster":"American Lobster",
+  "geb_EuropeanLobster":"European Lobster"
+};
+const BAITNAME = {
+  "Worm":"Earthworm","geb_GrassHopper":"Grasshopper","geb_FieldCricket":"Field Cricket",
+  "geb_GrubWorm":"Grub Worm","geb_RubberWorm":"Rubber Worm","geb_FatHeadMinnow":"Live Minnow",
+  "geb_RedSalamander":"Live Salamander","Shrimp":"Live Shrimp",
+  "geb_SpinnerBait":"Spinner Baits","geb_SpoonLure":"Spoon Lures",
+  "geb_Lure":"Hard Lures","geb_CurlyTailJig":"Curly Tail Jigs"
+};
+function niceName(cls){
+  if (FISHNAME[cls]) return FISHNAME[cls];
+  if (BAITNAME[cls]) return BAITNAME[cls];
+  if (typeof ITEMDETAIL !== "undefined" && ITEMDETAIL[cls] && ITEMDETAIL[cls].name) return ITEMDETAIL[cls].name;
+  return cls.replace(/^geb_/, "").replace(/([a-z])([A-Z])/g, "$1 $2");
+}
+// Bait-context label: Shrimp/minnow/salamander are both catchable fish AND
+// baits, so in the bait tab prefer the bait wording ("Live Shrimp") over the
+// fish name that niceName() would return first.
+function baitName(cls){ return BAITNAME[cls] || niceName(cls); }
+// Escape before interpolating any loaded-file string into innerHTML — a
+// classname from the JSON is user-supplied and could otherwise inject markup.
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+/* ---------- images: try known art, fall back to a themed emoji ---------- */
+function emojiFor(cls){
+  const c = cls.toLowerCase();
+  if (c.includes("shrimp")) return "🦐";
+  if (c.includes("crab")) return "🦀";
+  if (c.includes("lobster") || c.includes("crayfish")) return "🦞";
+  if (c.includes("jellyfish")) return "🪼";
+  if (c.includes("snail")) return "🐌";
+  if (c.includes("frog")) return "🐸";
+  if (c.includes("salamander")) return "🦎";
+  if (c.includes("clam") || c.includes("mussel")) return "🦪";
+  if (c.includes("starfish")) return "⭐";
+  if (c.includes("worm")) return "🪱";
+  if (c.includes("cricket") || c.includes("hopper")) return "🦗";
+  if (c.includes("shark")) return "🦈";
+  if (c.includes("hook")) return "🪝";
+  if (c.includes("spinner") || c.includes("spoon") || c.includes("lure") || c.includes("jig")) return "🎏";
+  return "🐟";
+}
+function imgCandidates(cls){
+  // Try the exact classname under fish/ then items/, then the lure-family
+  // image (geb_SpinnerBait -> items/geb_SpinnerBait1.webp) for numbered variants.
+  const fam = cls.replace(/\d+$/, "");
+  return ["fish/" + cls + ".webp", "items/" + cls + ".webp", "items/" + fam + "1.webp"];
+}
+function makeThumb(cls, mini){
+  const d = document.createElement("div");
+  d.className = "thumb" + (mini ? " mini" : "");
+  const img = document.createElement("img");
+  img.alt = "";
+  const cands = imgCandidates(cls);
+  let i = 0;
+  img.onerror = () => {
+    i++;
+    if (i < cands.length) { img.src = cands[i]; }
+    else { img.remove(); const e = document.createElement("span"); e.className = "emoji"; e.textContent = emojiFor(cls); d.appendChild(e); }
+  };
+  img.src = cands[0];
+  d.appendChild(img);
+  return d;
+}
+
+/* ---------- state ---------- */
+const FILES = {
+  fish:    { label: "fish.json",    ico: "🐟", data: null, dirty: false },
+  bait:    { label: "bait.json",    ico: "🪱", data: null, dirty: false },
+  general: { label: "general.json", ico: "⚙️", data: null, dirty: false },
+  junk:    { label: "junk.json",    ico: "🗑️", data: null, dirty: false }
+};
+
+function detectType(obj){
+  if (!obj || typeof obj !== "object") return null;
+  if (Array.isArray(obj.Species)) return "fish";
+  // Only bait.json carries a top-level Preferences array (may be empty).
+  if (Array.isArray(obj.Preferences)) return "bait";
+  if (Array.isArray(obj.Junk) || Array.isArray(obj.ContainerJunk)) return "junk";
+  if (obj.WeatherSettings || obj.GeneralSettings || obj.TreasureSettings || obj.PredatorSettings) return "general";
+  return null;
+}
+
+function markDirty(kind){
+  FILES[kind].dirty = true;
+  refreshChrome();
+}
+
+/* ---------- toast ---------- */
+function toast(msg, err){
+  const t = document.createElement("div");
+  t.className = "toast" + (err ? " err" : "");
+  t.textContent = msg;
+  document.getElementById("toasts").appendChild(t);
+  setTimeout(() => t.remove(), err ? 6000 : 3200);
+}
+
+/* ---------- file loading ---------- */
+const dz = document.getElementById("dropzone");
+const fi = document.getElementById("fileinput");
+dz.addEventListener("click", () => fi.click());
+dz.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fi.click(); } });
+fi.addEventListener("change", () => { loadFiles(fi.files); fi.value = ""; });
+
+["dragenter","dragover"].forEach(ev => document.addEventListener(ev, e => { e.preventDefault(); dz.classList.add("drag"); }));
+["dragleave","drop"].forEach(ev => document.addEventListener(ev, e => { e.preventDefault(); if (ev === "drop" || e.target === document.documentElement) dz.classList.remove("drag"); }));
+document.addEventListener("drop", e => { dz.classList.remove("drag"); if (e.dataTransfer && e.dataTransfer.files.length) loadFiles(e.dataTransfer.files); });
+
+function loadFiles(list){
+  [...list].forEach(f => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      let obj;
+      try { obj = JSON.parse(reader.result); }
+      catch (err) {
+        toast("❌ " + f.name + " isn't valid JSON — is it the right file? (" + err.message.slice(0, 60) + ")", true);
+        return;
+      }
+      const kind = detectType(obj);
+      if (!kind) { toast("❌ " + f.name + " doesn't look like a Gebsfish config file.", true); return; }
+      FILES[kind].data = obj;
+      FILES[kind].dirty = false;
+      renderEditor(kind);
+      refreshChrome();
+      toast("✅ Loaded " + FILES[kind].label + (f.name !== FILES[kind].label ? " (from " + f.name + ")" : ""));
+    };
+    reader.readAsText(f);
+  });
+}
+
+/* ---------- download ---------- */
+function download(kind){
+  const f = FILES[kind];
+  if (!f.data) return;
+  const blob = new Blob([JSON.stringify(f.data, null, 4)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = f.label;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  f.dirty = false;
+  refreshChrome();
+}
+document.querySelectorAll("#dlbar [data-dl]").forEach(b => b.addEventListener("click", () => download(b.dataset.dl)));
+document.getElementById("dl-all").addEventListener("click", () => {
+  Object.keys(FILES).filter(k => FILES[k].data && FILES[k].dirty).forEach((k, i) => setTimeout(() => download(k), i * 300));
+});
+
+/* ---------- chrome (nav dots, file cards, download bar) ---------- */
+function refreshChrome(){
+  let any = false, anyDirty = false;
+  Object.keys(FILES).forEach(k => {
+    const f = FILES[k];
+    const nb = document.getElementById("nav-" + k);
+    nb.classList.toggle("loaded", !!f.data);
+    nb.classList.toggle("dirty", f.dirty);
+    const db = document.querySelector('#dlbar [data-dl="' + k + '"]');
+    db.hidden = !f.data;
+    db.classList.toggle("dirty", f.dirty);
+    if (f.data) any = true;
+    if (f.dirty) anyDirty = true;
+  });
+  document.getElementById("dlbar").classList.toggle("show", any);
+  document.getElementById("dl-all").hidden = !anyDirty;
+  document.getElementById("dl-hint").textContent = anyDirty ? "● unsaved edits — download to keep them" : (any ? "put the files back in your server's Gebs folder and restart" : "");
+  renderFileCards();
+}
+function renderFileCards(){
+  const host = document.getElementById("filecards");
+  host.innerHTML = "";
+  const desc = {
+    fish: "Every species: rarity, environment, meat, weather & bite rhythm",
+    bait: "Which fish each bait and lure attracts",
+    general: "Weather, moon, temperature, treasure, predators, foraging",
+    junk: "Junk items a cast can pull up instead of a fish"
+  };
+  Object.keys(FILES).forEach(k => {
+    const f = FILES[k];
+    const c = document.createElement("div");
+    c.className = "filecard" + (f.data ? " loaded" : "");
+    const stat = f.data ? (f.dirty ? "loaded — edited, not yet downloaded" : "loaded ✓") : "not loaded yet";
+    c.innerHTML = '<div class="ico">' + f.ico + '</div><div><b>' + f.label + '</b><small>' + desc[k] + '</small><small style="color:' + (f.data ? "var(--accent2)" : "var(--dim)") + '">' + stat + "</small></div>";
+    const go = document.createElement("button");
+    go.className = "go"; go.textContent = "Edit →"; go.disabled = !f.data;
+    go.addEventListener("click", () => activateTab(k));
+    c.appendChild(go);
+    host.appendChild(c);
+  });
+}
+
+/* ---------- tabs ---------- */
+function activateTab(name){
+  const btn = document.querySelector('nav button[data-tab="' + name + '"]');
+  const sec = document.getElementById("tab-" + name);
+  if (!btn || !sec) return;
+  document.querySelectorAll("nav button").forEach(x => x.classList.remove("active"));
+  document.querySelectorAll("section.tab").forEach(x => x.classList.remove("active"));
+  btn.classList.add("active");
+  sec.classList.add("active");
+  window.scrollTo({ top: 0 });
+}
+document.querySelectorAll("nav button").forEach(b => b.addEventListener("click", () => activateTab(b.dataset.tab)));
+
+/* =========================================================================
+   Form builder helpers. Each control mutates the loaded object directly.
+   ========================================================================= */
+function fmtNum(v){ return Math.abs(v) >= 1000 ? v.toLocaleString("en-US") : String(Math.round(v * 1000) / 1000); }
+
+function helpFor(obj, key, fallback){
+  const s = obj && typeof obj[key + "Info"] === "string" ? obj[key + "Info"] : null;
+  return s || fallback || null;
+}
+function attachHelp(field, text){
+  if (!text) return;
+  const btn = document.createElement("button");
+  btn.className = "helpbtn"; btn.type = "button"; btn.textContent = "i";
+  btn.setAttribute("aria-label", "What does this do?");
+  const div = document.createElement("div");
+  div.className = "help"; div.textContent = text;
+  btn.addEventListener("click", () => div.classList.toggle("open"));
+  field.appendChild(btn);
+  field.appendChild(div);
+}
+
+function rowToggle(kind, obj, key, label, help){
+  const f = document.createElement("div");
+  f.className = "field";
+  const id = "t_" + Math.random().toString(36).slice(2);
+  f.innerHTML = '<label for="' + id + '">' + label + "</label>";
+  const sw = document.createElement("label");
+  sw.className = "switch";
+  const cb = document.createElement("input");
+  cb.type = "checkbox"; cb.id = id; cb.checked = !!obj[key];
+  cb.addEventListener("change", () => { obj[key] = cb.checked ? 1 : 0; markDirty(kind); });
+  sw.appendChild(cb);
+  sw.appendChild(document.createElement("i"));
+  f.appendChild(sw);
+  attachHelp(f, helpFor(obj, key, help));
+  return f;
+}
+
+function rowSlider(kind, obj, key, label, min, max, step, help, fmt){
+  const f = document.createElement("div");
+  f.className = "field";
+  const id = "s_" + Math.random().toString(36).slice(2);
+  f.innerHTML = '<label for="' + id + '">' + label + "</label>";
+  const r = document.createElement("input");
+  r.type = "range"; r.min = min; r.max = max; r.step = step; r.id = id;
+  r.value = typeof obj[key] === "number" ? obj[key] : min;
+  r.setAttribute("aria-label", label);
+  const v = document.createElement("span");
+  v.className = "val";
+  // Read the true stored value, not r.value: a range input clamps to
+  // [min,max] and snaps to step on assignment, so a loaded value outside the
+  // slider's range would otherwise be displayed as the clamped value.
+  const show = () => { v.textContent = (fmt || fmtNum)(typeof obj[key] === "number" ? obj[key] : parseFloat(r.value)); };
+  show();
+  r.addEventListener("input", () => { obj[key] = parseFloat(r.value); show(); sub(); markDirty(kind); });
+  f.appendChild(r);
+  f.appendChild(v);
+  let subEl = null, sub = () => {};
+  attachHelp(f, helpFor(obj, key, help));
+  f._setSub = fn => { subEl = document.createElement("div"); subEl.className = "sub2"; f.insertBefore(subEl, f.querySelector(".help")); sub = () => { subEl.textContent = fn(obj[key]); }; sub(); };
+  return f;
+}
+
+function rowNumber(kind, obj, key, label, opts, help){
+  opts = opts || {};
+  const f = document.createElement("div");
+  f.className = "field";
+  const id = "n_" + Math.random().toString(36).slice(2);
+  f.innerHTML = '<label for="' + id + '">' + label + "</label>";
+  const n = document.createElement("input");
+  n.type = "number"; n.id = id;
+  if (opts.min !== undefined) n.min = opts.min;
+  if (opts.max !== undefined) n.max = opts.max;
+  n.step = opts.step !== undefined ? opts.step : "any";
+  n.value = obj[key];
+  n.setAttribute("aria-label", label);
+  n.addEventListener("change", () => {
+    let v = parseFloat(n.value);
+    if (isNaN(v)) { n.value = obj[key]; return; }
+    if (opts.min !== undefined) v = Math.max(opts.min, v);
+    if (opts.max !== undefined) v = Math.min(opts.max, v);
+    if (opts.int) v = Math.round(v);
+    obj[key] = v; n.value = v; markDirty(kind);
+  });
+  f.appendChild(n);
+  attachHelp(f, helpFor(obj, key, help));
+  return f;
+}
+
+function rowSelect(kind, obj, key, label, options, help){
+  const f = document.createElement("div");
+  f.className = "field";
+  const id = "sel_" + Math.random().toString(36).slice(2);
+  f.innerHTML = '<label for="' + id + '">' + label + "</label>";
+  const s = document.createElement("select");
+  s.className = "cfg"; s.id = id;
+  s.setAttribute("aria-label", label);
+  options.forEach(([val, txt]) => {
+    const o = document.createElement("option");
+    o.value = val; o.textContent = txt;
+    if (obj[key] === val) o.selected = true;
+    s.appendChild(o);
+  });
+  s.addEventListener("change", () => { obj[key] = parseInt(s.value, 10); markDirty(kind); });
+  f.appendChild(s);
+  attachHelp(f, helpFor(obj, key, help));
+  return f;
+}
+
+const HEALTH_OPTS = [[0,"0 · Pristine"],[1,"1 · Worn"],[2,"2 · Damaged"],[3,"3 · Badly Damaged"],[4,"4 · Ruined"]];
+const ENV_OPTS = [[1,"Pond / fresh"],[2,"Sea / salt"],[3,"Both"]];
+
+/* generic add/remove table editor for entry arrays */
+function tableEditor(kind, arr, cols, addTemplate, note, showThumb){
+  const wrap = document.createElement("div");
+  const tw = document.createElement("div");
+  tw.className = "tblwrap";
+  const tbl = document.createElement("table");
+  tbl.className = "edit";
+  const thead = document.createElement("thead");
+  thead.innerHTML = "<tr>" + (showThumb ? "<th></th>" : "") + cols.map(c => "<th>" + c.label + "</th>").join("") + "<th></th></tr>";
+  tbl.appendChild(thead);
+  const tbody = document.createElement("tbody");
+  tbl.appendChild(tbody);
+  tw.appendChild(tbl);
+  wrap.appendChild(tw);
+
+  function renderRows(){
+    tbody.innerHTML = "";
+    arr.forEach((entry, idx) => {
+      const tr = document.createElement("tr");
+      if (showThumb) {
+        const td = document.createElement("td");
+        td.style.width = "56px";
+        td.appendChild(makeThumb(entry.Classname || "", true));
+        tr.appendChild(td);
+      }
+      cols.forEach(c => {
+        const td = document.createElement("td");
+        if (c.type === "text") {
+          const inp = document.createElement("input");
+          inp.type = "text"; inp.className = "cfg"; inp.value = entry[c.key] || "";
+          inp.setAttribute("aria-label", c.label);
+          inp.addEventListener("change", () => { entry[c.key] = inp.value.trim(); markDirty(kind); if (showThumb) renderRows(); });
+          td.appendChild(inp);
+        } else if (c.type === "select") {
+          const s = document.createElement("select");
+          s.className = "cfg";
+          s.setAttribute("aria-label", c.label);
+          c.options.forEach(([val, txt]) => {
+            const o = document.createElement("option");
+            o.value = val; o.textContent = txt;
+            if (entry[c.key] === val) o.selected = true;
+            s.appendChild(o);
+          });
+          s.addEventListener("change", () => { entry[c.key] = parseInt(s.value, 10); markDirty(kind); });
+          td.appendChild(s);
+        } else {
+          const n = document.createElement("input");
+          n.type = "number";
+          if (c.min !== undefined) n.min = c.min;
+          if (c.max !== undefined) n.max = c.max;
+          n.step = c.step !== undefined ? c.step : "any";
+          n.value = entry[c.key];
+          n.setAttribute("aria-label", c.label);
+          n.addEventListener("change", () => {
+            let v = parseFloat(n.value);
+            if (isNaN(v)) { n.value = entry[c.key]; return; }
+            if (c.min !== undefined) v = Math.max(c.min, v);
+            if (c.max !== undefined) v = Math.min(c.max, v);
+            if (c.int) v = Math.round(v);
+            entry[c.key] = v; n.value = v; markDirty(kind);
+          });
+          td.appendChild(n);
+        }
+        tr.appendChild(td);
+      });
+      const tdx = document.createElement("td");
+      const del = document.createElement("button");
+      del.className = "btn small danger"; del.textContent = "✕";
+      del.setAttribute("aria-label", "Remove row");
+      del.addEventListener("click", () => { arr.splice(idx, 1); markDirty(kind); renderRows(); });
+      tdx.appendChild(del);
+      tr.appendChild(tdx);
+      tbody.appendChild(tr);
+    });
+  }
+  renderRows();
+
+  const foot = document.createElement("div");
+  foot.style.cssText = "display:flex;gap:10px;align-items:center;margin-top:8px;flex-wrap:wrap";
+  const add = document.createElement("button");
+  add.className = "btn small"; add.textContent = "＋ Add entry";
+  add.addEventListener("click", () => { arr.push(JSON.parse(JSON.stringify(addTemplate))); markDirty(kind); renderRows(); });
+  foot.appendChild(add);
+  wrap.appendChild(foot);
+  if (note) {
+    const n = document.createElement("p");
+    n.className = "tblnote"; n.textContent = note;
+    wrap.appendChild(n);
+  }
+  return wrap;
+}
+
+function placeholderFor(kind){
+  const d = document.createElement("div");
+  d.className = "placeholder";
+  d.innerHTML = '<div class="big">📥</div><p>No <b>' + FILES[kind].label + '</b> loaded yet.</p><p style="margin-top:8px"></p>';
+  const b = document.createElement("button");
+  b.className = "btn primary"; b.textContent = "Load files";
+  b.addEventListener("click", () => activateTab("load"));
+  d.lastElementChild.appendChild(b);
+  return d;
+}
+
+/* =========================================================================
+   FISH editor
+   ========================================================================= */
+const BITE_PRESETS = {
+  "Nocturnal (catfish, sharks, crayfish)": "1 1 1 0.95 0.85 0.75 0.65 0.55 0.5 0.45 0.45 0.45 0.45 0.45 0.5 0.55 0.65 0.75 0.85 0.9 1 1 1 1",
+  "Crepuscular — dawn & dusk (bass, trout)": "0.6 0.55 0.5 0.5 0.55 0.85 1 1 0.9 0.8 0.7 0.6 0.55 0.55 0.55 0.6 0.7 0.9 1 1 0.95 0.85 0.75 0.65",
+  "Pelagic — day cruiser (tuna, mahi, cod)": "0.5 0.5 0.5 0.55 0.6 0.75 0.9 1 1 0.95 0.9 0.85 0.85 0.85 0.85 0.9 0.95 1 1 0.9 0.8 0.7 0.6 0.55",
+  "Diurnal — daytime (bluegill, perch)": "0.4 0.4 0.4 0.4 0.45 0.6 0.75 0.9 1 1 1 1 1 1 1 0.95 0.85 0.75 0.6 0.5 0.45 0.4 0.4 0.4",
+  "Twilight + night (pike, walleye)": "0.85 0.8 0.75 0.7 0.7 0.9 1 1 0.85 0.7 0.6 0.5 0.5 0.5 0.5 0.6 0.75 0.9 1 1 1 0.95 0.9 0.85",
+  "Steady all day (carp, mackerel)": "0.85 0.85 0.85 0.85 0.9 0.95 1 1 0.95 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.95 1 1 0.95 0.95 0.9 0.9 0.85",
+  "Filter feeder (clam, mussel)": "0.95 0.95 0.95 0.9 0.85 0.85 0.85 0.85 0.85 0.85 0.85 0.85 0.85 0.85 0.85 0.85 0.85 0.85 0.9 0.9 0.9 0.95 0.95 0.95",
+  "Constant (starfish)": "1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1"
+};
+
+function rarityPill(p){
+  const s = document.createElement("span");
+  if (p >= 20)      { s.className = "pill abundant"; s.textContent = "abundant"; }
+  else if (p >= 12) { s.className = "pill common";   s.textContent = "common"; }
+  else if (p >= 7)  { s.className = "pill uncommon"; s.textContent = "uncommon"; }
+  else              { s.className = "pill rare";     s.textContent = "rare"; }
+  return s;
+}
+function envPill(env){
+  const s = document.createElement("span");
+  s.className = "pill " + (env === 1 ? "pond" : env === 2 ? "sea" : "both");
+  s.textContent = env === 1 ? "pond" : env === 2 ? "sea" : "both";
+  return s;
+}
+
+function renderFish(){
+  const host = document.getElementById("fish-editor");
+  host.innerHTML = "";
+  const data = FILES.fish.data;
+  if (!data) { host.appendChild(placeholderFor("fish")); return; }
+  const species = data.Species || [];
+
+  const bar = document.createElement("div");
+  bar.className = "toolbar";
+  const search = document.createElement("input");
+  search.type = "search"; search.placeholder = "Search fish…";
+  search.setAttribute("aria-label", "Search fish");
+  const envSel = document.createElement("select");
+  envSel.setAttribute("aria-label", "Filter by environment");
+  envSel.innerHTML = '<option value="">All environments</option><option value="1">Pond / fresh</option><option value="2">Sea / salt</option><option value="3">Both</option>';
+  const sortSel = document.createElement("select");
+  sortSel.setAttribute("aria-label", "Sort");
+  sortSel.innerHTML = '<option value="file">File order</option><option value="name">Name A–Z</option><option value="p">Most common first</option><option value="pr">Rarest first</option>';
+  const count = document.createElement("span");
+  count.className = "count";
+  bar.appendChild(search); bar.appendChild(envSel); bar.appendChild(sortSel); bar.appendChild(count);
+  host.appendChild(bar);
+
+  const list = document.createElement("div");
+  host.appendChild(list);
+
+  function redraw(){
+    list.innerHTML = "";
+    let rows = species.map((f, i) => ({ f, i }));
+    const q = search.value.trim().toLowerCase();
+    if (q) rows = rows.filter(r => (niceName(r.f.Classname) + " " + r.f.Classname).toLowerCase().includes(q));
+    if (envSel.value) rows = rows.filter(r => String(r.f.Environment) === envSel.value);
+    if (sortSel.value === "name") rows.sort((a, b) => niceName(a.f.Classname).localeCompare(niceName(b.f.Classname)));
+    if (sortSel.value === "p") rows.sort((a, b) => b.f.CatchProbability - a.f.CatchProbability);
+    if (sortSel.value === "pr") rows.sort((a, b) => a.f.CatchProbability - b.f.CatchProbability);
+    count.textContent = rows.length + " of " + species.length + " species";
+    rows.forEach(r => list.appendChild(fishRow(r.f)));
+  }
+  search.addEventListener("input", redraw);
+  envSel.addEventListener("change", redraw);
+  sortSel.addEventListener("change", redraw);
+  redraw();
+}
+
+function fishRow(f){
+  const row = document.createElement("div");
+  row.className = "fishrow";
+  const head = document.createElement("div");
+  head.className = "head";
+  head.setAttribute("role", "button");
+  head.setAttribute("tabindex", "0");
+  head.appendChild(makeThumb(f.Classname));
+  const names = document.createElement("div");
+  names.className = "names";
+  names.innerHTML = "<b>" + esc(niceName(f.Classname)) + "</b><small>" + esc(f.Classname) + "</small>";
+  head.appendChild(names);
+  const pills = document.createElement("div");
+  pills.style.cssText = "display:flex;gap:6px;align-items:center;flex:0 0 auto";
+  pills.appendChild(envPill(f.Environment));
+  const rp = rarityPill(f.CatchProbability);
+  pills.appendChild(rp);
+  head.appendChild(pills);
+
+  const quick = document.createElement("div");
+  quick.className = "quick";
+  const ql = document.createElement("label");
+  ql.textContent = "Catch chance";
+  const qr = document.createElement("input");
+  qr.type = "range"; qr.min = 0; qr.max = 25; qr.step = 1; qr.value = f.CatchProbability;
+  qr.setAttribute("aria-label", "Catch probability for " + niceName(f.Classname));
+  const qv = document.createElement("span");
+  qv.className = "val"; qv.textContent = f.CatchProbability;
+  qr.addEventListener("click", e => e.stopPropagation());
+  // Keep Space/Enter/arrows on the slider from bubbling to the row header,
+  // whose keydown handler would otherwise toggle the row open/closed.
+  qr.addEventListener("keydown", e => e.stopPropagation());
+  qr.addEventListener("input", () => {
+    f.CatchProbability = parseInt(qr.value, 10);
+    qv.textContent = qr.value;
+    const np = rarityPill(f.CatchProbability);
+    pills.replaceChild(np, pills.lastElementChild);
+    markDirty("fish");
+  });
+  quick.appendChild(ql); quick.appendChild(qr); quick.appendChild(qv);
+  head.appendChild(quick);
+  const caret = document.createElement("span");
+  caret.className = "caret"; caret.textContent = "▶";
+  head.appendChild(caret);
+  row.appendChild(head);
+
+  const body = document.createElement("div");
+  body.className = "body";
+  row.appendChild(body);
+  let built = false;
+
+  function toggleOpen(){
+    row.classList.toggle("open");
+    if (row.classList.contains("open") && !built) {
+      buildFishDetail(body, f, () => pills.replaceChild(envPill(f.Environment), pills.firstElementChild));
+      built = true;
+    }
+  }
+  head.addEventListener("click", e => { if (e.target.tagName !== "INPUT") toggleOpen(); });
+  head.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleOpen(); } });
+  return row;
+}
+
+function buildFishDetail(body, f, onEnvChange){
+  const flex = document.createElement("div");
+  flex.className = "detailflex";
+  const art = document.createElement("div");
+  art.className = "art";
+  art.appendChild(makeThumb(f.Classname));
+  if (typeof FISHDETAIL !== "undefined" && FISHDETAIL[f.Classname]) {
+    const p = document.createElement("p");
+    p.style.cssText = "color:var(--dim);font-size:0.78rem;margin-top:8px;line-height:1.5";
+    const d = FISHDETAIL[f.Classname].desc || "";
+    p.textContent = d.length > 260 ? d.slice(0, 260) + "…" : d;
+    art.appendChild(p);
+  }
+  flex.appendChild(art);
+
+  const forms = document.createElement("div");
+  forms.className = "forms";
+
+  /* basics */
+  const c1 = document.createElement("div");
+  c1.className = "card";
+  c1.innerHTML = "<h3>Basics</h3>";
+  const envField = rowSelect("fish", f, "Environment", "Environment", ENV_OPTS,
+    "Where this fish can be caught: 1 = ponds/lakes, 2 = the sea, 3 = both.");
+  if (onEnvChange) envField.querySelector("select").addEventListener("change", onEnvChange);
+  c1.appendChild(envField);
+  /* catch method bitmask as checkboxes */
+  const cmField = document.createElement("div");
+  cmField.className = "field";
+  cmField.innerHTML = "<label>Catch methods</label>";
+  [[1, "Rod"], [2, "Large trap"], [4, "Small trap"]].forEach(([bit, lbl]) => {
+    const wrap = document.createElement("label");
+    wrap.style.cssText = "display:inline-flex;align-items:center;gap:5px;font-size:0.85rem;color:var(--dim);margin-right:8px";
+    const cb = document.createElement("input");
+    cb.type = "checkbox"; cb.checked = !!(f.CatchMethod & bit);
+    cb.addEventListener("change", () => {
+      f.CatchMethod = cb.checked ? (f.CatchMethod | bit) : (f.CatchMethod & ~bit);
+      markDirty("fish");
+    });
+    wrap.appendChild(cb);
+    wrap.appendChild(document.createTextNode(lbl));
+    cmField.appendChild(wrap);
+  });
+  attachHelp(cmField, "A bitmask you add together: 1 rod + 2 large trap + 4 small trap. So 3 = rod and large trap, 7 = everything. A fish with no method checked can never be caught.");
+  c1.appendChild(cmField);
+  c1.appendChild(rowNumber("fish", f, "MeatMin", "Meat (min fillets)", { min: 0, max: 20, int: true }, "Minimum number of fillets when preparing this fish."));
+  c1.appendChild(rowNumber("fish", f, "MeatMax", "Meat (max fillets)", { min: 0, max: 20, int: true }, "Maximum number of fillets when preparing this fish."));
+  forms.appendChild(c1);
+
+  /* weather */
+  const c2 = document.createElement("div");
+  c2.className = "card";
+  c2.innerHTML = "<h3>Weather &amp; time of day</h3><p class='sub'>1.0 = no effect · above 1.0 bites more · below 1.0 bites less</p>";
+  const g = document.createElement("div");
+  g.className = "grid2";
+  [["RainMultiplier", "🌧 Rain"], ["StormMultiplier", "⛈ Storm"], ["DawnMultiplier", "🌅 Dawn"],
+   ["DayMultiplier", "☀️ Day"], ["DuskMultiplier", "🌆 Dusk"], ["NightMultiplier", "🌙 Night"]].forEach(([k, lbl]) => {
+    g.appendChild(rowSlider("fish", f, k, lbl, 0, 3, 0.05));
+  });
+  c2.appendChild(g);
+  forms.appendChild(c2);
+
+  /* temperature */
+  const c3 = document.createElement("div");
+  c3.className = "card";
+  c3.innerHTML = "<h3>Water temperature (°C)</h3><p class='sub'>Bites best at Optimal, tapering toward Min and Max.</p>";
+  const g3 = document.createElement("div");
+  g3.className = "grid2";
+  g3.appendChild(rowNumber("fish", f, "TempMin", "Coldest (TempMin)", { min: -20, max: 45 }));
+  g3.appendChild(rowNumber("fish", f, "TempOptimal", "Optimal", { min: -20, max: 45 }));
+  g3.appendChild(rowNumber("fish", f, "TempMax", "Warmest (TempMax)", { min: -20, max: 45 }));
+  c3.appendChild(g3);
+  forms.appendChild(c3);
+
+  /* bitespeed */
+  const c4 = document.createElement("div");
+  c4.className = "card";
+  c4.innerHTML = "<h3>24-hour bite rhythm</h3><p class='sub'>How fast this fish bites at each hour — 1.0 = full speed, 0.5 = waits twice as long. Drag across the bars to paint.</p>";
+  c4.appendChild(biteEditor(f));
+  forms.appendChild(c4);
+
+  /* advanced */
+  const c5 = document.createElement("div");
+  c5.className = "card";
+  c5.innerHTML = "<h3>Advanced (results &amp; recipe)</h3><p class='sub'>Only change these if you know the classnames you're pointing at.</p>";
+  const rm = document.createElement("div");
+  rm.className = "field";
+  rm.innerHTML = "<label>Fillet result</label>";
+  const rmi = document.createElement("input");
+  rmi.type = "text"; rmi.className = "cfg"; rmi.value = f.ResultMain || "";
+  rmi.addEventListener("change", () => { f.ResultMain = rmi.value.trim(); markDirty("fish"); });
+  rm.appendChild(rmi);
+  attachHelp(rm, "Classname spawned when this fish is filleted. Empty = the whole fish is the yield (bait fish, crustaceans).");
+  c5.appendChild(rm);
+  const rb = document.createElement("div");
+  rb.className = "field";
+  rb.innerHTML = "<label>Bonus result</label>";
+  const rbi = document.createElement("input");
+  rbi.type = "text"; rbi.className = "cfg"; rbi.value = f.ResultBonus || "";
+  rbi.addEventListener("change", () => { f.ResultBonus = rbi.value.trim(); markDirty("fish"); });
+  rb.appendChild(rbi);
+  attachHelp(rb, "Optional second result: caviar for roe fish, the tail for lobsters.");
+  c5.appendChild(rb);
+  c5.appendChild(rowSelect("fish", f, "RecipeShape", "Recipe shape", [[0, "0 · Normal"], [1, "1 · Roe / caviar"], [2, "2 · Lobster (claws + tail)"]],
+    "How preparation behaves: normal fillets, caviar roll alongside fillets, or the lobster claw+tail split."));
+  forms.appendChild(c5);
+
+  flex.appendChild(forms);
+  body.appendChild(flex);
+}
+
+function biteEditor(f){
+  const wrap = document.createElement("div");
+  wrap.className = "bitewrap";
+  let vals = String(f.BiteSpeed || "").trim().split(/\s+/).map(parseFloat);
+  if (vals.length !== 24 || vals.some(isNaN)) vals = new Array(24).fill(1);
+
+  // One focusable chart (not 24 tab stops): a keyboard cursor picks the hour
+  // with Left/Right and adjusts it with Up/Down, so the widget is fully usable
+  // without a pointer.
+  const chart = document.createElement("div");
+  chart.className = "bitechart";
+  chart.tabIndex = 0;
+  chart.setAttribute("role", "slider");
+  chart.setAttribute("aria-label", "Bite speed by hour — Left/Right pick an hour, Up/Down adjust, Home/End for min/max");
+  chart.setAttribute("aria-valuemin", "0.05");
+  chart.setAttribute("aria-valuemax", "1");
+  let cursor = 0;
+  const bars = [];
+  for (let h = 0; h < 24; h++) {
+    const b = document.createElement("div");
+    b.className = "bar" + ((h < 6 || h >= 20) ? " night" : "");
+    bars.push(b);
+    chart.appendChild(b);
+  }
+  function setBar(h){ bars[h].style.height = Math.round(vals[h] * 100) + "%"; bars[h].title = hourLabel(h) + " — " + vals[h]; }
+  function paintAll(){ for (let h = 0; h < 24; h++) setBar(h); }
+  function setVal(h, v){ vals[h] = Math.min(1, Math.max(0.05, Math.round(v * 20) / 20)); setBar(h); }
+  function updateCursor(){
+    bars.forEach((b, i) => b.classList.toggle("cur", i === cursor));
+    chart.setAttribute("aria-valuenow", vals[cursor]);
+    chart.setAttribute("aria-valuetext", hourLabel(cursor) + ": " + vals[cursor]);
+  }
+  paintAll();
+  updateCursor();
+
+  function commit(){
+    f.BiteSpeed = vals.map(v => String(Math.round(v * 100) / 100)).join(" ");
+    markDirty("fish");
+  }
+  chart.addEventListener("keydown", e => {
+    if (e.key === "ArrowLeft") cursor = (cursor + 23) % 24;
+    else if (e.key === "ArrowRight") cursor = (cursor + 1) % 24;
+    else if (e.key === "ArrowUp") { setVal(cursor, vals[cursor] + 0.05); commit(); }
+    else if (e.key === "ArrowDown") { setVal(cursor, vals[cursor] - 0.05); commit(); }
+    else if (e.key === "Home") { setVal(cursor, 0.05); commit(); }
+    else if (e.key === "End") { setVal(cursor, 1); commit(); }
+    else return;
+    e.preventDefault();
+    updateCursor();
+  });
+  let painting = false;
+  function applyPointer(e){
+    const rect = chart.getBoundingClientRect();
+    const x = Math.min(Math.max(e.clientX - rect.left, 0), rect.width - 1);
+    const h = Math.min(23, Math.floor(x / rect.width * 24));
+    let v = 1 - (e.clientY - rect.top - 6) / (rect.height - 10);
+    setVal(h, v);
+    cursor = h; updateCursor();
+  }
+  chart.addEventListener("pointerdown", e => { painting = true; chart.setPointerCapture(e.pointerId); applyPointer(e); });
+  chart.addEventListener("pointermove", e => { if (painting) applyPointer(e); });
+  // Commit on both up and cancel — an interrupted touch (pointercancel) must
+  // not silently discard the painted edit.
+  chart.addEventListener("pointerup", () => { if (painting) { painting = false; commit(); } });
+  chart.addEventListener("pointercancel", () => { if (painting) { painting = false; commit(); } });
+  wrap.appendChild(chart);
+
+  const labels = document.createElement("div");
+  labels.className = "bitelabels";
+  for (let h = 0; h < 24; h++) {
+    const s = document.createElement("span");
+    s.textContent = (h % 4 === 0) ? hourLabel(h) : "";
+    labels.appendChild(s);
+  }
+  wrap.appendChild(labels);
+
+  const foot = document.createElement("div");
+  foot.style.cssText = "display:flex;gap:10px;align-items:center;margin-top:8px;flex-wrap:wrap";
+  const sel = document.createElement("select");
+  sel.className = "cfg";
+  sel.setAttribute("aria-label", "Bite rhythm preset");
+  sel.innerHTML = "<option value=''>Apply a preset…</option>" + Object.keys(BITE_PRESETS).map(k => "<option>" + k + "</option>").join("");
+  sel.addEventListener("change", () => {
+    if (!sel.value) return;
+    const preset = BITE_PRESETS[sel.value].trim().split(/\s+/).map(parseFloat);
+    if (preset.length === 24 && !preset.some(isNaN)) {
+      vals = preset;
+      paintAll(); updateCursor(); commit();
+    }
+    sel.value = "";
+  });
+  foot.appendChild(sel);
+  const hint = document.createElement("span");
+  hint.className = "bitehint";
+  hint.textContent = "Purple bars = night hours";
+  foot.appendChild(hint);
+  wrap.appendChild(foot);
+  return wrap;
+}
+function hourLabel(h){ return h === 0 ? "12a" : h < 12 ? h + "a" : h === 12 ? "12p" : (h - 12) + "p"; }
+
+/* =========================================================================
+   BAIT editor
+   ========================================================================= */
+let selectedBait = 0;
+function renderBait(){
+  const host = document.getElementById("bait-editor");
+  host.innerHTML = "";
+  const data = FILES.bait.data;
+  if (!data) { host.appendChild(placeholderFor("bait")); return; }
+  const prefs = data.Preferences || [];
+
+  if ("Enable" in data) {
+    const master = document.createElement("div");
+    master.className = "card";
+    master.appendChild(rowToggle("bait", data, "Enable", "🎚 Bait preference system enabled",
+      "Master toggle. Off = every bait is neutral 1.0× for every fish; your tuned values stay in the file."));
+    host.appendChild(master);
+  }
+
+  const strip = document.createElement("div");
+  strip.className = "baitstrip";
+  prefs.forEach((b, i) => {
+    const c = document.createElement("div");
+    c.className = "baitcard" + (i === selectedBait ? " sel" : "");
+    c.setAttribute("role", "button");
+    c.setAttribute("tabindex", "0");
+    c.appendChild(makeThumb(b.BaitClassname));
+    const nm = document.createElement("b");
+    nm.textContent = baitName(b.BaitClassname);
+    c.appendChild(nm);
+    const go = () => { selectedBait = i; renderBait(); };
+    c.addEventListener("click", go);
+    c.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+    strip.appendChild(c);
+  });
+  const addC = document.createElement("div");
+  addC.className = "baitcard";
+  addC.setAttribute("role", "button");
+  addC.setAttribute("tabindex", "0");
+  addC.innerHTML = '<div class="thumb"><span class="emoji">➕</span></div><b>Add bait…</b>';
+  addC.addEventListener("click", () => {
+    const cls = prompt("Bait / lure classname (any item that can go on the hook — modded classnames work too):");
+    if (!cls || !cls.trim()) return;
+    prefs.push({ BaitClassname: cls.trim(), Preferences: [] });
+    selectedBait = prefs.length - 1;
+    markDirty("bait");
+    renderBait();
+  });
+  strip.appendChild(addC);
+  host.appendChild(strip);
+
+  if (!prefs.length) return;
+  if (selectedBait >= prefs.length) selectedBait = 0;
+  const bait = prefs[selectedBait];
+
+  const panel = document.createElement("div");
+  panel.className = "card";
+  const h = document.createElement("h3");
+  h.textContent = baitName(bait.BaitClassname) + " — which fish does it attract?";
+  panel.appendChild(h);
+  const sub = document.createElement("p");
+  sub.className = "sub";
+  sub.innerHTML = "Classname <code>" + esc(bait.BaitClassname) + "</code>" +
+    (/\D$/.test(bait.BaitClassname) ? " — also covers its numbered variants (e.g. <code>" + esc(bait.BaitClassname) + "1–4</code>)." : ".");
+  panel.appendChild(sub);
+
+  const bar = document.createElement("div");
+  bar.className = "toolbar";
+  const search = document.createElement("input");
+  search.type = "search"; search.placeholder = "Search fish…";
+  search.setAttribute("aria-label", "Search fish in this bait");
+  const sortSel = document.createElement("select");
+  sortSel.setAttribute("aria-label", "Sort preferences");
+  sortSel.innerHTML = '<option value="mul">Strongest first</option><option value="name">Name A–Z</option><option value="file">File order</option>';
+  bar.appendChild(search); bar.appendChild(sortSel);
+  panel.appendChild(bar);
+
+  const listHost = document.createElement("div");
+  panel.appendChild(listHost);
+
+  function redraw(){
+    listHost.innerHTML = "";
+    let rows = (bait.Preferences || []).slice();
+    const q = search.value.trim().toLowerCase();
+    if (q) rows = rows.filter(p => (niceName(p.FishClassname) + " " + p.FishClassname).toLowerCase().includes(q));
+    if (sortSel.value === "mul") rows.sort((a, b) => b.Multiplier - a.Multiplier);
+    if (sortSel.value === "name") rows.sort((a, b) => niceName(a.FishClassname).localeCompare(niceName(b.FishClassname)));
+    rows.forEach(p => listHost.appendChild(prefRow(p)));
+  }
+  search.addEventListener("input", redraw);
+  sortSel.addEventListener("change", redraw);
+  redraw();
+
+  /* add fish that aren't listed yet */
+  const listed = new Set((bait.Preferences || []).map(p => p.FishClassname));
+  const missing = Object.keys(FISHNAME).filter(c => !listed.has(c));
+  if (missing.length) {
+    const foot = document.createElement("div");
+    foot.style.cssText = "display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap";
+    const sel = document.createElement("select");
+    sel.className = "cfg";
+    sel.setAttribute("aria-label", "Add a fish to this bait");
+    sel.innerHTML = "<option value=''>Add a fish to this bait…</option>" +
+      missing.sort((a, b) => niceName(a).localeCompare(niceName(b))).map(c => '<option value="' + c + '">' + niceName(c) + "</option>").join("");
+    sel.addEventListener("change", () => {
+      if (!sel.value) return;
+      if (!bait.Preferences) bait.Preferences = [];
+      bait.Preferences.push({ FishClassname: sel.value, Multiplier: 1.5 });
+      markDirty("bait");
+      renderBait();
+    });
+    foot.appendChild(sel);
+    panel.appendChild(foot);
+  }
+  const note = document.createElement("p");
+  note.className = "tblnote";
+  note.textContent = "Tip: a fish not listed here is neutral (1.0×). Setting a listed fish back to 1.0 does the same thing — and survives mod updates better than deleting the row.";
+  panel.appendChild(note);
+  host.appendChild(panel);
+}
+
+function prefRow(p){
+  const row = document.createElement("div");
+  row.className = "prefrow";
+  row.appendChild(makeThumb(p.FishClassname, true));
+  const names = document.createElement("div");
+  names.className = "names";
+  names.innerHTML = esc(niceName(p.FishClassname)) + "<small>" + esc(p.FishClassname) + "</small>";
+  row.appendChild(names);
+  const r = document.createElement("input");
+  r.type = "range"; r.min = 0; r.max = 5; r.step = 0.05;
+  r.value = Math.min(5, p.Multiplier);
+  r.setAttribute("aria-label", "Multiplier for " + niceName(p.FishClassname));
+  const v = document.createElement("span");
+  v.className = "mul";
+  function show(){
+    const m = p.Multiplier;
+    v.textContent = "×" + (Math.round(m * 100) / 100);
+    v.className = "mul " + (m > 1.02 ? "up" : m < 0.98 ? "down" : "neutral");
+  }
+  show();
+  r.addEventListener("input", () => { p.Multiplier = Math.round(parseFloat(r.value) * 100) / 100; show(); markDirty("bait"); });
+  const reset = document.createElement("button");
+  reset.className = "btn small"; reset.textContent = "1.0";
+  reset.title = "Reset to neutral";
+  reset.setAttribute("aria-label", "Reset " + niceName(p.FishClassname) + " to neutral");
+  reset.addEventListener("click", () => { p.Multiplier = 1.0; r.value = 1; show(); markDirty("bait"); });
+  row.appendChild(r);
+  row.appendChild(v);
+  row.appendChild(reset);
+  return row;
+}
+
+/* =========================================================================
+   GENERAL editor
+   ========================================================================= */
+function oneIn(chance){
+  if (!chance || chance <= 0) return "disabled (0)";
+  return "≈ 1 in " + Math.round(1 / chance).toLocaleString("en-US");
+}
+function pct(v){ return Math.round(v * 1000) / 10 + "%"; }
+
+function renderGeneral(){
+  const host = document.getElementById("general-editor");
+  host.innerHTML = "";
+  const d = FILES.general.data;
+  if (!d) { host.appendChild(placeholderFor("general")); return; }
+
+  /* master switchboard */
+  const sb = document.createElement("div");
+  sb.className = "card";
+  sb.innerHTML = "<h3>🎛 Master switchboard</h3><p class='sub'>Every big system in one place. Turning one off keeps its tuned values in the file — it just stops affecting the game.</p>";
+  const sg = document.createElement("div");
+  sg.className = "grid2";
+  if (d.WeatherSettings) {
+    sg.appendChild(rowToggle("general", d.WeatherSettings, "WeatherCatchBoostEnable", "🌧 Weather & time-of-day buffs"));
+    sg.appendChild(rowToggle("general", d.WeatherSettings, "MoonPhaseEnable", "🌕 Moon phase buff"));
+    sg.appendChild(rowToggle("general", d.WeatherSettings, "TemperatureEffectEnable", "🌡 Water temperature"));
+    sg.appendChild(rowToggle("general", d.WeatherSettings, "BiteSpeedEnable", "⏱ Bite-speed rhythm"));
+  }
+  if (d.TreasureSettings) sg.appendChild(rowToggle("general", d.TreasureSettings, "Enable", "💰 Treasure catches"));
+  if (d.PredatorSettings) sg.appendChild(rowToggle("general", d.PredatorSettings, "PredatorSpawnEnabled", "🐺 Predator spawns"));
+  if (d.GeneralSettings) sg.appendChild(rowToggle("general", d.GeneralSettings, "HookFromFishEnable", "🪝 Hook found in fish"));
+  sb.appendChild(sg);
+  host.appendChild(sb);
+
+  /* general settings */
+  if (d.GeneralSettings) {
+    const gs = d.GeneralSettings;
+    const c = document.createElement("div");
+    c.className = "card";
+    c.innerHTML = "<h3>🔧 Core settings</h3>";
+    c.appendChild(rowSelect("general", gs, "DebugLogs", "Debug logging", [[0, "0 · Off"], [1, "1 · Standard (per-cast summaries)"], [2, "2 · Elevated (very chatty)"]]));
+    c.appendChild(rowSlider("general", gs, "FishQuality", "Fish quality (traders)", 0, 2, 0.05));
+    c.appendChild(rowSlider("general", gs, "FishKnifeSpeedMultiplier", "Fish-knife fillet speed", 0.7, 1, 0.01));
+    const cav = rowSlider("general", gs, "CaviarChance", "Caviar keep-chance", 0, 1, 0.05);
+    cav._setSub(v => pct(v) + " of roe-fish fillets keep the caviar");
+    c.appendChild(cav);
+    const hc = rowSlider("general", gs, "HookFromFishChance", "Hook-in-fish chance", 0, 0.05, 0.001);
+    hc._setSub(v => oneIn(v) + " fillet actions");
+    c.appendChild(hc);
+    host.appendChild(c);
+  }
+
+  /* recipes */
+  if (d.RecipeToggles) {
+    const c = document.createElement("div");
+    c.className = "card";
+    c.innerHTML = "<h3>🔨 Crafting recipes</h3>";
+    const g = document.createElement("div");
+    g.className = "grid2";
+    [["CraftBambooFishingNet", "Craft bamboo fishing net"], ["CraftHookFromWire", "Craft hook from wire"],
+     ["CraftFishMount", "Craft wooden fish mount"], ["RepairFishingPole", "Repair fishing pole"],
+     ["RepairBambooFishingNet", "Repair bamboo net"]].forEach(([k, lbl]) => {
+      if (k in d.RecipeToggles) g.appendChild(rowToggle("general", d.RecipeToggles, k, lbl));
+    });
+    c.appendChild(g);
+    host.appendChild(c);
+  }
+
+  /* weather */
+  if (d.WeatherSettings) {
+    const w = d.WeatherSettings;
+    const c = document.createElement("div");
+    c.className = "card";
+    c.innerHTML = "<h3>🌧 Weather, time &amp; temperature</h3><p class='sub'>Global multipliers that stack with each fish's own values, capped by the stacked-multiplier limit.</p>";
+    const g = document.createElement("div");
+    g.className = "grid2";
+    g.appendChild(rowSlider("general", w, "RainCatchMultiplier", "Rain buff", 0.5, 2.5, 0.05));
+    g.appendChild(rowSlider("general", w, "StormCatchMultiplier", "Storm buff", 0.5, 2.5, 0.05));
+    g.appendChild(rowSlider("general", w, "DawnCatchMultiplier", "Dawn buff", 0.5, 2.5, 0.05));
+    g.appendChild(rowSlider("general", w, "DayCatchMultiplier", "Day buff", 0.5, 2.5, 0.05));
+    g.appendChild(rowSlider("general", w, "DuskCatchMultiplier", "Dusk buff", 0.5, 2.5, 0.05));
+    g.appendChild(rowSlider("general", w, "NightCatchMultiplier", "Night buff", 0.5, 2.5, 0.05));
+    g.appendChild(rowSlider("general", w, "RainThreshold", "Rain starts at intensity", 0, 1, 0.05));
+    g.appendChild(rowSlider("general", w, "StormThreshold", "Storm starts at intensity", 0, 1, 0.05));
+    g.appendChild(rowSlider("general", w, "MaxStackedMultiplier", "Stacked multiplier cap", 1, 4, 0.1));
+    g.appendChild(rowSlider("general", w, "FullMoonMultiplier", "Full-moon night buff", 0.5, 2, 0.05));
+    g.appendChild(rowSlider("general", w, "NewMoonMultiplier", "New-moon night buff", 0.5, 2, 0.05));
+    const off = rowSlider("general", w, "WaterTempOffset", "Water temp offset (°C)", -15, 15, 0.5);
+    off._setSub(v => v <= -8 ? "frozen-lake roleplay" : v <= -3 ? "cold map (e.g. Sakhal)" : v >= 4 ? "tropical server" : "standard map");
+    g.appendChild(off);
+    g.appendChild(rowSlider("general", w, "MinTempMultiplier", "Too-cold floor", 0, 1, 0.05));
+    g.appendChild(rowSlider("general", w, "MaxTempMultiplier", "Too-warm floor", 0, 1, 0.05));
+    c.appendChild(g);
+
+    const hoursNote = document.createElement("p");
+    hoursNote.className = "tblnote";
+    hoursNote.textContent = "Time windows (24h clock, start inclusive → end exclusive):";
+    c.appendChild(hoursNote);
+    const hg = document.createElement("div");
+    hg.className = "grid2";
+    [["DawnStartHour", "Dawn starts"], ["DawnEndHour", "Dawn ends"], ["DayStartHour", "Day starts"], ["DayEndHour", "Day ends"],
+     ["DuskStartHour", "Dusk starts"], ["DuskEndHour", "Dusk ends"], ["NightStartHour", "Night starts"], ["NightEndHour", "Night ends"]].forEach(([k, lbl]) => {
+      if (k in w) hg.appendChild(rowNumber("general", w, k, lbl, { min: 0, max: 23, int: true }));
+    });
+    c.appendChild(hg);
+    host.appendChild(c);
+  }
+
+  /* treasure */
+  if (d.TreasureSettings) {
+    const t = d.TreasureSettings;
+    const c = document.createElement("div");
+    c.className = "card";
+    c.innerHTML = "<h3>💰 Treasure</h3><p class='sub'>An ultra-rare pull: a container picked from the pool below, filled with rolls from the loot pool.</p>";
+    const ch = rowSlider("general", t, "Chance", "Treasure chance per catch", 0, 0.005, 0.0001, null, v => v.toFixed(4));
+    ch._setSub(v => oneIn(v) + " successful catches");
+    c.appendChild(ch);
+    c.appendChild(rowToggle("general", t, "Announce", "Announce the find in chat"));
+    c.appendChild(rowToggle("general", t, "RequireRealRod", "Require a proper fishing rod"));
+    c.appendChild(rowNumber("general", t, "RodCatchesToRuin", "Treasure pulls to ruin a pristine rod", { min: 0, max: 50, int: true }));
+    if (Array.isArray(d.TreasureContainers)) {
+      const h4 = document.createElement("h3");
+      h4.style.cssText = "margin-top:16px;font-size:0.92rem;color:var(--accent)";
+      h4.textContent = "Containers it can arrive as";
+      c.appendChild(h4);
+      c.appendChild(tableEditor("general", d.TreasureContainers, [
+        { key: "Classname", label: "Classname", type: "text" },
+        { key: "Weight", label: "Weight", min: 0, step: 0.1 },
+        { key: "MinHealthLevel", label: "Min health", type: "select", options: HEALTH_OPTS },
+        { key: "MaxHealthLevel", label: "Max health", type: "select", options: HEALTH_OPTS },
+        { key: "MinItems", label: "Min items", min: 0, max: 50, int: true },
+        { key: "MaxItems", label: "Max items", min: 0, max: 50, int: true }
+      ], { Classname: "SeaChest", Weight: 1.0, MinHealthLevel: 1, MaxHealthLevel: 3, MinItems: 2, MaxItems: 5 },
+      "Weight 0 disables an entry without deleting it — deleted default entries come back on the next mod update."));
+    }
+    if (Array.isArray(d.TreasureLoot)) {
+      const h4 = document.createElement("h3");
+      h4.style.cssText = "margin-top:16px;font-size:0.92rem;color:var(--accent)";
+      h4.textContent = "Loot inside (each slot rolls this pool)";
+      c.appendChild(h4);
+      c.appendChild(tableEditor("general", d.TreasureLoot, [
+        { key: "Classname", label: "Classname", type: "text" },
+        { key: "Weight", label: "Weight", min: 0, step: 0.1 },
+        { key: "MinHealthLevel", label: "Min health", type: "select", options: HEALTH_OPTS },
+        { key: "MaxHealthLevel", label: "Max health", type: "select", options: HEALTH_OPTS },
+        { key: "MinQuantity", label: "Min qty", min: 0, int: true },
+        { key: "MaxQuantity", label: "Max qty", min: 0, int: true }
+      ], { Classname: "Rag", Weight: 1.0, MinHealthLevel: 1, MaxHealthLevel: 3, MinQuantity: 0, MaxQuantity: 0 },
+      "Any classname on your server works here — including items from other mods. Qty 0/0 = the item's own default."));
+    }
+    host.appendChild(c);
+  }
+
+  /* predators */
+  if (d.PredatorSettings) {
+    const p = d.PredatorSettings;
+    const c = document.createElement("div");
+    c.className = "card";
+    c.innerHTML = "<h3>🐺 Predators</h3><p class='sub'>A chance per action that something hungry shows up on shore.</p>";
+    const g = document.createElement("div");
+    g.className = "grid2";
+    const f1 = rowSlider("general", p, "PredatorSpawnChanceFishing", "Chance on a catch", 0, 0.3, 0.005);
+    f1._setSub(v => oneIn(v) + " catches");
+    g.appendChild(f1);
+    const f2 = rowSlider("general", p, "PredatorSpawnChancePreparing", "Chance while filleting", 0, 0.3, 0.005);
+    f2._setSub(v => oneIn(v) + " fillets");
+    g.appendChild(f2);
+    const f3 = rowSlider("general", p, "PredatorSpawnChanceFailCatch", "Chance on a failed cast", 0, 0.3, 0.005);
+    f3._setSub(v => oneIn(v) + " failed casts");
+    g.appendChild(f3);
+    g.appendChild(rowToggle("general", p, "PredatorWarningSoundEnable", "Warning sound"));
+    g.appendChild(rowNumber("general", p, "PredatorWarningSoundRadius", "Sound radius (m)", { min: 0, max: 1000, int: true }));
+    g.appendChild(rowToggle("general", p, "PredatorWarningMessageEnable", "Warning chat message"));
+    c.appendChild(g);
+
+    /* message color radio-style */
+    const colField = document.createElement("div");
+    colField.className = "field";
+    colField.innerHTML = "<label>Message color</label>";
+    const colSel = document.createElement("select");
+    colSel.className = "cfg";
+    colSel.setAttribute("aria-label", "Warning message color");
+    const colors = [["PredatorWarningMessageYellow", "Yellow"], ["PredatorWarningMessageRed", "Red"], ["PredatorWarningMessageGreen", "Green"], ["PredatorWarningMessageGrey", "Grey"]];
+    // Explicit "none" option: without it, a config with every color flag at 0
+    // would show Yellow (first option) while no flag is set, and re-picking the
+    // already-shown Yellow fires no change event — leaving it unselectable.
+    const noneOpt = document.createElement("option");
+    noneOpt.value = ""; noneOpt.textContent = "— none —";
+    colSel.appendChild(noneOpt);
+    let anySet = false;
+    colors.forEach(([k, txt]) => {
+      const o = document.createElement("option");
+      o.value = k; o.textContent = txt;
+      if (p[k]) { o.selected = true; anySet = true; }
+      colSel.appendChild(o);
+    });
+    if (!anySet) noneOpt.selected = true;
+    colSel.addEventListener("change", () => {
+      colors.forEach(([k]) => { if (k in p) p[k] = (k === colSel.value) ? 1 : 0; });
+      markDirty("general");
+    });
+    colField.appendChild(colSel);
+    c.appendChild(colField);
+
+    if (Array.isArray(d.Predators)) {
+      const h4 = document.createElement("h3");
+      h4.style.cssText = "margin-top:16px;font-size:0.92rem;color:var(--accent)";
+      h4.textContent = "Predator pool";
+      c.appendChild(h4);
+      c.appendChild(tableEditor("general", d.Predators, [
+        { key: "Classname", label: "Classname", type: "text" },
+        { key: "SpawnChance", label: "Weight", min: 0, step: 0.1 },
+        { key: "MinCount", label: "Min", min: 0, max: 10, int: true },
+        { key: "MaxCount", label: "Max", min: 0, max: 10, int: true },
+        { key: "MinRadius", label: "Min radius (m)", min: 0, step: 5 },
+        { key: "MaxRadius", label: "Max radius (m)", min: 0, step: 5 }
+      ], { Classname: "Animal_CanisLupus_Grey", SpawnChance: 0.5, MinCount: 1, MaxCount: 1, MinRadius: 50, MaxRadius: 200 },
+      "Weight is relative: wolf 0.6 vs bear 0.3 means wolves are two-thirds of all spawns."));
+    }
+    host.appendChild(c);
+  }
+
+  /* net + digging */
+  const forage = document.createElement("div");
+  forage.className = "card";
+  forage.innerHTML = "<h3>🥅 Net &amp; foraging</h3>";
+  let hasForage = false;
+  if (d.BambooFishingNetSettings) {
+    hasForage = true;
+    const n = d.BambooFishingNetSettings;
+    const f = rowSlider("general", n, "FindChance", "Bamboo net find chance", 0, 1, 0.05);
+    f._setSub(v => pct(v) + " of net casts catch something");
+    forage.appendChild(f);
+    const f2 = rowSlider("general", n, "PredatorSpawnChance", "Net predator chance", 0, 0.3, 0.005);
+    f2._setSub(v => oneIn(v) + " net uses");
+    forage.appendChild(f2);
+    if (Array.isArray(n.Catches)) {
+      const h4 = document.createElement("h3");
+      h4.style.cssText = "margin-top:12px;font-size:0.92rem;color:var(--accent)";
+      h4.textContent = "Net catch table";
+      forage.appendChild(h4);
+      forage.appendChild(tableEditor("general", n.Catches, [
+        { key: "Classname", label: "Classname", type: "text" },
+        { key: "CatchChance", label: "Weight", min: 0, step: 0.5 },
+        { key: "Environment", label: "Water", type: "select", options: ENV_OPTS }
+      ], { Classname: "geb_FatHeadMinnow", CatchChance: 1, Environment: 1 },
+      "Default entries removed here come back on the next mod update — set their weight to 0 instead.", true));
+    }
+  }
+  [["DigWormsSettings", "🪱 Dig worms find chance", "Worm-dig catch table"], ["DigBugsSettings", "🦗 Dig bugs find chance", "Bug-dig catch table"]].forEach(([key, lbl, tbl]) => {
+    if (!d[key]) return;
+    hasForage = true;
+    const s = d[key];
+    const f = rowSlider("general", s, "FindChance", lbl, 0, 1, 0.05);
+    f._setSub(v => pct(v) + " per attempt");
+    forage.appendChild(f);
+    if (Array.isArray(s.Catches)) {
+      const h4 = document.createElement("h3");
+      h4.style.cssText = "margin-top:12px;font-size:0.92rem;color:var(--accent)";
+      h4.textContent = tbl;
+      forage.appendChild(h4);
+      forage.appendChild(tableEditor("general", s.Catches, [
+        { key: "Classname", label: "Classname", type: "text" },
+        { key: "CatchChance", label: "Weight", min: 0, step: 0.5 }
+      ], { Classname: "Worm", CatchChance: 1 }, null, true));
+    }
+  });
+  if (hasForage) host.appendChild(forage);
+
+  /* hook-from-fish pool */
+  if (Array.isArray(d.HookFromFishCatches)) {
+    const c = document.createElement("div");
+    c.className = "card";
+    c.innerHTML = "<h3>🪝 Hooks found in fish</h3><p class='sub'>The weighted pool rolled when filleting recovers a hook (chance is set in Core settings).</p>";
+    c.appendChild(tableEditor("general", d.HookFromFishCatches, [
+      { key: "Classname", label: "Classname", type: "text" },
+      { key: "Weight", label: "Weight", min: 0, step: 0.1 },
+      { key: "MinHealthLevel", label: "Min health", type: "select", options: HEALTH_OPTS },
+      { key: "MaxHealthLevel", label: "Max health", type: "select", options: HEALTH_OPTS }
+    ], { Classname: "Hook", Weight: 1.0, MinHealthLevel: 3, MaxHealthLevel: 3 }, null, true));
+    host.appendChild(c);
+  }
+}
+
+/* =========================================================================
+   JUNK editor
+   ========================================================================= */
+function renderJunk(){
+  const host = document.getElementById("junk-editor");
+  host.innerHTML = "";
+  const d = FILES.junk.data;
+  if (!d) { host.appendChild(placeholderFor("junk")); return; }
+
+  if (Array.isArray(d.Junk)) {
+    const c = document.createElement("div");
+    c.className = "card";
+    c.innerHTML = "<h3>🗑 Junk items</h3><p class='sub'>Weighted 0–25 alongside the fish pool — a boot at 22 competes with an abundant fish.</p>";
+    c.appendChild(tableEditor("junk", d.Junk, [
+      { key: "Classname", label: "Classname", type: "text" },
+      { key: "CatchProbability", label: "Weight (0–25)", min: 0, max: 25, int: true },
+      { key: "MinHealthLevel", label: "Min health", type: "select", options: HEALTH_OPTS },
+      { key: "MaxHealthLevel", label: "Max health", type: "select", options: HEALTH_OPTS }
+    ], { Classname: "Wellies_Brown", CatchProbability: 5, MinHealthLevel: 3, MaxHealthLevel: 3 },
+    "Any item classname works, including from other mods. Set weight 0 to disable an entry without deleting it.", true));
+    host.appendChild(c);
+  }
+  if (Array.isArray(d.ContainerJunk)) {
+    const c = document.createElement("div");
+    c.className = "card";
+    c.innerHTML = "<h3>🧴 Container junk</h3><p class='sub'>Junk that spawns holding cargo (liquid containers, cans).</p>";
+    c.appendChild(tableEditor("junk", d.ContainerJunk, [
+      { key: "Classname", label: "Classname", type: "text" },
+      { key: "CatchProbability", label: "Weight (0–25)", min: 0, max: 25, int: true },
+      { key: "MinHealthLevel", label: "Min health", type: "select", options: HEALTH_OPTS },
+      { key: "MaxHealthLevel", label: "Max health", type: "select", options: HEALTH_OPTS }
+    ], { Classname: "Pot", CatchProbability: 3, MinHealthLevel: 3, MaxHealthLevel: 3 }, null, true));
+    host.appendChild(c);
+  }
+}
+
+/* ---------- dispatch ---------- */
+function renderEditor(kind){
+  if (kind === "fish") renderFish();
+  else if (kind === "bait") renderBait();
+  else if (kind === "general") renderGeneral();
+  else if (kind === "junk") renderJunk();
+}
+Object.keys(FILES).forEach(renderEditor);
+refreshChrome();
+
+/* warn about unsaved edits */
+window.addEventListener("beforeunload", e => {
+  if (Object.values(FILES).some(f => f.dirty)) { e.preventDefault(); e.returnValue = ""; }
+});
+</script>
+
+<script>
+/* Underwater background — same vibe as the wiki: gradient, light rays, bubbles, fish. */
+(() => {
+  const canvas = document.getElementById("waterbg");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W, H, fish = [], bubbles = [], rays = [];
+  const rand = (a, b) => a + Math.random() * (b - a);
+
+  function makeFish(x){
+    const depth = Math.random();
+    return { x: x !== undefined ? x : rand(-100, W + 100), y: rand(H * 0.08, H * 0.95),
+      dir: Math.random() < 0.5 ? -1 : 1, depth, size: 12 + depth * 38,
+      speed: (12 + depth * 30) * rand(0.75, 1.25), wag: rand(0, Math.PI * 2),
+      wagSpeed: rand(3, 5.2), bob: rand(0, Math.PI * 2),
+      hue: rand(196, 214), sat: rand(28, 45), light: rand(52, 68) };
+  }
+  function populate(){
+    const n = Math.round(Math.min(14, Math.max(6, (W * H) / 110000)));
+    fish = Array.from({ length: n }, () => makeFish()).sort((a, b) => a.depth - b.depth);
+    bubbles = Array.from({ length: Math.round(n * 1.5) }, () => ({ x: rand(0, W), y: rand(0, H), r: rand(1, 3.2), s: rand(12, 28), wob: rand(0, Math.PI * 2) }));
+    rays = Array.from({ length: 4 }, (_, i) => ({ x: ((i + 0.5) * W) / 4 + rand(-60, 60), w: rand(60, 140), lean: rand(-0.18, 0.18), phase: rand(0, Math.PI * 2) }));
+  }
+  function resize(){
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    populate();
+    if (reduced) draw(0);
+  }
+  function drawFish(f, t){
+    const wag = Math.sin(f.wag + t * f.wagSpeed) * 0.22;
+    const y = f.y + Math.sin(f.bob + t * 0.7) * 6;
+    const a = 0.05 + f.depth * 0.13;
+    ctx.save();
+    ctx.translate(f.x, y);
+    ctx.scale(f.dir, 1);
+    ctx.rotate(wag * 0.35);
+    const s = f.size;
+    ctx.fillStyle = "hsla(" + f.hue + "," + f.sat + "%," + f.light + "%," + a + ")";
+    ctx.beginPath();
+    ctx.ellipse(0, 0, s * 0.5, s * 0.21, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(-s * 0.42, 0);
+    ctx.lineTo(-s * 0.72, -s * 0.2 + wag * s * 0.5);
+    ctx.lineTo(-s * 0.72, s * 0.2 + wag * s * 0.5);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+  function draw(t){
+    ctx.clearRect(0, 0, W, H);
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#10202f");
+    g.addColorStop(0.5, "#0d1723");
+    g.addColorStop(1, "#0a111b");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+    rays.forEach(r => {
+      const sway = Math.sin(t * 0.25 + r.phase) * 30;
+      const grd = ctx.createLinearGradient(r.x + sway, 0, r.x + sway + r.lean * H, H);
+      grd.addColorStop(0, "rgba(90,160,220,0.05)");
+      grd.addColorStop(1, "rgba(90,160,220,0)");
+      ctx.fillStyle = grd;
+      ctx.beginPath();
+      ctx.moveTo(r.x + sway - r.w / 2, 0);
+      ctx.lineTo(r.x + sway + r.w / 2, 0);
+      ctx.lineTo(r.x + sway + r.lean * H + r.w, H);
+      ctx.lineTo(r.x + sway + r.lean * H - r.w, H);
+      ctx.closePath();
+      ctx.fill();
+    });
+    fish.forEach(f => drawFish(f, t));
+    ctx.fillStyle = "rgba(160,205,240,0.10)";
+    bubbles.forEach(b => {
+      const x = b.x + Math.sin(b.wob + t) * 6;
+      ctx.beginPath();
+      ctx.arc(x, b.y, b.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
+  let last = 0;
+  function step(ms){
+    const t = ms / 1000;
+    const dt = Math.min(0.05, t - last);
+    last = t;
+    fish.forEach(f => {
+      f.x += f.dir * f.speed * dt;
+      if (f.dir > 0 && f.x > W + 120) { Object.assign(f, makeFish(-100)); f.dir = 1; }
+      if (f.dir < 0 && f.x < -120) { Object.assign(f, makeFish(W + 100)); f.dir = -1; }
+    });
+    bubbles.forEach(b => { b.y -= b.s * dt; if (b.y < -8) { b.y = H + 8; b.x = rand(0, W); } });
+    draw(t);
+    requestAnimationFrame(step);
+  }
+  addEventListener("resize", resize);
+  resize();
+  if (!reduced) requestAnimationFrame(step);
+})();
+</script>
+</body>
+</html>

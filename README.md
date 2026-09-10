@@ -76,7 +76,7 @@ Gebsfish layers several configurable environmental systems on top of vanilla fis
 
 * **Bite-speed cycle scaling** — every fish has a 24-hour `BiteSpeed` array tuned to its real-world circadian pattern. The catching system aggregates this across the active fish pool to drive how long you wait between bites, weighted by per-fish abundance and the current time-of-day multiplier. Catfish bite slow at noon; panfish bite slow at midnight.
 
-* **Per-bait fish preference matrix** — 23 baits and lures each carry a per-fish multiplier table (the numbered lure variants share one entry per family, e.g. `geb_SpinnerBait` covers `geb_SpinnerBait1-4`). Worms catch bluegill 2× more readily than bass and ignore large saltwater fish. Spinnerbaits attract bass, spoons attract trout and pike, live minnows attract pike and walleye. Roughly 700 seeded bait/fish pairings — all overridable in JSON.
+* **Per-bait fish preference matrix** — 24 baits and lures each carry a per-fish multiplier table (the numbered lure variants share one entry per family, e.g. `geb_SpinnerBait` covers `geb_SpinnerBait1-4`). Worms catch bluegill 2× more readily than bass and ignore large saltwater fish. Spinnerbaits attract bass, spoons attract trout and pike, live minnows attract pike and walleye, and net-caught shrimp go on the hook as the go-to bait for reef and tropical fish. Roughly 700 seeded bait/fish pairings — all overridable in JSON.
 
 * **Bamboo fishing net** — craftable, repairable net with cargo storage. Catches minnows, frogs, and salamanders out of the box, and catches land directly in the net's cargo (4×4) with overflow falling at your feet. Configurable spawn table with per-environment filtering (pond vs. sea) and an independent find-chance roll.
 
