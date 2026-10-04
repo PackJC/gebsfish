@@ -212,6 +212,15 @@ class GebsfishLogger {
         if (level < m_MinLevel)
             return;
 
+        // Warnings and errors also go to the RPT, where admins look first --
+        // and where they still land if the Gebs log file can't be written.
+        if (level >= GebsfishLogLevel.WARN) {
+            string rptLine = "[Gebsfish][" + LevelToString(level) + "] ";
+            if (category != string.Empty)
+                rptLine += "[" + category + "] ";
+            PrintToRPT(rptLine + message);
+        }
+
         if (!m_Initialized)
             Init();
 

@@ -22,7 +22,7 @@ const ITEMDETAIL = {
 "cat": "gear",
 "desc": "A tackle box. Good place to store fishing equipment.",
 "img": "items/geb_BlueTackle.webp",
-"name": "Blue Tackle box"
+"name": "Blue Tackle Box"
 },
 "geb_BrownCooler": {
 "cat": "gear",
@@ -34,7 +34,7 @@ const ITEMDETAIL = {
 "cat": "gear",
 "desc": "A tackle box. Good place to store fishing equipment.",
 "img": "items/geb_BrownTackle.webp",
-"name": "Brown Tackle box"
+"name": "Brown Tackle Box"
 },
 "geb_BugContainer": {
 "cat": "gear",
@@ -52,7 +52,7 @@ const ITEMDETAIL = {
 "cat": "gear",
 "desc": "A tackle box. Good place to store fishing equipment.",
 "img": "items/geb_CamoTackle.webp",
-"name": "Camouflage Tackle box"
+"name": "Camouflage Tackle Box"
 },
 "geb_CurlyTailJig1": {
 "cat": "lure",
@@ -94,25 +94,25 @@ const ITEMDETAIL = {
 "cat": "gear",
 "desc": "A tackle box. Good place to store fishing equipment.",
 "img": "items/geb_FunGreenTackle.webp",
-"name": "Fun Green Tackle box"
+"name": "Fun Green Tackle Box"
 },
 "geb_FunPurpleTackle": {
 "cat": "gear",
 "desc": "A tackle box. Good place to store fishing equipment.",
 "img": "items/geb_FunPurpleTackle.webp",
-"name": "Fun Purple Tackle box"
+"name": "Fun Purple Tackle Box"
 },
 "geb_FunRedTackle": {
 "cat": "gear",
 "desc": "A tackle box. Good place to store fishing equipment.",
 "img": "items/geb_FunRedTackle.webp",
-"name": "Fun Red Tackle box"
+"name": "Fun Red Tackle Box"
 },
 "geb_FunYellowTackle": {
 "cat": "gear",
 "desc": "A tackle box. Good place to store fishing equipment.",
 "img": "items/geb_FunYellowTackle.webp",
-"name": "Fun Yellow Tackle box"
+"name": "Fun Yellow Tackle Box"
 },
 "geb_GrassHopper": {
 "cat": "bait",
@@ -142,13 +142,13 @@ const ITEMDETAIL = {
 "cat": "gear",
 "desc": "An insulated cooler for storing fish fillets. Slows or completely stops their natural decay so your catch stays fresh much longer than in a regular container.",
 "img": "items/geb_LightBlueCooler.webp",
-"name": "Lightblue Cooler"
+"name": "Light Blue Cooler"
 },
 "geb_LightBlueTackle": {
 "cat": "gear",
 "desc": "A tackle box. Good place to store fishing equipment.",
 "img": "items/geb_LightBlueTackle.webp",
-"name": "Lightblue Tackle box"
+"name": "Light Blue Tackle Box"
 },
 "geb_LimeCooler": {
 "cat": "gear",
@@ -160,7 +160,7 @@ const ITEMDETAIL = {
 "cat": "gear",
 "desc": "A tackle box. Good place to store fishing equipment.",
 "img": "items/geb_LimeTackle.webp",
-"name": "Lime Tackle box"
+"name": "Lime Tackle Box"
 },
 "geb_Lure1": {
 "cat": "lure",
@@ -187,7 +187,7 @@ const ITEMDETAIL = {
 "name": "Squarebill Lure"
 },
 "geb_MinnowBucket": {
-"cat": "bait",
+"cat": "gear",
 "desc": "A container that is used for holding minnows and other small aquatic life.",
 "img": "items/geb_MinnowBucket.webp",
 "name": "Bait Bucket"
@@ -196,25 +196,25 @@ const ITEMDETAIL = {
 "cat": "gear",
 "desc": "A tackle box. Good place to store fishing equipment.",
 "img": "items/geb_OldBlueTackle.webp",
-"name": "Old Blue Tackle box"
+"name": "Old Blue Tackle Box"
 },
 "geb_OldGreenTackle": {
 "cat": "gear",
 "desc": "A tackle box. Good place to store fishing equipment.",
 "img": "items/geb_OldGreenTackle.webp",
-"name": "Old Green Tackle box"
+"name": "Old Green Tackle Box"
 },
 "geb_OldPurpleTackle": {
 "cat": "gear",
 "desc": "A tackle box. Good place to store fishing equipment.",
 "img": "items/geb_OldPurpleTackle.webp",
-"name": "Old Purple Tackle box"
+"name": "Old Purple Tackle Box"
 },
 "geb_OldRedTackle": {
 "cat": "gear",
 "desc": "A tackle box. Good place to store fishing equipment.",
 "img": "items/geb_OldRedTackle.webp",
-"name": "Old Red Tackle box"
+"name": "Old Red Tackle Box"
 },
 "geb_OrangeCooler": {
 "cat": "gear",
@@ -232,7 +232,7 @@ const ITEMDETAIL = {
 "cat": "gear",
 "desc": "A tackle box. Good place to store fishing equipment.",
 "img": "items/geb_OrangeTackle.webp",
-"name": "Orange Tackle box"
+"name": "Orange Tackle Box"
 },
 "geb_PinkCooler": {
 "cat": "gear",
@@ -244,7 +244,7 @@ const ITEMDETAIL = {
 "cat": "gear",
 "desc": "A tackle box. Good place to store fishing equipment.",
 "img": "items/geb_PinkTackle.webp",
-"name": "Pink Tackle box"
+"name": "Pink Tackle Box"
 },
 "geb_PurpleCooler": {
 "cat": "gear",
@@ -274,31 +274,31 @@ const ITEMDETAIL = {
 "cat": "gear",
 "desc": "A small tackle box. A great place to store small fishing hooks and other equipment.",
 "img": "items/geb_SmallTackle.webp",
-"name": "Small Tackle"
+"name": "Small Tackle Box"
 },
 "geb_SpinnerBait1": {
 "cat": "lure",
-"desc": "The in-line spinner is named for the fact that a metal blade revolves around a central axis (a wire), which may be attached by a clevis (a c-shaped metal piece with holes that accommodates the wire) or by itself. Most in-line spinners have metal weights rigged behind the spinning blade and beads or brass hardware that separates the two for frictionless spinning. Due to the fact that the spinning blade cause the whole bait to rotate, line twist builds that creates line problems and tangles. Swivels are used to solve the problem of twist.",
+"desc": "The in-line spinner is named for the fact that a metal blade revolves around a central axis (a wire), which may be attached by a clevis (a c-shaped metal piece with holes that accommodates the wire) or by itself. Most in-line spinners have metal weights rigged behind the spinning blade and beads or brass hardware that separates the two for frictionless spinning. Due to the fact that the spinning blade causes the whole bait to rotate, line twist builds up, which creates line problems and tangles. Swivels are used to solve the problem of twist.",
 "img": "items/geb_SpinnerBait1.webp",
-"name": "In-Line Spinnerbait #1"
+"name": "In-Line Spinner #1"
 },
 "geb_SpinnerBait2": {
 "cat": "lure",
-"desc": "The in-line spinner is named for the fact that a metal blade revolves around a central axis (a wire), which may be attached by a clevis (a c-shaped metal piece with holes that accommodates the wire) or by itself. Most in-line spinners have metal weights rigged behind the spinning blade and beads or brass hardware that separates the two for frictionless spinning. Due to the fact that the spinning blade cause the whole bait to rotate, line twist builds that creates line problems and tangles. Swivels are used to solve the problem of twist.",
+"desc": "The in-line spinner is named for the fact that a metal blade revolves around a central axis (a wire), which may be attached by a clevis (a c-shaped metal piece with holes that accommodates the wire) or by itself. Most in-line spinners have metal weights rigged behind the spinning blade and beads or brass hardware that separates the two for frictionless spinning. Due to the fact that the spinning blade causes the whole bait to rotate, line twist builds up, which creates line problems and tangles. Swivels are used to solve the problem of twist.",
 "img": "items/geb_SpinnerBait2.webp",
-"name": "In-Line Spinnerbait #2"
+"name": "In-Line Spinner #2"
 },
 "geb_SpinnerBait3": {
 "cat": "lure",
-"desc": "The in-line spinner is named for the fact that a metal blade revolves around a central axis (a wire), which may be attached by a clevis (a c-shaped metal piece with holes that accommodates the wire) or by itself. Most in-line spinners have metal weights rigged behind the spinning blade and beads or brass hardware that separates the two for frictionless spinning. Due to the fact that the spinning blade cause the whole bait to rotate, line twist builds that creates line problems and tangles. Swivels are used to solve the problem of twist.",
+"desc": "The in-line spinner is named for the fact that a metal blade revolves around a central axis (a wire), which may be attached by a clevis (a c-shaped metal piece with holes that accommodates the wire) or by itself. Most in-line spinners have metal weights rigged behind the spinning blade and beads or brass hardware that separates the two for frictionless spinning. Due to the fact that the spinning blade causes the whole bait to rotate, line twist builds up, which creates line problems and tangles. Swivels are used to solve the problem of twist.",
 "img": "items/geb_SpinnerBait3.webp",
-"name": "In-Line Spinnerbait #3"
+"name": "In-Line Spinner #3"
 },
 "geb_SpinnerBait4": {
 "cat": "lure",
-"desc": "The in-line spinner is named for the fact that a metal blade revolves around a central axis (a wire), which may be attached by a clevis (a c-shaped metal piece with holes that accommodates the wire) or by itself. Most in-line spinners have metal weights rigged behind the spinning blade and beads or brass hardware that separates the two for frictionless spinning. Due to the fact that the spinning blade cause the whole bait to rotate, line twist builds that creates line problems and tangles. Swivels are used to solve the problem of twist.",
+"desc": "The in-line spinner is named for the fact that a metal blade revolves around a central axis (a wire), which may be attached by a clevis (a c-shaped metal piece with holes that accommodates the wire) or by itself. Most in-line spinners have metal weights rigged behind the spinning blade and beads or brass hardware that separates the two for frictionless spinning. Due to the fact that the spinning blade causes the whole bait to rotate, line twist builds up, which creates line problems and tangles. Swivels are used to solve the problem of twist.",
 "img": "items/geb_SpinnerBait4.webp",
-"name": "In-Line Spinnerbait #4"
+"name": "In-Line Spinner #4"
 },
 "geb_SpoonLure1": {
 "cat": "lure",
@@ -325,7 +325,7 @@ const ITEMDETAIL = {
 "name": "Spoon Lure #4"
 },
 "geb_WormContainer": {
-"cat": "bait",
+"cat": "gear",
 "desc": "A container that is used for holding earth worms.",
 "img": "items/geb_WormContainer.webp",
 "name": "Worm Container"

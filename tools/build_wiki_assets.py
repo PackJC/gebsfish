@@ -1,7 +1,7 @@
 # Prepare the wiki's per-species assets: a trimmed thumbnail for each fish
 # and its English description, both written into docs/ for GitHub Pages.
 #
-#   python tools/build_wiki_assets.py [renders_dir]
+#   python tools/build_wiki_assets.py [renders_dir]     (default: fish_renders_species on your Desktop)
 #
 # Images are cropped to the subject, scaled down and saved as WebP so 72
 # species cost a few MB in the repo rather than ~40MB of full-size PNGs.
@@ -98,14 +98,25 @@ def english_table():
     return table
 
 
+def desktop_dir(name):
+    """Default render folders live on the user's Desktop."""
+    return os.path.join(os.path.expanduser("~"), "Desktop", name)
+
+
 def main():
-    renders = sys.argv[1] if len(sys.argv) > 1 else r"C:\Users\ECHO\Desktop\fish_renders_species"
+    renders = sys.argv[1] if len(sys.argv) > 1 else desktop_dir("fish_renders_species")
+    pngs = sorted(glob.glob(os.path.join(renders, "*.png")))
+    # Without renders this would still rewrite fish-details.js, with every
+    # rendered species' image gone, so stop before touching docs/.
+    if not pngs:
+        print("no PNG renders in %s -- nothing written" % renders)
+        return 1
     os.makedirs(DOCS_IMG, exist_ok=True)
 
     keys, table = description_keys(), english_table()
 
     details, written, no_desc, no_img = {}, 0, [], []
-    for path in sorted(glob.glob(os.path.join(renders, "*.png"))):
+    for path in pngs:
         cls = os.path.splitext(os.path.basename(path))[0]
 
         img = Image.open(path).convert("RGBA")
@@ -146,7 +157,8 @@ def main():
           % (sum(1 for v in details.values() if v["desc"]), len(details)))
     if no_desc:
         print("no description : %s" % ", ".join(sorted(no_desc)[:12]))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

@@ -5,9 +5,11 @@
 # 4 patterns), so rendering per-.p3d would produce untextured placeholders
 # and miss every variant.
 #
-#   python tools/build_item_manifest.py > tools/item_manifest.json
+#   python tools/build_item_manifest.py [out.json]     (default tools/item_manifest.json)
+#
+# Writes the file itself as UTF-8 with repo-relative paths, like
+# build_fish_manifest.py (a PowerShell `>` redirect would write UTF-16).
 
-import json
 import glob
 import os
 import sys
@@ -46,7 +48,7 @@ MODEL_OVERRIDES = {
     "spinner.p3d":             {"view": "MID"},
     # Live bait shares the bait sheet, so face them all the same way.
     "grasshopper.p3d":         {"flip_h": True},
-    "grub.p3d":                {"flip_h": True},
+    "grub.p3d":                {"flip_h": True, "flip_v": True},
 }
 
 
@@ -54,13 +56,14 @@ def main():
     classes = {}
     for cfg in glob.glob(os.path.join(REPO, "data", "*", "config.cpp")):
         for name, info in B.find_classes(B.read(cfg)).items():
-            info["model"], info["textures"] = B.own_fields(info["body"])
+            info["model"], info["textures"], info["materials"] = B.own_fields(info["body"])
             classes.setdefault(name, info)
 
     seen, manifest = set(), []
     for name in sorted(classes):
-        # Abstract bases duplicate a concrete variant's model+texture pair.
-        if "base" in name.lower():
+        # Abstract bases duplicate a concrete variant's model+texture pair, and
+        # Proxy* classes (CfgNonAIVehicles) are attachment points, not items.
+        if "base" in name.lower() or name.startswith("Proxy"):
             continue
         model = B.inherited(name, classes, "model")
         if not model:
@@ -87,9 +90,9 @@ def main():
         if key in seen:
             continue
         seen.add(key)
-        entry = {"name": name, "p3d": model_path, "texture": tex_path}
+        entry = {"name": name, "p3d": B.rel(model_path), "texture": B.rel(tex_path)}
         if len(tex_paths) > 1:
-            entry["textures"] = tex_paths
+            entry["textures"] = [B.rel(t) for t in tex_paths]
 
         ov = MODEL_OVERRIDES.get(os.path.basename(model_path).lower())
         if ov:
@@ -98,9 +101,9 @@ def main():
             if ov.get("texture"):
                 forced = os.path.join(REPO, ov["texture"].replace("/", os.sep))
                 if os.path.isfile(forced):
-                    entry["texture"] = forced
+                    entry["texture"] = B.rel(forced)
             if ov.get("reverse_textures") and len(tex_paths) > 1:
-                entry["textures"] = list(reversed(tex_paths))
+                entry["textures"] = [B.rel(t) for t in reversed(tex_paths)]
             for flag in ("flip_h", "flip_v", "roll"):
                 if ov.get(flag):
                     entry[flag] = True
@@ -115,7 +118,7 @@ def main():
     no_tex = [e["name"] for e in manifest if not e["texture"]]
     sys.stderr.write("without texture: %d %s\n" % (len(no_tex), ", ".join(no_tex[:8])))
 
-    print(json.dumps(manifest, indent=2))
+    B.write_manifest(manifest, "item_manifest.json")
 
 
 if __name__ == "__main__":

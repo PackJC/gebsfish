@@ -13,11 +13,15 @@ class CfgNonAIVehicles {
 };
 
 class CfgPatches {
-	class gebsTackleCfgPatches { 	
+	class gebsTackleCfgPatches {
 		//Never Use same name for patch, because conflict message.
+		// The patches defining each vanilla parent, so they always load first.
 		requiredAddons[] = {
 		"DZ_Data",
-		"DZ_Scripts"
+		"DZ_Scripts",
+		"DZ_Gear_Consumables",  // Jig
+		"DZ_Gear_Food",         // Worm
+		"DZ_Gear_Drinks"        // WaterBottle
 		};
 	};
 };
@@ -26,12 +30,10 @@ class cfgVehicles {
 	class Rope;
 	class Jig;
 	class Worm;
-	class NotCookable;
 	class Edible_Base;
 	class WaterBottle;
 	class Container_Base;
 	class Inventory_Base;
-	class FoodAnimationSources;
 	
     /*
 
@@ -60,7 +62,9 @@ class cfgVehicles {
 		isMeleeWeapon = 1;
 		allowOwnedCargoManipulation = 1;
 		randomQuantity = 2;
-		repairableWithKits[] = {5,2};
+		// Kit ids: 5 = DuctTape, 8 = EpoxyPutty (vanilla's hard cases use
+		// epoxy). 2 is the SewingKit, which was here by mistake.
+		repairableWithKits[] = {5,8};
 		repairCosts[] = {30,25};
 		lootTag[] = {"Hunting","Work","Camping"};
 		class DamageSystem {
@@ -68,11 +72,11 @@ class cfgVehicles {
 				class Health {
 					hitpoints = 80;
 					healthLevels[] = {
-						{1,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.7,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.5,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0.3,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0,{"DZ\gear\containers\data\FirsAidKit_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\largetackle.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\largetackle.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\largetackle_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\largetackle_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\largetackle_destruct.rvmat"}}
 					};
 				};
 			};
@@ -212,19 +216,19 @@ class cfgVehicles {
 		allowOwnedCargoManipulation = 1;
 		randomQuantity = 2;
 		canBeDigged = 1;
-		repairableWithKits[] = {2};
-		repairCosts[] = {25};
+		repairableWithKits[] = {5,8};  // duct tape or epoxy -- same as tackle boxes
+		repairCosts[] = {30,25};
 		isMeleeWeapon = 1;
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
 					hitpoints = 80;
 					healthLevels[] = {
-						{1,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.7,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.5,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0.3,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0,{"DZ\gear\containers\data\FirsAidKit_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\smalltackle.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\smalltackle.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\smalltackle_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\smalltackle_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\smalltackle_destruct.rvmat"}}
 					};
 				};
 			};
@@ -266,22 +270,27 @@ class cfgVehicles {
 		weight = 1200;  // a cooler is heavier than a tackle box -- ~1.2kg empty
 		itemSize[] = {4,3};
 		itemsCargoSize[] = {6,4};  // 24 slots -- generous fillet storage
+		// Insulation. When the cooler isn't the root item (carried, or inside a
+		// tent or vehicle), vanilla's ambient drift also works on its contents
+		// between chilling ticks; that drift multiplies this coefficient down
+		// the item tree, so 0.1 = contents warm ten times slower.
+		varHeatPermeabilityCoef = 0.1;
 		allowOwnedCargoManipulation = 1;
 		randomQuantity = 2;
 		canBeDigged = 1;
-		repairableWithKits[] = {2};  // duct tape -- same as tackle boxes
-		repairCosts[] = {25};
+		repairableWithKits[] = {5,8};  // duct tape or epoxy -- same as tackle boxes
+		repairCosts[] = {30,25};
 		isMeleeWeapon = 1;
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
 					hitpoints = 150;  // sturdier than tackle (80) since coolers are usually hard plastic
 					healthLevels[] = {
-						{1,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.7,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.5,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0.3,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0,{"DZ\gear\containers\data\FirsAidKit_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\cooler.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\cooler.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\cooler_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\cooler_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\cooler_destruct.rvmat"}}
 					};
 				};
 			};
@@ -394,19 +403,19 @@ class cfgVehicles {
 		allowOwnedCargoManipulation = 1;
 		randomQuantity = 2;
 		canBeDigged = 1;
-		repairableWithKits[] = {2};
-		repairCosts[] = {25};
+		repairableWithKits[] = {5,8};  // duct tape or epoxy -- same as tackle boxes
+		repairCosts[] = {30,25};
 		isMeleeWeapon = 1;
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
 					hitpoints = 80;
 					healthLevels[] = {
-						{1,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.7,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.5,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0.3,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0,{"DZ\gear\containers\data\FirsAidKit_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\wormcontainer.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\wormcontainer.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\wormcontainer_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\wormcontainer_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\wormcontainer_destruct.rvmat"}}
 					};
 				};
 			};
@@ -439,19 +448,19 @@ class cfgVehicles {
 		allowOwnedCargoManipulation = 1;
 		randomQuantity = 2;
 		canBeDigged = 1;
-		repairableWithKits[] = {2};
-		repairCosts[] = {25};
+		repairableWithKits[] = {5,8};  // duct tape or epoxy -- same as tackle boxes
+		repairCosts[] = {30,25};
 		isMeleeWeapon = 1;
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
 					hitpoints = 80;
 					healthLevels[] = {
-						{1,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.7,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.5,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0.3,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0,{"DZ\gear\containers\data\FirsAidKit_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\bugcontainer.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\bugcontainer.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\bugcontainer_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\bugcontainer_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\bugcontainer_destruct.rvmat"}}
 					};
 				};
 			};
@@ -478,7 +487,10 @@ class cfgVehicles {
 		weight = 25;
 		itemSize[] = {3,3};
 		itemsCargoSize[] = {4,4};
-		destroyOnEmpty = 0;
+		// WaterBottle (for the water the bait lives in) passes on Edible_Base's
+		// DirectCookingA/B/C slots, and a stone oven or closed barrel takes any
+		// Edible_Base there as food. The bucket is gear: no slots at all.
+		inventorySlot[] = {};
 		varQuantityDestroyOnMin = 0;
 		varLiquidTypeInit = 512;
 		liquidContainerType = "1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 + 512 + 1024 + 2048 + 4096 + 8192 + 16384 + 32768 + 65536	- (1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256) -32768";
@@ -491,11 +503,11 @@ class cfgVehicles {
 				class Health {
 					hitpoints = 50;
 					healthLevels[] = {
-						{1,{"DZ\gear\drinks\data\Loot_WaterBottle.rvmat"}},
-						{0.7,{"DZ\gear\drinks\data\Loot_WaterBottle.rvmat"}},
-						{0.5,{"DZ\gear\drinks\data\Loot_WaterBottle_damage.rvmat"}},
-						{0.3,{"DZ\gear\drinks\data\Loot_WaterBottle_damage.rvmat"}},
-						{0,{"DZ\gear\drinks\data\Loot_WaterBottle_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\baitbucket.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\baitbucket.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\baitbucket_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\baitbucket_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\baitbucket_destruct.rvmat"}}
 					};
 				};
 			};
@@ -556,19 +568,19 @@ class cfgVehicles {
 		allowOwnedCargoManipulation = 1;
 		randomQuantity = 2;
 		canBeDigged = 1;
-		repairableWithKits[] = {2};
-		repairCosts[] = {25};
+		repairableWithKits[] = {5,8};  // duct tape or epoxy -- same as tackle boxes
+		repairCosts[] = {30,25};
 		isMeleeWeapon = 1;
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
 					hitpoints = 80;
 					healthLevels[] = {
-						{1,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.7,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.5,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0.3,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0,{"DZ\gear\containers\data\FirsAidKit_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\mediumtackle.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\mediumtackle.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\mediumtackle_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\mediumtackle_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\mediumtackle_destruct.rvmat"}}
 					};
 				};
 			};
@@ -627,6 +639,24 @@ class cfgVehicles {
 		model = "\gebsfish\data\tackle\grasshopper.p3d";
 		rotationFlags = 17;
 		weight = 21;
+		// The DamageSystem below restates the vanilla parent's hit points in full:
+		// "class DamageSystem: DamageSystem" only compiles against a class defined
+		// in this same config, and the parent here comes from another addon.
+		// 10 hit points as vanilla Worm, with this model's materials
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 10;
+					healthLevels[] = {
+						{1,{"gebsfish\data\tackle\grasshopper.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\grasshopper.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\grasshopper_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\grasshopper_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\grasshopper_destruct.rvmat"}}
+					};
+				};
+			};
+		};
 	};
 	class geb_FieldCricket: Worm {
 		scope = 2;
@@ -635,6 +665,21 @@ class cfgVehicles {
 		model = "\gebsfish\data\tackle\fieldcricket.p3d";
 		rotationFlags = 17;
 		weight = 21;
+		// 10 hit points as vanilla Worm, with this model's materials
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 10;
+					healthLevels[] = {
+						{1,{"gebsfish\data\tackle\fieldcricket.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\fieldcricket.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\fieldcricket_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\fieldcricket_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\fieldcricket_destruct.rvmat"}}
+					};
+				};
+			};
+		};
 	};
 	class geb_GrubWorm: Worm {
 		scope=2;
@@ -642,6 +687,21 @@ class cfgVehicles {
 		descriptionShort = "$STR_tools_grubworm_desc";
 		model = "\gebsfish\data\tackle\grub.p3d";
 		rotationFlags = 17;
+		// 10 hit points as vanilla Worm, with this model's materials
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 10;
+					healthLevels[] = {
+						{1,{"gebsfish\data\tackle\grub.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\grub.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\grub_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\grub_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\grub_destruct.rvmat"}}
+					};
+				};
+			};
+		};
 	};
 	class geb_RubberWorm: Worm {
 		scope = 2;
@@ -669,12 +729,14 @@ class cfgVehicles {
 			class GlobalHealth {
 				class Health {
 					hitpoints = 18;
+					// One material per lure model built on this base (curly-tail
+					// jig, spinnerbait, spoon); each model only has its own.
 					healthLevels[] = {
-						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\curlytailjig.rvmat","gebsfish\data\tackle\spinner.rvmat","gebsfish\data\tackle\spoonlure.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\curlytailjig.rvmat","gebsfish\data\tackle\spinner.rvmat","gebsfish\data\tackle\spoonlure.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\curlytailjig_damage.rvmat","gebsfish\data\tackle\spinner_damage.rvmat","gebsfish\data\tackle\spoonlure_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\curlytailjig_damage.rvmat","gebsfish\data\tackle\spinner_damage.rvmat","gebsfish\data\tackle\spoonlure_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\curlytailjig_destruct.rvmat","gebsfish\data\tackle\spinner_destruct.rvmat","gebsfish\data\tackle\spoonlure_destruct.rvmat"}}
 					};
 				};
 			};
@@ -685,7 +747,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_spinnerbait1";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
 		model = "\gebsfish\data\tackle\spinner.p3d";
-		hookType = "geb_SpinnerBait1";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinner1_co.paa"};
 	};
@@ -694,7 +755,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_spinnerbait2";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
 		model = "\gebsfish\data\tackle\spinner.p3d";
-		hookType = "geb_SpinnerBait2";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinner2_co.paa"};
 	};
@@ -703,7 +763,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_spinnerbait3";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
 		model = "\gebsfish\data\tackle\spinner.p3d";
-		hookType = "geb_SpinnerBait3";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinner3_co.paa"};
 	};
@@ -712,7 +771,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_spinnerbait4";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
 		model = "\gebsfish\data\tackle\spinner.p3d";
-		hookType = "geb_SpinnerBait4";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinner4_co.paa"};
 	};
@@ -722,17 +780,16 @@ class cfgVehicles {
 		descriptionShort = "$STR_tools_lure1_desc";
 		model = "\gebsfish\data\tackle\popper.p3d";
 		inventorySlot[] = {"Hook"};
-		hookType = "geb_Lure1";
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
 					hitpoints = 18;
 					healthLevels[] = {
-						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\popper.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\popper.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\popper_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\popper_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\popper_destruct.rvmat"}}
 					};
 				};
 			};
@@ -742,19 +799,18 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_tools_lure2";
 		descriptionShort = "$STR_tools_lure2_desc";
-		model = "\gebsfish\data\tackle\redcrank.p3d";
+		model = "\gebsfish\data\tackle\purplecrank.p3d";
 		inventorySlot[] = {"Hook"};
-		hookType = "geb_Lure2";
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
 					hitpoints = 18;
 					healthLevels[] = {
-						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\purplecrank.rvmat","gebsfish\data\tackle\purplecrank_lip.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\purplecrank.rvmat","gebsfish\data\tackle\purplecrank_lip.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\purplecrank_damage.rvmat","gebsfish\data\tackle\purplecrank_lip_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\purplecrank_damage.rvmat","gebsfish\data\tackle\purplecrank_lip_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\purplecrank_destruct.rvmat","gebsfish\data\tackle\purplecrank_lip_destruct.rvmat"}}
 					};
 				};
 			};
@@ -766,17 +822,16 @@ class cfgVehicles {
 		descriptionShort = "$STR_tools_lure3_desc";
 		model = "\gebsfish\data\tackle\yellowcrank.p3d";
 		inventorySlot[] = {"Hook"};
-		hookType = "geb_Lure3";
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
 					hitpoints = 18;
 					healthLevels[] = {
-						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\yellowcrank.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\yellowcrank.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\yellowcrank_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\yellowcrank_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\yellowcrank_destruct.rvmat"}}
 					};
 				};
 			};
@@ -788,17 +843,16 @@ class cfgVehicles {
 		descriptionShort = "$STR_tools_lure4_desc";
 		model = "\gebsfish\data\tackle\squarebill.p3d";
 		inventorySlot[] = {"Hook"};
-		hookType = "geb_Lure4";
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
 					hitpoints = 18;
 					healthLevels[] = {
-						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\squarebill.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\squarebill.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\squarebill_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\squarebill_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\squarebill_destruct.rvmat"}}
 					};
 				};
 			};
@@ -813,7 +867,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_spoonlure1";
 		descriptionShort = "$STR_tools_spoonlure_desc";
 		model = "\gebsfish\data\tackle\spoonlure.p3d";
-		hookType = "geb_SpoonLure1";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spoonlure_blue_co.paa"};
 
@@ -823,7 +876,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_spoonlure2";
 		descriptionShort = "$STR_tools_spoonlure_desc";
 		model = "\gebsfish\data\tackle\spoonlure.p3d";
-		hookType = "geb_SpoonLure2";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spoonlure_white_co.paa"};
 	};
@@ -832,7 +884,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_spoonlure3";
 		descriptionShort = "$STR_tools_spoonlure_desc";
 		model = "\gebsfish\data\tackle\spoonlure.p3d";
-		hookType = "geb_SpoonLure3";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spoonlure_red_co.paa"};
 	};
@@ -841,7 +892,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_spoonlure4";
 		descriptionShort = "$STR_tools_spoonlure_desc";
 		model = "\gebsfish\data\tackle\spoonlure.p3d";
-		hookType = "geb_SpoonLure4";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spoonlure_yellow_co.paa"};
 	};
@@ -852,7 +902,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_curlytailjig1";
 		descriptionShort = "$STR_tools_curlytailjig_desc";
 		model = "\gebsfish\data\tackle\curlytailjig.p3d";
-		hookType = "geb_CurlyTailJig1";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\curlytailjig_blue_co.paa"};
 	};
@@ -861,7 +910,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_curlytailjig2";
 		descriptionShort = "$STR_tools_curlytailjig_desc";
 		model = "\gebsfish\data\tackle\curlytailjig.p3d";
-		hookType = "geb_CurlyTailJig2";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\curlytailjig_green_co.paa"};
 	};
@@ -870,7 +918,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_curlytailjig3";
 		descriptionShort = "$STR_tools_curlytailjig_desc";
 		model = "\gebsfish\data\tackle\curlytailjig.p3d";
-		hookType = "geb_CurlyTailJig3";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\curlytailjig_red_co.paa"};
 	};
@@ -879,7 +926,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_curlytailjig4";
 		descriptionShort = "$STR_tools_curlytailjig_desc";
 		model = "\gebsfish\data\tackle\curlytailjig.p3d";
-		hookType = "geb_CurlyTailJig4";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\curlytailjig_purple_co.paa"};
 	};

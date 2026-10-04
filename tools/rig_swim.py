@@ -431,6 +431,11 @@ def main():
     o = parse_args()
     frame_dir = os.path.join(o["out"], "frames_" + o["name"])
     os.makedirs(frame_dir, exist_ok=True)
+    # make_gif.py takes every PNG in the folder, so frames left from an
+    # earlier run (a longer cycle, other settings) would end up in this GIF.
+    for old in os.listdir(frame_dir):
+        if old.lower().endswith(".png"):
+            os.remove(os.path.join(frame_dir, old))
 
     print("=== rigging %s ===" % o["name"])
     rp.reset_scene()

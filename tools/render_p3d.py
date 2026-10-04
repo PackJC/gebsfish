@@ -20,6 +20,9 @@
 #   - Only the first LOD of each file is imported (the visual LOD).
 #   - Textures come from the .paa path embedded in the p3d; the file is
 #     located by basename inside --src, so variant-named textures resolve.
+#   - Each material's relief map, shine map and sheen (from its .rvmat, the
+#     manifest's "material" or the one the model names) are wired in, so a
+#     render shows the item as it looks in game.
 #   - Colour management is forced to Standard so texture colours render
 #     accurately instead of being desaturated by Blender's default AgX.
 
@@ -109,11 +112,12 @@ def import_model(path):
     return [o for o in bpy.context.scene.objects if o.type == 'MESH']
 
 
-def load_paa(paa_path):
-    """Import a .paa via the addon and return the new image datablock."""
+def load_paa(paa_path, data=False):
+    """Import a .paa via the addon and return the new image datablock.
+    data=True for relief and shine maps (no sRGB conversion)."""
     before = set(bpy.data.images.keys())
     try:
-        bpy.ops.a3ob.import_paa(filepath=paa_path, color_space='SRGB')
+        bpy.ops.a3ob.import_paa(filepath=paa_path, color_space='DATA' if data else 'SRGB')
     except Exception as exc:
         print("    ! PAA import failed for %s: %s" % (paa_path, exc))
         return None
@@ -158,7 +162,144 @@ def resolve_texture(base, src_dir, texroot=None):
     return None
 
 
-def apply_textures(objects, src_dir, cache, override=None, texroot=None):
+def resolve_exact(path, src_dir, texroot=None):
+    """A file named in a material (relief map, shine map) or a model (its
+    material), found by its own name beside the model or anywhere in the mod."""
+    base = os.path.basename(path.replace("\\", "/"))
+    if not base:
+        return None
+    hit = os.path.join(src_dir, base)
+    if os.path.isfile(hit):
+        return hit
+    if texroot:
+        if not _FILE_INDEX:
+            for dirpath, _, files in os.walk(texroot):
+                for f in files:
+                    if f.lower().endswith((".paa", ".rvmat")):
+                        _FILE_INDEX.setdefault(f.lower(), os.path.join(dirpath, f))
+        return _FILE_INDEX.get(base.lower())
+    return None
+
+
+_FILE_INDEX = {}
+
+
+def read_rvmat(path):
+    """Relief map (Stage1), shine map (Stage5), sheen colour and power of a
+    text .rvmat; None for a binarised one (vanilla's) or a missing file."""
+    try:
+        with open(path, "rb") as fh:
+            raw = fh.read()
+    except OSError:
+        return None
+    if raw[:4] == b"\x00raP":
+        return None
+    text = raw.decode("latin-1")
+
+    def stage(n):
+        m = re.search(r"class\s+Stage%d\s*\{(.*?)\};" % n, text, re.S)
+        if not m:
+            return None
+        for line in m.group(1).splitlines():
+            s = line.strip()
+            if s.startswith("//"):
+                continue
+            t = re.match(r'texture\s*=\s*"([^"]*)"', s)
+            if t:
+                return t.group(1)
+        return None
+    spec = re.search(r"specular\[\]\s*=\s*\{([^}]*)\}", text)
+    power = re.search(r"specularPower\s*=\s*([\d.]+)", text)
+    return {
+        "nohq": stage(1), "smdi": stage(5),
+        "spec": [float(v) for v in spec.group(1).split(",")[:3]] if spec else [0.2, 0.2, 0.2],
+        "power": float(power.group(1)) if power else 75.0,
+    }
+
+
+def wire_material_maps(nt, bsdf, info, src_dir, cache, texroot=None):
+    """Add the material's relief map, shine map and sheen to a Principled BSDF,
+    so a render shows the item as it looks in game.
+
+    Relief: the game's maps are tangent space with green pointing DOWN the
+    texture (DirectX style, X+ Y-) and, in vanilla's swizzled maps, X in
+    alpha (the shader reads X = R + 1 - A). Blender wants green UP (OpenGL),
+    so Y is inverted. Sheen: rvmat specularPower sets the roughness (a tight
+    1300 highlight is a wet, glossy fish; 75 a dull broad one), the shine
+    map's green its strength and blue its gloss, as in the game's Super shader."""
+    def image(path):
+        if path in cache:
+            return cache[path]
+        img = load_paa(path, data=True)
+        if img is not None:
+            try:
+                img.colorspace_settings.name = 'Non-Color'
+            except TypeError:
+                pass
+        cache[path] = img
+        return img
+
+    def node(kind, op=None, **inputs):
+        n = nt.nodes.new(kind)
+        if op:
+            n.operation = op
+        for k, v in inputs.items():
+            n.inputs[k].default_value = v
+        return n
+
+    nohq = info.get("nohq") or ""
+    if nohq and not nohq.startswith("#"):
+        path = resolve_exact(nohq, src_dir, texroot)
+        img = image(path) if path else None
+        if img is not None:
+            tex = nt.nodes.new('ShaderNodeTexImage'); tex.image = img; tex.location = (-900, -350)
+            sep = nt.nodes.new('ShaderNodeSeparateColor')
+            nt.links.new(tex.outputs["Color"], sep.inputs["Color"])
+            x_ra = node('ShaderNodeMath', 'SUBTRACT')                 # R - A
+            nt.links.new(sep.outputs["Red"], x_ra.inputs[0])
+            nt.links.new(tex.outputs["Alpha"], x_ra.inputs[1])
+            x = node('ShaderNodeMath', 'ADD'); x.inputs[1].default_value = 1.0
+            nt.links.new(x_ra.outputs[0], x.inputs[0])
+            y = node('ShaderNodeMath', 'SUBTRACT'); y.inputs[0].default_value = 1.0
+            nt.links.new(sep.outputs["Green"], y.inputs[1])
+            comb = nt.nodes.new('ShaderNodeCombineColor')
+            nt.links.new(x.outputs[0], comb.inputs["Red"])
+            nt.links.new(y.outputs[0], comb.inputs["Green"])
+            nt.links.new(sep.outputs["Blue"], comb.inputs["Blue"])
+            nm = nt.nodes.new('ShaderNodeNormalMap'); nm.space = 'TANGENT'
+            nt.links.new(comb.outputs["Color"], nm.inputs["Color"])
+            nt.links.new(nm.outputs["Normal"], bsdf.inputs["Normal"])
+    spec = info.get("spec") or [0.2, 0.2, 0.2]
+    lum = 0.2126 * spec[0] + 0.7152 * spec[1] + 0.0722 * spec[2]
+    power = max(info.get("power") or 75.0, 1.0)
+    base_rough = min(max((2.0 / (power + 2.0)) ** 0.25, 0.12), 0.65)
+    level_in = "Specular IOR Level" if "Specular IOR Level" in bsdf.inputs else ("Specular" if "Specular" in bsdf.inputs else None)
+    smdi = info.get("smdi") or ""
+    simg = None
+    if smdi and not smdi.startswith("#"):
+        path = resolve_exact(smdi, src_dir, texroot)
+        simg = image(path) if path else None
+    if simg is not None:
+        tex = nt.nodes.new('ShaderNodeTexImage'); tex.image = simg; tex.location = (-900, -650)
+        sep = nt.nodes.new('ShaderNodeSeparateColor')
+        nt.links.new(tex.outputs["Color"], sep.inputs["Color"])
+        if level_in:
+            lvl = node('ShaderNodeMath', 'MULTIPLY'); lvl.inputs[1].default_value = 2.0 * lum
+            lvl.use_clamp = True
+            nt.links.new(sep.outputs["Green"], lvl.inputs[0])
+            nt.links.new(lvl.outputs[0], bsdf.inputs[level_in])
+        r1 = node('ShaderNodeMath', 'MULTIPLY_ADD')                  # base * (1.35 - 0.7 * gloss)
+        r1.inputs[1].default_value = -0.7 * base_rough; r1.inputs[2].default_value = 1.35 * base_rough
+        r1.use_clamp = True
+        nt.links.new(sep.outputs["Blue"], r1.inputs[0])
+        nt.links.new(r1.outputs[0], bsdf.inputs["Roughness"])
+    else:
+        bsdf.inputs["Roughness"].default_value = base_rough
+        if level_in:
+            bsdf.inputs[level_in].default_value = min(max(0.8 * lum, 0.05), 1.0)
+
+
+def apply_textures(objects, src_dir, cache, override=None, texroot=None, material=None):
     """Wire textures into each material as a Principled BSDF.
 
     `override` is the manifest's hiddenSelectionsTextures list: entry N
@@ -228,6 +369,17 @@ def apply_textures(objects, src_dir, cache, override=None, texroot=None):
                         mat.blend_method = 'HASHED'          # legacy EEVEE
                     except (AttributeError, TypeError):
                         pass
+            # The material: the manifest's (hiddenSelectionsMaterials) for the
+            # first slot, else the one the model's faces name.
+            mat_file = material if (material and slot_index == 0) else None
+            if mat_file is None:
+                props = getattr(mat, "a3ob_properties_material", None)
+                raw_mat = getattr(props, "material_path", "") if props else ""
+                if raw_mat and raw_mat.lower().endswith(".rvmat"):
+                    mat_file = resolve_exact(raw_mat, src_dir, texroot)
+            info = read_rvmat(mat_file) if mat_file else None
+            if info:
+                wire_material_maps(nt, bsdf, info, src_dir, cache, texroot)
             nt.links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
             applied += 1
     return applied, missing
@@ -441,7 +593,7 @@ def setup_render(opts):
 
 
 def render_one(path, opts, name=None, override=None, view_override=None,
-               flips=None):
+               flips=None, material=None):
     name = name or os.path.splitext(os.path.basename(path))[0]
     print("\n=== %s ===" % name)
     reset_scene()
@@ -460,7 +612,7 @@ def render_one(path, opts, name=None, override=None, view_override=None,
 
     if opts["textures"]:
         applied, missing = apply_textures(
-            meshes, opts["src"], {}, override, opts["texroot"])
+            meshes, opts["src"], {}, override, opts["texroot"], material)
         print("  textures applied: %d%s" % (applied, ("  MISSING: " + ", ".join(sorted(set(missing)))) if missing else ""))
     else:
         clay_material(meshes)
@@ -491,14 +643,23 @@ def main():
     # model with different textures); without one, it is one image per .p3d.
     if opts["manifest"]:
         import json
+        # Manifest paths are relative to the repo root (tools/..); absolute
+        # ones from an older manifest still work as they are.
+        repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+        def local(p):
+            return os.path.join(repo, p.replace("/", os.sep)) if p and not os.path.isabs(p) else p
+
         with open(opts["manifest"], "r", encoding="utf-8") as fh:
-            jobs = [(e["name"], e["p3d"],
-                     e.get("textures") or ([e["texture"]] if e.get("texture") else None),
+            jobs = [(e["name"], local(e["p3d"]),
+                     [local(t) for t in e["textures"]] if e.get("textures")
+                     else ([local(e["texture"])] if e.get("texture") else None),
                      e.get("view"),
-                     (bool(e.get("flip_h")), bool(e.get("flip_v")), bool(e.get("roll"))))
+                     (bool(e.get("flip_h")), bool(e.get("flip_v")), bool(e.get("roll"))),
+                     local(e["material"]) if e.get("material") else None)
                     for e in json.load(fh)]
     else:
-        jobs = [(os.path.splitext(os.path.basename(f))[0], f, None, None, None)
+        jobs = [(os.path.splitext(os.path.basename(f))[0], f, None, None, None, None)
                 for f in sorted(glob.glob(os.path.join(opts["src"], "*.p3d")))]
 
     if opts["only"]:
@@ -509,8 +670,8 @@ def main():
 
     print("Rendering %d item(s) from %s" % (len(jobs), opts["src"]))
     ok, failed = [], []
-    for job_name, path, override, view, flips in jobs:
-        success, name, why = render_one(path, opts, job_name, override, view, flips)
+    for job_name, path, override, view, flips, material in jobs:
+        success, name, why = render_one(path, opts, job_name, override, view, flips, material)
         (ok if success else failed).append(name if success else "%s (%s)" % (name, why))
 
     print("\n================ SUMMARY ================")

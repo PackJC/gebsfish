@@ -13,5 +13,6 @@ modded class ActionConstructor {
 		super.RegisterActions(actions);
 		actions.Insert(ActionDigBugs);
 		actions.Insert(ActionBambooFishingNet);
+		actions.Insert(ActionGebSpearFishing);
 	}
 };

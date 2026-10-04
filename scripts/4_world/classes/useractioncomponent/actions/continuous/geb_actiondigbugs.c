@@ -20,9 +20,12 @@ class ActionDigBugsCB : ActionContinuousBaseCB {
 class ActionDigBugs : ActionContinuousBase {
 	void ActionDigBugs() {
 		m_CallbackClass = ActionDigBugsCB;
-		m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DIGMANIPULATE;
+		// Crouch-only, set once here (the bug catcher is the only item with
+		// this action). Like vanilla crafting, a standing player is moved into
+		// a crouch before the dig starts, and standing up cancels it.
+		m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DEPLOY_1HD;
 		m_FullBody = true;
-		m_StanceMask = DayZPlayerConstants.STANCEMASK_ERECT;
+		m_StanceMask = DayZPlayerConstants.STANCEMASK_CROUCH;
 		m_SpecialtyWeight = UASoftSkillsWeight.ROUGH_MEDIUM;
 		m_Text = "#STR_action_digbugs";
 	}
@@ -62,16 +65,6 @@ class ActionDigBugs : ActionContinuousBase {
 
 	override bool ActionConditionContinue(ActionData action_data) {
 		return true;
-	}
-
-	override bool SetupAction(PlayerBase player, ActionTarget target, ItemBase item, out ActionData action_data, Param extra_data = NULL) {
-		if (super.SetupAction(player, target, item, action_data, extra_data)) {
-			if (item) {
-				SetDiggingAnimation(item);
-			}
-			return true;
-		}
-		return false;
 	}
 
 	override bool HasTarget() {
@@ -161,17 +154,6 @@ class ActionDigBugs : ActionContinuousBase {
 			if (bugs) {
 				bugs.SetQuantity(1, false);
 			}
-		}
-	}
-
-	void SetDiggingAnimation(ItemBase item) {
-		if (item.KindOf("CatchBugs")) {
-			m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DEPLOY_1HD;
-			m_StanceMask = DayZPlayerConstants.STANCEMASK_ERECT | DayZPlayerConstants.STANCEMASK_CROUCH;
-		}
-		else {
-			m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DIGMANIPULATE;
-			m_StanceMask = DayZPlayerConstants.STANCEMASK_ERECT;
 		}
 	}
 };

@@ -26,17 +26,17 @@ class ActionBambooFishingNetCB : ActionContinuousBaseCB {
 };
 
 class ActionBambooFishingNet : ActionContinuousBase {
-	// Constructor values intentionally match master. The bamboo net's
-	// itemInfo[] in data/tools/config.cpp is "CatchWithNet", so
-	// SetDiggingAnimation routes through the CatchWithNet branch and sets
-	// STANCEMASK_ERECT | STANCEMASK_CROUCH -- the CROUCH from the
-	// constructor stays compatible. Any tag that flips SetDiggingAnimation
-	// to the ERECT-only fallback branch will hang the action because the
-	// constructor's CROUCH is then incompatible. See commit history for the
-	// regression that taught us this.
+	// The net is the only item with this action, so its animation is set
+	// once here, as in ActionDigBugs. DEPLOY_1HD is a looping full-body
+	// command vanilla only has crouched (plugindayzplayerdebug.c), so a
+	// standing player is moved into a crouch before netting starts, and
+	// standing up cancels it. It used to be rewritten on the shared action
+	// in SetupAction, after vanilla had already recorded the allowed stance
+	// (the bug that cancelled the first bug-dig after a restart), and from
+	// then on it allowed standing, which DEPLOY_1HD has no animation for.
 	void ActionBambooFishingNet() {
 		m_CallbackClass = ActionBambooFishingNetCB;
-		m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_POKE;
+		m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DEPLOY_1HD;
 		m_StanceMask = DayZPlayerConstants.STANCEMASK_CROUCH;
 		m_FullBody = true;
 		// Match ActionDigBugs so netting grants the same toughness progression
@@ -122,9 +122,11 @@ class ActionBambooFishingNet : ActionContinuousBase {
             // Super already applied the received payload on the server.
             if (data.m_GebEnvironment == 0 && !g_Game.IsDedicatedServer())
                 data.m_GebEnvironment = GetFishingNetEnvironment(target);
-			if ( item ) {
-				SetDiggingAnimation( item );
-			}
+            // A server that didn't get a valid water type refuses here. A
+            // failed ReadFromContext alone doesn't stop the action starting,
+            // so it would otherwise play out in full and give nothing.
+            if (g_Game.IsDedicatedServer() && data.m_GebEnvironment != 1 && data.m_GebEnvironment != 2)
+                return false;
 			return true;
 		}
 		return false;
@@ -234,20 +236,27 @@ class ActionBambooFishingNet : ActionContinuousBase {
 
 			string spawnType = GetConfiguredNetSpawnType(environment);
 			if (spawnType != "") {
-				// Try to spawn the catch into the net's cargo first. Falls
-				// back to the player's feet when the net is full or the
-				// filtered-cargo check rejects the item (see s_Allowed in
-				// containers.c). CreateInInventory returns null on either
-				// failure mode, so a single check covers both. Use
-				// CreateInInventory rather than CreateInCargo* because the
-				// former handles slot lookup automatically and matches the
-				// pattern used elsewhere in the mod (geb_jonboat.c spark
-				// plug spawn).
+				// Try to spawn the catch into the net's cargo first, falling
+				// back to the player's feet when it isn't on the net's
+				// allow-list (s_Allowed in containers.c) or the net is full.
+				// The allow-list has to be checked by classname here:
+				// CreateInInventory places a new item by type without asking
+				// the net's cargo filter, which only judges existing items,
+				// so a disallowed catch would land in the net and then be
+				// rejected by the load check on the next restart (lost). A
+				// full net still makes CreateInInventory return null. It is
+				// used rather than CreateInCargo* because it handles the slot
+				// lookup, as elsewhere in the mod (geb_jonboat.c spark plug).
 				EntityAI catchEntity;
-				if (net && net.GetInventory())
+				geb_FilteredContainerBase filtered = geb_FilteredContainerBase.Cast(net);
+				bool netAccepts = !filtered || filtered.GebAcceptsType(spawnType);
+				if (net && net.GetInventory() && netAccepts)
 					catchEntity = net.GetInventory().CreateInInventory(spawnType);
-				if (!catchEntity)
+				if (!catchEntity) {
+					if (debugLevel >= 1)
+						GebsfishLogger.Debug("Net catch '" + spawnType + "' didn't go into the net (net full, or not on its allow-list in containers.c) -- dropped at the player's feet.", "NetSpawn");
 					g_Game.CreateObjectEx(spawnType, player.GetPosition(), ECE_PLACE_ON_SURFACE);
+				}
 			}
 		}
 
@@ -263,22 +272,5 @@ class ActionBambooFishingNet : ActionContinuousBase {
 
 		if (net)
 			net.DecreaseHealth("", "", 5);
-	}
-
-	void SetDiggingAnimation( ItemBase item ) {
-		// The bamboo net carries itemInfo[] = {"CatchWithNet"}, which routes
-		// through the DEPLOY_1HD animation here. STANCEMASK must include
-		// CROUCH so the constructor's CROUCH stance stays compatible after
-		// SetupAction overwrites these values. The else clause exists as a
-		// safety net for any non-CatchWithNet item routed through this
-		// action class in the future.
-		if (item.KindOf("CatchWithNet")) {
-			m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DEPLOY_1HD;
-			m_StanceMask = DayZPlayerConstants.STANCEMASK_ERECT | DayZPlayerConstants.STANCEMASK_CROUCH;
-		}
-		else {
-			m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DIGMANIPULATE;
-			m_StanceMask = DayZPlayerConstants.STANCEMASK_ERECT;
-		}
 	}
 };

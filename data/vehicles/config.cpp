@@ -59,7 +59,7 @@ class CfgPatches {
 		requiredAddons[] = {
 			"DZ_Scripts",
 			"DZ_Data",
-            "DZ_Vehicles",
+            "DZ_Vehicles_Water",  // defines Boat_01_ColorBase (there is no "DZ_Vehicles" patch)
             "DZ_Sounds_Effects"
 		};
 	};
@@ -213,6 +213,13 @@ class cfgVehicles {
                     class Health {
                         hitpoints = 600;
                         transferToGlobalCoef = 1;
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_destruct.rvmat"}}
+                        };
                     };
                     inventorySlots[] = {};
                     inventorySlotsCoefs[] = {};
@@ -232,11 +239,11 @@ class cfgVehicles {
                         hitpoints = 300;
                         transferToGlobalCoef = 0;
                         healthLevels[] = {
-                            {1, {"dz\vehicles\water\Boat_01\data\Boat_01.rvmat"}},
-                            {0.7, {"dz\vehicles\water\Boat_01\data\Boat_01.rvmat"}},
-                            {0.5, {"dz\vehicles\water\Boat_01\data\Boat_01_damage.rvmat"}},
-                            {0.3, {"dz\vehicles\water\Boat_01\data\Boat_01_damage.rvmat"}},
-                            {0, {"dz\vehicles\water\Boat_01\data\Boat_01_destruct.rvmat"}}
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_motor.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_motor.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_motor_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_motor_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_motor_destruct.rvmat"}}
                         };
                     };
                     inventorySlots[] = {
@@ -257,11 +264,11 @@ class cfgVehicles {
                         hitpoints = 200;
                         transferToGlobalCoef = 1.05;
                         healthLevels[] = {
-                            {1, {"dz\vehicles\water\Boat_01\data\Boat_01.rvmat"}},
-                            {0.7, {"dz\vehicles\water\Boat_01\data\Boat_01.rvmat"}},
-                            {0.5, {"dz\vehicles\water\Boat_01\data\Boat_01_damage.rvmat"}},
-                            {0.3, {"dz\vehicles\water\Boat_01\data\Boat_01_damage.rvmat"}},
-                            {0, {"dz\vehicles\water\Boat_01\data\Boat_01_destruct.rvmat"}}
+                            {1,{"gebsfish\data\vehicles\geb_jonboat.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_destruct.rvmat"}}
                         };
                     };
                     inventorySlots[] = {};
@@ -280,11 +287,11 @@ class cfgVehicles {
                         hitpoints = 200;
                         transferToGlobalCoef = 1.05;
                         healthLevels[] = {
-                            {1, {"dz\vehicles\water\Boat_01\data\Boat_01.rvmat"}},
-                            {0.7, {"dz\vehicles\water\Boat_01\data\Boat_01.rvmat"}},
-                            {0.5, {"dz\vehicles\water\Boat_01\data\Boat_01_damage.rvmat"}},
-                            {0.3, {"dz\vehicles\water\Boat_01\data\Boat_01_damage.rvmat"}},
-                            {0, {"dz\vehicles\water\Boat_01\data\Boat_01_destruct.rvmat"}}
+                            {1,{"gebsfish\data\vehicles\geb_jonboat.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_destruct.rvmat"}}
                         };
                     };
                     inventorySlots[] = {};
@@ -303,11 +310,11 @@ class cfgVehicles {
                         hitpoints = 200;
                         transferToGlobalCoef = 1.05;
                         healthLevels[] = {
-                            {1, {"dz\vehicles\water\Boat_01\data\Boat_01.rvmat"}},
-                            {0.7, {"dz\vehicles\water\Boat_01\data\Boat_01.rvmat"}},
-                            {0.5, {"dz\vehicles\water\Boat_01\data\Boat_01_damage.rvmat"}},
-                            {0.3, {"dz\vehicles\water\Boat_01\data\Boat_01_damage.rvmat"}},
-                            {0, {"dz\vehicles\water\Boat_01\data\Boat_01_destruct.rvmat"}}
+                            {1,{"gebsfish\data\vehicles\geb_jonboat.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_destruct.rvmat"}}
                         };
                     };
                     inventorySlots[] = {};

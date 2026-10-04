@@ -7,7 +7,12 @@
 # the first entry of its hiddenSelectionsTextures (the raw/uncooked skin),
 # and writes a manifest the renderer can iterate.
 #
-#   python tools/build_fish_manifest.py > tools/fish_manifest.json
+#   python tools/build_fish_manifest.py [out.json]     (default tools/fish_manifest.json)
+#
+# The script writes the file itself, as UTF-8: a PowerShell `>` redirect
+# would write UTF-16, which json.load can't read. Paths in the manifest are
+# relative to the repo root, so it works from any checkout; the readers
+# (render_p3d.py, batch_gifs.py) resolve them against the repo.
 
 import json
 import os
@@ -26,6 +31,7 @@ VIEW_OVERRIDES = {
     "geb_SlimySculpin": "MID",
     "geb_NorthernSnakeHead": "MID",
     "geb_FlatHeadCatFish": "MID",
+    "geb_BowFin": "MID",
 }
 
 # Species where the "bulk sits forward" head test guesses backwards, so the
@@ -42,6 +48,11 @@ FLIP_H = {
     "geb_CaveCrayFish", "geb_MonongahelaCrayFish", "geb_RedSwampCrayFish",
     "geb_RustyCrayFish",
     "geb_FatHeadMinnow",
+}
+
+# Upside down in the default view: flipped vertically so the back is on top.
+FLIP_V = {
+    "geb_FlatHeadMullet",
 }
 
 # Turn 90 degrees in frame. The frog's widest axis is its splayed legs, not
@@ -81,9 +92,9 @@ def find_classes(text):
 
 
 def own_fields(body):
-    """Pull `model` and `hiddenSelectionsTextures` declared by this class
-    itself, ignoring anything inside nested subclasses."""
-    model, textures = None, None
+    """Pull `model`, `hiddenSelectionsTextures` and `hiddenSelectionsMaterials`
+    declared by this class itself, ignoring anything inside nested subclasses."""
+    model, textures, materials = None, None, None
     depth, i = 0, 0
     while i < len(body):
         c = body[i]
@@ -102,8 +113,14 @@ def own_fields(body):
                     found = [t for t in re.findall(r'"([^"]+)"', m.group(1)) if t.strip()]
                     if found:
                         textures = found
+            elif materials is None and body.startswith("hiddenSelectionsMaterials", i):
+                m = re.match(r'hiddenSelectionsMaterials\s*\[\s*\]\s*=\s*\{(.*?)\}', body[i:], re.S)
+                if m:
+                    found = [t for t in re.findall(r'"([^"]+)"', m.group(1)) if t.strip()]
+                    if found:
+                        materials = found
         i += 1
-    return model, textures
+    return model, textures, materials
 
 
 def inherited(name, classes, field):
@@ -128,10 +145,26 @@ def to_local(arma_path):
     return os.path.join(REPO, p.replace("/", os.sep))
 
 
+def rel(path):
+    """<repo>/data/fish/x.paa -> data/fish/x.paa, as stored in a manifest."""
+    if not path:
+        return path
+    return os.path.relpath(path, REPO).replace(os.sep, "/")
+
+
+def write_manifest(manifest, default_name):
+    """Write the manifest to argv[1] or tools/<default_name>, as UTF-8 JSON."""
+    out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(REPO, "tools", default_name)
+    with open(out, "w", encoding="utf-8") as fh:
+        json.dump(manifest, fh, indent=2)
+        fh.write("\n")
+    sys.stderr.write("\nwritten: %s\n" % out)
+
+
 def main():
     classes = find_classes(read(CONFIG))
     for info in classes.values():
-        info["model"], info["textures"] = own_fields(info["body"])
+        info["model"], info["textures"], info["materials"] = own_fields(info["body"])
 
     species = re.findall(r'f\.Classname="([^"]+)"', read(SEEDS))
 
@@ -150,17 +183,28 @@ def main():
         tex_path = to_local(textures[0]) if textures else None
         if tex_path and not os.path.isfile(tex_path):
             tex_path = None
+        # First entry is the fresh material: its relief map, shine map and
+        # sheen make the render look like the item in game. Without hidden
+        # selections the model's own faces name it, and the renderer reads it there.
+        materials = inherited(name, classes, "materials")
+        mat_path = to_local(materials[0]) if materials else None
+        if mat_path and not os.path.isfile(mat_path):
+            mat_path = None
         entry = {
             "name": name,
-            "p3d": model_path,
-            "texture": tex_path,
+            "p3d": rel(model_path),
+            "texture": rel(tex_path),
         }
+        if mat_path:
+            entry["material"] = rel(mat_path)
         if name in VIEW_OVERRIDES:
             entry["view"] = VIEW_OVERRIDES[name]
         if name in FLIP_HEAD:
             entry["flip_head"] = True
         if name in FLIP_H:
             entry["flip_h"] = True
+        if name in FLIP_V:
+            entry["flip_v"] = True
         if name in ROLL:
             entry["roll"] = True
         manifest.append(entry)
@@ -179,7 +223,7 @@ def main():
     for model, names in sorted(shared.items()):
         sys.stderr.write("   %-24s %d: %s\n" % (model, len(names), ", ".join(names)))
 
-    print(json.dumps(manifest, indent=2))
+    write_manifest(manifest, "fish_manifest.json")
 
 
 if __name__ == "__main__":

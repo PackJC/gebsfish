@@ -1,19 +1,27 @@
 modded class DayZGame {
+    // DeferredInit runs from the GUI call queue, which a dedicated server
+    // never ticks (NO_GUI) -- so this covers clients and offline play, and
+    // MissionServer.OnInit registers on the dedicated server.
     override void DeferredInit() {
         super.DeferredInit();
+        GebRegisterRPCs();
+    }
 
-        // Register RPCs with Community Framework - must be done on both client and server
+    // Community Framework RPCs. Both current ones are server -> client, but
+    // registering on both sides keeps any future client -> server RPC working.
+    void GebRegisterRPCs() {
         GetRPCManager().AddRPC("gebsfish", "ConfigSync", this, SingleplayerExecutionType.Client);
         GetRPCManager().AddRPC("gebsfish", "PlayPredatorSound", this, SingleplayerExecutionType.Client);
     }
 
     void ConfigSync(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target) {
-        GebsfishLogger.Info("ConfigSync RPC callback called. Type: " + type + ", IsClient: " + g_Game.IsClient(), "RPC");
-
-        if (type != CallType.Client) {
-            GebsfishLogger.Info("ConfigSync: Not client type, returning.", "RPC");
+        // Ignore anything but a server -> client sync before doing any work:
+        // the server registers this RPC too, so a client could otherwise make
+        // the server write log lines on demand.
+        if (type != CallType.Client)
             return;
-        }
+
+        GebsfishLogger.Info("ConfigSync RPC callback called. IsClient: " + g_Game.IsClient(), "RPC");
 
         Param1<gebsfishConfig> configParams;
         if (!ctx.Read(configParams)) {
@@ -73,10 +81,15 @@ static bool GebCatchConfigReady() {
 }
 
 modded class CatchYieldBank {
+    // Every registration in sync-list order (vanilla keeps its list private).
     protected ref array<ref YieldItemBase> m_GebEntries;
-    protected ref array<ref YieldItemBase> m_GebSuffix;
-    protected int m_GebStart;
-    protected int m_GebEnd;
+    // Yields other code put in this bank (the map's WorldData, other mods), in
+    // the order they came, including any a gebsfish yield of the same type
+    // stands in for. Every rebuild puts them back the same way, so a client's
+    // rebuild on config sync ends up with the server's list.
+    protected ref array<ref YieldItemBase> m_GebForeign;
+    protected int m_GebEnd;  // gebsfish's yields are entries 0 .. m_GebEnd - 1
+    protected int m_GebTail; // entries from here on came in after the last rebuild
     protected bool m_GebHasBlock;
 
     override protected void Init() {
@@ -97,36 +110,65 @@ modded class CatchYieldBank {
         return super.GetYieldItemByIdx(idx);
     }
 
-    void GebBeginRegistration() {
-        if (!m_GebHasBlock) {
-            m_GebStart = m_GebEntries.Count();
-            return;
-        }
-        array<ref YieldItemBase> prefix = new array<ref YieldItemBase>();
-        m_GebSuffix = new array<ref YieldItemBase>();
-        int i;
-        for (i = 0; i < m_GebStart; i++)
-            prefix.Insert(m_GebEntries[i]);
-        for (i = m_GebEnd; i < m_GebEntries.Count(); i++)
-            m_GebSuffix.Insert(m_GebEntries[i]);
-        Init();
-        foreach (YieldItemBase before : prefix) {
-            before.GebResetRegistrationIndex();
-            RegisterYieldItem(before);
-        }
-        m_GebStart = m_GebEntries.Count();
+    // Still the yield the bank hands out for its type. Vanilla's
+    // ClearAllRegisteredItems and UnregisterYieldItem only empty the map, and a
+    // later registration of the same type replaces the entry there.
+    protected bool GebIsLive(YieldItemBase entry) {
+        return entry && m_AllYieldsMap.Get(entry.GetType().Hash()) == entry;
     }
 
+    // False before the first registration, and once something has cleared or
+    // replaced gebsfish's yields: a map's WorldData that clears the bank after
+    // the yield invoker (as vanilla Livonia and Sakhal do) without a hook in
+    // gebsfish.c, or a mod registering a type gebsfish registers.
+    bool GebBlockIntact() {
+        if (!m_GebHasBlock || m_GebEnd > m_GebEntries.Count())
+            return false;
+        for (int i = 0; i < m_GebEnd; i++) {
+            if (!GebIsLive(m_GebEntries[i]))
+                return false;
+        }
+        return true;
+    }
+
+    // Every (re)registration starts from an empty bank so gebsfish's yields
+    // come first. The rest is set aside here and goes back in
+    // GebEndRegistration.
+    void GebBeginRegistration() {
+        array<ref YieldItemBase> foreign = new array<ref YieldItemBase>();
+        if (m_GebForeign) {
+            foreach (YieldItemBase known : m_GebForeign) {
+                // Index -1: a gebsfish yield stood in for it last time, so keep
+                // it. Registered but no longer live: cleared or replaced since.
+                if (known.GetRegistrationIdx() == -1 || GebIsLive(known))
+                    foreign.Insert(known);
+            }
+        }
+        int first = 0;
+        if (m_GebHasBlock)
+            first = m_GebTail;
+        for (int i = first; i < m_GebEntries.Count(); i++) {
+            YieldItemBase entry = m_GebEntries[i];
+            if (GebIsLive(entry) && foreign.Find(entry) == -1)
+                foreign.Insert(entry);
+        }
+        m_GebForeign = foreign;
+        Init();
+    }
+
+    // Put the other yields back behind gebsfish's. Where both registered a
+    // type, gebsfish's stays: fish.json and junk.json decide that catch.
     void GebEndRegistration() {
         m_GebEnd = m_GebEntries.Count();
         m_GebHasBlock = true;
-        if (m_GebSuffix) {
-            foreach (YieldItemBase after : m_GebSuffix) {
-                after.GebResetRegistrationIndex();
-                RegisterYieldItem(after);
+        if (m_GebForeign) {
+            foreach (YieldItemBase other : m_GebForeign) {
+                other.GebResetRegistrationIndex();
+                if (!m_AllYieldsMap.Contains(other.GetType().Hash()))
+                    RegisterYieldItem(other);
             }
-            m_GebSuffix = null;
         }
+        m_GebTail = m_GebEntries.Count();
     }
 }
 

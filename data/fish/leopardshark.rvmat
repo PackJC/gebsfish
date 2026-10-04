@@ -2,8 +2,8 @@ ambient[]={1,1,1,1};
 diffuse[]={1,1,1,1};
 forcedDiffuse[]={0,0,0,0};
 emmisive[]={0,0,0,1};
-specular[]={0.2,0.2,0.2,1};
-specularPower=75;
+specular[]={0.35,0.35,0.33,1};
+specularPower=400;
 PixelShaderID="Super";
 VertexShaderID="Super";
 class Stage1

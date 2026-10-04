@@ -101,6 +101,19 @@ class CraftFishMount extends RecipeBase {
 		if (m_gebsConfig && m_gebsConfig.General && m_gebsConfig.General.RecipeToggles && !m_gebsConfig.General.RecipeToggles.CraftFishMount)
 			return false;
 
+		// Planks and wire also sit in fence, gate, watchtower and flag-pole
+		// slots (some locked once built), and wire on car batteries. Never use up one
+		// that is part of something, as vanilla CraftFenceKit and
+		// CraftMetalWire refuse to. Gear the player wears is fine.
+		for (int i = 0; i < 2; i++) {
+			ItemBase ingredient = ingredients[i];
+			if (!ingredient || !ingredient.GetInventory() || !ingredient.GetInventory().IsAttachment())
+				continue;
+			EntityAI holder = ingredient.GetHierarchyParent();
+			if (holder && !holder.IsMan())
+				return false;
+		}
+
 		// The third "ingredient" the engine has no slot for.
 		return FindHacksaw(player) != null;
 	}

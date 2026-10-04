@@ -1,6 +1,10 @@
 # Build 1920x1080 category poster sheets from the species renders.
 #
-#   python tools/make_posters.py <renders_dir> <out_dir>
+#   python tools/make_posters.py [renders_dir] [out_dir] [gear_dir]
+#
+# Defaults: fish_renders_species, fish_posters and gear_renders on your
+# Desktop. gear_dir holds the item renders (lures, gear, boats, and the bugs
+# that join the bait sheet).
 #
 # Groups every rendered species by habitat and body plan, lays each group out
 # over a procedurally generated underwater or seabed backdrop, and captions
@@ -8,7 +12,6 @@
 # field in the config seeds (1 pond, 2 sea, 3 both) and names come from the
 # stringtable, so the sheets stay truthful to what the mod ships.
 
-import csv
 import glob
 import json
 import math
@@ -19,14 +22,46 @@ import sys
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
+# Same folder: the wiki builders' config/stringtable lookups, so poster names
+# follow config inheritance exactly as the wiki's do.
+from build_wiki_assets import attribute_keys, desktop_dir, english_table
+
 TOOLS = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(TOOLS)
 SEEDS = os.path.join(REPO, "scripts", "3_game", "FileGenerators", "gebsfishConfig.c")
 FISH_CFG = os.path.join(REPO, "data", "fish", "config.cpp")
-STRINGS = os.path.join(REPO, "languagecore", "stringtable.csv")
 
-FONT_BOLD = r"C:\Windows\Fonts\arialbd.ttf"
-FONT_REG = r"C:\Windows\Fonts\arial.ttf"
+
+def find_font(*names):
+    """The first of these font files found in the usual system font folders."""
+    folders = [os.path.join(os.environ.get("WINDIR", r"C:\Windows"), "Fonts"),
+               "/usr/share/fonts", "/usr/local/share/fonts", "/Library/Fonts",
+               "/System/Library/Fonts", os.path.expanduser("~/.fonts"),
+               os.path.expanduser("~/Library/Fonts")]
+    for name in names:
+        for folder in folders:
+            hits = glob.glob(os.path.join(folder, "**", name), recursive=True)
+            if hits:
+                return hits[0]
+    return None
+
+
+FONT_BOLD = find_font("arialbd.ttf", "Arial Bold.ttf", "DejaVuSans-Bold.ttf", "LiberationSans-Bold.ttf")
+FONT_REG = find_font("arial.ttf", "Arial.ttf", "DejaVuSans.ttf", "LiberationSans-Regular.ttf")
+
+
+def load_font(path, size):
+    """A TrueType font at `size`; without one, Pillow's own default font
+    (scalable since Pillow 10.1, a small fixed bitmap before that)."""
+    if path:
+        try:
+            return ImageFont.truetype(path, size)
+        except OSError:
+            pass
+    try:
+        return ImageFont.load_default(size)
+    except TypeError:
+        return ImageFont.load_default()
 
 W, H = 1920, 1080
 HEAD, FOOT, PAD = 132, 46, 26
@@ -119,8 +154,8 @@ def gear_rank(label):
         return 6
     return 9
 
-# The jon boat classnames carry no stringtable name, so caption them by the
-# pattern rather than falling back to a raw "jonboat camo desert".
+# All five jon boats share the in-game name "Jon Boat", so the boats sheet
+# captions them by colour instead.
 BOAT_NAMES = {
     "geb_jonboat_camo_desert": "Desert Camo",
     "geb_jonboat_camo_forest": "Forest Camo",
@@ -148,20 +183,10 @@ def species_environments():
 
 
 def display_names():
-    """classname -> English display name, from every config's displayName key."""
-    keys = {}
-    for cfg in glob.glob(os.path.join(REPO, "data", "*", "config.cpp")):
-        for m in re.finditer(r'class\s+(\w+)\s*:[^{]*\{(.*?)\n\t*\}', read(cfg), re.S):
-            d = re.search(r'displayName\s*=\s*"\$?([^"]+)"', m.group(2))
-            if d:
-                keys.setdefault(m.group(1), d.group(1).lower())
-
-    table = {}
-    with open(STRINGS, "r", encoding="utf-8-sig", errors="ignore") as fh:
-        for row in csv.reader(fh):
-            if len(row) > 2 and row[0]:
-                table[row[0].strip().lower()] = row[2].strip()
-
+    """classname -> English display name: each class's displayName key, or the
+    one it inherits (variants often declare only textures), resolved through
+    the stringtable."""
+    keys, table = attribute_keys("displayName"), english_table()
     return {cls: table[key] for cls, key in keys.items() if table.get(key)}
 
 
@@ -480,10 +505,7 @@ def fit_label(draw, text, max_w, cache, base_size):
     makes the sheet look broken."""
     def font(size):
         if size not in cache:
-            try:
-                cache[size] = ImageFont.truetype(FONT_BOLD, size)
-            except OSError:
-                cache[size] = ImageFont.load_default()
+            cache[size] = load_font(FONT_BOLD, size)
         return cache[size]
 
     floor = max(11, base_size - 5)
@@ -567,13 +589,10 @@ def build_sheet(entries, theme, out_path, groups=None, columns=False):
     sheet = backdrop(theme).convert("RGBA")
     draw = ImageDraw.Draw(sheet)
 
-    try:
-        f_title = ImageFont.truetype(FONT_BOLD, 58)
-        f_sub = ImageFont.truetype(FONT_REG, 25)
-        f_name = ImageFont.truetype(FONT_BOLD, max(13, min(21, label_h - 8)))
-        f_foot = ImageFont.truetype(FONT_REG, 18)
-    except OSError:
-        f_title = f_sub = f_name = f_foot = ImageFont.load_default()
+    f_title = load_font(FONT_BOLD, 58)
+    f_sub = load_font(FONT_REG, 25)
+    f_name = load_font(FONT_BOLD, max(13, min(21, label_h - 8)))
+    f_foot = load_font(FONT_REG, 18)
 
     draw.text((W // 2 + 2, 50 + 2), theme["title"], font=f_title,
               fill=(0, 0, 0, 190), anchor="mm")
@@ -641,9 +660,9 @@ def build_sheet(entries, theme, out_path, groups=None, columns=False):
 
 
 def main():
-    renders = sys.argv[1] if len(sys.argv) > 1 else r"C:\Users\ECHO\Desktop\fish_renders_species"
-    out_dir = sys.argv[2] if len(sys.argv) > 2 else r"C:\Users\ECHO\Desktop\fish_posters"
-    gear_dir = sys.argv[3] if len(sys.argv) > 3 else r"C:\Users\ECHO\Desktop\gear_renders"
+    renders = sys.argv[1] if len(sys.argv) > 1 else desktop_dir("fish_renders_species")
+    out_dir = sys.argv[2] if len(sys.argv) > 2 else desktop_dir("fish_posters")
+    gear_dir = sys.argv[3] if len(sys.argv) > 3 else desktop_dir("gear_renders")
     os.makedirs(out_dir, exist_ok=True)
 
     envs, names = species_environments(), display_names()
@@ -722,9 +741,11 @@ def main():
                             os.path.join(out_dir, fname),
                             groups=banded, columns=as_cols)
 
-    stale = os.path.join(out_dir, "amphibian.jpg")   # superseded by bait.jpg
+    # Older versions made an amphibian sheet; bait.jpg replaced it. Point it
+    # out rather than deleting a file in the user's folder.
+    stale = os.path.join(out_dir, "amphibian.jpg")
     if os.path.isfile(stale):
-        os.remove(stale)
+        print("\nnote: %s is from an older version (bait.jpg replaced it); delete it if you don't need it" % stale)
 
     if missing:
         print("\nno render (vanilla DayZ species): %s" % ", ".join(missing))

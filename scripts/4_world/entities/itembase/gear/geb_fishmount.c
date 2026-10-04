@@ -37,8 +37,8 @@ class geb_WoodenFishMount : ItemBase {
 	// Mounting is permanent: once a fish is on the plaque it can't be
 	// detached, dragged out, or taken to hands -- taxidermy, not storage.
 	// This also stops the mount doubling as a free never-rots fish locker.
-	// The only way to get the fish back is destroying the mount (vanilla
-	// drops attachments when the parent is ruined).
+	// Ruining the mount doesn't give the fish back either: it is destroyed
+	// with the plaque (EEHealthLevelChanged below).
 	override bool CanReleaseAttachment(EntityAI attachment) {
 		return false;
 	}
@@ -86,8 +86,20 @@ class geb_WoodenFishMount : ItemBase {
 		AddAction(ActionDeployObject);
 	}
 
+	// How far from the player's feet the plaque can go. The hologram clamps
+	// the aim point to this (Hologram.SetHologramPosition below).
+	static const float PLACEMENT_REACH = 2.5;
+
+	// Also the server's check: the server never runs the hologram's aim test,
+	// so without this a modified client could send any position. The extra
+	// 0.5 m covers the player shifting between placing and the server's check.
 	override bool CanBePlaced(Man player, vector position) {
-		return true;
+		if (!super.CanBePlaced(player, position))
+			return false;
+		if (!player)
+			return true;
+		float maxDistance = PLACEMENT_REACH + 0.5;
+		return vector.DistanceSq(player.GetPosition(), position) <= maxDistance * maxDistance;
 	}
 
 	override void OnPlacementComplete(Man player, vector position = "0 0 0", vector orientation = "0 0 0") {
@@ -114,6 +126,12 @@ modded class Hologram {
 	override void UpdateHologram(float timeslice) {
 		if (!m_Parent || !m_Parent.IsInherited(geb_WoodenFishMount)) {
 			super.UpdateHologram(timeslice);
+			return;
+		}
+		// Vanilla's update drops the hologram while the player can't place
+		// things; this replacement has to as well.
+		if (GebPlacementRestricted()) {
+			m_Player.TogglePlacingLocal();
 			return;
 		}
 		if (!m_Projection || !GetUpdatePosition())
@@ -155,6 +173,43 @@ modded class Hologram {
 		m_Projection.OnHologramBeingPlaced(m_Player);
 	}
 
+	// The same list as vanilla's IsRestrictedFromAdvancedPlacing, which is
+	// private to Hologram and so can't be called from here.
+	protected bool GebPlacementRestricted() {
+		if (m_Player.IsJumpInProgress())
+			return true;
+		if (m_Player.IsSwimming())
+			return true;
+		if (m_Player.IsClimbingLadder())
+			return true;
+		if (m_Player.IsRaised())
+			return true;
+		if (m_Player.IsClimbing())
+			return true;
+		if (m_Player.IsRestrained())
+			return true;
+		if (m_Player.IsUnconscious())
+			return true;
+		return false;
+	}
+
+	// Vanilla clamps the aim point to 1-2 m from the player's feet and marks a
+	// clamped point as floating (red). 2 m from the feet only reaches about
+	// head height on a wall, so the mount gets PLACEMENT_REACH instead: high
+	// enough for a trophy above eye level, and still red past that.
+	override protected bool SetHologramPosition(vector startPosition, float minProjectionDistance, float maxProjectionDistance, inout vector contactPosition) {
+		if (!m_Parent || !m_Parent.IsInherited(geb_WoodenFishMount))
+			return super.SetHologramPosition(startPosition, minProjectionDistance, maxProjectionDistance, contactPosition);
+
+		maxProjectionDistance = Math.Max(maxProjectionDistance, geb_WoodenFishMount.PLACEMENT_REACH);
+		bool clamped = super.SetHologramPosition(startPosition, minProjectionDistance, maxProjectionDistance, contactPosition);
+		// The aim ray hit nothing (GetProjectionEntityPosition zeroes
+		// m_ContactDir and only a hit fills it in): there is no wall or floor
+		// to put the plaque on, wherever the ray happened to end. In third
+		// person that end point can fall inside the longer reach.
+		return clamped || m_ContactDir.Length() == 0;
+	}
+
 	// The plaque deliberately sits flush against the wall -- the vanilla
 	// bounding-box collision test would read that as a collision and paint
 	// the hologram permanently red, so skip it for the mount only.
@@ -183,14 +238,11 @@ modded class Hologram {
 	// listed here still applies -- player collision, permitted-area, underwater
 	// and in-terrain all remain in force, so this doesn't become a free pass.
 
-	// Nothing underneath a wall mount: that IS the point, not an error.
-	override bool IsFloating() {
-		if (m_Parent && m_Parent.IsInherited(geb_WoodenFishMount))
-			return false;
-		return super.IsFloating();
-	}
+	// IsFloating is deliberately NOT overridden. Vanilla's "floating" doesn't
+	// mean "nothing underneath": it means the aim point was out of reach and
+	// got clamped, and switching it off let the plaque be hung in mid-air.
 
-	// Same reason -- there is no ground surface below the plaque to qualify.
+	// There is no ground surface below a wall plaque to qualify.
 	override bool IsBaseViable() {
 		if (m_Parent && m_Parent.IsInherited(geb_WoodenFishMount))
 			return true;

@@ -2,13 +2,13 @@ ambient[]={1,1,1,1};
 diffuse[]={1,1,1,1};
 forcedDiffuse[]={0,0,0,0};
 emmisive[]={0,0,0,1};
-specular[]={0.2,0.2,0.2,1};
-specularPower=75;
+specular[]={0.678,0.529,0.478,1};
+specularPower=950;
 PixelShaderID="Super";
 VertexShaderID="Super";
 class Stage1
 {
-  texture = "gebsfish\data\fish\europeanlobsterclaw_normals.paa";
+  	texture="gebsfish\data\fish\europeanlobsterclaw_normals.paa";
   	uvSource="tex";
 	class uvTransform
 	{
@@ -57,7 +57,7 @@ class Stage4
 };
 class Stage5
 {
-  texture = "gebsfish\data\fish\europeanlobsterclaw_smdi.paa";
+	texture="gebsfish\data\fish\europeanlobsterclaw_smdi.paa";
 	uvSource="tex";
 	class uvTransform
 	{

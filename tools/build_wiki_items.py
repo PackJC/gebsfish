@@ -2,7 +2,7 @@
 # gear, bait and lure, plus its English description, written into docs/ for
 # GitHub Pages.
 #
-#   python tools/build_wiki_items.py [renders_dir]
+#   python tools/build_wiki_items.py [renders_dir]     (default: gear_renders on your Desktop)
 #
 # The gear counterpart to build_wiki_assets.py, and it reuses that script's
 # stringtable lookup so item text comes from exactly the same place as fish
@@ -21,7 +21,7 @@ import sys
 from PIL import Image
 
 # Same folder, so the fish builder's helpers are importable rather than copied.
-from build_wiki_assets import attribute_keys, config_classes, description_keys, english_table
+from build_wiki_assets import attribute_keys, config_classes, description_keys, desktop_dir, english_table
 
 TOOLS = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(TOOLS)
@@ -31,11 +31,14 @@ OUT_JS = os.path.join(REPO, "docs", "item-details.js")
 MAX_W, MAX_H = 420, 300
 
 # Which tab each render belongs under. Checked in order, first match wins, so
-# the specific patterns have to come before the loose ones (SpinnerBait before
-# Bait would matter if such a pair existed). Anything unmatched lands in "gear",
-# which is the safe default -- it shows up rather than silently disappearing.
+# the specific patterns have to come before the loose ones. The containers are
+# named after what they hold (geb_WormContainer, geb_MinnowBucket = the Bait
+# Bucket), so they're matched as gear before the bait words can claim them.
+# Anything unmatched lands in "gear", which is the safe default -- it shows up
+# rather than silently disappearing.
 CATEGORIES = [
     ("lure",  ("Lure", "SpinnerBait", "SpoonLure", "CurlyTailJig")),
+    ("gear",  ("Container", "Bucket")),
     ("bait",  ("Worm", "Cricket", "GrassHopper", "Grub", "Minnow")),
     ("boat",  ("jonboat",)),
     ("gear",  ()),
@@ -66,7 +69,7 @@ def prettify(cls):
 
 
 def main():
-    renders = sys.argv[1] if len(sys.argv) > 1 else r"C:\Users\ECHO\Desktop\gear_renders"
+    renders = sys.argv[1] if len(sys.argv) > 1 else desktop_dir("gear_renders")
     if not os.path.isdir(renders):
         print("renders dir not found: %s" % renders)
         return 1

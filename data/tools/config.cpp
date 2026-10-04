@@ -34,7 +34,8 @@ class CfgPatches {
 		// gear_tools.pbo is undefined, and whenever vanilla loaded after us
 		// its plain inventorySlot[]={"Backpack_1"} wiped the Shoulder/Melee
 		// slots we add -- the long-standing "rod bug".
-		"DZ_Gear_Tools"
+		"DZ_Gear_Tools",
+		"DZ_Weapons_Melee_Blade"  // HuntingKnife, parent of the fish knives
 		};
 	};
 };
@@ -85,6 +86,10 @@ class cfgVehicles {
 		attachments[] = {"GebFishMount"};
 		rotationFlags = 2;
 		physLayer = "item_large";
+		// Picks the deploy animation (ActionDeployObject.SetupAnimation, 2 =
+		// two-handed). Without it the action logged an error and replayed
+		// whatever animation the last deployed item used.
+		itemBehaviour = 2;
 		// Placement hologram. Without a hiddenSelection the engine has no
 		// slot to swap the ghost material into and the projection renders as
 		// the normal textured plaque; "placing" is the selection the p3d
@@ -103,12 +108,32 @@ class cfgVehicles {
 		hologramMaterialPath = "gebsfish\data\tools";
 		// Don't force ground alignment -- the modded Hologram builds the
 		// orientation from the wall normal when the player aims at a wall.
-		alignHologramToTerrain = 0;
+		// Vanilla's key really is spelled "Terain" (hologram.c reads that
+		// exact name); the "Terrain" spelling was silently ignored.
+		alignHologramToTerain = 0;
 		// Hologram.IsCollidingAngle rejects placement when |pitch| or |roll|
 		// exceeds these limits. Flat against a vertical wall is ~90 degrees of
 		// pitch, so the old 89 blocked the exact orientation this item exists
 		// for. Opened up -- the plaque is meant to hang at any wall angle.
 		yawPitchRollLimit[] = {180,180,180};
+		// The DamageSystem below restates the vanilla parent's hit points in full:
+		// "class DamageSystem: DamageSystem" only compiles against a class defined
+		// in this same config, and the parent here comes from another addon.
+		// 100 hit points as Inventory_Base, with this model's materials
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 100;
+					healthLevels[] = {
+						{1,{"gebsfish\data\tools\fishmount.rvmat"}},
+						{0.7,{"gebsfish\data\tools\fishmount.rvmat"}},
+						{0.5,{"gebsfish\data\tools\fishmount_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tools\fishmount_damage.rvmat"}},
+						{0,{"gebsfish\data\tools\fishmount_destruct.rvmat"}}
+					};
+				};
+			};
+		};
 	};
 
 	class geb_FishingRodRepairKit: Inventory_Base {
@@ -120,10 +145,11 @@ class cfgVehicles {
 		animClass="Knife";
 		rotationFlags=17;
 		stackedUnit="percentage";
+		// Four repairs per kit: RepairFishingPole takes 1 per repair, plus the
+		// rod's repairCosts 0.1. The emptied kit is deleted by
+		// varQuantityDestroyOnMin, inherited from Inventory_Base.
 		varQuantityInit = 4;
 		varQuantityMin = 0;
-		quantityBarColor = "Default";
-		destroyOnEmpty = 1;  // Kit is deleted when empty
 		varQuantityMax = 4;
 		quantityBar = 1;
 		weight=150;
@@ -136,45 +162,12 @@ class cfgVehicles {
 			class GlobalHealth {
 				class Health {
 					hitpoints=100;
-					healthLevels[]= {
-						{
-							1,
-							{
-								"DZ\gear\tools\data\cleaning_kit_wood.rvmat"
-							}
-						},
-						
-						{
-							0.69999999,
-							
-							{
-								"DZ\gear\tools\data\cleaning_kit_wood.rvmat"
-							}
-						},
-						
-						{
-							0.5,
-							
-							{
-								"DZ\gear\tools\data\cleaning_kit_wood_damage.rvmat"
-							}
-						},
-						
-						{
-							0.30000001,
-							
-							{
-								"DZ\gear\tools\data\cleaning_kit_wood_damage.rvmat"
-							}
-						},
-						
-						{
-							0,
-							
-							{
-								"DZ\gear\tools\data\cleaning_kit_wood_destruct.rvmat"
-							}
-						}
+					healthLevels[] = {
+						{1,{"gebsfish\data\tools\fishingline_biggame.rvmat"}},
+						{0.7,{"gebsfish\data\tools\fishingline_biggame.rvmat"}},
+						{0.5,{"gebsfish\data\tools\fishingline_biggame_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tools\fishingline_biggame_damage.rvmat"}},
+						{0,{"gebsfish\data\tools\fishingline_biggame_destruct.rvmat"}}
 					};
 				};
 			};
@@ -206,28 +199,28 @@ class cfgVehicles {
     	hiddenSelections[] = {"Camo"};
         weight=100;
         // The geb fish knife has two intentional buffs over a vanilla HuntingKnife:
-        //   1. Durability: hitpoints=200 is ~54% more than vanilla's 130. Sits
-        //      between KitchenKnife (150) and KukriKnife (250) -- a "premium
-        //      fishing tool" feel without being the strongest blade in the game.
+        //   1. Durability: hitpoints=200 is ~54% more than vanilla's 130.
+        //      Above KitchenKnife (85) and KukriKnife (150), level with the
+        //      Machete (200) -- a "premium fishing tool" for heavy filleting.
         //   2. Filleting speed: 10% faster than vanilla via the
         //      GeneralSettings.FishKnifeSpeedMultiplier knob in general.json
-        //      (default 0.9). The bonus only applies when the recipe's
-        //      ApplyFishKnifeSpeedBonus detects a geb_FishKnife_Base derivative
-        //      in the ingredient slot; a vanilla knife still cuts at vanilla
-        //      speed. Multiplier values much below 0.9 cause visible animation
-        //      desync (recipe finishes before the skinning finish-animation
-        //      lands) -- see the info string on FishKnifeSpeedMultiplier in
-        //      gebsfishConfig.c for the full explanation.
+        //      (default 0.9). The bonus only applies when the fillet is cut
+        //      with a geb_FishKnife_Base derivative (geb_cacontinuouscraft.c);
+        //      a vanilla knife still cuts at vanilla speed. Multiplier values
+        //      much below 0.9 cause visible animation desync (recipe finishes
+        //      before the skinning finish-animation lands) -- see the info
+        //      string on FishKnifeSpeedMultiplier in gebsfishConfig.c for the
+        //      full explanation.
         class DamageSystem {
 			class GlobalHealth {
 				class Health {
 					hitpoints=200;
-					healthLevels[]={
-						{1,{"DZ\weapons\melee\blade\data\Hunting_knife.rvmat"}},
-						{0.7,{"DZ\weapons\melee\blade\data\Hunting_knife.rvmat"}},
-						{0.5,{"DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"}},
-						{0.3,{"DZ\weapons\melee\blade\data\Hunting_knife_damage.rvmat"}},
-						{0,{"DZ\weapons\melee\blade\data\Hunting_knife_destruct.rvmat"}}
+					healthLevels[] = {
+						{1,{"gebsfish\data\tools\fishknife.rvmat"}},
+						{0.7,{"gebsfish\data\tools\fishknife.rvmat"}},
+						{0.5,{"gebsfish\data\tools\fishknife_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tools\fishknife_damage.rvmat"}},
+						{0,{"gebsfish\data\tools\fishknife_destruct.rvmat"}}
 					};
 				};
 			};
@@ -299,7 +292,7 @@ class cfgVehicles {
 		inventorySlot[] = {"Backpack_1", "Shoulder", "Melee", "fishingpole", "fishingrod1", "fishingrod2", "fishingrod3", "fishingrod4", "fishingrod5", "fishingrod6", "fishingrod7", "fishingrod8", "fishingrod9", "fishingrod10"};
         hiddenSelections[]={"zbytek"};
 		repairableWithKits[] = {33033};  // Use the same repairKitType as above
-		repairCosts[] = {0.1};          // 10% quantity used per full repair
+		repairCosts[] = {0.1};          // kit units, charged on top of the recipe's 1 per repair; a kit still gives 4 repairs
         hiddenSelectionsTextures[]={"\DZ\gear\tools\data\fishing_rod_co.paa"};
 		class DamageSystem {
 			class GlobalHealth {
@@ -359,7 +352,7 @@ class cfgVehicles {
 		displayName = "$STR_tools_fishingnet";
 		descriptionShort = "$STR_tools_fishingnet_desc";
 		model = "\gebsfish\data\tools\bamboofishingnet.p3d";
-		hiddenSelections[] = {"zbytek"};
+		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\bamboofishingnet_co.paa"};
 		itemInfo[] = {"CatchWithNet"};
 		weight = 100;
@@ -376,11 +369,11 @@ class cfgVehicles {
 				class Health {
 					hitpoints = 80;
 					healthLevels[] = {
-						{1,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.7,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.5,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0.3,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0,{"DZ\gear\containers\data\FirsAidKit_destruct.rvmat"}}
+						{1,{"gebsfish\data\tools\bamboofishingnet.rvmat"}},
+						{0.7,{"gebsfish\data\tools\bamboofishingnet.rvmat"}},
+						{0.5,{"gebsfish\data\tools\bamboofishingnet_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tools\bamboofishingnet_damage.rvmat"}},
+						{0,{"gebsfish\data\tools\bamboofishingnet_destruct.rvmat"}}
 					};
 				};
 			};

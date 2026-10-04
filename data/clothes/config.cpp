@@ -13,11 +13,15 @@ class CfgNonAIVehicles {
 };
 
 class CfgPatches {
-	class gebsClothingCfgPatches { 	
+	class gebsClothingCfgPatches {
 		//Never Use same name for patch, because conflict message.
+		// The patches defining each vanilla parent, so they always load first.
 		requiredAddons[] = {
 		"DZ_Data",
-		"DZ_Scripts"
+		"DZ_Scripts",
+		"DZ_Characters_Gloves",    // NBCGloves_ColorBase
+		"DZ_Characters_Headgear",  // BaseballCap_ColorBase
+		"DZ_Characters_Tops"       // TShirt_ColorBase
 		};
 	};
 };
@@ -43,7 +47,13 @@ class cfgVehicles {
 		hiddenSelectionsTextures[]=	{
 			"\gebsfish\data\clothes\geb_orangefishgloves_co.paa",
 			"\gebsfish\data\clothes\geb_orangefishgloves_co.paa",
-			"\gebsfish\data\clothes\geb_orangefishgloves_co.paa",
+			"\gebsfish\data\clothes\geb_orangefishgloves_co.paa"
+		};
+		// Fishing gloves, not hazmat gear: the NBC parent's chemical = 1 made
+		// them full hand protection in toxic zones.
+		class Protection {
+			biological = 0;
+			chemical = 0;
 		};
 	};
 	class geb_BlueFishGloves: NBCGloves_ColorBase {
@@ -55,6 +65,11 @@ class cfgVehicles {
 			"\gebsfish\data\clothes\geb_bluefishgloves_co.paa",
 			"\gebsfish\data\clothes\geb_bluefishgloves_co.paa",
 			"\gebsfish\data\clothes\geb_bluefishgloves_co.paa"
+		};
+		// See geb_OrangeFishGloves: no toxic-zone protection.
+		class Protection {
+			biological = 0;
+			chemical = 0;
 		};
 	};
 

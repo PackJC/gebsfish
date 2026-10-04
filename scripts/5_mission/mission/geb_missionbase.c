@@ -17,6 +17,29 @@ modded class MissionBase {
 
 	void MissionBase() {
 		GebGetConfigReadyInvoker().Insert(GebOnConfigReceived);
+		// Vanilla's constructor has built the world data, yield bank and all, by
+		// now. A map whose WorldData clears the bank after the yield invoker has
+		// run, and that gebsfish.c doesn't hook, has just wiped our yields; put
+		// them back.
+		GebRepairYieldBank();
+	}
+
+	protected void GebRepairYieldBank() {
+		if (!m_WorldData)
+			return;
+		CatchYieldBank bank = m_WorldData.GetCatchYieldBank();
+		if (!bank || bank.GebBlockIntact())
+			return;
+		GebsfishLogger.Info(m_WorldData.ClassName() + " left the mod's yields out of its catch list -- registering them again, ahead of the map's own.", "MissionBase");
+		InitWorldYieldDataDefaults(bank);
+	}
+
+	// Second check once the mission is up (MissionServer and MissionGameplay
+	// both call super here): another mod's mission constructor, running after
+	// ours, can still have changed the bank.
+	override void OnInit() {
+		super.OnInit();
+		GebRepairYieldBank();
 	}
 
 	void GebOnConfigReceived() {
@@ -28,7 +51,10 @@ modded class MissionBase {
 		GebGetConfigReadyInvoker().Remove(GebOnConfigReceived);
 		if (g_GebYieldBank == s_GebInitializedBank) {
 			g_GebYieldBank = null;
-			if (!g_Game.IsServer()) {
+			// The menu only holds the built-in defaults; drop them so the next
+			// mission loads its own (the profile's files offline, the server's
+			// copy online).
+			if (!g_Game.IsServer() || IsInherited(MissionMainMenu)) {
 				g_GebConfigReceived = false;
 				m_gebsConfig = null;
 			}
@@ -51,13 +77,14 @@ modded class MissionBase {
 
 		// Re-entry guard: some world-init paths invoke this method twice per
 		// boot for the SAME bank (see the double "Initializing yield data"
-		// in server logs). With the old register-then-clear flow a second
-		// pass self-corrected; now that nothing clears the bank, it would
-		// append ~90 duplicate hashes to the sync list. Guard on the bank
-		// INSTANCE -- not on "bank is non-empty" -- so a custom map's
-		// WorldData that registers its own animals before this chain still
-		// gets our yields added alongside them instead of being skipped.
-		if (bank == s_GebInitializedBank && m_GebRegisteredConfig == m_gebsConfig) {
+		// in server logs). Each registration rebuilds the bank, ours first
+		// and everything already in it after (CatchYieldBank
+		// GebBeginRegistration), so a repeat only redoes the same work. It
+		// runs again when the config changed (a client receiving the
+		// server's) or when our yields are no longer in the bank: a map that
+		// clears it after this chain and fires the invoker again, as
+		// third-party map fixes do.
+		if (bank == s_GebInitializedBank && m_GebRegisteredConfig == m_gebsConfig && bank.GebBlockIntact()) {
 			GebsfishLogger.Info("Yield data already initialized for this bank -- skipping duplicate init.", "MissionBase");
 			return;
 		}
@@ -154,7 +181,22 @@ modded class MissionBase {
         bank.RegisterYieldItem(data);
     }
 
+	// Vanilla's snare catches per map. Sakhal has no poultry and an even
+	// rabbit/fox split (sakhal.c InitYieldBank), and so does Namalsk's own
+	// list; Chernarus, Livonia and maps without their own list use the one
+	// below. Keyed on the world name, not the WorldData class: the first
+	// registration runs while the mission's WorldData is still being built,
+	// and client and server must end up with the same list.
 	protected void RegisterTrapAnimalYieldData(CatchYieldBank bank) {
+		string worldName;
+		g_Game.GetWorldName(worldName);
+		worldName.ToLower();
+		if (worldName == "sakhal" || worldName == "namalsk") {
+			GebRegisterUniqueYield(bank, new YieldItemDeadRabbit(1));
+			GebRegisterUniqueYield(bank, new YieldItemDeadFox(1));
+			return;
+		}
+
 		GebRegisterUniqueYield(bank, new YieldItemDeadRabbit(4));
 		GebRegisterUniqueYield(bank, new YieldItemDeadRooster(1));
 		GebRegisterUniqueYield(bank, new YieldItemDeadChicken_White(1));

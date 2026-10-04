@@ -11,12 +11,33 @@ modded class MissionServer {
 			GebsfishLogger.Info("Version " + VERSION_GEBSFISH + " loaded successfully!", "MissionServer Init");
 		}
 
-		// RPCs are registered in DayZGame.DeferredInit() so they exist on both client and server.
+		// Clients register the RPCs in DayZGame.DeferredInit, which a
+		// dedicated server never runs (it sits on the GUI call queue).
+		if (g_Game.IsDedicatedServer())
+			GetDayZGame().GebRegisterRPCs();
+
+		GebWarnUnplaceableNetCatches();
 
 		gebsfishTypes fishTypesGenerator = new gebsfishTypes();
     	fishTypesGenerator.GenerateTypesXML();
 		gebsfishSpawnableTypes fishSpawnableTypesGenerator = new gebsfishSpawnableTypes();
     	fishSpawnableTypesGenerator.GenerateSpawnableTypesXML();
+	}
+
+	// Net catches spawn into the net's cargo, which only takes the classes on
+	// geb_BambooFishingNet.s_Allowed (containers.c); anything else always
+	// lands at the player's feet. Say so once at startup, not silently.
+	protected void GebWarnUnplaceableNetCatches() {
+		if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.BambooFishingNetSettings || !m_gebsConfig.General.BambooFishingNetSettings.Catches)
+			return;
+
+		foreach (NetEntry entry : m_gebsConfig.General.BambooFishingNetSettings.Catches) {
+			if (!entry || entry.Classname == "" || entry.CatchChance <= 0)
+				continue;
+			// The same check the net action makes before spawning a catch.
+			if (!geb_FilteredContainerBase.GebTypeMatches(entry.Classname, geb_BambooFishingNet.s_Allowed))
+				GebsfishLogger.Warn("Net catch '" + entry.Classname + "' isn't on the net's allow-list (geb_BambooFishingNet in containers.c), so it will always drop at the player's feet instead of going into the net.", "NetConfig");
+		}
 	}
 
 	override void OnClientPrepareEvent(PlayerIdentity identity, out bool useDB, out vector pos, out float yaw, out int preloadTimeout) {

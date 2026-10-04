@@ -15,6 +15,11 @@ class geb_FilteredContainerBase : Container_Base {
 		return null;
 	}
 
+	// Kinds refused even when the allow list would take them.
+	protected TStringArray GetRefusedItemKinds() {
+		return null;
+	}
+
 	override int GetDamageSystemVersionChange() {
 		return 110;
 	}
@@ -28,6 +33,14 @@ class geb_FilteredContainerBase : Container_Base {
 		if (!item)
 			return false;
 
+		TStringArray refused = GetRefusedItemKinds();
+		if (refused) {
+			foreach (string kind : refused) {
+				if (item.IsKindOf(kind))
+					return false;
+			}
+		}
+
 		TStringArray allowed = GetAllowedItemKinds();
 		if (!allowed || allowed.Count() == 0)
 			return false;
@@ -40,11 +53,48 @@ class geb_FilteredContainerBase : Container_Base {
 		return false;
 	}
 
+	// The same rule by classname, for an item that doesn't exist yet. The
+	// engine only asks the cargo checks here about an existing item, while
+	// CreateInInventory places a new one by classname without asking, so
+	// anything spawning straight into one of these containers must check
+	// this first.
+	bool GebAcceptsType(string type) {
+		if (GebTypeMatches(type, GetRefusedItemKinds()))
+			return false;
+		return GebTypeMatches(type, GetAllowedItemKinds());
+	}
+
+	// The type is one of the listed classes or inherits from one (config
+	// inheritance). The explicit name match covers the class itself, the
+	// way vanilla's recipe matching pairs it with IsKindOf.
+	static bool GebTypeMatches(string type, TStringArray allowed) {
+		if (type == "" || !allowed)
+			return false;
+		string typeLower = type;
+		typeLower.ToLower();
+		foreach (string kind : allowed) {
+			string kindLower = kind;
+			kindLower.ToLower();
+			if (typeLower == kindLower || g_Game.IsKindOf(type, kind))
+				return true;
+		}
+		return false;
+	}
+
+	// Vanilla's checks first: Container_Base refuses new items while the
+	// container itself sits in another container's cargo (a tackle box in a
+	// backpack), and the engine checks the item actually fits.
 	override bool CanReceiveItemIntoCargo(EntityAI item) {
+		if (!super.CanReceiveItemIntoCargo(item))
+			return false;
 		return IsAllowedCargoItem(item);
 	}
 
+	// Loading from storage deliberately has no "inside other cargo" check (in
+	// vanilla either): a stored box's contents must reload where they were.
 	override bool CanLoadItemIntoCargo(EntityAI item) {
+		if (!super.CanLoadItemIntoCargo(item))
+			return false;
 		return IsAllowedCargoItem(item);
 	}
 };
@@ -96,7 +146,9 @@ class geb_BugContainer : geb_FilteredContainerBase {
 };
 
 class geb_BambooFishingNet : geb_FilteredContainerBase {
-	static ref TStringArray s_Allowed = { "Worm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm", "geb_RubberWorm", "geb_FatHeadMinnow", "geb_SignalCrayFish", "geb_EuropeanCrayFish", "geb_AmericanBullFrog", "geb_RedSalamander" };
+	// geb_Crayfish_Base covers all seven crayfish, so any of them an admin
+	// adds to the net's catch table fits in the net.
+	static ref TStringArray s_Allowed = { "Worm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm", "geb_RubberWorm", "geb_FatHeadMinnow", "geb_Crayfish_Base", "geb_AmericanBullFrog", "geb_RedSalamander" };
 
 	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
@@ -121,7 +173,13 @@ class geb_BambooFishingNet : geb_FilteredContainerBase {
 };
 
 class geb_MinnowBucket : geb_FilteredContainerBase {
-	static ref TStringArray s_Allowed = { "geb_FatHeadMinnow", "geb_SignalCrayFish", "geb_EuropeanCrayFish", "Shrimp", "geb_AmericanBullFrog", "geb_RedSalamander" };
+	// The filter matches by config inheritance, so "Shrimp" admits every
+	// small aquatic catch built on it: the minnow, frog and salamander, all
+	// seven crayfish, the blood clam, mussel, snail, starfish and jellyfish.
+	// That's intended -- they're all small water creatures kept fresh in a
+	// bucket. The explicit entries keep the list readable and still work if
+	// one of them stops inheriting Shrimp.
+	static ref TStringArray s_Allowed = { "geb_FatHeadMinnow", "geb_Crayfish_Base", "Shrimp", "geb_AmericanBullFrog", "geb_RedSalamander" };
 
 	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
@@ -165,7 +223,7 @@ class geb_SmallTackleBase : geb_FilteredContainerBase {
 		"geb_OrangeFishGloves", "geb_BlueFishGloves",
 		"geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet",
 		"geb_FishingRodRepairKit",
-		"Hook", "geb_FishKnife_Base", "BoneKnife", "BoneHook", "Pliers"
+		"Hook", "BoneHook", "WoodenHook", "geb_FishKnife_Base", "BoneKnife", "Pliers"
 	};
 
 	override protected TStringArray GetAllowedItemKinds() {
@@ -185,7 +243,7 @@ class geb_LargeTackleBase : geb_FilteredContainerBase {
 		"geb_OrangeFishGloves", "geb_BlueFishGloves",
 		"geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet",
 		"geb_FishingRodRepairKit",
-		"Hook", "geb_FishKnife_Base", "BoneKnife", "BoneHook",
+		"Hook", "BoneHook", "WoodenHook", "geb_FishKnife_Base", "BoneKnife",
 		"Cleaver", "CombatKnife", "HuntingKnife", "ak_bayonet", "m9a1_bayonet",
 		"Pliers", "Screwdriver", "Steakknife", "stoneknife"
 	};
@@ -210,12 +268,19 @@ class geb_LargeTackleBase : geb_FilteredContainerBase {
 // (whole fish, fillets, caviar, fruit, vegetables, meat, cans, drinks)
 // descends from the vanilla Edible_Base config class, so IsKindOf on it
 // admits all of them -- including liquid containers like canteens and
-// pots, which extend Bottle_Base -> Edible_Base. Non-food gear stays out.
+// pots, which extend Bottle_Base -> Edible_Base. Non-food gear stays out,
+// and so does the Bait Bucket: its config is a WaterBottle, for the water
+// its bait lives in, which makes it an Edible_Base too.
 class geb_Cooler_base : geb_FilteredContainerBase {
 	static ref TStringArray s_Allowed = { "Edible_Base" };
+	static ref TStringArray s_Refused = { "geb_MinnowBucket" };
 
 	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
+	}
+
+	override protected TStringArray GetRefusedItemKinds() {
+		return s_Refused;
 	}
 
 	// Active chilling: every tick, cargo items step toward COOLING_TARGET_C,

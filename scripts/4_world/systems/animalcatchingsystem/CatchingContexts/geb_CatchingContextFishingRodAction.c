@@ -2,8 +2,42 @@
 // per-fish weighted pick, bait-preference bias, weather/time-of-day/moon/
 // temperature multipliers, BiteSpeed cycle scaling, and all the diagnostic
 // logging gated by GeneralSettings.DebugLogs.
+//
+// Vanilla runs this context on the client AND the server in lockstep (same
+// synced random numbers), so every input to the math above must be identical
+// on both sides. All world state therefore comes from m_GebSnapshot, read
+// once at cast start (see GebFishingSnapshot) -- never from the live world.
 modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
+	// Seasonal water-temperature swing either side of the map's base water
+	// temperature: warmest around 5 August (day 217), coldest early February.
+	// Lakes and rivers swing more than the sea.
+	protected const float WATER_SWING_FRESH = 6.0;
+	protected const float WATER_SWING_SEA = 3.0;
+	protected const float WATER_PEAK_DAY = 217.0;
+
+	// Handed over by ActionFishingNew.ComposeLocalContextData while it builds
+	// this context: vanilla constructs it with a fixed Param2, so there is no
+	// parameter slot for the snapshot.
+	protected static ref GebFishingSnapshot s_GebPendingSnapshot;
+	// The world inputs this cast uses, identical on client and server.
+	protected ref GebFishingSnapshot m_GebSnapshot;
+	protected float m_GebWaterTemp;
+	protected bool m_GebWaterTempReady;
+
+	static void GebSetPendingSnapshot(GebFishingSnapshot snapshot) {
+		s_GebPendingSnapshot = snapshot;
+	}
+
     override void Init(Param par) {
+		// Before super: vanilla Init already runs the item-data pass that
+		// reads the hour and weather. A context built anywhere other than the
+		// fishing action reads the local world instead.
+		m_GebSnapshot = s_GebPendingSnapshot;
+		if (!m_GebSnapshot)
+			m_GebSnapshot = GebFishingSnapshot.CaptureLocal();
+		if (GetDebugLogLevel() >= 1)
+			GebsfishLogger.Debug("Cast conditions: " + m_GebSnapshot.Describe(), "Init");
+
 		super.Init(par);
 		// Vanilla Init() runs InitCatchingItemData BEFORE SetupProbabilityArray,
 		// so the bite-speed aggregate (which reads m_ProbabilityArray) is a no-op
@@ -205,52 +239,81 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 		return true;
     }
 
-    // True when ANY of the three pick-biasing systems is enabled: weather/
-    // time-of-day, temperature curve, or bait preferences. All three apply
-    // inside PickWeightedYieldIndex and each one self-gates (its multiplier
-    // resolves to 1.0 when its own toggle is off), so the weighted pick must
-    // run if any of them is on -- gating on WeatherCatchBoostEnable alone
-    // silently disabled bait and temperature, contradicting their config
-    // docs which promise independent toggles. Only when all three are off
-    // does GenerateResult fall back to the uniform pick path.
-    protected bool HasActiveSpeciesBuffs() {
-        bool baitEnabled = m_gebsConfig && m_gebsConfig.Bait && m_gebsConfig.Bait.Enable;
-        if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
-            return baitEnabled;
-        WeatherConf w = m_gebsConfig.General.WeatherSettings;
-        return w.WeatherCatchBoostEnable || w.TemperatureEffectEnable || baitEnabled;
+    // junk.json's JunkShare, read the way the validator reads numbers: NaN or
+    // below 0 gives 0 (no junk), and it stops at 0.9.
+    protected float GebJunkShare() {
+        if (!m_gebsConfig || !m_gebsConfig.Junk)
+            return 0.1;
+        float share = m_gebsConfig.Junk.JunkShare;
+        if (!(share >= 0))
+            return 0;
+        return Math.Min(share, 0.9);
     }
 
     // Normalize floating weights before summation. Keep tiny positive weights
     // and avoid integer overflow; duplicate entries still encode abundance.
+    //
+    // Junk is scaled to the rest of the pool: its entries together get
+    // JunkShare of the total weight, split evenly per entry (so each item's
+    // CatchProbability still sets how often it turns up among the junk). A
+    // fixed junk weight let the junk rate swing with the fish -- cold water
+    // shrinks every fish, so a Sakhal sea cast came up junk nearly half the
+    // time. In water where nothing else can bite, junk keeps a weight of 1
+    // and is all a rod pulls, as in vanilla.
     protected int PickWeightedYieldIndex() {
         int n = m_ProbabilityArray.Count();
         array<float> weights = new array<float>();
         map<int, float> byKey = new map<int, float>();
-        float maximum = 0;
         string source;
         string bait = GetCurrentBaitClassname(source);
+        float catchTotal = 0;
+        int junkEntries = 0;
         for (int i = 0; i < n; i++) {
             int key = m_ProbabilityArray[i];
             float weight;
             if (!byKey.Find(key, weight)) {
-                weight = 1.0;
-                GebYieldFishBase fish = GebYieldFishBase.Cast(m_YieldsMapAll.Get(key));
-                if (fish) {
-                    float rain, time, temperature;
-                    int window;
-                    float weather = GetSpeciesWeatherMultiplier(fish, rain, window, time, temperature);
-                    float preference = GetBaitMultiplier(fish.GetSpeciesClassname(), bait);
-                    // Bound each factor before multiplication, including non-finite input.
-                    weather = GebBoundCatchFactor(weather);
-                    preference = GebBoundCatchFactor(preference);
-                    weight = weather * preference;
+                YieldItemBase yieldItem = m_YieldsMapAll.Get(key);
+                if (YieldItemJunk.Cast(yieldItem)) {
+                    weight = -1; // junk: set below, once the rest of the pool is known
+                } else {
+                    weight = 1.0;
+                    GebYieldFishBase fish = GebYieldFishBase.Cast(yieldItem);
+                    if (fish) {
+                        float rain, time, temperature;
+                        int window;
+                        float weather = GetSpeciesWeatherMultiplier(fish, rain, window, time, temperature);
+                        float preference = GetBaitMultiplier(fish.GetSpeciesClassname(), bait);
+                        // Bound each factor before multiplication, including non-finite input.
+                        weather = GebBoundCatchFactor(weather);
+                        preference = GebBoundCatchFactor(preference);
+                        weight = weather * preference;
+                    }
                 }
                 byKey.Insert(key, weight);
             }
+            if (weight < 0)
+                junkEntries++;
+            else
+                catchTotal += weight;
             weights.Insert(weight);
-            maximum = Math.Max(maximum, weight);
         }
+
+        float share = GebJunkShare();
+        float junkWeight = 0;
+        if (junkEntries > 0 && share > 0) {
+            if (catchTotal > 0)
+                junkWeight = catchTotal * share / (1.0 - share) / junkEntries;
+            else
+                junkWeight = 1.0;
+        }
+        float maximum = 0;
+        for (int w = 0; w < n; w++) {
+            if (weights[w] < 0)
+                weights[w] = junkWeight;
+            maximum = Math.Max(maximum, weights[w]);
+        }
+        if (junkEntries > 0 && GetDebugLogLevel() >= 1)
+            GebsfishLogger.Debug("Junk: " + junkEntries + " entries at weight " + junkWeight + " each (JunkShare " + share + ", catch weight " + catchTotal + ")", "GenerateResult");
         if (maximum <= 0)
             return -1;
         float total = 0;
@@ -407,25 +470,57 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         return s.Substring(0, end);
     }
 
-    // Returns the current water temperature in degrees Celsius. Uses ambient
-    // air temperature as a proxy -- water temperature isn't exposed cleanly
-    // by the engine, but ambient already tracks weather/time-of-day/season,
-    // so it's a defensible stand-in for game purposes. Adds the admin-
-    // configured WaterTempOffset so winter/tropical servers can shift the
-    // whole curve without editing every fish. Defaults to 18 C (plus offset)
-    // if world state isn't available yet (mission startup race) so the curve
-    // returns a sensible mid-range neutral value.
+    // Water temperature for this cast, in degrees Celsius. Starts from the
+    // map's own water temperature in vanilla WorldData (Chernarus 15 fresh /
+    // 23 sea, Livonia 20 / 25, Sakhal 2 / -0.5; a map that sets none gets
+    // Chernarus's) -- a per-map constant that is the same on every machine.
+    // Air temperature can't be used: a multiplayer client computes it once at
+    // login and never updates it, so client and server would weight species
+    // differently and disagree on bites. A seasonal swing from the cast's
+    // date and the admin's WaterTempOffset go on top, floored at freezing.
+    // Computed once per cast.
     protected float GetCurrentWaterTemp() {
+        if (m_GebWaterTempReady)
+            return m_GebWaterTemp;
+
+        int liquid = LIQUID_FRESHWATER;
+        string waterKind = "fresh";
+        float baseTemp = 15.0;
+        float swing = WATER_SWING_FRESH;
+        float freezing = 0.0;
+        if (m_IsSea) {
+            liquid = LIQUID_SALTWATER;
+            waterKind = "sea";
+            baseTemp = 23.0;
+            swing = WATER_SWING_SEA;
+            freezing = -1.8;
+        }
+        WorldData worldData;
+        if (g_Game && g_Game.GetMission())
+            worldData = g_Game.GetMission().GetWorldData();
+        float mapTemp;
+        // A map whose liquid table leaves this water out keeps the
+        // Chernarus value above (see WorldData.GebFindLiquidTemperature).
+        if (worldData && worldData.GebFindLiquidTemperature(liquid, mapTemp))
+            baseTemp = mapTemp;
+
         float offset = 0.0;
         if (m_gebsConfig && m_gebsConfig.General && m_gebsConfig.General.WeatherSettings)
             offset = m_gebsConfig.General.WeatherSettings.WaterTempOffset;
 
-        if (!g_Game || !g_Game.GetMission())
-            return 18.0 + offset;
-        WorldData worldData = g_Game.GetMission().GetWorldData();
-        if (!worldData)
-            return 18.0 + offset;
-        return worldData.GetBaseEnvTemperature() + offset;
+        // +1 at the warm peak, -1 half a year later.
+        float season = 0.0;
+        if (m_GebSnapshot) {
+            float monthsDone = m_GebSnapshot.Month - 1;
+            float dayOfYear = monthsDone * 30.44 + m_GebSnapshot.Day;
+            season = Math.Cos(Math.PI2 * (dayOfYear - WATER_PEAK_DAY) / 365.0);
+        }
+
+        m_GebWaterTemp = Math.Max(baseTemp + swing * season + offset, freezing);
+        m_GebWaterTempReady = true;
+        if (GetDebugLogLevel() >= 1)
+            GebsfishLogger.Debug("Water temperature this cast: " + m_GebWaterTemp + " C (" + waterKind + " water, map base " + baseTemp + ", season " + (swing * season) + ", offset " + offset + ")", "GetCurrentWaterTemp");
+        return m_GebWaterTemp;
     }
 
     // Per-species water-temperature multiplier. Piecewise linear bell curve:
@@ -523,23 +618,20 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
             if (speciesStorm < 0.0) speciesStorm = 0.0;
 
             // Rain / storm component (mutually exclusive, matches global rule).
-            Weather weather = g_Game.GetWeather();
-            if (weather && weather.GetRain()) {
-                float rain = weather.GetRain().GetActual();
-                // Band selection (storm vs rain) is decided purely by the
-                // thresholds; the != 1.0 no-op check must stay INSIDE the chosen
-                // band, otherwise a storm-neutral fish (StormMultiplier == 1.0)
-                // would fall through and wrongly get the rain multiplier applied
-                // during a storm.
-                if (rain >= w.StormThreshold) {
-                    dbgRainStormMul = speciesStorm;
-                    if (speciesStorm != 1.0)
-                        multiplier = multiplier * speciesStorm;
-                } else if (rain >= w.RainThreshold) {
-                    dbgRainStormMul = speciesRain;
-                    if (speciesRain != 1.0)
-                        multiplier = multiplier * speciesRain;
-                }
+            // Band selection (storm vs rain) is decided purely by the
+            // thresholds; the != 1.0 no-op check must stay INSIDE the chosen
+            // band, otherwise a storm-neutral fish (StormMultiplier == 1.0)
+            // would fall through and wrongly get the rain multiplier applied
+            // during a storm.
+            float rain = GetCastRain();
+            if (rain >= w.StormThreshold) {
+                dbgRainStormMul = speciesStorm;
+                if (speciesStorm != 1.0)
+                    multiplier = multiplier * speciesStorm;
+            } else if (rain >= w.RainThreshold) {
+                dbgRainStormMul = speciesRain;
+                if (speciesRain != 1.0)
+                    multiplier = multiplier * speciesRain;
             }
 
             // Time-of-day component. Exactly one of Dawn / Day / Dusk / Night
@@ -583,15 +675,21 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         return multiplier;
     }
 
-    // Returns the current in-game hour (0-23). Defaults to 12 (noon) if the
-    // world state isn't available yet (mission startup race).
+    // The cast's in-game hour (0-23), from the snapshot taken at cast start.
     protected int GetCurrentHour() {
-        int year, month, day, hour, minute;
-        if (g_Game && g_Game.GetWorld()) {
-            g_Game.GetWorld().GetDate(year, month, day, hour, minute);
-            return hour;
-        }
+        if (m_GebSnapshot)
+            return m_GebSnapshot.Hour;
         return 12;
+    }
+
+    // The cast's rain intensity (0-1), from the snapshot taken at cast start.
+    // Snowfall counts as rain: Sakhal locks rain at 0 and snows instead, so
+    // the rain and storm bands would never fire there. Whichever is heavier
+    // decides (the vanilla maps lock one of the two at 0).
+    protected float GetCastRain() {
+        if (m_GebSnapshot)
+            return Math.Max(m_GebSnapshot.Rain, m_GebSnapshot.Snow);
+        return 0.0;
     }
 
     // Resolves the current time-of-day window based on hour and the configured
@@ -667,9 +765,9 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         return phase;
     }
 
-    // Per-cast moon-phase multiplier. Returns 1.0 (neutral) when disabled,
-    // during daytime (moon not a visible/active factor), when both extremes
-    // are 1.0, or when the world date isn't available yet. Otherwise lerps
+    // Per-cast moon-phase multiplier, from the cast snapshot's date. Returns
+    // 1.0 (neutral) when disabled, during daytime (moon not a visible/active
+    // factor), or when both extremes are 1.0. Otherwise lerps
     // linearly between FullMoonMultiplier at full moon and NewMoonMultiplier
     // at new moon, smooth across quarter moons. Independent of
     // WeatherCatchBoostEnable so admins can run moon-only or weather-only.
@@ -687,12 +785,9 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         if (ResolveTimeWindow(w, hour) != 3)
             return 1.0;
 
-        int year, month, day, h, minute;
-        if (!g_Game || !g_Game.GetWorld())
+        if (!m_GebSnapshot)
             return 1.0;
-        g_Game.GetWorld().GetDate(year, month, day, h, minute);
-
-        float phase = ComputeMoonPhase(year, month, day, h);
+        float phase = ComputeMoonPhase(m_GebSnapshot.Year, m_GebSnapshot.Month, m_GebSnapshot.Day, m_GebSnapshot.Hour);
 
         // phase=0.5 -> distFromFull=0 (full). phase=0 or 1 -> distFromFull=1 (new).
         float distFromFull = Math.AbsFloat(phase - 0.5) * 2.0;
@@ -701,13 +796,13 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     }
 
     // Computes the combined rain / storm / dawn / day / dusk / night / moon
-    // multiplier from the current world state. Returns 1.0 (no effect) when
-    // every feature is disabled, when no condition is currently active, or
-    // when weather/world state isn't available yet (mission startup race).
+    // multiplier from the cast's snapshot (the world as it was when the cast
+    // started). Returns 1.0 (no effect) when every feature is disabled or
+    // when no condition is active.
     //
     // Rain and storm are mutually exclusive (storm replaces rain rather than
     // stacking with it). Dawn/Day/Dusk/Night are also mutually exclusive --
-    // the current hour falls in exactly one. Rain/storm CAN stack with the
+    // the cast's hour falls in exactly one. Rain/storm CAN stack with the
     // time-of-day window AND with the moon-phase multiplier (moon is night-
     // only, so it never stacks with Dawn/Day/Dusk). MoonPhaseEnable is
     // independent of WeatherCatchBoostEnable so admins can run moon-only or
@@ -734,23 +829,20 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 
         if (w.WeatherCatchBoostEnable) {
             // ---- rain / storm component ----
-            Weather weather = g_Game.GetWeather();
-            if (weather && weather.GetRain()) {
-                float rain = weather.GetRain().GetActual();
-                // Band selection (storm vs rain) is decided purely by the
-                // thresholds; the != 1.0 no-op check stays INSIDE the chosen
-                // band so a storm-neutral config (StormCatchMultiplier == 1.0)
-                // can't fall through and wrongly apply the rain multiplier
-                // during a storm.
-                if (rain >= w.StormThreshold) {
-                    dbgRainStorm = w.StormCatchMultiplier;
-                    if (w.StormCatchMultiplier != 1.0)
-                        multiplier = multiplier * w.StormCatchMultiplier;
-                } else if (rain >= w.RainThreshold) {
-                    dbgRainStorm = w.RainCatchMultiplier;
-                    if (w.RainCatchMultiplier != 1.0)
-                        multiplier = multiplier * w.RainCatchMultiplier;
-                }
+            // Band selection (storm vs rain) is decided purely by the
+            // thresholds; the != 1.0 no-op check stays INSIDE the chosen
+            // band so a storm-neutral config (StormCatchMultiplier == 1.0)
+            // can't fall through and wrongly apply the rain multiplier
+            // during a storm.
+            float rain = GetCastRain();
+            if (rain >= w.StormThreshold) {
+                dbgRainStorm = w.StormCatchMultiplier;
+                if (w.StormCatchMultiplier != 1.0)
+                    multiplier = multiplier * w.StormCatchMultiplier;
+            } else if (rain >= w.RainThreshold) {
+                dbgRainStorm = w.RainCatchMultiplier;
+                if (w.RainCatchMultiplier != 1.0)
+                    multiplier = multiplier * w.RainCatchMultiplier;
             }
 
             // ---- time-of-day component ----
@@ -811,16 +903,13 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 		}
 
 		YieldItemBase yItem;
-		int idx = -1;
 
-        if (HasActiveSpeciesBuffs()) {
-            idx = PickWeightedYieldIndex();
-            if (idx < 0)
-                return; // All eligible weights are zero: never fall back to uniform.
-        } else {
-            idx = m_Player.GetRandomGeneratorSyncManager().GetRandomInRange(RandomGeneratorSyncUsage.RGSAnimalCatching, 0, m_ProbabilityArray.Count());
-            idx = Math.Clamp(idx, 0, m_ProbabilityArray.Count() - 1);
-        }
+        // Always the weighted pick: junk is scaled to the pool there. With
+        // weather, temperature and bait all switched off every fish weighs 1,
+        // which is the plain pick.
+        int idx = PickWeightedYieldIndex();
+        if (idx < 0)
+            return; // All eligible weights are zero: never fall back to uniform.
 
 		// The probability array stores keys into the yield map, so resolve the
 		// selected entry before setting it as the active fishing result.
@@ -1006,9 +1095,12 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 	override protected void RemoveItemSafe(EntityAI item) {
 		if (item && !m_Player.IsQuickFishing()) {
 			string parentType = item.GetType();
+			// Health is read only for the debug line below, and only where the
+			// engine allows it: on a multiplayer client GetHealth logs
+			// "cannot be called on client" and returns 0. This runs on both.
 			float parentHpBefore = -1;
 			ItemBase parentAsItem = ItemBase.Cast(item);
-			if (parentAsItem)
+			if (parentAsItem && GetDebugLogLevel() && (!g_Game.IsMultiplayer() || g_Game.IsDedicatedServer()))
 				parentHpBefore = parentAsItem.GetHealth("","Health");
 
 			// Hooks can carry an attached bait item (worm, minnow, salamander,
@@ -1051,21 +1143,23 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 				if (GetDebugLogLevel()) {
 					GebsfishLogger.Debug("Hook HP after: type=" + hookType + " hpAfter=" + m_Hook.GetHealth("","Health"),"TryDamageItems");
 				}
-				// Single-arg AddHealth on purpose: vanilla's old ActionFishingNew
-				// used it on the rod (AddHealth(-1.5)), and the 3-arg form
-				// silently no-ops on rods. Exactly ONE rod hit per catch outcome
-				// -- a second, unlogged single-arg call used to sit above the
-				// hook-after log and made rods wear at double the intended rate.
-				if (m_MainItem) {
-					float rodHpBefore = m_MainItem.GetHealth("","Health");
-					string rodType = m_MainItem.GetType();
-					if (GetDebugLogLevel()) {
-						GebsfishLogger.Debug("Applying damage to rod: type=" + rodType + " hpBefore=" + rodHpBefore + " dmg=" + UAFishingConstants.DAMAGE_HOOK,"TryDamageItems");
-					}
-					m_MainItem.AddHealth(-UAFishingConstants.DAMAGE_HOOK);
-					if (GetDebugLogLevel()) {
-						GebsfishLogger.Debug("Rod HP after: type=" + rodType + " hpAfter=" + m_MainItem.GetHealth("","Health"),"TryDamageItems");
-					}
+			}
+			// The rod wears on every bite outcome, including one where the hook
+			// was just lost (it is already flagged for deletion by now, which is
+			// why this sits outside the hook check). AddHealth(x) is vanilla's
+			// wrapper for AddHealth("", "", x): the rod's global health, as
+			// vanilla's old ActionFishingNew used (AddHealth(-1.5)). Exactly ONE
+			// rod hit per catch outcome -- a second, unlogged call used to make
+			// rods wear at double the intended rate.
+			if (m_MainItem) {
+				float rodHpBefore = m_MainItem.GetHealth("","Health");
+				string rodType = m_MainItem.GetType();
+				if (GetDebugLogLevel()) {
+					GebsfishLogger.Debug("Applying damage to rod: type=" + rodType + " hpBefore=" + rodHpBefore + " dmg=" + UAFishingConstants.DAMAGE_HOOK,"TryDamageItems");
+				}
+				m_MainItem.AddHealth(-UAFishingConstants.DAMAGE_HOOK);
+				if (GetDebugLogLevel()) {
+					GebsfishLogger.Debug("Rod HP after: type=" + rodType + " hpAfter=" + m_MainItem.GetHealth("","Health"),"TryDamageItems");
 				}
 			}
 		}

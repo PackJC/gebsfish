@@ -1,6 +1,10 @@
 # Render a looping animated GIF for every species in the fish manifest.
 #
-#   python tools/batch_gifs.py <out_dir> [--only name1,name2] [--res 512]
+#   python tools/batch_gifs.py [out_dir] [--only name1,name2] [--res 512] [--blender path]
+#
+# out_dir defaults to fish_gifs on your Desktop. Blender is found from
+# --blender, the BLENDER environment variable, the PATH, or the newest
+# install under Program Files\Blender Foundation.
 #
 # Each species gets a motion profile suited to its anatomy -- a spine
 # undulation is right for a trout and ridiculous on a clam:
@@ -12,14 +16,17 @@
 #
 # No jaw animation -- these are swim cycles only.
 
+import argparse
+import glob
 import json
 import os
+import re
+import shutil
 import subprocess
 import sys
 
 TOOLS = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(TOOLS)
-BLENDER = r"C:\Program Files\Blender Foundation\Blender 4.4\blender.exe"
 MANIFEST = os.path.join(TOOLS, "fish_manifest.json")
 FISH_DIR = os.path.join(REPO, "data", "fish")
 
@@ -49,17 +56,47 @@ def profile_for(name):
     return "swim"
 
 
+def find_blender(explicit):
+    """--blender, then $BLENDER, then the PATH, then the newest Program Files install."""
+    for candidate in (explicit, os.environ.get("BLENDER")):
+        if candidate and os.path.isfile(candidate):
+            return candidate
+    on_path = shutil.which("blender")
+    if on_path:
+        return on_path
+    installs = glob.glob(os.path.join(os.environ.get("ProgramFiles", r"C:\Program Files"),
+                                      "Blender Foundation", "Blender *", "blender.exe"))
+
+    def version(path):
+        m = re.search(r"Blender (\d+)\.(\d+)", path)
+        return (int(m.group(1)), int(m.group(2))) if m else (0, 0)
+    return max(installs, key=version) if installs else None
+
+
+def local(path):
+    """A manifest path (relative to the repo root) as a usable file path."""
+    if path and not os.path.isabs(path):
+        return os.path.join(REPO, path.replace("/", os.sep))
+    return path
+
+
 def main():
-    out_root = sys.argv[1] if len(sys.argv) > 1 else r"C:\Users\ECHO\Desktop\fish_gifs"
-    only, res = None, "512"
-    for i, a in enumerate(sys.argv):
-        if a == "--only":
-            only = {x.strip().lower() for x in sys.argv[i + 1].split(",")}
-        elif a == "--res":
-            res = sys.argv[i + 1]
+    ap = argparse.ArgumentParser(description="Render a looping GIF per species in tools/fish_manifest.json.")
+    ap.add_argument("out_dir", nargs="?", default=os.path.join(os.path.expanduser("~"), "Desktop", "fish_gifs"))
+    ap.add_argument("--only", help="comma-separated species classnames")
+    ap.add_argument("--res", default="512")
+    ap.add_argument("--blender", help="path to blender.exe")
+    args = ap.parse_args()
+
+    blender = find_blender(args.blender)
+    if not blender:
+        sys.exit("Blender not found: pass --blender <path to blender.exe> or set BLENDER.")
+    out_root, res = args.out_dir, args.res
+    only = {x.strip().lower() for x in args.only.split(",") if x.strip()} if args.only else None
 
     os.makedirs(out_root, exist_ok=True)
-    entries = json.load(open(MANIFEST, encoding="utf-8"))
+    with open(MANIFEST, encoding="utf-8") as fh:
+        entries = json.load(fh)
     if only:
         entries = [e for e in entries if e["name"].lower() in only]
 
@@ -69,12 +106,12 @@ def main():
         profile = profile_for(name)
         print("\n[%d/%d] %s  (%s)" % (i, len(entries), name, profile), flush=True)
 
-        cmd = [BLENDER, "--background", "--python",
+        cmd = [blender, "--background", "--python",
                os.path.join(TOOLS, "rig_swim.py"), "--",
-               "--p3d", e["p3d"], "--name", name, "--out", out_root,
+               "--p3d", local(e["p3d"]), "--name", name, "--out", out_root,
                "--src", FISH_DIR, "--profile", profile, "--res", res]
         if e.get("texture"):
-            cmd += ["--texture", e["texture"]]
+            cmd += ["--texture", local(e["texture"])]
         if e.get("view"):
             cmd += ["--view", e["view"]]
         if e.get("flip_head"):

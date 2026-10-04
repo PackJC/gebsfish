@@ -113,7 +113,10 @@ class gebsfishTypes {
         if (written.Contains(name))
             return;
         written.Insert(name, true);
-        WriteType(file, name, 0, 14400, 0, 0, 10, 100, 100, "food", false);
+        // -1 quantities like vanilla's fish: these only spawn as cargo (bait
+        // buckets), and any other range would make the CE re-roll how full
+        // each one comes.
+        WriteType(file, name, 0, 14400, 0, 0, -1, -1, 100, "food", false, true);
     }
 
     protected void WriteGearSection(FileHandle file) {
@@ -134,7 +137,7 @@ class gebsfishTypes {
             "geb_OrangeTackle", "geb_LimeTackle", "geb_LightBlueTackle", "geb_GreenTackle",
             "geb_BrownTackle", "geb_CamoTackle", "geb_BlueTackle", "geb_SmallTackle",
             "geb_MinnowBucket", "geb_BambooFishingNet", "geb_BugContainer", "geb_WormContainer",
-            "geb_RubberWorm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm",
+            "geb_RubberWorm",
             "geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
             "geb_Lure1", "geb_Lure2", "geb_Lure3", "geb_Lure4",
             "geb_SpoonLure1", "geb_SpoonLure2", "geb_SpoonLure3", "geb_SpoonLure4",
@@ -149,17 +152,34 @@ class gebsfishTypes {
         };
         InsertGearBatch(gearItems, gear, 3, 1);
 
+        // Quantities stay -1 (the item's config default), as vanilla does
+        // for gear: any other range makes the CE re-roll quantity on every
+        // spawn, so repair kits would come with random uses left. Lifetime
+        // is 4 hours untouched, vanilla's for fishing rods, knives and most
+        // tools; at 2 hours a stocked cooler or tackle box left outside a
+        // base vanished with everything in it.
         FPrintln(file, "    <!-- Gear Items -->");
         foreach (XmlTypeEntry gearEntry : gearItems) {
-            WriteType(file, gearEntry.Name, gearEntry.Nominal, 7200, 0, gearEntry.Min, 0, 100, 200, "tools", true);
+            WriteType(file, gearEntry.Name, gearEntry.Nominal, 14400, 0, gearEntry.Min, -1, -1, 200, "tools", true, false);
         }
 
-        // The fish mount is a placed structure, not pocket loot: it gets the
-        // tent/barrel lifetime (45 days untouched) instead of the 2-hour
-        // gear lifetime, so wall trophies persist like any base fixture and
-        // abandoned ones decay away on the same schedule as tents.
+        // Live insect bait comes from digging (and inside bug containers via
+        // spawnabletypes), never loose: it starts dying the moment it exists,
+        // so a world spawn would mostly be found dead. Same profile as
+        // vanilla Worm -- crafted, nominal 0. Cargo spawns ignore the flag.
+        TStringArray liveBait = {"geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm"};
+        FPrintln(file, "    <!-- Live bait (dug, not looted) -->");
+        foreach (string bait : liveBait) {
+            WriteType(file, bait, 0, 7200, 0, 0, -1, -1, 200, "tools", false, true);
+        }
+
+        // The fish mount is a placed structure, not pocket loot: crafted with
+        // nominal 0 like vanilla's WoodenCrate, and the tent/barrel lifetime
+        // (45 days untouched) instead of the 4-hour gear lifetime, so wall
+        // trophies persist like any base fixture and abandoned ones decay
+        // away on the same schedule as tents.
         FPrintln(file, "    <!-- Placed structures -->");
-        WriteType(file, "geb_WoodenFishMount", 3, 3888000, 0, 1, 0, 100, 200, "tools", true);
+        WriteType(file, "geb_WoodenFishMount", 0, 3888000, 0, 0, -1, -1, 200, "tools", false, true);
     }
 
     protected void InsertGearBatch(array<ref XmlTypeEntry> gearItems, TStringArray names, int nominal, int min) {
@@ -168,7 +188,14 @@ class gebsfishTypes {
         }
     }
 
-    protected void WriteType(FileHandle file, string typeName, int nominal, int lifetime, int restock, int min, int quantMin, int quantMax, int cost, string category, bool addUsageTags) {
+    // crafted=1 means "only made by players": the CE loot spawner skips the
+    // type whatever its nominal (vanilla sets it only on nominal-0 types).
+    // Anything meant to spawn as world loot must be written crafted=0.
+    protected void WriteType(FileHandle file, string typeName, int nominal, int lifetime, int restock, int min, int quantMin, int quantMax, int cost, string category, bool addUsageTags, bool crafted) {
+        string craftedFlag = "0";
+        if (crafted)
+            craftedFlag = "1";
+
         FPrintln(file, "    <type name=\"" + typeName + "\">");
         FPrintln(file, "        <nominal>" + nominal.ToString() + "</nominal>");
         FPrintln(file, "        <lifetime>" + lifetime.ToString() + "</lifetime>");
@@ -177,7 +204,7 @@ class gebsfishTypes {
         FPrintln(file, "        <quantmin>" + quantMin.ToString() + "</quantmin>");
         FPrintln(file, "        <quantmax>" + quantMax.ToString() + "</quantmax>");
         FPrintln(file, "        <cost>" + cost.ToString() + "</cost>");
-        FPrintln(file, "        <flags count_in_cargo=\"0\" count_in_hoarder=\"0\" count_in_map=\"1\" count_in_player=\"0\" crafted=\"1\" deloot=\"0\"/>");
+        FPrintln(file, "        <flags count_in_cargo=\"0\" count_in_hoarder=\"0\" count_in_map=\"1\" count_in_player=\"0\" crafted=\"" + craftedFlag + "\" deloot=\"0\"/>");
         FPrintln(file, "        <category name=\"" + category + "\"/>");
 
         if (addUsageTags) {

@@ -1,6 +1,4 @@
 modded class PrepareFish {
-    // Vanilla baseline so the knife-speed multiplier never compounds across CanDo calls.
-    protected float m_BaseAnimationLength;
     protected bool m_GebConfiguredRecipe;
     protected string m_GebFallbackSpecies;
     protected string m_GebFallbackMain;
@@ -79,12 +77,10 @@ modded class PrepareFish {
 		InsertIngredient(1,"geb_YellowFishKnife",DayZPlayerConstants.CMD_ACTIONFB_ANIMALSKINNING, true);
 		InsertIngredient(1,"geb_RedFishKnife",DayZPlayerConstants.CMD_ACTIONFB_ANIMALSKINNING, true);
 		InsertIngredient(1,"geb_PurpleFishKnife",DayZPlayerConstants.CMD_ACTIONFB_ANIMALSKINNING, true);
-
-		m_BaseAnimationLength = m_AnimationLength;
     }
 
-    // Recalculated every CanDo so swapping knives mid-session always reflects the
-    // current tool, and so the multiplier scales from the vanilla baseline (never compounds).
+    // The fish-knife speed-up is applied per fillet in CAContinuousCraft.Setup
+    // (geb_cacontinuouscraft.c), not here: the recipe is shared by every player.
     override bool CanDo(ItemBase ingredients[], PlayerBase player) {
         if (!ingredients[0] || !ingredients[1]) return false;
         if (m_GebConfiguredRecipe && !GebHasValidResults(GebResolveRecipe(ingredients[0])))
@@ -93,23 +89,13 @@ modded class PrepareFish {
 		// PrepareAnimal, which blocks skinning frozen carcasses the same way.
 		if (ingredients[0] && ingredients[0].GetIsFrozen())
 			return false;
+		// Mounting is permanent: the mount refuses to release the fish, but a
+		// recipe never asks, so block filleting it here. (Decay is paused on
+		// the mount, so an old trophy would also come off as fresh fillets.)
+		if (geb_WoodenFishMount.Cast(ingredients[0].GetHierarchyParent()))
+			return false;
 
-		ApplyFishKnifeSpeedBonus(ingredients);
 		return super.CanDo(ingredients, player);
-	}
-
-    void ApplyFishKnifeSpeedBonus(ItemBase ingredients[]) {
-		float multiplier = 1.0;
-		if (m_gebsConfig && m_gebsConfig.General && m_gebsConfig.General.GeneralSettings)
-			multiplier = m_gebsConfig.General.GeneralSettings.FishKnifeSpeedMultiplier;
-
-		if (multiplier <= 0)
-			multiplier = 1.0;
-
-		if (ingredients[1] && ingredients[1].IsKindOf("geb_FishKnife_Base"))
-			m_AnimationLength = m_BaseAnimationLength * multiplier;
-		else
-			m_AnimationLength = m_BaseAnimationLength;
 	}
 
 	// ---- Shared recipe-construction helpers ----
@@ -120,7 +106,10 @@ modded class PrepareFish {
 	// GebPrepareFishBase.
 
 	void SetupFishRecipe(string ingredientType) {
-		InsertIngredient(0, ingredientType);
+		// As vanilla PrepareCarp: with the fish in hands the skinning animation
+		// plays and the fish is hidden (showItem false), instead of the generic
+		// crafting animation.
+		InsertIngredient(0, ingredientType, DayZPlayerConstants.CMD_ACTIONFB_ANIMALSKINNING, false);
 		m_IngredientAddHealth[0] = 0;
 		m_IngredientSetHealth[0] = -1;
 		m_IngredientAddQuantity[0] = 0;
@@ -201,7 +190,19 @@ modded class PrepareFish {
         for (int resultIndex = results.Count() - 1; resultIndex >= 0; --resultIndex) {
             if (!results[resultIndex]) results.Remove(resultIndex);
         }
-		super.Do(ingredients, player, results, specialty_weight);
+        // Vanilla PrepareAnimal.Do copies the fish's fill level onto every
+        // result. A custom catch with no quantity reads as 0% full, which
+        // would delete every fillet (varQuantityDestroyOnMin), so do vanilla's
+        // transfer here with full fillets instead.
+        if (ingredients[0] && !ingredients[0].HasQuantity()) {
+            foreach (ItemBase filletResult : results) {
+                MiscGameplayFunctions.TransferItemProperties(ingredients[0], filletResult);
+                filletResult.SetQuantityMax();
+            }
+            SetBloodyHands(ingredients, player);
+        } else {
+            super.Do(ingredients, player, results, specialty_weight);
+        }
         if (caviar)
             ApplyConfiguredCaviarChance(results);
         // Trigger predator spawning
@@ -224,11 +225,9 @@ modded class PrepareFish {
     // rolls HookFromFishChance (default 0.004 = ~1/250) and on a hit, picks a
     // hook classname from the weighted HookFromFishCatches pool and spawns it
     // at a random health level in that entry's [MinHealthLevel, MaxHealthLevel]
-    // range. Server-only so
-    // the spawn doesn't double up between client + server. Tries the player's
-    // inventory first (cleanest UX -- hook lands where the fillets do), falls
-    // back to player position if inventory placement fails. Logs at DebugLogs
-    // >= 1 so admins can see when the system fires.
+    // range. Server-only so the spawn doesn't double up between client and
+    // server. The hook drops on the ground beside the player, with the
+    // fillets. Logs at DebugLogs >= 1 so admins can see when the system fires.
     void TrySpawnHookFromFish(PlayerBase player) {
         if (!player) return;
         if (!g_Game.IsServer()) return;
@@ -283,21 +282,14 @@ modded class PrepareFish {
         if (maxLvl > 4) maxLvl = 4;
         int healthLevel = Math.RandomInt(minLvl, maxLvl + 1);
 
-        // Prefer player inventory (lands in cargo / on belt slot if it fits).
-        // CreateInInventory returns null on failure, in which case fall back
-        // to dropping it at the player's feet so the hook isn't lost on a
-        // full inventory.
-        EntityAI spawned = null;
-        if (player.GetInventory())
-            spawned = player.GetInventory().CreateInInventory(picked.Classname);
-
-        if (!spawned) {
-            spawned = EntityAI.Cast(g_Game.CreateObjectEx(picked.Classname, player.GetPosition(), ECE_PLACE_ON_SURFACE));
-        }
-
+        // On the ground with the fillets: vanilla's RecipeBase.SpawnItems drops
+        // them with this same call and spread. Never into the inventory, where
+        // a worm container, bug catcher or bait bucket could take a hook it
+        // doesn't allow and drop it on the next restart.
+        EntityAI spawned = player.SpawnEntityOnGroundRaycastDispersed(picked.Classname, DEFAULT_SPAWN_DISTANCE);
         if (!spawned) {
             if (debugLevel >= 1)
-                GebsfishLogger.Debug("HookFromFish picked=" + picked.Classname + " but CreateInInventory/CreateObjectEx both returned null -- spawn failed", "HookFromFish");
+                GebsfishLogger.Debug("HookFromFish picked=" + picked.Classname + " but it could not be spawned on the ground", "HookFromFish");
             return;
         }
 

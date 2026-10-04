@@ -8,7 +8,12 @@
 
 */
 
-class geb_EdibleBase extends Edible_Base {
+// Whole fish behave like vanilla Carp: a raw corpse that rots, cooked only
+// as fillets. A config class with no script class of its own runs as its
+// nearest scripted config ancestor, so the config-only fish bases need these
+// script twins -- without them every species under them ran as plain
+// Edible_Base, whose CanDecay() is false, and never rotted.
+class geb_FishBase extends Edible_Base {
 	override bool CanBeCookedOnStick() {
 		return false;
 	}
@@ -24,7 +29,14 @@ class geb_EdibleBase extends Edible_Base {
 	override bool CanDecay() {
 		return true;
 	}
+}
 
+class geb_FreshFish_Base extends geb_FishBase {}
+class geb_SaltFish_Base extends geb_FishBase {}
+class geb_LargeFish_Base extends geb_FishBase {}
+
+// Big fish: carried two-handed like a heavy item.
+class geb_EdibleBase extends geb_FishBase {
 	override bool CanSaveItemInHands(EntityAI item_in_hands) {
 		return false;
 	}
@@ -47,7 +59,10 @@ class geb_LeopardShark extends geb_EdibleBase {}
 class geb_MahiMahi extends geb_EdibleBase {}
 class geb_LakeSturgeon extends geb_EdibleBase {}
 
-class geb_FatHeadMinnow extends Edible_Base {
+// The live baits are Shrimp in config, so they extend vanilla's Shrimp
+// script class too: that is what makes them cookable, eatable as meat, and
+// perishable (plain Edible_Base gave them none of it).
+class geb_FatHeadMinnow extends Shrimp {
     override void OnWasAttached(EntityAI parent, int slot_id) {
 		super.OnWasAttached(parent, slot_id);
 		
@@ -67,7 +82,7 @@ class geb_FatHeadMinnow extends Edible_Base {
 	}
 }
 
-class geb_AmericanBullFrog extends Edible_Base {
+class geb_AmericanBullFrog extends Shrimp {
     override void OnWasAttached(EntityAI parent, int slot_id) {
 		super.OnWasAttached(parent, slot_id);
 		
@@ -87,7 +102,7 @@ class geb_AmericanBullFrog extends Edible_Base {
 	}
 }
 
-class geb_RedSalamander extends Edible_Base {
+class geb_RedSalamander extends Shrimp {
     override void OnWasAttached(EntityAI parent, int slot_id) {
 		super.OnWasAttached(parent, slot_id);
 
@@ -213,42 +228,31 @@ modded class Edible_Base {
 // modded class ages every live bait in the mod plus vanilla worms. The
 // artificial geb_RubberWorm also extends Worm and is explicitly exempted.
 //
-// Aging drains item health in steps; at Ruined the bait is dead. It pauses
-// while the bait sits in a worm/bug container (its natural habitat) or a
-// cooler (refrigerated bait keeps, like real anglers do with worms). Tackle
-// boxes do NOT pause it -- the dedicated containers are the point.
-//   BAIT_LIFETIME_SECS   = real seconds from pristine to ruined when exposed
-//   BAIT_AGING_TICK_SECS = seconds between aging steps
+// Aging drains item health; at Ruined the bait is dead. It pauses while the
+// bait sits in a worm/bug container (its natural habitat) or a cooler
+// (refrigerated bait keeps, like real anglers do with worms). Tackle boxes do
+// NOT pause it -- the dedicated containers are the point.
+//
+// It runs on the Central Economy's periodic item update (OnCEUpdate), the
+// same clock vanilla uses for food rot and item temperature, rather than a
+// timer per worm: hundreds of loose worms meant hundreds of timers ticking
+// every frame, and dead ones kept ticking. The update hands over the seconds
+// since the item's last one, so the rate doesn't depend on how often it runs.
+//   BAIT_LIFETIME_SECS = real seconds from pristine to ruined when exposed
 modded class Worm {
-	protected const float BAIT_LIFETIME_SECS   = 5400.0;  // 90 minutes
-	protected const float BAIT_AGING_TICK_SECS = 300.0;   // 5 minutes
+	protected const float BAIT_LIFETIME_SECS = 5400.0;  // 90 minutes
 
-	protected ref Timer m_GebAgingTimer;
-
-	override void EEInit() {
-		super.EEInit();
-		if (!g_Game.IsServer())
+	override void OnCEUpdate() {
+		super.OnCEUpdate();
+		if (!g_Game.IsServer() || IsRuined())
 			return;
 		// Artificial lure: never dies.
 		if (IsKindOf("geb_RubberWorm"))
 			return;
-		m_GebAgingTimer = new Timer(CALL_CATEGORY_SYSTEM);
-		m_GebAgingTimer.Run(BAIT_AGING_TICK_SECS, this, "OnGebBaitAgingTick", null, true);
-	}
-
-	override void EEDelete(EntityAI parent) {
-		super.EEDelete(parent);
-		if (m_GebAgingTimer)
-			m_GebAgingTimer.Stop();
-	}
-
-	void OnGebBaitAgingTick() {
-		if (IsRuined())
-			return;
-		if (GebsfishIsBaitPreserved())
+		if (m_ElapsedSinceLastUpdate <= 0 || GebsfishIsBaitPreserved())
 			return;
 
-		float step = GetMaxHealth("", "") * (BAIT_AGING_TICK_SECS / BAIT_LIFETIME_SECS);
+		float step = GetMaxHealth("", "") * (m_ElapsedSinceLastUpdate / BAIT_LIFETIME_SECS);
 		DecreaseHealth("", "", step);
 	}
 

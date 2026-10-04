@@ -14,7 +14,7 @@ class CfgPatches {
 			"JM_CF_Scripts",  // Required for GetRPCManager()
 			"DZ_Scripts",
 			"DZ_Data",
-            "DZ_Vehicles",
+            "DZ_Vehicles_Water",  // Boat_01 (there is no "DZ_Vehicles" patch)
             "DZ_Sounds_Effects",
 			"DZ_Weapons_Melee"
 		};
@@ -26,14 +26,14 @@ class CfgMods {
 		picture = "gebsfish\data\logo.paa";					// picture in expanded description
 		logoSmall = "gebsfish\data\logo.paa";				// icon next to mod name when description is not expanded
 		logo = "gebsfish\data\logo.paa";					// logo below game menu
-		logoHover = "gebsfish\data\logo_hover.paa";			// logo hovered
-		overview = "DayZ Fish Expansion";
+		logoOver = "gebsfish\data\logo_hover.paa";			// logo hovered (CfgMods reads logoOver, as mod.cpp does)
+		overview = "DayZ Fish Expansion";  // keep in step with mod.cpp's overview
 		action="";
 		name="gebsfish";
 		creditsJson = "gebsfish/Scripts/Credits.json";
 		author="Geb";
 		authorID="0";
-		version="3.3.2";
+		version="3.3.3";
 		extra=0;
 		type="mod";
 		dependencies[]= {

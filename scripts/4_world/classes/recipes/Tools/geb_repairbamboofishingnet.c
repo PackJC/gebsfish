@@ -15,10 +15,10 @@ class RepairBambooFishingNet : RecipeBase {
 		m_AnimationLength = 2.5;
 		m_Specialty = -0.02;
 
-		// ---- ingredient 0: the Netting (one piece, destroyed on use) ----
+		// ---- ingredient 0: the Netting (one piece of the stack used up) ----
 		m_MinDamageIngredient[0] = -1;
 		m_MaxDamageIngredient[0] = 3;     // can use up to badly-damaged netting
-		m_MinQuantityIngredient[0] = -1;
+		m_MinQuantityIngredient[0] = 1;
 		m_MaxQuantityIngredient[0] = -1;
 
 		// ---- ingredient 1: the bamboo fishing net being repaired ----
@@ -33,8 +33,8 @@ class RepairBambooFishingNet : RecipeBase {
 		InsertIngredient(0, "Netting");
 		m_IngredientAddHealth[0] = 0;
 		m_IngredientSetHealth[0] = -1;
-		m_IngredientAddQuantity[0] = -1;
-		m_IngredientDestroy[0] = true;    // one netting consumed per repair
+		m_IngredientAddQuantity[0] = -1;  // one netting consumed per repair
+		m_IngredientDestroy[0] = false;   // true would delete the whole stack
 		m_IngredientUseSoftSkills[0] = false;
 
 		InsertIngredient(1, "geb_BambooFishingNet", DayZPlayerConstants.CMD_ACTIONFB_CLEANING_WEAPON, true);
