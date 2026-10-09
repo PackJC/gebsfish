@@ -49,20 +49,20 @@ class CfgMods {
 			class gameScriptModule {
 				value="";
 				files[]= {
-					"gebsfish\scripts\3_Game"
+					"gebsfish/scripts/3_Game"
 				};
 			};
 			class worldScriptModule {
 				value="";
 				files[]= {
-					"gebsfish\scripts\4_world"
+					"gebsfish/scripts/4_world"
 				};
 			};
 			class missionScriptModule {
 				value = "";
 				files[] =
 				{
-					"gebsfish\scripts\5_mission"
+					"gebsfish/scripts/5_mission"
 				};
 			};
 		};
