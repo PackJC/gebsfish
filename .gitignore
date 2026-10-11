@@ -13,3 +13,8 @@ __pycache__/
 # docs/, so fish renders, item renders and anything added later need to
 # be tracked or they 404 on the site.
 !docs/**/*.webp
+# Local only, never on GitHub: the Python build and render tools, and the
+# old Workbench project. Anchored to the top folder: data/tools and the
+# script folders called Tools are mod content and stay tracked.
+/tools/
+/Workbench/
