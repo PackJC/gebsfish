@@ -8,7 +8,7 @@ PixelShaderID = "Super";
 VertexShaderID = "Super";
 class Stage1
 {
-	texture="gebsfish\data\tackle\yellowcrank_normals.paa";
+    texture="gebsfish\data\tackle\yellowcrank_normals.paa";
     uvSource = "tex";
     class uvTransform
     {
@@ -56,7 +56,7 @@ class Stage4
 };
 class Stage5
 {
-	texture="gebsfish\data\tackle\yellowcrank_smdi.paa";
+    texture="gebsfish\data\tackle\yellowcrank_smdi.paa";
     uvSource = "tex";
     class uvTransform
     {
@@ -90,4 +90,3 @@ class Stage7
         pos[] = {0, 0, 0};
     };
 };
-

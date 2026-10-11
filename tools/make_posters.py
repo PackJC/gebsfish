@@ -3,8 +3,8 @@
 #   python tools/make_posters.py [renders_dir] [out_dir] [gear_dir]
 #
 # Defaults: fish_renders_species, fish_posters and gear_renders on your
-# Desktop. gear_dir holds the item renders (lures, gear, boats, and the bugs
-# that join the bait sheet).
+# Desktop. gear_dir holds the item renders, one per tools/item_manifest.json
+# entry (lures, gear, clothes, boats, and the bugs that join the bait sheet).
 #
 # Groups every rendered species by habitat and body plan, lays each group out
 # over a procedurally generated underwater or seabed backdrop, and captions
@@ -63,6 +63,7 @@ def load_font(path, size):
     except TypeError:
         return ImageFont.load_default()
 
+
 W, H = 1920, 1080
 HEAD, FOOT, PAD = 132, 46, 26
 
@@ -117,10 +118,29 @@ THEMES["lures"] = {
     "backdrop": "slate", "deep": (14, 20, 26), "shallow": (62, 66, 76),
     "accent": (198, 214, 236), "seed": 131, "noun": "items",
 }
+THEMES["clothes"] = {
+    "title": "FISHING CLOTHES", "subtitle": "Hats, shirts, raincoats, wellies and gloves",
+    "backdrop": "slate", "deep": (18, 22, 30), "shallow": (64, 72, 86),
+    "accent": (214, 206, 236), "seed": 151, "noun": "items",
+}
 
 # Terminal tackle that goes on the line, split out from the containers and
-# tools so each sheet reads as one kind of thing.
-LURE_KEYS = ("jig", "spinner", "spoon", "crank", "popper", "squarebill", "lure")
+# tools so each sheet reads as one kind of thing. The rubber worm is a soft
+# plastic lure, though its name says bait.
+LURE_KEYS = ("jig", "spinner", "spoon", "crank", "popper", "squarebill", "lure", "rubberworm")
+
+# The clothes get a sheet of their own, one row per kind (ten colours each),
+# matched on the class name (geb_RedFishHat, geb_RedFishShirt...).
+CLOTHES_KINDS = ("fishhat", "fishshirt", "fishraincoat", "fishwellies", "fishgloves")
+
+
+def clothes_kind(classname):
+    low = classname.lower()
+    for i, key in enumerate(CLOTHES_KINDS):
+        if key in low:
+            return i
+    return None
+
 
 # Each lure family gets its own column on the tackle sheet.
 LURE_FAMILIES = ("jig", "spinner", "spoon", "crank", "popper", "squarebill")
@@ -132,6 +152,7 @@ def lure_family(label):
         if key in low:
             return i
     return len(LURE_FAMILIES)
+
 
 def gear_rank(label):
     """Keep like with like on the gear sheet instead of alphabetising coolers,
@@ -152,7 +173,12 @@ def gear_rank(label):
         return 5
     if any(k in low for k in ("net", "repair", "line")):
         return 6
+    if "rod" in low:
+        return 7
+    if "mount" in low:
+        return 8
     return 9
+
 
 # All five jon boats share the in-game name "Jon Boat", so the boats sheet
 # captions them by colour instead.
@@ -580,7 +606,6 @@ def build_sheet(entries, theme, out_path, groups=None, columns=False):
         else:
             groups = None
     if not groups:
-
         cols, rows, cell_w, cell_h, label_h = choose_grid(len(entries))
 
     count = len(entries)
@@ -704,7 +729,7 @@ def main():
     if os.path.isfile(item_manifest):
         with open(item_manifest, encoding="utf-8") as fh:
             items = json.load(fh)
-        gear, boats, lures = [], [], []
+        gear, boats, lures, clothes = [], [], [], []
         for e in items:
             name = e["name"]
             path = os.path.join(gear_dir, name + ".png")
@@ -717,6 +742,10 @@ def main():
             if name in BAIT_EXTRAS:
                 continue          # bugs belong on the bait sheet, not in gear
             label = names.get(name) or prettify(name)
+            kind = clothes_kind(name)
+            if kind is not None:
+                clothes.append((kind, label, path))
+                continue
             target = lures if any(k in low or k in label.lower() for k in LURE_KEYS) else gear
             target.append((label, path))
 
@@ -725,6 +754,12 @@ def main():
             ranked = sorted((gear_rank(l), l, p) for l, p in gear)
             gear_banded = [[(l, p) for r, l, p in ranked if r == rank]
                            for rank in sorted({r for r, _, _ in ranked})]
+
+        # One row per kind of clothing; each row runs through the colours in
+        # the same order, so a colour lines up down the sheet.
+        clothes_banded = [[(l, p) for k, l, p in sorted(clothes) if k == kind]
+                          for kind in sorted({k for k, _, _ in clothes})]
+        clothes = [(l, p) for _, l, p in clothes]
 
         lure_cols = None
         if lures:
@@ -735,6 +770,7 @@ def main():
         for entries, theme, fname, banded, as_cols in (
                 (lures, "lures", "lures.jpg", lure_cols, True),
                 (gear, "gear", "gear.jpg", gear_banded, False),
+                (clothes, "clothes", "clothes.jpg", clothes_banded, False),
                 (boats, "boats", "boats.jpg", None, False)):
             if entries:
                 build_sheet(sorted(entries), THEMES[theme],

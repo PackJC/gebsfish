@@ -21,8 +21,14 @@
 class GebFishingSnapshot {
 	// How far the client's reading may sit from the server's before the
 	// server uses its own instead. Loose enough for network lag at high time
-	// acceleration; tight enough that a modified client can't claim a storm
-	// or a different time of day. The rain tolerance covers snowfall too.
+	// acceleration, and the rain tolerance covers snowfall too. What it
+	// guarantees: a modified client can't claim a storm on a dry day or dawn
+	// at noon. What it allows: within these margins a client can land on the
+	// better side of a boundary (dawn from 05:01 while the server reads 04:30,
+	// the storm bonus at rain 0.71 against the server's 0.65). Snapping to the
+	// server's reading whenever the two straddle a boundary would close that,
+	// but honest clients lag the server and straddle every dawn and dusk, so
+	// their casts there would desync; the margin is the cheaper side.
 	protected const int MAX_CLOCK_DRIFT_MINUTES = 60;
 	protected const float MAX_RAIN_DRIFT = 0.1;
 

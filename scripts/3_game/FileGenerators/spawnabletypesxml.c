@@ -1,7 +1,5 @@
 class gebsfishSpawnableTypes {
-    private const string DIRECTORY_PATH = "$profile:Gebs/mpmissions/";
     private const string FILE_PATH = "$profile:Gebs/mpmissions/gebsfish-spawnabletypes.xml";
-    private const string VERSION_PREFIX = "<!-- Version: ";
 
     void GenerateSpawnableTypesXML() {
         // Only generate this on the server.
@@ -11,12 +9,12 @@ class gebsfishSpawnableTypes {
         string version = VERSION_GEBSFISH;
 
         // Skip regeneration if the current file already matches the mod version.
-        if (IsCurrentVersion(FILE_PATH, version)) {
+        if (GebXmlFiles.IsCurrentVersion(FILE_PATH, version)) {
             GebsfishLogger.Info("Spawnable types XML already at version " + version + ". Skipping regeneration.", "SpawnableTypes");
             return;
         }
 
-        EnsureDirectoryExists();
+        GebXmlFiles.EnsureDirectoryExists();
 
         FileHandle file = OpenFile(FILE_PATH, FileMode.WRITE);
         if (!file) {
@@ -28,58 +26,16 @@ class gebsfishSpawnableTypes {
         WriteTackleSection(file);
         WriteClothingSection(file);
         WriteContainerSection(file);
+        WriteVehicleSection(file);
         WriteFooter(file);
 
         CloseFile(file);
         GebsfishLogger.Info("gebsfish-spawnabletypes.xml successfully generated in $profile:Gebs/mpmissions/.", "SpawnableTypes");
     }
 
-    protected bool IsCurrentVersion(string filePath, string expectedVersion) {
-        if (!FileExist(filePath))
-            return false;
-
-        FileHandle readFile = OpenFile(filePath, FileMode.READ);
-        if (!readFile)
-            return false;
-
-        string line;
-        string existingVersion = "";
-        int lineCount = 0;
-
-        // Read the first few lines so the version comment can be found even if the XML declaration is first.
-        while (lineCount < 5 && FGets(readFile, line) > 0) {
-            existingVersion = ExtractVersionFromLine(line);
-            if (existingVersion != string.Empty)
-                break;
-
-            lineCount++;
-        }
-
-        CloseFile(readFile);
-        return existingVersion == expectedVersion;
-    }
-
-    protected string ExtractVersionFromLine(string line) {
-        int start = line.IndexOf(VERSION_PREFIX);
-        if (start == -1)
-            return string.Empty;
-
-        string tail = line.Substring(start, line.Length() - start);
-        int end = tail.IndexOf("-->");
-        if (end == -1)
-            return string.Empty;
-
-        return tail.Substring(VERSION_PREFIX.Length(), end - VERSION_PREFIX.Length()).Trim();
-    }
-
-    protected void EnsureDirectoryExists() {
-        MakeDirectory("$profile:Gebs");
-        MakeDirectory(DIRECTORY_PATH);
-    }
-
     protected void WriteHeader(FileHandle file, string version) {
         FPrintln(file, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        FPrintln(file, "<!-- Version: " + version + " -->");
+        GebXmlFiles.WriteVersionLine(file, version);
         FPrintln(file, "<spawnabletypes>");
     }
 
@@ -92,8 +48,7 @@ class gebsfishSpawnableTypes {
             "geb_OldBlueTackle", "geb_OldGreenTackle", "geb_OldPurpleTackle", "geb_OldRedTackle",
             "geb_RedTackle", "geb_PurpleTackle", "geb_PinkTackle", "geb_OrangeTackle",
             "geb_LimeTackle", "geb_LightBlueTackle", "geb_GreenTackle", "geb_BrownTackle",
-            "geb_CamoTackle", "geb_BlueTackle", "geb_FunPurpleTackle", "geb_FunYellowTackle",
-            "geb_FunGreenTackle", "geb_FunRedTackle", "geb_SmallTackle"
+            "geb_CamoTackle", "geb_BlueTackle", "geb_YellowTackle", "geb_SmallTackle"
         };
 
         TStringArray lures = {
@@ -112,19 +67,20 @@ class gebsfishSpawnableTypes {
     }
 
     protected void WriteClothingSection(FileHandle file) {
-        ref TStringArray clothingItems = {"geb_GreenFishShirt", "geb_BlueFishShirt", "geb_PurpleFishShirt", "geb_RedFishShirt"};
+        // Shirts may carry a fish knife, a fishing hat and fishing gloves; raincoats and wellies spawn empty.
+        ref TStringArray clothingItems = {"geb_GreenFishShirt", "geb_BlueFishShirt", "geb_PurpleFishShirt", "geb_RedFishShirt", "geb_OrangeFishShirt", "geb_YellowFishShirt", "geb_BrownFishShirt", "geb_LightBlueFishShirt", "geb_LimeFishShirt", "geb_PinkFishShirt"};
 
-        TStringArray knives = {"geb_BlueFishKnife", "geb_OrangeFishKnife", "geb_GreenFishKnife", "geb_YellowFishKnife", "geb_RedFishKnife", "geb_PurpleFishKnife"};
+        TStringArray knives = {"geb_BlueFishKnife", "geb_OrangeFishKnife", "geb_GreenFishKnife", "geb_YellowFishKnife", "geb_RedFishKnife", "geb_PurpleFishKnife", "geb_LimeFishKnife", "geb_LightBlueFishKnife", "geb_CamoFishKnife", "geb_BrownFishKnife", "geb_PinkFishKnife"};
         ref array<ref XmlCargoItem> knifeCargo = new array<ref XmlCargoItem>;
-        InsertCargoBatch(knifeCargo, knives, 0.16);
+        InsertCargoBatch(knifeCargo, knives, 0.09);
 
-        TStringArray hats = {"geb_BlueFishHat", "geb_GreenFishHat", "geb_PurpleFishHat", "geb_RedFishHat"};
+        TStringArray hats = {"geb_BlueFishHat", "geb_GreenFishHat", "geb_PurpleFishHat", "geb_RedFishHat", "geb_OrangeFishHat", "geb_YellowFishHat", "geb_BrownFishHat", "geb_LightBlueFishHat", "geb_LimeFishHat", "geb_PinkFishHat"};
         ref array<ref XmlCargoItem> hatCargo = new array<ref XmlCargoItem>;
-        InsertCargoBatch(hatCargo, hats, 0.25);
+        InsertCargoBatch(hatCargo, hats, 0.10);
 
-        TStringArray gloves = {"geb_BlueFishGloves", "geb_OrangeFishGloves"};
+        TStringArray gloves = {"geb_BlueFishGloves", "geb_OrangeFishGloves", "geb_YellowFishGloves", "geb_RedFishGloves", "geb_GreenFishGloves", "geb_PurpleFishGloves", "geb_BrownFishGloves", "geb_LightBlueFishGloves", "geb_LimeFishGloves", "geb_PinkFishGloves"};
         ref array<ref XmlCargoItem> gloveCargo = new array<ref XmlCargoItem>;
-        InsertCargoBatch(gloveCargo, gloves, 0.50);
+        InsertCargoBatch(gloveCargo, gloves, 0.10);
 
         FPrintln(file, "    <!-- Clothes -->");
         foreach (string clothing : clothingItems)
@@ -156,6 +112,20 @@ class gebsfishSpawnableTypes {
         minnowCargo.Insert(new XmlCargoItem("geb_AmericanBullFrog", 1.00));
         minnowCargo.Insert(new XmlCargoItem("geb_RedSalamander", 1.00));
         WriteTypeWithRepeatedCargo(file, "geb_MinnowBucket", 12, 0.20, minnowCargo);
+    }
+
+    // The jon boats come with a spark plug one time in ten, as vanilla's
+    // Boat_01 boats do.
+    protected void WriteVehicleSection(FileHandle file) {
+        TStringArray boats = GebXmlFiles.s_JonBoats;
+        FPrintln(file, "    <!-- Vehicles -->");
+        foreach (string boat : boats) {
+            FPrintln(file, "    <type name=\"" + boat + "\">");
+            FPrintln(file, "        <attachments chance=\"0.10\">");
+            FPrintln(file, "            <item name=\"SparkPlug\" chance=\"1.0\" />");
+            FPrintln(file, "        </attachments>");
+            FPrintln(file, "    </type>");
+        }
     }
 
     protected void WriteTypeWithSingleCargo(FileHandle file, string typeName, float cargoChance, array<ref XmlCargoItem> items) {

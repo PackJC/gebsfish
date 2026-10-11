@@ -9,10 +9,12 @@
 # Each species gets a motion profile suited to its anatomy -- a spine
 # undulation is right for a trout and ridiculous on a clam:
 #
-#   swim   fish and the salamander: travelling spine wave
-#   crawl  crustaceans and the frog: walking bob with a slight sway
-#   drift  shells, snails, starfish: nearly static, very slow turn
-#   pulse  jellyfish: contracting bell
+#   swim        fish and the salamander: travelling spine wave
+#   crustacean  crayfish, lobsters, crabs: the tail tucks and releases, walking bob
+#   crawl       the frog and the shrimp: walking bob with a slight sway
+#   drift       clams, mussels, snails: nearly static, very slow turn
+#   curl        starfish: the arms lift and settle, very slow turn
+#   pulse       jellyfish: contracting bell
 #
 # No jaw animation -- these are swim cycles only.
 
@@ -112,10 +114,17 @@ def main():
                "--src", FISH_DIR, "--profile", profile, "--res", res]
         if e.get("texture"):
             cmd += ["--texture", local(e["texture"])]
+        # The species' own material: several species share one model, and
+        # without it they all render with the base species' material.
+        if e.get("material"):
+            cmd += ["--material", local(e["material"])]
         if e.get("view"):
             cmd += ["--view", e["view"]]
-        if e.get("flip_head"):
-            cmd += ["--flip-head"]
+        # Orientation fixes, as the still renderer applies them. flip_h is
+        # left out: rig_swim turns every head the same way itself.
+        for key, flag in (("flip_head", "--flip-head"), ("flip_v", "--flip-v"), ("roll", "--roll")):
+            if e.get(key):
+                cmd += [flag]
         if profile == "swim":
             # Eel-like bodies read better with a stronger, longer wave.
             if "salamander" in name.lower():
@@ -126,7 +135,7 @@ def main():
             # Oblique view so the arms lifting is actually visible.
             cmd += ["--azimuth", "42", "--elevation", "38"]
 
-        r = subprocess.run(cmd, capture_output=True, text=True)
+        r = subprocess.run(cmd, capture_output=True, text=True, errors="replace")
         frames = os.path.join(out_root, "frames_" + name)
         if r.returncode != 0 or not os.path.isdir(frames):
             failed.append((name, "render rc=%s" % r.returncode))
@@ -135,7 +144,7 @@ def main():
 
         gif = os.path.join(out_root, name + "_swim.gif")
         g = subprocess.run([sys.executable, os.path.join(TOOLS, "make_gif.py"),
-                            frames, gif, "60"], capture_output=True, text=True)
+                            frames, gif, "60"], capture_output=True, text=True, errors="replace")
         if g.returncode != 0:
             failed.append((name, "gif"))
             print("   GIF FAILED: %s" % (g.stderr or "")[-200:], flush=True)

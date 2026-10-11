@@ -8,11 +8,8 @@ enum GebsfishLogLevel {
 class GebsfishLogger {
     private static const string LOG_DIR = "$profile:Gebs/logs";
     // Session logs older than this are deleted on startup (see PruneOldLogs).
-    // A constant rather than a config field for now -- say the word and it moves
-    // into GeneralSettings alongside DebugLogs.
     private static const int LOG_RETENTION_DAYS = 3;
     private static string m_SessionFilePath = "";
-    private static GebsfishLogLevel m_MinLevel = GebsfishLogLevel.DEBUG;
     private static bool m_Initialized = false;
     // No session-lifetime handle on purpose. Enforce exposes no flush, so
     // CloseFile is the only thing that commits bytes to disk: opening and
@@ -66,6 +63,18 @@ class GebsfishLogger {
     // so the date is right there. Anything that doesn't parse as that format is
     // left alone -- this only ever deletes files it positively recognises as its
     // own, never "everything in the folder".
+    // A directory listing can't tell a folder from a file by its attribute:
+    // the script enum makes FileAttr.DIRECTORY its first member (0), so
+    // "attr & FileAttr.DIRECTORY" is always 0. A folder is what can't be opened
+    // for reading as a file.
+    static bool IsRegularFile(string path) {
+        FileHandle file = OpenFile(path, FileMode.READ);
+        if (!file)
+            return false;
+        CloseFile(file);
+        return true;
+    }
+
     private static void PruneOldLogs() {
         int year, month, day;
         GetYearMonthDayUTC(year, month, day);   // filenames are UTC, so compare in UTC
@@ -82,7 +91,7 @@ class GebsfishLogger {
         array<string> doomed = new array<string>();
         bool more = true;
         while (more) {
-            if (fileName != "" && (attr & FileAttr.DIRECTORY) == 0) {
+            if (fileName != "" && IsRegularFile(LOG_DIR + "/" + fileName)) {
                 int fileDay = ParseLogDayNumber(fileName);
                 if (fileDay > 0 && (today - fileDay) >= LOG_RETENTION_DAYS)
                     doomed.Insert(fileName);
@@ -209,9 +218,6 @@ class GebsfishLogger {
     }
 
     static void Log(GebsfishLogLevel level, string message, string category = "") {
-        if (level < m_MinLevel)
-            return;
-
         // Warnings and errors also go to the RPT, where admins look first --
         // and where they still land if the Gebs log file can't be written.
         if (level >= GebsfishLogLevel.WARN) {
@@ -239,12 +245,6 @@ class GebsfishLogger {
 
         FPrintln(file, line);
         CloseFile(file);
-    }
-
-    // Optional helper in case you ever want to force a new log file per session / reload.
-    static void Reset() {
-        m_SessionFilePath = "";
-        m_Initialized = false;
     }
 
     private static string GetExecutionSide() {

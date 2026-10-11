@@ -79,3 +79,26 @@ class GebWeightedPick {
         return -1;
     }
 }
+
+// One find-chance roll (the net's, the spear's, a dig's): true on a hit. At a
+// chance of 1 it always hits without drawing (roll stays -1, for the logs).
+static bool GebRollChance(float chance, out float roll) {
+    roll = -1;
+    if (chance >= 1.0)
+        return true;
+    roll = Math.RandomFloat01();
+    return roll < chance;
+}
+
+// A health level (0 pristine .. 4 ruined) in [minLevel, maxLevel], both ends
+// included, for the config's MinHealthLevel / MaxHealthLevel pairs (treasure,
+// hooks found in fish, junk). Clamped so a typo'd config can't push
+// SetHealthLevel out of range, and inversion-safe so Min > Max degrades to
+// "always Min" instead of breaking.
+static int GebRollHealthLevel(int minLevel, int maxLevel) {
+    if (minLevel < 0) minLevel = 0;
+    if (minLevel > 4) minLevel = 4;
+    if (maxLevel < minLevel) maxLevel = minLevel;
+    if (maxLevel > 4) maxLevel = 4;
+    return Math.RandomInt(minLevel, maxLevel + 1);
+}

@@ -8,235 +8,233 @@
 // on both sides. All world state therefore comes from m_GebSnapshot, read
 // once at cast start (see GebFishingSnapshot) -- never from the live world.
 modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
-	// Seasonal water-temperature swing either side of the map's base water
-	// temperature: warmest around 5 August (day 217), coldest early February.
-	// Lakes and rivers swing more than the sea.
-	protected const float WATER_SWING_FRESH = 6.0;
-	protected const float WATER_SWING_SEA = 3.0;
-	protected const float WATER_PEAK_DAY = 217.0;
+    // Seasonal water-temperature swing either side of the map's base water
+    // temperature: warmest around 5 August (day 217), coldest early February.
+    // Lakes and rivers swing more than the sea.
+    protected const float WATER_SWING_FRESH = 6.0;
+    protected const float WATER_SWING_SEA = 3.0;
+    protected const float WATER_PEAK_DAY = 217.0;
 
-	// Handed over by ActionFishingNew.ComposeLocalContextData while it builds
-	// this context: vanilla constructs it with a fixed Param2, so there is no
-	// parameter slot for the snapshot.
-	protected static ref GebFishingSnapshot s_GebPendingSnapshot;
-	// The world inputs this cast uses, identical on client and server.
-	protected ref GebFishingSnapshot m_GebSnapshot;
-	protected float m_GebWaterTemp;
-	protected bool m_GebWaterTempReady;
+    // Handed over by ActionFishingNew.ComposeLocalContextData while it builds
+    // this context: vanilla constructs it with a fixed Param2, so there is no
+    // parameter slot for the snapshot.
+    protected static ref GebFishingSnapshot s_GebPendingSnapshot;
+    // The world inputs this cast uses, identical on client and server.
+    protected ref GebFishingSnapshot m_GebSnapshot;
+    protected float m_GebWaterTemp;
+    protected bool m_GebWaterTempReady;
 
-	static void GebSetPendingSnapshot(GebFishingSnapshot snapshot) {
-		s_GebPendingSnapshot = snapshot;
-	}
+    static void GebSetPendingSnapshot(GebFishingSnapshot snapshot) {
+        s_GebPendingSnapshot = snapshot;
+    }
 
     override void Init(Param par) {
-		// Before super: vanilla Init already runs the item-data pass that
-		// reads the hour and weather. A context built anywhere other than the
-		// fishing action reads the local world instead.
-		m_GebSnapshot = s_GebPendingSnapshot;
-		if (!m_GebSnapshot)
-			m_GebSnapshot = GebFishingSnapshot.CaptureLocal();
-		if (GetDebugLogLevel() >= 1)
-			GebsfishLogger.Debug("Cast conditions: " + m_GebSnapshot.Describe(), "Init");
+        // Before super: vanilla Init already runs the item-data pass that
+        // reads the hour and weather. A context built anywhere other than the
+        // fishing action reads the local world instead.
+        m_GebSnapshot = s_GebPendingSnapshot;
+        if (!m_GebSnapshot)
+            m_GebSnapshot = GebFishingSnapshot.CaptureLocal();
+        if (GetDebugLogLevel() >= 1)
+            GebsfishLogger.Debug("Cast conditions: " + m_GebSnapshot.Describe(), "Init");
 
-		super.Init(par);
-		// Vanilla Init() runs InitCatchingItemData BEFORE SetupProbabilityArray,
-		// so the bite-speed aggregate (which reads m_ProbabilityArray) is a no-op
-		// during construction. Re-apply it here, now that the pool exists, so the
-		// FIRST signal cycle of the cast is scaled too -- not just cycles 2+ via
-		// UpdateCatchingItemData. No compounding: the next InitCatchingItemData
-		// resets the cycle targets to base (ClearCatchingItemData) before this
-		// rescales them.
-		ApplyBiteSpeedScaling();
-	}
+        super.Init(par);
+        // Vanilla Init() runs InitCatchingItemData BEFORE SetupProbabilityArray,
+        // so the bite-speed aggregate (which reads m_ProbabilityArray) is a no-op
+        // during construction. Re-apply it here, now that the pool exists, so the
+        // FIRST signal cycle of the cast is scaled too -- not just cycles 2+ via
+        // UpdateCatchingItemData. No compounding: the next InitCatchingItemData
+        // resets the cycle targets to base (ClearCatchingItemData) before this
+        // rescales them.
+        ApplyBiteSpeedScaling();
+    }
 
-	override void InitCatchingItemData() {
-		super.InitCatchingItemData();
-		ApplyBiteSpeedScaling();
-	}
+    override void InitCatchingItemData() {
+        super.InitCatchingItemData();
+        ApplyBiteSpeedScaling();
+    }
 
-	// Stretches the signal-cycle targets inversely to the aggregated BiteSpeed of
-	// the current pool (lower aggregate -> longer wait). No-op (biteSpeed=1.0)
-	// when the buff is disabled, the pool is empty, or all weights resolve to
-	// zero. Safe to call repeatedly: super.InitCatchingItemData resets the cycle
-	// targets to base each cycle, so this never compounds.
-	protected void ApplyBiteSpeedScaling() {
-		float cycleTargetBefore = m_SignalCycleTarget;
-		float cycleEndBefore = m_SignalCycleEndTarget;
-		float biteSpeed = ComputeAggregateBiteSpeed();
-		if (biteSpeed != 1.0) {
-			m_SignalCycleTarget = m_SignalCycleTarget / biteSpeed;
-			m_SignalCycleEndTarget = m_SignalCycleEndTarget / biteSpeed;
-		}
+    // Stretches the signal-cycle targets inversely to the aggregated BiteSpeed of
+    // the current pool (lower aggregate -> longer wait). No-op (biteSpeed=1.0)
+    // when the buff is disabled, the pool is empty, or all weights resolve to
+    // zero. Safe to call repeatedly: super.InitCatchingItemData resets the cycle
+    // targets to base each cycle, so this never compounds.
+    protected void ApplyBiteSpeedScaling() {
+        float cycleTargetBefore = m_SignalCycleTarget;
+        float cycleEndBefore = m_SignalCycleEndTarget;
+        float biteSpeed = ComputeAggregateBiteSpeed();
+        if (biteSpeed != 1.0) {
+            m_SignalCycleTarget = m_SignalCycleTarget / biteSpeed;
+            m_SignalCycleEndTarget = m_SignalCycleEndTarget / biteSpeed;
+        }
 
-		if (GetDebugLogLevel() >= 1) {
-			GebsfishLogger.Debug("Cycle scaled by BiteSpeed=" + biteSpeed + ": cycleTarget " + cycleTargetBefore + "->" + m_SignalCycleTarget + ", cycleEnd " + cycleEndBefore + "->" + m_SignalCycleEndTarget, "InitCatchingItemData");
-		}
+        if (GetDebugLogLevel() >= 1) {
+            GebsfishLogger.Debug("Cycle scaled by BiteSpeed=" + biteSpeed + ": cycleTarget " + cycleTargetBefore + "->" + m_SignalCycleTarget + ", cycleEnd " + cycleEndBefore + "->" + m_SignalCycleEndTarget, "InitCatchingItemData");
+        }
 
-		if (GetDebugLogLevel() == ELEVATED_DEBUG) {
-			GebsfishLogger.Debug("---InitCatchingItemData---","InitCatchingItemData");
-			GebsfishLogger.Debug("aggregate bite speed: " + biteSpeed,"InitCatchingItemData");
-			GebsfishLogger.Debug("m_SignalCycleTarget (adjusted): " + m_SignalCycleTarget,"InitCatchingItemData");
-			GebsfishLogger.Debug("m_SignalCycleTargetAdjustment: " + m_SignalCycleTargetAdjustment,"InitCatchingItemData");
-			GebsfishLogger.Debug("m_SignalTargetProbability: " + m_SignalTargetProbability,"InitCatchingItemData");
-			GebsfishLogger.Debug("m_SignalCycleEndTarget (adjusted): " + m_SignalCycleEndTarget,"InitCatchingItemData");
-			GebsfishLogger.Debug("m_SignalCycleTargetEndAdjustment: " + m_SignalCycleTargetEndAdjustment,"InitCatchingItemData");
-			GebsfishLogger.Debug("m_SignalTargetEndProbability: " + m_SignalTargetEndProbability,"InitCatchingItemData");
-			GebsfishLogger.Debug("m_SignalDurationMin: " + m_SignalDurationMin,"InitCatchingItemData");
-			GebsfishLogger.Debug("m_SignalDurationMax: " + m_SignalDurationMax,"InitCatchingItemData");
-			GebsfishLogger.Debug("m_SignalStartTimeMin: " + m_SignalStartTimeMin,"InitCatchingItemData");
-			GebsfishLogger.Debug("m_SignalStartTimeMax: " + m_SignalStartTimeMax,"InitCatchingItemData");
-		}
-	}
+        if (GetDebugLogLevel() == ELEVATED_DEBUG) {
+            GebsfishLogger.Debug("---InitCatchingItemData---","InitCatchingItemData");
+            GebsfishLogger.Debug("aggregate bite speed: " + biteSpeed,"InitCatchingItemData");
+            GebsfishLogger.Debug("m_SignalCycleTarget (adjusted): " + m_SignalCycleTarget,"InitCatchingItemData");
+            GebsfishLogger.Debug("m_SignalCycleTargetAdjustment: " + m_SignalCycleTargetAdjustment,"InitCatchingItemData");
+            GebsfishLogger.Debug("m_SignalTargetProbability: " + m_SignalTargetProbability,"InitCatchingItemData");
+            GebsfishLogger.Debug("m_SignalCycleEndTarget (adjusted): " + m_SignalCycleEndTarget,"InitCatchingItemData");
+            GebsfishLogger.Debug("m_SignalCycleTargetEndAdjustment: " + m_SignalCycleTargetEndAdjustment,"InitCatchingItemData");
+            GebsfishLogger.Debug("m_SignalTargetEndProbability: " + m_SignalTargetEndProbability,"InitCatchingItemData");
+            GebsfishLogger.Debug("m_SignalDurationMin: " + m_SignalDurationMin,"InitCatchingItemData");
+            GebsfishLogger.Debug("m_SignalDurationMax: " + m_SignalDurationMax,"InitCatchingItemData");
+            GebsfishLogger.Debug("m_SignalStartTimeMin: " + m_SignalStartTimeMin,"InitCatchingItemData");
+            GebsfishLogger.Debug("m_SignalStartTimeMax: " + m_SignalStartTimeMax,"InitCatchingItemData");
+        }
+    }
 
-	// Weighted average of per-fish BiteSpeed[currentHour] across every yield in
-	// the active probability pool. Each fish's contribution is weighted by its
-	// CatchProbability times its current time-of-day weather multiplier, so the
-	// aggregate reflects the fish actually likely to bite right now. Returns
-	// 1.0 (no effect) when the buff is disabled, the pool is empty, or all
-	// weights resolve to zero. Floor of 0.05 prevents an all-zero hour from
-	// freezing the cycle.
-	//
-	// Logging: DebugLogs=1 prints a one-line summary per cast (hour, pool size,
-	// final aggregate, top contributors). DebugLogs=2 (ELEVATED_DEBUG) adds a
-	// per-fish breakdown row showing BiteSpeed, CatchProbability, weather
-	// multiplier, weight, and contribution to the numerator.
-	protected float ComputeAggregateBiteSpeed() {
-		if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
-			return 1.0;
-		// Gate on BiteSpeedEnable (not WeatherCatchBoostEnable) so the three
-		// catch-modifying systems -- weather/time-of-day, moon, and BiteSpeed --
-		// are independently toggleable. The aggregate still uses
-		// GetSpeciesWeatherMultiplier internally for per-fish weighting, and
-		// that helper handles its own enable gating.
-		if (!m_gebsConfig.General.WeatherSettings.BiteSpeedEnable)
-			return 1.0;
-		if (!m_ProbabilityArray || m_ProbabilityArray.Count() == 0)
-			return 1.0;
+    // Weighted average of per-fish BiteSpeed[currentHour] across every yield in
+    // the active probability pool. Each fish's contribution is weighted by its
+    // CatchProbability times its current time-of-day weather multiplier, so the
+    // aggregate reflects the fish actually likely to bite right now. Returns
+    // 1.0 (no effect) when the buff is disabled, the pool is empty, or all
+    // weights resolve to zero. Floor of 0.05 prevents an all-zero hour from
+    // freezing the cycle.
+    //
+    // Logging: DebugLogs=1 prints a one-line summary per cast (hour, pool size,
+    // final aggregate, top contributors). DebugLogs=2 (ELEVATED_DEBUG) adds a
+    // per-fish breakdown row showing BiteSpeed, CatchProbability, weather
+    // multiplier, weight, and contribution to the numerator.
+    protected float ComputeAggregateBiteSpeed() {
+        if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
+            return 1.0;
+        // Gate on BiteSpeedEnable (not WeatherCatchBoostEnable) so the three
+        // catch-modifying systems -- weather/time-of-day, moon, and BiteSpeed --
+        // are independently toggleable. The aggregate still uses
+        // GetSpeciesWeatherMultiplier internally for per-fish weighting, and
+        // that helper handles its own enable gating.
+        if (!m_gebsConfig.General.WeatherSettings.BiteSpeedEnable)
+            return 1.0;
+        if (!m_ProbabilityArray || m_ProbabilityArray.Count() == 0)
+            return 1.0;
 
-		int hour = GetCurrentHour();
-		float numerator = 0.0;
-		float denominator = 0.0;
-		// Enforce's parser dislikes `bool x = (intExpr >= literal);` here, so
-		// cache the level as an int and compare inline at each log site -- same
-		// pattern that already compiles cleanly inside the `if`s above.
-		int debugLevel = GetDebugLogLevel();
+        int hour = GetCurrentHour();
+        float numerator = 0.0;
+        float denominator = 0.0;
+        // Enforce's parser dislikes `bool x = (intExpr >= literal);` here, so
+        // cache the level as an int and compare inline at each log site -- same
+        // pattern that already compiles cleanly inside the `if`s above.
+        int debugLevel = GetDebugLogLevel();
 
-		// Tracks the highest-weighted contributor so the regular debug summary
-		// can name the fish that's dominating the aggregate this cast.
-		string topName = "";
-		float topWeight = 0;
-		float topBiteSpeed = 0;
+        // Tracks the highest-weighted contributor so the regular debug summary
+        // can name the fish that's dominating the aggregate this cast.
+        string topName = "";
+        float topWeight = 0;
+        float topBiteSpeed = 0;
 
-		if (debugLevel == ELEVATED_DEBUG) {
-			GebsfishLogger.Debug("---BiteSpeed aggregate breakdown (hour=" + hour + ")---", "ComputeAggregateBiteSpeed");
-			GebsfishLogger.Debug("species | BiteSpeed[h] | CatchProb | weatherMul | weight | contribution", "ComputeAggregateBiteSpeed");
-		}
+        if (debugLevel == ELEVATED_DEBUG) {
+            GebsfishLogger.Debug("---BiteSpeed aggregate breakdown (hour=" + hour + ")---", "ComputeAggregateBiteSpeed");
+            GebsfishLogger.Debug("species | BiteSpeed[h] | CatchProb | weatherMul | weight | contribution", "ComputeAggregateBiteSpeed");
+        }
 
-		int n = m_ProbabilityArray.Count();
-		int contributors = 0;
-		// The probability array repeats each yield once per weight point, and
-		// the explicit GetCatchProbability() factor in `weight` below already
-		// encodes abundance -- iterating every duplicate would apply it twice
-		// (a prob-25 fish: 25 copies x weight 25 = 625 effective, squaring
-		// the intended ratio). Process each unique yield exactly once.
-		map<int, bool> seenKeys = new map<int, bool>();
-		for (int i = 0; i < n; i++) {
-			int key = m_ProbabilityArray[i];
-			if (seenKeys.Contains(key))
-				continue;
-			seenKeys.Insert(key, true);
-			YieldItemBase y;
-			if (!Class.CastTo(y, m_YieldsMapAll.Get(key)) || !y)
-				continue;
-			GebYieldFishBase gy;
-			if (!Class.CastTo(gy, y) || !gy)
-				continue;
+        int n = m_ProbabilityArray.Count();
+        int contributors = 0;
+        // The probability array repeats each yield once per weight point, and
+        // the explicit GetCatchProbability() factor in `weight` below already
+        // encodes abundance -- iterating every duplicate would apply it twice
+        // (a prob-25 fish: 25 copies x weight 25 = 625 effective, squaring
+        // the intended ratio). Process each unique yield exactly once.
+        map<int, bool> seenKeys = new map<int, bool>();
+        for (int i = 0; i < n; i++) {
+            int key = m_ProbabilityArray[i];
+            if (seenKeys.Contains(key))
+                continue;
+            seenKeys.Insert(key, true);
+            YieldItemBase y;
+            if (!Class.CastTo(y, m_YieldsMapAll.Get(key)) || !y)
+                continue;
+            GebYieldFishBase gy;
+            if (!Class.CastTo(gy, y) || !gy)
+                continue;
 
-			float _aggRainStorm, _aggTimeMul, _aggTempMul;
-			int _aggWindow;
-			float weatherMul = GetSpeciesWeatherMultiplier(gy, _aggRainStorm, _aggWindow, _aggTimeMul, _aggTempMul);
-			float weight = gy.GetCatchProbability() * weatherMul;
-			float biteSpeed = gy.GetBiteSpeedForHour(hour);
+            float weatherMul = GetSpeciesWeatherMultiplier(gy);
+            float weight = gy.GetCatchProbability() * weatherMul;
+            float biteSpeed = gy.GetBiteSpeedForHour(hour);
 
-			if (weight <= 0) {
-				if (debugLevel == ELEVATED_DEBUG) {
-					GebsfishLogger.Debug(gy.GetSpeciesClassname() + " | " + biteSpeed + " | " + gy.GetCatchProbability() + " | " + weatherMul + " | 0 (SKIPPED) | 0", "ComputeAggregateBiteSpeed");
-				}
-				continue;
-			}
+            if (weight <= 0) {
+                if (debugLevel == ELEVATED_DEBUG) {
+                    GebsfishLogger.Debug(gy.GetSpeciesClassname() + " | " + biteSpeed + " | " + gy.GetCatchProbability() + " | " + weatherMul + " | 0 (SKIPPED) | 0", "ComputeAggregateBiteSpeed");
+                }
+                continue;
+            }
 
-			float contribution = biteSpeed * weight;
-			numerator += contribution;
-			denominator += weight;
-			contributors++;
+            float contribution = biteSpeed * weight;
+            numerator += contribution;
+            denominator += weight;
+            contributors++;
 
-			if (weight > topWeight) {
-				topWeight = weight;
-				topName = gy.GetSpeciesClassname();
-				topBiteSpeed = biteSpeed;
-			}
+            if (weight > topWeight) {
+                topWeight = weight;
+                topName = gy.GetSpeciesClassname();
+                topBiteSpeed = biteSpeed;
+            }
 
-			if (debugLevel == ELEVATED_DEBUG) {
-				GebsfishLogger.Debug(gy.GetSpeciesClassname() + " | " + biteSpeed + " | " + gy.GetCatchProbability() + " | " + weatherMul + " | " + weight + " | " + contribution, "ComputeAggregateBiteSpeed");
-			}
-		}
+            if (debugLevel == ELEVATED_DEBUG) {
+                GebsfishLogger.Debug(gy.GetSpeciesClassname() + " | " + biteSpeed + " | " + gy.GetCatchProbability() + " | " + weatherMul + " | " + weight + " | " + contribution, "ComputeAggregateBiteSpeed");
+            }
+        }
 
-		if (denominator <= 0) {
-			if (debugLevel >= 1) {
-				GebsfishLogger.Debug("BiteSpeed aggregate: 1.0 baseline (all weights zero, pool=" + n + " hour=" + hour + ")", "ComputeAggregateBiteSpeed");
-			}
-			return 1.0;
-		}
+        if (denominator <= 0) {
+            if (debugLevel >= 1) {
+                GebsfishLogger.Debug("BiteSpeed aggregate: 1.0 baseline (all weights zero, pool=" + n + " hour=" + hour + ")", "ComputeAggregateBiteSpeed");
+            }
+            return 1.0;
+        }
 
-		float aggregated = numerator / denominator;
-		bool floored = false;
-		if (aggregated < 0.05) {
-			aggregated = 0.05;
-			floored = true;
-		}
+        float aggregated = numerator / denominator;
+        bool floored = false;
+        if (aggregated < 0.05) {
+            aggregated = 0.05;
+            floored = true;
+        }
 
-		if (debugLevel >= 1) {
-			string flooredTag = "";
-			if (floored)
-				flooredTag = " (FLOORED to 0.05)";
-			GebsfishLogger.Debug("BiteSpeed aggregate: " + aggregated + " | hour=" + hour + " | pool=" + n + " | contributors=" + contributors + " | top=" + topName + "(BiteSpeed=" + topBiteSpeed + ", weight=" + topWeight + ")" + flooredTag, "ComputeAggregateBiteSpeed");
-		}
-		if (debugLevel == ELEVATED_DEBUG) {
-			GebsfishLogger.Debug("totals: numerator=" + numerator + " denominator=" + denominator + " aggregated=" + aggregated, "ComputeAggregateBiteSpeed");
-			GebsfishLogger.Debug("---End BiteSpeed breakdown---", "ComputeAggregateBiteSpeed");
-		}
+        if (debugLevel >= 1) {
+            string flooredTag = "";
+            if (floored)
+                flooredTag = " (FLOORED to 0.05)";
+            GebsfishLogger.Debug("BiteSpeed aggregate: " + aggregated + " | hour=" + hour + " | pool=" + n + " | contributors=" + contributors + " | top=" + topName + "(BiteSpeed=" + topBiteSpeed + ", weight=" + topWeight + ")" + flooredTag, "ComputeAggregateBiteSpeed");
+        }
+        if (debugLevel == ELEVATED_DEBUG) {
+            GebsfishLogger.Debug("totals: numerator=" + numerator + " denominator=" + denominator + " aggregated=" + aggregated, "ComputeAggregateBiteSpeed");
+            GebsfishLogger.Debug("---End BiteSpeed breakdown---", "ComputeAggregateBiteSpeed");
+        }
 
-		return aggregated;
-	}
+        return aggregated;
+    }
 
     override bool ModifySignalProbability(inout float probability) {
-		float easingTime;
-		if ((float)m_SignalCurrent < m_SignalCycleTarget) {
-			easingTime = Math.InverseLerp(0,m_SignalCycleTarget,(float)m_SignalCurrent);
-			probability = Easing.EaseInExpo(easingTime) * m_SignalTargetProbability * GetChanceCoef();
-		}
-		else {
-			easingTime = Math.InverseLerp(m_SignalCycleTarget,m_SignalCycleEndTarget,(float)m_SignalCurrent);
-			probability = (m_SignalTargetProbability + (Easing.EaseInExpo(easingTime) * (m_SignalTargetEndProbability - m_SignalTargetProbability))) * GetChanceCoef();
-		}
+        float easingTime;
+        if ((float)m_SignalCurrent < m_SignalCycleTarget) {
+            easingTime = Math.InverseLerp(0,m_SignalCycleTarget,(float)m_SignalCurrent);
+            probability = Easing.EaseInExpo(easingTime) * m_SignalTargetProbability * GetChanceCoef();
+        }
+        else {
+            easingTime = Math.InverseLerp(m_SignalCycleTarget,m_SignalCycleEndTarget,(float)m_SignalCurrent);
+            probability = (m_SignalTargetProbability + (Easing.EaseInExpo(easingTime) * (m_SignalTargetEndProbability - m_SignalTargetProbability))) * GetChanceCoef();
+        }
 
-		// Weather catch buff: rain / storm / night make fish bite more often.
-		// Applied as a probability multiplier so it stacks naturally with
-		// GetChanceCoef() above. Returns 1.0 when disabled or no condition matches,
-		// so this is a no-op for servers that leave WeatherCatchBoostEnable off.
-		float weatherMul = GetWeatherCatchMultiplier();
-		if (weatherMul != 1.0)
-			probability = probability * weatherMul;
+        // Weather catch buff: rain / storm / night make fish bite more often.
+        // Applied as a probability multiplier so it stacks naturally with
+        // GetChanceCoef() above. Returns 1.0 when disabled or no condition matches,
+        // so this is a no-op for servers that leave WeatherCatchBoostEnable off.
+        float weatherMul = GetWeatherCatchMultiplier();
+        if (weatherMul != 1.0)
+            probability = probability * weatherMul;
 
-		if (GetDebugLogLevel() == ELEVATED_DEBUG) {
-			GebsfishLogger.Debug("---ModifySignalProbability---","ModifySignalProbability");
-			GebsfishLogger.Debug("m_SignalCurrent: " + m_SignalCurrent,"ModifySignalProbability");
-			GebsfishLogger.Debug("easingTime: " + easingTime,"ModifySignalProbability");
-			GebsfishLogger.Debug("weather multiplier: " + weatherMul,"ModifySignalProbability");
-			GebsfishLogger.Debug("probability: " + probability,"ModifySignalProbability");
-		}
+        if (GetDebugLogLevel() == ELEVATED_DEBUG) {
+            GebsfishLogger.Debug("---ModifySignalProbability---","ModifySignalProbability");
+            GebsfishLogger.Debug("m_SignalCurrent: " + m_SignalCurrent,"ModifySignalProbability");
+            GebsfishLogger.Debug("easingTime: " + easingTime,"ModifySignalProbability");
+            GebsfishLogger.Debug("weather multiplier: " + weatherMul,"ModifySignalProbability");
+            GebsfishLogger.Debug("probability: " + probability,"ModifySignalProbability");
+        }
 
-		return true;
+        return true;
     }
 
     // junk.json's JunkShare, read the way the validator reads numbers: NaN or
@@ -264,8 +262,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         int n = m_ProbabilityArray.Count();
         array<float> weights = new array<float>();
         map<int, float> byKey = new map<int, float>();
-        string source;
-        string bait = GetCurrentBaitClassname(source);
+        string bait = GetCurrentBaitClassname();
         float catchTotal = 0;
         int junkEntries = 0;
         for (int i = 0; i < n; i++) {
@@ -279,9 +276,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
                     weight = 1.0;
                     GebYieldFishBase fish = GebYieldFishBase.Cast(yieldItem);
                     if (fish) {
-                        float rain, time, temperature;
-                        int window;
-                        float weather = GetSpeciesWeatherMultiplier(fish, rain, window, time, temperature);
+                        float weather = GetSpeciesWeatherMultiplier(fish);
                         float preference = GetBaitMultiplier(fish.GetSpeciesClassname(), bait);
                         // Bound each factor before multiplication, including non-finite input.
                         weather = GebBoundCatchFactor(weather);
@@ -348,21 +343,11 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     // geb_SpoonLure*, geb_CurlyTailJig*, geb_Lure*). Returns empty string
     // when neither is available -- callers default to a neutral 1.0
     // multiplier in that case.
-    //
-    // outSource exposes which slot supplied the classname so debug logging
-    // can distinguish "bait biased the pick" from "the lure-as-hook did" --
-    // when bait preferences look wrong, that distinction is the answer to
-    // "why am I catching X with this lure".
-    protected string GetCurrentBaitClassname(out string outSource) {
-        if (m_Bait) {
-            outSource = "bait";
+    protected string GetCurrentBaitClassname() {
+        if (m_Bait)
             return m_Bait.GetType();
-        }
-        if (m_Hook) {
-            outSource = "hook";
+        if (m_Hook)
             return m_Hook.GetType();
-        }
-        outSource = "none";
         return "";
     }
 
@@ -370,21 +355,6 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     // the null-guard logic lives in exactly one place.
     protected int GetDebugLogLevel() {
         return GebGetDebugLevel();
-    }
-
-    // Case-insensitive classname comparison. DayZ engine classnames are
-    // case-sensitive (CreateObject("Worm") works, CreateObject("worm") does
-    // not), so engine-supplied GetType() results always come back canonical.
-    // But admins hand-editing the JSON aren't always careful with case --
-    // silently failing those lookups makes whole subsystems (bait preferences
-    // etc.) look broken on what's really a typo. Defensive copies before
-    // ToLower so we never mutate the caller's strings.
-    protected bool ClassnamesMatch(string a, string b) {
-        string aCopy = a;
-        string bCopy = b;
-        aCopy.ToLower();
-        bCopy.ToLower();
-        return aCopy == bCopy;
     }
 
     // Small label helper for the weather sub-component log table. Keeps the
@@ -440,10 +410,10 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
             // the JSON sometimes type "worm" or "WORM" -- silently failing
             // those lookups would make the entire bait-preference system
             // look broken on what's really a typo.
-            if (!bait || !bait.Preferences || !ClassnamesMatch(bait.BaitClassname, baitClassname))
+            if (!bait || !bait.Preferences || !GebSameClassname(bait.BaitClassname, baitClassname))
                 continue;
             foreach (BaitPreferenceEntry pref : bait.Preferences) {
-                if (pref && ClassnamesMatch(pref.FishClassname, fishClassname)) {
+                if (pref && GebSameClassname(pref.FishClassname, fishClassname)) {
                     // Floor at 0 so an admin typo (-2.0) can't drag the
                     // weighted-pick weight negative. Downstream rounds
                     // negative weights to 0 anyway, but defending at the
@@ -530,7 +500,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     //   - clamps to those floors outside [TempMin, TempMax]
     // Returns 1.0 (neutral) when disabled in config, when the fish wasn't
     // initialized via SetTemperature (sentinel TempMin == TempMax), or when
-    // TempMin >= TempOptimal >= TempMax (degenerate range).
+    // TempOptimal isn't strictly between TempMin and TempMax (degenerate range).
     protected float GetSpeciesTempMultiplier(GebYieldFishBase gy) {
         if (!gy)
             return 1.0;
@@ -582,19 +552,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     // passed multipliers in SetupYield default to 1.0 (no effect). Bails
     // early only when BOTH WeatherCatchBoostEnable and TemperatureEffectEnable
     // are off -- temperature is independent of the rain/time toggle.
-    //
-    // Out params expose the sub-components so callers (PickWeightedYieldIndex)
-    // can log a per-species breakdown at ELEVATED_DEBUG without re-deriving
-    // them. dbgRainStormMul is whichever of rain/storm actually applied (1.0
-    // if neither), dbgWindow is the resolved Dawn=0/Day=1/Dusk=2/Night=3/-1
-    // sentinel, dbgTimeMul is the picked time-of-day multiplier, dbgTempMul
-    // is the temperature-curve multiplier.
-    protected float GetSpeciesWeatherMultiplier(GebYieldFishBase gy, out float dbgRainStormMul, out int dbgWindow, out float dbgTimeMul, out float dbgTempMul) {
-        dbgRainStormMul = 1.0;
-        dbgWindow = -1;
-        dbgTimeMul = 1.0;
-        dbgTempMul = 1.0;
-
+    protected float GetSpeciesWeatherMultiplier(GebYieldFishBase gy) {
         if (!gy)
             return 1.0;
         if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
@@ -625,11 +583,9 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
             // during a storm.
             float rain = GetCastRain();
             if (rain >= w.StormThreshold) {
-                dbgRainStormMul = speciesStorm;
                 if (speciesStorm != 1.0)
                     multiplier = multiplier * speciesStorm;
             } else if (rain >= w.RainThreshold) {
-                dbgRainStormMul = speciesRain;
                 if (speciesRain != 1.0)
                     multiplier = multiplier * speciesRain;
             }
@@ -640,14 +596,12 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
             int hour = GetCurrentHour();
             float speciesTimeOfDay = 1.0;
             int window = ResolveTimeWindow(w, hour);
-            dbgWindow = window;
             if (window == 0)      speciesTimeOfDay = gy.GetDawnMultiplier();
             else if (window == 1) speciesTimeOfDay = gy.GetDayMultiplier();
             else if (window == 2) speciesTimeOfDay = gy.GetDuskMultiplier();
             else if (window == 3) speciesTimeOfDay = gy.GetNightMultiplier();
             if (speciesTimeOfDay < 0.0)
                 speciesTimeOfDay = 0.0;
-            dbgTimeMul = speciesTimeOfDay;
 
             if (speciesTimeOfDay != 1.0)
                 multiplier = multiplier * speciesTimeOfDay;
@@ -659,7 +613,6 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         float tempMul = GetSpeciesTempMultiplier(gy);
         if (tempMul < 0.0)
             tempMul = 0.0;
-        dbgTempMul = tempMul;
         if (tempMul != 1.0)
             multiplier = multiplier * tempMul;
 
@@ -680,6 +633,13 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         if (m_GebSnapshot)
             return m_GebSnapshot.Hour;
         return 12;
+    }
+
+    // The same hour for vanilla's per-hour cycle length (the modded
+    // FishYieldItemBase.GetCycleTimeForYieldItem), so client and server time
+    // the cast's cycles alike.
+    int GebGetCastHour() {
+        return GetCurrentHour();
     }
 
     // The cast's rain intensity (0-1), from the snapshot taken at cast start.
@@ -890,19 +850,19 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     }
 
     override void GenerateResult() {
-		m_IsValid = false;
-		if (m_Result)
-			m_Result.SetYieldItem(null);
-		// A fully disabled or malformed yield config can leave this empty.
-		// Guard before random selection so the range never becomes 0..-1.
-		if (!m_ProbabilityArray || m_ProbabilityArray.Count() == 0) {
-			if (GetDebugLogLevel()) {
-				GebsfishLogger.Debug("No valid fishing yields available. Skipping result generation.", "GenerateResult");
-			}
-			return;
-		}
+        m_IsValid = false;
+        if (m_Result)
+            m_Result.SetYieldItem(null);
+        // A fully disabled or malformed yield config can leave this empty.
+        // Guard before random selection so the range never becomes 0..-1.
+        if (!m_ProbabilityArray || m_ProbabilityArray.Count() == 0) {
+            if (GetDebugLogLevel()) {
+                GebsfishLogger.Debug("No valid fishing yields available. Skipping result generation.", "GenerateResult");
+            }
+            return;
+        }
 
-		YieldItemBase yItem;
+        YieldItemBase yItem;
 
         // Always the weighted pick: junk is scaled to the pool there. With
         // weather, temperature and bait all switched off every fish weighs 1,
@@ -911,300 +871,300 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         if (idx < 0)
             return; // All eligible weights are zero: never fall back to uniform.
 
-		// The probability array stores keys into the yield map, so resolve the
-		// selected entry before setting it as the active fishing result.
-		if (!Class.CastTo(yItem,m_YieldsMapAll.Get(m_ProbabilityArray[idx])) || !yItem) {
-			if (GetDebugLogLevel()) {
-				GebsfishLogger.Debug("Failed to resolve fishing yield item at probability index: " + idx, "GenerateResult");
-			}
-			return;
-		}
+        // The probability array stores keys into the yield map, so resolve the
+        // selected entry before setting it as the active fishing result.
+        if (!Class.CastTo(yItem,m_YieldsMapAll.Get(m_ProbabilityArray[idx])) || !yItem) {
+            if (GetDebugLogLevel()) {
+                GebsfishLogger.Debug("Failed to resolve fishing yield item at probability index: " + idx, "GenerateResult");
+            }
+            return;
+        }
 
-		m_Result.SetYieldItem(yItem);
-		m_IsValid = true;
+        m_Result.SetYieldItem(yItem);
+        m_IsValid = true;
 
         if (GetDebugLogLevel()) {
-			// Resolve the yield's species classname for the log instead of
-			// stringifying the YieldItemBase reference directly. Enforce's
-			// default object-to-string for YieldItemBase walks the first
-			// internal member, so concatenating yItem directly to a string
-			// rendered as something like "[0,..]" rather than a usable name.
-			// Casting to GebYieldFishBase gives us the configured species
-			// classname (e.g. "geb_BlueGill").
-			string yieldClassname = "<unresolved>";
-			GebYieldFishBase gyResult;
-			if (Class.CastTo(gyResult, yItem) && gyResult)
-				yieldClassname = gyResult.GetSpeciesClassname();
+            // Resolve the yield's species classname for the log instead of
+            // stringifying the YieldItemBase reference directly. Enforce's
+            // default object-to-string for YieldItemBase walks the first
+            // internal member, so concatenating yItem directly to a string
+            // rendered as something like "[0,..]" rather than a usable name.
+            // Casting to GebYieldFishBase gives us the configured species
+            // classname (e.g. "geb_BlueGill").
+            string yieldClassname = "<unresolved>";
+            GebYieldFishBase gyResult;
+            if (Class.CastTo(gyResult, yItem) && gyResult)
+                yieldClassname = gyResult.GetSpeciesClassname();
 
-			GebsfishLogger.Debug("---------------------Starting New Fishing Session---------------------","GenerateResult");
-			GebsfishLogger.Debug("---Generating Fishing Result---","GenerateResult");
+            GebsfishLogger.Debug("---------------------Starting New Fishing Session---------------------","GenerateResult");
+            GebsfishLogger.Debug("---Generating Fishing Result---","GenerateResult");
             GebsfishLogger.Debug("Chosen pool index: " + idx, "GenerateResult");
             GebsfishLogger.Debug("Yield Item Selected: " + yieldClassname, "GenerateResult");
-			// Wording note: this fish is locked in at GenerateResult time --
-			// the catching context picks once at fishing start, before any
-			// signal fires, and that same yield is what spawns on a successful
-			// reel-in. The label spells that out so the log isn't mistaken
-			// for "one of several possible catches" or for an array index
-			// readout. m_Result.GebGetFishingResultName resolves to the same
-			// species classname via m_YItem.GetType() -- kept as a second
-			// readout because it confirms the result struct actually received
-			// the yield (i.e. SetYieldItem succeeded).
-			GebsfishLogger.Debug("Pre-determined yield (will spawn on success): " + m_Result.GebGetFishingResultName(),"GenerateResult");
+            // Wording note: this fish is locked in at GenerateResult time --
+            // the catching context picks once at fishing start, before any
+            // signal fires, and that same yield is what spawns on a successful
+            // reel-in. The label spells that out so the log isn't mistaken
+            // for "one of several possible catches" or for an array index
+            // readout. m_Result.GebGetFishingResultName resolves to the same
+            // species classname via m_YItem.GetType() -- kept as a second
+            // readout because it confirms the result struct actually received
+            // the yield (i.e. SetYieldItem succeeded).
+            GebsfishLogger.Debug("Pre-determined yield (will spawn on success): " + m_Result.GebGetFishingResultName(),"GenerateResult");
 
-			// Pool composition snapshot. At basic debug level we just log the
-			// count + a compact species list so admins can answer "is fish X
-			// even eligible right now". At ELEVATED_DEBUG we expand to a per-
-			// entry table with env/method/catchProb so anyone asking "why
-			// isn't fish X spawning" can read the answer straight from the
-			// log (e.g. wrong Environment, CatchProbability=0, masked off).
-			LogProbabilityArrayAssembly();
-		}
-	}
+            // Pool composition snapshot. At basic debug level we just log the
+            // count + a compact species list so admins can answer "is fish X
+            // even eligible right now". At ELEVATED_DEBUG we expand to a per-
+            // entry table with env/method/catchProb so anyone asking "why
+            // isn't fish X spawning" can read the answer straight from the
+            // log (e.g. wrong Environment, CatchProbability=0, masked off).
+            LogProbabilityArrayAssembly();
+        }
+    }
 
-	// Dumps the assembled m_ProbabilityArray with resolved species classnames
-	// plus enough surrounding metadata to diagnose pool composition. Split out
-	// from GenerateResult to keep that override scannable. Tolerates a null /
-	// empty array and a null m_YieldsMapAll without throwing so a misconfigured
-	// server still gets a useful log line instead of a silent return.
-	protected void LogProbabilityArrayAssembly() {
-		int debugLevel = GetDebugLogLevel();
-		if (debugLevel < 1)
-			return;
+    // Dumps the assembled m_ProbabilityArray with resolved species classnames
+    // plus enough surrounding metadata to diagnose pool composition. Split out
+    // from GenerateResult to keep that override scannable. Tolerates a null /
+    // empty array and a null m_YieldsMapAll without throwing so a misconfigured
+    // server still gets a useful log line instead of a silent return.
+    protected void LogProbabilityArrayAssembly() {
+        int debugLevel = GetDebugLogLevel();
+        if (debugLevel < 1)
+            return;
 
-		array<int> arr = m_ProbabilityArray;
-		if (!arr) {
-			GebsfishLogger.Debug("Probability pool: <null>", "PoolAssembly");
-			return;
-		}
+        array<int> arr = m_ProbabilityArray;
+        if (!arr) {
+            GebsfishLogger.Debug("Probability pool: <null>", "PoolAssembly");
+            return;
+        }
 
-		int n = arr.Count();
-		if (n == 0) {
-			GebsfishLogger.Debug("Probability pool: [] (empty)", "PoolAssembly");
-			return;
-		}
+        int n = arr.Count();
+        if (n == 0) {
+            GebsfishLogger.Debug("Probability pool: [] (empty)", "PoolAssembly");
+            return;
+        }
 
-		// The probability array is duplicate-expanded -- each yield appears
-		// once per weight point (CatchProbability 25 -> 25 copies) -- so
-		// collapse to unique yields first. One table row / list entry per
-		// species with its duplicate count as the weight, instead of one row
-		// per copy and a species list naming every duplicate.
-		array<int> uniqueKeys = new array<int>();
-		map<int, int> weightByKey = new map<int, int>();
-		for (int i = 0; i < n; i++) {
-			int key = arr.Get(i);
-			int seen;
-			if (weightByKey.Find(key, seen)) {
-				weightByKey.Set(key, seen + 1);
-			} else {
-				weightByKey.Insert(key, 1);
-				uniqueKeys.Insert(key);
-			}
-		}
+        // The probability array is duplicate-expanded -- each yield appears
+        // once per weight point (CatchProbability 25 -> 25 copies) -- so
+        // collapse to unique yields first. One table row / list entry per
+        // species with its duplicate count as the weight, instead of one row
+        // per copy and a species list naming every duplicate.
+        array<int> uniqueKeys = new array<int>();
+        map<int, int> weightByKey = new map<int, int>();
+        for (int i = 0; i < n; i++) {
+            int key = arr.Get(i);
+            int seen;
+            if (weightByKey.Find(key, seen)) {
+                weightByKey.Set(key, seen + 1);
+            } else {
+                weightByKey.Insert(key, 1);
+                uniqueKeys.Insert(key);
+            }
+        }
 
-		int u = uniqueKeys.Count();
-		if (debugLevel == ELEVATED_DEBUG) {
-			GebsfishLogger.Debug("Probability pool [entries=" + n + " unique=" + u + "]:", "PoolAssembly");
-			GebsfishLogger.Debug("key | classname | weight | envMask | methodMask | catchProb", "PoolAssembly");
-		}
+        int u = uniqueKeys.Count();
+        if (debugLevel == ELEVATED_DEBUG) {
+            GebsfishLogger.Debug("Probability pool [entries=" + n + " unique=" + u + "]:", "PoolAssembly");
+            GebsfishLogger.Debug("key | classname | weight | envMask | methodMask | catchProb", "PoolAssembly");
+        }
 
-		string compact = "";
-		for (int j = 0; j < u; j++) {
-			int uKey = uniqueKeys.Get(j);
-			string clsName = "<unresolved>";
-			int envMask = -1;
-			int methodMask = -1;
-			int catchProb = -1;
-			YieldItemBase y;
-			if (m_YieldsMapAll && Class.CastTo(y, m_YieldsMapAll.Get(uKey)) && y) {
-				GebYieldFishBase gy;
-				if (Class.CastTo(gy, y) && gy) {
-					clsName = gy.GetSpeciesClassname();
-					catchProb = gy.GetCatchProbability();
-				}
-				envMask = y.GetEnviroMask();
-				methodMask = y.GetMethodMask();
-			}
+        string compact = "";
+        for (int j = 0; j < u; j++) {
+            int uKey = uniqueKeys.Get(j);
+            string clsName = "<unresolved>";
+            int envMask = -1;
+            int methodMask = -1;
+            int catchProb = -1;
+            YieldItemBase y;
+            if (m_YieldsMapAll && Class.CastTo(y, m_YieldsMapAll.Get(uKey)) && y) {
+                GebYieldFishBase gy;
+                if (Class.CastTo(gy, y) && gy) {
+                    clsName = gy.GetSpeciesClassname();
+                    catchProb = gy.GetCatchProbability();
+                }
+                envMask = y.GetEnviroMask();
+                methodMask = y.GetMethodMask();
+            }
 
-			if (debugLevel == ELEVATED_DEBUG) {
-				GebsfishLogger.Debug("" + uKey + " | " + clsName + " | " + weightByKey.Get(uKey) + " | " + envMask + " | " + methodMask + " | " + catchProb, "PoolAssembly");
-			}
+            if (debugLevel == ELEVATED_DEBUG) {
+                GebsfishLogger.Debug("" + uKey + " | " + clsName + " | " + weightByKey.Get(uKey) + " | " + envMask + " | " + methodMask + " | " + catchProb, "PoolAssembly");
+            }
 
-			if (compact != "")
-				compact += ", ";
-			compact += clsName;
-		}
+            if (compact != "")
+                compact += ", ";
+            compact += clsName;
+        }
 
-		// Always-on (DebugLogs >= 1) one-liner: comma-separated species list so
-		// "is fish X in the pool" is answerable at the lower debug level too.
-		GebsfishLogger.Debug("Pool species (" + u + " unique, " + n + " weighted entries): " + compact, "PoolAssembly");
-	}
+        // Always-on (DebugLogs >= 1) one-liner: comma-separated species list so
+        // "is fish X in the pool" is answerable at the lower debug level too.
+        GebsfishLogger.Debug("Pool species (" + u + " unique, " + n + " weighted entries): " + compact, "PoolAssembly");
+    }
 
     override float RandomizeSignalDuration() {
-		float res = m_Player.GetRandomGeneratorSyncManager().GetRandomInRange(RandomGeneratorSyncUsage.RGSAnimalCatching,m_SignalDurationMin,m_SignalDurationMax);
-		
-		if (GetDebugLogLevel() == ELEVATED_DEBUG ) {
-			GebsfishLogger.Debug("---RandomizeSignalDuration---","RandomizeSignalDuration");
-			GebsfishLogger.Debug("next signal duration: " + res,"RandomizeSignalDuration");
-		}
+        float res = m_Player.GetRandomGeneratorSyncManager().GetRandomInRange(RandomGeneratorSyncUsage.RGSAnimalCatching,m_SignalDurationMin,m_SignalDurationMax);
 
-		if (GetDebugLogLevel()) {
-			GebsfishLogger.Debug("Catch signal duration chosen: " + res,"RandomizeSignalDuration");
-		}
-		
-		return res;
-	}
+        if (GetDebugLogLevel() == ELEVATED_DEBUG ) {
+            GebsfishLogger.Debug("---RandomizeSignalDuration---","RandomizeSignalDuration");
+            GebsfishLogger.Debug("next signal duration: " + res,"RandomizeSignalDuration");
+        }
+
+        if (GetDebugLogLevel()) {
+            GebsfishLogger.Debug("Catch signal duration chosen: " + res,"RandomizeSignalDuration");
+        }
+
+        return res;
+    }
 
     override float RandomizeSignalStartTime() {
-		float res = m_Player.GetRandomGeneratorSyncManager().GetRandomInRange(RandomGeneratorSyncUsage.RGSAnimalCatching,m_SignalStartTimeMin,m_SignalStartTimeMax);
+        float res = m_Player.GetRandomGeneratorSyncManager().GetRandomInRange(RandomGeneratorSyncUsage.RGSAnimalCatching,m_SignalStartTimeMin,m_SignalStartTimeMax);
 
-		if (GetDebugLogLevel() == ELEVATED_DEBUG) {
-			GebsfishLogger.Debug("---RandomizeSignalStartTime---","RandomizeSignalStartTime");
-			GebsfishLogger.Debug("next signal start time: " + res,"RandomizeSignalStartTime");
-		}
+        if (GetDebugLogLevel() == ELEVATED_DEBUG) {
+            GebsfishLogger.Debug("---RandomizeSignalStartTime---","RandomizeSignalStartTime");
+            GebsfishLogger.Debug("next signal start time: " + res,"RandomizeSignalStartTime");
+        }
 
-		if (GetDebugLogLevel()) {
-			GebsfishLogger.Debug("Catch signal starts at: " + res,"RandomizeSignalStartTime");
-		}
-		
-		return res;
-	}
+        if (GetDebugLogLevel()) {
+            GebsfishLogger.Debug("Catch signal starts at: " + res,"RandomizeSignalStartTime");
+        }
 
-	override protected void TryHookLoss() {
-		if (m_Hook && !m_Hook.IsSetForDeletion()) {
-			float lossChance = GetHookLossChanceModifierClamped();
-			if (lossChance <= 0)
-				return;
+        return res;
+    }
 
-			float roll = m_Player.GetRandomGeneratorSyncManager().GetRandom01(RandomGeneratorSyncUsage.RGSAnimalCatching);
-			string hookType = m_Hook.GetType();
+    override protected void TryHookLoss() {
+        if (m_Hook && !m_Hook.IsSetForDeletion()) {
+            float lossChance = GetHookLossChanceModifierClamped();
+            if (lossChance <= 0)
+                return;
 
-			if (lossChance >= 1 || roll < lossChance) {
-				RemoveItemSafe(m_Hook);
-				if (GetDebugLogLevel()) {
-					GebsfishLogger.Debug("Hook was lost. type=" + hookType + " roll=" + roll + " lossChance=" + lossChance,"TryHookLoss");
-				}
-			}
+            float roll = m_Player.GetRandomGeneratorSyncManager().GetRandom01(RandomGeneratorSyncUsage.RGSAnimalCatching);
+            string hookType = m_Hook.GetType();
+
+            if (lossChance >= 1 || roll < lossChance) {
+                RemoveItemSafe(m_Hook);
+                if (GetDebugLogLevel()) {
+                    GebsfishLogger.Debug("Hook was lost. type=" + hookType + " roll=" + roll + " lossChance=" + lossChance,"TryHookLoss");
+                }
+            }
             else {
-				if (GetDebugLogLevel()) {
-					GebsfishLogger.Debug("Hook was not lost. type=" + hookType + " roll=" + roll + " lossChance=" + lossChance,"TryHookLoss");
-				}
-			}
-		}
-	}
+                if (GetDebugLogLevel()) {
+                    GebsfishLogger.Debug("Hook was not lost. type=" + hookType + " roll=" + roll + " lossChance=" + lossChance,"TryHookLoss");
+                }
+            }
+        }
+    }
 
-	override protected void RemoveItemSafe(EntityAI item) {
-		if (item && !m_Player.IsQuickFishing()) {
-			string parentType = item.GetType();
-			// Health is read only for the debug line below, and only where the
-			// engine allows it: on a multiplayer client GetHealth logs
-			// "cannot be called on client" and returns 0. This runs on both.
-			float parentHpBefore = -1;
-			ItemBase parentAsItem = ItemBase.Cast(item);
-			if (parentAsItem && GetDebugLogLevel() && (!g_Game.IsMultiplayer() || g_Game.IsDedicatedServer()))
-				parentHpBefore = parentAsItem.GetHealth("","Health");
+    override protected void RemoveItemSafe(EntityAI item) {
+        if (item && !m_Player.IsQuickFishing()) {
+            string parentType = item.GetType();
+            // Health is read only for the debug line below, and only where the
+            // engine allows it: on a multiplayer client GetHealth logs
+            // "cannot be called on client" and returns 0. This runs on both.
+            float parentHpBefore = -1;
+            ItemBase parentAsItem = ItemBase.Cast(item);
+            if (parentAsItem && GetDebugLogLevel() && (!g_Game.IsMultiplayer() || g_Game.IsDedicatedServer()))
+                parentHpBefore = parentAsItem.GetHealth("","Health");
 
-			// Hooks can carry an attached bait item (worm, minnow, salamander,
-			// etc.) in their "Bait" slot -- same slot name vanilla uses in
-			// CatchingContextFishingRodAction.AddCatchingItem. Deleting the hook
-			// without first flagging that attachment for deletion would leave
-			// the bait orphaned (or trip an attachment-detach error inside the
-			// engine's parent cleanup). The original vanilla comment punted on
-			// this with "the action terminates anyway" -- handle it properly so
-			// the inventory stays consistent if any other system reads it
-			// mid-cleanup.
-			EntityAI attachedBait = item.FindAttachmentBySlotName("Bait");
-			if (attachedBait) {
-				string attachedType = attachedBait.GetType();
-				attachedBait.SetPrepareToDelete();
-				attachedBait.DeleteSafe();
-				if (GetDebugLogLevel()) {
-					GebsfishLogger.Debug("Cleaned up attached bait before parent removal: type=" + attachedType + " (parent=" + parentType + ")","RemoveItemSafe");
-				}
-			}
+            // Hooks can carry an attached bait item (worm, minnow, salamander,
+            // etc.) in their "Bait" slot -- same slot name vanilla uses in
+            // CatchingContextFishingRodAction.InitItemValues. Deleting the hook
+            // without first flagging that attachment for deletion would leave
+            // the bait orphaned (or trip an attachment-detach error inside the
+            // engine's parent cleanup). The original vanilla comment punted on
+            // this with "the action terminates anyway" -- handle it properly so
+            // the inventory stays consistent if any other system reads it
+            // mid-cleanup.
+            EntityAI attachedBait = item.FindAttachmentBySlotName("Bait");
+            if (attachedBait) {
+                string attachedType = attachedBait.GetType();
+                attachedBait.SetPrepareToDelete();
+                attachedBait.DeleteSafe();
+                if (GetDebugLogLevel()) {
+                    GebsfishLogger.Debug("Cleaned up attached bait before parent removal: type=" + attachedType + " (parent=" + parentType + ")","RemoveItemSafe");
+                }
+            }
 
-			item.SetPrepareToDelete();
-			item.DeleteSafe();
+            item.SetPrepareToDelete();
+            item.DeleteSafe();
 
-			if (GetDebugLogLevel()) {
-				GebsfishLogger.Debug("Item Lost: type=" + parentType + " hpAtRemoval=" + parentHpBefore + "; Removing item from player inventory.","RemoveItemSafe");
-			}
-		}
-	}
+            if (GetDebugLogLevel()) {
+                GebsfishLogger.Debug("Item Lost: type=" + parentType + " hpAtRemoval=" + parentHpBefore + "; Removing item from player inventory.","RemoveItemSafe");
+            }
+        }
+    }
 
-	override protected void TryDamageItems() {
-		if (!g_Game.IsMultiplayer() || g_Game.IsDedicatedServer()) {
-			if (m_Hook && !m_Hook.IsSetForDeletion()) {
-				float hookHpBefore = m_Hook.GetHealth("","Health");
-				string hookType = m_Hook.GetType();
-				if (GetDebugLogLevel()) {
-					GebsfishLogger.Debug("Applying damage to hook: type=" + hookType + " hpBefore=" + hookHpBefore + " dmg=" + UAFishingConstants.DAMAGE_HOOK,"TryDamageItems");
-				}
-				m_Hook.AddHealth("","Health",-UAFishingConstants.DAMAGE_HOOK);
-				if (GetDebugLogLevel()) {
-					GebsfishLogger.Debug("Hook HP after: type=" + hookType + " hpAfter=" + m_Hook.GetHealth("","Health"),"TryDamageItems");
-				}
-			}
-			// The rod wears on every bite outcome, including one where the hook
-			// was just lost (it is already flagged for deletion by now, which is
-			// why this sits outside the hook check). AddHealth(x) is vanilla's
-			// wrapper for AddHealth("", "", x): the rod's global health, as
-			// vanilla's old ActionFishingNew used (AddHealth(-1.5)). Exactly ONE
-			// rod hit per catch outcome -- a second, unlogged call used to make
-			// rods wear at double the intended rate.
-			if (m_MainItem) {
-				float rodHpBefore = m_MainItem.GetHealth("","Health");
-				string rodType = m_MainItem.GetType();
-				if (GetDebugLogLevel()) {
-					GebsfishLogger.Debug("Applying damage to rod: type=" + rodType + " hpBefore=" + rodHpBefore + " dmg=" + UAFishingConstants.DAMAGE_HOOK,"TryDamageItems");
-				}
-				m_MainItem.AddHealth(-UAFishingConstants.DAMAGE_HOOK);
-				if (GetDebugLogLevel()) {
-					GebsfishLogger.Debug("Rod HP after: type=" + rodType + " hpAfter=" + m_MainItem.GetHealth("","Health"),"TryDamageItems");
-				}
-			}
-		}
-	}
+    override protected void TryDamageItems() {
+        if (!g_Game.IsMultiplayer() || g_Game.IsDedicatedServer()) {
+            if (m_Hook && !m_Hook.IsSetForDeletion()) {
+                float hookHpBefore = m_Hook.GetHealth("","Health");
+                string hookType = m_Hook.GetType();
+                if (GetDebugLogLevel()) {
+                    GebsfishLogger.Debug("Applying damage to hook: type=" + hookType + " hpBefore=" + hookHpBefore + " dmg=" + UAFishingConstants.DAMAGE_HOOK,"TryDamageItems");
+                }
+                m_Hook.AddHealth("","Health",-UAFishingConstants.DAMAGE_HOOK);
+                if (GetDebugLogLevel()) {
+                    GebsfishLogger.Debug("Hook HP after: type=" + hookType + " hpAfter=" + m_Hook.GetHealth("","Health"),"TryDamageItems");
+                }
+            }
+            // The rod wears on every bite outcome, including one where the hook
+            // was just lost (it is already flagged for deletion by now, which is
+            // why this sits outside the hook check). AddHealth(x) is vanilla's
+            // wrapper for AddHealth("", "", x): the rod's global health, as
+            // vanilla's old ActionFishingNew used (AddHealth(-1.5)). Exactly ONE
+            // rod hit per catch outcome -- a second, unlogged call used to make
+            // rods wear at double the intended rate.
+            if (m_MainItem) {
+                float rodHpBefore = m_MainItem.GetHealth("","Health");
+                string rodType = m_MainItem.GetType();
+                if (GetDebugLogLevel()) {
+                    GebsfishLogger.Debug("Applying damage to rod: type=" + rodType + " hpBefore=" + rodHpBefore + " dmg=" + UAFishingConstants.DAMAGE_HOOK,"TryDamageItems");
+                }
+                m_MainItem.AddHealth(-UAFishingConstants.DAMAGE_HOOK);
+                if (GetDebugLogLevel()) {
+                    GebsfishLogger.Debug("Rod HP after: type=" + rodType + " hpAfter=" + m_MainItem.GetHealth("","Health"),"TryDamageItems");
+                }
+            }
+        }
+    }
 
-	override void OnBeforeSpawnSignalHit() {
-		if (GetDebugLogLevel()) {
-			GebsfishLogger.Debug("Trying hook loss before catch signal is generated.","OnBeforeSpawnSignalHit");
-		}
-		TryHookLoss();
-	}
+    override void OnBeforeSpawnSignalHit() {
+        if (GetDebugLogLevel()) {
+            GebsfishLogger.Debug("Trying hook loss before catch signal is generated.","OnBeforeSpawnSignalHit");
+        }
+        TryHookLoss();
+    }
 
-	override void OnAfterSpawnSignalHit() {
-		if (GetDebugLogLevel()) {
-			string baitType = "<none>";
-			if (m_Bait)
-				baitType = m_Bait.GetType();
-			GebsfishLogger.Debug("Catch signal success. Removing bait (" + baitType + ") and damaging hook.","OnAfterSpawnSignalHit");
-		}
-		RemoveItemSafe(m_Bait);
-		TryDamageItems();
-	}
+    override void OnAfterSpawnSignalHit() {
+        if (GetDebugLogLevel()) {
+            string baitType = "<none>";
+            if (m_Bait)
+                baitType = m_Bait.GetType();
+            GebsfishLogger.Debug("Catch signal success. Removing bait (" + baitType + ") and damaging hook.","OnAfterSpawnSignalHit");
+        }
+        RemoveItemSafe(m_Bait);
+        TryDamageItems();
+    }
 
-	//! release without signal
-	override void OnSignalMiss() {
-		if (GetDebugLogLevel()) {
-			string hookTypeM = "<none>";
-			string baitTypeM = "<none>";
-			if (m_Hook) hookTypeM = m_Hook.GetType();
-			if (m_Bait) baitTypeM = m_Bait.GetType();
-			GebsfishLogger.Debug("Catch signal missed. Trying hook (" + hookTypeM + ") and bait (" + baitTypeM + ") loss.","OnSignalMiss");
-		}
-		TryHookLoss();
-		TryBaitLoss();
-	}
+    //! release without signal
+    override void OnSignalMiss() {
+        if (GetDebugLogLevel()) {
+            string hookTypeM = "<none>";
+            string baitTypeM = "<none>";
+            if (m_Hook) hookTypeM = m_Hook.GetType();
+            if (m_Bait) baitTypeM = m_Bait.GetType();
+            GebsfishLogger.Debug("Catch signal missed. Trying hook (" + hookTypeM + ") and bait (" + baitTypeM + ") loss.","OnSignalMiss");
+        }
+        TryHookLoss();
+        TryBaitLoss();
+    }
 
-	override void OnSignalPass() {
-		if (GetDebugLogLevel()) {
-			string baitTypeP = "<none>";
-			if (m_Bait)
-				baitTypeP = m_Bait.GetType();
-			GebsfishLogger.Debug("Catch signal ignored. Removing bait (" + baitTypeP + "), applying damage to hook, and updating catching item data.","OnSignalPass");
-		}
-		RemoveItemSafe(m_Bait);
-		TryDamageItems();
-		UpdateCatchingItemData();
-	}
+    override void OnSignalPass() {
+        if (GetDebugLogLevel()) {
+            string baitTypeP = "<none>";
+            if (m_Bait)
+                baitTypeP = m_Bait.GetType();
+            GebsfishLogger.Debug("Catch signal ignored. Removing bait (" + baitTypeP + "), applying damage to hook, and updating catching item data.","OnSignalPass");
+        }
+        RemoveItemSafe(m_Bait);
+        TryDamageItems();
+        UpdateCatchingItemData();
+    }
 }

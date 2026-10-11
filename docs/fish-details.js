@@ -13,7 +13,7 @@ const FISHDETAIL = {
 "img": "fish/geb_AmericanLobster.webp"
 },
 "geb_AngelFish": {
-"desc": "The gray angelfish (Pomacanthus arcuatus) is a marine angelfish of the family Pomacanthidae, found in the western Atlantic from Florida and the Bahamas through the Gulf of Mexico and the Caribbean to Brazil. It lives around coral reefs and rocky bottoms, usually alone or in pairs, and grows to about 60 cm (2 ft). Its tall, flat body is gray with a dark spot on each scale, a whitish mouth and yellow on the inside of the pectoral fins. It feeds mostly on sponges, along with algae, tunicates and other small invertebrates. Marine angelfish are not related to the freshwater angelfish kept in aquariums, which is a South American cichlid.",
+"desc": "The semicircle angelfish (Pomacanthus semicirculatus), also called the Koran angelfish, is a marine angelfish of the family Pomacanthidae, found in the Indo-West Pacific from the Red Sea and East Africa to Samoa, north to southern Japan and south to Australia. It lives on coral and rocky reefs, often near caves and ledges, usually alone, and grows to about 40 cm (16 in). Adults are brownish green, darkening to navy blue toward the tail, with a small blue spot on each scale, a yellowish face with blue lines edging the gill cover, blue-edged fins drawn out into long tips and yellow pectoral fins. Young fish are deep blue with white and pale blue semicircles, which give the species its name. It feeds on sponges, algae and tunicates. Marine angelfish are not related to the freshwater angelfish kept in aquariums, which is a South American cichlid.",
 "img": "fish/geb_AngelFish.webp"
 },
 "geb_AngelShark": {
@@ -59,10 +59,6 @@ const FISHDETAIL = {
 "geb_BlueTang": {
 "desc": "Paracanthurus hepatus is a species of Indo-Pacific surgeonfish. A popular fish in marine aquaria, it is the only member of the genus Paracanthurus.",
 "img": "fish/geb_BlueTang.webp"
-},
-"geb_Bonita": {
-"desc": "Bonitos are a tribe of medium-sized, ray-finned predatory fish in the family Scombridae - a family it shares with the mackerel, tuna, and Spanish mackerel tribes, and also the butterfly kingfish.",
-"img": "fish/geb_Bonita.webp"
 },
 "geb_BowFin": {
 "desc": "The bowfin (Amia calva) is a ray-finned fish native to North America. Common names include mudfish, mud pike, dogfish, grindle, grinnel, swamp trout, and choupique. It is regarded as a relict, being one of only two surviving species of the Halecomorphi, a group of fish that first appeared during the Early Triassic, around 250 million years ago. The bowfin is often considered a &quot;living fossil&quot; because they have retained some morphological characteristics of their early ancestors. It is one of two species in the genus Amia, along with Amia ocellicauda, the eyespot bowfin. The closest living relatives of bowfins are gars, with the two groups being united in the clade Holostei.",
@@ -115,6 +111,10 @@ const FISHDETAIL = {
 "geb_FloridaCrayFish": {
 "desc": "The Florida crayfish, the blue crayfish, the electric blue crayfish, or the sapphire crayfish, is a species of freshwater crayfish endemic to Florida in the United States. Its natural range is the area east of St. Johns River and all of Florida from Levy County and Marion County southwards, as well as on some of the Florida Keys. It is included on the IUCN Red List as a species of Least Concern. The blue crayfish is frequently kept in freshwater aquaria.",
 "img": "fish/geb_FloridaCrayFish.webp"
+},
+"geb_GreatBarracuda": {
+"desc": "The great barracuda (Sphyraena barracuda) is a large predatory ray-finned fish of the family Sphyraenidae, found in tropical and warm temperate waters of the Atlantic, Indian and Pacific oceans down to about 110 m (360 ft). Young fish stay close to shore among mangroves and seagrass beds, while adults range farther out to reefs, wrecks and rocky outcrops.\n\nIts long body is blue-grey above and silvery to chalky white below, often with dark bars along the upper side and black blotches low on the flanks. The lower jaw juts past the upper, and both are set with large, uneven, fang-like teeth. Adults are usually 60-100 cm (24-39 in) long and weigh 2.5-9 kg (5.5-20 lb), though some pass 1.5 m (4.9 ft) and 23 kg (51 lb). It hunts from ambush, mostly small fish such as sardines, anchovies and mullets, striking in bursts of up to 58 km/h (36 mph). It is a popular sport fish that fights hard on the hook, but its meat can cause ciguatera poisoning.",
+"img": "fish/geb_GreatBarracuda.webp"
 },
 "geb_GreatWhiteShark": {
 "desc": "The great white shark, also known as the white shark, white pointer, or simply great white, is a species of large mackerel shark which can be found in the coastal surface waters of all the major oceans.",
@@ -179,6 +179,10 @@ const FISHDETAIL = {
 "geb_NorthernSnakeHead": {
 "desc": "The northern snakehead (Channa argus) is a species of snakehead fish native to temperate East Asia, in China, Russia, North Korea, and South Korea. Their natural range goes from the Amur River watershed in Siberia and Manchuria down to Hainan. It is an important food fish and one of the most cultivated in its native region, with 510,000 tonnes annual production worldwide.",
 "img": "fish/geb_NorthernSnakeHead.webp"
+},
+"geb_PacificBonito": {
+"desc": "Bonitos are a tribe of medium-sized, ray-finned predatory fish in the family Scombridae - a family it shares with the mackerel, tuna, and Spanish mackerel tribes, and also the butterfly kingfish.",
+"img": "fish/geb_PacificBonito.webp"
 },
 "geb_PacificCod": {
 "desc": "The Pacific Cod, Gadus macrocephalus, is a species of ray-finned fish in the family Gadidae. It is a bottom-dwelling fish found in the northern Pacific Ocean, mainly on the continental shelf and upper slopes, to depths of about 900 m. It can grow to a length of a meter or so and is found in large schools.",

@@ -1,5 +1,5 @@
 modded class CatchingContextBase {
-    override EntityAI SpawnAndSetupCatch(out int yItemIdx, vector v = vector.Zero) {
+	override EntityAI SpawnAndSetupCatch(out int yItemIdx, vector v = vector.Zero) {
 		if (!m_IsValid) {
 			// Bug reports against "I caught nothing" used to land with a single
 			// "Could not spawn catch for item: <ref>" line that didn't say which

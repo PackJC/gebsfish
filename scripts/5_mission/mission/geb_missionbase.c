@@ -36,7 +36,8 @@ modded class MissionBase {
 
 	// Second check once the mission is up (MissionServer and MissionGameplay
 	// both call super here): another mod's mission constructor, running after
-	// ours, can still have changed the bank.
+	// ours, can still have changed the bank. The server checks a third time
+	// in OnGameplayDataHandlerLoad, where vanilla builds its world data again.
 	override void OnInit() {
 		super.OnInit();
 		GebRepairYieldBank();
@@ -51,10 +52,18 @@ modded class MissionBase {
 		GebGetConfigReadyInvoker().Remove(GebOnConfigReceived);
 		if (g_GebYieldBank == s_GebInitializedBank) {
 			g_GebYieldBank = null;
-			// The menu only holds the built-in defaults; drop them so the next
-			// mission loads its own (the profile's files offline, the server's
-			// copy online).
-			if (!g_Game.IsServer() || IsInherited(MissionMainMenu)) {
+			// A multiplayer client's config ends with its game. The main menu
+			// leaves it alone: a joining client gets the server's config while
+			// the menu is still up. The server sends it at ClientPrepareEvent, as
+			// soon as the client reports PLAYER ASSIGNED, and the client closes
+			// the menu only when the server moves it on to MISSION RECEIVED and
+			// it loads the server's mission, so dropping the config here lost it
+			// on every join from the menu. The menu marks it stale instead, and
+			// the next menu or offline game drops it (InitWorldYieldDataDefaults).
+			// An offline game's own restart keeps its config.
+			if (!g_Game.IsServer() || IsInherited(MissionMainMenu))
+				g_GebConfigStale = true;
+			if (!g_Game.IsServer() && !IsInherited(MissionMainMenu)) {
 				g_GebConfigReceived = false;
 				m_gebsConfig = null;
 			}
@@ -85,8 +94,20 @@ modded class MissionBase {
 		// clears it after this chain and fires the invoker again, as
 		// third-party map fixes do.
 		if (bank == s_GebInitializedBank && m_GebRegisteredConfig == m_gebsConfig && bank.GebBlockIntact()) {
-			GebsfishLogger.Info("Yield data already initialized for this bank -- skipping duplicate init.", "MissionBase");
+			if (GebGetDebugLevel() >= 1)
+				GebsfishLogger.Info("Yield data already initialized for this bank -- skipping duplicate init.", "MissionBase");
 			return;
+		}
+		// A mission's first registration. The main menu and an offline game
+		// start from their own config (the built-in defaults, the profile's
+		// files), so they drop one the last menu or client game left stale
+		// (~MissionBase): the menu's defaults, or a server's config whose join
+		// ended before the game. One loaded for this game (an offline game
+		// started straight from -mission, or restarted) is kept, and so is a
+		// multiplayer client's, which arrives while the menu is still up.
+		if (!s_GebInitializedBank && g_GebConfigStale && !g_Game.IsMultiplayer()) {
+			g_GebConfigReceived = false;
+			m_gebsConfig = null;
 		}
 		s_GebInitializedBank = bank;
 
@@ -95,14 +116,16 @@ modded class MissionBase {
 		m_GebRegisteredConfig = m_gebsConfig;
 		bank.GebBeginRegistration();
 
-		GebsfishLogger.Info("Initializing yield data.", "MissionBase");
+		if (GebGetDebugLevel() >= 1)
+			GebsfishLogger.Info("Initializing yield data.", "MissionBase");
 
 		RegisterFishYieldData(bank);
 		RegisterJunkYieldData(bank);
 		RegisterTrapAnimalYieldData(bank);
 		bank.GebEndRegistration();
 
-		GebsfishLogger.Info("Initialization of yield data complete.", "MissionBase");
+		if (GebGetDebugLevel() >= 1)
+			GebsfishLogger.Info("Initialization of yield data complete.", "MissionBase");
 	}
 
 	protected void RegisterFishYieldData(CatchYieldBank bank) {
@@ -111,7 +134,8 @@ modded class MissionBase {
 			return;
 		}
 
-		GebsfishLogger.Info("Adding fish to the yield data.", "MissionBase");
+		if (GebGetDebugLevel() >= 1)
+			GebsfishLogger.Info("Adding fish to the yield data.", "MissionBase");
 
 		if (m_gebsConfig && m_gebsConfig.Fish && m_gebsConfig.Fish.Species) {
 			geb_YieldFishGeneric fishYield;
@@ -127,7 +151,8 @@ modded class MissionBase {
 			}
 		}
 
-		GebsfishLogger.Info("Registering fish complete.", "MissionBase");
+		if (GebGetDebugLevel() >= 1)
+			GebsfishLogger.Info("Registering fish complete.", "MissionBase");
 	}
 
 	protected void RegisterJunkYieldData(CatchYieldBank bank) {
@@ -139,7 +164,8 @@ modded class MissionBase {
 			return;
 		}
 
-		GebsfishLogger.Info("Adding junk to the yield data.", "MissionBase");
+		if (GebGetDebugLevel() >= 1)
+			GebsfishLogger.Info("Adding junk to the yield data.", "MissionBase");
 
 		int i;
 		if (m_gebsConfig.Junk && m_gebsConfig.Junk.Junk)
@@ -172,14 +198,15 @@ modded class MissionBase {
 			}
 		}
 
-		GebsfishLogger.Info("Registering junk items complete.", "MissionBase");
+		if (GebGetDebugLevel() >= 1)
+			GebsfishLogger.Info("Registering junk items complete.", "MissionBase");
 	}
 
-    protected void GebRegisterUniqueYield(CatchYieldBank bank, YieldItemBase data) {
-        if (!data || bank.GetYieldsMap().Contains(data.GetType().Hash()))
-            return;
-        bank.RegisterYieldItem(data);
-    }
+	protected void GebRegisterUniqueYield(CatchYieldBank bank, YieldItemBase data) {
+		if (!data || bank.GetYieldsMap().Contains(data.GetType().Hash()))
+			return;
+		bank.RegisterYieldItem(data);
+	}
 
 	// Vanilla's snare catches per map. Sakhal has no poultry and an even
 	// rabbit/fox split (sakhal.c InitYieldBank), and so does Namalsk's own

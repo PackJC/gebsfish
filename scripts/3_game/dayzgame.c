@@ -21,8 +21,6 @@ modded class DayZGame {
         if (type != CallType.Client)
             return;
 
-        GebsfishLogger.Info("ConfigSync RPC callback called. IsClient: " + g_Game.IsClient(), "RPC");
-
         Param1<gebsfishConfig> configParams;
         if (!ctx.Read(configParams)) {
             GebsfishLogger.Error("ConfigSync: Failed to read configParams from context!", "RPC");
@@ -37,11 +35,13 @@ modded class DayZGame {
             return;
         }
 
-        GebsfishLogger.Info("ConfigSync: Successfully read configParams, setting config.", "RPC");
+        // Debug lines only after the swap: until then a client holds the
+        // built-in defaults, whose DebugLogs is always 0.
         SetGebsfishConfig(configParams.param1);
         g_GebConfigReceived = true;
         GebGetConfigReadyInvoker().Invoke();
-        GebsfishLogger.Info("Client received config data " + VERSION_GEBSFISH + " from the server.", "RPC");
+        if (GebGetDebugLevel() >= 1)
+            GebsfishLogger.Info("Client received config data " + VERSION_GEBSFISH + " from the server.", "RPC");
     }
 
     void PlayPredatorSound(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target) {
@@ -60,7 +60,8 @@ modded class DayZGame {
 
         string soundSetName = data.param1;
         EffectSound soundEffect;
-        GebsfishLogger.Debug("Received RPC to play sound: " + soundSetName + ".", "PredatorSpawnFishingRPC");
+        if (GebGetDebugLevel() >= 1)
+            GebsfishLogger.Debug("Received RPC to play sound: " + soundSetName + ".", "PredatorSpawnFishingRPC");
         player.PlaySoundSet(soundEffect, soundSetName, 0, 0); // Play the sound on the client
     }
 }

@@ -13,12 +13,46 @@ modded class FishingActionReceiveData {
 
 modded class ActionFishingNew: ActionContinuousBase {
     override bool SetupAction(PlayerBase player, ActionTarget target, ItemBase item, out ActionData action_data, Param extra_data = null) {
+        // Before vanilla's setup, which reserves the rod: a client still
+        // waiting for the server's config refuses with nothing to release.
         if (!GebCatchConfigReady())
             return false;
         if (!super.SetupAction(player, target, item, action_data, extra_data))
             return false;
         FishingActionData data = FishingActionData.Cast(action_data);
-        return data && data.m_ContextData && data.m_ContextData.IsValid();
+        if (data && data.m_ContextData && data.m_ContextData.IsValid())
+            return true;
+        GebRefuseCast(player, action_data);
+        // As vanilla's client manager does after a refused setup. The
+        // server's would keep the refused data as its current action, and
+        // run the action's OnUpdate on it, until its rejection came back from
+        // the client.
+        action_data = null;
+        return false;
+    }
+
+    // Nothing can bite: no catch for this water and tackle, or every weight
+    // is 0. The player's own game (a client, or offline) refuses first and
+    // then never asks the server; the server refuses alone only when its
+    // reading of the cast differs from the client's. Vanilla's setup has
+    // reserved the rod in the player's hands by now
+    // (ActionBase.InventoryReservation, client and offline only) and nothing
+    // releases a refused setup's reservation, so the rod stayed locked until
+    // it timed out after 5 s. A dedicated server reserves nothing at setup,
+    // so the release does nothing there.
+    protected void GebRefuseCast(PlayerBase player, ActionData action_data) {
+        ClearInventoryReservationEx(action_data);
+        if (GebGetDebugLevel() >= 1)
+            GebsfishLogger.Debug("Cast refused: nothing can bite here (no catch for this water and tackle, or every weight is 0).", "SetupAction");
+
+        // One chat line per refused cast, the way vanilla's actions report:
+        // MessageAction on the player's own game, which a server reaches
+        // through ActionBase.SendMessageToClient. The chat translates the key.
+        string message = "#STR_action_nothingbiting";
+        if (g_Game.IsDedicatedServer())
+            SendMessageToClient(player, message);
+        else
+            player.MessageAction(message);
     }
 
     // Builds the cast's catching context, on client and server alike. The
@@ -58,8 +92,10 @@ modded class ActionFishingNew: ActionContinuousBase {
     }
 
     // Server: adopt the client's reading only when it matches the server's own
-    // within tolerance, so a modified client can't claim a storm or a better
-    // hour. A mismatch can desync that one cast, never cheat it.
+    // within tolerance (GebFishingSnapshot.IsCloseTo), so a modified client
+    // can't claim a storm on a dry day or another time of day; within the
+    // margin it can only shade a boundary (see the constants there). A
+    // mismatch can desync that one cast, never cheat it.
     override void HandleReciveData(ActionReciveData action_recive_data, ActionData action_data) {
         super.HandleReciveData(action_recive_data, action_data);
         FishingActionData data = FishingActionData.Cast(action_data);

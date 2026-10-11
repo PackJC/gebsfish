@@ -8,7 +8,10 @@
 
 */
 
-// Craft the Wooden Fish Mount: 1 plank + 1 metal wire, with a hacksaw on you.
+// Craft the fish mounts: planks + 1 metal wire, with a hacksaw on you. The
+// small plaque takes 1 plank, the medium board 3 and the large board 6
+// (CraftMediumFishMount and CraftLargeFishMount at the bottom change only the
+// plank count, the board and the name).
 //
 // WHY THE HACKSAW ISN'T AN INGREDIENT: vanilla caps recipes at two ingredients
 // (MAX_NUMBER_OF_INGREDIENTS = 2 in RecipeBase.c) -- there is no third slot to
@@ -21,8 +24,21 @@ class CraftFishMount extends RecipeBase {
 	// Roughly matches what a tool loses in an ingredient slot on a comparable craft.
 	private const float HACKSAW_WEAR = 5.0;
 
+	// Planks used, the board made and the recipe's name.
+	protected int GebPlanks() {
+		return 1;
+	}
+
+	protected string GebBoard() {
+		return "geb_WoodenFishMount";
+	}
+
+	protected string GebRecipeName() {
+		return "#STR_craft_smallfishmount";
+	}
+
 	override void Init() {
-		m_Name = "#STR_craft_fishmount";
+		m_Name = GebRecipeName();
 		m_IsInstaRecipe = false;
 		m_AnimationLength = 2;
 		m_Specialty = 0.02;// roughness
@@ -32,7 +48,7 @@ class CraftFishMount extends RecipeBase {
 		m_MinDamageIngredient[0] = -1;
 		m_MaxDamageIngredient[0] = 3;// anything short of ruined
 
-		m_MinQuantityIngredient[0] = 1;
+		m_MinQuantityIngredient[0] = GebPlanks();
 		m_MaxQuantityIngredient[0] = -1;
 
 		m_MinDamageIngredient[1] = -1;
@@ -43,13 +59,13 @@ class CraftFishMount extends RecipeBase {
 		//----------------------------------------------------------------------------------------------------------------------
 
 		//INGREDIENTS
-		//ingredient 1 -- the board
+		//ingredient 1 -- the board's planks
 		InsertIngredient(0,"WoodenPlank");
 
 		m_IngredientAddHealth[0] = 0;
 		m_IngredientSetHealth[0] = -1;
-		m_IngredientAddQuantity[0] = -1;
-		m_IngredientDestroy[0] = false; // consume one plank, preserve the remaining stack
+		m_IngredientAddQuantity[0] = -GebPlanks();
+		m_IngredientDestroy[0] = false; // consume the planks, preserve the rest of the stack
 		m_IngredientUseSoftSkills[0] = false;
 
 		//ingredient 2 -- the hanging wire
@@ -63,18 +79,38 @@ class CraftFishMount extends RecipeBase {
 		//----------------------------------------------------------------------------------------------------------------------
 
 		//result1
-		AddResult("geb_WoodenFishMount");
+		AddResult(GebBoard());
 
 		m_ResultSetFullQuantity[0] = false;
 		m_ResultSetQuantity[0] = -1;
 		m_ResultSetHealth[0] = -1;
 		m_ResultInheritsHealth[0] = -1;
 		m_ResultInheritsColor[0] = -1;
-		m_ResultToInventory[0] = -1;// place anywhere in the player's inventory
+		m_ResultToInventory[0] = -2;// the ground, unless SpawnItems below finds the board a safe spot in the player's inventory
 		m_ResultUseSoftSkills[0] = false;
 		m_ResultReplacesIngredient[0] = -1;
 
 		//----------------------------------------------------------------------------------------------------------------------
+	}
+
+	// The board goes where vanilla's "anywhere in the player's inventory"
+	// result (-1) would put it: the first free cargo or attachment spot the
+	// player's inventory has for its classname. When there is none, or that
+	// spot is inside a gebsfish filtered container (cooler, Bait Bucket,
+	// tackle box...) that refuses boards, vanilla's SpawnItems drops it on the
+	// ground (-2 in Init), even if another spot is free: the engine picks the
+	// spot by classname without asking the container's cargo checks, so the
+	// board would go in and be thrown out when storage loads after a restart
+	// (geb_FilteredContainerBase.GebCreateInInventory). The hands are never
+	// free here: one of the ingredients is in them.
+	override void SpawnItems(ItemBase ingredients[], PlayerBase player, array<ItemBase> spawned_objects) {
+		EntityAI board = geb_FilteredContainerBase.GebCreateInInventory(player, GebBoard());
+		if (!board) {
+			super.SpawnItems(ingredients, player, spawned_objects);
+			return;
+		}
+		spawned_objects.Clear();
+		spawned_objects.Insert(ItemBase.Cast(board));
 	}
 
 	// First non-ruined hacksaw anywhere on the player, or null.
@@ -126,5 +162,35 @@ class CraftFishMount extends RecipeBase {
 		ItemBase saw = FindHacksaw(player);
 		if (saw)
 			saw.DecreaseHealth("", "", HACKSAW_WEAR);
+	}
+};
+
+// Three planks make the medium board (pike, catfish, cod, crabs).
+class CraftMediumFishMount extends CraftFishMount {
+	override protected int GebPlanks() {
+		return 3;
+	}
+
+	override protected string GebBoard() {
+		return "geb_MediumFishMount";
+	}
+
+	override protected string GebRecipeName() {
+		return "#STR_craft_mediumfishmount";
+	}
+};
+
+// Six planks make the large board (sturgeon, billfish, sharks).
+class CraftLargeFishMount extends CraftFishMount {
+	override protected int GebPlanks() {
+		return 6;
+	}
+
+	override protected string GebBoard() {
+		return "geb_LargeFishMount";
+	}
+
+	override protected string GebRecipeName() {
+		return "#STR_craft_largefishmount";
 	}
 };

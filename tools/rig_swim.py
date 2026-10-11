@@ -39,15 +39,22 @@ def parse_args():
          "mouth_cycles": 1.0,
          # swim/undulate = spine wave; crawl/drift/pulse = whole-body motion
          # for creatures with no swimming spine.
-         "profile": "swim", "flip_head": False}
+         "profile": "swim", "flip_head": False,
+         # From the fish manifest, as the still renderer uses them: the
+         # species' own material (several species share one model), and
+         # the orientation fixes flip_v (comes out belly-up) and roll (the
+         # splay-legged frog). flip_h isn't needed: the head test turns
+         # every head the same way, and --flip-head corrects a wrong guess.
+         "material": None, "flip_v": False, "roll": False}
+    flags = {"--flip-head": "flip_head", "--flip-v": "flip_v", "--roll": "roll"}
     i = 0
     while i < len(argv):
-        if argv[i] == "--flip-head":
-            o["flip_head"] = True
+        if argv[i] in flags:
+            o[flags[argv[i]]] = True
             i += 1
             continue
         k = argv[i][2:] if argv[i].startswith("--") else None
-        if k in ("p3d", "texture", "name", "out", "src", "view", "profile"):
+        if k in ("p3d", "texture", "material", "name", "out", "src", "view", "profile"):
             o[k] = argv[i + 1]; i += 2
         elif k in ("frames", "res", "samples", "bones"):
             o[k] = int(argv[i + 1]); i += 2
@@ -444,10 +451,29 @@ def main():
         sys.exit("no mesh imported from %s" % o["p3d"])
 
     applied, missing = rp.apply_textures(
-        meshes, o["src"], {}, [o["texture"]] if o["texture"] else None)
+        meshes, o["src"], {}, [o["texture"]] if o["texture"] else None,
+        material=o["material"])
     print("  textures applied: %d%s" % (applied, "  MISSING: " + ",".join(missing) if missing else ""))
 
     normalise_orientation(meshes, o["view"])
+    # The manifest's orientation fixes, turned the way the still renderer
+    # turns its camera for them: roll is a quarter turn in frame (about the
+    # viewing axis, +Y here), flip_v a half turn about the length axis (+X).
+    turns = []
+    if o["roll"]:
+        turns.append(Matrix.Rotation(math.pi / 2, 4, 'Y'))
+    if o["flip_v"]:
+        turns.append(Matrix.Rotation(math.pi, 4, 'X'))
+    if turns:
+        for turn in turns:
+            for obj in meshes:
+                obj.matrix_world = turn @ obj.matrix_world
+        bpy.context.view_layer.update()
+        bpy.ops.object.select_all(action='DESELECT')
+        for obj in meshes:
+            obj.select_set(True)
+        bpy.context.view_layer.objects.active = meshes[0]
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     head_pos = head_is_positive_x(meshes)
     if o["flip_head"]:
         head_pos = not head_pos          # centroid test guessed backwards

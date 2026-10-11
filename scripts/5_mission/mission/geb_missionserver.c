@@ -19,9 +19,11 @@ modded class MissionServer {
 		GebWarnUnplaceableNetCatches();
 
 		gebsfishTypes fishTypesGenerator = new gebsfishTypes();
-    	fishTypesGenerator.GenerateTypesXML();
+		fishTypesGenerator.GenerateTypesXML();
 		gebsfishSpawnableTypes fishSpawnableTypesGenerator = new gebsfishSpawnableTypes();
-    	fishSpawnableTypesGenerator.GenerateSpawnableTypesXML();
+		fishSpawnableTypesGenerator.GenerateSpawnableTypesXML();
+		gebsfishEvents fishEventsGenerator = new gebsfishEvents();
+		fishEventsGenerator.GenerateEventsXML();
 	}
 
 	// Net catches spawn into the net's cargo, which only takes the classes on
@@ -44,16 +46,24 @@ modded class MissionServer {
 		super.OnClientPrepareEvent(identity, useDB, pos, yaw, preloadTimeout);
 
 		if(identity) {
-			//if identity is valid, send config to player. 
+			//if identity is valid, send config to player.
 			auto configParams = new Param1<gebsfishConfig>(GetGebSettingsConfig());
-			GebsfishLogger.Info("Sending Geb's Fishing config " + VERSION_GEBSFISH + " to Player: " + identity.GetName() + " RPC: ConfigSync", "RPC");
-			PlayerBase player = PlayerBase.Cast(identity.GetPlayer());
-			GetRPCManager().SendRPC("gebsfish", "ConfigSync", configParams, true, identity, player);
+			if (GebGetDebugLevel() >= 1)
+				GebsfishLogger.Info("Sending Geb's Fishing config " + VERSION_GEBSFISH + " to Player: " + identity.GetName() + " RPC: ConfigSync", "RPC");
+			// No target object, as in vanilla's own prepare-time syncs
+			// (CfgGameplayHandler.SyncDataSendEx): the client's handler never
+			// reads one, and CGame.RPC silently drops an RPC whose target has no
+			// network id.
+			GetRPCManager().SendRPC("gebsfish", "ConfigSync", configParams, true, identity);
 		}
 	}
 
 	override void OnGameplayDataHandlerLoad() {
 		super.OnGameplayDataHandlerLoad();
+		// Vanilla builds the server's world data a second time here, with a
+		// new catch list, after MissionBase's two checks ran on the first one:
+		// check the list the server keeps (nothing to do while ours is in it).
+		GebRepairYieldBank();
 		if(GebGetDebugLevel() == ELEVATED_DEBUG){
 			// Resolve the yield map only when the dump will actually run,
 			// and null-guard each link -- the old unconditional 3-deep chain
@@ -102,16 +112,16 @@ modded class MissionServer {
 
 	string GetDisplayNameFromTypeName(string typeName) {
 
-        // Find the display name in the config
-        string displayName = "";
-        if (g_Game.ConfigIsExisting("CfgVehicles " + typeName)) {
-            displayName = g_Game.ConfigGetTextOut("CfgVehicles " + typeName + " displayName");
-        }
-        
-        // Return display name or fallback to type name if not found
-        if (displayName == "") {
-            return typeName; // Fallback to type name if no display name is found
-        }
-        return displayName;
-    }
+		// Find the display name in the config
+		string displayName = "";
+		if (g_Game.ConfigIsExisting("CfgVehicles " + typeName)) {
+			displayName = g_Game.ConfigGetTextOut("CfgVehicles " + typeName + " displayName");
+		}
+
+		// Return display name or fallback to type name if not found
+		if (displayName == "") {
+			return typeName; // Fallback to type name if no display name is found
+		}
+		return displayName;
+	}
 }

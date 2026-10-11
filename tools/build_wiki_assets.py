@@ -114,10 +114,18 @@ def main():
     os.makedirs(DOCS_IMG, exist_ok=True)
 
     keys, table = description_keys(), english_table()
+    # The catchable species, from the seeds. A render of anything else (a
+    # removed species, a fillet) is skipped before its picture is written,
+    # so an old render left in the folder can't put a deleted picture back.
+    seeds = os.path.join(REPO, "scripts", "3_game", "FileGenerators", "gebsfishConfig.c")
+    species = set(re.findall(r'f\.Classname="([^"]+)"', read(seeds)))
 
-    details, written, no_desc, no_img = {}, 0, [], []
+    details, written, no_desc, skipped = {}, 0, [], []
     for path in pngs:
         cls = os.path.splitext(os.path.basename(path))[0]
+        if cls not in species:
+            skipped.append(cls)
+            continue
 
         img = Image.open(path).convert("RGBA")
         bbox = img.getbbox()
@@ -133,15 +141,19 @@ def main():
         # Escaped here because the page injects it with innerHTML.
         details[cls] = {"img": "fish/%s.webp" % cls, "desc": html.escape(desc)}
 
-    # Species with a description but no render (the vanilla DayZ ones) still
-    # get their text so the panel isn't empty. Restrict to the catchable
-    # species so the payload stays small -- every tool and lure in the mod
-    # also has a description, and none of them appear in the fish table.
-    seeds = os.path.join(REPO, "scripts", "3_game", "FileGenerators", "gebsfishConfig.c")
-    species = set(re.findall(r'f\.Classname="([^"]+)"', read(seeds)))
-    for cls, key in keys.items():
-        if cls in species and cls not in details and table.get(key):
-            details[cls] = {"img": "", "desc": html.escape(table[key])}
+    # Species not rendered this run keep the picture they already have in
+    # docs/fish/ (rendering one species mustn't blank the others), and the
+    # ones with no picture at all (the vanilla DayZ fish) still get their
+    # text so the panel isn't empty. Restrict to the catchable species so the
+    # payload stays small -- every tool and lure in the mod also has a
+    # description, and none of them appear in the fish table.
+    for cls in sorted(species):
+        if cls in details:
+            continue
+        has_img = os.path.exists(os.path.join(DOCS_IMG, cls + ".webp"))
+        desc = table.get(keys.get(cls, ""), "")
+        if has_img or desc:
+            details[cls] = {"img": ("fish/%s.webp" % cls) if has_img else "", "desc": html.escape(desc)}
     details = {k: v for k, v in details.items() if k in species}
 
     with open(OUT_JS, "w", encoding="utf-8") as fh:
@@ -157,6 +169,8 @@ def main():
           % (sum(1 for v in details.values() if v["desc"]), len(details)))
     if no_desc:
         print("no description : %s" % ", ".join(sorted(no_desc)[:12]))
+    if skipped:
+        print("not a species  : %s (no picture written)" % ", ".join(sorted(skipped)))
     return 0
 
 

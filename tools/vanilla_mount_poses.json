@@ -1,0 +1,81 @@
+{
+ "_about": "Mount poses of the mountable vanilla classes, whose models can't live in this repo. tools/build_mount_poses.py reads them; run it with --dz <extraction root> after a game update to recompute them from the game's own (debinarized) models, which rewrites this file. pose = size, yaw, pitch, roll, dx, dy, dz, height; length in metres of model.",
+ "computed": "2026-10-05, game 1.29 stable (ODOL v54 models)",
+ "classes": {
+  "Shrimp": {
+   "model": "dz/gear/food/shrimp.p3d",
+   "view": "AUTO",
+   "pose": [
+    0,
+    0,
+    270,
+    90,
+    -0.0019,
+    -0.0005,
+    0.0064,
+    0.111
+   ],
+   "length": 0.14
+  },
+  "Carp": {
+   "model": "dz/gear/food/carp_live.p3d",
+   "view": "AUTO",
+   "pose": [
+    0,
+    0,
+    0,
+    0,
+    0.0774,
+    -0.0105,
+    0.094,
+    0.231
+   ],
+   "length": 0.45
+  },
+  "Mackerel": {
+   "model": "dz/gear/food/mackerel_live.p3d",
+   "view": "AUTO",
+   "pose": [
+    0,
+    0,
+    0,
+    0,
+    -0.0587,
+    -0.0167,
+    0.0297,
+    0.108
+   ],
+   "length": 0.41
+  },
+  "WalleyePollock": {
+   "model": "dz/gear/food/walleye_pollock_live.p3d",
+   "view": "AUTO",
+   "pose": [
+    0,
+    0,
+    0,
+    0,
+    0.0995,
+    0.0,
+    0.0528,
+    0.12
+   ],
+   "length": 0.44
+  },
+  "SteelheadTrout": {
+   "model": "dz/gear/food/steelhead_trout_live.p3d",
+   "view": "MID",
+   "pose": [
+    0,
+    0,
+    0,
+    0,
+    0.1139,
+    -0.0072,
+    0.0942,
+    0.17
+   ],
+   "length": 0.48
+  }
+ }
+}

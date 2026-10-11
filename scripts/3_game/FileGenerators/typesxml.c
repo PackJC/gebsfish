@@ -1,7 +1,5 @@
 class gebsfishTypes {
-    private const string DIRECTORY_PATH = "$profile:Gebs/mpmissions/";
     private const string FILE_PATH = "$profile:Gebs/mpmissions/gebsfish-types.xml";
-    private const string VERSION_PREFIX = "<!-- Version: ";
 
     void GenerateTypesXML() {
         // Only generate on the server.
@@ -11,12 +9,12 @@ class gebsfishTypes {
         string version = VERSION_GEBSFISH;
 
         // Skip regeneration if the existing file already matches the current version.
-        if (IsCurrentVersion(FILE_PATH, version)) {
+        if (GebXmlFiles.IsCurrentVersion(FILE_PATH, version)) {
             GebsfishLogger.Info("Types XML already at version " + version + ". Skipping regeneration.", "Types");
             return;
         }
 
-        EnsureDirectoryExists();
+        GebXmlFiles.EnsureDirectoryExists();
 
         FileHandle file = OpenFile(FILE_PATH, FileMode.WRITE);
         if (!file) {
@@ -27,58 +25,16 @@ class gebsfishTypes {
         WriteHeader(file, version);
         WriteFishSection(file);
         WriteGearSection(file);
+        WriteVehicleSection(file);
         WriteFooter(file);
 
         CloseFile(file);
         GebsfishLogger.Info("gebsfish-types.xml successfully generated in $profile:Gebs/mpmissions/.", "Types");
     }
 
-    protected bool IsCurrentVersion(string filePath, string expectedVersion) {
-        if (!FileExist(filePath))
-            return false;
-
-        FileHandle readFile = OpenFile(filePath, FileMode.READ);
-        if (!readFile)
-            return false;
-
-        string line;
-        string existingVersion = "";
-        int lineCount = 0;
-
-        // Read the first few lines so the version comment can be found even if the XML declaration is first.
-        while (lineCount < 5 && FGets(readFile, line) > 0) {
-            existingVersion = ExtractVersionFromLine(line);
-            if (existingVersion != string.Empty)
-                break;
-
-            lineCount++;
-        }
-
-        CloseFile(readFile);
-        return existingVersion == expectedVersion;
-    }
-
-    protected string ExtractVersionFromLine(string line) {
-        int start = line.IndexOf(VERSION_PREFIX);
-        if (start == -1)
-            return string.Empty;
-
-        string tail = line.Substring(start, line.Length() - start);
-        int end = tail.IndexOf("-->");
-        if (end == -1)
-            return string.Empty;
-
-        return tail.Substring(VERSION_PREFIX.Length(), end - VERSION_PREFIX.Length()).Trim();
-    }
-
-    protected void EnsureDirectoryExists() {
-        MakeDirectory("$profile:Gebs");
-        MakeDirectory(DIRECTORY_PATH);
-    }
-
     protected void WriteHeader(FileHandle file, string version) {
         FPrintln(file, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        FPrintln(file, "<!-- Version: " + version + " -->");
+        GebXmlFiles.WriteVersionLine(file, version);
         FPrintln(file, "<types>");
     }
 
@@ -91,8 +47,8 @@ class gebsfishTypes {
 
         gebsfishConfig cfg = GetGebSettingsConfig();
         if (cfg && cfg.Fish && cfg.Fish.Species) {
-            // Result classnames are shared across species (8 fish produce
-            // RedCaviar) but types.xml needs each classname declared once.
+            // Result classnames are shared across species (five pike and muskies
+            // give geb_YellowCaviar), but types.xml needs each declared once.
             map<string, bool> written = new map<string, bool>();
             foreach (FishConf f : cfg.Fish.Species) {
                 if (!f || f.Classname == "") continue;
@@ -121,17 +77,32 @@ class gebsfishTypes {
 
     protected void WriteGearSection(FileHandle file) {
         ref array<ref XmlTypeEntry> gearItems = new array<ref XmlTypeEntry>;
-        gearItems.Reserve(80);
+        gearItems.Reserve(100);
 
-        // Fishing rods spawn slightly more often than the rest of the gear.
-        TStringArray rods = {"geb_RedFishingRod", "geb_BlueFishingRod", "geb_GreenFishingRod", "geb_PurpleFishingRod"};
-        InsertGearBatch(gearItems, rods, 5, 1);
+        // Fishing rods: the ten colours share the spawns the four rods had (4 x 5 = 20, now 10 x 2 = 20),
+        // so a new colour makes each rod rarer, not rods commoner.
+        TStringArray rods = {"geb_RedFishingRod", "geb_BlueFishingRod", "geb_GreenFishingRod", "geb_PurpleFishingRod", "geb_OrangeFishingRod", "geb_YellowFishingRod", "geb_BrownFishingRod", "geb_LightBlueFishingRod", "geb_LimeFishingRod", "geb_PinkFishingRod"};
+        InsertGearBatch(gearItems, rods, 2, 1);
+
+        // Fishing clothes: 50 pieces (hats, shirts, raincoats, wellies and gloves, ten colours each), one of
+        // each in the world, the fewest the economy allows. The four hats, four shirts and two gloves were 30
+        // at 3 apiece; one each of every new colour and piece keeps each piece rarer than it was. Typed as
+        // clothes, like vanilla's raincoats, caps, T-shirts and gloves, so they spawn where clothing does
+        // instead of on tool spots.
+        TStringArray clothes = {
+            "geb_BlueFishHat", "geb_RedFishHat", "geb_GreenFishHat", "geb_PurpleFishHat", "geb_OrangeFishHat", "geb_YellowFishHat", "geb_BrownFishHat", "geb_LightBlueFishHat", "geb_LimeFishHat", "geb_PinkFishHat",
+            "geb_RedFishShirt", "geb_GreenFishShirt", "geb_BlueFishShirt", "geb_PurpleFishShirt", "geb_OrangeFishShirt", "geb_YellowFishShirt", "geb_BrownFishShirt", "geb_LightBlueFishShirt", "geb_LimeFishShirt", "geb_PinkFishShirt",
+            "geb_RedFishRaincoat", "geb_GreenFishRaincoat", "geb_BlueFishRaincoat", "geb_PurpleFishRaincoat", "geb_OrangeFishRaincoat", "geb_YellowFishRaincoat", "geb_BrownFishRaincoat", "geb_LightBlueFishRaincoat", "geb_LimeFishRaincoat", "geb_PinkFishRaincoat",
+            "geb_RedFishWellies", "geb_GreenFishWellies", "geb_BlueFishWellies", "geb_PurpleFishWellies", "geb_OrangeFishWellies", "geb_YellowFishWellies", "geb_BrownFishWellies", "geb_LightBlueFishWellies", "geb_LimeFishWellies", "geb_PinkFishWellies",
+            "geb_BlueFishGloves", "geb_OrangeFishGloves", "geb_YellowFishGloves", "geb_RedFishGloves", "geb_GreenFishGloves", "geb_PurpleFishGloves", "geb_BrownFishGloves", "geb_LightBlueFishGloves", "geb_LimeFishGloves", "geb_PinkFishGloves"
+        };
+        InsertGearBatch(gearItems, clothes, 1, 1, "clothes");
 
         // Everything else (knives, tackle boxes, containers, baits/lures,
-        // clothing, coolers) shares the same 3/1 loot profile.
+        // the repair kit, coolers) shares the same 3/1 loot profile.
         TStringArray gear = {
             "geb_BlueFishKnife", "geb_OrangeFishKnife", "geb_GreenFishKnife", "geb_YellowFishKnife",
-            "geb_RedFishKnife", "geb_PurpleFishKnife",
+            "geb_RedFishKnife", "geb_PurpleFishKnife", "geb_LimeFishKnife", "geb_LightBlueFishKnife", "geb_CamoFishKnife", "geb_BrownFishKnife", "geb_PinkFishKnife",
             "geb_OldRedTackle", "geb_OldPurpleTackle", "geb_OldGreenTackle", "geb_OldBlueTackle",
             "geb_YellowTackle", "geb_RedTackle", "geb_PurpleTackle", "geb_PinkTackle",
             "geb_OrangeTackle", "geb_LimeTackle", "geb_LightBlueTackle", "geb_GreenTackle",
@@ -142,10 +113,7 @@ class gebsfishTypes {
             "geb_Lure1", "geb_Lure2", "geb_Lure3", "geb_Lure4",
             "geb_SpoonLure1", "geb_SpoonLure2", "geb_SpoonLure3", "geb_SpoonLure4",
             "geb_CurlyTailJig1", "geb_CurlyTailJig2", "geb_CurlyTailJig3", "geb_CurlyTailJig4",
-            "geb_FunPurpleTackle", "geb_FunYellowTackle", "geb_FunGreenTackle", "geb_FunRedTackle",
-            "geb_BlueFishHat", "geb_RedFishHat", "geb_GreenFishHat", "geb_PurpleFishHat",
-            "geb_RedFishShirt", "geb_GreenFishShirt", "geb_BlueFishShirt", "geb_PurpleFishShirt",
-            "geb_FishingRodRepairKit", "geb_BlueFishGloves", "geb_OrangeFishGloves",
+            "geb_FishingRodRepairKit",
             "geb_RedCooler", "geb_YellowCooler", "geb_BlueCooler", "geb_OrangeCooler",
             "geb_BrownCooler", "geb_PurpleCooler", "geb_PinkCooler", "geb_LimeCooler",
             "geb_LightBlueCooler", "geb_GreenCooler", "geb_CamoCooler"
@@ -160,7 +128,7 @@ class gebsfishTypes {
         // base vanished with everything in it.
         FPrintln(file, "    <!-- Gear Items -->");
         foreach (XmlTypeEntry gearEntry : gearItems) {
-            WriteType(file, gearEntry.Name, gearEntry.Nominal, 14400, 0, gearEntry.Min, -1, -1, 200, "tools", true, false);
+            WriteType(file, gearEntry.Name, gearEntry.Nominal, 14400, 0, gearEntry.Min, -1, -1, 200, gearEntry.Category, true, false);
         }
 
         // Live insect bait comes from digging (and inside bug containers via
@@ -173,18 +141,42 @@ class gebsfishTypes {
             WriteType(file, bait, 0, 7200, 0, 0, -1, -1, 200, "tools", false, true);
         }
 
-        // The fish mount is a placed structure, not pocket loot: crafted with
+        // The fish mounts are placed structures, not pocket loot: crafted with
         // nominal 0 like vanilla's WoodenCrate, and the tent/barrel lifetime
         // (45 days untouched) instead of the 4-hour gear lifetime, so wall
         // trophies persist like any base fixture and abandoned ones decay
         // away on the same schedule as tents.
         FPrintln(file, "    <!-- Placed structures -->");
-        WriteType(file, "geb_WoodenFishMount", 0, 3888000, 0, 0, -1, -1, 200, "tools", false, true);
+        TStringArray mounts = {"geb_WoodenFishMount", "geb_MediumFishMount", "geb_LargeFishMount"};
+        foreach (string mount : mounts) {
+            WriteType(file, mount, 0, 3888000, 0, 0, -1, -1, 200, "tools", false, true);
+        }
     }
 
-    protected void InsertGearBatch(array<ref XmlTypeEntry> gearItems, TStringArray names, int nominal, int min) {
+    protected void InsertGearBatch(array<ref XmlTypeEntry> gearItems, TStringArray names, int nominal, int min, string category = "tools") {
         foreach (string name : names) {
-            gearItems.Insert(new XmlTypeEntry(name, nominal, min));
+            gearItems.Insert(new XmlTypeEntry(name, nominal, min, category));
+        }
+    }
+
+    // The jon boats, typed the way vanilla types its Boat_01 boats: nominal 0
+    // (they come from the VehicleBoat event, an admin or a trader, not loot),
+    // lifetime 3, cost 100, counted on the map only, no category or usage.
+    // Without a type the CE doesn't know them at all.
+    protected void WriteVehicleSection(FileHandle file) {
+        TStringArray boats = GebXmlFiles.s_JonBoats;
+        FPrintln(file, "    <!-- Vehicles -->");
+        foreach (string boat : boats) {
+            FPrintln(file, "    <type name=\"" + boat + "\">");
+            FPrintln(file, "        <nominal>0</nominal>");
+            FPrintln(file, "        <lifetime>3</lifetime>");
+            FPrintln(file, "        <restock>0</restock>");
+            FPrintln(file, "        <min>0</min>");
+            FPrintln(file, "        <quantmin>-1</quantmin>");
+            FPrintln(file, "        <quantmax>-1</quantmax>");
+            FPrintln(file, "        <cost>100</cost>");
+            FPrintln(file, "        <flags count_in_cargo=\"0\" count_in_hoarder=\"0\" count_in_map=\"1\" count_in_player=\"0\" crafted=\"0\" deloot=\"0\"/>");
+            FPrintln(file, "    </type>");
         }
     }
 
@@ -222,10 +214,12 @@ class XmlTypeEntry {
     string Name;
     int Nominal;
     int Min;
+    string Category;
 
-    void XmlTypeEntry(string name, int nominal, int min) {
+    void XmlTypeEntry(string name, int nominal, int min, string category = "tools") {
         Name = name;
         Nominal = nominal;
         Min = min;
+        Category = category;
     }
 }

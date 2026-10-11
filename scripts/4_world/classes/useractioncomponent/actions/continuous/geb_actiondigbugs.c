@@ -78,10 +78,7 @@ class ActionDigBugs : ActionContinuousBase {
 		if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.DigBugsSettings)
 			return 1.0;
 
-		float chance = m_gebsConfig.General.DigBugsSettings.FindChance;
-		if (chance < 0.0) chance = 0.0;
-		if (chance > 1.0) chance = 1.0;
-		return chance;
+		return Math.Clamp(m_gebsConfig.General.DigBugsSettings.FindChance, 0.0, 1.0);
 	}
 
 	override void OnFinishProgressServer(ActionData action_data) {
@@ -117,12 +114,8 @@ class ActionDigBugs : ActionContinuousBase {
 
 		// Per-attempt find chance gate.
 		float findChance = GetDigBugsFindChance();
-		float findRoll = -1;
-		bool foundSomething = true;
-		if (findChance < 1.0) {
-			findRoll = Math.RandomFloat01();
-			foundSomething = (findRoll < findChance);
-		}
+		float findRoll;
+		bool foundSomething = GebRollChance(findChance, findRoll);
 		if (debugLevel >= 1) {
 			GebsfishLogger.Debug("Dig-bugs find-chance gate: findChance=" + findChance + " roll=" + findRoll + " result=" + foundSomething, "DigBugs");
 		}
@@ -145,12 +138,24 @@ class ActionDigBugs : ActionContinuousBase {
 			return;
 		string selectedBug = names[pick];
 
-		// Spawn the selected bug. Quantity 1 -- one bug per successful dig.
-		// CreateObjectEx, NOT CreateObject: CreateObject's third param is
+		// The bug goes into the Bug Catcher doing the digging, as the bamboo
+		// net keeps its catch, and onto the spot the player dug when it doesn't
+		// fit or isn't on the catcher's allow-list. The allow-list is checked by
+		// classname first: CreateInInventory places a new item by type without
+		// asking the cargo filter, so a refused type would go in now and be
+		// thrown out at the next restart. Quantity 1 -- one bug per successful
+		// dig. CreateObjectEx, NOT CreateObject: CreateObject's third param is
 		// `bool create_local` (a flag there silently coerces to true and the
 		// object never networks to clients); only CreateObjectEx takes ECE_ flags.
 		if (selectedBug != "") {
-			ItemBase bugs = ItemBase.Cast(g_Game.CreateObjectEx(selectedBug, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
+			EntityAI catcher = action_data.m_MainItem;
+			EntityAI bugEntity;
+			geb_FilteredContainerBase filtered = geb_FilteredContainerBase.Cast(catcher);
+			if (catcher && catcher.GetInventory() && (!filtered || filtered.GebAcceptsType(selectedBug)))
+				bugEntity = catcher.GetInventory().CreateInInventory(selectedBug);
+			if (!bugEntity)
+				bugEntity = EntityAI.Cast(g_Game.CreateObjectEx(selectedBug, action_data.m_Target.GetCursorHitPos(), ECE_PLACE_ON_SURFACE));
+			ItemBase bugs = ItemBase.Cast(bugEntity);
 			if (bugs) {
 				bugs.SetQuantity(1, false);
 			}

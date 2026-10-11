@@ -46,7 +46,7 @@ class GebsTreasureSpawner {
         // A crafted rod is a stick and a length of rope -- it has no business
         // winching a sea chest off the bottom. ImprovisedFishingRod is a SIBLING
         // of FishingRod (both extend FishingRod_Base_New) rather than a child, so
-        // testing for FishingRod admits the vanilla rod and the four gebsfish
+        // testing for FishingRod admits the vanilla rod and the ten gebsfish
         // colour variants while leaving the improvised one out. Gated before the
         // roll so an ineligible rod never burns a chance.
         if (ts.RequireRealRod && (!rod || !rod.IsInherited(FishingRod))) {
@@ -84,7 +84,7 @@ class GebsTreasureSpawner {
 
         ItemBase containerItem = ItemBase.Cast(spawned);
         if (containerItem)
-            containerItem.SetHealthLevel(RollHealthLevel(container.MinHealthLevel, container.MaxHealthLevel), "");
+            containerItem.SetHealthLevel(GebRollHealthLevel(container.MinHealthLevel, container.MaxHealthLevel), "");
 
         // CreateObjectEx hands the container its types.xml lifetime (a SeaChest
         // sits 45-90 days and counts toward the CE nominal). Give an untouched
@@ -173,16 +173,22 @@ class GebsTreasureSpawner {
             if (!loot)
                 continue;
 
-            EntityAI made = container.GetInventory().CreateInInventory(loot.Classname);
+            // Where CreateInInventory would put it, but never inside a gebsfish
+            // container that refuses it: the treasure container itself if an
+            // admin listed one in TreasureContainers (a tackle box, cooler or
+            // bucket), or one an earlier slot put inside it. CreateInInventory
+            // doesn't ask their cargo filters, and the next restart would throw
+            // the item out.
+            EntityAI made = geb_FilteredContainerBase.GebCreateInInventory(container, loot.Classname);
             if (!made) {
                 if (debugLevel >= 1)
-                    GebsfishLogger.Debug("could not place '" + loot.Classname + "' (container full, or classname missing) -- skipping this slot.", logTag);
+                    GebsfishLogger.Debug("could not place '" + loot.Classname + "' (container full, a container there refuses it, or classname missing) -- skipping this slot.", logTag);
                 continue;
             }
 
             ItemBase item = ItemBase.Cast(made);
             if (item) {
-                item.SetHealthLevel(RollHealthLevel(loot.MinHealthLevel, loot.MaxHealthLevel), "");
+                item.SetHealthLevel(GebRollHealthLevel(loot.MinHealthLevel, loot.MaxHealthLevel), "");
                 // 0/0 means "leave the item at whatever it spawns with"
                 if (loot.MaxQuantity > 0) {
                     int qty = GetInclusiveRandomInt(loot.MinQuantity, loot.MaxQuantity);
@@ -227,16 +233,6 @@ class GebsTreasureSpawner {
     }
 
     // ---- helpers ----
-
-    // Clamped so a typo'd config can't push SetHealthLevel out of range, and
-    // inversion-safe so Min > Max degrades to "always Min" instead of breaking.
-    protected static int RollHealthLevel(int minLevel, int maxLevel) {
-        if (minLevel < 0) minLevel = 0;
-        if (minLevel > 4) minLevel = 4;
-        if (maxLevel < minLevel) maxLevel = minLevel;
-        if (maxLevel > 4) maxLevel = 4;
-        return Math.RandomInt(minLevel, maxLevel + 1);
-    }
 
     protected static int GetInclusiveRandomInt(int min, int max) {
         if (min < 0) min = 0;

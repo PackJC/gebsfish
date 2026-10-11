@@ -9,7 +9,7 @@
 */
 
 // Centralised predator-spawn logic. Callers (fishing action, prepare-fish
-// recipe, fishing-net action) pass the triggering player, the chance from
+// recipe, net and spear actions) pass the triggering player, the chance from
 // config (e.g. PredatorSpawnChanceFishing / Preparing / FailCatch / FishingNet),
 // and a log tag so call sites stay identifiable in script.log.
 //
@@ -40,6 +40,9 @@ class GebsPredatorSpawner {
     protected static const float DESPAWN_AFTER_SECS = 900.0;
     protected static const float DESPAWN_PLAYER_RADIUS = 150.0;
     protected static const int SWEEP_INTERVAL_MS = 60000;
+    // How far the walkable surface may sit above the bare terrain at a spawn
+    // point: road surfaces, kerbs and small rocks pass, roofs and bridges don't.
+    protected static const float MAX_HEIGHT_ABOVE_GROUND = 1.0;
 
     // Predators this spawner created and their spawn times (GetTickTime),
     // kept in step. Entity references null themselves when the entity is
@@ -108,13 +111,13 @@ class GebsPredatorSpawner {
         for (int i = 0; i < count; i++) {
             bool foundLand;
             vector spawnPos = FindLandSpawnPosition(playerPos, selected.MinRadius, selected.MaxRadius, debugLogs, logTag, foundLand);
-            // Skip rather than spawn over water. Happens when the triggering
-            // player is fishing far from shore (boat in deep sea) and no
-            // random offset within [MinRadius, MaxRadius] hit terrain after
-            // the retry cap.
+            // Skip rather than spawn over water or on a roof. Happens when the
+            // triggering player is fishing far from shore (boat in deep sea) or
+            // in the middle of a town, and no random offset within
+            // [MinRadius, MaxRadius] hit open ground after the retry cap.
             if (!foundLand) {
                 if (debugLogs)
-                    GebsfishLogger.Debug("Skipping predator spawn -- no land found within [" + selected.MinRadius + "m, " + selected.MaxRadius + "m] of player. Likely too far from shore.", logTag);
+                    GebsfishLogger.Debug("Skipping predator spawn -- no open ground found within [" + selected.MinRadius + "m, " + selected.MaxRadius + "m] of player (water or buildings all round).", logTag);
                 continue;
             }
             if (SpawnOneAt(selected.Classname, spawnPos, player, cfg, debugLogs, logTag, soundPlayed))
@@ -154,17 +157,18 @@ class GebsPredatorSpawner {
     }
 
     // Picks a random offset in [minRadius..maxRadius] around center and
-    // retries up to 20 times to find a position that isn't over sea or pond.
-    // Sets foundLand=true on success. On failure (all 20 attempts landed
-    // over water, typically when fishing far from shore in a boat) returns
-    // center as a safe fallback with foundLand=false so the caller can skip
-    // the spawn instead of dropping a wolf underwater.
+    // retries up to 20 times to find open ground: not over sea or pond, and
+    // not on top of something (a roof, a bridge, a big rock -- the walkable
+    // surface more than MAX_HEIGHT_ABOVE_GROUND above the terrain). Sets
+    // foundLand=true on success. On failure (water or buildings all round,
+    // e.g. fishing far out in a boat or in the middle of a town) returns
+    // center with foundLand=false so the caller skips the spawn.
     //
-    // Pins the result's Y to the walkable surface via SurfaceRoadY (a bridge
-    // deck, a rock or another object's roadway, else the terrain), the way
-    // vanilla snaps traps and stashes, rather than reusing center's Y. The
-    // triggering player may be on a boat, on a cliff, or wading in shallow
-    // water -- their Y is not the ground the predator needs to spawn on.
+    // Pins the result's Y to the walkable surface via SurfaceRoadY (a road,
+    // a kerb or a small rock, else the terrain), the way vanilla snaps traps
+    // and stashes, rather than reusing center's Y. The triggering player may
+    // be on a boat, on a cliff, or wading in shallow water -- their Y is not
+    // the ground the predator needs to spawn on.
     protected static vector FindLandSpawnPosition(vector center, float minRadius, float maxRadius, int debugLogs, string logTag, out bool foundLand) {
         foundLand = false;
         if (minRadius < 0) minRadius = 0;
@@ -191,9 +195,19 @@ class GebsPredatorSpawner {
                 continue;
             }
 
-            // The surface Y at the candidate, not the player's Y. SurfaceY
-            // alone is the bare terrain, under any bridge or inside any rock.
+            // Open ground only. SurfaceRoadY is the highest walkable surface,
+            // SurfaceY the bare terrain: where the first is well above the
+            // second something stands there (a roof, a bridge, a big rock), and
+            // an animal put on top of it is stuck. Vanilla never meets this: its
+            // wolves and bears come from the Central Economy's territories, out
+            // in the wild, never from a point picked next to a player.
+            float groundY = g_Game.SurfaceY(candidateX, candidateZ);
             float candidateY = g_Game.SurfaceRoadY(candidateX, candidateZ);
+            if (candidateY - groundY > MAX_HEIGHT_ABOVE_GROUND) {
+                if (debugLogs == ELEVATED_DEBUG)
+                    GebsfishLogger.Debug("Surface selected for spawning predator is on a building or rock (" + (candidateY - groundY) + " m above the ground). Retrying.", logTag);
+                continue;
+            }
             spawnPos = Vector(candidateX, candidateY, candidateZ);
             foundLand = true;
             return spawnPos;

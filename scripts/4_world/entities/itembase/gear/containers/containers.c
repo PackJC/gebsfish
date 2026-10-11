@@ -20,6 +20,13 @@ class geb_FilteredContainerBase : Container_Base {
 		return null;
 	}
 
+	// Kinds taken as their own class only, not the classes built on them:
+	// vanilla Shrimp in a tackle box, where "Shrimp" by inheritance would
+	// also take every crayfish, clam, snail, starfish and jellyfish.
+	protected TStringArray GetExactItemKinds() {
+		return null;
+	}
+
 	override int GetDamageSystemVersionChange() {
 		return 110;
 	}
@@ -27,8 +34,10 @@ class geb_FilteredContainerBase : Container_Base {
 	// Shared check so the drag-drop path (CanReceiveItemIntoCargo) and the
 	// script/persistence path (CanLoadItemIntoCargo) stay in lockstep.
 	// Vanilla DayZ does not always route every cargo move through the same
-	// check, so overriding both prevents disallowed items sneaking in via
-	// quickbar swaps, world-craft results, or save-load.
+	// check, so overriding both keeps disallowed items out of moves such as
+	// quickbar swaps, and out of save-load. A new item created straight into
+	// the cargo by classname (CreateInInventory, a craft result) is checked
+	// by neither: see GebAcceptsType below.
 	protected bool IsAllowedCargoItem(EntityAI item) {
 		if (!item)
 			return false;
@@ -40,6 +49,9 @@ class geb_FilteredContainerBase : Container_Base {
 					return false;
 			}
 		}
+
+		if (GebTypeIsExact(item.GetType(), GetExactItemKinds()))
+			return true;
 
 		TStringArray allowed = GetAllowedItemKinds();
 		if (!allowed || allowed.Count() == 0)
@@ -61,7 +73,53 @@ class geb_FilteredContainerBase : Container_Base {
 	bool GebAcceptsType(string type) {
 		if (GebTypeMatches(type, GetRefusedItemKinds()))
 			return false;
+		if (GebTypeIsExact(type, GetExactItemKinds()))
+			return true;
 		return GebTypeMatches(type, GetAllowedItemKinds());
+	}
+
+	// A new `type` in owner's inventory (a player's, or a container's) at the
+	// spot CreateInInventory would pick: the first free cargo or attachment
+	// spot, which the engine may find inside another container there. Null
+	// when there is none, or when that spot is inside one of these containers
+	// that refuses the type, since the engine picks it by classname without
+	// asking their cargo checks and the next restart would throw the item out.
+	static EntityAI GebCreateInInventory(EntityAI owner, string type) {
+		if (!owner || !owner.GetInventory() || type == "")
+			return null;
+		InventoryLocation loc = new InventoryLocation();
+		if (!owner.GetInventory().FindFirstFreeLocationForNewEntity(type, FindInventoryLocationType.CARGO | FindInventoryLocationType.ATTACHMENT, loc))
+			return null;
+		EntityAI parent = loc.GetParent();
+		if (!parent || !parent.GetInventory())
+			return null;
+		// The spot's container and every one it sits in, up to the owner.
+		EntityAI holder = parent;
+		while (holder) {
+			geb_FilteredContainerBase filtered = geb_FilteredContainerBase.Cast(holder);
+			if (filtered && !filtered.GebAcceptsType(type))
+				return null;
+			if (holder == owner)
+				break;
+			holder = holder.GetHierarchyParent();
+		}
+		if (loc.GetType() == InventoryLocationType.ATTACHMENT)
+			return parent.GetInventory().CreateAttachmentEx(type, loc.GetSlot());
+		if (loc.GetType() == InventoryLocationType.CARGO)
+			return parent.GetInventory().CreateEntityInCargoEx(type, loc.GetIdx(), loc.GetRow(), loc.GetCol(), loc.GetFlip());
+		return null;
+	}
+
+	// The type is one of the listed classes itself (any case), not a
+	// subclass of one.
+	static bool GebTypeIsExact(string type, TStringArray kinds) {
+		if (type == "" || !kinds)
+			return false;
+		foreach (string kind : kinds) {
+			if (GebSameClassname(type, kind))
+				return true;
+		}
+		return false;
 	}
 
 	// The type is one of the listed classes or inherits from one (config
@@ -70,12 +128,8 @@ class geb_FilteredContainerBase : Container_Base {
 	static bool GebTypeMatches(string type, TStringArray allowed) {
 		if (type == "" || !allowed)
 			return false;
-		string typeLower = type;
-		typeLower.ToLower();
 		foreach (string kind : allowed) {
-			string kindLower = kind;
-			kindLower.ToLower();
-			if (typeLower == kindLower || g_Game.IsKindOf(type, kind))
+			if (GebSameClassname(type, kind) || g_Game.IsKindOf(type, kind))
 				return true;
 		}
 		return false;
@@ -178,8 +232,9 @@ class geb_MinnowBucket : geb_FilteredContainerBase {
 	// seven crayfish, the blood clam, mussel, snail, starfish and jellyfish.
 	// That's intended -- they're all small water creatures kept fresh in a
 	// bucket. The explicit entries keep the list readable and still work if
-	// one of them stops inheriting Shrimp.
-	static ref TStringArray s_Allowed = { "geb_FatHeadMinnow", "geb_Crayfish_Base", "Shrimp", "geb_AmericanBullFrog", "geb_RedSalamander" };
+	// one of them stops inheriting Shrimp. Bitterlings and Sardines aren't
+	// Shrimp: vanilla's trap baitfish, hook bait like the minnow.
+	static ref TStringArray s_Allowed = { "geb_FatHeadMinnow", "geb_Crayfish_Base", "Shrimp", "geb_AmericanBullFrog", "geb_RedSalamander", "Bitterlings", "Sardines" };
 
 	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
@@ -202,7 +257,8 @@ class geb_MinnowBucket : geb_FilteredContainerBase {
 //      geb_Lure1-4 / geb_CurlyTailJig1-4 all extend geb_Lure). "Jig" stays
 //      for vanilla jigs.
 //   2. LIVE BAIT -- worms (vanilla + grub + rubber), insects (grasshopper +
-//      cricket), minnows, salamander, bullfrog. Players can stash bait
+//      cricket), minnows, salamander, bullfrog, bitterlings, sardines, and
+//      vanilla shrimp as its own class only (s_Exact). Players can stash bait
 //      directly in the tackle box instead of always needing the dedicated
 //      worm/bug/minnow containers, while the dedicated containers still
 //      remain the most efficient way to organize bait at scale.
@@ -212,6 +268,14 @@ class geb_MinnowBucket : geb_FilteredContainerBase {
 //      data/tackle/config.cpp) so the 2x2 repair kit fits.
 
 class geb_SmallTackleBase : geb_FilteredContainerBase {
+	// Vanilla Shrimp (hook bait) by its own class only: the crayfish, clams,
+	// mussels, snails, starfish and jellyfish are built on it too.
+	static ref TStringArray s_Exact = { "Shrimp" };
+
+	override protected TStringArray GetExactItemKinds() {
+		return s_Exact;
+	}
+
 	static ref TStringArray s_Allowed = {
 		// Lures / jigs
 		"Jig", "geb_Lure",
@@ -219,8 +283,9 @@ class geb_SmallTackleBase : geb_FilteredContainerBase {
 		"Worm", "geb_GrubWorm", "geb_RubberWorm",
 		"geb_GrassHopper", "geb_FieldCricket",
 		"geb_FatHeadMinnow", "geb_RedSalamander", "geb_AmericanBullFrog",
+		"Bitterlings", "Sardines",
 		// Tools / containers
-		"geb_OrangeFishGloves", "geb_BlueFishGloves",
+		"geb_FishGloves_Base",  // every colour of fishing gloves, and any added later
 		"geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet",
 		"geb_FishingRodRepairKit",
 		"Hook", "BoneHook", "WoodenHook", "geb_FishKnife_Base", "BoneKnife", "Pliers"
@@ -232,6 +297,14 @@ class geb_SmallTackleBase : geb_FilteredContainerBase {
 };
 
 class geb_LargeTackleBase : geb_FilteredContainerBase {
+	// Vanilla Shrimp (hook bait) by its own class only: the crayfish, clams,
+	// mussels, snails, starfish and jellyfish are built on it too.
+	static ref TStringArray s_Exact = { "Shrimp" };
+
+	override protected TStringArray GetExactItemKinds() {
+		return s_Exact;
+	}
+
 	static ref TStringArray s_Allowed = {
 		// Lures / jigs
 		"Jig", "geb_Lure",
@@ -239,8 +312,9 @@ class geb_LargeTackleBase : geb_FilteredContainerBase {
 		"Worm", "geb_GrubWorm", "geb_RubberWorm",
 		"geb_GrassHopper", "geb_FieldCricket",
 		"geb_FatHeadMinnow", "geb_RedSalamander", "geb_AmericanBullFrog",
+		"Bitterlings", "Sardines",
 		// Tools / containers
-		"geb_OrangeFishGloves", "geb_BlueFishGloves",
+		"geb_FishGloves_Base",  // every colour of fishing gloves, and any added later
 		"geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet",
 		"geb_FishingRodRepairKit",
 		"Hook", "BoneHook", "WoodenHook", "geb_FishKnife_Base", "BoneKnife",
@@ -294,12 +368,13 @@ class geb_Cooler_base : geb_FilteredContainerBase {
 	// filleted -- that's the gameplay trade-off of long-term storage.
 	//   COOLING_TARGET_C  = temperature contents settle at (below 0 = freezer)
 	//   COOLING_STEP_C    = degrees moved per tick
-	//   COOLING_TICK_SECS = seconds between ticks
+	//   COOLING_TICK_SECS = seconds of the CE update's elapsed time per tick
 	protected const float COOLING_TARGET_C  = -5.0;
 	protected const float COOLING_STEP_C    = 1.5;
 	protected const float COOLING_TICK_SECS = 60.0;
 
-	protected ref Timer m_CoolingTimer;
+	// Seconds of cooling not yet spent on a tick (see OnCEUpdate).
+	protected float m_CoolingElapsed;
 
 	// Vanilla skips ambient temperature processing for any item whose
 	// hierarchy ROOT self-adjusts (EntityAI.ProcessVariables and
@@ -307,23 +382,34 @@ class geb_Cooler_base : geb_FilteredContainerBase {
 	// hands the cooler full control of its cargo's temperature while it
 	// sits in the world. Inside a vehicle/tent the root is no longer the
 	// cooler so vanilla ambient drift competes, but the tick re-chills
-	// every minute and stays ahead.
+	// every minute and stays ahead. A ruined cooler gives that up: vanilla's
+	// ambient pass then reaches its contents again, so a frozen fish thaws and
+	// then rots (frozen food never decays, so claiming it kept it frozen and
+	// fresh for good).
 	override bool IsSelfAdjustingTemperature() {
-		return true;
+		return !IsRuined();
 	}
 
-	override void EEInit() {
-		super.EEInit();
-		if (g_Game.IsServer()) {
-			m_CoolingTimer = new Timer(CALL_CATEGORY_SYSTEM);
-			m_CoolingTimer.Run(COOLING_TICK_SECS, this, "OnCoolingTick", null, true);
-		}
-	}
-
-	override void EEDelete(EntityAI parent) {
-		super.EEDelete(parent);
-		if (m_CoolingTimer)
-			m_CoolingTimer.Stop();
+	// The cooling runs on the Central Economy's periodic item update, the
+	// clock vanilla uses for food rot and item temperature (and the mod's
+	// worms), not a Timer per cooler checked every frame. The update hands
+	// over the seconds since the cooler's last one; they add up to whole
+	// cooling ticks, so contents cool at the same rate however often the
+	// update comes. A long gap catches up at most ten ticks at once.
+	override void OnCEUpdate() {
+		super.OnCEUpdate();
+		// A ruined cooler no longer chills; its contents warm up as anywhere.
+		if (!g_Game.IsServer() || m_ElapsedSinceLastUpdate <= 0 || IsRuined())
+			return;
+		m_CoolingElapsed += m_ElapsedSinceLastUpdate;
+		int ticks = Math.Floor(m_CoolingElapsed / COOLING_TICK_SECS);
+		if (ticks <= 0)
+			return;
+		m_CoolingElapsed -= ticks * COOLING_TICK_SECS;
+		if (ticks > 10)
+			ticks = 10;
+		for (int t = 0; t < ticks; t++)
+			OnCoolingTick();
 	}
 
 	// Steps every cargo item toward the cooling target. While an unfrozen
@@ -332,7 +418,7 @@ class geb_Cooler_base : geb_FilteredContainerBase {
 	// instead -- so the repeated calls during that phase are what drive the
 	// item from cold to frozen.
 	void OnCoolingTick() {
-		// Timer can fire while the entity is mid-delete / not yet
+		// The update can come while the entity is mid-delete / not yet
 		// initialized, where GetInventory() itself is null.
 		if (!GetInventory())
 			return;

@@ -30,13 +30,13 @@ class FishConf {
     float  TempMin;
     float  TempMax;
     // BiteSpeed is 24 hourly values stored as a space-separated STRING, not a
-    // dynamic float array. DayZ's JsonFileLoader access-violates deserializing a
-    // ref array<float> member that lives inside an array<ref FishConf> element
-    // -- numeric arrays in array-element classes must be static (vanilla's
-    // "float pos[3]") or, as here, a string. Every other array-element config
-    // (PredatorEntry/NetEntry/BaitConfig) avoids a dynamic primitive array,
-    // which is why only fish.json crashed on read. GetBiteSpeedArray() parses
-    // it back into a TFloatArray for runtime use.
+    // dynamic float array. It became a string after fish.json crashed the JSON
+    // reader; that crash was most likely an over-long default string (see the
+    // limit noted at FishConfig.SpeciesInfo), not the array -- vanilla loads a
+    // ref array<float> inside each element of an array on every boot
+    // (cfgeffectarea.json, Data.Pos). The string stays: it is what existing
+    // fish.json files hold. GetBiteSpeedArray() parses it back into a
+    // TFloatArray for runtime use.
     string BiteSpeed;
 
     void FishConf() { }
@@ -55,23 +55,6 @@ class FishConf {
 // ===========================================================================
 // FILE 1: general.json
 // ===========================================================================
-// ---------------------------------------------------------------------------
-// Was a setting actually written in the file on disk?
-//
-// The deserializer cannot tell us. JsonFileLoader turns a member the file does
-// not mention into 0 / false rather than leaving the class default, so once a
-// config is loaded, "this server has never had this setting" and "the admin
-// deliberately set it to 0" look identical. That is what makes a newly added
-// bool or float ship switched OFF on every existing server.
-//
-// Reading the raw text answers the question directly. Unlike a list of old
-// version numbers it never needs maintaining: it keeps working however many
-// releases go by, and adding the next setting needs no new code at all.
-//
-// Line-based on purpose -- the JSON writer puts one field per line, the same
-// assumption BaitSettingsConf.RoundMultiplierLines already relies on. The key
-// is matched WITH its quotes so the field names mentioned in prose inside the
-// self-documenting ...Info strings can't cause a false positive.
 // The four config files' folder. Nothing guarantees it exists the first time
 // a file is written -- the logger only creates it once it writes a log -- and
 // vanilla's JsonSaveFile gives up without a word when it can't open the file.
@@ -84,25 +67,270 @@ static void GebMakeConfigDir() {
         MakeDirectory(GEB_CONFIG_DIR);
 }
 
-static bool GebJsonFileHasKey(string path, string key) {
-    if (!FileExist(path))
-        return false;
+// Class names from the JSON files match whatever their case, as the engine's
+// own lookups do (ConfigIsExisting, CreateObject) and the validator's duplicate
+// check does: an admin's "geb_bluegill" row is the caught geb_BlueGill's, for
+// filleting as for bait. Copies, so the callers' strings stay as written.
+static bool GebSameClassname(string a, string b) {
+    if (a == b)
+        return true;
+    string aLower = a;
+    string bLower = b;
+    aLower.ToLower();
+    bLower.ToLower();
+    return aLower == bLower;
+}
 
-    FileHandle fr = OpenFile(path, FileMode.READ);
-    if (!fr)
-        return false;
+// Help text: every string field whose name ends in "Info" is documentation the
+// game never reads. Loading fills it from the file like any other field, so an
+// old file keeps whatever text it was written with (blank, or an older
+// version's). This copies the current text in from `fresh`, a newly made object
+// of the same class; settings are never touched. Returns how many texts changed.
+static int GebRefreshInfo(Class target, Class fresh) {
+    if (!target || !fresh)
+        return 0;
+    typename t = target.Type();
+    int changed = 0;
+    int count = t.GetVariableCount();
+    for (int i = 0; i < count; i++) {
+        if (t.GetVariableType(i) != string)
+            continue;
+        string name = t.GetVariableName(i);
+        int len = name.Length();
+        if (len < 5 || name.Substring(len - 4, 4) != "Info")
+            continue;
+        string now;
+        string current;
+        t.GetVariableValue(target, i, now);
+        t.GetVariableValue(fresh, i, current);
+        if (now == current)
+            continue;
+        EnScript.SetClassVar(target, name, 0, current);
+        changed++;
+    }
+    return changed;
+}
 
-    string needle = "\"" + key + "\"";
-    string line;
-    bool found = false;
-    while (FGets(fr, line) != -1) {
-        if (line.IndexOf(needle) != -1) {
-            found = true;
-            break;
+// ---------------------------------------------------------------------------
+// Was a setting or section actually written in the file on disk?
+//
+// The loaded object can't tell us. JsonFileLoader reads INTO the object it is
+// given. A scalar the file has no value for (a key that is missing, or null)
+// is left as it was: on the top-level object, which script made, that is the
+// class default. A section or list the file has no value for is made anyway:
+// a missing section comes back as an object with every field 0 / false / ""
+// (the loader creates it without running its constructor, which is what sets
+// the class defaults), and a missing list as an empty one. The same goes for
+// the sections and list rows the loader creates, so a field missing from one
+// of them reads as 0. A real general.json shows it: a TreasureSettings section
+// an older file didn't have came back as Enable 0, Chance 0, Announce 0. So
+// once a file is loaded, "this file never had it", "the admin deleted it" and
+// "the admin emptied it or set it to 0 on purpose" look the same.
+//
+// Reading the raw text answers the question directly. Unlike a list of old
+// version numbers it never needs maintaining: it keeps working however many
+// releases go by.
+//
+// GebJsonKeys reads a file once and lists the keys it holds by path, so one
+// Backfill can ask many questions: "TreasureSettings" is a top-level key,
+// "TreasureSettings.Enable" a key inside that section, and
+// "Preferences[2].Preferences" the Preferences key in the third row of the
+// top-level Preferences list (bait.json uses that name at both levels). Keys
+// are listed down to maxDepth objects deep (1 = top level only). A key whose
+// value is null is left out, since the loader reads null exactly like a
+// missing key. The scan follows the JSON structure and jumps over quoted
+// text, so a field name mentioned in an ...Info string never counts as a key.
+//
+// It reads the file line by line. string.Get walks the whole string to its
+// end on every call, so going through a whole file's text character by
+// character costs the square of its size (seconds for bait.json); JSON keeps
+// every string on one line, and these files are written pretty-printed (by the
+// mod and by the config editor), so the lines are short. A file that can't be
+// read answers "there" to every question, so a bad read never re-seeds
+// defaults over an admin's settings.
+class GebJsonKeys {
+    protected ref TStringArray m_Paths = new TStringArray();
+    protected bool m_Read;
+    protected int m_MaxDepth;
+    // The open containers, carried from line to line: each one's key path,
+    // whether it is a [ list, and for a list the index of the element being
+    // read.
+    protected ref TStringArray m_ContainerPath = new TStringArray();
+    protected ref TBoolArray m_ContainerIsList = new TBoolArray();
+    protected ref TIntArray m_ContainerItem = new TIntArray();
+    protected int m_Objects;
+    protected string m_LastKey;
+    // A key that ended its line before its value: its path, settled by the
+    // value's first character on a later line.
+    protected string m_Pending;
+
+    void GebJsonKeys(string path, int maxDepth) {
+        m_MaxDepth = maxDepth;
+        if (!FileExist(path)) {
+            WarnUnread(path);
+            return;
+        }
+        FileHandle fr = OpenFile(path, FileMode.READ);
+        if (!fr) {
+            WarnUnread(path);
+            return;
+        }
+        string line;
+        while (FGets(fr, line) >= 0)
+            ScanLine(line);
+        CloseFile(fr);
+        if (!m_Read)
+            WarnUnread(path);
+    }
+
+    // True when the file gives keyPath a value other than null. A file that
+    // couldn't be read answers true, so nothing is re-seeded over it.
+    bool Has(string keyPath) {
+        if (!m_Read)
+            return true;
+        return m_Paths.Find(keyPath) != -1;
+    }
+
+    protected static void WarnUnread(string path) {
+        GebsfishLogger.Warn("Couldn't read " + path + " to check which settings it holds; nothing is re-seeded from it this start.", "Config");
+    }
+
+    // One line of the file. Every open { and [ is a container (the members
+    // above), carried over to the next line; quoted text is jumped over whole.
+    protected void ScanLine(string text) {
+        string c;
+        string here;
+        int code;
+        int top;
+        int close;
+        int after;
+        int valueAt;
+        int len = text.Length();
+        int i = 0;
+        while (i < len) {
+            c = text.Get(i);
+            code = c.ToAscii();
+            if (code == 32 || code == 9 || code == 10 || code == 13) {
+                i++;
+                continue;
+            }
+            // The value of a key that ended an earlier line: null or not.
+            if (m_Pending != "") {
+                if (c != "n")
+                    m_Paths.Insert(m_Pending);
+                m_Pending = "";
+            }
+            if (c == "\"") {
+                close = FindClosingQuote(text, i + 1);
+                if (close == -1)
+                    return;
+                after = SkipBlanks(text, close + 1);
+                if (after < len && text.Get(after) == ":") {
+                    // A key; it sits inside m_Objects objects (1 = top level).
+                    m_LastKey = text.Substring(i + 1, close - i - 1);
+                    valueAt = SkipBlanks(text, after + 1);
+                    if (m_Objects <= m_MaxDepth) {
+                        if (valueAt >= len)
+                            m_Pending = KeyPath(m_ContainerPath, m_LastKey);
+                        else if (text.Get(valueAt) != "n")
+                            m_Paths.Insert(KeyPath(m_ContainerPath, m_LastKey));
+                    }
+                    i = after + 1;
+                } else {
+                    i = close + 1;
+                }
+                continue;
+            }
+            if (c == "{" || c == "[") {
+                top = m_ContainerPath.Count() - 1;
+                here = "";
+                if (top >= 0 && m_ContainerIsList.Get(top))
+                    here = m_ContainerPath.Get(top) + "[" + m_ContainerItem.Get(top) + "]";
+                else if (top >= 0)
+                    here = KeyPath(m_ContainerPath, m_LastKey);
+                m_ContainerPath.Insert(here);
+                m_ContainerIsList.Insert(c == "[");
+                m_ContainerItem.Insert(0);
+                if (c == "{") {
+                    m_Objects++;
+                    m_Read = true;
+                }
+            } else if (c == "}" || c == "]") {
+                top = m_ContainerPath.Count() - 1;
+                if (top >= 0) {
+                    if (!m_ContainerIsList.Get(top))
+                        m_Objects--;
+                    m_ContainerPath.Remove(top);
+                    m_ContainerIsList.Remove(top);
+                    m_ContainerItem.Remove(top);
+                }
+            } else if (c == ",") {
+                top = m_ContainerPath.Count() - 1;
+                if (top >= 0 && m_ContainerIsList.Get(top))
+                    m_ContainerItem.Set(top, m_ContainerItem.Get(top) + 1);
+            }
+            i++;
         }
     }
-    CloseFile(fr);
-    return found;
+
+    // The path of `key` read in the innermost open container.
+    protected static string KeyPath(TStringArray containerPath, string key) {
+        int top = containerPath.Count() - 1;
+        if (top < 0 || containerPath.Get(top) == "")
+            return key;
+        return containerPath.Get(top) + "." + key;
+    }
+
+    // Index of the quote that ends the string starting at `start`, or -1.
+    // A quote after an odd number of backslashes is part of the text.
+    protected static int FindClosingQuote(string text, int start) {
+        int len = text.Length();
+        int at = start;
+        int close;
+        int slashes;
+        while (at < len) {
+            close = text.IndexOfFrom(at, "\"");
+            if (close == -1)
+                return -1;
+            slashes = 0;
+            while (close - slashes - 1 >= 0 && text.Get(close - slashes - 1) == "\\")
+                slashes++;
+            if (slashes % 2 == 0)
+                return close;
+            at = close + 1;
+        }
+        return -1;
+    }
+
+    // Index of the first character at or after `start` that isn't a space,
+    // tab or line break; the text's length if there is none.
+    protected static int SkipBlanks(string text, int start) {
+        int len = text.Length();
+        int at = start;
+        string ch;
+        int code;
+        while (at < len) {
+            ch = text.Get(at);
+            code = ch.ToAscii();
+            if (code != 32 && code != 9 && code != 10 && code != 13)
+                return at;
+            at++;
+        }
+        return len;
+    }
+}
+
+// One question about one file: does it give `key` (a key path, as in
+// GebJsonKeys) a value other than null? Reads the file on every call; to ask
+// several questions of one file, make one GebJsonKeys and ask that.
+static bool GebJsonFileHasKey(string path, string key) {
+    int depth = 1;
+    for (int at = 0; at < key.Length(); at++) {
+        if (key.Get(at) == ".")
+            depth++;
+    }
+    GebJsonKeys file = new GebJsonKeys(path, depth);
+    return file.Has(key);
 }
 
 class GeneralConfig {
@@ -126,7 +354,7 @@ class GeneralConfig {
     ref array<ref PredatorEntry>      Predators;
     string BambooFishingNetSettingsInfo = "Bamboo-net action: FindChance (0-1 per cast), PredatorSpawnChance, and a Catches table (each entry: Classname, CatchChance, Environment 1 pond/2 sea/3 both).";
     ref BambooFishingNetConf          BambooFishingNetSettings;
-    string SpearFishingSettingsInfo = "Spear fishing: stab at fish in shallow water with a Spear, Bone Spear or Stone Spear in hand. Enable, FindChance (0-1 per stab), MaxWaterDepth (metres of water at the aim point), PredatorSpawnChance, and a Catches table (each entry: Classname, CatchChance, Environment 1 pond/2 sea/3 both).";
+    string SpearFishingSettingsInfo = "Spear fishing: stab at fish in shallow water with an Improvised Spear (bone- or stone-tipped) in hand. Enable, FindChance (0-1 per stab), MaxWaterDepth (metres of water at the aim point), PredatorSpawnChance, and a Catches table (each entry: Classname, CatchChance, Environment 1 pond/2 sea/3 both).";
     ref SpearFishingConf              SpearFishingSettings;
     string DigBugsSettingsInfo = "Dig-for-bugs action: FindChance (0-1) plus a Catches table (each entry: Classname, CatchChance).";
     ref DigBugsConf                   DigBugsSettings;
@@ -153,6 +381,11 @@ class GeneralConfig {
                 ConfigVersion = VERSION_GEBSFISH;
                 changed = true;
             }
+            int helpTexts = RefreshInfoStrings();
+            if (helpTexts > 0) {
+                GebsfishLogger.Info("general.json: brought " + helpTexts.ToString() + " help texts up to date. Settings untouched.", "Migrate");
+                changed = true;
+            }
         } else {
             SeedDefaults();
             changed = true;
@@ -163,6 +396,62 @@ class GeneralConfig {
         if (changed) Save();
         return true;
     }
+    // The current help text in every ...Info field (GebRefreshInfo): the file's
+    // own, each section's, and every table row's (each row carries its own
+    // copy). A new section or table must be added here. Returns how many changed.
+    protected int RefreshInfoStrings() {
+        int n = GebRefreshInfo(this, new GeneralConfig());
+        n += GebRefreshInfo(GeneralSettings, new GenSetConf());
+        n += GebRefreshInfo(RecipeToggles, new RecipeToggleConf());
+        n += GebRefreshInfo(TreasureSettings, new TreasureConf());
+        n += GebRefreshInfo(PredatorSettings, new PredatorConf());
+        n += GebRefreshInfo(BambooFishingNetSettings, new BambooFishingNetConf());
+        n += GebRefreshInfo(SpearFishingSettings, new SpearFishingConf());
+        n += GebRefreshInfo(DigBugsSettings, new DigBugsConf());
+        n += GebRefreshInfo(DigWormsSettings, new DigWormsConf());
+        n += GebRefreshInfo(WeatherSettings, new WeatherConf());
+        if (HookFromFishCatches) {
+            HookFromFishEntry freshHook = new HookFromFishEntry();
+            foreach (HookFromFishEntry hook : HookFromFishCatches)
+                n += GebRefreshInfo(hook, freshHook);
+        }
+        if (TreasureContainers) {
+            TreasureContainerEntry freshBox = new TreasureContainerEntry();
+            foreach (TreasureContainerEntry box : TreasureContainers)
+                n += GebRefreshInfo(box, freshBox);
+        }
+        if (TreasureLoot) {
+            TreasureLootEntry freshLoot = new TreasureLootEntry();
+            foreach (TreasureLootEntry loot : TreasureLoot)
+                n += GebRefreshInfo(loot, freshLoot);
+        }
+        if (Predators) {
+            PredatorEntry freshPredator = new PredatorEntry();
+            foreach (PredatorEntry predator : Predators)
+                n += GebRefreshInfo(predator, freshPredator);
+        }
+        if (BambooFishingNetSettings && BambooFishingNetSettings.Catches) {
+            NetEntry freshNet = new NetEntry();
+            foreach (NetEntry net : BambooFishingNetSettings.Catches)
+                n += GebRefreshInfo(net, freshNet);
+        }
+        if (SpearFishingSettings && SpearFishingSettings.Catches) {
+            SpearEntry freshSpear = new SpearEntry();
+            foreach (SpearEntry spear : SpearFishingSettings.Catches)
+                n += GebRefreshInfo(spear, freshSpear);
+        }
+        BugEntry freshBug = new BugEntry();
+        if (DigBugsSettings && DigBugsSettings.Catches) {
+            foreach (BugEntry bug : DigBugsSettings.Catches)
+                n += GebRefreshInfo(bug, freshBug);
+        }
+        if (DigWormsSettings && DigWormsSettings.Catches) {
+            foreach (BugEntry worm : DigWormsSettings.Catches)
+                n += GebRefreshInfo(worm, freshBug);
+        }
+        return n;
+    }
+
     void Save() {
         GebMakeConfigDir();
         string error;
@@ -170,42 +459,84 @@ class GeneralConfig {
             GebsfishLogger.Error("general.json could not be written: " + error, "Config");
     }
 
-    // Returns true if any missing section had to be allocated/seeded, so Load
-    // can decide whether to persist. Existing values are never overwritten.
+    // Re-seeds whatever the file is missing and returns true if anything had
+    // to be added, so Load can decide whether to persist. Values the file
+    // holds are never overwritten. "Missing" is read from the file text
+    // (GebJsonKeys): the loader turns a missing section into an all-zero
+    // object, never null, and reads a missing list as an empty one, so the
+    // loaded object can't say what the file lacked. A section or list written
+    // as null counts as missing, the way the loader treats it.
     bool Backfill() {
         bool changed = false;
-        if (!GeneralSettings)          { GeneralSettings = new GenSetConf;       changed = true; }
-        if (!RecipeToggles)            { RecipeToggles = new RecipeToggleConf;   changed = true; }
-        if (!PredatorSettings)         { PredatorSettings = new PredatorConf;    changed = true; }
-        if (!WeatherSettings)          { WeatherSettings = new WeatherConf;      changed = true; }
-        if (!TreasureSettings)         { TreasureSettings = new TreasureConf;    changed = true; }
-        // Settings added to an EXISTING section can't be caught by a null check --
-        // the section is there, the field just isn't. Ask the file directly, so a
-        // server that never had the toggle gets the intended default while one
-        // that has it keeps the admin's choice, including a deliberate 0.
-        if (RecipeToggles && !GebJsonFileHasKey(PATH, "CraftFishMount")) {
+        GebJsonKeys file = new GebJsonKeys(PATH, 2);
+        if (!GeneralSettings || !file.Has("GeneralSettings"))   { GeneralSettings = new GenSetConf;       changed = true; }
+        if (!RecipeToggles || !file.Has("RecipeToggles"))       { RecipeToggles = new RecipeToggleConf;   changed = true; }
+        if (!PredatorSettings || !file.Has("PredatorSettings")) { PredatorSettings = new PredatorConf;    changed = true; }
+        if (!WeatherSettings || !file.Has("WeatherSettings"))   { WeatherSettings = new WeatherConf;      changed = true; }
+        if (!TreasureSettings || !file.Has("TreasureSettings")) { TreasureSettings = new TreasureConf;    changed = true; }
+        // Settings added to an EXISTING section need their own check: the
+        // section is there, the field just isn't, and the loader leaves a
+        // field missing from a section at 0 / false (it builds sections
+        // without their class defaults). Ask the file directly, so a server
+        // that never had the toggle gets the intended default while one that
+        // has it keeps the admin's choice, including a deliberate 0.
+        if (RecipeToggles && !file.Has("RecipeToggles.CraftFishMount")) {
             RecipeToggles.CraftFishMount = true;
             changed = true;
         }
-        if (TreasureSettings && !GebJsonFileHasKey(PATH, "RequireRealRod")) {
+        if (TreasureSettings && !file.Has("TreasureSettings.RequireRealRod")) {
             TreasureSettings.RequireRealRod = true;
             changed = true;
         }
-        if (TreasureSettings && !GebJsonFileHasKey(PATH, "RodCatchesToRuin")) {
+        if (TreasureSettings && !file.Has("TreasureSettings.RodCatchesToRuin")) {
             TreasureSettings.RodCatchesToRuin = 3;
             changed = true;
         }
         // A per-action section that is entirely missing (fresh key never
-        // written, or hand-deleted) is re-seeded with working defaults. A
-        // section that exists but was emptied on purpose is left alone.
-        if (!BambooFishingNetSettings) { SeedDefaultNetCatches();       changed = true; }
-        if (!SpearFishingSettings)     { SeedDefaultSpearCatches();     changed = true; }
-        if (!DigBugsSettings)          { SeedDefaultDigBugsCatches();   changed = true; }
-        if (!DigWormsSettings)         { SeedDefaultDigWormsCatches();  changed = true; }
-        if (!Predators)                { SeedDefaultPredators();        changed = true; }
-        if (!HookFromFishCatches || HookFromFishCatches.Count() == 0) { SeedHookFromFish(); changed = true; }
-        if (!TreasureContainers || TreasureContainers.Count() == 0) { SeedTreasureContainers(); changed = true; }
-        if (!TreasureLoot || TreasureLoot.Count() == 0) { SeedTreasureLoot(); changed = true; }
+        // written, or hand-deleted) is re-seeded with working defaults, and so
+        // is a Catches table missing from a section that is there. A table the
+        // file holds but empty was emptied on purpose and is left alone.
+        if (!BambooFishingNetSettings || !file.Has("BambooFishingNetSettings")) {
+            BambooFishingNetSettings = null;
+            SeedDefaultNetCatches();
+            changed = true;
+        } else if (!file.Has("BambooFishingNetSettings.Catches")) {
+            BambooFishingNetSettings.Catches = null;
+            SeedDefaultNetCatches();
+            changed = true;
+        }
+        if (!SpearFishingSettings || !file.Has("SpearFishingSettings")) {
+            SpearFishingSettings = null;
+            SeedDefaultSpearCatches();
+            changed = true;
+        } else if (!file.Has("SpearFishingSettings.Catches")) {
+            SpearFishingSettings.Catches = null;
+            SeedDefaultSpearCatches();
+            changed = true;
+        }
+        if (!DigBugsSettings || !file.Has("DigBugsSettings")) {
+            DigBugsSettings = null;
+            SeedDefaultDigBugsCatches();
+            changed = true;
+        } else if (!file.Has("DigBugsSettings.Catches")) {
+            DigBugsSettings.Catches = null;
+            SeedDefaultDigBugsCatches();
+            changed = true;
+        }
+        if (!DigWormsSettings || !file.Has("DigWormsSettings")) {
+            DigWormsSettings = null;
+            SeedDefaultDigWormsCatches();
+            changed = true;
+        } else if (!file.Has("DigWormsSettings.Catches")) {
+            DigWormsSettings.Catches = null;
+            SeedDefaultDigWormsCatches();
+            changed = true;
+        }
+        if (!Predators || !file.Has("Predators")) { Predators = null; SeedDefaultPredators(); changed = true; }
+        // These three pools are refilled when they are empty, too.
+        if (!HookFromFishCatches || HookFromFishCatches.Count() == 0 || !file.Has("HookFromFishCatches")) { HookFromFishCatches = null; SeedHookFromFish(); changed = true; }
+        if (!TreasureContainers || TreasureContainers.Count() == 0 || !file.Has("TreasureContainers")) { TreasureContainers = null; SeedTreasureContainers(); changed = true; }
+        if (!TreasureLoot || TreasureLoot.Count() == 0 || !file.Has("TreasureLoot")) { TreasureLoot = null; SeedTreasureLoot(); changed = true; }
         if (CorrectLegacyHookClassnames()) changed = true;
         return changed;
     }
@@ -217,13 +548,13 @@ class GeneralConfig {
             return false;
         bool changed = false;
         foreach (HookFromFishEntry hook : HookFromFishCatches) {
-            if (hook && hook.Classname == "FishingHook") {
+            if (hook && GebSameClassname(hook.Classname, "FishingHook")) {
                 hook.Classname = "Hook";
                 changed = true;
             }
         }
         foreach (TreasureLootEntry loot : TreasureLoot) {
-            if (loot && loot.Classname == "FishingHook") {
+            if (loot && GebSameClassname(loot.Classname, "FishingHook")) {
                 loot.Classname = "Hook";
                 changed = true;
             }
@@ -233,24 +564,28 @@ class GeneralConfig {
 
     // Additive update merge (version-change only, see Load): insert default
     // entries missing from the loaded arrays; never modify existing ones.
-    // Runs after Backfill so sections exist; a Catches array that is null is
-    // skipped (respects a section an admin gutted on purpose). To disable an
-    // entry permanently use weight/chance 0 instead of deleting it.
+    // Runs after Backfill, which has already re-seeded every section and list
+    // the file didn't have -- so a list that is empty here was written empty.
+    // It is skipped: an admin emptied it on purpose, and the docs promise it
+    // stays that way. The exceptions are HookFromFishCatches,
+    // TreasureContainers and TreasureLoot, which Backfill refills when empty.
+    // A row deleted from a list that still has entries is re-added; to
+    // disable an entry permanently use weight/chance 0 instead of deleting it.
     int MergeNewDefaults() {
         GeneralConfig defaults = new GeneralConfig();
         defaults.SeedDefaults();
         int added = 0;
-        if (Predators && defaults.Predators) {
+        if (Predators && Predators.Count() > 0 && defaults.Predators) {
             foreach (PredatorEntry dp : defaults.Predators) {
                 if (dp && !HasPredator(dp.Classname)) { Predators.Insert(dp); added++; }
             }
         }
-        if (BambooFishingNetSettings && BambooFishingNetSettings.Catches && defaults.BambooFishingNetSettings && defaults.BambooFishingNetSettings.Catches) {
+        if (BambooFishingNetSettings && BambooFishingNetSettings.Catches && BambooFishingNetSettings.Catches.Count() > 0 && defaults.BambooFishingNetSettings && defaults.BambooFishingNetSettings.Catches) {
             foreach (NetEntry dn : defaults.BambooFishingNetSettings.Catches) {
                 if (dn && !HasNetCatch(dn.Classname)) { BambooFishingNetSettings.Catches.Insert(dn); added++; }
             }
         }
-        if (SpearFishingSettings && SpearFishingSettings.Catches && defaults.SpearFishingSettings && defaults.SpearFishingSettings.Catches) {
+        if (SpearFishingSettings && SpearFishingSettings.Catches && SpearFishingSettings.Catches.Count() > 0 && defaults.SpearFishingSettings && defaults.SpearFishingSettings.Catches) {
             foreach (SpearEntry ds : defaults.SpearFishingSettings.Catches) {
                 if (ds && !HasSpearCatch(ds.Classname)) { SpearFishingSettings.Catches.Insert(ds); added++; }
             }
@@ -275,56 +610,54 @@ class GeneralConfig {
             }
         }
 
-        // Recipe toggles are NOT handled here. A bool can't be backfilled by a
-        // null check the way the arrays above can: JsonFileLoader ZEROES any
-        // member the file doesn't mention (it does not leave the class
-        // initializer), so a bool toggle added in a later version loads as 0 on
-        // every server whose config predates it -- indistinguishable from an
-        // admin deliberately switching it off. That case is resolved in
-        // Backfill() via the version-independent GebJsonFileHasKey raw-text
-        // scan, which asks "did the file actually contain this key?" -- never by
-        // version number (see the file header). A new RecipeToggleConf bool
-        // needs its own GebJsonFileHasKey line in Backfill(); copy the
-        // CraftFishMount block there.
+        // Recipe toggles are NOT handled here. A toggle added to an existing
+        // section can't be spotted on the loaded object: the loader builds the
+        // RecipeToggles section without its class defaults, so a toggle added
+        // in a later version loads as 0 on every server whose config predates
+        // it -- indistinguishable from an admin deliberately switching it off.
+        // Backfill() settles that by asking the file text whether the key is
+        // there (GebJsonKeys), never by version number. A new RecipeToggleConf
+        // bool needs its own key check in Backfill(); copy the CraftFishMount
+        // block there.
         return added;
     }
     protected bool HasPredator(string classname) {
-        foreach (PredatorEntry e : Predators) if (e && e.Classname == classname) return true;
+        foreach (PredatorEntry e : Predators) if (e && GebSameClassname(e.Classname, classname)) return true;
         return false;
     }
     protected bool HasNetCatch(string classname) {
-        foreach (NetEntry e : BambooFishingNetSettings.Catches) if (e && e.Classname == classname) return true;
+        foreach (NetEntry e : BambooFishingNetSettings.Catches) if (e && GebSameClassname(e.Classname, classname)) return true;
         return false;
     }
     protected bool HasSpearCatch(string classname) {
-        foreach (SpearEntry e : SpearFishingSettings.Catches) if (e && e.Classname == classname) return true;
+        foreach (SpearEntry e : SpearFishingSettings.Catches) if (e && GebSameClassname(e.Classname, classname)) return true;
         return false;
     }
     protected bool HasHookCatch(string classname) {
-        foreach (HookFromFishEntry e : HookFromFishCatches) if (e && e.Classname == classname) return true;
+        foreach (HookFromFishEntry e : HookFromFishCatches) if (e && GebSameClassname(e.Classname, classname)) return true;
         return false;
     }
 
     bool HasTreasureContainer(string classname) {
         if (!TreasureContainers) return false;
-        foreach (TreasureContainerEntry c : TreasureContainers) if (c && c.Classname == classname) return true;
+        foreach (TreasureContainerEntry c : TreasureContainers) if (c && GebSameClassname(c.Classname, classname)) return true;
         return false;
     }
 
     bool HasTreasureLoot(string classname) {
         if (!TreasureLoot) return false;
-        foreach (TreasureLootEntry l : TreasureLoot) if (l && l.Classname == classname) return true;
+        foreach (TreasureLootEntry l : TreasureLoot) if (l && GebSameClassname(l.Classname, classname)) return true;
         return false;
     }
     protected static int MergeBugCatches(array<ref BugEntry> into, array<ref BugEntry> defs) {
-        if (!into || !defs)
+        if (!into || into.Count() == 0 || !defs)      // emptied on purpose: left alone
             return 0;
         int added = 0;
         foreach (BugEntry d : defs) {
             if (!d) continue;
             bool found = false;
             foreach (BugEntry e : into) {
-                if (e && e.Classname == d.Classname) { found = true; break; }
+                if (e && GebSameClassname(e.Classname, d.Classname)) { found = true; break; }
             }
             if (!found) { into.Insert(d); added++; }
         }
@@ -478,7 +811,13 @@ class BaitSettingsConf {
                 GebsfishLogger.Error("bait.json failed to load; file preserved, using defaults for this session: " + err, "Config");
                 return false;
             }
-            if (!Preferences) { SeedDefaultPreferences(); changed = true; }
+            // The top-level Preferences table, asked for by path: every bait
+            // row has a Preferences list too. The loader reads a missing table
+            // as an empty one, so only the file text tells "not there"
+            // (re-seeded) from "emptied on purpose" (kept); a table with rows
+            // came from the file, so only an empty one needs the file asked.
+            if (!Preferences || (Preferences.Count() == 0 && !GebJsonFileHasKey(PATH, "Preferences"))) { SeedDefaultPreferences(); changed = true; }
+            if (RenameLegacyFish()) changed = true;
             if (ConfigVersion != VERSION_GEBSFISH) {
                 int added = MergeNewDefaults();
                 if (added > 0)
@@ -486,12 +825,49 @@ class BaitSettingsConf {
                 ConfigVersion = VERSION_GEBSFISH;
                 changed = true;
             }
+            // the current help text (the rows carry none)
+            if (GebRefreshInfo(this, new BaitSettingsConf()) > 0)
+                changed = true;
         } else {
             SeedDefaults();
             changed = true;
         }
         if (changed) Save();
         return true;
+    }
+
+    // 3.3.3 renamed geb_Bonita to geb_PacificBonito. A preference written
+    // before that takes the new name, keeping its multiplier; where the bait
+    // already has a geb_PacificBonito preference the old one is dropped.
+    // Runs before the merge, so the merge doesn't add a second, default row.
+    protected bool RenameLegacyFish() {
+        if (!Preferences)
+            return false;
+        bool changed = false;
+        foreach (BaitConfig bait : Preferences) {
+            if (!bait || !bait.Preferences)
+                continue;
+            bool hasNew = false;
+            foreach (BaitPreferenceEntry seen : bait.Preferences) {
+                if (seen && GebSameClassname(seen.FishClassname, "geb_PacificBonito"))
+                    hasNew = true;
+            }
+            for (int i = bait.Preferences.Count() - 1; i >= 0; i--) {
+                BaitPreferenceEntry pref = bait.Preferences[i];
+                if (!pref || !GebSameClassname(pref.FishClassname, "geb_Bonita"))
+                    continue;
+                if (hasNew) {
+                    bait.Preferences.RemoveOrdered(i);
+                } else {
+                    pref.FishClassname = "geb_PacificBonito";
+                    hasNew = true;
+                }
+                changed = true;
+            }
+        }
+        if (changed)
+            GebsfishLogger.Info("bait.json: preferences for geb_Bonita now name geb_PacificBonito (renamed in 3.3.3; multipliers kept).", "Migrate");
+        return changed;
     }
     void Save() {
         GebMakeConfigDir();
@@ -563,13 +939,17 @@ class BaitSettingsConf {
     //   1. a default bait/lure row missing entirely -> whole row inserted
     //   2. a default per-fish preference missing from an existing row (e.g.
     //      a fish added this update) -> just that preference inserted
-    // Existing multipliers are never modified; a row whose Preferences array
-    // an admin nulled/gutted is skipped. Numbered lure variants stay covered
+    // Existing multipliers are never modified; a Preferences list the file
+    // holds but empty (the whole file's, or one bait's) was emptied on
+    // purpose and is skipped. A bait row whose Preferences list is missing
+    // from the file gets the defaults: the loader reads it as an empty list,
+    // so the file text decides (GebJsonKeys). Numbered lure variants stay covered
     // by their family row (GetBaitMultiplier's trailing-digit fallback), and
     // an exact numbered entry still wins.
     int MergeNewDefaults() {
-        if (!Preferences)
+        if (!Preferences || Preferences.Count() == 0)
             return 0;
+        GebJsonKeys file;
         BaitSettingsConf defaults = new BaitSettingsConf();
         defaults.SeedDefaultPreferences();
         int added = 0;
@@ -582,14 +962,27 @@ class BaitSettingsConf {
                 added++;
                 continue;
             }
-            if (!mine.Preferences || !db.Preferences)
+            if (!db.Preferences)
                 continue;
+            // An empty list is one the file holds empty (emptied on purpose,
+            // kept) or one it doesn't have (filled in). Rows keep their order
+            // from the file through the load and RenameLegacyFish, so a row's
+            // index is its place in the file. The file is only read when some
+            // row needs the answer.
+            if (!mine.Preferences || mine.Preferences.Count() == 0) {
+                if (!file)
+                    file = new GebJsonKeys(PATH, 2);
+                if (file.Has("Preferences[" + Preferences.Find(mine) + "].Preferences"))
+                    continue;
+            }
+            if (!mine.Preferences)
+                mine.Preferences = new array<ref BaitPreferenceEntry>();
             foreach (BaitPreferenceEntry dp : db.Preferences) {
                 if (!dp)
                     continue;
                 bool found = false;
                 foreach (BaitPreferenceEntry mp : mine.Preferences) {
-                    if (mp && mp.FishClassname == dp.FishClassname) { found = true; break; }
+                    if (mp && GebSameClassname(mp.FishClassname, dp.FishClassname)) { found = true; break; }
                 }
                 if (!found) { mine.Preferences.Insert(dp); added++; }
             }
@@ -598,7 +991,7 @@ class BaitSettingsConf {
     }
     protected BaitConfig FindBait(string baitClassname) {
         foreach (BaitConfig b : Preferences) {
-            if (b && b.BaitClassname == baitClassname) return b;
+            if (b && GebSameClassname(b.BaitClassname, baitClassname)) return b;
         }
         return null;
     }
@@ -622,6 +1015,11 @@ class BaitSettingsConf {
         // Shrimp is the signature reef/tropical bait -- the one bucket no
         // other bait favors -- and a strong general saltwater live bait.
         SeedBait("Shrimp",            1.0, 1.2, 0.5, 0.8, 0.8, 1.4, 0.8, 0.4, 0.9, 0.7, 1.5, 1.8, 2.5);
+        // Vanilla's trap baitfish. Bitterlings, from traps in fresh water, take
+        // the predators a minnow does; sardines, from traps at sea, are the big
+        // saltwater bait (tuna, marlin, sharks).
+        SeedBait("Bitterlings",       0.6, 2.0, 2.5, 2.2, 1.2, 1.8, 0.3, 0.8, 0.8, 0.6, 0.6, 0.4, 0.3);
+        SeedBait("Sardines",          0.4, 0.8, 1.0, 0.8, 0.6, 1.5, 0.3, 0.3, 0.5, 2.5, 2.0, 1.2, 1.0);
 
         // One row per lure family: GetBaitMultiplier's trailing-digit
         // fallback resolves geb_SpinnerBait1..4 etc. to these rows, and an
@@ -661,7 +1059,7 @@ class BaitSettingsConf {
         s_CatAmphibian = {"geb_AmericanBullFrog", "geb_RedSalamander"};
         s_CatBaitFish = {"geb_FatHeadMinnow", "geb_FlatHeadMullet", "geb_SlimySculpin"};
         s_CatSaltwaterLarge = {"geb_GreatWhiteShark", "geb_HammerHeadShark", "geb_AngelShark", "geb_LeopardShark", "geb_AtlanticBlueMarlin", "geb_AtlanticSailFish", "geb_YellowFinTuna"};
-        s_CatSaltwaterMed = {"geb_AsianSeaBass", "geb_Bonita", "geb_MahiMahi", "geb_RoughNeckRock", "geb_SiameseTigerFish", "WalleyePollock", "geb_PacificCod", "geb_LargeHeadHairTailFish", "geb_SouthernFlounder"};
+        s_CatSaltwaterMed = {"geb_AsianSeaBass", "geb_PacificBonito", "geb_GreatBarracuda", "geb_MahiMahi", "geb_RoughNeckRock", "geb_SiameseTigerFish", "WalleyePollock", "geb_PacificCod", "geb_LargeHeadHairTailFish", "geb_SouthernFlounder"};
         s_CatSaltwaterSmall = {"Mackerel", "Sardines", "geb_YellowSnapper", "geb_WhiteGrunt"};
         s_CatReefTropical = {"geb_AngelFish", "geb_BlueTang", "geb_HumpHeadWrasse", "geb_Severum", "geb_RedHeadCichlid"};
     }
@@ -687,8 +1085,8 @@ class BaitSettingsConf {
     }
     // Helper: append a BaitPreferenceEntry to `conf.Preferences` for
     // every fish classname in `fishList`, all with the same multiplier.
-    // Lets SeedDefaultBaitPreferences emit per-category preferences in
-    // one line per (bait, category) pair instead of per fish.
+    // Lets SeedBait emit per-category preferences in one line per
+    // (bait, category) pair instead of per fish.
     protected void AppendBaitPrefsByCategory(BaitConfig conf, array<string> fishList, float mul) {
         foreach (string fish : fishList) {
             BaitPreferenceEntry pref = new BaitPreferenceEntry();
@@ -724,10 +1122,11 @@ class JunkConfig {
                 int added = MergeNewDefaults();
                 if (added > 0)
                     GebsfishLogger.Info("junk.json: added " + added.ToString() + " new default entries (update '" + ConfigVersion + "' -> '" + VERSION_GEBSFISH + "'). Existing entries untouched.", "Migrate");
-                RefreshInfoStrings();
                 ConfigVersion = VERSION_GEBSFISH;
                 changed = true;
             }
+            if (RefreshInfoStrings() > 0)
+                changed = true;
         } else {
             SeedDefaults();
             changed = true;
@@ -741,47 +1140,60 @@ class JunkConfig {
         if (!JsonFileLoader<JunkConfig>.SaveFile(PATH, this, error))
             GebsfishLogger.Error("junk.json could not be written: " + error, "Config");
     }
+    // Re-seeds a table the file doesn't have (or has as null). Whether it is
+    // there comes from the file text (GebJsonKeys): the loader reads a missing
+    // table as an empty one, the same as one emptied on purpose, which is kept.
     bool Backfill() {
         bool changed = false;
-        if (!Junk)          { SeedDefaultJunk();          changed = true; }
-        if (!ContainerJunk) { SeedDefaultContainerJunk(); changed = true; }
-        // A file written before JunkShare existed doesn't have it, and a number
-        // missing from the file may load as 0, which would switch junk off.
-        // Ask the file itself, so a deliberate 0 is kept.
-        if (!GebJsonFileHasKey(PATH, "JunkShare")) {
+        GebJsonKeys file = new GebJsonKeys(PATH, 1);
+        if (!Junk || !file.Has("Junk"))                   { Junk = null;          SeedDefaultJunk();          changed = true; }
+        if (!ContainerJunk || !file.Has("ContainerJunk")) { ContainerJunk = null; SeedDefaultContainerJunk(); changed = true; }
+        // A file written before JunkShare existed doesn't have it. JunkShare
+        // sits at the top of the file, where the loader leaves a missing value
+        // at the class default -- but ask the file anyway: a file without it
+        // gets it written in, and a deliberate 0 is kept.
+        if (!file.Has("JunkShare")) {
             JunkConfig defaults = new JunkConfig();
             JunkShare = defaults.JunkShare;
-            RefreshInfoStrings();
             changed = true;
         }
         return changed;
     }
 
-    // The ...Info strings load from the file like every other field, so an old
-    // file keeps old help text. Junk's CatchProbability changed meaning when
-    // JunkShare arrived, so put the current text back.
-    protected void RefreshInfoStrings() {
-        JunkConfig fresh = new JunkConfig();
-        ConfigVersionInfo = fresh.ConfigVersionInfo;
-        JunkShareInfo = fresh.JunkShareInfo;
-        JunkInfo = fresh.JunkInfo;
-        ContainerJunkInfo = fresh.ContainerJunkInfo;
+    // The current help text in every ...Info field (GebRefreshInfo), the
+    // file's own and every row's (each row carries its own copy). Returns how
+    // many changed.
+    protected int RefreshInfoStrings() {
+        int n = GebRefreshInfo(this, new JunkConfig());
+        if (Junk) {
+            JunkEntry freshJunk = new JunkEntry();
+            foreach (JunkEntry j : Junk)
+                n += GebRefreshInfo(j, freshJunk);
+        }
+        if (ContainerJunk) {
+            ContainerJunkEntry freshContainer = new ContainerJunkEntry();
+            foreach (ContainerJunkEntry c : ContainerJunk)
+                n += GebRefreshInfo(c, freshContainer);
+        }
+        return n;
     }
 
     // Additive update merge (version-change only, see Load): insert default
-    // entries missing from the loaded tables; never modify existing ones.
-    // Permanently remove an entry by setting CatchProbability 0, not deletion.
+    // entries missing from the loaded tables; never modify existing ones. A
+    // table that is empty here was written empty (Backfill re-seeds one the
+    // file doesn't have) and is left alone (emptied on purpose). Permanently
+    // remove one entry by setting CatchProbability 0, not deletion.
     int MergeNewDefaults() {
         JunkConfig defaults = new JunkConfig();
         defaults.SeedDefaultJunk();
         defaults.SeedDefaultContainerJunk();
         int added = 0;
-        if (Junk && defaults.Junk) {
+        if (Junk && Junk.Count() > 0 && defaults.Junk) {
             foreach (JunkEntry dj : defaults.Junk) {
                 if (dj && !HasJunk(dj.Classname)) { Junk.Insert(dj); added++; }
             }
         }
-        if (ContainerJunk && defaults.ContainerJunk) {
+        if (ContainerJunk && ContainerJunk.Count() > 0 && defaults.ContainerJunk) {
             foreach (ContainerJunkEntry dc : defaults.ContainerJunk) {
                 if (dc && !HasContainerJunk(dc.Classname)) { ContainerJunk.Insert(dc); added++; }
             }
@@ -789,11 +1201,11 @@ class JunkConfig {
         return added;
     }
     protected bool HasJunk(string classname) {
-        foreach (JunkEntry e : Junk) if (e && e.Classname == classname) return true;
+        foreach (JunkEntry e : Junk) if (e && GebSameClassname(e.Classname, classname)) return true;
         return false;
     }
     protected bool HasContainerJunk(string classname) {
-        foreach (ContainerJunkEntry e : ContainerJunk) if (e && e.Classname == classname) return true;
+        foreach (ContainerJunkEntry e : ContainerJunk) if (e && GebSameClassname(e.Classname, classname)) return true;
         return false;
     }
     void SeedDefaults() {
@@ -821,19 +1233,23 @@ class FishConfig {
     string ConfigVersionInfo = "Mod config version this file was written with. Do NOT edit -- used to migrate the file on mod updates.";
     string ConfigVersion = "";
     // ENGINE LIMIT: ReadFromString access-violates (illegal read, stack smeared
-    // with the string's tail) when any single string member exceeds ~1024 chars.
+    // with the string's tail) when a string member's value IN MEMORY is 1024
+    // bytes or more -- for a config class that is the compiled default literal,
+    // which the reader copies into a 1024-byte buffer before it reads the file.
     // Bracketed empirically: 955 loads, 1458 crashed the server on every restart.
-    // The limit applies to the DEFAULT literal too, not just the file value --
-    // a long default crashes the load even when the on-disk value is short.
-    // Keep every string literal in this file under ~900 chars.
+    // A long value in the FILE doesn't crash (it is cut to 1023 bytes), and no
+    // edit to the file can fix the crash. Keep every string literal in this
+    // file under ~900 bytes.
     string SpeciesInfo = "One object per fish/catchable. Classname = catchable item classname (also the fillet-recipe ingredient). RecipeShape: 0 = fillet only, 1 = caviar (ResultBonus caviar at index 0, gated by GeneralSettings.CaviarChance), 2 = lobster (ResultBonus tail at index 0). ResultMain = repeated fillet/claw result classname ('' = catch-only, no recipe). MeatMin/MeatMax = fillets per prepare. Environment: 1 pond, 2 sea, 3 both. CatchMethod bitmask: 1 rod + 2 largetrap + 4 smalltrap, added together (7 = all). CatchProbability = 0-25 abundance weight (0 = uncatchable). Rain/Storm/Dawn/Day/Dusk/NightMultiplier = per-species catch-bias multipliers (1.0 = no effect). TempOptimal/TempMin/TempMax = water-temperature preference in degrees Celsius. BiteSpeed = 24 space-separated hourly bite-speed values (index 0 = 12AM), each 0.0-1.0 where 1.0 = vanilla speed.";
     ref array<ref FishConf>           Species;
 
     private const static string PATH = "$profile:Gebs/fish.json";
 
+    // Case-blind (GebSameClassname): the caught fish's type is the config's
+    // spelling, the row is the admin's.
     FishConf Get(string classname) {
         if (!Species) return null;
-        foreach (FishConf f : Species) if (f && f.Classname == classname) return f;
+        foreach (FishConf f : Species) if (f && GebSameClassname(f.Classname, classname)) return f;
         return null;
     }
 
@@ -846,6 +1262,7 @@ class FishConfig {
                 return false;
             }
             changed = Backfill();
+            if (RenameLegacyFish()) changed = true;
             if (ConfigVersion != VERSION_GEBSFISH) {
                 int added = MergeNewDefaults();
                 if (added > 0)
@@ -853,6 +1270,9 @@ class FishConfig {
                 ConfigVersion = VERSION_GEBSFISH;
                 changed = true;
             }
+            // the current help text (the species rows carry none)
+            if (GebRefreshInfo(this, new FishConfig()) > 0)
+                changed = true;
         } else {
             SeedDefaults();
             changed = true;
@@ -860,6 +1280,51 @@ class FishConfig {
         if (changed) Save();
         return true;
     }
+    // 3.3.3 renamed geb_Bonita to geb_PacificBonito (and its fillet). A row
+    // written before that takes the new names, keeping the admin's tuning;
+    // if geb_PacificBonito already has a row the old one is dropped. Runs
+    // before the merge, so the merge doesn't add a second, default row.
+    protected bool RenameLegacyFish() {
+        if (!Species)
+            return false;
+        bool hasNew = false;
+        foreach (FishConf seen : Species) {
+            if (seen && GebSameClassname(seen.Classname, "geb_PacificBonito"))
+                hasNew = true;
+        }
+        bool changed = false;
+        for (int i = Species.Count() - 1; i >= 0; i--) {
+            FishConf f = Species[i];
+            if (!f || !GebSameClassname(f.Classname, "geb_Bonita"))
+                continue;
+            if (hasNew) {
+                Species.RemoveOrdered(i);
+                GebsfishLogger.Info("fish.json: dropped the old geb_Bonita row; geb_PacificBonito already has one.", "Migrate");
+            } else {
+                f.Classname = "geb_PacificBonito";
+                hasNew = true;
+                GebsfishLogger.Info("fish.json: renamed geb_Bonita to geb_PacificBonito (renamed in 3.3.3; its settings kept).", "Migrate");
+            }
+            changed = true;
+        }
+        // The fillet's old name, on the bonito's row or any other an admin
+        // gave it to: the class is gone, so a row still naming it would
+        // fillet into nothing.
+        foreach (FishConf row : Species) {
+            if (!row)
+                continue;
+            if (GebSameClassname(row.ResultMain, "geb_BonitaFilletMeat")) {
+                row.ResultMain = "geb_PacificBonitoFilletMeat";
+                changed = true;
+            }
+            if (GebSameClassname(row.ResultBonus, "geb_BonitaFilletMeat")) {
+                row.ResultBonus = "geb_PacificBonitoFilletMeat";
+                changed = true;
+            }
+        }
+        return changed;
+    }
+
     void Save() {
         GebMakeConfigDir();
         string error;
@@ -867,18 +1332,23 @@ class FishConfig {
             GebsfishLogger.Error("fish.json could not be written: " + error, "Config");
     }
 
+    // Re-seeds the Species table when the file doesn't have it (or has it as
+    // null). The loader reads a missing table as an empty one, so the file
+    // text decides; "Species": [] written on purpose is kept.
     bool Backfill() {
-        if (!Species) { SeedSpecies(); return true; }
+        if (!Species || (Species.Count() == 0 && !GebJsonFileHasKey(PATH, "Species"))) { SeedSpecies(); return true; }
         return false;
     }
 
     // Additive update merge: any species the compiled defaults have but the
     // loaded file lacks is inserted. Runs only on a version change (see
     // Load), so in-version admin deletions are respected until the next mod
-    // update; existing rows are never modified. To remove a species
-    // permanently, set its CatchProbability to 0 instead of deleting it.
+    // update; existing rows are never modified, and a Species list written
+    // empty is left empty (Backfill re-seeds one the file doesn't have). To
+    // remove a species permanently, set its CatchProbability to 0 instead of
+    // deleting it.
     int MergeNewDefaults() {
-        if (!Species)
+        if (!Species || Species.Count() == 0)
             return 0;
         FishConfig defaults = new FishConfig();
         defaults.SeedSpecies();
@@ -899,7 +1369,8 @@ class FishConfig {
         SeedSpeciesA(); SeedSpeciesB(); SeedSpeciesC(); SeedSpeciesD(); SeedSpeciesE();
     }
     // ---- shared 24-hour BiteSpeed curves (index 0 = 12AM .. 23 = 11PM) ----
-    // Each helper returns a FRESH array so no two fish share one instance.
+    // Each helper returns the 24 values as one space-separated string
+    // (FishConf.BiteSpeed is a string; GetBiteSpeedArray parses it per fish).
     // Fastest 8PM-2AM, slowest midday -- catfish, crayfish, frogs, sharks, lobsters.
     protected string BiteNocturnal() { return "1 1 1 0.95 0.85 0.75 0.65 0.55 0.5 0.45 0.45 0.45 0.45 0.45 0.5 0.55 0.65 0.75 0.85 0.9 1 1 1 1"; }
     // Sharp dawn + dusk peaks, slow night and midday -- bass, trout, salmon.
@@ -979,7 +1450,8 @@ class FishConfig {
         FishConf f;
         f = new FishConf(); f.Classname="geb_AsianSeaBass"; f.RecipeShape=0; f.ResultMain="geb_AsianSeaBassFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=3; f.CatchMethod=3; f.CatchProbability=10; f.RainMultiplier=1.2; f.StormMultiplier=1.3; f.DawnMultiplier=1.2; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.2; f.TempOptimal=28.0; f.TempMin=20.0; f.TempMax=33.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
         f = new FishConf(); f.Classname="geb_AtlanticBlueMarlin"; f.RecipeShape=0; f.ResultMain="geb_AtlanticBlueMarlinFilletMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=3; f.RainMultiplier=1.2; f.StormMultiplier=1.4; f.DawnMultiplier=1.2; f.DayMultiplier=1.0; f.DuskMultiplier=1.2; f.NightMultiplier=1.0; f.TempOptimal=26.0; f.TempMin=20.0; f.TempMax=30.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_Bonita"; f.RecipeShape=0; f.ResultMain="geb_BonitaFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=3; f.CatchProbability=10; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.2; f.DayMultiplier=1.0; f.DuskMultiplier=1.2; f.NightMultiplier=1.0; f.TempOptimal=22.0; f.TempMin=14.0; f.TempMax=28.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new FishConf(); f.Classname="geb_PacificBonito"; f.RecipeShape=0; f.ResultMain="geb_PacificBonitoFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=3; f.CatchProbability=10; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.2; f.DayMultiplier=1.0; f.DuskMultiplier=1.2; f.NightMultiplier=1.0; f.TempOptimal=22.0; f.TempMin=14.0; f.TempMax=28.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new FishConf(); f.Classname="geb_GreatBarracuda"; f.RecipeShape=0; f.ResultMain="geb_GreatBarracudaFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=2; f.CatchMethod=1; f.CatchProbability=6; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=1.0; f.DuskMultiplier=1.3; f.NightMultiplier=0.7; f.TempOptimal=26.0; f.TempMin=18.0; f.TempMax=32.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
         f = new FishConf(); f.Classname="geb_CherrySalmon"; f.RecipeShape=1; f.ResultMain="geb_CherrySalmonFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=6; f.RainMultiplier=1.3; f.StormMultiplier=1.2; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.0; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=18.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
         f = new FishConf(); f.Classname="geb_ChinookSalmon"; f.RecipeShape=1; f.ResultMain="geb_ChinookSalmonFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=8; f.RainMultiplier=1.3; f.StormMultiplier=1.2; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.0; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=18.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
         f = new FishConf(); f.Classname="geb_SockEyeSalmon"; f.RecipeShape=1; f.ResultMain="geb_SockEyeSalmonFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=8; f.RainMultiplier=1.3; f.StormMultiplier=1.2; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.0; f.TempOptimal=13.0; f.TempMin=4.0; f.TempMax=18.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
@@ -1077,14 +1549,19 @@ class gebsfishConfig {
             Fish.SeedDefaults();
         }
         GebValidateFishConfig(Fish);
+        GebValidateRows(this);
     }
 }
 
 ref gebsfishConfig m_gebsConfig;
+// Set when the main menu, or a client's game that held the config, ends: the
+// next menu or offline game loads its own (MissionBase.InitWorldYieldDataDefaults).
+bool g_GebConfigStale;
 
 static gebsfishConfig GetGebSettingsConfig() {
     if (!m_gebsConfig) {
         GebsfishLogger.Info("Initializing gebsfish config.", "JSON");
+        g_GebConfigStale = false;
         m_gebsConfig = new gebsfishConfig;
         m_gebsConfig.LoadAll();
     }
@@ -1092,7 +1569,7 @@ static gebsfishConfig GetGebSettingsConfig() {
 }
 
 static void SetGebsfishConfig(gebsfishConfig config) {
-    GebsfishLogger.Info("Setting config from server (RPC).", "JSON");
+    g_GebConfigStale = false;
     m_gebsConfig = config;
 }
 
@@ -1113,7 +1590,7 @@ static int GebGetDebugLevel() {
 class GenSetConf {
     string DebugInfo = "Debug log level for the logs in $profile:Gebs/logs (warnings and errors also go to the server RPT). 0 = off, 1 = standard (per cast: date, hour, rain, water temperature, the species in the pool, the fish picked, the BiteSpeed aggregate and any multiplier clamp), 2 = elevated (adds the pool table, the per-fish BiteSpeed table and the bite chance on every tick). Set to 1 when tuning fishing config; 2 only when reproducing a specific bug since it is very chatty.";
     int DebugLogs = 0;
-    string FishQualityInfo = "How full every caught fish comes out, from 0 to 1 (1 = a whole, full fish). Vanilla DayZ calls this catch quality and uses 0.35, then the rod, hook and bait add a small random bonus on top. The result is capped at 1, so values above 1.0 behave exactly like 1.0. Trader mods (DayZ-Expansion-Market, TraderPlus, Dr. Jones, etc.) look at how full an item is, and several refuse anything that is not full, so the default of 1.0 keeps every fish sellable. Lower it (e.g. 0.35) only if your trader buys partly-full items and you want vanilla-style size variation.";
+    string FishQualityInfo = "How full every caught fish comes out, from 0 to 1 (1 = a whole, full fish), and with it how much the fish weighs. Vanilla DayZ calls this catch quality and uses 0.35, then the rod, hook and bait add a small random bonus on top. The result is capped at 1, so values above 1.0 behave exactly like 1.0. Trader mods (DayZ-Expansion-Market, TraderPlus, Dr. Jones, etc.) look at how full an item is, and several refuse anything that is not full, so the default of 1.0 keeps every fish sellable. Lower it (e.g. 0.35) only if your trader buys partly-full items and you want vanilla-style size variation.";
     float FishQuality = 1.0;
     string FishKnifeSpeedMultiplierInfo = "Animation length multiplier applied when filleting a fish with a geb fish knife. 1.0 = vanilla speed (no bonus), 0.9 = 10% faster (default), 0.7 = 30% faster but causes visible animation desync. DayZ does not expose a way to scale the actual character animation playback, only the recipe duration -- so values too far below 1.0 produce a noticeable gap where the recipe ends before the skinning finish-animation completes (player can freeze briefly, or move away before the fillet visually appears). 0.9 keeps the gap inside the finish-transition window so it isn't perceptible.";
     float FishKnifeSpeedMultiplier = 0.9;
@@ -1163,9 +1640,9 @@ class RecipeToggleConf {
 // effective rate below these nominal fractions when the player is far
 // from shore -- not configurable here, see geb_predatorspawner.c.
 class PredatorConf {
-    string PredatorSpawnEnabledInfo = "Turns on(1) and off(0) the predators feature of the mod. When on, it will enable the random spawning of predators when catching/cutting up the fish.";
+    string PredatorSpawnEnabledInfo = "Turns on(1) and off(0) the predators feature of the mod. When on, it will enable the random spawning of predators when fishing, filleting, using the bamboo net or spear fishing; off turns all of them off.";
     bool PredatorSpawnEnabled = 1;
-    string PredatorSpawnChanceInfo = "Gate 1 of 3 for predator spawning -- the per-action chance that ANY predator is selected. Fishing is when a fish is caught, preparing is when filleting, failcatch is when fishing rolls nothing. Bamboo fishing net has its own predator chance under BambooFishingNetSettings.PredatorSpawnChance. Set any to 0 to disable that path entirely. Final per-catch odds = thisChance * (predator weight / sum of weights), so 0.01 here with default wolf/bear weights gives wolves 1/150 and bear 1/300. See the comment above PredatorConf for the full three-gate breakdown.";
+    string PredatorSpawnChanceInfo = "Gate 1 of 3 for predator spawning -- the per-action chance that ANY predator is selected. Fishing is when a fish is caught, preparing is when filleting, failcatch is when fishing rolls nothing. Bamboo fishing net and spear fishing have their own predator chances under BambooFishingNetSettings.PredatorSpawnChance and SpearFishingSettings.PredatorSpawnChance. Set any to 0 to disable that path entirely. Final per-catch odds = thisChance * (predator weight / sum of weights), so 0.01 here with default wolf/bear weights gives wolves 1/150 and bear 1/300. See the comment above PredatorConf for the full three-gate breakdown.";
     float PredatorSpawnChanceFishing = 0.01;
     float PredatorSpawnChancePreparing = 0.01;
     float PredatorSpawnChanceFailCatch = 0.01;
@@ -1264,7 +1741,7 @@ class NetEntry {
     string Classname;
     string CatchChanceInfo = "Relative weight for this entry within the net's Catches table (NOT a 0-1 chance, and separate from the net's FindChance). Among the entries valid for the current water surface, an entry's odds are its weight divided by the sum of those weights. Set to 0 (or below) to disable this entry without deleting it.";
     float CatchChance;
-    string EnvironmentInfo = "Where this entry is allowed: 1 = pond/freshwater only, 2 = sea/saltwater only, 3 = both. Entries whose Environment doesn't match the water the net was cast in are skipped before the weighted pick.";
+    string EnvironmentInfo = "Where this entry is allowed: 1 = pond/freshwater only, 2 = sea/saltwater only, 3 = both. Entries whose Environment doesn't match the water the net was cast in are skipped before the weighted pick. Always set it: a row without a valid Environment never catches anything, and the server log names it at startup.";
     int Environment = 1;
 }
 
@@ -1278,7 +1755,7 @@ class BaitPreferenceEntry {
 
 // Bait-side container: each bait/lure classname owns a list of fish it
 // favours. Lookups default to 1.0 (no bias) when the current bait is not
-// in BaitPreferences at all, or when the bait is configured but the
+// in the Preferences list at all, or when the bait is configured but the
 // specific fish isn't listed. So admins can opt in incrementally without
 // listing every fish-bait pair.
 class BaitConfig {
@@ -1315,7 +1792,7 @@ class SpearEntry {
     string Classname;
     string CatchChanceInfo = "Relative weight within the spear's Catches table (not a 0-1 chance, and separate from FindChance). Among the entries valid for the water stabbed into, an entry's odds are its weight divided by the sum of those weights. 0 disables it without deleting it.";
     float CatchChance;
-    string EnvironmentInfo = "Where this entry can be caught: 1 = pond/freshwater only, 2 = sea only, 3 = both.";
+    string EnvironmentInfo = "Where this entry can be caught: 1 = pond/freshwater only, 2 = sea only, 3 = both. Always set it: a row without a valid Environment never catches anything, and the server log names it at startup.";
     int Environment = 1;
 }
 
@@ -1326,13 +1803,13 @@ class SpearFishingConf {
     string EnableInfo = "Turns spear fishing on (1) or off (0). Off, spears get no fishing action.";
     bool Enable = true;
 
-    string FindChanceInfo = "Per-stab probability of catching anything. 0-1; 1.0 = every stab catches, 0.0 = none do.";
-    float FindChance = 0.4;
+    string FindChanceInfo = "Per-stab probability of catching anything. 0-1; 1.0 = every stab catches, 0.0 = none do. The default 0.04 with a 6 s stab gives a fish about every 2.5 minutes, a little slower than a rod.";
+    float FindChance = 0.04;
 
     string MaxWaterDepthInfo = "Deepest water, in metres at the spot aimed at, that a spear can fish. Spear fishing is for the shallows: knee-deep water near the bank or shore.";
     float MaxWaterDepth = 1.0;
 
-    string PredatorChanceInfo = "Per-stab probability of a predator spawning after the action completes, independent of the catch roll.";
+    string PredatorChanceInfo = "Chance (0-1) that a predator is drawn when a stab lands a fish, the way a rod rolls once per cast. 0.01 = about one predator per 100 fish.";
     float PredatorSpawnChance = 0.01;
 
     string CatchesInfo = "Weighted catch table. Environment: 1=pond, 2=sea, 3=both. Entries whose Environment doesn't match the water stabbed into are skipped before the weighted roll.";
@@ -1374,7 +1851,7 @@ class DigWormsConf {
 class JunkEntry {
     string ClassnameInfo = "Any classname for a junk item that's not a liquid container.";
     string Classname;
-    string CatchProbInfo = "Catch probability for this junk item. Typically a scale of 0-25, with 0 being no chance.";
+    string CatchProbInfo = "How often this item turns up compared with the other junk, 0-25 (0 = never). How often junk comes up at all is JunkShare, at the top of the file.";
     int CatchProbability;
     string HealthLevelInfo = "Health level range for spawned junk: 0 pristine, 1 worn, 2 damaged, 3 badly damaged, 4 ruined. Use 3/3 for fixed badly damaged, 3/4 for random badly damaged or ruined.";
     int MinHealthLevel = 3;
@@ -1384,7 +1861,7 @@ class JunkEntry {
 class ContainerJunkEntry {
     string ClassnameInfo = "Any classname for a junk item that's a liquid container.";
     string Classname;
-    string CatchProbInfo = "Catch probability for this junk item. Typically a scale of 0-25, with 0 being no chance.";
+    string CatchProbInfo = "How often this container turns up compared with the other junk, 0-25 (0 = never). It shares JunkShare with the Junk items.";
     int CatchProbability;
     string HealthLevelInfo = "Health level range for spawned container junk: 0 pristine, 1 worn, 2 damaged, 3 badly damaged, 4 ruined. Use 3/3 for fixed badly damaged, 3/4 for random badly damaged or ruined.";
     int MinHealthLevel = 3;
@@ -1412,19 +1889,21 @@ class HookFromFishEntry {
 // items rolled independently from the loot pool -- so no two hauls match.
 // Both pools are entirely admin-defined; nothing here is hardcoded in script.
 // ---------------------------------------------------------------------------
-// Treasure feature switches. Its own section on purpose: Backfill null-checks
-// each section, and an object the file doesn't mention loads as null (which is
-// detectable) whereas a loose bool/float would load as 0 (which is not). That is
-// why every switchable system here is a section rather than scalars on
-// GeneralSettings -- it is what makes a new feature default correctly on servers
-// whose config predates it, with no version checks anywhere.
+// Treasure feature switches. Its own section on purpose: Backfill gives a
+// section the file doesn't have its class defaults (it asks the file text,
+// since the loader turns a missing section into an all-zero object rather
+// than null), so one check makes a whole new feature default correctly on
+// servers whose config predates it, with no version checks anywhere. A loose
+// bool/float added to an existing section would load as 0 instead and need a
+// key check of its own (see CraftFishMount) -- that is why every switchable
+// system here is a section rather than scalars on GeneralSettings.
 class TreasureConf {
     string TreasureInfo = "Ultra-rare treasure catch. On a SUCCESSFUL catch (not a failed cast) this rolls once: on a hit, one container is picked from the top-level TreasureContainers pool and filled with a random number of items rolled independently from TreasureLoot, so no two hauls are the same. Enable set to 0 turns the feature off entirely; Chance is the per-catch probability and 0 also disables it. Default 0.0002 is about 1 in 5000 CATCHES -- that is catches, not casts, so a session landing 60 fish has roughly a 1.2 percent chance of seeing one. For reference: 0.0005 is ~1 in 2000, 0.002 is ~1 in 500, 0.00005 is ~1 in 20000. Keep it low -- this is meant to be a story someone tells, not a farm. The container spawns at the player's feet (they are usually too big for a pocket). Edit the TreasureContainers / TreasureLoot pools rather than this line to change what actually appears.";
     bool Enable = 1;
     float Chance = 0.0002;
     string AnnounceInfo = "Send the lucky player a chat message when a treasure is pulled up. Purely cosmetic -- set to 0 for a silent find.";
     bool Announce = 1;
-    string RequireRealRodInfo = "Restrict treasure to a proper fishing rod. The crafted ImprovisedFishingRod is a stick and a piece of rope, so it is excluded, as is any rod that does not inherit from FishingRod. The vanilla rod and the four gebsfish colour variants all qualify. Set to 0 to let any rod find treasure.";
+    string RequireRealRodInfo = "Restrict treasure to a proper fishing rod. The crafted ImprovisedFishingRod is a stick and a piece of rope, so it is excluded, as is any rod that does not inherit from FishingRod. The vanilla rod and the ten gebsfish colour rods all qualify. Set to 0 to let any rod find treasure.";
     bool RequireRealRod = 1;
     string RodCatchesToRuinInfo = "How many treasure pulls it takes to ruin a PRISTINE rod -- winching a loaded container up is brutal on tackle. Each pull removes this fraction of the rod maximum health, so the default 3 costs 50 of a stock rod 150 HP. A rod already worn from ordinary fishing gives out sooner, and the damage rescales on its own if the hitpoints are retuned or another mod rod is used. Set to 0 to leave the rod undamaged.";
     int RodCatchesToRuin = 3;
@@ -1438,7 +1917,7 @@ class TreasureContainerEntry {
     string HealthLevelInfo = "Health level the container spawns at: 0 pristine .. 4 ruined. A range rolls per spawn -- 1/3 gives anything from worn to badly damaged.";
     int MinHealthLevel = 1;
     int MaxHealthLevel = 3;
-    string ItemCountInfo = "How many loot rolls this container gets. Each roll picks independently from TreasureLoot, so a bigger container can be made to hold more.";
+    string ItemCountInfo = "How many loot rolls this container gets. Each roll picks independently from TreasureLoot, so a bigger container can be made to hold more. Set both: MaxItems 0 means the container always arrives empty.";
     int MinItems = 2;
     int MaxItems = 5;
 };
@@ -1474,8 +1953,18 @@ static void GebValidateFishConfig(FishConfig config) {
     int removed = 0;
     for (int i = 0; i < config.Species.Count(); i++) {
         FishConf f = config.Species[i];
-        if (!f || f.Classname == "" || !g_Game.ConfigIsExisting("CfgVehicles " + f.Classname)) {
-            GebsfishLogger.Error("Skipping invalid fish.json Species row " + i, "ConfigValidation");
+        // Every removal shifts the later rows down, so i + removed is the row's
+        // place in the file (counting from 0), the one an admin can look up.
+        int row = i + removed;
+        string problem = "";
+        if (!f)
+            problem = "the row is empty";
+        else if (f.Classname == "")
+            problem = "it has no Classname";
+        else if (!g_Game.ConfigIsExisting("CfgVehicles " + f.Classname))
+            problem = f.Classname + " is not an item in this game (a typo, or its mod isn't loaded)";
+        if (problem != "") {
+            GebsfishLogger.Error("Skipping fish.json Species row " + row + ": " + problem, "ConfigValidation");
             config.Species.RemoveOrdered(i);
             i--;
             removed++;
@@ -1487,7 +1976,7 @@ static void GebValidateFishConfig(FishConfig config) {
         lowerName.ToLower();
         int key = lowerName.Hash();
         if (seen.Contains(key)) {
-            GebsfishLogger.Error("Skipping duplicate classname/hash: " + f.Classname + " conflicts with " + seen.Get(key), "ConfigValidation");
+            GebsfishLogger.Error("Skipping fish.json Species row " + row + ": " + f.Classname + " conflicts with an earlier row (" + seen.Get(key) + ")", "ConfigValidation");
             config.Species.RemoveOrdered(i);
             i--;
             removed++;
@@ -1542,4 +2031,115 @@ static void GebValidateFishConfig(FishConfig config) {
         }
     }
     GebsfishLogger.Info("Validated " + config.Species.Count() + " species; skipped " + removed + " invalid/duplicate rows. JSON preserved.", "ConfigValidation");
+}
+
+// Rows added to the JSON files by hand can carry values the server can't use:
+// a key left out of a row loads as 0 / empty, not as the class default (the
+// loader builds rows without their class defaults; see GebJsonKeys). Each
+// such row is named at startup with what it will do; nothing is changed, so
+// the admin's file stays as written.
+static int GebWarnRow(string where, int row, string classname, string problem) {
+    string name = classname;
+    if (name == "")
+        name = "no Classname";
+    GebsfishLogger.Error(where + " row " + row + " (" + name + "): " + problem, "ConfigValidation");
+    return 1;
+}
+
+static int GebCheckCatchRow(string where, int row, string classname, int environment) {
+    if (classname == "")
+        return GebWarnRow(where, row, classname, "it has no Classname, so it never catches anything");
+    if (environment < 1 || environment > 3)
+        return GebWarnRow(where, row, classname, "Environment is " + environment + "; it must be 1 (pond), 2 (sea) or 3 (both), so this row never catches anything");
+    return 0;
+}
+
+static int GebCheckLevels(string where, int row, string classname, int minLevel, int maxLevel) {
+    if (minLevel < 0 || maxLevel > 4 || minLevel > maxLevel)
+        return GebWarnRow(where, row, classname, "MinHealthLevel " + minLevel + " / MaxHealthLevel " + maxLevel + " must run from low to high within 0 (pristine) to 4 (ruined)");
+    return 0;
+}
+
+static void GebValidateRows(gebsfishConfig cfg) {
+    if (!cfg)
+        return;
+    int warnings = 0;
+    GeneralConfig g = cfg.General;
+    if (g && g.BambooFishingNetSettings && g.BambooFishingNetSettings.Catches) {
+        foreach (int ni, NetEntry net : g.BambooFishingNetSettings.Catches) {
+            if (net)
+                warnings += GebCheckCatchRow("general.json BambooFishingNetSettings.Catches", ni, net.Classname, net.Environment);
+        }
+    }
+    if (g && g.SpearFishingSettings && g.SpearFishingSettings.Catches) {
+        foreach (int si, SpearEntry spear : g.SpearFishingSettings.Catches) {
+            if (spear)
+                warnings += GebCheckCatchRow("general.json SpearFishingSettings.Catches", si, spear.Classname, spear.Environment);
+        }
+    }
+    if (g && g.TreasureContainers) {
+        foreach (int ci, TreasureContainerEntry box : g.TreasureContainers) {
+            if (!box)
+                continue;
+            if (box.MaxItems < 1)
+                warnings += GebWarnRow("general.json TreasureContainers", ci, box.Classname, "MaxItems is " + box.MaxItems + ", so it always arrives empty");
+            else if (box.MinItems > box.MaxItems)
+                warnings += GebWarnRow("general.json TreasureContainers", ci, box.Classname, "MinItems " + box.MinItems + " is above MaxItems " + box.MaxItems);
+            warnings += GebCheckLevels("general.json TreasureContainers", ci, box.Classname, box.MinHealthLevel, box.MaxHealthLevel);
+        }
+    }
+    if (g && g.TreasureLoot) {
+        foreach (int li, TreasureLootEntry loot : g.TreasureLoot) {
+            if (!loot)
+                continue;
+            warnings += GebCheckLevels("general.json TreasureLoot", li, loot.Classname, loot.MinHealthLevel, loot.MaxHealthLevel);
+            if (loot.MinQuantity > loot.MaxQuantity)
+                warnings += GebWarnRow("general.json TreasureLoot", li, loot.Classname, "MinQuantity " + loot.MinQuantity + " is above MaxQuantity " + loot.MaxQuantity);
+        }
+    }
+    if (g && g.Predators) {
+        foreach (int pi, PredatorEntry predator : g.Predators) {
+            if (!predator)
+                continue;
+            if (predator.MaxCount < 1)
+                warnings += GebWarnRow("general.json Predators", pi, predator.Classname, "MaxCount is " + predator.MaxCount + ", so it never spawns");
+            else if (predator.MinCount > predator.MaxCount)
+                warnings += GebWarnRow("general.json Predators", pi, predator.Classname, "MinCount " + predator.MinCount + " is above MaxCount " + predator.MaxCount);
+            if (predator.MinRadius > predator.MaxRadius)
+                warnings += GebWarnRow("general.json Predators", pi, predator.Classname, "MinRadius " + predator.MinRadius + " is above MaxRadius " + predator.MaxRadius);
+        }
+    }
+    if (cfg.Junk && cfg.Junk.Junk) {
+        foreach (int ji, JunkEntry junk : cfg.Junk.Junk) {
+            if (junk)
+                warnings += GebCheckLevels("junk.json Junk", ji, junk.Classname, junk.MinHealthLevel, junk.MaxHealthLevel);
+        }
+    }
+    if (cfg.Junk && cfg.Junk.ContainerJunk) {
+        foreach (int ki, ContainerJunkEntry cjunk : cfg.Junk.ContainerJunk) {
+            if (cjunk)
+                warnings += GebCheckLevels("junk.json ContainerJunk", ki, cjunk.Classname, cjunk.MinHealthLevel, cjunk.MaxHealthLevel);
+        }
+    }
+    if (cfg.Bait && cfg.Bait.Preferences) {
+        foreach (int bi, BaitConfig bait : cfg.Bait.Preferences) {
+            if (!bait)
+                continue;
+            if (bait.BaitClassname == "")
+                warnings += GebWarnRow("bait.json Preferences", bi, "", "it has no BaitClassname, so its preferences never apply");
+            if (!bait.Preferences)
+                continue;
+            string baitWhere = "bait.json " + bait.BaitClassname + " Preferences";
+            foreach (int fi, BaitPreferenceEntry pref : bait.Preferences) {
+                if (!pref)
+                    continue;
+                if (pref.FishClassname == "")
+                    warnings += GebWarnRow(baitWhere, fi, "", "it has no FishClassname, so it never applies");
+                else if (pref.Multiplier < 0)
+                    warnings += GebWarnRow(baitWhere, fi, pref.FishClassname, "Multiplier is " + pref.Multiplier + "; below 0 counts as 0, which takes this fish out of the bait's pool");
+            }
+        }
+    }
+    if (warnings > 0)
+        GebsfishLogger.Info("Config rows: " + warnings + " warning(s) above. Nothing was changed; fix the rows in the JSON files.", "ConfigValidation");
 }

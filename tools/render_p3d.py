@@ -7,7 +7,8 @@
 #   --src DIR        folder of .p3d files                     (required)
 #   --out DIR        folder to write PNGs into                (required)
 #   --limit N        only process the first N models          (default: all)
-#   --only a,b,c     only these model names (no .p3d suffix)
+#   --only a,b,c     only these model names (no .p3d suffix); * and ? are
+#                    wildcards, so --only "geb_*FishShirt" takes all ten shirts
 #   --res N          square output resolution in px           (default 1024)
 #   --samples N      EEVEE render samples                     (default 64)
 #   --margin F       framing padding, 1.0 = tight             (default 1.08)
@@ -15,18 +16,43 @@
 #   --flip-h         mirror horizontally (fish faces the other way)
 #   --flip-v         flip vertically (if models come out belly-up)
 #   --no-textures    render untextured clay instead
+#   --model-normals  shade with the normals stored in the p3d (what the game
+#                    uses) instead of the ones Blender works out itself
+#   --manifest FILE  one picture per entry of tools/item_manifest.json or
+#                    tools/fish_manifest.json instead of one per .p3d in --src
+#   --texroot DIR    also find textures and materials anywhere under DIR (by
+#                    file name), for models that use files outside their folder
+#   --dz DIR         the local extraction of DayZ's own files that
+#                    tools/extract_vanilla.py builds. Every game path (\dz\...)
+#                    a manifest, model or material names is found there. The
+#                    items on vanilla models (the colour rods, the clothes, the
+#                    rubber worm) need it. Keep that folder out of the repo.
+#
+# Manifest entries may also carry:
+#   "textures"   one texture per material slot (hiddenSelectionsTextures)
+#   "materials"  one material per material slot (hiddenSelectionsMaterials);
+#                "material" sets the first slot's only, as the fish manifest does
+#   "tilt"       degrees the subject turns counter-clockwise in the picture (35
+#                shows a rod, knife or lure rising to the right, not lying flat)
+#   "hide"       named selections whose faces stay out of the picture: vanilla's
+#                worm model holds a hooked worm and a loose one, and the rubber
+#                worm's picture shows only the loose one
 #
 # Notes:
 #   - Only the first LOD of each file is imported (the visual LOD).
 #   - Textures come from the .paa path embedded in the p3d; the file is
-#     located by basename inside --src, so variant-named textures resolve.
+#     located by basename inside --src, so variant-named textures resolve
+#     (a game path is looked up in --dz first).
 #   - Each material's relief map, shine map and sheen (from its .rvmat, the
-#     manifest's "material" or the one the model names) are wired in, so a
-#     render shows the item as it looks in game.
+#     manifest's "materials"/"material" or the one the model names) are wired
+#     in, so a render shows the item as it looks in game. Vanilla's own .rvmat
+#     files are binarised and can't be read, so those parts keep a plain sheen.
 #   - Colour management is forced to Standard so texture colours render
 #     accurately instead of being desaturated by Blender's default AgX.
 
 import bpy
+import bmesh
+import fnmatch
 import math
 import os
 import re
@@ -43,6 +69,7 @@ def parse_args():
         "res": 1024, "samples": 64, "margin": 1.08,
         "view": "AUTO", "textures": True,
         "flip_h": False, "flip_v": False, "manifest": None, "texroot": None,
+        "model_normals": False, "dz": None,
     }
     i = 0
     while i < len(argv):
@@ -51,12 +78,16 @@ def parse_args():
             opts["textures"] = False
             i += 1
             continue
+        if a == "--model-normals":
+            opts["model_normals"] = True
+            i += 1
+            continue
         if a in ("--flip-h", "--flip-v"):
             opts["flip_h" if a == "--flip-h" else "flip_v"] = True
             i += 1
             continue
         key = a[2:] if a.startswith("--") else None
-        if key in ("src", "out", "only", "view", "manifest", "texroot"):
+        if key in ("src", "out", "only", "view", "manifest", "texroot", "dz"):
             opts[key] = argv[i + 1]
             i += 2
         elif key in ("limit", "res", "samples"):
@@ -97,7 +128,7 @@ def reset_scene():
                 pass
 
 
-def import_model(path):
+def import_model(path, model_normals=False):
     bpy.ops.a3ob.import_p3d(
         filepath=path,
         first_lod_only=True,      # visual LOD only
@@ -105,11 +136,51 @@ def import_model(path):
         groupby='NONE',
         proxy_action='CLEAR',     # drop proxy geometry
         additional_data_allowed=True,
-        additional_data={'UV', 'MATERIALS'},
+        # The importer only finds proxies through the named selections, so
+        # without SELECTIONS a proxy triangle (the fish mounts' fish, the jon
+        # boat's seats) rendered as a grey shard.
+        additional_data={'UV', 'MATERIALS', 'SELECTIONS', 'NORMALS'} if model_normals else {'UV', 'MATERIALS', 'SELECTIONS'},
         validate_meshes=True,
         absolute_paths=False,
     )
     return [o for o in bpy.context.scene.objects if o.type == 'MESH']
+
+
+def hide_selections(objects, names):
+    """Leave out every face of the named selections (the importer brings them
+    in as vertex groups; a face belongs to one when all its corners do), then
+    drop the material slots nothing uses any more, so the manifest's per-slot
+    textures still line up with the parts that are left. Returns the number of
+    faces removed."""
+    wanted = {n.lower() for n in names}
+    removed = 0
+    for obj in objects:
+        groups = {g.index for g in obj.vertex_groups if g.name.lower() in wanted}
+        if not groups:
+            continue
+        me = obj.data
+        inside = {v.index for v in me.vertices
+                  if any(g.group in groups and g.weight > 0 for g in v.groups)}
+        bm = bmesh.new()
+        bm.from_mesh(me)
+        doomed = [f for f in bm.faces if all(v.index in inside for v in f.verts)]
+        removed += len(doomed)
+        bmesh.ops.delete(bm, geom=doomed, context='FACES_ONLY')
+        bmesh.ops.delete(bm, geom=[v for v in bm.verts if not v.link_faces], context='VERTS')
+        bm.to_mesh(me)
+        bm.free()
+        used = sorted({p.material_index for p in me.polygons})
+        if len(used) < len(me.materials):
+            keep = [me.materials[i] for i in used]
+            remap = {old: new for new, old in enumerate(used)}
+            for p in me.polygons:
+                p.material_index = remap[p.material_index]
+            me.materials.clear()
+            for m in keep:
+                me.materials.append(m)
+        me.update()
+    bpy.context.view_layer.update()
+    return removed
 
 
 def load_paa(paa_path, data=False):
@@ -127,13 +198,48 @@ def load_paa(paa_path, data=False):
 
 _TEX_INDEX = {}
 
+# --dz: the local extraction of DayZ's own files (tools/extract_vanilla.py),
+# laid out by game path, so \dz\gear\food\bait_worm.p3d is <root>\dz\gear\food\bait_worm.p3d.
+_DZ_ROOT = None
+
+
+def game_path(path):
+    """'\\dz\\gear\\food\\bait_worm.p3d' -> 'dz/gear/food/bait_worm.p3d' when the
+    path names one of DayZ's own files, else None (a gebsfish or repo path)."""
+    p = (path or "").replace("\\", "/").lstrip("/")
+    return p if p.lower().startswith("dz/") else None
+
+
+def resolve_game(path):
+    """A game path's file in the --dz extraction, matched without regard to case
+    as the game does; None without --dz or when the file isn't there."""
+    rel = game_path(path)
+    if not rel or not _DZ_ROOT:
+        return None
+    cur = _DZ_ROOT
+    for part in rel.split("/"):
+        nxt = os.path.join(cur, part)
+        if not os.path.exists(nxt):
+            try:
+                nxt = next((os.path.join(cur, n) for n in os.listdir(cur)
+                            if n.lower() == part.lower()), None)
+            except OSError:
+                nxt = None
+            if nxt is None:
+                return None
+        cur = nxt
+    return cur if os.path.isfile(cur) else None
+
 
 def build_texture_index(root):
     """Index every .paa under the mod so models can reference textures that
     live outside their own folder (tackle models do this)."""
     if not root or _TEX_INDEX:
         return
-    for dirpath, _, files in os.walk(root):
+    for dirpath, dirnames, files in os.walk(root):
+        # hidden folders hold stale copies of the mod (a .claude worktree has the
+        # last commit's files under the same names), never the textures in use
+        dirnames[:] = [d for d in dirnames if not d.startswith(".")]
         for f in files:
             if f.lower().endswith(".paa"):
                 _TEX_INDEX.setdefault(f.lower(), os.path.join(dirpath, f))
@@ -164,7 +270,11 @@ def resolve_texture(base, src_dir, texroot=None):
 
 def resolve_exact(path, src_dir, texroot=None):
     """A file named in a material (relief map, shine map) or a model (its
-    material), found by its own name beside the model or anywhere in the mod."""
+    material), found by its own name beside the model or anywhere in the mod.
+    One of DayZ's own files is taken from the --dz extraction first."""
+    hit = resolve_game(path)
+    if hit:
+        return hit
     base = os.path.basename(path.replace("\\", "/"))
     if not base:
         return None
@@ -173,7 +283,8 @@ def resolve_exact(path, src_dir, texroot=None):
         return hit
     if texroot:
         if not _FILE_INDEX:
-            for dirpath, _, files in os.walk(texroot):
+            for dirpath, dirnames, files in os.walk(texroot):
+                dirnames[:] = [d for d in dirnames if not d.startswith(".")]   # see build_texture_index
                 for f in files:
                     if f.lower().endswith((".paa", ".rvmat")):
                         _FILE_INDEX.setdefault(f.lower(), os.path.join(dirpath, f))
@@ -217,6 +328,18 @@ def read_rvmat(path):
     }
 
 
+# Name suffixes the engine reads as normal maps (raw data); every other name is
+# a colour texture to it, decoded through the sRGB curve.
+ENGINE_NORMAL_SUFFIXES = ("_no", "_non", "_nopx", "_noex", "_nohq", "_novhq", "_nofhq",
+                          "_nof", "_nofex", "_ns", "_nsex", "_nshq", "_normalmap")
+
+
+def engine_normal_map_name(path):
+    stem = os.path.splitext(os.path.basename(path.replace("\\", "/")))[0].lower()
+    i = stem.rfind("_")
+    return i >= 0 and stem[i:] in ENGINE_NORMAL_SUFFIXES
+
+
 def wire_material_maps(nt, bsdf, info, src_dir, cache, texroot=None):
     """Add the material's relief map, shine map and sheen to a Principled BSDF,
     so a render shows the item as it looks in game.
@@ -226,17 +349,25 @@ def wire_material_maps(nt, bsdf, info, src_dir, cache, texroot=None):
     alpha (the shader reads X = R + 1 - A). Blender wants green UP (OpenGL),
     so Y is inverted. Sheen: rvmat specularPower sets the roughness (a tight
     1300 highlight is a wet, glossy fish; 75 a dull broad one), the shine
-    map's green its strength and blue its gloss, as in the game's Super shader."""
-    def image(path):
-        if path in cache:
-            return cache[path]
+    map's green its strength and blue its gloss, as in the game's Super shader.
+
+    The engine decides from a texture's name suffix whether it is a normal map
+    (_no, _nohq, _normalmap...); any other name, gebsfish's own *_normals
+    included, is read as a colour texture and decoded through the sRGB curve.
+    gebsfish's relief maps are stored pre-corrected for that, so a relief map
+    with such a name is loaded as sRGB here, which undoes the correction the
+    same way the game does; vanilla _nohq maps stay raw data."""
+    def image(path, srgb=False):
+        key = (path, srgb)
+        if key in cache:
+            return cache[key]
         img = load_paa(path, data=True)
         if img is not None:
             try:
-                img.colorspace_settings.name = 'Non-Color'
+                img.colorspace_settings.name = 'sRGB' if srgb else 'Non-Color'
             except TypeError:
                 pass
-        cache[path] = img
+        cache[key] = img
         return img
 
     def node(kind, op=None, **inputs):
@@ -250,7 +381,7 @@ def wire_material_maps(nt, bsdf, info, src_dir, cache, texroot=None):
     nohq = info.get("nohq") or ""
     if nohq and not nohq.startswith("#"):
         path = resolve_exact(nohq, src_dir, texroot)
-        img = image(path) if path else None
+        img = image(path, srgb=not engine_normal_map_name(nohq)) if path else None
         if img is not None:
             tex = nt.nodes.new('ShaderNodeTexImage'); tex.image = img; tex.location = (-900, -350)
             sep = nt.nodes.new('ShaderNodeSeparateColor')
@@ -293,13 +424,21 @@ def wire_material_maps(nt, bsdf, info, src_dir, cache, texroot=None):
         r1.use_clamp = True
         nt.links.new(sep.outputs["Blue"], r1.inputs[0])
         nt.links.new(r1.outputs[0], bsdf.inputs["Roughness"])
+    elif re.match(r"#\(argb,[^)]*\)color\(", smdi):
+        # a procedural shine map: one colour, read like a shine map's texels
+        vals = re.match(r"#\(argb,[^)]*\)color\(([^)]*)\)", smdi).group(1).split(",")
+        g, b = float(vals[1]), float(vals[2])
+        bsdf.inputs["Roughness"].default_value = min(max(base_rough * (1.35 - 0.7 * b), 0.0), 1.0)
+        if level_in:
+            bsdf.inputs[level_in].default_value = min(max(2.0 * lum * g, 0.0), 1.0)
     else:
         bsdf.inputs["Roughness"].default_value = base_rough
         if level_in:
             bsdf.inputs[level_in].default_value = min(max(0.8 * lum, 0.05), 1.0)
 
 
-def apply_textures(objects, src_dir, cache, override=None, texroot=None, material=None):
+def apply_textures(objects, src_dir, cache, override=None, texroot=None, material=None,
+                   materials=None):
     """Wire textures into each material as a Principled BSDF.
 
     `override` is the manifest's hiddenSelectionsTextures list: entry N
@@ -308,7 +447,13 @@ def apply_textures(objects, src_dir, cache, override=None, texroot=None, materia
     (crayfish.p3d) and how multi-part models get the right skin on each part
     (the jon boat's hull and outboard motor are separate selections).
     Slots past the end of the list keep the texture embedded in the p3d.
+
+    `materials` is the hiddenSelectionsMaterials list, slot for slot in the
+    same way, so each jon boat skin gets its own hull relief map; `material`
+    sets the first slot's only (the fish manifest's raw-stage material). A
+    slot without one keeps the material its faces name.
     """
+    per_slot = list(materials) if materials else ([material] if material else [])
     applied, missing = 0, []
     seen = set()
     index = 0
@@ -318,21 +463,25 @@ def apply_textures(objects, src_dir, cache, override=None, texroot=None, materia
             if not mat or mat.name in seen:
                 continue
             seen.add(mat.name)
-            slot_index = index
-            index += 1
+            props = getattr(mat, "a3ob_properties_material", None)
+            raw = getattr(props, "texture_path", "") if props else ""
+            # only parts with a real texture count towards the override's slots (an untextured hook is not
+            # in the item's retexture selection)
+            textured = os.path.basename(raw.replace("\\", "/")).lower().endswith(".paa") if raw else False
+            slot_index = index if textured else -1
+            if textured:
+                index += 1
 
             path = None
-            if override and slot_index < len(override):
+            if override and 0 <= slot_index < len(override):
                 candidate = override[slot_index]
                 if candidate and os.path.isfile(candidate):
                     path = candidate
             if path is None:
-                props = getattr(mat, "a3ob_properties_material", None)
-                raw = getattr(props, "texture_path", "") if props else ""
                 base = os.path.basename(raw.replace("\\", "/")) if raw else ""
                 if not base.lower().endswith(".paa"):
                     continue
-                path = resolve_texture(base, src_dir, texroot)
+                path = resolve_game(raw) or resolve_texture(base, src_dir, texroot)
                 if not path:
                     missing.append(base)
                     continue
@@ -369,9 +518,12 @@ def apply_textures(objects, src_dir, cache, override=None, texroot=None, materia
                         mat.blend_method = 'HASHED'          # legacy EEVEE
                     except (AttributeError, TypeError):
                         pass
-            # The material: the manifest's (hiddenSelectionsMaterials) for the
-            # first slot, else the one the model's faces name.
-            mat_file = material if (material and slot_index == 0) else None
+            # The material: the manifest's for this slot (hiddenSelectionsMaterials),
+            # else the one the model's faces name.
+            mat_file = per_slot[slot_index] if 0 <= slot_index < len(per_slot) else None
+            if mat_file and not os.path.isfile(mat_file):
+                missing.append(os.path.basename(mat_file))
+                mat_file = None
             if mat_file is None:
                 props = getattr(mat, "a3ob_properties_material", None)
                 raw_mat = getattr(props, "material_path", "") if props else ""
@@ -480,9 +632,14 @@ def setup_camera(lo, hi, view, margin, flip_h=False, flip_v=False, roll=False):
 
     if view.startswith("ISO"):
         # "ISO" picks the upright axis automatically; "ISO:Z" forces it, which
-        # is needed for boxy items whose three extents all differ.
-        forced = view.split(":")[1] if ":" in view else None
-        return setup_camera_iso(lo, hi, center, extents, axes, margin, forced)
+        # is needed for boxy items whose three extents all differ. A third
+        # field turns the camera round the upright axis: "ISO:X:218" shows the
+        # side the default 38 degrees has its back to (the front of a box whose
+        # latch faces the other way).
+        parts = view.split(":")
+        forced = parts[1] if len(parts) > 1 and parts[1] else None
+        azimuth = float(parts[2]) if len(parts) > 2 else 38.0
+        return setup_camera_iso(lo, hi, center, extents, axes, margin, forced, azimuth=azimuth)
 
     if view == "AUTO":
         i_h, i_v = order[0], order[1]      # view down the thinnest axis
@@ -592,14 +749,33 @@ def setup_render(opts):
         pass
 
 
+def tilt_camera(cam, meshes, degrees, margin):
+    """Turn the picture so the subject rotates `degrees` counter-clockwise, then
+    fit the frame to the model's own vertices (a turned bounding box would leave
+    empty corners). Returns the new camera basis so the lights keep their place
+    in the picture."""
+    cam.matrix_world = cam.matrix_world @ Matrix.Rotation(math.radians(-degrees), 4, 'Z')
+    bpy.context.view_layer.update()
+    inv = cam.matrix_world.inverted()
+    xs, ys = [0.0], [0.0]
+    for o in meshes:
+        mw = o.matrix_world
+        for v in o.data.vertices:
+            p = inv @ (mw @ v.co)
+            xs.append(abs(p.x)); ys.append(abs(p.y))
+    cam.data.ortho_scale = max(max(xs), max(ys)) * 2.0 * margin
+    m = cam.matrix_world
+    return (m.col[0].xyz.normalized(), m.col[1].xyz.normalized(), m.col[2].xyz.normalized())
+
+
 def render_one(path, opts, name=None, override=None, view_override=None,
-               flips=None, material=None):
+               flips=None, material=None, tilt=0.0, materials=None, hide=None):
     name = name or os.path.splitext(os.path.basename(path))[0]
     print("\n=== %s ===" % name)
     reset_scene()
 
     try:
-        meshes = import_model(path)
+        meshes = import_model(path, opts.get("model_normals", False))
     except Exception as exc:
         print("  ! import failed: %s" % exc)
         return False, name, "import failed"
@@ -607,12 +783,21 @@ def render_one(path, opts, name=None, override=None, view_override=None,
         print("  ! no mesh in first LOD")
         return False, name, "no mesh"
 
+    if hide:
+        gone = hide_selections(meshes, hide)
+        print("  hidden: %d faces of %s" % (gone, ", ".join(hide)))
+        if not gone:
+            # the picture would show what the manifest meant to leave out
+            print("  ! none of %s found in the model" % ", ".join(hide))
+            return False, name, "hide: no such selection"
+        meshes = [o for o in meshes if o.data.polygons]
+
     tris = sum(len(o.data.polygons) for o in meshes)
     print("  objects=%d faces=%d" % (len(meshes), tris))
 
     if opts["textures"]:
         applied, missing = apply_textures(
-            meshes, opts["src"], {}, override, opts["texroot"], material)
+            meshes, opts["src"], {}, override, opts["texroot"], material, materials)
         print("  textures applied: %d%s" % (applied, ("  MISSING: " + ", ".join(sorted(set(missing)))) if missing else ""))
     else:
         clay_material(meshes)
@@ -623,9 +808,11 @@ def render_one(path, opts, name=None, override=None, view_override=None,
     print("  size: %.3f x %.3f x %.3f" % (hi.x - lo.x, hi.y - lo.y, hi.z - lo.z))
 
     flip_h, flip_v, roll = flips if flips else (opts["flip_h"], opts["flip_v"], False)
-    _, center, span, basis = setup_camera(
+    cam, center, span, basis = setup_camera(
         lo, hi, (view_override or opts["view"]).upper(),
         opts["margin"], flip_h or opts["flip_h"], flip_v or opts["flip_v"], roll)
+    if tilt:
+        basis = tilt_camera(cam, meshes, tilt, opts["margin"])
     setup_lights(center, span, basis)
     setup_render(opts)
 
@@ -636,42 +823,69 @@ def render_one(path, opts, name=None, override=None, view_override=None,
 
 
 def main():
+    global _DZ_ROOT
     opts = parse_args()
     os.makedirs(opts["out"], exist_ok=True)
+    if opts["dz"]:
+        if not os.path.isdir(opts["dz"]):
+            sys.exit("ERROR: --dz %s is not a folder (build it with tools/extract_vanilla.py)" % opts["dz"])
+        _DZ_ROOT = os.path.abspath(opts["dz"])
 
     # A manifest renders one image per SPECIES (several species can share one
     # model with different textures); without one, it is one image per .p3d.
     if opts["manifest"]:
         import json
         # Manifest paths are relative to the repo root (tools/..); absolute
-        # ones from an older manifest still work as they are.
+        # ones from an older manifest still work as they are. A game path
+        # (\dz\...) is one of DayZ's own files, found in --dz. It is checked
+        # first: Windows counts a path starting with a backslash as absolute.
         repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
         def local(p):
+            if p and game_path(p):
+                return resolve_game(p)
             return os.path.join(repo, p.replace("/", os.sep)) if p and not os.path.isabs(p) else p
 
+        def job(e):
+            path, why = local(e["p3d"]), None
+            if not path and game_path(e["p3d"]):
+                why = ("vanilla model %s: not in --dz %s" % (e["p3d"], _DZ_ROOT) if _DZ_ROOT
+                       else "vanilla model %s: pass --dz <extraction> (tools/extract_vanilla.py)" % e["p3d"])
+            return {
+                "name": e["name"], "path": path, "why": why,
+                "override": [local(t) for t in e["textures"]] if e.get("textures")
+                            else ([local(e["texture"])] if e.get("texture") else None),
+                "view": e.get("view"),
+                "flips": (bool(e.get("flip_h")), bool(e.get("flip_v")), bool(e.get("roll"))),
+                "material": local(e["material"]) if e.get("material") else None,
+                "materials": [local(m) for m in e["materials"]] if e.get("materials") else None,
+                "tilt": float(e.get("tilt") or 0.0),
+                "hide": e.get("hide") or None,
+            }
+
         with open(opts["manifest"], "r", encoding="utf-8") as fh:
-            jobs = [(e["name"], local(e["p3d"]),
-                     [local(t) for t in e["textures"]] if e.get("textures")
-                     else ([local(e["texture"])] if e.get("texture") else None),
-                     e.get("view"),
-                     (bool(e.get("flip_h")), bool(e.get("flip_v")), bool(e.get("roll"))),
-                     local(e["material"]) if e.get("material") else None)
-                    for e in json.load(fh)]
+            jobs = [job(e) for e in json.load(fh)]
     else:
-        jobs = [(os.path.splitext(os.path.basename(f))[0], f, None, None, None, None)
+        jobs = [{"name": os.path.splitext(os.path.basename(f))[0], "path": f, "why": None,
+                 "override": None, "view": None, "flips": None, "material": None,
+                 "materials": None, "tilt": 0.0, "hide": None}
                 for f in sorted(glob.glob(os.path.join(opts["src"], "*.p3d")))]
 
     if opts["only"]:
-        wanted = {n.strip().lower() for n in opts["only"].split(",") if n.strip()}
-        jobs = [j for j in jobs if j[0].lower() in wanted]
+        wanted = [n.strip().lower() for n in opts["only"].split(",") if n.strip()]
+        jobs = [j for j in jobs if any(fnmatch.fnmatchcase(j["name"].lower(), w) for w in wanted)]
     if opts["limit"] > 0:
         jobs = jobs[:opts["limit"]]
 
     print("Rendering %d item(s) from %s" % (len(jobs), opts["src"]))
     ok, failed = [], []
-    for job_name, path, override, view, flips, material in jobs:
-        success, name, why = render_one(path, opts, job_name, override, view, flips, material)
+    for j in jobs:
+        if j["why"]:
+            print("\n=== %s ===\n  ! %s" % (j["name"], j["why"]))
+            failed.append("%s (%s)" % (j["name"], j["why"]))
+            continue
+        success, name, why = render_one(j["path"], opts, j["name"], j["override"], j["view"], j["flips"],
+                                        j["material"], j["tilt"], j["materials"], j["hide"])
         (ok if success else failed).append(name if success else "%s (%s)" % (name, why))
 
     print("\n================ SUMMARY ================")

@@ -8,14 +8,6 @@
 
 */
 
-class GebFishingNetActionData : ActionData {
-    int m_GebEnvironment;
-}
-
-class GebFishingNetReceiveData : ActionReciveData {
-    int m_GebEnvironment;
-}
-
 class ActionBambooFishingNetCB : ActionContinuousBaseCB {
 	override void CreateActionComponent() {
 		float time_spent;
@@ -25,7 +17,7 @@ class ActionBambooFishingNetCB : ActionContinuousBaseCB {
 	}
 };
 
-class ActionBambooFishingNet : ActionContinuousBase {
+class ActionBambooFishingNet : ActionGebWaterBase {
 	// The net is the only item with this action, so its animation is set
 	// once here, as in ActionDigBugs. DEPLOY_1HD is a looping full-body
 	// command vanilla only has crouched (plugindayzplayerdebug.c), so a
@@ -51,46 +43,6 @@ class ActionBambooFishingNet : ActionContinuousBase {
 		m_ConditionTarget = new CCTSurface(UAMaxDistances.DEFAULT);
 	}
 
-    // Classify on the casting peer and carry the result in the action payload,
-    // as vanilla ActionFishingNew does. Zero is invalid, never an implicit pond.
-    int GetFishingNetEnvironment(ActionTarget target) {
-        if (!target) return 0;
-        vector position = target.GetCursorHitPos();
-        if (g_Game.SurfaceIsSea(position[0], position[2])) return 2;
-        if (g_Game.SurfaceIsPond(position[0], position[2])) return 1;
-        return 0;
-    }
-
-    bool IsValidFishingNetSurface(ActionTarget target) {
-        return GetFishingNetEnvironment(target) != 0;
-    }
-
-    override ActionData CreateActionData() {
-        return new GebFishingNetActionData();
-    }
-
-    override void WriteToContext(ParamsWriteContext ctx, ActionData action_data) {
-        super.WriteToContext(ctx, action_data);
-        GebFishingNetActionData data = GebFishingNetActionData.Cast(action_data);
-        ctx.Write(data.m_GebEnvironment);
-    }
-
-    override bool ReadFromContext(ParamsReadContext ctx, out ActionReciveData action_recive_data) {
-        if (!action_recive_data)
-            action_recive_data = new GebFishingNetReceiveData();
-        if (!super.ReadFromContext(ctx, action_recive_data)) return false;
-        GebFishingNetReceiveData received = GebFishingNetReceiveData.Cast(action_recive_data);
-        if (!received || !ctx.Read(received.m_GebEnvironment)) return false;
-        return received.m_GebEnvironment == 1 || received.m_GebEnvironment == 2;
-    }
-
-    override void HandleReciveData(ActionReciveData action_recive_data, ActionData action_data) {
-        super.HandleReciveData(action_recive_data, action_data);
-        GebFishingNetReceiveData received = GebFishingNetReceiveData.Cast(action_recive_data);
-        GebFishingNetActionData data = GebFishingNetActionData.Cast(action_data);
-        if (received && data) data.m_GebEnvironment = received.m_GebEnvironment;
-    }
-
 	override bool ActionCondition( PlayerBase player, ActionTarget target, ItemBase item ) {
 		if ( player.IsPlacingLocal() )
 			return false;
@@ -103,33 +55,16 @@ class ActionBambooFishingNet : ActionContinuousBase {
 		if ( height > 0.4 )
 			return false; // Player is not standing on ground
 
-        // Dedicated server uses the water type carried in the action payload.
-        // Keep the existing trust model; do not re-query its cursor surface.
+		// Dedicated server uses the water type carried in the action payload.
+		// Keep the existing trust model; do not re-query its cursor surface.
 		if (g_Game.IsDedicatedServer())
 			return true;
 
-		return IsValidFishingNetSurface(target);
+		return GebGetWaterType(target) != 0;
 	}
 
 	override bool ActionConditionContinue( ActionData action_data ) {
 		return true;
-	}
-
-	override bool SetupAction( PlayerBase player, ActionTarget target, ItemBase item, out ActionData action_data, Param extra_data = NULL ) {
-		if( super.SetupAction( player, target, item, action_data, extra_data ) ) {
-            GebFishingNetActionData data = GebFishingNetActionData.Cast(action_data);
-            if (!data) return false;
-            // Super already applied the received payload on the server.
-            if (data.m_GebEnvironment == 0 && !g_Game.IsDedicatedServer())
-                data.m_GebEnvironment = GetFishingNetEnvironment(target);
-            // A server that didn't get a valid water type refuses here. A
-            // failed ReadFromContext alone doesn't stop the action starting,
-            // so it would otherwise play out in full and give nothing.
-            if (g_Game.IsDedicatedServer() && data.m_GebEnvironment != 1 && data.m_GebEnvironment != 2)
-                return false;
-			return true;
-		}
-		return false;
 	}
 
 	override bool HasTarget() {
@@ -143,10 +78,7 @@ class ActionBambooFishingNet : ActionContinuousBase {
 		if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.BambooFishingNetSettings)
 			return 1.0;
 
-		float chance = m_gebsConfig.General.BambooFishingNetSettings.FindChance;
-		if (chance < 0.0) chance = 0.0;
-		if (chance > 1.0) chance = 1.0;
-		return chance;
+		return Math.Clamp(m_gebsConfig.General.BambooFishingNetSettings.FindChance, 0.0, 1.0);
 	}
 
 	// Weighted-random spawn classname from BambooFishingNetSettings.Catches.
@@ -207,32 +139,26 @@ class ActionBambooFishingNet : ActionContinuousBase {
 			return;
 		}
 
-        GebFishingNetActionData netData = GebFishingNetActionData.Cast(action_data);
-        if (!netData || (netData.m_GebEnvironment != 1 && netData.m_GebEnvironment != 2)) {
-            GebsfishLogger.Error("Missing valid net water type; skipping catch.", "NetSpawn");
-            return;
-        }
+		GebWaterActionData netData = GebWaterActionData.Cast(action_data);
+		if (!netData || !GebIsWaterType(netData.m_GebEnvironment)) {
+			GebsfishLogger.Error("Missing valid net water type; skipping catch.", "NetSpawn");
+			return;
+		}
 		PlayerBase player = action_data.m_Player;
 		ItemBase net = action_data.m_MainItem;
 
 		// Per-attempt find chance gate. Net still takes damage on a miss so
 		// nets wear down even when the catch fails.
 		float findChance = GetFishingNetFindChance();
-		float findRoll = -1;
-		bool foundSomething;
-		if (findChance >= 1.0) {
-			foundSomething = true;
-		} else {
-			findRoll = Math.RandomFloat01();
-			foundSomething = (findRoll < findChance);
-		}
+		float findRoll;
+		bool foundSomething = GebRollChance(findChance, findRoll);
 
 		if (debugLevel >= 1) {
 			GebsfishLogger.Debug("Net find-chance gate: findChance=" + findChance + " roll=" + findRoll + " result=" + foundSomething, "NetSpawn");
 		}
 
 		if (foundSomething) {
-            int environment = netData.m_GebEnvironment;
+			int environment = netData.m_GebEnvironment;
 
 			string spawnType = GetConfiguredNetSpawnType(environment);
 			if (spawnType != "") {
@@ -246,7 +172,7 @@ class ActionBambooFishingNet : ActionContinuousBase {
 				// rejected by the load check on the next restart (lost). A
 				// full net still makes CreateInInventory return null. It is
 				// used rather than CreateInCargo* because it handles the slot
-				// lookup, as elsewhere in the mod (geb_jonboat.c spark plug).
+				// lookup.
 				EntityAI catchEntity;
 				geb_FilteredContainerBase filtered = geb_FilteredContainerBase.Cast(net);
 				bool netAccepts = !filtered || filtered.GebAcceptsType(spawnType);

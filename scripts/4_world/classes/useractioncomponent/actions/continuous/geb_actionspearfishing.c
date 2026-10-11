@@ -14,24 +14,17 @@
 // alone in OnFinishProgressServer -- nothing here feeds the synced catch maths
 // the rod uses, so client and server can't disagree about it.
 
-class GebSpearFishingActionData : ActionData {
-    int m_GebEnvironment;
-}
-
-class GebSpearFishingReceiveData : ActionReciveData {
-    int m_GebEnvironment;
-}
-
 class ActionGebSpearFishingCB : ActionContinuousBaseCB {
 	override void CreateActionComponent() {
 		m_ActionData.m_ActionComponent = new CAContinuousTime(UATimeSpent.DIG_WORMS * 0.6);
 	}
 };
 
-class ActionGebSpearFishing : ActionContinuousBase {
-	// How far away the water may be, and what a stab costs the spear.
+class ActionGebSpearFishing : ActionGebWaterBase {
+	// How far away the water may be, and what a stab costs the spear: at 1 a
+	// 100-health spear lasts about four fish at the default FindChance (0.04).
 	protected const float SPEAR_REACH = 3.0;
-	protected const float SPEAR_HEALTH_PER_STAB = 5.0;
+	protected const float SPEAR_HEALTH_PER_STAB = 1.0;
 
 	// DIGMANIPULATE is the standing two-handed work loop vanilla plays for
 	// shovels, hoes and pickaxes. Standing, because the player is usually
@@ -62,54 +55,12 @@ class ActionGebSpearFishing : ActionContinuousBase {
 		return m_gebsConfig.General.SpearFishingSettings;
 	}
 
-	// 1 = pond, 2 = sea, 0 = neither. Classified on the casting peer and sent
-	// with the action, as the net does.
-	int GetSpearEnvironment(ActionTarget target) {
-		if (!target)
-			return 0;
-		vector position = target.GetCursorHitPos();
-		if (g_Game.SurfaceIsSea(position[0], position[2]))
-			return 2;
-		if (g_Game.SurfaceIsPond(position[0], position[2]))
-			return 1;
-		return 0;
-	}
-
 	// Metres of water at the spot aimed at. GetWaterDepth measures how far a
 	// point sits below the water surface, so it is taken at the bottom (the
 	// terrain under the aim point).
 	protected float GetWaterDepthAt(vector position) {
 		float bottom = g_Game.SurfaceY(position[0], position[2]);
 		return g_Game.GetWaterDepth(Vector(position[0], bottom, position[2]));
-	}
-
-	override ActionData CreateActionData() {
-		return new GebSpearFishingActionData();
-	}
-
-	override void WriteToContext(ParamsWriteContext ctx, ActionData action_data) {
-		super.WriteToContext(ctx, action_data);
-		GebSpearFishingActionData data = GebSpearFishingActionData.Cast(action_data);
-		ctx.Write(data.m_GebEnvironment);
-	}
-
-	override bool ReadFromContext(ParamsReadContext ctx, out ActionReciveData action_recive_data) {
-		if (!action_recive_data)
-			action_recive_data = new GebSpearFishingReceiveData();
-		if (!super.ReadFromContext(ctx, action_recive_data))
-			return false;
-		GebSpearFishingReceiveData received = GebSpearFishingReceiveData.Cast(action_recive_data);
-		if (!received || !ctx.Read(received.m_GebEnvironment))
-			return false;
-		return received.m_GebEnvironment == 1 || received.m_GebEnvironment == 2;
-	}
-
-	override void HandleReciveData(ActionReciveData action_recive_data, ActionData action_data) {
-		super.HandleReciveData(action_recive_data, action_data);
-		GebSpearFishingReceiveData received = GebSpearFishingReceiveData.Cast(action_recive_data);
-		GebSpearFishingActionData data = GebSpearFishingActionData.Cast(action_data);
-		if (received && data)
-			data.m_GebEnvironment = received.m_GebEnvironment;
 	}
 
 	override bool ActionCondition(PlayerBase player, ActionTarget target, ItemBase item) {
@@ -125,7 +76,7 @@ class ActionGebSpearFishing : ActionContinuousBase {
 		if (g_Game.IsDedicatedServer())
 			return true;
 
-		if (GetSpearEnvironment(target) == 0)
+		if (GebGetWaterType(target) == 0)
 			return false;
 		float depth = GetWaterDepthAt(target.GetCursorHitPos());
 		return depth > 0 && depth <= settings.MaxWaterDepth;
@@ -133,22 +84,6 @@ class ActionGebSpearFishing : ActionContinuousBase {
 
 	override bool ActionConditionContinue(ActionData action_data) {
 		return !action_data.m_Player.IsSwimming();
-	}
-
-	override bool SetupAction(PlayerBase player, ActionTarget target, ItemBase item, out ActionData action_data, Param extra_data = NULL) {
-		if (!super.SetupAction(player, target, item, action_data, extra_data))
-			return false;
-		GebSpearFishingActionData data = GebSpearFishingActionData.Cast(action_data);
-		if (!data)
-			return false;
-		// Super already applied the received payload on the server.
-		if (data.m_GebEnvironment == 0 && !g_Game.IsDedicatedServer())
-			data.m_GebEnvironment = GetSpearEnvironment(target);
-		// A server without a valid water type refuses rather than playing the
-		// action out for nothing.
-		if (g_Game.IsDedicatedServer() && data.m_GebEnvironment != 1 && data.m_GebEnvironment != 2)
-			return false;
-		return true;
 	}
 
 	// Weighted pick from SpearFishingSettings.Catches among the entries for
@@ -187,8 +122,8 @@ class ActionGebSpearFishing : ActionContinuousBase {
 		if (!action_data || !action_data.m_Player)
 			return;
 
-		GebSpearFishingActionData data = GebSpearFishingActionData.Cast(action_data);
-		if (!data || (data.m_GebEnvironment != 1 && data.m_GebEnvironment != 2)) {
+		GebWaterActionData data = GebWaterActionData.Cast(action_data);
+		if (!data || !GebIsWaterType(data.m_GebEnvironment)) {
 			GebsfishLogger.Error("Missing valid water type for a spear stab; skipping the catch.", "SpearFishing");
 			return;
 		}
@@ -199,11 +134,12 @@ class ActionGebSpearFishing : ActionContinuousBase {
 
 		if (settings) {
 			float findChance = Math.Clamp(settings.FindChance, 0.0, 1.0);
-			float roll = Math.RandomFloat01();
-			bool caught = roll < findChance;
+			float roll;
+			bool caught = GebRollChance(findChance, roll);
 			if (debugLevel >= 1)
 				GebsfishLogger.Debug("Spear stab: findChance=" + findChance + " roll=" + roll + " caught=" + caught + " water=" + data.m_GebEnvironment, "SpearFishing");
 
+			bool landed = false;
 			if (caught) {
 				string catchType = GetSpearCatchType(settings, data.m_GebEnvironment);
 				if (catchType != "") {
@@ -212,6 +148,7 @@ class ActionGebSpearFishing : ActionContinuousBase {
 					// into inventory by type would skip the filtered
 					// containers' allow-lists.
 					Object spawned = g_Game.CreateObjectEx(catchType, player.GetPosition(), ECE_PLACE_ON_SURFACE);
+					landed = spawned != null;
 					ItemBase catchItem = ItemBase.Cast(spawned);
 					if (catchItem && catchItem.HasQuantity())
 						catchItem.SetQuantityNormalized(GetCatchQuality());
@@ -220,7 +157,12 @@ class ActionGebSpearFishing : ActionContinuousBase {
 				}
 			}
 
-			GebsPredatorSpawner.TrySpawn(player, settings.PredatorSpawnChance, "PredatorSpawnSpear");
+			// A predator chance only for a fish landed, the way a rod rolls once
+			// per cast. Rolled on every 6 s stab, with about 25 stabs to a fish,
+			// it drew a wolf or bear every ten minutes or so: some twenty times a
+			// rod's rate.
+			if (landed)
+				GebsPredatorSpawner.TrySpawn(player, settings.PredatorSpawnChance, "PredatorSpawnSpear");
 		}
 
 		player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);

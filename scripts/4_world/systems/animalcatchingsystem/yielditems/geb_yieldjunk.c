@@ -18,12 +18,10 @@ modded class YieldItemJunk {
 	protected int m_GebMinHealthLevel = 3;
 	protected int m_GebMaxHealthLevel = 3;
 
+	// Kept as configured; GebRollHealthLevel clamps them when it rolls.
 	void GebSetHealthLevelRange(int minHealthLevel, int maxHealthLevel) {
-		m_GebMinHealthLevel = Math.Clamp(minHealthLevel, 0, 4);
-		m_GebMaxHealthLevel = Math.Clamp(maxHealthLevel, 0, 4);
-
-		if (m_GebMaxHealthLevel < m_GebMinHealthLevel)
-			m_GebMaxHealthLevel = m_GebMinHealthLevel;
+		m_GebMinHealthLevel = minHealthLevel;
+		m_GebMaxHealthLevel = maxHealthLevel;
 	}
 
 	// Vanilla calls SetHealthLevel(STATE_BADLY_DAMAGED) here. We override to
@@ -34,7 +32,6 @@ modded class YieldItemJunk {
 		if (!spawn)
 			return;
 
-		int healthLevel = Math.RandomInt(m_GebMinHealthLevel, m_GebMaxHealthLevel + 1);
-		spawn.SetHealthLevel(healthLevel, "");
+		spawn.SetHealthLevel(GebRollHealthLevel(m_GebMinHealthLevel, m_GebMaxHealthLevel), "");
 	}
 }

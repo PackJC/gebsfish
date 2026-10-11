@@ -152,6 +152,13 @@ def rel(path):
     return os.path.relpath(path, REPO).replace(os.sep, "/")
 
 
+def check_args(default_name):
+    """An option such as --help where the output path goes: print the usage and stop, rather than writing the
+    manifest to a file named --help."""
+    if len(sys.argv) > 1 and sys.argv[1].startswith("-"):
+        sys.exit("usage: python %s [out.json]    (default: tools/%s)" % (os.path.basename(sys.argv[0]), default_name))
+
+
 def write_manifest(manifest, default_name):
     """Write the manifest to argv[1] or tools/<default_name>, as UTF-8 JSON."""
     out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(REPO, "tools", default_name)
@@ -162,6 +169,7 @@ def write_manifest(manifest, default_name):
 
 
 def main():
+    check_args("fish_manifest.json")
     classes = find_classes(read(CONFIG))
     for info in classes.values():
         info["model"], info["textures"], info["materials"] = own_fields(info["body"])
@@ -175,6 +183,10 @@ def main():
             continue
         model = inherited(name, classes, "model")
         textures = inherited(name, classes, "textures")
+        if not model:
+            # the 7 vanilla fish: data/fish/config.cpp only reconfigures them, their model is the game's
+            skipped.append((name, "vanilla model, not in this repo"))
+            continue
         model_path = to_local(model)
         if not model_path or not os.path.isfile(model_path):
             skipped.append((name, "model missing: %s" % model))

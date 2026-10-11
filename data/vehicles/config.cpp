@@ -1,87 +1,89 @@
 /*
 
-	CREATED BY PACKJC
-	https://github.com/PackJC/gebsfish
-	https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
-	https://discord.com/invite/G8uSGZ8yyf
-	Contributions welcome via github
+    CREATED BY PACKJC
+    https://github.com/PackJC/gebsfish
+    https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
+    https://discord.com/invite/G8uSGZ8yyf
+    Contributions welcome via github
 
 */
 
 class CfgNonAIVehicles {
-	class StaticObject;
-	class ProxyAttachment;
-	// Attachment proxies for the two deck slots -- THIS is what makes an attached
-	// item actually render on the boat. Same pattern as Proxygebfishmount in
-	// data/tools/config.cpp: the class name must be "Proxy" + the proxy p3d's
-	// filename, and inventorySlot binds that proxy to the slot. Without these
-	// entries the slots still accept items and show them in the vehicle inventory
-	// panel, but nothing appears on the deck: the model carries the proxies and
-	// the config declares the slots, yet the engine has nothing tying the two
-	// together, so it never places the attached entity. The proxy p3d itself is
-	// never drawn; it only supplies the position and rotation.
-	//
-	// These MUST live in CfgNonAIVehicles, not cfgVehicles. Putting them in
-	// cfgVehicles makes ProxyAttachment resolve to a new empty class there and
-	// turns these into bogus vehicle entries, which breaks the jon boat's crew
-	// config -- you can't board as driver or passenger.
-	class Proxygebboatdeck1: ProxyAttachment {
-		scope = 2;
-		inventorySlot = "GebBoatDeck1";
-		model = "\gebsfish\data\proxy\gebboatdeck1.p3d";
-	};
-	class Proxygebboatdeck2: ProxyAttachment {
-		scope = 2;
-		inventorySlot = "GebBoatDeck2";
-		model = "\gebsfish\data\proxy\gebboatdeck2.p3d";
-	};
+    class StaticObject;
+    class ProxyAttachment;
+    // Attachment proxies for the two deck slots -- THIS is what makes an attached
+    // item actually render on the boat. Same pattern as Proxygebfishmount in
+    // data/tools/config.cpp: the class name must be "Proxy" + the proxy p3d's
+    // filename, and inventorySlot binds that proxy to the slot. Without these
+    // entries the slots still accept items and show them in the vehicle inventory
+    // panel, but nothing appears on the deck: the model carries the proxies and
+    // the config declares the slots, yet the engine has nothing tying the two
+    // together, so it never places the attached entity. The proxy p3d itself is
+    // never drawn; it only supplies the position and rotation.
+    //
+    // These MUST live in CfgNonAIVehicles, not cfgVehicles. Putting them in
+    // cfgVehicles makes ProxyAttachment resolve to a new empty class there and
+    // turns these into bogus vehicle entries, which breaks the jon boat's crew
+    // config -- you can't board as driver or passenger.
+    class Proxygebboatdeck1: ProxyAttachment {
+        scope = 2;
+        inventorySlot = "GebBoatDeck1";
+        model = "\gebsfish\data\proxy\gebboatdeck1.p3d";
+    };
+    class Proxygebboatdeck2: ProxyAttachment {
+        scope = 2;
+        inventorySlot = "GebBoatDeck2";
+        model = "\gebsfish\data\proxy\gebboatdeck2.p3d";
+    };
 };
 
 class CfgSlots {
-	// Two general-purpose deck spots on the jon boat. Both accept the same
-	// item families (coolers and tackle boxes) so a player can pick any
-	// combination rather than being forced into one of each.
-	class Slot_GebBoatDeck1 {
-		name = "GebBoatDeck1";
-		displayName = "$STR_vehicles_jonboat_deck";
-		ghostIcon = "missing";
-	};
-	class Slot_GebBoatDeck2 {
-		name = "GebBoatDeck2";
-		displayName = "$STR_vehicles_jonboat_deck";
-		ghostIcon = "missing";
-	};
+    // Two general-purpose deck spots on the jon boat. Both accept the same
+    // item families (coolers and tackle boxes) so a player can pick any
+    // combination rather than being forced into one of each.
+    // Ghost icon: vanilla's crate (set:dayz_inventory image:cat_common_cargo),
+    // as both spots take a cooler or a tackle box.
+    class Slot_GebBoatDeck1 {
+        name = "GebBoatDeck1";
+        displayName = "$STR_vehicles_jonboat_deck";
+        ghostIcon = "cat_common_cargo";
+    };
+    class Slot_GebBoatDeck2 {
+        name = "GebBoatDeck2";
+        displayName = "$STR_vehicles_jonboat_deck";
+        ghostIcon = "cat_common_cargo";
+    };
 };
 
 class CfgPatches {
-	class gebsVehiclesCfgPatches { 	
-		//Never Use same name for patch, because conflict message.
-		requiredAddons[] = {
-			"DZ_Scripts",
-			"DZ_Data",
+    class gebsVehiclesCfgPatches {
+        //Never Use same name for patch, because conflict message.
+        requiredAddons[] = {
+            "DZ_Scripts",
+            "DZ_Data",
             "DZ_Vehicles_Water",  // defines Boat_01_ColorBase (there is no "DZ_Vehicles" patch)
             "DZ_Sounds_Effects"
-		};
-	};
+        };
+    };
 };
 
 class cfgVehicles {
-	class Boat_01_ColorBase;
-	class Crew;
-	class Driver;
+    class Boat_01_ColorBase;
+    class Crew;
+    class Driver;
 
-	// The vanilla jerry can (CanisterGasoline) deliberately does NOT opt into the
-	// deck slots. A proxy supplies one position and rotation for everything that
-	// lands on it, and the gebsfish coolers and tackle boxes all share an axis
-	// convention the jerry can doesn't -- one orientation cannot suit both. The
-	// deck proxies are aimed at the 27 gebsfish containers; adding the can back
-	// would put it back to sitting wrong. If it's wanted later it needs its own
-	// slot and its own proxy, not a share of these.
+    // The vanilla jerry can (CanisterGasoline) deliberately does NOT opt into the
+    // deck slots. A proxy supplies one position and rotation for everything that
+    // lands on it, and the gebsfish coolers and tackle boxes all share an axis
+    // convention the jerry can doesn't -- one orientation cannot suit both. The
+    // deck proxies are aimed at the 27 gebsfish containers; adding the can back
+    // would put it back to sitting wrong. If it's wanted later it needs its own
+    // slot and its own proxy, not a share of these.
     class geb_jonboat_base : Boat_01_ColorBase {
         scope = 0;
         displayName = "$STR_vehicles_jonboat";
         descriptionShort = "$STR_vehicles_jonboat_desc";
-		model="\gebsfish\data\vehicles\geb_jonboat.p3d";
+        model="\gebsfish\data\vehicles\geb_jonboat.p3d";
         fuelCapacity = 25;
         fuelConsumption = 5.5;
         animPhysDetachSpeed = 5;
@@ -90,12 +92,12 @@ class cfgVehicles {
             "GebBoatDeck1",
             "GebBoatDeck2"
         };
-		class Cargo
-		{
-			itemsCargoSize[] = {10,30};
-			allowOwnedCargoManipulation = 1;
-			openable = 0;
-		};
+        class Cargo
+        {
+            itemsCargoSize[] = {10,30};
+            allowOwnedCargoManipulation = 1;
+            openable = 0;
+        };
         class AnimationSources {
             class FoldingEngine {
                 source = "user";
@@ -353,13 +355,30 @@ class cfgVehicles {
         };
 
         hiddenSelectionsTextures[] = {
-		    "\gebsfish\data\vehicles\geb_jonboat_greenaluminum.paa",
-		    "\gebsfish\data\vehicles\geb_jonboat_motor_white.paa"
+            "\gebsfish\data\vehicles\geb_jonboat_greenaluminum_co.paa",
+            "\gebsfish\data\vehicles\geb_jonboat_motor_white_co.paa"
         };
 
         hiddenSelectionsMaterials[] = {
             "\gebsfish\data\vehicles\geb_jonboat.rvmat",
-            "\gebsfish\data\vehicles\geb_jonboat_motor.rvmat"
+            "\gebsfish\data\vehicles\geb_jonboat_motor_white.rvmat"
+        };
+        // its own materials for the worn, damaged and ruined looks (RefTexsMats: the model's own material)
+        class DamageSystem: DamageSystem {
+            class DamageZones: DamageZones {
+                class Engine: Engine {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat_motor.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_motor_white.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_motor_white.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_motor_white_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_motor_white_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_motor_white_destruct.rvmat"}}
+                        };
+                    };
+                };
+            };
         };
     };
     class geb_jonboat_grayaluminum : geb_jonboat_base {
@@ -370,13 +389,78 @@ class cfgVehicles {
         };
 
         hiddenSelectionsTextures[] = {
-		    "\gebsfish\data\vehicles\geb_jonboat_grayaluminum.paa",
-		    "\gebsfish\data\vehicles\geb_jonboat_motor_white.paa"
+            "\gebsfish\data\vehicles\geb_jonboat_grayaluminum_co.paa",
+            "\gebsfish\data\vehicles\geb_jonboat_motor_white_co.paa"
         };
 
         hiddenSelectionsMaterials[] = {
-            "\gebsfish\data\vehicles\geb_jonboat.rvmat",
-            "\gebsfish\data\vehicles\geb_jonboat_motor.rvmat"
+            "\gebsfish\data\vehicles\geb_jonboat_grayaluminum.rvmat",
+            "\gebsfish\data\vehicles\geb_jonboat_motor_white.rvmat"
+        };
+        // its own materials for the worn, damaged and ruined looks (RefTexsMats: the model's own material)
+        class DamageSystem: DamageSystem {
+            class DamageZones: DamageZones {
+                class Chassis: Chassis {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_grayaluminum.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_grayaluminum.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_grayaluminum_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_grayaluminum_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_grayaluminum_destruct.rvmat"}}
+                        };
+                    };
+                };
+                class LeftFloat: LeftFloat {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_grayaluminum.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_grayaluminum.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_grayaluminum_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_grayaluminum_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_grayaluminum_destruct.rvmat"}}
+                        };
+                    };
+                };
+                class RightFloat: RightFloat {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_grayaluminum.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_grayaluminum.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_grayaluminum_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_grayaluminum_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_grayaluminum_destruct.rvmat"}}
+                        };
+                    };
+                };
+                class FrontFloat: FrontFloat {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_grayaluminum.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_grayaluminum.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_grayaluminum_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_grayaluminum_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_grayaluminum_destruct.rvmat"}}
+                        };
+                    };
+                };
+                class Engine: Engine {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat_motor.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_motor_white.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_motor_white.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_motor_white_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_motor_white_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_motor_white_destruct.rvmat"}}
+                        };
+                    };
+                };
+            };
         };
     };
     class geb_jonboat_camo_desert : geb_jonboat_base {
@@ -387,13 +471,66 @@ class cfgVehicles {
         };
 
         hiddenSelectionsTextures[] = {
-		    "\gebsfish\data\vehicles\geb_jonboat_desertcamo.paa",
-		    "\gebsfish\data\vehicles\geb_jonboat_motor_black.paa"
+            "\gebsfish\data\vehicles\geb_jonboat_desertcamo_co.paa",
+            "\gebsfish\data\vehicles\geb_jonboat_motor_black_co.paa"
         };
 
         hiddenSelectionsMaterials[] = {
-            "\gebsfish\data\vehicles\geb_jonboat.rvmat",
+            "\gebsfish\data\vehicles\geb_jonboat_desertcamo.rvmat",
             "\gebsfish\data\vehicles\geb_jonboat_motor.rvmat"
+        };
+        // its own materials for the worn, damaged and ruined looks (RefTexsMats: the model's own material)
+        class DamageSystem: DamageSystem {
+            class DamageZones: DamageZones {
+                class Chassis: Chassis {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_desertcamo.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_desertcamo.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_desertcamo_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_desertcamo_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_desertcamo_destruct.rvmat"}}
+                        };
+                    };
+                };
+                class LeftFloat: LeftFloat {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_desertcamo.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_desertcamo.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_desertcamo_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_desertcamo_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_desertcamo_destruct.rvmat"}}
+                        };
+                    };
+                };
+                class RightFloat: RightFloat {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_desertcamo.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_desertcamo.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_desertcamo_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_desertcamo_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_desertcamo_destruct.rvmat"}}
+                        };
+                    };
+                };
+                class FrontFloat: FrontFloat {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_desertcamo.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_desertcamo.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_desertcamo_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_desertcamo_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_desertcamo_destruct.rvmat"}}
+                        };
+                    };
+                };
+            };
         };
     };
     class geb_jonboat_camo_snow : geb_jonboat_base {
@@ -404,13 +541,66 @@ class cfgVehicles {
         };
 
         hiddenSelectionsTextures[] = {
-		    "\gebsfish\data\vehicles\geb_jonboat_snowcamo.paa",
-		    "\gebsfish\data\vehicles\geb_jonboat_motor_black.paa"
+            "\gebsfish\data\vehicles\geb_jonboat_snowcamo_co.paa",
+            "\gebsfish\data\vehicles\geb_jonboat_motor_black_co.paa"
         };
 
         hiddenSelectionsMaterials[] = {
-            "\gebsfish\data\vehicles\geb_jonboat.rvmat",
+            "\gebsfish\data\vehicles\geb_jonboat_snowcamo.rvmat",
             "\gebsfish\data\vehicles\geb_jonboat_motor.rvmat"
+        };
+        // its own materials for the worn, damaged and ruined looks (RefTexsMats: the model's own material)
+        class DamageSystem: DamageSystem {
+            class DamageZones: DamageZones {
+                class Chassis: Chassis {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_snowcamo.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_snowcamo.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_snowcamo_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_snowcamo_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_snowcamo_destruct.rvmat"}}
+                        };
+                    };
+                };
+                class LeftFloat: LeftFloat {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_snowcamo.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_snowcamo.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_snowcamo_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_snowcamo_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_snowcamo_destruct.rvmat"}}
+                        };
+                    };
+                };
+                class RightFloat: RightFloat {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_snowcamo.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_snowcamo.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_snowcamo_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_snowcamo_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_snowcamo_destruct.rvmat"}}
+                        };
+                    };
+                };
+                class FrontFloat: FrontFloat {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_snowcamo.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_snowcamo.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_snowcamo_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_snowcamo_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_snowcamo_destruct.rvmat"}}
+                        };
+                    };
+                };
+            };
         };
     };
     class geb_jonboat_camo_forest : geb_jonboat_base {
@@ -421,13 +611,66 @@ class cfgVehicles {
         };
 
         hiddenSelectionsTextures[] = {
-		    "\gebsfish\data\vehicles\geb_jonboat_forestcamo.paa",
-		    "\gebsfish\data\vehicles\geb_jonboat_motor_black.paa"
+            "\gebsfish\data\vehicles\geb_jonboat_forestcamo_co.paa",
+            "\gebsfish\data\vehicles\geb_jonboat_motor_black_co.paa"
         };
 
         hiddenSelectionsMaterials[] = {
-            "\gebsfish\data\vehicles\geb_jonboat.rvmat",
+            "\gebsfish\data\vehicles\geb_jonboat_forestcamo.rvmat",
             "\gebsfish\data\vehicles\geb_jonboat_motor.rvmat"
+        };
+        // its own materials for the worn, damaged and ruined looks (RefTexsMats: the model's own material)
+        class DamageSystem: DamageSystem {
+            class DamageZones: DamageZones {
+                class Chassis: Chassis {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_forestcamo.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_forestcamo.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_forestcamo_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_forestcamo_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_forestcamo_destruct.rvmat"}}
+                        };
+                    };
+                };
+                class LeftFloat: LeftFloat {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_forestcamo.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_forestcamo.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_forestcamo_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_forestcamo_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_forestcamo_destruct.rvmat"}}
+                        };
+                    };
+                };
+                class RightFloat: RightFloat {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_forestcamo.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_forestcamo.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_forestcamo_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_forestcamo_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_forestcamo_destruct.rvmat"}}
+                        };
+                    };
+                };
+                class FrontFloat: FrontFloat {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_forestcamo.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_forestcamo.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_forestcamo_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_forestcamo_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_forestcamo_destruct.rvmat"}}
+                        };
+                    };
+                };
+            };
         };
     };
 };

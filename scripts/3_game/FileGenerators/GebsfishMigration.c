@@ -143,7 +143,8 @@ class GebsfishMigration {
         array<string> names = new array<string>();
         bool more = true;
         while (more) {
-            if (fileName != "" && (attr & FileAttr.DIRECTORY) == 0)
+            // Subfolders (an old mission folder, say) stay where they are.
+            if (fileName != "" && GebsfishLogger.IsRegularFile(fromDir + fileName))
                 names.Insert(fileName);
             more = FindNextFile(handle, fileName, attr);
         }

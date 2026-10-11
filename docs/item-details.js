@@ -12,11 +12,47 @@ const ITEMDETAIL = {
 "img": "items/geb_BlueCooler.webp",
 "name": "Blue Cooler"
 },
+"geb_BlueFishGloves": {
+"cat": "gear",
+"desc": "Blue Fishing Gloves.",
+"img": "items/geb_BlueFishGloves.webp",
+"name": "Blue Fishing Gloves"
+},
+"geb_BlueFishHat": {
+"cat": "gear",
+"desc": "Blue Fishing Hat.",
+"img": "items/geb_BlueFishHat.webp",
+"name": "Blue Fishing Hat"
+},
 "geb_BlueFishKnife": {
 "cat": "gear",
 "desc": "A knife that was built for fish.",
 "img": "items/geb_BlueFishKnife.webp",
 "name": "Blue Fish Knife"
+},
+"geb_BlueFishRaincoat": {
+"cat": "gear",
+"desc": "A waterproof blue raincoat with the Gebsfish logo on the chest.",
+"img": "items/geb_BlueFishRaincoat.webp",
+"name": "Blue Fishing Raincoat"
+},
+"geb_BlueFishShirt": {
+"cat": "gear",
+"desc": "Blue Fishing Shirt.",
+"img": "items/geb_BlueFishShirt.webp",
+"name": "Blue Fishing Shirt"
+},
+"geb_BlueFishWellies": {
+"cat": "gear",
+"desc": "Waterproof blue rubber boots with the Gebsfish logo on the side and GEBSFISH on the soles.",
+"img": "items/geb_BlueFishWellies.webp",
+"name": "Blue Fishing Wellies"
+},
+"geb_BlueFishingRod": {
+"cat": "gear",
+"desc": "A spinning rod with cork grips and a blue reel.",
+"img": "items/geb_BlueFishingRod.webp",
+"name": "Blue Fishing Rod"
 },
 "geb_BlueTackle": {
 "cat": "gear",
@@ -29,6 +65,48 @@ const ITEMDETAIL = {
 "desc": "An insulated cooler for storing fish fillets. Slows or completely stops their natural decay so your catch stays fresh much longer than in a regular container.",
 "img": "items/geb_BrownCooler.webp",
 "name": "Brown Cooler"
+},
+"geb_BrownFishGloves": {
+"cat": "gear",
+"desc": "Brown Fishing Gloves.",
+"img": "items/geb_BrownFishGloves.webp",
+"name": "Brown Fishing Gloves"
+},
+"geb_BrownFishHat": {
+"cat": "gear",
+"desc": "Brown Fishing Hat.",
+"img": "items/geb_BrownFishHat.webp",
+"name": "Brown Fishing Hat"
+},
+"geb_BrownFishKnife": {
+"cat": "gear",
+"desc": "A knife that was built for fish.",
+"img": "items/geb_BrownFishKnife.webp",
+"name": "Brown Fish Knife"
+},
+"geb_BrownFishRaincoat": {
+"cat": "gear",
+"desc": "A waterproof brown raincoat with the Gebsfish logo on the chest.",
+"img": "items/geb_BrownFishRaincoat.webp",
+"name": "Brown Fishing Raincoat"
+},
+"geb_BrownFishShirt": {
+"cat": "gear",
+"desc": "Brown Fishing Shirt.",
+"img": "items/geb_BrownFishShirt.webp",
+"name": "Brown Fishing Shirt"
+},
+"geb_BrownFishWellies": {
+"cat": "gear",
+"desc": "Waterproof brown rubber boots with the Gebsfish logo on the side and GEBSFISH on the soles.",
+"img": "items/geb_BrownFishWellies.webp",
+"name": "Brown Fishing Wellies"
+},
+"geb_BrownFishingRod": {
+"cat": "gear",
+"desc": "A spinning rod with cork grips and a brown reel.",
+"img": "items/geb_BrownFishingRod.webp",
+"name": "Brown Fishing Rod"
 },
 "geb_BrownTackle": {
 "cat": "gear",
@@ -47,6 +125,12 @@ const ITEMDETAIL = {
 "desc": "An insulated cooler for storing fish fillets. Slows or completely stops their natural decay so your catch stays fresh much longer than in a regular container.",
 "img": "items/geb_CamoCooler.webp",
 "name": "Camouflage Cooler"
+},
+"geb_CamoFishKnife": {
+"cat": "gear",
+"desc": "A knife that was built for fish.",
+"img": "items/geb_CamoFishKnife.webp",
+"name": "Camouflage Fish Knife"
 },
 "geb_CamoTackle": {
 "cat": "gear",
@@ -90,30 +174,6 @@ const ITEMDETAIL = {
 "img": "items/geb_FishingRodRepairKit.webp",
 "name": "Fishing Rod Repair Kit"
 },
-"geb_FunGreenTackle": {
-"cat": "gear",
-"desc": "A tackle box. Good place to store fishing equipment.",
-"img": "items/geb_FunGreenTackle.webp",
-"name": "Fun Green Tackle Box"
-},
-"geb_FunPurpleTackle": {
-"cat": "gear",
-"desc": "A tackle box. Good place to store fishing equipment.",
-"img": "items/geb_FunPurpleTackle.webp",
-"name": "Fun Purple Tackle Box"
-},
-"geb_FunRedTackle": {
-"cat": "gear",
-"desc": "A tackle box. Good place to store fishing equipment.",
-"img": "items/geb_FunRedTackle.webp",
-"name": "Fun Red Tackle Box"
-},
-"geb_FunYellowTackle": {
-"cat": "gear",
-"desc": "A tackle box. Good place to store fishing equipment.",
-"img": "items/geb_FunYellowTackle.webp",
-"name": "Fun Yellow Tackle Box"
-},
 "geb_GrassHopper": {
 "cat": "bait",
 "desc": "Grasshoppers are a group of insects belonging to the suborder Caelifera. They are among what is probably the most ancient living group of chewing herbivorous insects, dating back to the early Triassic around 250 million years ago.",
@@ -126,11 +186,53 @@ const ITEMDETAIL = {
 "img": "items/geb_GreenCooler.webp",
 "name": "Green Cooler"
 },
+"geb_GreenFishGloves": {
+"cat": "gear",
+"desc": "Green Fishing Gloves.",
+"img": "items/geb_GreenFishGloves.webp",
+"name": "Green Fishing Gloves"
+},
+"geb_GreenFishHat": {
+"cat": "gear",
+"desc": "Green Fishing Hat.",
+"img": "items/geb_GreenFishHat.webp",
+"name": "Green Fishing Hat"
+},
 "geb_GreenFishKnife": {
 "cat": "gear",
 "desc": "A knife that was built for fish.",
 "img": "items/geb_GreenFishKnife.webp",
 "name": "Green Fish Knife"
+},
+"geb_GreenFishRaincoat": {
+"cat": "gear",
+"desc": "A waterproof green raincoat with the Gebsfish logo on the chest.",
+"img": "items/geb_GreenFishRaincoat.webp",
+"name": "Green Fishing Raincoat"
+},
+"geb_GreenFishShirt": {
+"cat": "gear",
+"desc": "Green Fishing Shirt.",
+"img": "items/geb_GreenFishShirt.webp",
+"name": "Green Fishing Shirt"
+},
+"geb_GreenFishWellies": {
+"cat": "gear",
+"desc": "Waterproof green rubber boots with the Gebsfish logo on the side and GEBSFISH on the soles.",
+"img": "items/geb_GreenFishWellies.webp",
+"name": "Green Fishing Wellies"
+},
+"geb_GreenFishingRod": {
+"cat": "gear",
+"desc": "A spinning rod with cork grips and a green reel.",
+"img": "items/geb_GreenFishingRod.webp",
+"name": "Green Fishing Rod"
+},
+"geb_GreenTackle": {
+"cat": "gear",
+"desc": "A tackle box. Good place to store fishing equipment.",
+"img": "items/geb_GreenTackle.webp",
+"name": "Green Tackle Box"
 },
 "geb_GrubWorm": {
 "cat": "bait",
@@ -138,11 +240,59 @@ const ITEMDETAIL = {
 "img": "items/geb_GrubWorm.webp",
 "name": "Grub Worm"
 },
+"geb_LargeFishMount": {
+"cat": "gear",
+"desc": "A big trophy board with a brass nameplate, for marlin, sailfish, mahi-mahi, sturgeon and sharks. Any smaller catch fits too. Too big for a backpack, so it is carried in the hands. A mounted catch never rots and stays on for good.",
+"img": "items/geb_LargeFishMount.webp",
+"name": "Large Fish Mount"
+},
 "geb_LightBlueCooler": {
 "cat": "gear",
 "desc": "An insulated cooler for storing fish fillets. Slows or completely stops their natural decay so your catch stays fresh much longer than in a regular container.",
 "img": "items/geb_LightBlueCooler.webp",
 "name": "Light Blue Cooler"
+},
+"geb_LightBlueFishGloves": {
+"cat": "gear",
+"desc": "Light Blue Fishing Gloves.",
+"img": "items/geb_LightBlueFishGloves.webp",
+"name": "Light Blue Fishing Gloves"
+},
+"geb_LightBlueFishHat": {
+"cat": "gear",
+"desc": "Light Blue Fishing Hat.",
+"img": "items/geb_LightBlueFishHat.webp",
+"name": "Light Blue Fishing Hat"
+},
+"geb_LightBlueFishKnife": {
+"cat": "gear",
+"desc": "A knife that was built for fish.",
+"img": "items/geb_LightBlueFishKnife.webp",
+"name": "Light Blue Fish Knife"
+},
+"geb_LightBlueFishRaincoat": {
+"cat": "gear",
+"desc": "A waterproof light blue raincoat with the Gebsfish logo on the chest.",
+"img": "items/geb_LightBlueFishRaincoat.webp",
+"name": "Light Blue Fishing Raincoat"
+},
+"geb_LightBlueFishShirt": {
+"cat": "gear",
+"desc": "Light Blue Fishing Shirt.",
+"img": "items/geb_LightBlueFishShirt.webp",
+"name": "Light Blue Fishing Shirt"
+},
+"geb_LightBlueFishWellies": {
+"cat": "gear",
+"desc": "Waterproof light blue rubber boots with the Gebsfish logo on the side and GEBSFISH on the soles.",
+"img": "items/geb_LightBlueFishWellies.webp",
+"name": "Light Blue Fishing Wellies"
+},
+"geb_LightBlueFishingRod": {
+"cat": "gear",
+"desc": "A spinning rod with cork grips and a light blue reel.",
+"img": "items/geb_LightBlueFishingRod.webp",
+"name": "Light Blue Fishing Rod"
 },
 "geb_LightBlueTackle": {
 "cat": "gear",
@@ -155,6 +305,48 @@ const ITEMDETAIL = {
 "desc": "An insulated cooler for storing fish fillets. Slows or completely stops their natural decay so your catch stays fresh much longer than in a regular container.",
 "img": "items/geb_LimeCooler.webp",
 "name": "Lime Cooler"
+},
+"geb_LimeFishGloves": {
+"cat": "gear",
+"desc": "Lime Fishing Gloves.",
+"img": "items/geb_LimeFishGloves.webp",
+"name": "Lime Fishing Gloves"
+},
+"geb_LimeFishHat": {
+"cat": "gear",
+"desc": "Lime Fishing Hat.",
+"img": "items/geb_LimeFishHat.webp",
+"name": "Lime Fishing Hat"
+},
+"geb_LimeFishKnife": {
+"cat": "gear",
+"desc": "A knife that was built for fish.",
+"img": "items/geb_LimeFishKnife.webp",
+"name": "Lime Fish Knife"
+},
+"geb_LimeFishRaincoat": {
+"cat": "gear",
+"desc": "A waterproof lime raincoat with the Gebsfish logo on the chest.",
+"img": "items/geb_LimeFishRaincoat.webp",
+"name": "Lime Fishing Raincoat"
+},
+"geb_LimeFishShirt": {
+"cat": "gear",
+"desc": "Lime Fishing Shirt.",
+"img": "items/geb_LimeFishShirt.webp",
+"name": "Lime Fishing Shirt"
+},
+"geb_LimeFishWellies": {
+"cat": "gear",
+"desc": "Waterproof lime rubber boots with the Gebsfish logo on the side and GEBSFISH on the soles.",
+"img": "items/geb_LimeFishWellies.webp",
+"name": "Lime Fishing Wellies"
+},
+"geb_LimeFishingRod": {
+"cat": "gear",
+"desc": "A spinning rod with cork grips and a lime reel.",
+"img": "items/geb_LimeFishingRod.webp",
+"name": "Lime Fishing Rod"
 },
 "geb_LimeTackle": {
 "cat": "gear",
@@ -185,6 +377,12 @@ const ITEMDETAIL = {
 "desc": "A square bill lure is a shallow-running, shallow-diving crankbait characterized by a flat, square-shaped plastic or circuit board lip. Designed for fishing in 1–8 feet of water, its unique bill deflects sharply off timber, rocks, and shallow cover to trigger reaction strikes. These lures often feature a wide, &quot;hunting&quot; wobble.",
 "img": "items/geb_Lure4.webp",
 "name": "Squarebill Lure"
+},
+"geb_MediumFishMount": {
+"cat": "gear",
+"desc": "An oval trophy board with a brass nameplate, for pike, muskies, catfish, cod, gar, sockeye salmon, flounder, crabs and the reef fish. Smaller catches fit too. Hang it on a wall: a mounted catch never rots and stays on for good.",
+"img": "items/geb_MediumFishMount.webp",
+"name": "Medium Fish Mount"
 },
 "geb_MinnowBucket": {
 "cat": "gear",
@@ -222,11 +420,47 @@ const ITEMDETAIL = {
 "img": "items/geb_OrangeCooler.webp",
 "name": "Orange Cooler"
 },
+"geb_OrangeFishGloves": {
+"cat": "gear",
+"desc": "Orange Fishing Gloves.",
+"img": "items/geb_OrangeFishGloves.webp",
+"name": "Orange Fishing Gloves"
+},
+"geb_OrangeFishHat": {
+"cat": "gear",
+"desc": "Orange Fishing Hat.",
+"img": "items/geb_OrangeFishHat.webp",
+"name": "Orange Fishing Hat"
+},
 "geb_OrangeFishKnife": {
 "cat": "gear",
 "desc": "A knife that was built for fish.",
 "img": "items/geb_OrangeFishKnife.webp",
 "name": "Orange Fish Knife"
+},
+"geb_OrangeFishRaincoat": {
+"cat": "gear",
+"desc": "A waterproof orange raincoat with the Gebsfish logo on the chest.",
+"img": "items/geb_OrangeFishRaincoat.webp",
+"name": "Orange Fishing Raincoat"
+},
+"geb_OrangeFishShirt": {
+"cat": "gear",
+"desc": "Orange Fishing Shirt.",
+"img": "items/geb_OrangeFishShirt.webp",
+"name": "Orange Fishing Shirt"
+},
+"geb_OrangeFishWellies": {
+"cat": "gear",
+"desc": "Waterproof orange rubber boots with the Gebsfish logo on the side and GEBSFISH on the soles.",
+"img": "items/geb_OrangeFishWellies.webp",
+"name": "Orange Fishing Wellies"
+},
+"geb_OrangeFishingRod": {
+"cat": "gear",
+"desc": "A spinning rod with cork grips and an orange reel.",
+"img": "items/geb_OrangeFishingRod.webp",
+"name": "Orange Fishing Rod"
 },
 "geb_OrangeTackle": {
 "cat": "gear",
@@ -240,6 +474,48 @@ const ITEMDETAIL = {
 "img": "items/geb_PinkCooler.webp",
 "name": "Pink Cooler"
 },
+"geb_PinkFishGloves": {
+"cat": "gear",
+"desc": "Pink Fishing Gloves.",
+"img": "items/geb_PinkFishGloves.webp",
+"name": "Pink Fishing Gloves"
+},
+"geb_PinkFishHat": {
+"cat": "gear",
+"desc": "Pink Fishing Hat.",
+"img": "items/geb_PinkFishHat.webp",
+"name": "Pink Fishing Hat"
+},
+"geb_PinkFishKnife": {
+"cat": "gear",
+"desc": "A knife that was built for fish.",
+"img": "items/geb_PinkFishKnife.webp",
+"name": "Pink Fish Knife"
+},
+"geb_PinkFishRaincoat": {
+"cat": "gear",
+"desc": "A waterproof pink raincoat with the Gebsfish logo on the chest.",
+"img": "items/geb_PinkFishRaincoat.webp",
+"name": "Pink Fishing Raincoat"
+},
+"geb_PinkFishShirt": {
+"cat": "gear",
+"desc": "Pink Fishing Shirt.",
+"img": "items/geb_PinkFishShirt.webp",
+"name": "Pink Fishing Shirt"
+},
+"geb_PinkFishWellies": {
+"cat": "gear",
+"desc": "Waterproof pink rubber boots with the Gebsfish logo on the side and GEBSFISH on the soles.",
+"img": "items/geb_PinkFishWellies.webp",
+"name": "Pink Fishing Wellies"
+},
+"geb_PinkFishingRod": {
+"cat": "gear",
+"desc": "A spinning rod with cork grips and a pink reel.",
+"img": "items/geb_PinkFishingRod.webp",
+"name": "Pink Fishing Rod"
+},
 "geb_PinkTackle": {
 "cat": "gear",
 "desc": "A tackle box. Good place to store fishing equipment.",
@@ -252,11 +528,53 @@ const ITEMDETAIL = {
 "img": "items/geb_PurpleCooler.webp",
 "name": "Purple Cooler"
 },
+"geb_PurpleFishGloves": {
+"cat": "gear",
+"desc": "Purple Fishing Gloves.",
+"img": "items/geb_PurpleFishGloves.webp",
+"name": "Purple Fishing Gloves"
+},
+"geb_PurpleFishHat": {
+"cat": "gear",
+"desc": "Purple Fishing Hat.",
+"img": "items/geb_PurpleFishHat.webp",
+"name": "Purple Fishing Hat"
+},
 "geb_PurpleFishKnife": {
 "cat": "gear",
 "desc": "A knife that was built for fish.",
 "img": "items/geb_PurpleFishKnife.webp",
 "name": "Purple Fish Knife"
+},
+"geb_PurpleFishRaincoat": {
+"cat": "gear",
+"desc": "A waterproof purple raincoat with the Gebsfish logo on the chest.",
+"img": "items/geb_PurpleFishRaincoat.webp",
+"name": "Purple Fishing Raincoat"
+},
+"geb_PurpleFishShirt": {
+"cat": "gear",
+"desc": "Purple Fishing Shirt.",
+"img": "items/geb_PurpleFishShirt.webp",
+"name": "Purple Fishing Shirt"
+},
+"geb_PurpleFishWellies": {
+"cat": "gear",
+"desc": "Waterproof purple rubber boots with the Gebsfish logo on the side and GEBSFISH on the soles.",
+"img": "items/geb_PurpleFishWellies.webp",
+"name": "Purple Fishing Wellies"
+},
+"geb_PurpleFishingRod": {
+"cat": "gear",
+"desc": "A spinning rod with cork grips and a purple reel.",
+"img": "items/geb_PurpleFishingRod.webp",
+"name": "Purple Fishing Rod"
+},
+"geb_PurpleTackle": {
+"cat": "gear",
+"desc": "A tackle box. Good place to store fishing equipment.",
+"img": "items/geb_PurpleTackle.webp",
+"name": "Purple Tackle Box"
 },
 "geb_RedCooler": {
 "cat": "gear",
@@ -264,11 +582,59 @@ const ITEMDETAIL = {
 "img": "items/geb_RedCooler.webp",
 "name": "Red Cooler"
 },
+"geb_RedFishGloves": {
+"cat": "gear",
+"desc": "Red Fishing Gloves.",
+"img": "items/geb_RedFishGloves.webp",
+"name": "Red Fishing Gloves"
+},
+"geb_RedFishHat": {
+"cat": "gear",
+"desc": "Red Fishing Hat.",
+"img": "items/geb_RedFishHat.webp",
+"name": "Red Fishing Hat"
+},
 "geb_RedFishKnife": {
 "cat": "gear",
 "desc": "A knife that was built for fish.",
 "img": "items/geb_RedFishKnife.webp",
 "name": "Red Fish Knife"
+},
+"geb_RedFishRaincoat": {
+"cat": "gear",
+"desc": "A waterproof red raincoat with the Gebsfish logo on the chest.",
+"img": "items/geb_RedFishRaincoat.webp",
+"name": "Red Fishing Raincoat"
+},
+"geb_RedFishShirt": {
+"cat": "gear",
+"desc": "Red Fishing Shirt.",
+"img": "items/geb_RedFishShirt.webp",
+"name": "Red Fishing Shirt"
+},
+"geb_RedFishWellies": {
+"cat": "gear",
+"desc": "Waterproof red rubber boots with the Gebsfish logo on the side and GEBSFISH on the soles.",
+"img": "items/geb_RedFishWellies.webp",
+"name": "Red Fishing Wellies"
+},
+"geb_RedFishingRod": {
+"cat": "gear",
+"desc": "A spinning rod with cork grips and a red reel.",
+"img": "items/geb_RedFishingRod.webp",
+"name": "Red Fishing Rod"
+},
+"geb_RedTackle": {
+"cat": "gear",
+"desc": "A tackle box. Good place to store fishing equipment.",
+"img": "items/geb_RedTackle.webp",
+"name": "Red Tackle Box"
+},
+"geb_RubberWorm": {
+"cat": "lure",
+"desc": "A rubber worm",
+"img": "items/geb_RubberWorm.webp",
+"name": "Rubber Worm"
 },
 "geb_SmallTackle": {
 "cat": "gear",
@@ -324,6 +690,12 @@ const ITEMDETAIL = {
 "img": "items/geb_SpoonLure4.webp",
 "name": "Spoon Lure #4"
 },
+"geb_WoodenFishMount": {
+"cat": "gear",
+"desc": "A small oval trophy plaque with a brass nameplate, for bass, trout, perch, walleye, most salmon, tuna, crayfish, lobsters and shellfish. Hang it on a wall: a mounted catch never rots and stays on for good.",
+"img": "items/geb_WoodenFishMount.webp",
+"name": "Small Fish Mount"
+},
 "geb_WormContainer": {
 "cat": "gear",
 "desc": "A container that is used for holding earth worms.",
@@ -336,11 +708,53 @@ const ITEMDETAIL = {
 "img": "items/geb_YellowCooler.webp",
 "name": "Yellow Cooler"
 },
+"geb_YellowFishGloves": {
+"cat": "gear",
+"desc": "Yellow Fishing Gloves.",
+"img": "items/geb_YellowFishGloves.webp",
+"name": "Yellow Fishing Gloves"
+},
+"geb_YellowFishHat": {
+"cat": "gear",
+"desc": "Yellow Fishing Hat.",
+"img": "items/geb_YellowFishHat.webp",
+"name": "Yellow Fishing Hat"
+},
 "geb_YellowFishKnife": {
 "cat": "gear",
 "desc": "A knife that was built for fish.",
 "img": "items/geb_YellowFishKnife.webp",
 "name": "Yellow Fish Knife"
+},
+"geb_YellowFishRaincoat": {
+"cat": "gear",
+"desc": "A waterproof yellow raincoat with the Gebsfish logo on the chest.",
+"img": "items/geb_YellowFishRaincoat.webp",
+"name": "Yellow Fishing Raincoat"
+},
+"geb_YellowFishShirt": {
+"cat": "gear",
+"desc": "Yellow Fishing Shirt.",
+"img": "items/geb_YellowFishShirt.webp",
+"name": "Yellow Fishing Shirt"
+},
+"geb_YellowFishWellies": {
+"cat": "gear",
+"desc": "Waterproof yellow rubber boots with the Gebsfish logo on the side and GEBSFISH on the soles.",
+"img": "items/geb_YellowFishWellies.webp",
+"name": "Yellow Fishing Wellies"
+},
+"geb_YellowFishingRod": {
+"cat": "gear",
+"desc": "A spinning rod with cork grips and a yellow reel.",
+"img": "items/geb_YellowFishingRod.webp",
+"name": "Yellow Fishing Rod"
+},
+"geb_YellowTackle": {
+"cat": "gear",
+"desc": "A tackle box. Good place to store fishing equipment.",
+"img": "items/geb_YellowTackle.webp",
+"name": "Yellow Tackle Box"
 },
 "geb_jonboat_camo_desert": {
 "cat": "boat",

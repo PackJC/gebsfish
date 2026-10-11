@@ -12,9 +12,53 @@
     "view": "ISO:X"
   },
   {
+    "name": "geb_BlueFishGloves",
+    "p3d": "\\dz\\characters\\gloves\\nbc_gloves_g.p3d",
+    "texture": "data/clothes/geb_bluefishgloves_co.paa",
+    "materials": [
+      "data/clothes/geb_fishgloves.rvmat"
+    ],
+    "view": "ISO:Z"
+  },
+  {
+    "name": "geb_BlueFishHat",
+    "p3d": "\\dz\\characters\\headgear\\baseballcap_m.p3d",
+    "texture": "data/clothes/geb_bluefishhat_co.paa",
+    "view": "ISO:Z:290"
+  },
+  {
     "name": "geb_BlueFishKnife",
     "p3d": "data/tools/fishknife.p3d",
-    "texture": "data/tools/fishknife_blue_co.paa"
+    "texture": "data/tools/fishknife_blue_co.paa",
+    "materials": [
+      "data/tools/fishknife.rvmat"
+    ],
+    "tilt": 35
+  },
+  {
+    "name": "geb_BlueFishRaincoat",
+    "p3d": "\\dz\\characters\\tops\\raincoat_g.p3d",
+    "texture": "data/clothes/geb_bluefishraincoat_ground_co.paa",
+    "view": "Z"
+  },
+  {
+    "name": "geb_BlueFishShirt",
+    "p3d": "\\dz\\characters\\tops\\tshirt_ground.p3d",
+    "texture": "data/clothes/geb_bluefishshirt_ground_co.paa",
+    "view": "Z"
+  },
+  {
+    "name": "geb_BlueFishWellies",
+    "p3d": "\\dz\\characters\\shoes\\wellies_m.p3d",
+    "texture": "data/clothes/geb_bluefishwellies_co.paa",
+    "view": "ISO:Z:340"
+  },
+  {
+    "name": "geb_BlueFishingRod",
+    "p3d": "\\dz\\gear\\tools\\fishing_rod.p3d",
+    "texture": "data/tools/fishingrod_blue_co.paa",
+    "flip_v": true,
+    "tilt": 35
   },
   {
     "name": "geb_BlueTackle",
@@ -29,6 +73,55 @@
     "view": "ISO:X"
   },
   {
+    "name": "geb_BrownFishGloves",
+    "p3d": "\\dz\\characters\\gloves\\nbc_gloves_g.p3d",
+    "texture": "data/clothes/geb_brownfishgloves_co.paa",
+    "materials": [
+      "data/clothes/geb_fishgloves.rvmat"
+    ],
+    "view": "ISO:Z"
+  },
+  {
+    "name": "geb_BrownFishHat",
+    "p3d": "\\dz\\characters\\headgear\\baseballcap_m.p3d",
+    "texture": "data/clothes/geb_brownfishhat_co.paa",
+    "view": "ISO:Z:290"
+  },
+  {
+    "name": "geb_BrownFishKnife",
+    "p3d": "data/tools/fishknife.p3d",
+    "texture": "data/tools/fishknife_brown_co.paa",
+    "materials": [
+      "data/tools/fishknife.rvmat"
+    ],
+    "tilt": 35
+  },
+  {
+    "name": "geb_BrownFishRaincoat",
+    "p3d": "\\dz\\characters\\tops\\raincoat_g.p3d",
+    "texture": "data/clothes/geb_brownfishraincoat_ground_co.paa",
+    "view": "Z"
+  },
+  {
+    "name": "geb_BrownFishShirt",
+    "p3d": "\\dz\\characters\\tops\\tshirt_ground.p3d",
+    "texture": "data/clothes/geb_brownfishshirt_ground_co.paa",
+    "view": "Z"
+  },
+  {
+    "name": "geb_BrownFishWellies",
+    "p3d": "\\dz\\characters\\shoes\\wellies_m.p3d",
+    "texture": "data/clothes/geb_brownfishwellies_co.paa",
+    "view": "ISO:Z:340"
+  },
+  {
+    "name": "geb_BrownFishingRod",
+    "p3d": "\\dz\\gear\\tools\\fishing_rod.p3d",
+    "texture": "data/tools/fishingrod_brown_co.paa",
+    "flip_v": true,
+    "tilt": 35
+  },
+  {
     "name": "geb_BrownTackle",
     "p3d": "data/tackle/largetackle.p3d",
     "texture": "data/tackle/largetackle_brown_co.paa",
@@ -36,8 +129,8 @@
   },
   {
     "name": "geb_BugContainer",
-    "p3d": "data/tackle/bugcontainer.p3d",
-    "texture": "data/tackle/bugcontainer_co.paa",
+    "p3d": "data/tackle/bugcatcher.p3d",
+    "texture": "data/tackle/bugcatcher_co.paa",
     "view": "ISO"
   },
   {
@@ -45,6 +138,15 @@
     "p3d": "data/tackle/cooler.p3d",
     "texture": "data/tackle/cooler_camo_co.paa",
     "view": "ISO:X"
+  },
+  {
+    "name": "geb_CamoFishKnife",
+    "p3d": "data/tools/fishknife.p3d",
+    "texture": "data/tools/fishknife_camo_co.paa",
+    "materials": [
+      "data/tools/fishknife.rvmat"
+    ],
+    "tilt": 35
   },
   {
     "name": "geb_CamoTackle",
@@ -55,27 +157,36 @@
   {
     "name": "geb_CurlyTailJig1",
     "p3d": "data/tackle/curlytailjig.p3d",
-    "texture": "data/tackle/curlytailjig_blue_co.paa"
+    "texture": "data/tackle/curlytailjig_blue_co.paa",
+    "flip_v": true,
+    "tilt": 35
   },
   {
     "name": "geb_CurlyTailJig2",
     "p3d": "data/tackle/curlytailjig.p3d",
-    "texture": "data/tackle/curlytailjig_green_co.paa"
+    "texture": "data/tackle/curlytailjig_green_co.paa",
+    "flip_v": true,
+    "tilt": 35
   },
   {
     "name": "geb_CurlyTailJig3",
     "p3d": "data/tackle/curlytailjig.p3d",
-    "texture": "data/tackle/curlytailjig_red_co.paa"
+    "texture": "data/tackle/curlytailjig_red_co.paa",
+    "flip_v": true,
+    "tilt": 35
   },
   {
     "name": "geb_CurlyTailJig4",
     "p3d": "data/tackle/curlytailjig.p3d",
-    "texture": "data/tackle/curlytailjig_purple_co.paa"
+    "texture": "data/tackle/curlytailjig_purple_co.paa",
+    "flip_v": true,
+    "tilt": 35
   },
   {
     "name": "geb_FieldCricket",
     "p3d": "data/tackle/fieldcricket.p3d",
-    "texture": null
+    "texture": null,
+    "view": "MID"
   },
   {
     "name": "geb_FishingRodRepairKit",
@@ -84,34 +195,12 @@
     "view": "ISO"
   },
   {
-    "name": "geb_FunGreenTackle",
-    "p3d": "data/tackle/largetackle.p3d",
-    "texture": "data/tackle/largetackle_green_co.paa",
-    "view": "ISO:X"
-  },
-  {
-    "name": "geb_FunPurpleTackle",
-    "p3d": "data/tackle/largetackle.p3d",
-    "texture": "data/tackle/largetackle_purple_co.paa",
-    "view": "ISO:X"
-  },
-  {
-    "name": "geb_FunRedTackle",
-    "p3d": "data/tackle/largetackle.p3d",
-    "texture": "data/tackle/largetackle_red_co.paa",
-    "view": "ISO:X"
-  },
-  {
-    "name": "geb_FunYellowTackle",
-    "p3d": "data/tackle/largetackle.p3d",
-    "texture": "data/tackle/largetackle_yellow_co.paa",
-    "view": "ISO:X"
-  },
-  {
     "name": "geb_GrassHopper",
     "p3d": "data/tackle/grasshopper.p3d",
     "texture": null,
-    "flip_h": true
+    "view": "MID",
+    "flip_h": true,
+    "flip_v": true
   },
   {
     "name": "geb_GreenCooler",
@@ -120,9 +209,59 @@
     "view": "ISO:X"
   },
   {
+    "name": "geb_GreenFishGloves",
+    "p3d": "\\dz\\characters\\gloves\\nbc_gloves_g.p3d",
+    "texture": "data/clothes/geb_greenfishgloves_co.paa",
+    "materials": [
+      "data/clothes/geb_fishgloves.rvmat"
+    ],
+    "view": "ISO:Z"
+  },
+  {
+    "name": "geb_GreenFishHat",
+    "p3d": "\\dz\\characters\\headgear\\baseballcap_m.p3d",
+    "texture": "data/clothes/geb_greenfishhat_co.paa",
+    "view": "ISO:Z:290"
+  },
+  {
     "name": "geb_GreenFishKnife",
     "p3d": "data/tools/fishknife.p3d",
-    "texture": "data/tools/fishknife_green_co.paa"
+    "texture": "data/tools/fishknife_green_co.paa",
+    "materials": [
+      "data/tools/fishknife.rvmat"
+    ],
+    "tilt": 35
+  },
+  {
+    "name": "geb_GreenFishRaincoat",
+    "p3d": "\\dz\\characters\\tops\\raincoat_g.p3d",
+    "texture": "data/clothes/geb_greenfishraincoat_ground_co.paa",
+    "view": "Z"
+  },
+  {
+    "name": "geb_GreenFishShirt",
+    "p3d": "\\dz\\characters\\tops\\tshirt_ground.p3d",
+    "texture": "data/clothes/geb_greenfishshirt_ground_co.paa",
+    "view": "Z"
+  },
+  {
+    "name": "geb_GreenFishWellies",
+    "p3d": "\\dz\\characters\\shoes\\wellies_m.p3d",
+    "texture": "data/clothes/geb_greenfishwellies_co.paa",
+    "view": "ISO:Z:340"
+  },
+  {
+    "name": "geb_GreenFishingRod",
+    "p3d": "\\dz\\gear\\tools\\fishing_rod.p3d",
+    "texture": "data/tools/fishingrod_green_co.paa",
+    "flip_v": true,
+    "tilt": 35
+  },
+  {
+    "name": "geb_GreenTackle",
+    "p3d": "data/tackle/largetackle.p3d",
+    "texture": "data/tackle/largetackle_green_co.paa",
+    "view": "ISO:X"
   },
   {
     "name": "geb_GrubWorm",
@@ -132,10 +271,69 @@
     "flip_v": true
   },
   {
+    "name": "geb_LargeFishMount",
+    "p3d": "data/tools/largefishmount.p3d",
+    "texture": "data/tools/largefishmount_co.paa",
+    "materials": [
+      "data/tools/largefishmount.rvmat"
+    ],
+    "view": "Y",
+    "flip_h": true
+  },
+  {
     "name": "geb_LightBlueCooler",
     "p3d": "data/tackle/cooler.p3d",
     "texture": "data/tackle/cooler_lightblue_co.paa",
     "view": "ISO:X"
+  },
+  {
+    "name": "geb_LightBlueFishGloves",
+    "p3d": "\\dz\\characters\\gloves\\nbc_gloves_g.p3d",
+    "texture": "data/clothes/geb_lightbluefishgloves_co.paa",
+    "materials": [
+      "data/clothes/geb_fishgloves.rvmat"
+    ],
+    "view": "ISO:Z"
+  },
+  {
+    "name": "geb_LightBlueFishHat",
+    "p3d": "\\dz\\characters\\headgear\\baseballcap_m.p3d",
+    "texture": "data/clothes/geb_lightbluefishhat_co.paa",
+    "view": "ISO:Z:290"
+  },
+  {
+    "name": "geb_LightBlueFishKnife",
+    "p3d": "data/tools/fishknife.p3d",
+    "texture": "data/tools/fishknife_lightblue_co.paa",
+    "materials": [
+      "data/tools/fishknife.rvmat"
+    ],
+    "tilt": 35
+  },
+  {
+    "name": "geb_LightBlueFishRaincoat",
+    "p3d": "\\dz\\characters\\tops\\raincoat_g.p3d",
+    "texture": "data/clothes/geb_lightbluefishraincoat_ground_co.paa",
+    "view": "Z"
+  },
+  {
+    "name": "geb_LightBlueFishShirt",
+    "p3d": "\\dz\\characters\\tops\\tshirt_ground.p3d",
+    "texture": "data/clothes/geb_lightbluefishshirt_ground_co.paa",
+    "view": "Z"
+  },
+  {
+    "name": "geb_LightBlueFishWellies",
+    "p3d": "\\dz\\characters\\shoes\\wellies_m.p3d",
+    "texture": "data/clothes/geb_lightbluefishwellies_co.paa",
+    "view": "ISO:Z:340"
+  },
+  {
+    "name": "geb_LightBlueFishingRod",
+    "p3d": "\\dz\\gear\\tools\\fishing_rod.p3d",
+    "texture": "data/tools/fishingrod_lightblue_co.paa",
+    "flip_v": true,
+    "tilt": 35
   },
   {
     "name": "geb_LightBlueTackle",
@@ -150,6 +348,55 @@
     "view": "ISO:X"
   },
   {
+    "name": "geb_LimeFishGloves",
+    "p3d": "\\dz\\characters\\gloves\\nbc_gloves_g.p3d",
+    "texture": "data/clothes/geb_limefishgloves_co.paa",
+    "materials": [
+      "data/clothes/geb_fishgloves.rvmat"
+    ],
+    "view": "ISO:Z"
+  },
+  {
+    "name": "geb_LimeFishHat",
+    "p3d": "\\dz\\characters\\headgear\\baseballcap_m.p3d",
+    "texture": "data/clothes/geb_limefishhat_co.paa",
+    "view": "ISO:Z:290"
+  },
+  {
+    "name": "geb_LimeFishKnife",
+    "p3d": "data/tools/fishknife.p3d",
+    "texture": "data/tools/fishknife_lime_co.paa",
+    "materials": [
+      "data/tools/fishknife.rvmat"
+    ],
+    "tilt": 35
+  },
+  {
+    "name": "geb_LimeFishRaincoat",
+    "p3d": "\\dz\\characters\\tops\\raincoat_g.p3d",
+    "texture": "data/clothes/geb_limefishraincoat_ground_co.paa",
+    "view": "Z"
+  },
+  {
+    "name": "geb_LimeFishShirt",
+    "p3d": "\\dz\\characters\\tops\\tshirt_ground.p3d",
+    "texture": "data/clothes/geb_limefishshirt_ground_co.paa",
+    "view": "Z"
+  },
+  {
+    "name": "geb_LimeFishWellies",
+    "p3d": "\\dz\\characters\\shoes\\wellies_m.p3d",
+    "texture": "data/clothes/geb_limefishwellies_co.paa",
+    "view": "ISO:Z:340"
+  },
+  {
+    "name": "geb_LimeFishingRod",
+    "p3d": "\\dz\\gear\\tools\\fishing_rod.p3d",
+    "texture": "data/tools/fishingrod_lime_co.paa",
+    "flip_v": true,
+    "tilt": 35
+  },
+  {
     "name": "geb_LimeTackle",
     "p3d": "data/tackle/largetackle.p3d",
     "texture": "data/tackle/largetackle_lime_co.paa",
@@ -158,22 +405,36 @@
   {
     "name": "geb_Lure1",
     "p3d": "data/tackle/popper.p3d",
-    "texture": null
+    "texture": null,
+    "flip_h": true
   },
   {
     "name": "geb_Lure2",
     "p3d": "data/tackle/purplecrank.p3d",
-    "texture": null
+    "texture": null,
+    "flip_h": true
   },
   {
     "name": "geb_Lure3",
     "p3d": "data/tackle/yellowcrank.p3d",
-    "texture": null
+    "texture": null,
+    "flip_h": true
   },
   {
     "name": "geb_Lure4",
     "p3d": "data/tackle/squarebill.p3d",
-    "texture": null
+    "texture": null,
+    "flip_h": true
+  },
+  {
+    "name": "geb_MediumFishMount",
+    "p3d": "data/tools/mediumfishmount.p3d",
+    "texture": "data/tools/mediumfishmount_co.paa",
+    "materials": [
+      "data/tools/mediumfishmount.rvmat"
+    ],
+    "view": "Y",
+    "flip_h": true
   },
   {
     "name": "geb_MinnowBucket",
@@ -184,26 +445,26 @@
   {
     "name": "geb_OldBlueTackle",
     "p3d": "data/tackle/mediumtackle.p3d",
-    "texture": "data/tackle/mediumtackle_blue.paa",
-    "view": "ISO:X"
+    "texture": "data/tackle/mediumtackle_blue_co.paa",
+    "view": "ISO:X:218"
   },
   {
     "name": "geb_OldGreenTackle",
     "p3d": "data/tackle/mediumtackle.p3d",
-    "texture": "data/tackle/mediumtackle_green.paa",
-    "view": "ISO:X"
+    "texture": "data/tackle/mediumtackle_green_co.paa",
+    "view": "ISO:X:218"
   },
   {
     "name": "geb_OldPurpleTackle",
     "p3d": "data/tackle/mediumtackle.p3d",
-    "texture": "data/tackle/mediumtackle_purple.paa",
-    "view": "ISO:X"
+    "texture": "data/tackle/mediumtackle_purple_co.paa",
+    "view": "ISO:X:218"
   },
   {
     "name": "geb_OldRedTackle",
     "p3d": "data/tackle/mediumtackle.p3d",
-    "texture": "data/tackle/mediumtackle_red.paa",
-    "view": "ISO:X"
+    "texture": "data/tackle/mediumtackle_red_co.paa",
+    "view": "ISO:X:218"
   },
   {
     "name": "geb_OrangeCooler",
@@ -212,9 +473,53 @@
     "view": "ISO:X"
   },
   {
+    "name": "geb_OrangeFishGloves",
+    "p3d": "\\dz\\characters\\gloves\\nbc_gloves_g.p3d",
+    "texture": "data/clothes/geb_orangefishgloves_co.paa",
+    "materials": [
+      "data/clothes/geb_fishgloves.rvmat"
+    ],
+    "view": "ISO:Z"
+  },
+  {
+    "name": "geb_OrangeFishHat",
+    "p3d": "\\dz\\characters\\headgear\\baseballcap_m.p3d",
+    "texture": "data/clothes/geb_orangefishhat_co.paa",
+    "view": "ISO:Z:290"
+  },
+  {
     "name": "geb_OrangeFishKnife",
     "p3d": "data/tools/fishknife.p3d",
-    "texture": "data/tools/fishknife_orange_co.paa"
+    "texture": "data/tools/fishknife_orange_co.paa",
+    "materials": [
+      "data/tools/fishknife.rvmat"
+    ],
+    "tilt": 35
+  },
+  {
+    "name": "geb_OrangeFishRaincoat",
+    "p3d": "\\dz\\characters\\tops\\raincoat_g.p3d",
+    "texture": "data/clothes/geb_orangefishraincoat_ground_co.paa",
+    "view": "Z"
+  },
+  {
+    "name": "geb_OrangeFishShirt",
+    "p3d": "\\dz\\characters\\tops\\tshirt_ground.p3d",
+    "texture": "data/clothes/geb_orangefishshirt_ground_co.paa",
+    "view": "Z"
+  },
+  {
+    "name": "geb_OrangeFishWellies",
+    "p3d": "\\dz\\characters\\shoes\\wellies_m.p3d",
+    "texture": "data/clothes/geb_orangefishwellies_co.paa",
+    "view": "ISO:Z:340"
+  },
+  {
+    "name": "geb_OrangeFishingRod",
+    "p3d": "\\dz\\gear\\tools\\fishing_rod.p3d",
+    "texture": "data/tools/fishingrod_orange_co.paa",
+    "flip_v": true,
+    "tilt": 35
   },
   {
     "name": "geb_OrangeTackle",
@@ -229,6 +534,55 @@
     "view": "ISO:X"
   },
   {
+    "name": "geb_PinkFishGloves",
+    "p3d": "\\dz\\characters\\gloves\\nbc_gloves_g.p3d",
+    "texture": "data/clothes/geb_pinkfishgloves_co.paa",
+    "materials": [
+      "data/clothes/geb_fishgloves.rvmat"
+    ],
+    "view": "ISO:Z"
+  },
+  {
+    "name": "geb_PinkFishHat",
+    "p3d": "\\dz\\characters\\headgear\\baseballcap_m.p3d",
+    "texture": "data/clothes/geb_pinkfishhat_co.paa",
+    "view": "ISO:Z:290"
+  },
+  {
+    "name": "geb_PinkFishKnife",
+    "p3d": "data/tools/fishknife.p3d",
+    "texture": "data/tools/fishknife_pink_co.paa",
+    "materials": [
+      "data/tools/fishknife.rvmat"
+    ],
+    "tilt": 35
+  },
+  {
+    "name": "geb_PinkFishRaincoat",
+    "p3d": "\\dz\\characters\\tops\\raincoat_g.p3d",
+    "texture": "data/clothes/geb_pinkfishraincoat_ground_co.paa",
+    "view": "Z"
+  },
+  {
+    "name": "geb_PinkFishShirt",
+    "p3d": "\\dz\\characters\\tops\\tshirt_ground.p3d",
+    "texture": "data/clothes/geb_pinkfishshirt_ground_co.paa",
+    "view": "Z"
+  },
+  {
+    "name": "geb_PinkFishWellies",
+    "p3d": "\\dz\\characters\\shoes\\wellies_m.p3d",
+    "texture": "data/clothes/geb_pinkfishwellies_co.paa",
+    "view": "ISO:Z:340"
+  },
+  {
+    "name": "geb_PinkFishingRod",
+    "p3d": "\\dz\\gear\\tools\\fishing_rod.p3d",
+    "texture": "data/tools/fishingrod_pink_co.paa",
+    "flip_v": true,
+    "tilt": 35
+  },
+  {
     "name": "geb_PinkTackle",
     "p3d": "data/tackle/largetackle.p3d",
     "texture": "data/tackle/largetackle_pink_co.paa",
@@ -241,9 +595,59 @@
     "view": "ISO:X"
   },
   {
+    "name": "geb_PurpleFishGloves",
+    "p3d": "\\dz\\characters\\gloves\\nbc_gloves_g.p3d",
+    "texture": "data/clothes/geb_purplefishgloves_co.paa",
+    "materials": [
+      "data/clothes/geb_fishgloves.rvmat"
+    ],
+    "view": "ISO:Z"
+  },
+  {
+    "name": "geb_PurpleFishHat",
+    "p3d": "\\dz\\characters\\headgear\\baseballcap_m.p3d",
+    "texture": "data/clothes/geb_purplefishhat_co.paa",
+    "view": "ISO:Z:290"
+  },
+  {
     "name": "geb_PurpleFishKnife",
     "p3d": "data/tools/fishknife.p3d",
-    "texture": "data/tools/fishknife_purple_co.paa"
+    "texture": "data/tools/fishknife_purple_co.paa",
+    "materials": [
+      "data/tools/fishknife.rvmat"
+    ],
+    "tilt": 35
+  },
+  {
+    "name": "geb_PurpleFishRaincoat",
+    "p3d": "\\dz\\characters\\tops\\raincoat_g.p3d",
+    "texture": "data/clothes/geb_purplefishraincoat_ground_co.paa",
+    "view": "Z"
+  },
+  {
+    "name": "geb_PurpleFishShirt",
+    "p3d": "\\dz\\characters\\tops\\tshirt_ground.p3d",
+    "texture": "data/clothes/geb_purplefishshirt_ground_co.paa",
+    "view": "Z"
+  },
+  {
+    "name": "geb_PurpleFishWellies",
+    "p3d": "\\dz\\characters\\shoes\\wellies_m.p3d",
+    "texture": "data/clothes/geb_purplefishwellies_co.paa",
+    "view": "ISO:Z:340"
+  },
+  {
+    "name": "geb_PurpleFishingRod",
+    "p3d": "\\dz\\gear\\tools\\fishing_rod.p3d",
+    "texture": "data/tools/fishingrod_purple_co.paa",
+    "flip_v": true,
+    "tilt": 35
+  },
+  {
+    "name": "geb_PurpleTackle",
+    "p3d": "data/tackle/largetackle.p3d",
+    "texture": "data/tackle/largetackle_purple_co.paa",
+    "view": "ISO:X"
   },
   {
     "name": "geb_RedCooler",
@@ -252,9 +656,72 @@
     "view": "ISO:X"
   },
   {
+    "name": "geb_RedFishGloves",
+    "p3d": "\\dz\\characters\\gloves\\nbc_gloves_g.p3d",
+    "texture": "data/clothes/geb_redfishgloves_co.paa",
+    "materials": [
+      "data/clothes/geb_fishgloves.rvmat"
+    ],
+    "view": "ISO:Z"
+  },
+  {
+    "name": "geb_RedFishHat",
+    "p3d": "\\dz\\characters\\headgear\\baseballcap_m.p3d",
+    "texture": "data/clothes/geb_redfishhat_co.paa",
+    "view": "ISO:Z:290"
+  },
+  {
     "name": "geb_RedFishKnife",
     "p3d": "data/tools/fishknife.p3d",
-    "texture": "data/tools/fishknife_red_co.paa"
+    "texture": "data/tools/fishknife_red_co.paa",
+    "materials": [
+      "data/tools/fishknife.rvmat"
+    ],
+    "tilt": 35
+  },
+  {
+    "name": "geb_RedFishRaincoat",
+    "p3d": "\\dz\\characters\\tops\\raincoat_g.p3d",
+    "texture": "data/clothes/geb_redfishraincoat_ground_co.paa",
+    "view": "Z"
+  },
+  {
+    "name": "geb_RedFishShirt",
+    "p3d": "\\dz\\characters\\tops\\tshirt_ground.p3d",
+    "texture": "data/clothes/geb_redfishshirt_ground_co.paa",
+    "view": "Z"
+  },
+  {
+    "name": "geb_RedFishWellies",
+    "p3d": "\\dz\\characters\\shoes\\wellies_m.p3d",
+    "texture": "data/clothes/geb_redfishwellies_co.paa",
+    "view": "ISO:Z:340"
+  },
+  {
+    "name": "geb_RedFishingRod",
+    "p3d": "\\dz\\gear\\tools\\fishing_rod.p3d",
+    "texture": "data/tools/fishingrod_red_co.paa",
+    "flip_v": true,
+    "tilt": 35
+  },
+  {
+    "name": "geb_RedTackle",
+    "p3d": "data/tackle/largetackle.p3d",
+    "texture": "data/tackle/largetackle_red_co.paa",
+    "view": "ISO:X"
+  },
+  {
+    "name": "geb_RubberWorm",
+    "p3d": "\\dz\\gear\\food\\bait_worm.p3d",
+    "texture": "data/tackle/rubberworm_co.paa",
+    "textures": [
+      "data/tackle/rubberworm_co.paa",
+      "data/tackle/rubberworm_co.paa",
+      "data/tackle/rubberworm_co.paa"
+    ],
+    "hide": [
+      "bait_hooked"
+    ]
   },
   {
     "name": "geb_SmallTackle",
@@ -266,50 +733,63 @@
     "name": "geb_SpinnerBait1",
     "p3d": "data/tackle/spinner.p3d",
     "texture": "data/tackle/spinner1_co.paa",
-    "view": "MID"
+    "view": "MID",
+    "tilt": 35
   },
   {
     "name": "geb_SpinnerBait2",
     "p3d": "data/tackle/spinner.p3d",
     "texture": "data/tackle/spinner2_co.paa",
-    "view": "MID"
+    "view": "MID",
+    "tilt": 35
   },
   {
     "name": "geb_SpinnerBait3",
     "p3d": "data/tackle/spinner.p3d",
     "texture": "data/tackle/spinner3_co.paa",
-    "view": "MID"
+    "view": "MID",
+    "tilt": 35
   },
   {
     "name": "geb_SpinnerBait4",
     "p3d": "data/tackle/spinner.p3d",
     "texture": "data/tackle/spinner4_co.paa",
-    "view": "MID"
+    "view": "MID",
+    "tilt": 35
   },
   {
     "name": "geb_SpoonLure1",
     "p3d": "data/tackle/spoonlure.p3d",
-    "texture": "data/tackle/spoonlure_blue_co.paa"
+    "texture": "data/tackle/spoonlure_blue_co.paa",
+    "tilt": 35
   },
   {
     "name": "geb_SpoonLure2",
     "p3d": "data/tackle/spoonlure.p3d",
-    "texture": "data/tackle/spoonlure_white_co.paa"
+    "texture": "data/tackle/spoonlure_white_co.paa",
+    "tilt": 35
   },
   {
     "name": "geb_SpoonLure3",
     "p3d": "data/tackle/spoonlure.p3d",
-    "texture": "data/tackle/spoonlure_red_co.paa"
+    "texture": "data/tackle/spoonlure_red_co.paa",
+    "tilt": 35
   },
   {
     "name": "geb_SpoonLure4",
     "p3d": "data/tackle/spoonlure.p3d",
-    "texture": "data/tackle/spoonlure_yellow_co.paa"
+    "texture": "data/tackle/spoonlure_yellow_co.paa",
+    "tilt": 35
   },
   {
     "name": "geb_WoodenFishMount",
-    "p3d": "data/tools/fishmount.p3d",
-    "texture": "data/tools/fishmount_co.paa"
+    "p3d": "data/tools/smallfishmount.p3d",
+    "texture": "data/tools/smallfishmount_co.paa",
+    "materials": [
+      "data/tools/smallfishmount.rvmat"
+    ],
+    "view": "Y",
+    "flip_h": true
   },
   {
     "name": "geb_WormContainer",
@@ -324,57 +804,127 @@
     "view": "ISO:X"
   },
   {
+    "name": "geb_YellowFishGloves",
+    "p3d": "\\dz\\characters\\gloves\\nbc_gloves_g.p3d",
+    "texture": "data/clothes/geb_yellowfishgloves_co.paa",
+    "materials": [
+      "data/clothes/geb_fishgloves.rvmat"
+    ],
+    "view": "ISO:Z"
+  },
+  {
+    "name": "geb_YellowFishHat",
+    "p3d": "\\dz\\characters\\headgear\\baseballcap_m.p3d",
+    "texture": "data/clothes/geb_yellowfishhat_co.paa",
+    "view": "ISO:Z:290"
+  },
+  {
     "name": "geb_YellowFishKnife",
     "p3d": "data/tools/fishknife.p3d",
-    "texture": "data/tools/fishknife_yellow_co.paa"
+    "texture": "data/tools/fishknife_yellow_co.paa",
+    "materials": [
+      "data/tools/fishknife.rvmat"
+    ],
+    "tilt": 35
+  },
+  {
+    "name": "geb_YellowFishRaincoat",
+    "p3d": "\\dz\\characters\\tops\\raincoat_g.p3d",
+    "texture": "data/clothes/geb_yellowfishraincoat_ground_co.paa",
+    "view": "Z"
+  },
+  {
+    "name": "geb_YellowFishShirt",
+    "p3d": "\\dz\\characters\\tops\\tshirt_ground.p3d",
+    "texture": "data/clothes/geb_yellowfishshirt_ground_co.paa",
+    "view": "Z"
+  },
+  {
+    "name": "geb_YellowFishWellies",
+    "p3d": "\\dz\\characters\\shoes\\wellies_m.p3d",
+    "texture": "data/clothes/geb_yellowfishwellies_co.paa",
+    "view": "ISO:Z:340"
+  },
+  {
+    "name": "geb_YellowFishingRod",
+    "p3d": "\\dz\\gear\\tools\\fishing_rod.p3d",
+    "texture": "data/tools/fishingrod_yellow_co.paa",
+    "flip_v": true,
+    "tilt": 35
+  },
+  {
+    "name": "geb_YellowTackle",
+    "p3d": "data/tackle/largetackle.p3d",
+    "texture": "data/tackle/largetackle_yellow_co.paa",
+    "view": "ISO:X"
   },
   {
     "name": "geb_jonboat_camo_desert",
     "p3d": "data/vehicles/geb_jonboat.p3d",
-    "texture": "data/vehicles/geb_jonboat_desertcamo.paa",
+    "texture": "data/vehicles/geb_jonboat_desertcamo_co.paa",
     "textures": [
-      "data/vehicles/geb_jonboat_motor_black.paa",
-      "data/vehicles/geb_jonboat_desertcamo.paa"
+      "data/vehicles/geb_jonboat_motor_black_co.paa",
+      "data/vehicles/geb_jonboat_desertcamo_co.paa"
+    ],
+    "materials": [
+      "data/vehicles/geb_jonboat_motor.rvmat",
+      "data/vehicles/geb_jonboat_desertcamo.rvmat"
     ],
     "view": "ISO:Z"
   },
   {
     "name": "geb_jonboat_camo_forest",
     "p3d": "data/vehicles/geb_jonboat.p3d",
-    "texture": "data/vehicles/geb_jonboat_forestcamo.paa",
+    "texture": "data/vehicles/geb_jonboat_forestcamo_co.paa",
     "textures": [
-      "data/vehicles/geb_jonboat_motor_black.paa",
-      "data/vehicles/geb_jonboat_forestcamo.paa"
+      "data/vehicles/geb_jonboat_motor_black_co.paa",
+      "data/vehicles/geb_jonboat_forestcamo_co.paa"
+    ],
+    "materials": [
+      "data/vehicles/geb_jonboat_motor.rvmat",
+      "data/vehicles/geb_jonboat_forestcamo.rvmat"
     ],
     "view": "ISO:Z"
   },
   {
     "name": "geb_jonboat_camo_snow",
     "p3d": "data/vehicles/geb_jonboat.p3d",
-    "texture": "data/vehicles/geb_jonboat_snowcamo.paa",
+    "texture": "data/vehicles/geb_jonboat_snowcamo_co.paa",
     "textures": [
-      "data/vehicles/geb_jonboat_motor_black.paa",
-      "data/vehicles/geb_jonboat_snowcamo.paa"
+      "data/vehicles/geb_jonboat_motor_black_co.paa",
+      "data/vehicles/geb_jonboat_snowcamo_co.paa"
+    ],
+    "materials": [
+      "data/vehicles/geb_jonboat_motor.rvmat",
+      "data/vehicles/geb_jonboat_snowcamo.rvmat"
     ],
     "view": "ISO:Z"
   },
   {
     "name": "geb_jonboat_grayaluminum",
     "p3d": "data/vehicles/geb_jonboat.p3d",
-    "texture": "data/vehicles/geb_jonboat_grayaluminum.paa",
+    "texture": "data/vehicles/geb_jonboat_grayaluminum_co.paa",
     "textures": [
-      "data/vehicles/geb_jonboat_motor_white.paa",
-      "data/vehicles/geb_jonboat_grayaluminum.paa"
+      "data/vehicles/geb_jonboat_motor_white_co.paa",
+      "data/vehicles/geb_jonboat_grayaluminum_co.paa"
+    ],
+    "materials": [
+      "data/vehicles/geb_jonboat_motor_white.rvmat",
+      "data/vehicles/geb_jonboat_grayaluminum.rvmat"
     ],
     "view": "ISO:Z"
   },
   {
     "name": "geb_jonboat_greenaluminum",
     "p3d": "data/vehicles/geb_jonboat.p3d",
-    "texture": "data/vehicles/geb_jonboat_greenaluminum.paa",
+    "texture": "data/vehicles/geb_jonboat_greenaluminum_co.paa",
     "textures": [
-      "data/vehicles/geb_jonboat_motor_white.paa",
-      "data/vehicles/geb_jonboat_greenaluminum.paa"
+      "data/vehicles/geb_jonboat_motor_white_co.paa",
+      "data/vehicles/geb_jonboat_greenaluminum_co.paa"
+    ],
+    "materials": [
+      "data/vehicles/geb_jonboat_motor_white.rvmat",
+      "data/vehicles/geb_jonboat.rvmat"
     ],
     "view": "ISO:Z"
   }

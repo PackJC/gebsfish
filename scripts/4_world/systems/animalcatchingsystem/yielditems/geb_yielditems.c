@@ -8,6 +8,26 @@
 
 */
 
+// Vanilla times each fishing cycle (5.5-6.5 s, by the hour) from the clock of
+// whichever side runs it. A cast started while the client's and the server's
+// clocks sat either side of an hour where the length changes ran different
+// cycles on the two sides (0.3-0.5 s apart): signals and bite rolls fell on
+// different ticks, and the client showed bites that didn't land. The hour now
+// comes from the cast's snapshot, the same on both sides (vanilla's clock only
+// without a catching context, which vanilla never does).
+modded class FishYieldItemBase {
+	override float GetCycleTimeForYieldItem(CatchingContextFishingRodAction ctx) {
+		int hour;
+		if (ctx)
+			hour = ctx.GebGetCastHour();
+		else
+			hour = Math.Floor(g_Game.GetDayTime());
+		if (hour < 0 || hour > 23)
+			hour = 12;
+		return Math.Lerp(UAFishingConstants.CYCLE_LENGTH_MIN, UAFishingConstants.CYCLE_LENGTH_MAX, m_HourlyCycleLengthCoefs[hour]);
+	}
+}
+
 class GebYieldFishBase extends FishYieldItemBase {
 	// Per-species weather multipliers cached at registration time, mirroring
 	// how m_QualityBase / m_EnviroMask / m_MethodMask are already cached.

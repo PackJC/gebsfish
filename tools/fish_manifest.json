@@ -64,7 +64,7 @@
     "name": "geb_SunFish",
     "p3d": "data/fish/bluegill.p3d",
     "texture": "data/fish/redbreastsunfish_co.paa",
-    "material": "data/fish/bluegill.rvmat"
+    "material": "data/fish/redbreastsunfish.rvmat"
   },
   {
     "name": "geb_WhiteBass",
@@ -150,13 +150,15 @@
   {
     "name": "geb_AmericanBullFrog",
     "p3d": "data/fish/americanbullfrog.p3d",
-    "texture": null,
+    "texture": "data/fish/americanbullfrog_co.paa",
+    "material": "data/fish/americanbullfrog.rvmat",
     "roll": true
   },
   {
     "name": "geb_RedSalamander",
     "p3d": "data/fish/redsalamander.p3d",
-    "texture": null
+    "texture": "data/fish/redsalamander_co.paa",
+    "material": "data/fish/redsalamander.rvmat"
   },
   {
     "name": "geb_BlueGill",
@@ -270,10 +272,16 @@
     "material": "data/fish/bluemarlin.rvmat"
   },
   {
-    "name": "geb_Bonita",
-    "p3d": "data/fish/bonita.p3d",
-    "texture": "data/fish/bonita_co.paa",
-    "material": "data/fish/bonita.rvmat"
+    "name": "geb_PacificBonito",
+    "p3d": "data/fish/pacificbonito.p3d",
+    "texture": "data/fish/pacificbonito_co.paa",
+    "material": "data/fish/pacificbonito.rvmat"
+  },
+  {
+    "name": "geb_GreatBarracuda",
+    "p3d": "data/fish/greatbarracuda.p3d",
+    "texture": "data/fish/greatbarracuda_co.paa",
+    "material": "data/fish/greatbarracuda.rvmat"
   },
   {
     "name": "geb_CherrySalmon",
@@ -397,22 +405,26 @@
   {
     "name": "geb_BloodClam",
     "p3d": "data/fish/bloodclam.p3d",
-    "texture": null
+    "texture": "data/fish/bloodclam_co.paa",
+    "material": "data/fish/bloodclam.rvmat"
   },
   {
     "name": "geb_Mussel",
     "p3d": "data/fish/mussel.p3d",
-    "texture": null
+    "texture": "data/fish/mussel_inside_co.paa",
+    "material": "data/fish/mussel_inside.rvmat"
   },
   {
     "name": "geb_BlackDevilSnail",
     "p3d": "data/fish/blackdevilsnail.p3d",
-    "texture": null
+    "texture": "data/fish/blackdevilsnail_co.paa",
+    "material": "data/fish/blackdevilsnail.rvmat"
   },
   {
     "name": "geb_StarFish",
     "p3d": "data/fish/starfish.p3d",
-    "texture": null
+    "texture": "data/fish/starfish_co.paa",
+    "material": "data/fish/starfish.rvmat"
   },
   {
     "name": "geb_KingCrab",
@@ -429,7 +441,8 @@
   {
     "name": "geb_BlueJellyFish",
     "p3d": "data/fish/bluejellyfish.p3d",
-    "texture": null
+    "texture": "data/fish/bluejellyfish_co.paa",
+    "material": "data/fish/bluejellyfish.rvmat"
   },
   {
     "name": "geb_AmericanLobster",

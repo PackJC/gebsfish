@@ -7,6 +7,8 @@ modded class PluginRecipesManager {
         RegisterRecipe(new RepairBambooFishingNet);
         RegisterRecipe(new CraftHookFromWire);
         RegisterRecipe(new CraftFishMount);
+        RegisterRecipe(new CraftMediumFishMount);
+        RegisterRecipe(new CraftLargeFishMount);
         RegisterRecipe(new GebPrepareFishData);
     }
 };

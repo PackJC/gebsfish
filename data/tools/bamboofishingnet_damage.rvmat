@@ -2,8 +2,8 @@ ambient[] = { 1, 1, 1, 1 };
 diffuse[] = { 1, 1, 1, 1 };
 forcedDiffuse[] = { 0, 0, 0, 1 };
 emmisive[] = { 0, 0, 0, 1 };
-specular[] = { 0.16, 0.16, 0.16, 1 };
-specularPower = 45;
+specular[] = { 0.3, 0.3, 0.3, 1 };
+specularPower = 30;
 PixelShaderID = "Super";
 VertexShaderID = "Super";
 class Stage1 {
@@ -57,7 +57,7 @@ class Stage5 {
 	};
 };
 class Stage6 {
-	texture = "#(ai,64,64,1)fresnel(1.5,0.45)";
+	texture = "#(ai,64,64,1)fresnel(0.6,0.2)";
 	uvSource = "tex";
 	class uvTransform {
 		aside[] = { 1, 0, 0 };
@@ -80,4 +80,3 @@ class Stage7 {
 class StageTI {
 	texture="dz\data\data\env_land_co.paa";
 };
-
