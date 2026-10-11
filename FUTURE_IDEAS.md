@@ -47,23 +47,9 @@ server in lockstep and both must see the same value.
   could get their own category as the clothes did (2026-10-05).
 - **Config backups.** A `.bak` via `CopyFile` before each config overwrite
   (there's no rename native, and the writer truncates first).
-- **Server-side net and spear checks.** The net trusts the client's water
-  type, and the spear its water type and depth (its water-surface check does
-  run on the server); re-check them from the cursor position on the server
-  (`CCTWaterSurfaceEx`, as vanilla fishing does). Dig-bugs and the net could
-  also use vanilla dig-worms' free-space and on-ground checks.
 
 ## Code health
 
-- **Config sections.** Pre-allocate nested sections the vanilla way
-  (`cfggameplaydatajson.c`: `ref X Section = new X;`). The loader fills an
-  object that already exists in place, so a field deleted from a section would
-  keep its default instead of loading as 0 (settled from the engine
-  2026-10-09, MAYBE_ISSUES #26). Lists still need GebJsonKeys' key checks: the
-  loader empties a list before reading it, and builds list rows without their
-  defaults. Check the clients first: before the server's config arrives they
-  hold `new GeneralConfig()`, so pre-allocated sections there would stop being
-  null.
 - **Very rare chances elsewhere.** Engine `rand()` is 15-bit; anything that must
   go below 1 in 32,768 needs the two-draw roll the treasure spawner now uses.
 
@@ -121,7 +107,7 @@ of the point in `GebFishingSnapshot`; nothing new goes over the network.
   through it; the hole refreezes after a while; cold-water species dominate.
 - A new action on vanilla `Iceaxe` / `Pickaxe` when `SurfaceGetType` returns
   `sakhal_ice_lake` / `sakhal_ice_sea` (not liquid in
-  `DZ\surfaces_sakhal\config.cpp`, so vanilla fishing never targets them)
+  `DZ/surfaces_sakhal/config.cpp`, so vanilla fishing never targets them)
   spawns a short-lived `geb_IceHole`, with vanilla's mining animation
   (`CMD_ACTIONFB_MINEROCK`). `ActionFishingIceHole extends
   ActionFishingNew` with a `CCTObject` target, deciding sea or lake from the

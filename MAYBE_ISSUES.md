@@ -101,8 +101,8 @@ Fixed 2026-10-06 on Cole's word ("fix all these"):
 - A23: the Yellow Crankbait's 188 clear-lip faces use their own flat
   yellowcrank_lip.rvmat (+ _damage/_destruct, copies of the purple lure's), named
   in its healthLevels; binarize gives the same warnings as before.
-- A27: exclude.lst (DayZ Tools\Bin\PboUtils) also lists the top-level
-  Workbench\, .claude\, .vs\, .idea\ and .github\ folders and the root tools\
+- A27: exclude.lst (DayZ Tools/Bin/PboUtils) also lists the top-level
+  Workbench/, .claude/, .vs/, .idea/ and .github/ folders and the root tools/
   JSON files by name (*_manifest.json, *vanilla_mount_poses.json), never a
   tools folder pattern. Both tool settings files were backed up first.
 - B17: the config editor no longer blanks a tab on a row it can't draw (a null
@@ -1193,9 +1193,9 @@ table still returns no catch; add sea/both entries if sea netting is desired.
     row" error appears. With Cole's test profile (both rows present) the old row
     is dropped instead.
 108. (2026-10-06) Packaging (A4, A27): rebuild the PBO with AddonBuilder and
-    list it (BankRev or PBO Manager): data\sounds\*.ogg are inside;
-    Workbench\, tools\*_manifest.json and tools\vanilla_mount_poses.json are
-    not, and data\tools plus the two script folders called tools still are. In
+    list it (BankRev or PBO Manager): data/sounds/*.ogg are inside;
+    Workbench/, tools/*_manifest.json and tools/vanilla_mount_poses.json are
+    not, and data/tools plus the two script folders called tools still are. In
     game, a predator spawn plays the warning sound for players within
     PredatorWarningSoundRadius (50 m) and not beyond it.
 109. (2026-10-06) Yellow Crankbait lip (A23): up close in hands and on the
@@ -1208,7 +1208,7 @@ table still returns no catch; add sea/both entries if sea netting is desired.
     Craft each fish mount with room in a backpack: the small one lands in the
     backpack; with a full inventory it drops beside you, never into a cooler,
     Bait Bucket or tackle box.
-129. (2026-10-09) Config sections (#26): back up Documents\DayZServer\Gebs.
+129. (2026-10-09) Config sections (#26): back up Documents/DayZServer/Gebs.
     In general.json delete the WeatherSettings and TreasureSettings blocks, set
     "PredatorSettings": null, delete CraftFishMount from RecipeToggles, delete
     only Catches from DigBugsSettings and set DigWormsSettings.Catches to [];
@@ -1279,7 +1279,7 @@ table still returns no catch; add sea/both entries if sea netting is desired.
 121. (2026-10-08) Slot icons (F38): look at a jon boat's attachments: both
     deck spots show a crate. Look at an empty fish mount: its slot shows a
     white fish (a bass side-on). A blank slot there means the mod's imageset
-    didn't load: gui\gebsfish.imageset has to be in the PBO, and AddonBuilder
+    didn't load: gui/gebsfish.imageset has to be in the PBO, and AddonBuilder
     only copies *.imageset when it is in its "files to copy directly" list.
 120. (2026-10-08) Bite timing (A9): on a dedicated server with time
     acceleration, cast just before 05:00 and just before 17:00 (two of the
