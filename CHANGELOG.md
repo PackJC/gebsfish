@@ -4,8 +4,11 @@
 
 ### Requirements & Compatibility
 
-- DayZ 1.29 compatibility
+- DayZ 1.30 compatibility. This version no longer loads on 1.29
 - DayZ 1.30: the mod's three script folders are listed with forward slashes in `config.cpp`. 1.30 Experimental silently skips a script folder written with backslashes, so none of the mod's scripts loaded there (no fishing, nets, bug digging, rod repair, fish recipes or config files) while its items still existed; forward slashes load on 1.29 and 1.30 alike
+- DayZ 1.30: the mod compiles there. 1.30 removed the field holding an item's seconds since its last Central Economy update (`m_ElapsedSinceLastUpdate`) and never calls `OnCEUpdate`, which live bait aging and cooler chilling ran on, so the World scripts failed to compile and the server would not start. Both now run on 1.30's `OnCEIterate`
+- DayZ 1.30: spear fishing checks the water with the game's new `CCTLiquid` condition, as the rod does, instead of the obsolete `CCTWaterSurfaceEx`, and refuses wells and pumps the way the rod does. Reach (3 m) and the depth limit are unchanged, and the check still runs once at the start of a stab
+- DayZ 1.30: logs older than 3 days are still deleted, and the pre-3.3 file sweep still finds its files. 1.30's `FindFile` reads its last argument as the file system to search (Bohemia's DZEXP-134, not fixed before the 1.30 release), so `FindFileFlags.ALL` listed the server's own folder instead of `$profile:`; the mod now passes -1, which searches the normal way. The logger also keeps the names of its logs in `Gebs/logs/sessions.txt` and prunes from that list too, so cleanup keeps working if the -1 stops working once Bohemia fixes `FindFile`
 - **Community Framework (CF) is now a required dependency** — the RPC system migrated to CF's RPCManager
 - `DZ_Weapons_Melee` added as a required addon; all fish now have melee functionality (matching vanilla)
 - New map yield support: Deadfall (credits: DapperDan)

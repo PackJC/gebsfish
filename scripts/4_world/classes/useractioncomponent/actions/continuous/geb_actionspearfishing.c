@@ -14,6 +14,17 @@
 // alone in OnFinishProgressServer -- nothing here feeds the synced catch maths
 // the rod uses, so client and server can't disagree about it.
 
+// The water target vanilla's rod uses (CCTLiquid replaced the obsolete
+// CCTWaterSurfaceEx in 1.30). CCTLiquid re-runs its checks on every frame of
+// the action, a line-of-sight ray from the head included; the spear checks
+// once at the start, so a stab isn't cut short while the player bends over
+// the water.
+class GebCCTSpearWater : CCTLiquid {
+	override bool CanContinue(PlayerBase player, ActionTarget target) {
+		return true;
+	}
+}
+
 class ActionGebSpearFishingCB : ActionContinuousBaseCB {
 	override void CreateActionComponent() {
 		m_ActionData.m_ActionComponent = new CAContinuousTime(UATimeSpent.DIG_WORMS * 0.6);
@@ -42,7 +53,11 @@ class ActionGebSpearFishing : ActionGebWaterBase {
 
 	override void CreateConditionComponents() {
 		m_ConditionItem = new CCINonRuined;
-		m_ConditionTarget = new CCTWaterSurfaceEx(SPEAR_REACH, LIQUID_SALTWATER | LIQUID_FRESHWATER);
+		// SPEAR_REACH both ways: to the water surface, and in height between
+		// the player's feet and that surface. No sea-level cursor fallback:
+		// that moves the aim point for the rod's long cast, and the spear needs
+		// the spot actually aimed at (its depth is measured there).
+		m_ConditionTarget = new GebCCTSpearWater(LIQUID_SALTWATER | LIQUID_FRESHWATER, SPEAR_REACH, SPEAR_REACH);
 	}
 
 	override bool HasTarget() {
@@ -69,6 +84,13 @@ class ActionGebSpearFishing : ActionGebWaterBase {
 
 		SpearFishingConf settings = GetSpearSettings();
 		if (!settings || !settings.Enable)
+			return false;
+
+		// CCTLiquid also accepts wells, pumps and other water-source objects.
+		// Open water only, as vanilla's rod decides it; this also runs on the
+		// server.
+		CCTLiquid liquid = CCTLiquid.Cast(m_ConditionTarget);
+		if (liquid && (liquid.GetWaterSourceType() != EWaterSourceObjectType.NONE || liquid.GetLiquidSourceType() != ELiquidSourceObjectType.NONE))
 			return false;
 
 		// The dedicated server takes the water type from the action payload,

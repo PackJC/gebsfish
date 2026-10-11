@@ -98,7 +98,7 @@ class GebsfishMigration {
     protected static bool IsDirEmpty(string dir) {
         string fileName;
         FileAttr attr;
-        FindFileHandle handle = FindFile(dir + "/*", fileName, attr, FindFileFlags.ALL);
+        FindFileHandle handle = FindFile(dir + "/*", fileName, attr, GebsfishLogger.FIND_FILE_FLAGS);
         if (!handle)
             return true;              // nothing matched at all
 
@@ -134,7 +134,7 @@ class GebsfishMigration {
     protected static int MoveDirFiles(string fromDir, string toDir) {
         string fileName;
         FileAttr attr;
-        FindFileHandle handle = FindFile(fromDir + "*", fileName, attr, FindFileFlags.ALL);
+        FindFileHandle handle = FindFile(fromDir + "*", fileName, attr, GebsfishLogger.FIND_FILE_FLAGS);
         if (!handle)
             return 0;
 

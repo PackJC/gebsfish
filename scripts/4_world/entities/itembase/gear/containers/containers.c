@@ -373,7 +373,7 @@ class geb_Cooler_base : geb_FilteredContainerBase {
 	protected const float COOLING_STEP_C    = 1.5;
 	protected const float COOLING_TICK_SECS = 60.0;
 
-	// Seconds of cooling not yet spent on a tick (see OnCEUpdate).
+	// Seconds of cooling not yet spent on a tick (see OnCEIterate).
 	protected float m_CoolingElapsed;
 
 	// Vanilla skips ambient temperature processing for any item whose
@@ -396,12 +396,12 @@ class geb_Cooler_base : geb_FilteredContainerBase {
 	// over the seconds since the cooler's last one; they add up to whole
 	// cooling ticks, so contents cool at the same rate however often the
 	// update comes. A long gap catches up at most ten ticks at once.
-	override void OnCEUpdate() {
-		super.OnCEUpdate();
+	override void OnCEIterate(float currentTime, float elapsedTime) {
+		super.OnCEIterate(currentTime, elapsedTime);
 		// A ruined cooler no longer chills; its contents warm up as anywhere.
-		if (!g_Game.IsServer() || m_ElapsedSinceLastUpdate <= 0 || IsRuined())
+		if (!g_Game.IsServer() || elapsedTime <= 0 || IsRuined())
 			return;
-		m_CoolingElapsed += m_ElapsedSinceLastUpdate;
+		m_CoolingElapsed += elapsedTime;
 		int ticks = Math.Floor(m_CoolingElapsed / COOLING_TICK_SECS);
 		if (ticks <= 0)
 			return;

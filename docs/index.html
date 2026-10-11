@@ -1066,8 +1066,11 @@ junk weight <span class="op">=</span> fishTotal <span class="op">×</span> JunkS
   <details class="faq-item" open><summary>v3.3.3 — Unreleased</summary><div class="chg">
     <h3>Requirements &amp; Compatibility</h3>
     <ul>
-      <li>DayZ 1.29 compatibility</li>
+      <li>DayZ 1.30 compatibility. This version no longer loads on 1.29</li>
       <li>DayZ 1.30: the mod's three script folders are listed with forward slashes in <code>config.cpp</code>. 1.30 Experimental silently skips a script folder written with backslashes, so none of the mod's scripts loaded there (no fishing, nets, bug digging, rod repair, fish recipes or config files) while its items still existed; forward slashes load on 1.29 and 1.30 alike</li>
+      <li>DayZ 1.30: the mod compiles there. 1.30 removed the field holding an item's seconds since its last Central Economy update (<code>m_ElapsedSinceLastUpdate</code>) and never calls <code>OnCEUpdate</code>, which live bait aging and cooler chilling ran on, so the World scripts failed to compile and the server would not start. Both now run on 1.30's <code>OnCEIterate</code></li>
+      <li>DayZ 1.30: spear fishing checks the water with the game's new <code>CCTLiquid</code> condition, as the rod does, instead of the obsolete <code>CCTWaterSurfaceEx</code>, and refuses wells and pumps the way the rod does. Reach (3 m) and the depth limit are unchanged, and the check still runs once at the start of a stab</li>
+      <li>DayZ 1.30: logs older than 3 days are still deleted, and the pre-3.3 file sweep still finds its files. 1.30's <code>FindFile</code> reads its last argument as the file system to search (Bohemia's DZEXP-134, not fixed before the 1.30 release), so <code>FindFileFlags.ALL</code> listed the server's own folder instead of <code>$profile:</code>; the mod now passes -1, which searches the normal way. The logger also keeps the names of its logs in <code>Gebs/logs/sessions.txt</code> and prunes from that list too, so cleanup keeps working if the -1 stops working once Bohemia fixes <code>FindFile</code></li>
       <li><b>Community Framework (CF) is now a required dependency</b> — the RPC system migrated to CF's RPCManager</li>
       <li><code>DZ_Weapons_Melee</code> added as a required addon; all fish now have melee functionality (matching vanilla)</li>
       <li>New map yield support: Deadfall (credits: DapperDan)</li>

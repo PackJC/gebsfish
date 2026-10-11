@@ -6,7 +6,18 @@ enum GebsfishLogLevel {
 };
 
 class GebsfishLogger {
+    // The last argument for every FindFile call in the mod. 1.30's script
+    // binding hands it to the engine as the file system to search rather than
+    // as flags (Bohemia's DZEXP-134): FindFileFlags.ALL is 2, which picks the
+    // server's own folder, while -1 searches the normal way, so $profile:
+    // paths resolve again. Once Bohemia fixes the binding, -1 is no valid
+    // flag and listings may come back empty again; the log pruner still has
+    // sessions.txt then.
+    static const int FIND_FILE_FLAGS = -1;
+
     private static const string LOG_DIR = "$profile:Gebs/logs";
+    // Names of the session logs still on disk, one per line (see PruneOldLogs).
+    private static const string LOG_INDEX = "$profile:Gebs/logs/sessions.txt";
     // Session logs older than this are deleted on startup (see PruneOldLogs).
     private static const int LOG_RETENTION_DAYS = 3;
     private static string m_SessionFilePath = "";
@@ -27,7 +38,8 @@ class GebsfishLogger {
         if (safeTag == string.Empty)
             safeTag = "gebsfish";
 
-        m_SessionFilePath = LOG_DIR + "/" + BuildDateTimeCompact() + "_" + safeTag + ".log";
+        string sessionName = BuildDateTimeCompact() + "_" + safeTag + ".log";
+        m_SessionFilePath = LOG_DIR + "/" + sessionName;
 
         FileHandle file = OpenFile(m_SessionFilePath, FileMode.WRITE);
         if (file == 0) {
@@ -51,7 +63,7 @@ class GebsfishLogger {
 
         // Safe to log from here: m_Initialized is set, so the Info() below
         // re-enters Init() and returns immediately instead of recursing.
-        PruneOldLogs();
+        PruneOldLogs(sessionName);
     }
 
     // Delete session logs older than LOG_RETENTION_DAYS so an unattended server
@@ -75,42 +87,90 @@ class GebsfishLogger {
         return true;
     }
 
-    private static void PruneOldLogs() {
+    // Finding the files: a folder listing (see FIND_FILE_FLAGS for why it
+    // passes -1), plus the names in sessions.txt, which the logger keeps so
+    // pruning doesn't depend on FindFile alone while Bohemia's DZEXP-134 is
+    // open. A name a broken listing takes from another folder doesn't open
+    // under Gebs/logs and is skipped, so it can't reach other files.
+    private static void PruneOldLogs(string sessionName) {
         int year, month, day;
         GetYearMonthDayUTC(year, month, day);   // filenames are UTC, so compare in UTC
         int today = DayNumber(year, month, day);
 
-        string fileName;
-        FileAttr attr;
-        FindFileHandle handle = FindFile(LOG_DIR + "/*.log", fileName, attr, FindFileFlags.ALL);
-        if (!handle)
-            return;
+        array<string> names = ReadLogIndex();
+        if (names.Find(sessionName) == -1)
+            names.Insert(sessionName);
 
         // Collect first, delete after: mutating a live directory listing risks
         // skipping entries (same reason GebsfishMigration.MoveDirFiles does this).
-        array<string> doomed = new array<string>();
-        bool more = true;
-        while (more) {
-            if (fileName != "" && IsRegularFile(LOG_DIR + "/" + fileName)) {
-                int fileDay = ParseLogDayNumber(fileName);
-                if (fileDay > 0 && (today - fileDay) >= LOG_RETENTION_DAYS)
-                    doomed.Insert(fileName);
+        string fileName;
+        FileAttr attr;
+        FindFileHandle handle = FindFile(LOG_DIR + "/*.log", fileName, attr, FIND_FILE_FLAGS);
+        if (handle) {
+            bool more = true;
+            while (more) {
+                if (fileName != "" && names.Find(fileName) == -1)
+                    names.Insert(fileName);
+                more = FindNextFile(handle, fileName, attr);
             }
-            more = FindNextFile(handle, fileName, attr);
+            CloseFindFile(handle);
         }
-        CloseFindFile(handle);
 
+        array<string> kept = new array<string>();
         int deleted = 0;
-        foreach (string name : doomed) {
-            string full = LOG_DIR + "/" + name;
-            if (full == m_SessionFilePath)      // never the live session file
+        foreach (string name : names) {
+            int fileDay = ParseLogDayNumber(name);
+            if (fileDay <= 0 || !IsPlainLogName(name))
                 continue;
-            if (DeleteFile(full))
+            string full = LOG_DIR + "/" + name;
+            if (!IsRegularFile(full))
+                continue;                       // already gone, or not in Gebs/logs
+            // Never the live session file; a log that won't delete stays
+            // listed and is tried again next start.
+            if (full != m_SessionFilePath && (today - fileDay) >= LOG_RETENTION_DAYS && DeleteFile(full)) {
                 deleted++;
+                continue;
+            }
+            kept.Insert(name);
         }
+        WriteLogIndex(kept);
 
         if (deleted > 0)
             Info("Removed " + deleted + " log file(s) older than " + LOG_RETENTION_DAYS + " days.", "Logs");
+    }
+
+    // A bare file name ending in .log. sessions.txt is a text file anyone with
+    // access to the profile can edit, so nothing from it reaches DeleteFile
+    // with a folder in it.
+    private static bool IsPlainLogName(string name) {
+        if (name.Contains("/") || name.Contains("\\") || name.Contains(".."))
+            return false;
+        int len = name.Length();
+        return len > 4 && name.Substring(len - 4, 4) == ".log";
+    }
+
+    private static array<string> ReadLogIndex() {
+        array<string> names = new array<string>();
+        FileHandle file = OpenFile(LOG_INDEX, FileMode.READ);
+        if (!file)
+            return names;
+        string line;
+        while (FGets(file, line) >= 0) {
+            line = line.Trim();
+            if (line != "" && names.Find(line) == -1)
+                names.Insert(line);
+        }
+        CloseFile(file);
+        return names;
+    }
+
+    private static void WriteLogIndex(array<string> names) {
+        FileHandle file = OpenFile(LOG_INDEX, FileMode.WRITE);
+        if (!file)
+            return;
+        foreach (string entry : names)
+            FPrintln(file, entry);
+        CloseFile(file);
     }
 
     // Day number for the YYYYMMDD prefix of a log filename, or -1 if the name

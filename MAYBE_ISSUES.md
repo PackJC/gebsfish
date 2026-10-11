@@ -1201,6 +1201,16 @@ table still returns no catch; add sea/both entries if sea netting is desired.
 109. (2026-10-06) Yellow Crankbait lip (A23): up close in hands and on the
     ground, the clear lip reads as smooth clear plastic (no body relief or
     sheen across it), as on the Purple Crankbait, also when damaged and ruined.
+131. (2026-10-11) DayZ 1.30 (bzed's version-130 notes): boot on 1.30 (on
+    Experimental, CF-Test instead of CF until 1.30 stable) and read
+    script_*.log: no (E) from gebsfish, and no "obsolete" warning for
+    OnCEUpdate or CCTWaterSurfaceEx. A loose worm dies in about 90 minutes but
+    lives on in a Worm Container, and fish in a cooler go cold, then freeze.
+    The spear stabs in a pond and the sea, from the bank and wading, up to 1 m
+    deep, and offers nothing on a well or pump. Logs (FindFile with -1): copy
+    a gebsfish log in Gebs/logs twice, give both a date prefix four days back
+    and add only one name to sessions.txt; after a restart both are gone and
+    sessions.txt lists only the current logs.
 130. (2026-10-09) Crabs and mounts (D1, E2): hold a king crab
     and a snow crab: both use the one-handed carp hold like a lobster (walk,
     run, crouch, prone, first and third person; the snow crab model lies flat,

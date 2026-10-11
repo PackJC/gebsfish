@@ -221,7 +221,7 @@ modded class Edible_Base {
 // (refrigerated bait keeps, like real anglers do with worms). Tackle boxes do
 // NOT pause it -- the dedicated containers are the point.
 //
-// It runs on the Central Economy's periodic item update (OnCEUpdate), the
+// It runs on the Central Economy's periodic item update (OnCEIterate), the
 // same clock vanilla uses for food rot and item temperature, rather than a
 // timer per worm: hundreds of loose worms meant hundreds of timers ticking
 // every frame, and dead ones kept ticking. The update hands over the seconds
@@ -231,14 +231,14 @@ modded class Edible_Base {
 modded class Worm {
 	protected const float BAIT_LIFETIME_SECS = 5400.0;  // 90 minutes
 
-	override void OnCEUpdate() {
-		super.OnCEUpdate();
+	override void OnCEIterate(float currentTime, float elapsedTime) {
+		super.OnCEIterate(currentTime, elapsedTime);
 		if (!g_Game.IsServer() || IsRuined())
 			return;
 		// Artificial lure: never dies.
 		if (IsKindOf("geb_RubberWorm"))
 			return;
-		if (m_ElapsedSinceLastUpdate <= 0 || GebsfishIsBaitPreserved())
+		if (elapsedTime <= 0 || GebsfishIsBaitPreserved())
 			return;
 		// The server's food decay setting (FoodDecay in the CE's globals.xml)
 		// sets the pace, as it does for vanilla food rot: 0 stops the clock,
@@ -247,7 +247,7 @@ modded class Worm {
 		if (decay <= 0)
 			return;
 
-		float step = GetMaxHealth("", "") * (m_ElapsedSinceLastUpdate / BAIT_LIFETIME_SECS) * decay;
+		float step = GetMaxHealth("", "") * (elapsedTime / BAIT_LIFETIME_SECS) * decay;
 		DecreaseHealth("", "", step);
 	}
 

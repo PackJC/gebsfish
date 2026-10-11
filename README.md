@@ -10,7 +10,7 @@
 
 <p align="center">
   <img alt="Mod Version" src="https://img.shields.io/badge/Mod-v3.3.3-blue?style=for-the-badge">
-  <img alt="DayZ Version" src="https://img.shields.io/badge/DayZ-v1.29-teal?style=for-the-badge">
+  <img alt="DayZ Version" src="https://img.shields.io/badge/DayZ-v1.30-teal?style=for-the-badge">
   <img alt="Workshop Subscribers" src="https://img.shields.io/steam/subscriptions/2757509117?style=for-the-badge&color=purple&label=Workshop%20Subs">
   <a href="https://packjc.github.io/gebsfish/"><img alt="Website" src="https://img.shields.io/badge/Website-Gebsfish%20Wiki-ff8c00?style=for-the-badge"></a>
 </p>
