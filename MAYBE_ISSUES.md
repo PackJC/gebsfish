@@ -4,8 +4,7 @@ Living list of unresolved maybe-issues. Delete entries as they are resolved.
 
 Latest review: 2026-10-09, a bug hunt over every script, config, material,
 tool and wiki page, then every open finding fixed or decided on Cole's word
-("fix it all"; both in the list below). Still open: A36 (commit the untracked
-files). Before it, 2026-10-05, evening — a
+("fix it all"; both in the list below). Nothing is open. Before it, 2026-10-05, evening — a
 fifth full pass after the fish mount
 rework (scripts, configs, models, materials and the stringtable, the docs, the
 wiki, the config editor and the tools), checked against the decompiled game;
@@ -342,6 +341,9 @@ Fixed 2026-10-06 on Cole's word ("fix all these"):
   and treasure loot (the treasure now checks a container an earlier slot put
   inside, too); a vanilla fish with no fish.json row gives vanilla's two
   fillets. E8 (hidden aliases on the ground) went to Watch, accepted.
+- A36 (2026-10-11): everything committed and pushed to testing on Cole's word
+  (d1f744c, then d592cfd merging PR #118); nothing the mod or the wiki needs
+  is untracked.
 - B24: the ten-colour rods, raincoats and wellies have their own descriptions
   (one key per colour, all 13 languages), in game and in the wiki gallery.
 
@@ -501,37 +503,7 @@ needs a test to confirm. Fixed the same day and taken off this list: A1, A5,
 A6, A7, A12, A15, A17, A21, A22 and A26 (see the CHANGELOG; runtime cases
 63-72 check them). Fixed 2026-10-05: A28-A34 and A25's container weights
 (runtime cases 75-77). Fixed 2026-10-09: A2 and A16; A11 is kept as it was,
-under Watch.
-
-### A36. 313 new files are untracked in git (and 193 deleted ones unstaged)
-On 2026-10-09 the configs audit counted 234 untracked files that the configs,
-materials and models use (all of gui\, 232 under data\: clothes 65, fish 63,
-tools 43, tackle 33, vehicles 28); they have to go in with the configs.
-Counted 2026-10-06; the list below is from 2026-10-05, since then the new tools
-(tools/extract_vanilla.py, tools/vanilla_mount_poses.json), the lip and hook
-materials (data/tackle/yellowcrank_lip*.rvmat, lure_hook*.rvmat, squarebill_lip*.rvmat)
-joined it.
-They include the Pacific bonito's files (data/fish/pacificbonito*), the cooked
-and rotten looks for eight creatures (32 textures, 15 materials), the medium
-tackle boxes' and jon boat's textures renamed to _co, the jon boat's materials
-and relief maps, the bug catcher, the tackle boxes' _as maps, the lure relief
-maps, the net and knife-blade materials, the jon boat events generator
-(scripts/3_game/FileGenerators/eventsxml.c), the fishing shirts' ground
-textures (data/clothes/geb_*fishshirt_ground_co.paa), the ten-colour fishing
-set's textures (data/clothes/geb_*fishraincoat*, geb_*fishwellies*, the new
-hats, shirts and gloves, the gloves' material geb_fishgloves*.rvmat with its
-_normals and _smdi, data/tools/fishingrod_*_co.paa and fishknife_pink_co.paa),
-the three fish mounts (data/tools/{small,medium,large}fishmount.p3d with
-their textures and materials, the generated
-scripts/4_world/entities/itembase/gear/geb_fishmountposes.c and
-tools/build_mount_poses.py), tools/build_container_lists.py, and the new wiki
-pictures
-(docs/fish/geb_PacificBonito.webp, the four new knives',
-geb_{Green,Purple,Red,Yellow}Tackle.webp, the rods, hats, shirts, gloves,
-Rubber Worm and fish mounts added 2026-10-05, and the 47 new set pieces). The
-files they replace show as deleted, so a commit needs both. Local PBO builds
-include them, but the repo and the published wiki don't until they're
-committed (`git status` lists them).
+under Watch. A36 closed 2026-10-11 (everything committed).
 
 ## Also noted — lower priority
 
