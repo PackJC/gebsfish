@@ -50,6 +50,9 @@ class GebsfishLogger {
         string side = GetExecutionSide();
         string worldName = GetWorldNameSafe();
 
+        // With DebugLogs on, the banner opens the log, ahead of the header.
+        if (DebugLogsOn())
+            GebsAsciiArt.Write(file);
         FPrintln(file, "==================== LOGGING SESSION START ====================");
         FPrintln(file, "World: " + worldName);
         FPrintln(file, "Log Type: " + side);
@@ -64,6 +67,29 @@ class GebsfishLogger {
         // Safe to log from here: m_Initialized is set, so the Info() below
         // re-enters Init() and returns immediately instead of recursing.
         PruneOldLogs(sessionName);
+    }
+
+    // DebugLogs read from general.json's text: the logger starts on its first
+    // line, while general.json is still loading, so the loaded config can't
+    // answer yet. No file (a first boot, or a client) counts as off.
+    private static bool DebugLogsOn() {
+        FileHandle file = OpenFile(GEB_CONFIG_DIR + "/general.json", FileMode.READ);
+        if (!file)
+            return false;
+        bool on = false;
+        string line;
+        while (FGets(file, line) >= 0) {
+            int at = line.IndexOf("\"DebugLogs\"");
+            if (at < 0)
+                continue;
+            string value = line.Substring(at + 11, line.Length() - at - 11);   // after "DebugLogs"
+            value.Replace(":", "");
+            value.Replace(",", "");
+            on = value.Trim().ToInt() > 0;
+            break;
+        }
+        CloseFile(file);
+        return on;
     }
 
     // Delete session logs older than LOG_RETENTION_DAYS so an unattended server
@@ -241,24 +267,6 @@ class GebsfishLogger {
         if (y % 100 == 0)
             return false;
         return (y % 4 == 0);
-    }
-
-    // Banner for the top of the log. Deliberately NOT written from Init():
-    // the logger initialises lazily on its first write, which happens while
-    // the config is still loading, so DebugLogs isn't known yet. The caller
-    // (MissionServer.OnInit) fires this once the config is up and only when
-    // debug logging is enabled.
-    static void WriteBanner() {
-        if (!m_Initialized)
-            Init();
-        if (!m_Initialized || m_SessionFilePath == string.Empty)
-            return;
-
-        FileHandle file = OpenFile(m_SessionFilePath, FileMode.APPEND);
-        if (file == 0)
-            return;
-        GebsAsciiArt.Write(file);
-        CloseFile(file);
     }
 
     static void Debug(string msg, string category = "") {
