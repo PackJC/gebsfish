@@ -37,8 +37,8 @@ class GebFishingSnapshot {
 	int Day;
 	int Hour;
 	int Minute;
-	float Rain;
-	float Snow;
+	float RainLevel;
+	float SnowLevel;
 
 	static GebFishingSnapshot CaptureLocal() {
 		GebFishingSnapshot snapshot = new GebFishingSnapshot();
@@ -55,9 +55,9 @@ class GebFishingSnapshot {
 
 		Weather weather = g_Game.GetWeather();
 		if (weather && weather.GetRain())
-			snapshot.Rain = weather.GetRain().GetActual();
+			snapshot.RainLevel = weather.GetRain().GetActual();
 		if (weather && weather.GetSnowfall())
-			snapshot.Snow = weather.GetSnowfall().GetActual();
+			snapshot.SnowLevel = weather.GetSnowfall().GetActual();
 		return snapshot;
 	}
 
@@ -67,8 +67,8 @@ class GebFishingSnapshot {
 		ctx.Write(Day);
 		ctx.Write(Hour);
 		ctx.Write(Minute);
-		ctx.Write(Rain);
-		ctx.Write(Snow);
+		ctx.Write(RainLevel);
+		ctx.Write(SnowLevel);
 	}
 
 	bool Read(ParamsReadContext ctx) {
@@ -82,9 +82,9 @@ class GebFishingSnapshot {
 			return false;
 		if (!ctx.Read(Minute))
 			return false;
-		if (!ctx.Read(Rain))
+		if (!ctx.Read(RainLevel))
 			return false;
-		if (!ctx.Read(Snow))
+		if (!ctx.Read(SnowLevel))
 			return false;
 		return true;
 	}
@@ -99,13 +99,13 @@ class GebFishingSnapshot {
 			return false;
 		if (Hour < 0 || Hour > 23 || Minute < 0 || Minute > 59)
 			return false;
-		if (!(Rain >= 0.0 && Rain <= 1.0)) // also rejects NaN
+		if (!(RainLevel >= 0.0 && RainLevel <= 1.0)) // also rejects NaN
 			return false;
-		if (Math.AbsFloat(Rain - other.Rain) > MAX_RAIN_DRIFT)
+		if (Math.AbsFloat(RainLevel - other.RainLevel) > MAX_RAIN_DRIFT)
 			return false;
-		if (!(Snow >= 0.0 && Snow <= 1.0))
+		if (!(SnowLevel >= 0.0 && SnowLevel <= 1.0))
 			return false;
-		if (Math.AbsFloat(Snow - other.Snow) > MAX_RAIN_DRIFT)
+		if (Math.AbsFloat(SnowLevel - other.SnowLevel) > MAX_RAIN_DRIFT)
 			return false;
 
 		int dayDiff = DayStamp() - other.DayStamp();
@@ -126,6 +126,6 @@ class GebFishingSnapshot {
 	}
 
 	string Describe() {
-		return Year.ToString() + "-" + Month.ToString() + "-" + Day.ToString() + " " + Hour.ToString() + ":" + Minute.ToString() + " rain=" + Rain.ToString() + " snow=" + Snow.ToString();
+		return Year.ToString() + "-" + Month.ToString() + "-" + Day.ToString() + " " + Hour.ToString() + ":" + Minute.ToString() + " rain=" + RainLevel.ToString() + " snow=" + SnowLevel.ToString();
 	}
 }

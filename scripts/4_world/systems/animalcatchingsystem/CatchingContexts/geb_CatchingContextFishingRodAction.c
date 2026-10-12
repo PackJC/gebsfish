@@ -648,7 +648,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     // decides (the vanilla maps lock one of the two at 0).
     protected float GetCastRain() {
         if (m_GebSnapshot)
-            return Math.Max(m_GebSnapshot.Rain, m_GebSnapshot.Snow);
+            return Math.Max(m_GebSnapshot.RainLevel, m_GebSnapshot.SnowLevel);
         return 0.0;
     }
 
