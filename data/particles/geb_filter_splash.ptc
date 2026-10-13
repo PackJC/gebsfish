@@ -1,0 +1,162 @@
+EffectDef {
+ MinFPS 30
+ Emitors {
+  EmitorDef Fishing_splash_big {
+   ShapeType Box
+   ShapeSize 0.0096 0 0.0096
+   ConeAngle 360 0 0
+   MaxNum 2
+   BirthRate 5
+   BirthRateRND 0
+   Offset 0 0.0048 0
+   Material "{74434DAD6A06CE85}Graphics/Particles/materials/enviroment/Fishing_splash_3.emat"
+   CenterX 0.152
+   CenterY -1
+   SizeMultiplier 0.016
+   SizeRND 0.4
+   RandomRotDir 0
+   RotMultiplier 0
+   VelAngle 0
+   RandomAngle 0
+   Sort 0
+   BillboardingType Full
+   Velocity 0
+   VelocityRND 0
+   AirResistance 5
+   AirResistanceRND 1
+   GravityMultiply 0
+   GravityMultiplyRND 0
+   Wind 0
+   AnimOnce 1
+   AnimFPS 40
+   LifetimeByAnim 0
+   RandomFrame 0
+   LifeTime 1.05
+   LifeTimeRND 0.3
+   Color {
+    0 0.4039 0.4118 0.4588 1 0.4039 0.4118 0.4588
+   }
+   Alpha {
+    0 0.27778 0.29587 0.7814 0.38206 0.69767 0.6124 1 0.76361 0.2093 1 0
+   }
+   RotationSpeed {
+    0 0 1 1
+   }
+   Size {
+    0 0.0787 0.08115 0.72685 0.79083 0.74884 0.90121 0.34419 1 0
+   }
+   EffectTime 0.6
+   Repeat 1
+   SizeMast {
+    0 1 0.21623 1 0.35937 0.43981 1 0.18981
+   }
+   BRateMast {
+    0 1 0.16986 0 1 0
+   }
+  }
+  EmitorDef Fishing_splash_5_big {
+   ShapeType Box
+   ShapeSize 0.0096 0 0.0096
+   ConeAngle 360 0 0
+   MaxNum 2
+   BirthRate 5
+   BirthRateRND 0
+   Offset 0 0.0048 0
+   Material "{C9931F2A151DD29B}Graphics/Particles/materials/enviroment/Fishing_splash_5.emat"
+   CenterX 0.04
+   CenterY -1
+   SizeMultiplier 0.024
+   SizeRND 0.3
+   RandomRotDir 0
+   RotMultiplier 0
+   VelAngle 0
+   RandomAngle 0
+   Sort 0
+   BillboardingType Full
+   Velocity 0
+   VelocityRND 0
+   AirResistance 5
+   AirResistanceRND 1
+   GravityMultiply 0
+   GravityMultiplyRND 0
+   Wind 0
+   AnimOnce 1
+   AnimFPS 40
+   LifetimeByAnim 0
+   RandomFrame 0
+   LifeTime 1.05
+   LifeTimeRND 0.375
+   Color {
+    0 0.4039 0.4118 0.4588 1 0.4039 0.4118 0.4588
+   }
+   Alpha {
+    0 0.22791 0.09274 0.89767 0.65222 0.94419 0.92339 0.08837 1 0
+   }
+   RotationSpeed {
+    0 0 1 1
+   }
+   Size {
+    0 0.0787 0.08115 0.72685 0.87802 0.74884 1 0
+   }
+   EffectTime 0.6
+   Repeat 1
+   SizeMast {
+    0 1 0.21623 1 0.35937 0.43981 1 0.18981
+   }
+   BRateMast {
+    0 1 0.16986 0 1 0
+   }
+  }
+  EmitorDef emitor5_ring {
+   ShapeType Point
+   ShapeSize 0 0 0
+   ConeAngle 360 0 0
+   MaxNum 2
+   BirthRate 2
+   BirthRateRND 0
+   Offset 0 0.008 0
+   Angles 180 90 180
+   Material "{40C6E8CF3C5932A6}Graphics/Particles/materials/enviroment/ring_03.emat"
+   SizeMultiplier 0.06
+   SizeRND 0.1
+   RandomRotDir 0
+   RotMultiplier 0
+   VelAngle 0
+   RandomAngle 0
+   Sort 1
+   BillboardingType None
+   Velocity 0
+   VelocityRND 0
+   AirResistance 0.5
+   AirResistanceRND 1
+   GravityMultiply 0
+   GravityMultiplyRND 0
+   Wind 0
+   AnimOnce 0
+   AnimFPS 30
+   LifetimeByAnim 0
+   LifeTime 1
+   LifeTimeRND 0.1
+   Color {
+    0 0.8902 0.9059 1 1 0.8902 0.9059 1
+   }
+   Alpha {
+    0 0.0787 0.2878 1 1 0
+   }
+   RotationSpeed {
+    0 0 1 0
+   }
+   Size {
+    0 0.21395 1 1
+   }
+   EffectTime 0.6
+   Repeat 1
+   AlphaMast {
+    0 1 0.87198 0.55093 1 0.25
+   }
+   SizeMast {
+    0 1 1 0.26852
+   }
+  }
+ }
+}

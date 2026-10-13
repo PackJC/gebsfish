@@ -32,20 +32,23 @@ class ActionGebSpearFishingCB : ActionContinuousBaseCB {
 };
 
 class ActionGebSpearFishing : ActionGebWaterBase {
-	// How far away the water may be, and what a stab costs the spear: at 1 a
-	// 100-health spear lasts about four fish at the default FindChance (0.04).
+	// How far away the water may be, and what a stab costs the spear (vanilla's
+	// tool wear, as digging worms takes 4 from a hoe): at 2 a 100-health spear
+	// shows Worn after 15 stabs and lasts 50, about seven fish at the default
+	// FindChance (0.15).
 	protected const float SPEAR_REACH = 3.0;
-	protected const float SPEAR_HEALTH_PER_STAB = 1.0;
+	protected const float SPEAR_DAMAGE_PER_STAB = 2.0;
 
-	// DIGMANIPULATE is the standing two-handed work loop vanilla plays for
-	// shovels, hoes and pickaxes. Standing, because the player is usually
-	// wading. The stance mask must stay ERECT
-	// to match it: a stance the command doesn't support hangs the action
-	// (see ActionBambooFishingNet).
+	// The farming hoe's worm-digging loop (vanilla's two-handed DigWorms), a
+	// downward jab in front, standing or crouched as vanilla's dig-worms action
+	// allows. The spear's animation set (player_main_2h_spear.asi) inherits it
+	// from player_main_2h.asi. A command the held item's set doesn't define
+	// never plays or ends, so the player freezes: DIGMANIPULATE, used before,
+	// exists only in the shovel, hoe and pickaxe sets.
 	void ActionGebSpearFishing() {
 		m_CallbackClass = ActionGebSpearFishingCB;
-		m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DIGMANIPULATE;
-		m_StanceMask = DayZPlayerConstants.STANCEMASK_ERECT;
+		m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DIGGIN_WORMS;
+		m_StanceMask = DayZPlayerConstants.STANCEMASK_ERECT | DayZPlayerConstants.STANCEMASK_CROUCH;
 		m_FullBody = true;
 		m_SpecialtyWeight = UASoftSkillsWeight.ROUGH_MEDIUM;
 		m_Text = "#STR_action_spearfishing";
@@ -150,6 +153,9 @@ class ActionGebSpearFishing : ActionGebWaterBase {
 			return;
 		}
 
+		// A splash where the spear went in, caught or not.
+		GebFishingFx.Play(action_data.m_Target.GetCursorHitPos(), ParticleList.FISHING_SIGNAL_SPLASH);
+
 		PlayerBase player = action_data.m_Player;
 		ItemBase spear = action_data.m_MainItem;
 		SpearFishingConf settings = GetSpearSettings();
@@ -180,9 +186,8 @@ class ActionGebSpearFishing : ActionGebWaterBase {
 			}
 
 			// A predator chance only for a fish landed, the way a rod rolls once
-			// per cast. Rolled on every 6 s stab, with about 25 stabs to a fish,
-			// it drew a wolf or bear every ten minutes or so: some twenty times a
-			// rod's rate.
+			// per cast. Rolled on every 6 s stab instead, it drew a wolf or bear
+			// every ten minutes or so, several times a rod's rate.
 			if (landed)
 				GebsPredatorSpawner.TrySpawn(player, settings.PredatorSpawnChance, "PredatorSpawnSpear");
 		}
@@ -190,6 +195,6 @@ class ActionGebSpearFishing : ActionGebWaterBase {
 		player.GetSoftSkillsManager().AddSpecialty(m_SpecialtyWeight);
 
 		if (spear)
-			spear.DecreaseHealth("", "", SPEAR_HEALTH_PER_STAB);
+			MiscGameplayFunctions.DealEvinronmentAdjustedDmg(spear, player, SPEAR_DAMAGE_PER_STAB);
 	}
 };

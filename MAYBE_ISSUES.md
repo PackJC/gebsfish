@@ -301,8 +301,9 @@ Fixed 2026-10-06 on Cole's word ("fix all these"):
   classes load as hidden scope 1 aliases until a wipe:
   geb_Fun{Yellow,Red,Purple,Green}Tackle on their twins (with duct tape and
   epoxy repairs, geb_repairlegacytackle.c) and geb_Bonita on geb_PacificBonito
-  (it fillets by the Pacific Bonito's row). On Cole's word geb_BonitaFilletMeat
-  got no alias (old fillets go); fish.json rows naming it are renamed on load.
+  (it fillets by the Pacific Bonito's row). geb_BonitaFilletMeat got no alias at first (old fillets
+  went); since 2026-10-12 (Cole) it is a hidden alias of
+  geb_PacificBonitoFilletMeat too. fish.json rows naming it are renamed on load.
   E1: on Cole's word ("remove filleting fish from other mods") a fish fillets
   only by its own class's fish.json row, never a parent's; each vanilla
   Prepare* recipe takes only its own fish, so a modded fish with a row shows
@@ -560,7 +561,7 @@ damage or engine-fold parts.
 ### E8. Hidden aliases lying loose in the world vanish after the second restart — accepted
 The world save skips an entity with no Central Economy item profile, and a
 scope 1 class can't get one (the types.xml reader ignores it: "Not spawnable.
-(Scope is not public?)"). So a geb_Fun*Tackle or geb_Bonita lying loose on the
+(Scope is not public?)"). So a geb_Fun*Tackle, geb_Bonita or geb_BonitaFilletMeat lying loose on the
 ground loads at the first restart after the update and is gone after the
 second, box contents included; ones inside something (tents, barrels, cars,
 jon boat decks, inventories, coolers, mounts) stay. Found by the 2026-10-11
@@ -1201,6 +1202,158 @@ table still returns no catch; add sea/both entries if sea netting is desired.
 109. (2026-10-06) Yellow Crankbait lip (A23): up close in hands and on the
     ground, the clear lip reads as smooth clear plastic (no body relief or
     sheen across it), as on the Purple Crankbait, also when damaged and ruined.
+139. (2026-10-13) Fishing Locker (new): craft it from 12 stacked planks plus
+    24 nails with a hammer or hatchet on you (refused without one, or with
+    CraftFishingLocker 0); it lands on the ground. Carry it in two hands and
+    place it (white hologram, open front facing you, upright on a slope).
+    Fill every spot from the inventory: six rods (vanilla, improvised and the
+    mod's) stand in the rack with their reels out; hat and gloves on the left
+    shelf; raincoat, shirt and vest hang from the pegs; wellies, a large tackle
+    box and the Bait Bucket on the floor; a medium or small tackle box, a cooler
+    and a worm container or bug catcher on the shelf above, each sitting on its
+    shelf (not floating, not sunk); any backpack hangs flat against the right
+    side; a small fish trap and a fish net trap sit on the roof. Vanilla
+    clothes, other boxes and a set trap are refused. A second player sees the
+    same placement, and so does everyone after a restart (the bones are set on
+    both sides from each item's loot box). Check the slot names and ghost icons,
+    the cargo (10x5), that it can't be picked up with anything in or on it, its
+    damaged and ruined looks, and that ruining it spills the contents.
+142. (2026-10-13) Floating catches and the barracuda's inventory picture: drop
+    the severum, a pike, the blue marlin, mahi-mahi, angelfish, hairtail,
+    alligator gar, lobster and snow crab legs; each lies on the ground with no
+    gap. Their inventory pictures should look as before (the crab legs and
+    jellyfish may be slightly larger). The great barracuda's inventory box was
+    narrowed to halfway between a tight fit and Cole's enlarged box to zoom in
+    (Cole said it looked too far away): check it, and whether the ground fix
+    itself changed any picture's zoom. Originals of all 22 are in scratchpad
+    float_backup / barracuda_before_zoom.p3d. The king and snow crab now
+    show upright, claws up (invViewCameraRoll 60 -> 0); if they show upside
+    down instead, use 180.
+141. (2026-10-13) Fish tank, the rest: the severum swims a 6 s small loop then
+    a 6 s lap; the six minnows move as a group near the surface; the five
+    plants sway. The treasure chest lid opens over 3 s, gushes bubbles while
+    open and closes every 12 s (lid phase is set on each client; if it
+    doesn't move, set it on the server instead). The filter's water sheet and
+    its small splash run with the bubbles; the filter trickle and bubble hum
+    are quiet and only heard within ~4 m (volumes 0.16 / 0.30 to tune); all
+    effects and sounds stop when the tank is picked up. Backdrop, diver and
+    the thermometer read through the front glass look right. The bubble
+    streams fade out just under the surface with no bubbling on top: the
+    filter's splash is the only thing touching the water surface.
+140. (2026-10-13) Fish tank stand and tank upgrades: place geb_FishTankStand,
+    attach the tank from hands. FIRST: do the fish, snail and crab still move
+    with the tank on the stand? (If attached items don't animate, the
+    fallback is snapping the tank onto the stand top as a free object.)
+    Both bubble streams (air stone and volcano crater) start at the right
+    spots on the stand and on the floor, and stop when it is picked up. At
+    night the hood strip glows and the light (geb_FishTankLight, brightness
+    1.1, radius 1.4 m: tune) lights the tank; off when picked up. Snail
+    climbs 12.5 cm in 75 s, crab shuffles 2.5 cm (flip offsets if reversed).
+    Stand: hologram, 10x5 cupboard, can't be picked up while holding
+    anything; neither item is in world loot or any recipe.
+139. (2026-10-13) Fish tank (new): spawn geb_FishTank and place it. FIRST:
+    do the four fish swim their loops on the placed tank (22 Model.cfg
+    animations on source "time", no script)? If they stand still, switch
+    them to one user source driven from the clock modulo 6 s in
+    geb_fishtank.c; if one swims tail-first, flip its orbit angle1 sign.
+    Then: bubbles rise from the air stone and stop when it is picked up;
+    the hologram ghosts only the frame and decor; plants never draw over
+    the glass; wear looks at 50% and 0%; it sits on the floor; inventory
+    picture. It must not appear in world loot (nominal 0) or any recipe.
+138. (2026-10-13) Fish drying rack (new): craft it from 7 stacked long wooden
+    sticks plus a rope (refused with CraftDryingRack 0); carry it in two hands,
+    place it (white hologram, deploy animation). Hang vanilla carp, mackerel,
+    steelhead, walleye pollock and catfish fillets and mod fillets: each hangs
+    by its tail on its loop, flesh out (if one shows upside down, flip that
+    model's turn sign in GebHangPose). With MinutesToDry 1 they turn dried;
+    rain or snow above StallThreshold stops it, wind speeds it up; decay is
+    paused only while drying. Restart: progress and poses kept. Refused:
+    rotten fillets, lobster/crab parts, anything while the rack is carried.
+    Check its damaged looks, that it sits on the ground, and its inventory picture.
+137. (2026-10-13) Fly, spincast, baitcast and heavy surf rods (new): rebuild
+    the PBO with the four rods in data/tools (p3d, _co/_normals/_smdi, three
+    rvmats each, their Model.cfg classes and geb_telescopicrod_skeleton), then
+    spawn each. In hands the hand sits where it holds vanilla's rod: the fly,
+    spincast (underspin) and surf reels hang under it, the baitcaster rides on
+    top with the trigger under the index finger. Cast: the five sections slide
+    out together, the thick ones stopping first, to about 1.4 m (surf rod
+    about 2.6 m), and back in when fishing ends, guides in line. Winding: the
+    left hand should be on the fly, spincast and surf reels' handles (each sits
+    on vanilla's handle circle, the fly reel's within about 1 cm); on the
+    baitcast rod it winds below the reel, which sits on top. Check the
+    inventory picture, the dropped rod lying on its side, worn/damaged/ruined
+    looks, the repair kit, the back and shoulder slots, and that
+    gebsfish-types.xml lists 18 rods, each at nominal 1.
+136. (2026-10-12) Fish foods on vanilla packaging (new): spawn each of the 14.
+    The pate tins and 250 g cans show their print closed and their own food
+    opened (not vanilla pate, pork or lunchmeat), and open by hand into their
+    own _Opened class; an opened 250 g can's rim and ring pull stay metal (the
+    food colour only on the food), and no picture on a 250 g label covers its
+    bar code. The three jars show their label, lid colour and contents through
+    the glass, which stays see-through; Fish Jerky shows no pretzel sticks; the
+    snack bags and the box show their print. Each eats like its vanilla item.
+    gebsfish-types.xml on Chernarus has short rows for Pajka, Pate,
+    BrisketSpread (12/9), PorkCan (5), Lunchmeat (7), Honey (4), Crackers,
+    Chips, SaltySticks and BoxCerealCrunchin (12), and the new items copied
+    from those rows.
+135. (2026-10-12) Canned fish (new): rebuild the PBO with data/food in it
+    (config, Model.cfg, fishtin_open.p3d, 15 x _co/_normals, 45 rvmats,
+    roundcan_smdi), then spawn each of the 15 cans. Each shows its own label
+    in hands and on the ground and holds like vanilla's tuna or sardine can. A
+    flat tin opens by hand into its _Opened class (the mod's own model, lid
+    rolled back at the far end) and shows its own food, not tuna; it lies
+    flat on the ground, the inventory view shows the whole tin, and it falls
+    and throws like vanilla's opened tuna; a round can opens with a knife, a can
+    opener or a screwdriver into its own _Opened class, its food showing.
+    Eat each to the end: the food values are the vanilla can's. Damage one of
+    each shape to worn and ruined: the wear shows closed and opened. In
+    Buldozer, the opened flat tin's food lights evenly (no tuna bumps) and the
+    round can's food shows no sardine-shaped ridges. Server: start on
+    Chernarus with DebugLogs 1: gebsfish-types.xml holds a short TunaCan and
+    SardinesCan row (nominal 3/min 2 and 3/2), the eight flat tins and seven
+    round cans copied from vanilla's rows (Town/Office, Tier1/Tier2, shelves)
+    with their _Opened rows, and the log says TunaCan and 8 cans share
+    nominal 20 (20 in all); registered in cfgeconomycore.xml, the economy
+    keeps about 20 fish tins of each shape on the map after a few hours.
+134. (2026-10-12) Squid (new): seven species, four juveniles, squid meat. At
+    sea at night with a rod (and juveniles in fish traps), or /give each class.
+    Every whole squid and juvenile, dropped on a road, grass and a floor, lies
+    flat on its belly or back with its fins spread (none on its side or
+    standing on a fin); if one always lies on its side, its rotationFlags
+    (17) needs the X bits instead. In the inventory each sits level with its
+    arms one way like the bonito, framed like the other fish; the meat sits
+    like vanilla's carp fillet. In hands: the Humboldt two-handed like the
+    barracuda, the others one-handed like a carp, juveniles in the palm like
+    the minnow. Up close at 1, 10, 30 and 80 m: wet sheen, the photo's eye,
+    no seams along the back or belly; the Japanese has no white glare streak
+    on its back. Rotten shows mould. Clean each adult: 1 to 6 squid meat (the
+    Humboldt most), each tube in its species' skin with white flesh inside,
+    and it bakes, boils, dries and burns to the shared cooked looks. A juvenile
+    has no clean option, can be eaten raw or cooked (all five looks), goes on
+    a hook as bait (it gets eaten on a bite) and in a trap, and keeps fresh in
+    the Bait Bucket and a water barrel; tackle boxes take it. Each species
+    hangs on its mount (small; Humboldt, European and neon on the medium)
+    back out, arms to the right. bait.json on a 3.3.2 server gains the four
+    juvenile rows; fish.json gains the eleven species rows.
+133. (2026-10-12) Net and angelfish: drop the bamboo fishing net on flat
+    ground, on a slope and on a floor: it rests on top, no part of the hoop
+    below the surface (its loot-box points now match the model). Open the
+    inventory with an angelfish next to a severum and a blue tang: the
+    angelfish sits level like them (its invViewCameraRoll is 190; if it now
+    tilts the other way try about 197, if worse 220).
+132. (2026-10-12) Fishing effects: with *.ptc in AddonBuilder's files to copy,
+    the script log has no "Particle file not found" for
+    gebsfish/data/particles. A carp or anything lighter bites with vanilla's
+    small splash, a salmon or cod (2.3-15 kg) with a bigger one, a pike or
+    shark (over 15 kg) with the biggest, and landing one of the two heavier
+    kinds splashes at the cast point again. Bubbles show at the float about
+    1.5 s before each bite; a treasure catch (Chance 1 to test) bubbles at the
+    cast point. Each spear stab and net haul splashes. Filleting leaves blood
+    drops at your feet for a minute. A rotten fish or fillet dropped on the
+    ground gets flies, which stop when it is picked up. A cooler on the ground
+    holding a frozen fish puffs cold mist from its lid every 4 s, and stops
+    when picked up or emptied of frozen food. Judge the splash and bubble
+    sizes; data/particles/*.ptc are easy to scale.
 131. (2026-10-11) DayZ 1.30 (bzed's version-130 notes): boot on 1.30 (on
     Experimental, CF-Test instead of CF until 1.30 stable) and read
     script_*.log: no (E) from gebsfish, and no "obsolete" warning for
@@ -1283,8 +1436,9 @@ table still returns no catch; add sea/both entries if sea netting is desired.
     health levels stay inside the configured ranges. Delete
     gebsfish-types.xml and gebsfish-spawnabletypes.xml from
     $profile:Gebs/mpmissions and restart: both come back with the five jon
-    boats, gebsfish-events.xml too; the next restart logs them as already at
-    this version. A bait preference typed in lower case in bait.json still
+    boats, gebsfish-events.xml too; the next restart logs
+    gebsfish-spawnabletypes.xml as already at this version (gebsfish-types.xml
+    is rewritten at every start since the canned fish, case 135). A bait preference typed in lower case in bait.json still
     applies.
 121. (2026-10-08) Slot icons (F38): look at a jon boat's attachments: both
     deck spots show a crate. Look at an empty fish mount: its slot shows a

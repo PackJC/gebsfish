@@ -25,17 +25,24 @@ modded class ModItemRegisterCallbacks {
             "geb_Severum", "geb_SiameseTigerFish", "geb_AlligatorGar", "geb_NorthernPike",
             "geb_Muskellunge", "geb_TigerMuskellunge", "geb_BarredMuskellunge", "geb_SpottedMuskellunge",
             "geb_FlatHeadCatFish", "geb_LakeSturgeon", "geb_NorthernSnakeHead", "geb_SouthernFlounder",
-            "geb_GreatBarracuda"
+            "geb_GreatBarracuda", "geb_HumboldtSquid"
         };
         foreach (string twoHandedName : twoHandedFish) {
             pType.AddItemInHandsProfileIK(twoHandedName, "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
         }
+
+        // The bait bucket, carried in both hands like vanilla's cooking pot (Pot):
+        // the nearest vanilla carry for a pail with a bail handle, and the pot's
+        // model stands the same way (upright on +Y). Left to its config parent,
+        // WaterBottle, it took the bottle's one-handed grip and was held sideways.
+        pType.AddItemInHandsProfileIK("geb_MinnowBucket", "dz/anims/workspaces/player/player_main/props/player_main_2h_pot.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/CookingPot.anm");
     }
 
     override void RegisterOneHanded(DayZPlayerType pType, DayzPlayerItemBehaviorCfg pBehavior) {
         super.RegisterOneHanded(pType, pBehavior);
 
-        // Medium fish held one-handed (carp-style carry), with the lobsters and
+        // Medium fish held one-handed (carp-style carry), with the squid (their base:
+        // the Humboldt's own two-handed entry above is found first), the lobsters and
         // the crabs: the king crab (5 kg, 0.77 m across) is the cod's size and
         // weight, the snow crab (1.5 kg) a trout's weight. Their legs, like the
         // lobster tails and claws, carry as vanilla's mackerel fillet, the class
@@ -49,7 +56,7 @@ modded class ModItemRegisterCallbacks {
             "geb_CherrySalmon", "geb_PacificBonito", "geb_PacificCod", "geb_YellowFinTuna",
             "geb_YellowSnapper", "geb_WhiteGrunt", "geb_RoughNeckRock", "geb_SunFish",
             "geb_SlimySculpin", "geb_AmericanLobster", "geb_EuropeanLobster", "geb_KingCrab",
-            "geb_SnowCrab"
+            "geb_SnowCrab", "geb_Squid_Base"
         };
         foreach (string fishName : oneHandedFish) {
             pType.AddItemInHandsProfileIK(fishName, "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
@@ -60,7 +67,7 @@ modded class ModItemRegisterCallbacks {
             "geb_StarFish", "geb_BlackDevilSnail", "geb_Mussel", "geb_BloodClam",
             "geb_FatHeadMinnow", "geb_AmericanBullFrog", "geb_RedSalamander", "geb_BlueJellyFish",
             "geb_SignalCrayFish", "geb_EuropeanCrayFish", "geb_FloridaCrayFish", "geb_RedSwampCrayFish",
-            "geb_CaveCrayFish", "geb_RustyCrayFish", "geb_MonongahelaCrayFish"
+            "geb_CaveCrayFish", "geb_RustyCrayFish", "geb_MonongahelaCrayFish", "geb_SquidJuvenile_Base"
         };
         foreach (string smallName : oneHandedSmall) {
             pType.AddItemInHandsProfileIK(smallName, "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/shrimp.anm");

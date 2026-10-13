@@ -46,9 +46,12 @@ class gebsfishSpawnableTypes {
     protected void WriteTackleSection(FileHandle file) {
         ref TStringArray tackleItems = {
             "geb_OldBlueTackle", "geb_OldGreenTackle", "geb_OldPurpleTackle", "geb_OldRedTackle",
+            "geb_OldOrangeTackle", "geb_OldYellowTackle", "geb_OldBrownTackle", "geb_OldPinkTackle", "geb_OldLimeTackle", "geb_OldLightBlueTackle", "geb_OldCamoTackle",
             "geb_RedTackle", "geb_PurpleTackle", "geb_PinkTackle", "geb_OrangeTackle",
             "geb_LimeTackle", "geb_LightBlueTackle", "geb_GreenTackle", "geb_BrownTackle",
-            "geb_CamoTackle", "geb_BlueTackle", "geb_YellowTackle", "geb_SmallTackle"
+            "geb_CamoTackle", "geb_BlueTackle", "geb_YellowTackle", "geb_SmallTackle",
+            "geb_DesertCamoTackle", "geb_SnowCamoTackle", "geb_PinkCamoTackle",
+            "geb_OldDesertCamoTackle", "geb_OldSnowCamoTackle", "geb_OldPinkCamoTackle"
         };
 
         TStringArray lures = {
@@ -68,17 +71,17 @@ class gebsfishSpawnableTypes {
 
     protected void WriteClothingSection(FileHandle file) {
         // Shirts may carry a fish knife, a fishing hat and fishing gloves; raincoats and wellies spawn empty.
-        ref TStringArray clothingItems = {"geb_GreenFishShirt", "geb_BlueFishShirt", "geb_PurpleFishShirt", "geb_RedFishShirt", "geb_OrangeFishShirt", "geb_YellowFishShirt", "geb_BrownFishShirt", "geb_LightBlueFishShirt", "geb_LimeFishShirt", "geb_PinkFishShirt"};
+        ref TStringArray clothingItems = {"geb_GreenFishShirt", "geb_BlueFishShirt", "geb_PurpleFishShirt", "geb_RedFishShirt", "geb_OrangeFishShirt", "geb_YellowFishShirt", "geb_BrownFishShirt", "geb_LightBlueFishShirt", "geb_LimeFishShirt", "geb_PinkFishShirt", "geb_CamoFishShirt", "geb_DesertCamoFishShirt", "geb_SnowCamoFishShirt", "geb_PinkCamoFishShirt"};
 
-        TStringArray knives = {"geb_BlueFishKnife", "geb_OrangeFishKnife", "geb_GreenFishKnife", "geb_YellowFishKnife", "geb_RedFishKnife", "geb_PurpleFishKnife", "geb_LimeFishKnife", "geb_LightBlueFishKnife", "geb_CamoFishKnife", "geb_BrownFishKnife", "geb_PinkFishKnife"};
+        TStringArray knives = {"geb_BlueFishKnife", "geb_OrangeFishKnife", "geb_GreenFishKnife", "geb_YellowFishKnife", "geb_RedFishKnife", "geb_PurpleFishKnife", "geb_LimeFishKnife", "geb_LightBlueFishKnife", "geb_CamoFishKnife", "geb_BrownFishKnife", "geb_PinkFishKnife", "geb_DesertCamoFishKnife", "geb_SnowCamoFishKnife", "geb_PinkCamoFishKnife"};
         ref array<ref XmlCargoItem> knifeCargo = new array<ref XmlCargoItem>;
         InsertCargoBatch(knifeCargo, knives, 0.09);
 
-        TStringArray hats = {"geb_BlueFishHat", "geb_GreenFishHat", "geb_PurpleFishHat", "geb_RedFishHat", "geb_OrangeFishHat", "geb_YellowFishHat", "geb_BrownFishHat", "geb_LightBlueFishHat", "geb_LimeFishHat", "geb_PinkFishHat"};
+        TStringArray hats = {"geb_BlueFishHat", "geb_GreenFishHat", "geb_PurpleFishHat", "geb_RedFishHat", "geb_OrangeFishHat", "geb_YellowFishHat", "geb_BrownFishHat", "geb_LightBlueFishHat", "geb_LimeFishHat", "geb_PinkFishHat", "geb_CamoFishHat", "geb_DesertCamoFishHat", "geb_SnowCamoFishHat", "geb_PinkCamoFishHat"};
         ref array<ref XmlCargoItem> hatCargo = new array<ref XmlCargoItem>;
         InsertCargoBatch(hatCargo, hats, 0.10);
 
-        TStringArray gloves = {"geb_BlueFishGloves", "geb_OrangeFishGloves", "geb_YellowFishGloves", "geb_RedFishGloves", "geb_GreenFishGloves", "geb_PurpleFishGloves", "geb_BrownFishGloves", "geb_LightBlueFishGloves", "geb_LimeFishGloves", "geb_PinkFishGloves"};
+        TStringArray gloves = {"geb_BlueFishGloves", "geb_OrangeFishGloves", "geb_YellowFishGloves", "geb_RedFishGloves", "geb_GreenFishGloves", "geb_PurpleFishGloves", "geb_BrownFishGloves", "geb_LightBlueFishGloves", "geb_LimeFishGloves", "geb_PinkFishGloves", "geb_CamoFishGloves", "geb_DesertCamoFishGloves", "geb_SnowCamoFishGloves", "geb_PinkCamoFishGloves"};
         ref array<ref XmlCargoItem> gloveCargo = new array<ref XmlCargoItem>;
         InsertCargoBatch(gloveCargo, gloves, 0.10);
 

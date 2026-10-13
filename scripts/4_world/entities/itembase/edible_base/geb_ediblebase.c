@@ -35,6 +35,16 @@ class geb_FreshFish_Base extends geb_FishBase {}
 class geb_SaltFish_Base extends geb_FishBase {}
 class geb_LargeFish_Base extends geb_FishBase {}
 
+// The sharks (data/fish/config.cpp geb_Shark_Base): their first loot box is fitted
+// belly-down for dropping, and a second box and camera (boundingbox_min2/max2,
+// invView2) hold the inventory picture they always had. Vanilla shows view 1 only
+// on the ground and as an attachment; the sharks show it everywhere.
+class geb_Shark_Base extends geb_LargeFish_Base {
+	override int GetViewIndex() {
+		return 1;
+	}
+}
+
 // Big fish: carried two-handed like a heavy item.
 class geb_EdibleBase extends geb_FishBase {
 	// No CanSaveItemInHands here: the game asks the holder (the player), never
@@ -138,6 +148,8 @@ modded class Edible_Base {
 			delta = 0;   // worm/bug/minnow containers keep live bait fresh
 		else if (GebsfishIsMountedTrophy())
 			delta = 0;   // taxidermy: a fish on the wall mount never rots
+		else if (GebsfishIsDryingOnRack())
+			delta = 0;   // drying in the open air: no rot while the weather lets it dry
 		else if (GebsfishIsInWaterBarrel() && GebsfishIsLiveCatch())
 			delta = 0;   // a water barrel half full or more is a live well
 
@@ -180,16 +192,24 @@ modded class Edible_Base {
 	}
 
 	// What a water barrel keeps alive: whole fish (the mod's fish bases and
-	// vanilla's whole fish) and the minnow. Worms and insects age in modded
+	// vanilla's whole fish), the minnow and the juvenile squid. Worms and insects age in modded
 	// Worm, which doesn't look at barrels, so they still die there.
 	protected bool GebsfishIsLiveCatch() {
-		return IsKindOf("geb_FreshFish_Base") || IsKindOf("geb_SaltFish_Base") || IsKindOf("geb_LargeFish_Base") || IsKindOf("geb_FatHeadMinnow") || IsKindOf("Carp") || IsKindOf("Mackerel") || IsKindOf("WalleyePollock") || IsKindOf("SteelheadTrout") || IsKindOf("Sardines") || IsKindOf("Bitterlings");
+		return IsKindOf("geb_FreshFish_Base") || IsKindOf("geb_SaltFish_Base") || IsKindOf("geb_LargeFish_Base") || IsKindOf("geb_FatHeadMinnow") || IsKindOf("geb_SquidJuvenile_Base") || IsKindOf("Carp") || IsKindOf("Mackerel") || IsKindOf("WalleyePollock") || IsKindOf("SteelheadTrout") || IsKindOf("Sardines") || IsKindOf("Bitterlings");
 	}
 
 	// Trophy check: the fish attaches directly to the plaque, so a single
 	// parent hop is enough -- no full hierarchy walk needed.
 	protected bool GebsfishIsMountedTrophy() {
 		return geb_WoodenFishMount.Cast(GetHierarchyParent()) != null;
+	}
+
+	// A fillet hanging on a Fish Drying Rack while the rack is drying (it stands
+	// in the world, drying is on, and rain and snow are low): see
+	// geb_FishDryingRack.GebIsDrying. In rain or snow it decays as usual.
+	protected bool GebsfishIsDryingOnRack() {
+		geb_FishDryingRack rack = geb_FishDryingRack.Cast(GetHierarchyParent());
+		return rack && rack.GebIsDrying();
 	}
 
 	// Same hierarchy walk for the dedicated bait containers. Tackle boxes are
@@ -207,6 +227,51 @@ modded class Edible_Base {
 			parent = parent.GetHierarchyParent();
 		}
 		return false;
+	}
+
+	// Flies swarm over rotten fish and fillets lying loose on the ground. Each
+	// client runs its own swarm: the food stage and the item's place are synced.
+	protected ref EffectParticle m_GebsfishFlies;
+
+	override void EEInit() {
+		super.EEInit();
+		GebsfishUpdateFlies();
+	}
+
+	override void EEDelete(EntityAI parent) {
+		GebsfishStopFlies();
+		super.EEDelete(parent);
+	}
+
+	override void EEItemLocationChanged(notnull InventoryLocation oldLoc, notnull InventoryLocation newLoc) {
+		super.EEItemLocationChanged(oldLoc, newLoc);
+		GebsfishUpdateFlies();
+	}
+
+	override void OnVariablesSynchronized() {
+		super.OnVariablesSynchronized();
+		GebsfishUpdateFlies();
+	}
+
+	protected void GebsfishUpdateFlies() {
+		if (g_Game.IsDedicatedServer())
+			return;
+		bool fishFood = GebsfishIsLiveCatch() || IsKindOf("CarpFilletMeat") || IsKindOf("MackerelFilletMeat") || IsKindOf("WalleyePollockFilletMeat") || IsKindOf("SteelheadTroutFilletMeat");
+		if (IsFoodRotten() && !GetHierarchyParent() && fishFood) {
+			if (!m_GebsfishFlies) {
+				m_GebsfishFlies = new EffSwarmingFlies();
+				SEffectManager.PlayOnObject(m_GebsfishFlies, this, "0 0.15 0");
+			}
+		} else {
+			GebsfishStopFlies();
+		}
+	}
+
+	protected void GebsfishStopFlies() {
+		if (m_GebsfishFlies) {
+			SEffectManager.DestroyEffect(m_GebsfishFlies);
+			m_GebsfishFlies = null;
+		}
 	}
 }
 

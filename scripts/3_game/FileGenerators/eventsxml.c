@@ -8,8 +8,8 @@
 // children, positions, lifetime, limit) stays. The exception is the flags:
 // a later file that leaves out <flags> resets the event's flags to none,
 // which would switch off remove_damaged and leave every wrecked boat in place,
-// counting toward the caps. So gebsfish-events.xml names the five jon boats,
-// the event's nominal and max (each raised by five from the mission's own
+// counting toward the caps. So gebsfish-events.xml names the six jon boats,
+// the event's nominal and max (each raised by six from the mission's own
 // db/events.xml) and the mission's own flags line, and the vanilla boats keep
 // every spawn they had.
 //
@@ -70,10 +70,10 @@ class gebsfishEvents {
         FPrintln(file, "             <file name=\"gebsfish-events.xml\" type=\"events\"/>");
         FPrintln(file, "         </ce>");
         FPrintln(file, "     gebsfish-types.xml must be in your economy too, or the economy leaves the jon boats out.");
-        FPrintln(file, "     The economy reads this file after db/events.xml and adds to its VehicleBoat event: the five jon boats");
+        FPrintln(file, "     The economy reads this file after db/events.xml and adds to its VehicleBoat event: the six jon boats");
         FPrintln(file, "     join the vanilla boats, one of each colour at most, and everything else about the event stays as");
         if (counts) {
-            FPrintln(file, "     db/events.xml has it, except the nominal and max, which go up by five (from " + nominal.ToString() + " and " + max.ToString() + " in this");
+            FPrintln(file, "     db/events.xml has it, except the nominal and max, which go up by six (from " + nominal.ToString() + " and " + max.ToString() + " in this");
             FPrintln(file, "     mission's db/events.xml) so the vanilla boats keep all their spawns.");
         } else {
             FPrintln(file, "     db/events.xml has it. Its VehicleBoat event has no nominal or max this file could read, so the");
@@ -82,8 +82,8 @@ class gebsfishEvents {
         FPrintln(file, "     The flags line is db/events.xml's own: the economy clears an event's flags when a later file leaves");
         FPrintln(file, "     them out, which would stop wrecked boats being cleaned up. If you change the VehicleBoat event in");
         FPrintln(file, "     db/events.xml (its nominal, max or flags), copy this file again after the next start, which rewrites it.");
-        FPrintln(file, "     Or skip this file: paste the five child lines into the VehicleBoat event in db/events.xml and add");
-        FPrintln(file, "     five to its nominal and max. -->");
+        FPrintln(file, "     Or skip this file: paste the six child lines into the VehicleBoat event in db/events.xml and add");
+        FPrintln(file, "     six to its nominal and max. -->");
         FPrintln(file, "<events>");
         FPrintln(file, "    <event name=\"" + BOAT_EVENT + "\">");
         if (counts) {
@@ -104,9 +104,9 @@ class gebsfishEvents {
         CloseFile(file);
 
         if (counts)
-            GebsfishLogger.Info("gebsfish-events.xml written: the five jon boats join the VehicleBoat event, nominal " + nominal.ToString() + " to " + newNominal.ToString() + ", max " + max.ToString() + " to " + newMax.ToString() + ".", "Events");
+            GebsfishLogger.Info("gebsfish-events.xml written: the six jon boats join the VehicleBoat event, nominal " + nominal.ToString() + " to " + newNominal.ToString() + ", max " + max.ToString() + " to " + newMax.ToString() + ".", "Events");
         else
-            GebsfishLogger.Info("gebsfish-events.xml written: the five jon boats join the VehicleBoat event; its nominal and max couldn't be read, so they share its count.", "Events");
+            GebsfishLogger.Info("gebsfish-events.xml written: the six jon boats join the VehicleBoat event; its nominal and max couldn't be read, so they share its count.", "Events");
     }
 
     // The VehicleBoat event's nominal, max, active and flags in the mission's
@@ -159,11 +159,11 @@ class gebsfishEvents {
                 }
                 continue;
             }
-            if (ReadElement(line, "nominal", value))
+            if (GebXmlFiles.ReadElement(line, "nominal", value))
                 nominal = value;
-            else if (ReadElement(line, "max", value))
+            else if (GebXmlFiles.ReadElement(line, "max", value))
                 max = value;
-            else if (ReadElement(line, "active", value))
+            else if (GebXmlFiles.ReadElement(line, "active", value))
                 active = value == 1;
         }
         CloseFile(fr);
@@ -172,19 +172,5 @@ class gebsfishEvents {
         if (inFlags)
             flags = "";
         return found;
-    }
-
-    // <name>number</name> on one line gives the number.
-    protected bool ReadElement(string line, string name, out int value) {
-        string open = "<" + name + ">";
-        int start = line.IndexOf(open);
-        if (start == -1)
-            return false;
-        start += open.Length();
-        int end = line.IndexOf("</" + name + ">");
-        if (end <= start)
-            return false;
-        value = line.Substring(start, end - start).Trim().ToInt();
-        return true;
     }
 }

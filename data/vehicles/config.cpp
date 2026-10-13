@@ -603,6 +603,76 @@ class cfgVehicles {
             };
         };
     };
+    class geb_jonboat_camo_pink : geb_jonboat_base {
+        scope = 2;
+        hiddenSelections[] = {
+            "BoatCamo",
+            "MotorCamo"
+        };
+
+        hiddenSelectionsTextures[] = {
+            "\gebsfish\data\vehicles\geb_jonboat_pinkcamo_co.paa",
+            "\gebsfish\data\vehicles\geb_jonboat_motor_black_co.paa"
+        };
+
+        hiddenSelectionsMaterials[] = {
+            "\gebsfish\data\vehicles\geb_jonboat_pinkcamo.rvmat",
+            "\gebsfish\data\vehicles\geb_jonboat_motor.rvmat"
+        };
+        // its own materials for the worn, damaged and ruined looks (RefTexsMats: the model's own material)
+        class DamageSystem: DamageSystem {
+            class DamageZones: DamageZones {
+                class Chassis: Chassis {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_pinkcamo.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_pinkcamo.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_pinkcamo_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_pinkcamo_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_pinkcamo_destruct.rvmat"}}
+                        };
+                    };
+                };
+                class LeftFloat: LeftFloat {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_pinkcamo.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_pinkcamo.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_pinkcamo_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_pinkcamo_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_pinkcamo_destruct.rvmat"}}
+                        };
+                    };
+                };
+                class RightFloat: RightFloat {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_pinkcamo.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_pinkcamo.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_pinkcamo_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_pinkcamo_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_pinkcamo_destruct.rvmat"}}
+                        };
+                    };
+                };
+                class FrontFloat: FrontFloat {
+                    class Health: Health {
+                        RefTexsMats[] = {"gebsfish\data\vehicles\geb_jonboat.rvmat"};
+                        healthLevels[] = {
+                            {1,{"gebsfish\data\vehicles\geb_jonboat_pinkcamo.rvmat"}},
+                            {0.7,{"gebsfish\data\vehicles\geb_jonboat_pinkcamo.rvmat"}},
+                            {0.5,{"gebsfish\data\vehicles\geb_jonboat_pinkcamo_damage.rvmat"}},
+                            {0.3,{"gebsfish\data\vehicles\geb_jonboat_pinkcamo_damage.rvmat"}},
+                            {0,{"gebsfish\data\vehicles\geb_jonboat_pinkcamo_destruct.rvmat"}}
+                        };
+                    };
+                };
+            };
+        };
+    };
     class geb_jonboat_camo_forest : geb_jonboat_base {
         scope = 2;
         hiddenSelections[] = {

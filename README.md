@@ -37,7 +37,7 @@ Built from the ground up for modded servers, it adds dozens of new fish species,
 
 ## Key Features
 
-* **80 catchable yields** including fish, crustaceans, marine invertebrates, and amphibians.
+* **91 catchable yields** including fish, squid, crustaceans, marine invertebrates, and amphibians.
 * New tools, baits, lures, jigs, storage containers, and clothing.
 * Fully featured logging system for dialing in your configs to your server's needs.
 * Extensive config system allows complete customizability to fit your server:
@@ -100,6 +100,12 @@ Gebsfish layers several configurable environmental systems on top of vanilla fis
 
 * **Fishing clothes** — fishing hats, shirts, raincoats, wellies and gloves in ten colours (red, green, blue, purple, orange, yellow, brown, light blue, lime and pink), carrying the Gebsfish logo; every shirt has a fish on its back, and the gloves are knit work gloves with a black rubber-dipped palm. Each colour is one shade across the whole mod, so a red hat matches a red rod, knife, cooler and tackle box. They give no fishing bonus, and the raincoats and wellies keep out the weather exactly as vanilla's do.
 
+* **Canned fish** — fifteen cans built on vanilla's Canned Tuna and Canned Sardines, each with its own printed label and its own food inside once opened. Flat ring-pull tins, opened by hand: sprats, anchovies, kipper snacks, mackerel in tomato sauce, smoked trout, smoked mussels, smoked oysters and squid in ink. Round cans, opened with a knife or another tool: salmon, cod liver, saury, crab meat, bonito, caviar and minced clams. They feed like the vanilla can they're built on and share its spawns rather than adding to them: the generated `gebsfish-types.xml` splits the mission's own tuna and sardine nominal and min between vanilla's can and the new ones.
+
+* **Fish foods** — fourteen more on vanilla's other packaging, each feeding and spawning like the vanilla item it's built on: cod roe spread, salmon pâté and smoked fish spread in pâté tins; fish soup, clam chowder, fish balls in tomato sauce and herring in mustard sauce in 250 g cans; pickled herring, red caviar and pickled mussels in glass jars; prawn crackers and dried squid in snack bags, fish jerky in a stick pack and bonito flakes in a box.
+
+* **Fishing effects** — a bite's splash shows the fish's size (vanilla's small splash up to a carp, bigger up to 15 kg, big beyond), and landing a heavy fish splashes again. Bubbles rise at the float just before a bite and boil up when treasure is hooked; spear stabs and net hauls splash; filleting leaves blood on the ground; flies swarm over rotten fish left lying around; and a cooler holding frozen food breathes cold mist. All made from vanilla's particles and textures.
+
 * **Configurable junk catches** — rods can pull junk instead of fish (nets and traps never do), about one catch in ten on every map and in every season by default (`JunkShare`): a weighted table of items (wellies, anything you add) with per-entry spawn-damage ranges, plus a separate table for liquid containers that come up empty (the default is a cooking pot). Fully tunable in `junk.json`.
 
 * **Repairs with consequences** — fishing rods repair with the Fishing Rod Repair Kit and the bamboo net repairs with Netting, but repairs cap at **Worn** — no restoring gear to factory-fresh — and Ruined tools are gone for good.
@@ -110,7 +116,7 @@ Gebsfish layers several configurable environmental systems on top of vanilla fis
 
 * **Trader compatibility** — `FishQuality` is how full each caught fish comes out (0–1; values above 1 act as 1), and with it how much the fish weighs. It defaults to `1.0`, a whole fish, because popular trader mods (DayZ-Expansion-Market, TraderPlus, Dr. Jones, etc.) refuse items that aren't full. Lower it (e.g. vanilla's `0.35`) only if your trader buys partly-full items.
 
-* **Admin logging** — every session writes a timestamped log to `$profile:Gebs/logs/`. `DebugLogs` has three levels: `0` off, `1` per-cast summaries (the cast's time, rain and water temperature, the species in the pool, the bite-speed aggregate and which fish was picked), `2` elevated — adds per-fish tables (each species' abundance, environment and method masks, weather/temperature multiplier and bite speed) plus the bite-rate numbers on every tick. Built for answering "why isn't fish X spawning" without guesswork. Logs older than 3 days are deleted automatically at startup so an unattended server doesn't accumulate one file per restart.
+* **Admin logging** — every session writes a timestamped log to `$profile:Gebs/logs/`. `DebugLogs` has three levels: `0` off, `1` per-cast summaries (the cast's time, rain and water temperature, the species in the pool, the bite-speed aggregate and which fish was picked), `2` elevated — adds per-fish tables (each species' abundance, environment and method masks, weather/temperature multiplier and bite speed) plus the bite-rate numbers on every tick. Built for answering "why isn't fish X spawning" without guesswork. Logs older than 3 days are deleted automatically at startup so an unattended server doesn't accumulate one file per restart (the logger keeps their names in `sessions.txt` in the same folder). With `DebugLogs` on, each log file opens with the gebsfish banner.
 * **Visual config editor** — open `docs/config-editor.html` (or the wiki's 🛠️ Config Editor), drop in your four JSON files, edit them with sliders, toggles and tables, and download them again. Everything stays in your browser. The **What will bite?** tab shows each species' odds for a map, date, hour, rain, water and bait, using your own files and the same maths as the server, so you can see what a change does before you restart.
 
 ## Configuration Examples
@@ -219,7 +225,7 @@ Worth knowing before you hand-tune anything, because it decides which of your ed
 
 **Updating from 3.3.2:**
 
-* The four "Fun" tackle boxes are gone (they were the Yellow, Red, Purple and Green Tackle Box under a second name), and the bonito is now `geb_PacificBonito`. Old ones keep loading under the old names until your next wipe when they sit inside something (a tent, a container, a vehicle, a jon boat deck, an inventory, a cooler or a mount). One lying loose on the ground is gone after the second restart, with its contents, so move them into something before updating. Old bonito fillets don't carry over.
+* The four "Fun" tackle boxes are gone (they were the Yellow, Red, Purple and Green Tackle Box under a second name), and the bonito and its fillet are now `geb_PacificBonito` and `geb_PacificBonitoFilletMeat`. Old ones keep loading under the old names until your next wipe when they sit inside something (a tent, a container, a vehicle, a jon boat deck, an inventory, a cooler or a mount). One lying loose on the ground is gone after the second restart, with its contents, so move them into something before updating. Old bonito fillets don't carry over.
 * Take `geb_FunYellowTackle`, `geb_FunRedTackle`, `geb_FunPurpleTackle`, `geb_FunGreenTackle`, `geb_Bonita` and `geb_BonitaFilletMeat` out of your mission's `types.xml` and any trader lists. The mod's generated files already name the new classes, and the old bonito rows in `fish.json` and `bait.json` are renamed on load, keeping your settings.
 
 **Disabling individual systems:**
@@ -256,6 +262,21 @@ In `general.json`:
 - The DayZ community for reporting bugs and inspiration throughout the life of the mod
 - [CadNav](https://cadnav.com) for models and textures of fish.
 - [All About the Birds & Macaulay Library](https://www.allaboutbirds.org/guide/Common_Loon/sounds) For the loon call recording used in the mod.
+- The squid skins are made from these photos:
+  - Humboldt squid: Attila Oláh, [iNaturalist observation 25076882](https://www.inaturalist.org/observations/25076882) ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))
+  - Northern shortfin squid: Michael Vecchione, NOAA Fisheries, [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:IIlex_illecebrosus_(Michael_Vecchione,_NOAA).jpg) (public domain)
+  - European flying squid: Philip Schaffer, [iNaturalist observation 149417347](https://www.inaturalist.org/observations/149417347) ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))
+  - Purpleback flying squid: [iNaturalist observation 175571410](https://www.inaturalist.org/observations/175571410) ([CC0](https://creativecommons.org/publicdomain/zero/1.0/))
+  - Squid meat: Fumikas Sagisavas, [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Frozen_fresh_squid_flowers.jpg) ([CC0](https://creativecommons.org/publicdomain/zero/1.0/))
+  - Baked squid meat: Ocdp, [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Grilled_squid_001.jpg) ([CC0](https://creativecommons.org/publicdomain/zero/1.0/))
+  - Boiled squid meat: moriza, [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Ojingeo.Sukhoe-01.jpg) ([CC BY 2.0](https://creativecommons.org/licenses/by/2.0/))
+  - Dried squid meat: Binh Giang, [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Dried_squid_3.png) (public domain)
+  - Burned squid meat: Obsidian Soul, [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Inihaw_na_pusit_(grilled_squid)_from_the_Philippines.jpg) ([CC0](https://creativecommons.org/publicdomain/zero/1.0/))
+  - Japanese flying squid: Chiswick Chap, [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Todarodes_pacificus_(white_background).jpg) ([CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/))
+  - Neon flying squid: Marina Drago Marchesi, [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Ommastrephes_bartramii_necropsia_02.jpg) ([CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/))
+  - Argentine shortfin squid: Astromessier, [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Illex_argentinus.jpg) ([CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/))
+
+  The textures made from the three CC BY-SA photos (`japaneseflyingsquid_*`, `neonflyingsquid_*` and `argentineshortfinsquid_*` in `data/fish`, the juveniles' and meat's included) are shared under the same licence as their photo, not the mod's licence below.
 
 
 ## Support

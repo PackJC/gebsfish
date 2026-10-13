@@ -232,9 +232,10 @@ class geb_MinnowBucket : geb_FilteredContainerBase {
 	// seven crayfish, the blood clam, mussel, snail, starfish and jellyfish.
 	// That's intended -- they're all small water creatures kept fresh in a
 	// bucket. The explicit entries keep the list readable and still work if
-	// one of them stops inheriting Shrimp. Bitterlings and Sardines aren't
-	// Shrimp: vanilla's trap baitfish, hook bait like the minnow.
-	static ref TStringArray s_Allowed = { "geb_FatHeadMinnow", "geb_Crayfish_Base", "Shrimp", "geb_AmericanBullFrog", "geb_RedSalamander", "Bitterlings", "Sardines" };
+	// one of them stops inheriting Shrimp (the juvenile squid are Shrimp too).
+	// Bitterlings and Sardines aren't Shrimp: vanilla's trap baitfish, hook
+	// bait like the minnow.
+	static ref TStringArray s_Allowed = { "geb_FatHeadMinnow", "geb_Crayfish_Base", "Shrimp", "geb_AmericanBullFrog", "geb_RedSalamander", "Bitterlings", "Sardines", "geb_SquidJuvenile_Base" };
 
 	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
@@ -257,7 +258,7 @@ class geb_MinnowBucket : geb_FilteredContainerBase {
 //      geb_Lure1-4 / geb_CurlyTailJig1-4 all extend geb_Lure). "Jig" stays
 //      for vanilla jigs.
 //   2. LIVE BAIT -- worms (vanilla + grub + rubber), insects (grasshopper +
-//      cricket), minnows, salamander, bullfrog, bitterlings, sardines, and
+//      cricket), minnows, salamander, bullfrog, bitterlings, sardines, juvenile squid, and
 //      vanilla shrimp as its own class only (s_Exact). Players can stash bait
 //      directly in the tackle box instead of always needing the dedicated
 //      worm/bug/minnow containers, while the dedicated containers still
@@ -283,7 +284,7 @@ class geb_SmallTackleBase : geb_FilteredContainerBase {
 		"Worm", "geb_GrubWorm", "geb_RubberWorm",
 		"geb_GrassHopper", "geb_FieldCricket",
 		"geb_FatHeadMinnow", "geb_RedSalamander", "geb_AmericanBullFrog",
-		"Bitterlings", "Sardines",
+		"Bitterlings", "Sardines", "geb_SquidJuvenile_Base",
 		// Tools / containers
 		"geb_FishGloves_Base",  // every colour of fishing gloves, and any added later
 		"geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet",
@@ -312,7 +313,7 @@ class geb_LargeTackleBase : geb_FilteredContainerBase {
 		"Worm", "geb_GrubWorm", "geb_RubberWorm",
 		"geb_GrassHopper", "geb_FieldCricket",
 		"geb_FatHeadMinnow", "geb_RedSalamander", "geb_AmericanBullFrog",
-		"Bitterlings", "Sardines",
+		"Bitterlings", "Sardines", "geb_SquidJuvenile_Base",
 		// Tools / containers
 		"geb_FishGloves_Base",  // every colour of fishing gloves, and any added later
 		"geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet",
@@ -388,6 +389,38 @@ class geb_Cooler_base : geb_FilteredContainerBase {
 	// fresh for good).
 	override bool IsSelfAdjustingTemperature() {
 		return !IsRuined();
+	}
+
+	// A cooler standing in the world breathes a faint cold mist every few
+	// seconds while it holds something frozen. Client-side: the contents'
+	// frozen state is synced. The puff rises from the lid (cooler.p3d's top).
+	protected const int GEB_MIST_INTERVAL_MS = 4000;
+
+	override void EEInit() {
+		super.EEInit();
+		if (!g_Game.IsDedicatedServer())
+			g_Game.GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GebColdMist, GEB_MIST_INTERVAL_MS, true);
+	}
+
+	override void EEDelete(EntityAI parent) {
+		if (!g_Game.IsDedicatedServer())
+			g_Game.GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(GebColdMist);
+		super.EEDelete(parent);
+	}
+
+	protected void GebColdMist() {
+		if (IsRuined() || GetHierarchyParent() || !GetInventory() || !GetInventory().GetCargo())
+			return;
+		CargoBase cargo = GetInventory().GetCargo();
+		for (int i = 0; i < cargo.GetItemCount(); i++) {
+			ItemBase item = ItemBase.Cast(cargo.GetItem(i));
+			if (item && item.GetIsFrozen()) {
+				EffectParticle mist = new EffBreathVapourLight();
+				mist.SetAutodestroy(true);
+				SEffectManager.PlayInWorld(mist, ModelToWorld(Vector(-0.115, 0.3, 0.02)));
+				return;
+			}
+		}
 	}
 
 	// The cooling runs on the Central Economy's periodic item update, the
@@ -469,4 +502,14 @@ class geb_OldRedTackle : geb_LargeTackleBase {};
 class geb_OldGreenTackle : geb_LargeTackleBase {};
 class geb_OldBlueTackle : geb_LargeTackleBase {};
 class geb_OldPurpleTackle : geb_LargeTackleBase {};
+class geb_OldOrangeTackle : geb_LargeTackleBase {};
+class geb_OldYellowTackle : geb_LargeTackleBase {};
+class geb_OldBrownTackle : geb_LargeTackleBase {};
+class geb_OldPinkTackle : geb_LargeTackleBase {};
+class geb_OldLimeTackle : geb_LargeTackleBase {};
+class geb_OldLightBlueTackle : geb_LargeTackleBase {};
+class geb_OldCamoTackle : geb_LargeTackleBase {};
+class geb_OldDesertCamoTackle : geb_LargeTackleBase {};
+class geb_OldSnowCamoTackle : geb_LargeTackleBase {};
+class geb_OldPinkCamoTackle : geb_LargeTackleBase {};
 class geb_Tackle_Base : geb_LargeTackleBase {};

@@ -362,6 +362,8 @@ class GeneralConfig {
     ref DigWormsConf                  DigWormsSettings;
     string WeatherSettingsInfo = "Global weather/time-of-day/temperature/moon catch modifiers and their thresholds (each field has its own *Info inside).";
     ref WeatherConf                   WeatherSettings;
+    string DryingRackSettingsInfo = "Fish Drying Rack: raw fillets hung on a standing rack dry to the dried food stage without a fire (each field inside has its own *Info).";
+    ref DryingRackConf                DryingRackSettings;
 
     private const static string PATH = "$profile:Gebs/general.json";
 
@@ -410,6 +412,7 @@ class GeneralConfig {
         n += GebRefreshInfo(DigBugsSettings, new DigBugsConf());
         n += GebRefreshInfo(DigWormsSettings, new DigWormsConf());
         n += GebRefreshInfo(WeatherSettings, new WeatherConf());
+        n += GebRefreshInfo(DryingRackSettings, new DryingRackConf());
         if (HookFromFishCatches) {
             HookFromFishEntry freshHook = new HookFromFishEntry();
             foreach (HookFromFishEntry hook : HookFromFishCatches)
@@ -474,6 +477,7 @@ class GeneralConfig {
         if (!PredatorSettings || !file.Has("PredatorSettings")) { PredatorSettings = new PredatorConf;    changed = true; }
         if (!WeatherSettings || !file.Has("WeatherSettings"))   { WeatherSettings = new WeatherConf;      changed = true; }
         if (!TreasureSettings || !file.Has("TreasureSettings")) { TreasureSettings = new TreasureConf;    changed = true; }
+        if (!DryingRackSettings || !file.Has("DryingRackSettings")) { DryingRackSettings = new DryingRackConf; changed = true; }
         // Settings added to an EXISTING section need their own check: the
         // section is there, the field just isn't, and the loader leaves a
         // field missing from a section at 0 / false (it builds sections
@@ -482,6 +486,14 @@ class GeneralConfig {
         // has it keeps the admin's choice, including a deliberate 0.
         if (RecipeToggles && !file.Has("RecipeToggles.CraftFishMount")) {
             RecipeToggles.CraftFishMount = true;
+            changed = true;
+        }
+        if (RecipeToggles && !file.Has("RecipeToggles.CraftDryingRack")) {
+            RecipeToggles.CraftDryingRack = true;
+            changed = true;
+        }
+        if (RecipeToggles && !file.Has("RecipeToggles.CraftFishingLocker")) {
+            RecipeToggles.CraftFishingLocker = true;
             changed = true;
         }
         if (TreasureSettings && !file.Has("TreasureSettings.RequireRealRod")) {
@@ -670,6 +682,7 @@ class GeneralConfig {
         RecipeToggles = new RecipeToggleConf;
         PredatorSettings = new PredatorConf;
         WeatherSettings = new WeatherConf;
+        DryingRackSettings = new DryingRackConf;
         BambooFishingNetSettings = new BambooFishingNetConf;
         SpearFishingSettings = new SpearFishingConf;
         DigBugsSettings = new DigBugsConf;
@@ -1020,6 +1033,12 @@ class BaitSettingsConf {
         // saltwater bait (tuna, marlin, sharks).
         SeedBait("Bitterlings",       0.6, 2.0, 2.5, 2.2, 1.2, 1.8, 0.3, 0.8, 0.8, 0.6, 0.6, 0.4, 0.3);
         SeedBait("Sardines",          0.4, 0.8, 1.0, 0.8, 0.6, 1.5, 0.3, 0.3, 0.5, 2.5, 2.0, 1.2, 1.0);
+        // Whole juvenile squid: the classic big-game sea bait (tuna, marlin,
+        // sharks, swordfish) and good for big bottom fish; little use in fresh water.
+        SeedBait("geb_NorthernShortfinSquidJuvenile",  0.3, 0.6, 0.6, 0.4, 0.5, 1.2, 0.2, 0.2, 0.4, 2.6, 2.2, 1.4, 1.0);
+        SeedBait("geb_ArgentineShortfinSquidJuvenile", 0.3, 0.6, 0.6, 0.4, 0.5, 1.2, 0.2, 0.2, 0.4, 2.6, 2.2, 1.4, 1.0);
+        SeedBait("geb_JapaneseFlyingSquidJuvenile",    0.3, 0.6, 0.6, 0.4, 0.5, 1.2, 0.2, 0.2, 0.4, 2.6, 2.2, 1.4, 1.0);
+        SeedBait("geb_PurplebackFlyingSquidJuvenile",  0.3, 0.6, 0.6, 0.4, 0.5, 1.2, 0.2, 0.2, 0.4, 2.6, 2.2, 1.4, 1.0);
 
         // One row per lure family: GetBaitMultiplier's trailing-digit
         // fallback resolves geb_SpinnerBait1..4 etc. to these rows, and an
@@ -1059,8 +1078,8 @@ class BaitSettingsConf {
         s_CatAmphibian = {"geb_AmericanBullFrog", "geb_RedSalamander"};
         s_CatBaitFish = {"geb_FatHeadMinnow", "geb_FlatHeadMullet", "geb_SlimySculpin"};
         s_CatSaltwaterLarge = {"geb_GreatWhiteShark", "geb_HammerHeadShark", "geb_AngelShark", "geb_LeopardShark", "geb_AtlanticBlueMarlin", "geb_AtlanticSailFish", "geb_YellowFinTuna"};
-        s_CatSaltwaterMed = {"geb_AsianSeaBass", "geb_PacificBonito", "geb_GreatBarracuda", "geb_MahiMahi", "geb_RoughNeckRock", "geb_SiameseTigerFish", "WalleyePollock", "geb_PacificCod", "geb_LargeHeadHairTailFish", "geb_SouthernFlounder"};
-        s_CatSaltwaterSmall = {"Mackerel", "Sardines", "geb_YellowSnapper", "geb_WhiteGrunt"};
+        s_CatSaltwaterMed = {"geb_AsianSeaBass", "geb_PacificBonito", "geb_GreatBarracuda", "geb_MahiMahi", "geb_RoughNeckRock", "geb_SiameseTigerFish", "WalleyePollock", "geb_PacificCod", "geb_LargeHeadHairTailFish", "geb_SouthernFlounder", "geb_HumboldtSquid", "geb_EuropeanFlyingSquid", "geb_NeonFlyingSquid"};
+        s_CatSaltwaterSmall = {"Mackerel", "Sardines", "geb_YellowSnapper", "geb_WhiteGrunt", "geb_NorthernShortfinSquid", "geb_ArgentineShortfinSquid", "geb_JapaneseFlyingSquid", "geb_PurplebackFlyingSquid", "geb_NorthernShortfinSquidJuvenile", "geb_ArgentineShortfinSquidJuvenile", "geb_JapaneseFlyingSquidJuvenile", "geb_PurplebackFlyingSquidJuvenile"};
         s_CatReefTropical = {"geb_AngelFish", "geb_BlueTang", "geb_HumpHeadWrasse", "geb_Severum", "geb_RedHeadCichlid"};
     }
 
@@ -1484,6 +1503,24 @@ class FishConfig {
         f = new FishConf(); f.Classname="geb_BlueJellyFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=6; f.CatchProbability=12; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.0; f.NightMultiplier=1.4; f.TempOptimal=20.0; f.TempMin=8.0; f.TempMax=30.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
         f = new FishConf(); f.Classname="geb_AmericanLobster"; f.RecipeShape=2; f.ResultMain="geb_AmericanLobsterClaw"; f.ResultBonus="geb_AmericanLobsterTail"; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=6; f.CatchProbability=9; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=18.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
         f = new FishConf(); f.Classname="geb_EuropeanLobster"; f.RecipeShape=2; f.ResultMain="geb_EuropeanLobsterClaw"; f.ResultBonus="geb_EuropeanLobsterTail"; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=6; f.CatchProbability=9; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=14.0; f.TempMin=5.0; f.TempMax=20.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        SeedSpeciesSquid();
+    }
+    // Squid feed at night near the surface and are caught on a rod (jigging);
+    // calm water suits them better than a storm. The juveniles are bait-sized
+    // and also come up in fish traps; they have no cleaning recipe.
+    void SeedSpeciesSquid() {
+        FishConf f;
+        f = new FishConf(); f.Classname="geb_HumboldtSquid"; f.RecipeShape=0; f.ResultMain="geb_HumboldtSquidMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=4; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=18.0; f.TempMin=10.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf(); f.Classname="geb_NorthernShortfinSquid"; f.RecipeShape=0; f.ResultMain="geb_NorthernShortfinSquidMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=1; f.CatchProbability=10; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=20.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf(); f.Classname="geb_ArgentineShortfinSquid"; f.RecipeShape=0; f.ResultMain="geb_ArgentineShortfinSquidMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=1; f.CatchProbability=9; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=10.0; f.TempMin=4.0; f.TempMax=16.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf(); f.Classname="geb_JapaneseFlyingSquid"; f.RecipeShape=0; f.ResultMain="geb_JapaneseFlyingSquidMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=1; f.CatchProbability=9; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=16.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf(); f.Classname="geb_PurplebackFlyingSquid"; f.RecipeShape=0; f.ResultMain="geb_PurplebackFlyingSquidMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=1; f.CatchProbability=7; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=26.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf(); f.Classname="geb_EuropeanFlyingSquid"; f.RecipeShape=0; f.ResultMain="geb_EuropeanFlyingSquidMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=3; f.Environment=2; f.CatchMethod=1; f.CatchProbability=6; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=15.0; f.TempMin=10.0; f.TempMax=22.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf(); f.Classname="geb_NeonFlyingSquid"; f.RecipeShape=0; f.ResultMain="geb_NeonFlyingSquidMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=2; f.CatchMethod=1; f.CatchProbability=4; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=17.0; f.TempMin=10.0; f.TempMax=25.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf(); f.Classname="geb_NorthernShortfinSquidJuvenile"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=7; f.CatchProbability=14; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=20.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf(); f.Classname="geb_ArgentineShortfinSquidJuvenile"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=7; f.CatchProbability=12; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=10.0; f.TempMin=4.0; f.TempMax=16.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf(); f.Classname="geb_JapaneseFlyingSquidJuvenile"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=7; f.CatchProbability=12; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=16.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new FishConf(); f.Classname="geb_PurplebackFlyingSquidJuvenile"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=7; f.CatchProbability=10; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=26.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
     }
 }
 
@@ -1606,6 +1643,8 @@ class RecipeToggleConf {
     bool CraftBambooFishingNet = 1;
     bool CraftHookFromWire = 1;
     bool CraftFishMount = 1;
+    bool CraftDryingRack = 1;
+    bool CraftFishingLocker = 1;
     bool RepairFishingPole = 1;
     bool RepairBambooFishingNet = 1;
 };
@@ -1707,6 +1746,21 @@ class WeatherConf {
     string SpeciesBuffsInfo = "Per-species multipliers live on each fish in fish.json (RainMultiplier, StormMultiplier, DawnMultiplier, DayMultiplier, DuskMultiplier, NightMultiplier, TempOptimal, TempMin, TempMax). They decide WHICH fish bites; the global multipliers above decide how OFTEN anything bites, and the two never multiply together. 1.0 = no effect, higher = more likely, lower = less likely.";
 }
 
+// Fish Drying Rack (geb_fishdryingrack.c, FUTURE_IDEAS F21). Raw fillets hung on
+// a rack standing in the world dry to the dried food stage without a fire,
+// stalled by rain or snow and sped up by wind; while they can dry they don't
+// rot. Crafting the rack is RecipeToggles.CraftDryingRack.
+class DryingRackConf {
+    string EnableInfo = "Turns the Fish Drying Rack's drying on (1) or off (0). On: raw fillets hung on a rack standing in the world dry to the dried food stage without a fire, and fillets on the rack don't rot while the weather lets them dry. Off: the rack still holds fillets, but nothing dries and they rot as usual. Crafting the rack is switched by RecipeToggles.CraftDryingRack.";
+    bool Enable = 1;
+    string MinutesToDryInfo = "Real minutes a raw fillet takes to dry on the rack in dry, still weather (default 60). Wind makes it quicker (see WindScale); rain or snow above StallThreshold pauses it. Progress is kept for each slot through server restarts and starts over when the fillet is taken off the rack.";
+    float MinutesToDry = 60.0;
+    string StallThresholdInfo = "Rain or snowfall intensity (0-1) above which drying stops and fillets on the rack decay as usual again (default 0.2; the heavier of rain and snow counts). 0 = any rain or snow stops it; 1 = nothing does.";
+    float StallThreshold = 0.2;
+    string WindScaleInfo = "How much wind speeds up drying: at the map's strongest wind a fillet dries (1 + WindScale) times as fast, at half that wind (1 + WindScale / 2) times, and so on. 0 = wind makes no difference. Default 1: the strongest wind halves the drying time.";
+    float WindScale = 1.0;
+}
+
 class PredatorEntry {
     string ClassnameInfo = "Classname of the predator to spawn (e.g. Animal_CanisLupus_Grey for a grey wolf, Animal_UrsusArctos for a bear).";
     string Classname;   //Classname of predator
@@ -1803,8 +1857,8 @@ class SpearFishingConf {
     string EnableInfo = "Turns spear fishing on (1) or off (0). Off, spears get no fishing action.";
     bool Enable = true;
 
-    string FindChanceInfo = "Per-stab probability of catching anything. 0-1; 1.0 = every stab catches, 0.0 = none do. The default 0.04 with a 6 s stab gives a fish about every 2.5 minutes, a little slower than a rod.";
-    float FindChance = 0.04;
+    string FindChanceInfo = "Per-stab probability of catching anything. 0-1; 1.0 = every stab catches, 0.0 = none do. The default 0.15 with a 6 s stab gives a fish about every 40 seconds (one stab in seven).";
+    float FindChance = 0.15;
 
     string MaxWaterDepthInfo = "Deepest water, in metres at the spot aimed at, that a spear can fish. Spear fishing is for the shallows: knee-deep water near the bank or shore.";
     float MaxWaterDepth = 1.0;
@@ -1903,7 +1957,7 @@ class TreasureConf {
     float Chance = 0.0002;
     string AnnounceInfo = "Send the lucky player a chat message when a treasure is pulled up. Purely cosmetic -- set to 0 for a silent find.";
     bool Announce = 1;
-    string RequireRealRodInfo = "Restrict treasure to a proper fishing rod. The crafted ImprovisedFishingRod is a stick and a piece of rope, so it is excluded, as is any rod that does not inherit from FishingRod. The vanilla rod and the ten gebsfish colour rods all qualify. Set to 0 to let any rod find treasure.";
+    string RequireRealRodInfo = "Restrict treasure to a proper fishing rod. The crafted ImprovisedFishingRod is a stick and a piece of rope, so it is excluded, as is any rod that does not inherit from FishingRod. The vanilla rod and every gebsfish rod qualify. Set to 0 to let any rod find treasure.";
     bool RequireRealRod = 1;
     string RodCatchesToRuinInfo = "How many treasure pulls it takes to ruin a PRISTINE rod -- winching a loaded container up is brutal on tackle. Each pull removes this fraction of the rod maximum health, so the default 3 costs 50 of a stock rod 150 HP. A rod already worn from ordinary fishing gives out sooner, and the damage rescales on its own if the hitpoints are retuned or another mod rod is used. Set to 0 to leave the rod undamaged.";
     int RodCatchesToRuin = 3;

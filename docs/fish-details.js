@@ -20,6 +20,14 @@ const FISHDETAIL = {
 "desc": "Squatina squatina, the angelshark or monkfish, is a species of shark in the family Squatinidae, that were once widespread in the coastal waters of the northeastern Atlantic Ocean.",
 "img": "fish/geb_AngelShark.webp"
 },
+"geb_ArgentineShortfinSquid": {
+"desc": "The Argentine shortfin squid (Illex argentinus) is a squid of the family Ommastrephidae from the southwest Atlantic, found from southern Brazil to Patagonia and the Falkland Islands, over the continental shelf and slope from about 50 m to 800 m (160-2,600 ft). Like its northern cousin it lives only about a year, migrating along the shelf in huge shoals to feed and spawn.\n\nIts back is reddish to purplish brown with a darker stripe down the middle, its belly paler, and its short fins form an arrowhead at the end of the mantle. Adults reach a mantle length of about 40 cm (16 in) and weigh up to 1 kg (2.2 lb). It feeds on krill, small fish and other squid. Fleets of jigging ships catch it at night under rows of bright lamps, which can be seen from space, making it one of the most important squid fisheries in the world.",
+"img": "fish/geb_ArgentineShortfinSquid.webp"
+},
+"geb_ArgentineShortfinSquidJuvenile": {
+"desc": "A young Argentine shortfin squid (Illex argentinus) with a mantle of about 10 cm (4 in), no longer than a hand. Small whole squid are one of the best saltwater baits: tuna, marlin, sharks and big bottom fish take them readily. Put it on the hook as it is, or cook and eat it whole. It is too small to clean.",
+"img": "fish/geb_ArgentineShortfinSquidJuvenile.webp"
+},
 "geb_AsianSeaBass": {
 "desc": "The barramundi or Asian sea bass, is a species of catadromous fish in the family Latidae of the order Perciformes. The species is widely distributed in the Indo-West Pacific region from South Asia to Papua New Guinea and Northern Australia.",
 "img": "fish/geb_AsianSeaBass.webp"
@@ -92,6 +100,10 @@ const FISHDETAIL = {
 "desc": "Astacus astacus, the European crayfish, noble crayfish, or broad-fingered crayfish, is the most common species of crayfish in Europe, and a traditional food source. Like other true crayfish, A. astacus is restricted to fresh water, living only in unpolluted streams, rivers, and lakes. It is found from France throughout Central Europe, to the Balkan Peninsula, and north as far as Scandinavia and Finland, and Eastern Europe. Males may grow up to 16 cm (6 in) long, and females up to 12 centimetres (5 inches).",
 "img": "fish/geb_EuropeanCrayFish.webp"
 },
+"geb_EuropeanFlyingSquid": {
+"desc": "The European flying squid (Todarodes sagittatus) is a large squid of the family Ommastrephidae from the eastern Atlantic, found from the Arctic waters off Norway to West Africa and throughout the Mediterranean, from the surface down to more than 1,000 m (3,300 ft). It roams the open sea and the edges of the continental shelf, coming closer to the surface at night.\n\nIts body is reddish brown to violet, with short fins, long arms and very long tentacles that carry suckers along their whole length. Most adults have a mantle of 25-35 cm (10-14 in), the largest reach 75 cm (30 in) and over 3 kg (6.6 lb). It hunts fish such as blue whiting and herring, crustaceans and other squid. It is caught by trawlers and on jigs, and is eaten above all in Spain, Portugal and Italy.",
+"img": "fish/geb_EuropeanFlyingSquid.webp"
+},
 "geb_EuropeanLobster": {
 "desc": "Homarus gammarus, known as the European lobster or common lobster, is a species of clawed lobster from the eastern Atlantic Ocean, Mediterranean Sea and parts of the Black Sea. It is closely related to the American lobster, H. americanus. It may grow to a length of 60 cm (24 in) and a mass of 6 kilograms (13 lb), and bears a conspicuous pair of claws. In life, the lobsters are blue, only becoming &quot;lobster red&quot; on cooking. Mating occurs in the summer, producing eggs which are carried by the females for up to a year before hatching into planktonic larvae. Homarus gammarus is a highly esteemed food, and is widely caught using lobster pots, mostly around the British Isles.",
 "img": "fish/geb_EuropeanLobster.webp"
@@ -124,9 +136,21 @@ const FISHDETAIL = {
 "desc": "The hammerhead sharks are a group of sharks that form the family Sphyrnidae, named for the unusual and distinctive form of their heads, which are flattened and laterally extended into a cephalofoil (a T-shape or &quot;hammer&quot;). The shark&#x27;s eyes are placed one on each end of this T-shaped structure, with their small mouths directly centered and underneath. Most hammerhead species are placed in the genus Sphyrna, while the winghead shark is placed in its own genus, Eusphyra. Many different—but not necessarily mutually exclusive—functions have been postulated for the cephalofoil, including sensory reception, manoeuvering, and prey manipulation. The cephalofoil gives the shark superior binocular vision and depth perception, as well as increased surface area for electroreceptors.",
 "img": "fish/geb_HammerHeadShark.webp"
 },
+"geb_HumboldtSquid": {
+"desc": "The Humboldt squid (Dosidicus gigas), also called the jumbo flying squid or &quot;diablo rojo&quot;, is a large predatory squid of the family Ommastrephidae. It lives in the eastern Pacific from southern Chile to California, in warm years as far north as Alaska, from the surface down to about 1,200 m (3,900 ft). By day it stays deep, often in water with very little oxygen; at night it rises to the surface to feed.\n\nIts body is deep red to purple, and it can flash red and white in an instant by working the pigment cells in its skin. Most caught at sea are 50-80 cm (20-31 in) in mantle length and weigh 5-15 kg (11-33 lb), but the largest reach a mantle of 1.5 m (4.9 ft) and 50 kg (110 lb). It hunts in shoals of hundreds, mostly lanternfish, small fish, shrimp and other squid, which it grabs with suckers ringed with sharp teeth. It is caught at night on jigs under bright lights and supports one of the largest squid fisheries in the world.",
+"img": "fish/geb_HumboldtSquid.webp"
+},
 "geb_HumpHeadWrasse": {
 "desc": "The humphead wrasse is a large species of wrasse mainly found on coral reefs in the Indo-Pacific region. It is also known as the Maori wrasse, Napoleon wrasse, Napoleon fish, Napoleonfish, so mei, mameng, and merer in the Pohnpeian language of the Caroline Islands.",
 "img": "fish/geb_HumpHeadWrasse.webp"
+},
+"geb_JapaneseFlyingSquid": {
+"desc": "The Japanese flying squid (Todarodes pacificus) is a squid of the family Ommastrephidae from the northwest Pacific, found around Japan, Korea, eastern China and the Russian Far East, from the surface down to about 500 m (1,600 ft). It migrates north to feed in summer and south to spawn in winter, and like most squid it lives about a year.\n\nIts body is reddish brown, darker along the back, with short broad fins and long tentacles. Adults usually have a mantle of 25-30 cm (10-12 in), the largest reach 50 cm (20 in) and about 1 kg (2.2 lb). It feeds on krill, small fish and other squid. It is the most important squid in Japan, where it is eaten raw as sashimi, grilled, or dried as surume, and it is caught at night by boats hanging rows of bright lamps over the water.",
+"img": "fish/geb_JapaneseFlyingSquid.webp"
+},
+"geb_JapaneseFlyingSquidJuvenile": {
+"desc": "A young Japanese flying squid (Todarodes pacificus) with a mantle of about 10 cm (4 in), no longer than a hand. Small whole squid are one of the best saltwater baits: tuna, marlin, sharks and big bottom fish take them readily. Put it on the hook as it is, or cook and eat it whole. It is too small to clean.",
+"img": "fish/geb_JapaneseFlyingSquidJuvenile.webp"
 },
 "geb_KingCrab": {
 "desc": "King crabs are decapod crustaceans of the family Lithodidae that are chiefly found in deep waters and are adapted to cold environments. They are composed of two subfamilies: Lithodinae, which tend to inhabit deep waters, are globally distributed, and comprise the majority of the family&#x27;s species diversity; and Hapalogastrinae, which are endemic to the North Pacific and inhabit exclusively shallow waters. King crabs superficially resemble true crabs but are generally understood to be closest to the pagurid hermit crabs. This placement of king crabs among the hermit crabs is supported by several anatomical peculiarities which are present only in king crabs and hermit crabs, making them a prominent example of carcinisation among decapods. Several species of king crabs, especially in Alaskan and southern South American waters, are targeted by commercial fisheries and have been subject to overfishing.",
@@ -168,6 +192,10 @@ const FISHDETAIL = {
 "desc": "Mussel is the common name used for members of several families of bivalve molluscs, from saltwater and freshwater habitats. These groups have in common a shell whose outline is elongated and asymmetrical compared with other edible clams, which are often more or less rounded or oval.",
 "img": "fish/geb_Mussel.webp"
 },
+"geb_NeonFlyingSquid": {
+"desc": "The neon flying squid (Ommastrephes bartramii) is a large ocean squid of the family Ommastrephidae, found in subtropical and temperate waters of every ocean, from the surface down to about 1,500 m (4,900 ft). In the North Pacific it makes long migrations between warm spawning grounds and cold feeding grounds, and it can glide over the surface to escape predators.\n\nIts back is dark red to purple and its belly silvery, with a glowing, silvery stripe along the underside of the mantle that gives it its name, and large diamond-shaped fins. Females grow much larger than males and reach a mantle of 60 cm (24 in) and about 5 kg (11 lb). It feeds on fish and other squid. It is fished with jigs under lights in the North Pacific and eaten fresh, dried and frozen.",
+"img": "fish/geb_NeonFlyingSquid.webp"
+},
 "geb_NeoshoBass": {
 "desc": "The Neosho Bass (Micropterus velox) is a black bass found only in the Spring, Neosho, and Elk River basins of Missouri, Arkansas, Kansas, and Oklahoma. Long treated as a subspecies of the Smallmouth Bass, it is now usually recognized as a species of its own. They&#x27;re perfectly adapted to the clear, gravel-bottomed streams of this region, playing a vital role in the ecosystem. Over time they are breeding with Smallmouth and it is getting harder to find a pure Neosho. That&#x27;s why proper identification is crucial when determining if you&#x27;ve successfully found one.",
 "img": "fish/geb_NeoshoBass.webp"
@@ -175,6 +203,14 @@ const FISHDETAIL = {
 "geb_NorthernPike": {
 "desc": "The northern pike (Esox lucius) is a species of carnivorous fish of the genus Esox (pikes). They are commonly found in moderately salty and fresh waters of the Northern Hemisphere (i.e. holarctic in distribution). They are known simply as a pike in Great Britain, Ireland, most of Eastern Europe, Canada and the U.S., although in the Midwest, they may be called a Northern.\n\nPike can grow to a relatively large size. Their average length is about 40-55 cm (16-22 in), with maximum recorded lengths of up to 150 cm (59 in) and maximum weights of 28.4 kg (63 lb). The IGFA currently recognises a 25 kg (55 lb) pike caught by Lothar Louis on Greffern Lake, Germany, on 16 October 1986, as the all-tackle world-record holding northern pike. Northern pike grow to larger sizes in Eurasia than in North America, and in coastal Eurasian regions than inland ones.",
 "img": "fish/geb_NorthernPike.webp"
+},
+"geb_NorthernShortfinSquid": {
+"desc": "The northern shortfin squid (Illex illecebrosus) is a small, fast squid of the family Ommastrephidae from the northwest Atlantic, found from Florida to Labrador and southern Greenland, from the surface down to about 1,000 m (3,300 ft). Every summer it moves onto the continental shelf to feed, and in autumn it returns to deep water to spawn. It lives only about a year.\n\nIts body is pale, speckled with reddish-brown and orange pigment spots and darker along the back, with short fins at the tip of the mantle. Adults reach a mantle length of 31 cm (12 in) and weigh up to about 0.5 kg (1.1 lb). It feeds on krill, small fish and other squid, including its own kind. It is fished commercially and is one of the most widely used baits for tuna, swordfish and sharks.",
+"img": "fish/geb_NorthernShortfinSquid.webp"
+},
+"geb_NorthernShortfinSquidJuvenile": {
+"desc": "A young northern shortfin squid (Illex illecebrosus) with a mantle of about 10 cm (4 in), no longer than a hand. Small whole squid are one of the best saltwater baits: tuna, marlin, sharks and big bottom fish take them readily. Put it on the hook as it is, or cook and eat it whole. It is too small to clean.",
+"img": "fish/geb_NorthernShortfinSquidJuvenile.webp"
 },
 "geb_NorthernSnakeHead": {
 "desc": "The northern snakehead (Channa argus) is a species of snakehead fish native to temperate East Asia, in China, Russia, North Korea, and South Korea. Their natural range goes from the Amur River watershed in Siberia and Manchuria down to Hainan. It is an important food fish and one of the most cultivated in its native region, with 510,000 tonnes annual production worldwide.",
@@ -187,6 +223,14 @@ const FISHDETAIL = {
 "geb_PacificCod": {
 "desc": "The Pacific Cod, Gadus macrocephalus, is a species of ray-finned fish in the family Gadidae. It is a bottom-dwelling fish found in the northern Pacific Ocean, mainly on the continental shelf and upper slopes, to depths of about 900 m. It can grow to a length of a meter or so and is found in large schools.",
 "img": "fish/geb_PacificCod.webp"
+},
+"geb_PurplebackFlyingSquid": {
+"desc": "The purpleback flying squid (Sthenoteuthis oualaniensis) is a squid of the family Ommastrephidae from the warm Indian and Pacific oceans, including the Red Sea and the Arabian Sea, from the surface down to about 1,000 m (3,300 ft). It is one of the most common squid of tropical open seas, and like other flying squid it can launch itself out of the water and glide to escape predators.\n\nIts back is purple-red and its belly silvery, and the large form carries an oval patch of light organs on its back. Most adults have a mantle of 12-25 cm (5-10 in), but a giant form reaches 65 cm (26 in) and several kilograms. It feeds on lanternfish, crustaceans and other squid, and is itself food for tuna, dolphinfish and swordfish. It is caught at night on jigs under lights in the South China Sea and the Arabian Sea.",
+"img": "fish/geb_PurplebackFlyingSquid.webp"
+},
+"geb_PurplebackFlyingSquidJuvenile": {
+"desc": "A young purpleback flying squid (Sthenoteuthis oualaniensis) with a mantle of about 10 cm (4 in), no longer than a hand. Small whole squid are one of the best saltwater baits: tuna, marlin, sharks and big bottom fish take them readily. Put it on the hook as it is, or cook and eat it whole. It is too small to clean.",
+"img": "fish/geb_PurplebackFlyingSquidJuvenile.webp"
 },
 "geb_RainbowTrout": {
 "desc": "The rainbow trout (Oncorhynchus mykiss) is a species of trout native to cold-water tributaries of the Pacific Ocean in North America and Asia. The steelhead (sometimes called steelhead trout) is an anadromous (sea-run) form of the coastal rainbow trout (O. m. irideus) or Columbia River redband trout (O. m. gairdneri) that usually returns to freshwater to spawn after living two to three years in the ocean. Freshwater forms that have been introduced into the Great Lakes and migrate into tributaries to spawn are also called steelhead.\n\nAdult freshwater stream rainbow trout average between 0.5 and 2.5 kilograms (1 and 5 lb), while lake-dwelling and anadromous forms may reach 9 kg (20 lb). Coloration varies widely based on subspecies, forms, and habitat. Adult fish are distinguished by a broad reddish stripe along the lateral line, from gills to the tail, which is most vivid in breeding males.",

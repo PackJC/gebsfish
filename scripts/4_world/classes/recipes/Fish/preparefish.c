@@ -218,6 +218,9 @@ modded class PrepareFish {
         }
         if (caviar)
             ApplyConfiguredCaviarChance(results);
+        // Blood drips onto the ground in front of whoever cut the fish.
+        if (player)
+            GebFishingFx.Play(player.GetPosition() + player.GetDirection() * 0.4, ParticleList.BLOOD_SURFACE_DROPS, 60);
         // Trigger predator spawning
         TrySpawnPredator(player);
         // Roll for a damaged hook 'stuck in the fish'

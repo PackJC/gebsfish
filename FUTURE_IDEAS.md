@@ -8,7 +8,7 @@ rejected.
 
 **Animations: only what is already in the game.** No idea may need a custom
 animation. Every player action uses a vanilla `CMD_ACTIONMOD_*` /
-`CMD_ACTIONFB_*` command (as spear fishing uses `CMD_ACTIONFB_DIGMANIPULATE`),
+`CMD_ACTIONFB_*` command (as spear fishing uses `CMD_ACTIONFB_DIGGIN_WORMS`), and the held item's animation set must define it or the player freezes,
 and each idea that adds an action names the one it would use. The 2026-10-02 review added the bigger feature ideas at the end
 (F1–F25).
 

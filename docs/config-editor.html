@@ -409,7 +409,7 @@ const FISHNAME = {
   "geb_RustyCrayFish":"Rusty Crayfish","geb_MahiMahi":"Mahi Mahi",
   "geb_AtlanticSailFish":"Atlantic Sailfish","geb_AngelFish":"Angelfish",
   "geb_AsianSeaBass":"Asian Seabass","geb_AtlanticBlueMarlin":"Atlantic Blue Marlin",
-  "geb_PacificBonito":"Pacific Bonito","geb_GreatBarracuda":"Great Barracuda","geb_CherrySalmon":"Cherry Salmon","geb_ChinookSalmon":"Chinook Salmon",
+  "geb_PacificBonito":"Pacific Bonito","geb_GreatBarracuda":"Great Barracuda","geb_HumboldtSquid":"Humboldt Squid","geb_NorthernShortfinSquid":"Northern Shortfin Squid","geb_ArgentineShortfinSquid":"Argentine Shortfin Squid","geb_JapaneseFlyingSquid":"Japanese Flying Squid","geb_PurplebackFlyingSquid":"Purpleback Flying Squid","geb_EuropeanFlyingSquid":"European Flying Squid","geb_NeonFlyingSquid":"Neon Flying Squid","geb_NorthernShortfinSquidJuvenile":"Juvenile Northern Shortfin Squid","geb_ArgentineShortfinSquidJuvenile":"Juvenile Argentine Shortfin Squid","geb_JapaneseFlyingSquidJuvenile":"Juvenile Japanese Flying Squid","geb_PurplebackFlyingSquidJuvenile":"Juvenile Purpleback Flying Squid","geb_CherrySalmon":"Cherry Salmon","geb_ChinookSalmon":"Chinook Salmon",
   "geb_SockEyeSalmon":"Sockeye Salmon","geb_FlatHeadMullet":"Flathead Mullet",
   "geb_LeopardShark":"Leopard Shark","geb_HammerHeadShark":"Hammerhead Shark",
   "geb_PacificCod":"Pacific Cod","geb_RedHeadCichlid":"Redhead Cichlid",
@@ -812,7 +812,7 @@ function fmtNum(v){ return Math.abs(v) >= 1000 ? v.toLocaleString("en-US") : Str
 const HELP_GROUP = {
   DebugLogs: "DebugInfo",
   HookFromFishEnable: "HookFromFishInfo", HookFromFishChance: "HookFromFishInfo",
-  CraftBambooFishingNet: "RecipeToggleInfo", CraftHookFromWire: "RecipeToggleInfo", CraftFishMount: "RecipeToggleInfo",
+  CraftBambooFishingNet: "RecipeToggleInfo", CraftHookFromWire: "RecipeToggleInfo", CraftFishMount: "RecipeToggleInfo", CraftDryingRack: "RecipeToggleInfo", CraftFishingLocker: "RecipeToggleInfo",
   RepairFishingPole: "RecipeToggleInfo", RepairBambooFishingNet: "RecipeToggleInfo",
   PredatorSpawnChanceFishing: "PredatorSpawnChanceInfo", PredatorSpawnChancePreparing: "PredatorSpawnChanceInfo",
   PredatorSpawnChanceFailCatch: "PredatorSpawnChanceInfo",
@@ -1737,7 +1737,7 @@ function pct(v){ return Math.round(v * 1000) / 10 + "%"; }
 
 // general.json's sections of settings (the lists beside them are checked where they're drawn).
 const GENERAL_SECTIONS = ["GeneralSettings", "RecipeToggles", "WeatherSettings", "TreasureSettings", "PredatorSettings",
-  "BambooFishingNetSettings", "SpearFishingSettings", "DigWormsSettings", "DigBugsSettings"];
+  "BambooFishingNetSettings", "SpearFishingSettings", "DigWormsSettings", "DigBugsSettings", "DryingRackSettings"];
 function renderGeneral(){
   const host = document.getElementById("general-editor");
   host.innerHTML = "";
@@ -1775,6 +1775,7 @@ function renderGeneral(){
   if (d.TreasureSettings) sg.appendChild(rowToggle("general", d.TreasureSettings, "Enable", "💰 Treasure catches"));
   if (d.PredatorSettings) sg.appendChild(rowToggle("general", d.PredatorSettings, "PredatorSpawnEnabled", "🐺 Predator spawns"));
   if (d.GeneralSettings) sg.appendChild(rowToggle("general", d.GeneralSettings, "HookFromFishEnable", "🪝 Hook found in fish"));
+  if (d.DryingRackSettings) sg.appendChild(rowToggle("general", d.DryingRackSettings, "Enable", "🐟 Fish drying rack"));
   sb.appendChild(sg);
   host.appendChild(sb);
 
@@ -1805,10 +1806,30 @@ function renderGeneral(){
     g.className = "grid2";
     [["CraftBambooFishingNet", "Craft bamboo fishing net"], ["CraftHookFromWire", "Craft hook from wire"],
      ["CraftFishMount", "Craft fish mounts (small, medium, large)"], ["RepairFishingPole", "Repair fishing pole"],
-     ["RepairBambooFishingNet", "Repair bamboo net"]].forEach(([k, lbl]) => {
+     ["RepairBambooFishingNet", "Repair bamboo net"], ["CraftDryingRack", "Craft fish drying rack"],
+     ["CraftFishingLocker", "Craft fishing locker"]].forEach(([k, lbl]) => {
       if (k in d.RecipeToggles) g.appendChild(rowToggle("general", d.RecipeToggles, k, lbl));
     });
     c.appendChild(g);
+    host.appendChild(c);
+  }
+
+  /* drying rack */
+  if (d.DryingRackSettings) {
+    const r = d.DryingRackSettings;
+    const c = document.createElement("div");
+    c.className = "card";
+    c.innerHTML = "<h3>🐟 Fish drying rack</h3>";
+    c.appendChild(rowToggle("general", r, "Enable", "Drying on the rack"));
+    const rm = rowSlider("general", r, "MinutesToDry", "Minutes to dry", 5, 480, 5, null, v => fmtNum(v) + " min");
+    rm._setSub(v => "a raw fillet dries in " + fmtNum(v) + " real minutes in dry, still weather");
+    c.appendChild(rm);
+    const rs = rowSlider("general", r, "StallThreshold", "Rain / snow stall", 0, 1, 0.05);
+    rs._setSub(v => "drying stops above " + pct(v) + " rain or snowfall");
+    c.appendChild(rs);
+    const rw = rowSlider("general", r, "WindScale", "Wind speed-up", 0, 3, 0.1);
+    rw._setSub(v => "the strongest wind dries fillets " + fmtNum(1 + v) + "× as fast");
+    c.appendChild(rw);
     host.appendChild(c);
   }
 

@@ -21,6 +21,47 @@ class CfgNonAIVehicles {
 		inventorySlot = "GebFishMount";
 		model = "\gebsfish\data\proxy\gebfishmount.p3d";
 	};
+	// Attachment proxies for the Fish Drying Rack's six fillet slots, the same
+	// pattern as Proxygebfishmount: the rack's model places proxies named
+	// gebdryingracka..f, and the hung fillet renders there (geb_fishdryingrack.c
+	// turns and shifts it so every fillet model hangs by its tail).
+	class Proxygebdryingracka: ProxyAttachment {
+		scope = 2;
+		inventorySlot = "GebDryingRackA";
+		model = "\gebsfish\data\proxy\gebdryingracka.p3d";
+	};
+	class Proxygebdryingrackb: ProxyAttachment {
+		scope = 2;
+		inventorySlot = "GebDryingRackB";
+		model = "\gebsfish\data\proxy\gebdryingrackb.p3d";
+	};
+	class Proxygebdryingrackc: ProxyAttachment {
+		scope = 2;
+		inventorySlot = "GebDryingRackC";
+		model = "\gebsfish\data\proxy\gebdryingrackc.p3d";
+	};
+	class Proxygebdryingrackd: ProxyAttachment {
+		scope = 2;
+		inventorySlot = "GebDryingRackD";
+		model = "\gebsfish\data\proxy\gebdryingrackd.p3d";
+	};
+	class Proxygebdryingracke: ProxyAttachment {
+		scope = 2;
+		inventorySlot = "GebDryingRackE";
+		model = "\gebsfish\data\proxy\gebdryingracke.p3d";
+	};
+	class Proxygebdryingrackf: ProxyAttachment {
+		scope = 2;
+		inventorySlot = "GebDryingRackF";
+		model = "\gebsfish\data\proxy\gebdryingrackf.p3d";
+	};
+	// The Fish Tank Stand's top: the stand's model places a proxy named gebfishtank there,
+	// and the attached Fish Tank renders standing on it.
+	class Proxygebfishtank: ProxyAttachment {
+		scope = 2;
+		inventorySlot = "GebFishTank";
+		model = "\gebsfish\data\proxy\gebfishtank.p3d";
+	};
 };
 
 class CfgPatches {
@@ -51,6 +92,44 @@ class CfgSlots {
 		// registered in config.cpp's CfgMods defs). ghostIcon must name an
 		// imageset entry, not a texture path; a bare name like "hook" means
 		// vanilla's set:dayz_inventory.
+		ghostIcon = "set:gebsfish image:fishmount";
+	};
+	// The Fish Drying Rack's six fillet slots, three on each side (A-C, D-F).
+	// The fillets opt in through inventorySlot[] in data/fish/config.cpp.
+	class Slot_GebDryingRackA {
+		name = "GebDryingRackA";
+		displayName = "$STR_tools_fishdryingrack_slot";
+		ghostIcon = "set:gebsfish image:fishmount";
+	};
+	class Slot_GebDryingRackB {
+		name = "GebDryingRackB";
+		displayName = "$STR_tools_fishdryingrack_slot";
+		ghostIcon = "set:gebsfish image:fishmount";
+	};
+	class Slot_GebDryingRackC {
+		name = "GebDryingRackC";
+		displayName = "$STR_tools_fishdryingrack_slot";
+		ghostIcon = "set:gebsfish image:fishmount";
+	};
+	class Slot_GebDryingRackD {
+		name = "GebDryingRackD";
+		displayName = "$STR_tools_fishdryingrack_slot";
+		ghostIcon = "set:gebsfish image:fishmount";
+	};
+	class Slot_GebDryingRackE {
+		name = "GebDryingRackE";
+		displayName = "$STR_tools_fishdryingrack_slot";
+		ghostIcon = "set:gebsfish image:fishmount";
+	};
+	class Slot_GebDryingRackF {
+		name = "GebDryingRackF";
+		displayName = "$STR_tools_fishdryingrack_slot";
+		ghostIcon = "set:gebsfish image:fishmount";
+	};
+	// The Fish Tank Stand's one slot: the Fish Tank stands on it (geb_FishTank lists it in inventorySlot[]).
+	class Slot_GebFishTank {
+		name = "GebFishTank";
+		displayName = "$STR_tools_fishtank";
 		ghostIcon = "set:gebsfish image:fishmount";
 	};
 };
@@ -208,6 +287,186 @@ class cfgVehicles {
 		};
 	};
 
+	// The Fish Drying Rack (geb_fishdryingrack.c, FUTURE_IDEAS F21): an A-frame
+	// of long sticks lashed with rope, every face on vanilla's long wooden stick
+	// material. Six fillet slots; raw fillets hung on a rack standing in the
+	// world dry to the dried stage without a fire (general.json
+	// DryingRackSettings). Crafted from 7 long sticks and a rope (CraftDryingRack)
+	// and placed with vanilla's hologram and deploy actions. A heavy item
+	// (itemBehaviour 0): carried in both hands, never in cargo.
+	class geb_FishDryingRack: Inventory_Base {
+		scope = 2;
+		displayName = "$STR_tools_fishdryingrack";
+		descriptionShort = "$STR_tools_fishdryingrack_desc";
+		model = "\gebsfish\data\tools\fishdryingrack.p3d";
+		weight = 5000;
+		itemSize[] = {10,6};
+		itemBehaviour = 0;
+		physLayer = "item_large";
+		rotationFlags = 2;
+		attachments[] = {"GebDryingRackA","GebDryingRackB","GebDryingRackC","GebDryingRackD","GebDryingRackE","GebDryingRackF"};
+		// The hologram's section, as on the fish mounts: "placing" covers every
+		// face, so its texture and material must be listed (vanilla's own).
+		hiddenSelections[] = {"placing"};
+		hiddenSelectionsTextures[] = {"dz\gear\crafting\data\wooden_stick_co.paa"};
+		hiddenSelectionsMaterials[] = {"dz\gear\crafting\data\wooden_stick.rvmat"};
+		hologramMaterial = "fishmount";
+		hologramMaterialPath = "gebsfish\data\tools";
+		// How each slot hangs its fillet (Model.cfg fishdryingrack): three shifts
+		// along the fillet's own axes (0.5 = none, then 4 m per phase) and two
+		// turns (one full turn per phase), set by the script per fillet model.
+		class AnimationSources {
+			class hang_a_x {
+				source = "user";
+				animPeriod = 0.01;
+				initPhase = 0.5;
+			};
+			class hang_a_y: hang_a_x {};
+			class hang_a_z: hang_a_x {};
+			class hang_a_turn {
+				source = "user";
+				animPeriod = 0.01;
+				initPhase = 0;
+			};
+			class hang_a_yaw: hang_a_turn {};
+			class hang_b_x: hang_a_x {};
+			class hang_b_y: hang_a_x {};
+			class hang_b_z: hang_a_x {};
+			class hang_b_turn: hang_a_turn {};
+			class hang_b_yaw: hang_a_turn {};
+			class hang_c_x: hang_a_x {};
+			class hang_c_y: hang_a_x {};
+			class hang_c_z: hang_a_x {};
+			class hang_c_turn: hang_a_turn {};
+			class hang_c_yaw: hang_a_turn {};
+			class hang_d_x: hang_a_x {};
+			class hang_d_y: hang_a_x {};
+			class hang_d_z: hang_a_x {};
+			class hang_d_turn: hang_a_turn {};
+			class hang_d_yaw: hang_a_turn {};
+			class hang_e_x: hang_a_x {};
+			class hang_e_y: hang_a_x {};
+			class hang_e_z: hang_a_x {};
+			class hang_e_turn: hang_a_turn {};
+			class hang_e_yaw: hang_a_turn {};
+			class hang_f_x: hang_a_x {};
+			class hang_f_y: hang_a_x {};
+			class hang_f_z: hang_a_x {};
+			class hang_f_turn: hang_a_turn {};
+			class hang_f_yaw: hang_a_turn {};
+		};
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 200;
+					healthLevels[] = {
+						{1,{"dz\gear\crafting\data\wooden_stick.rvmat"}},
+						{0.7,{"dz\gear\crafting\data\wooden_stick.rvmat"}},
+						{0.5,{"dz\gear\crafting\data\wooden_stick_damage.rvmat"}},
+						{0.3,{"dz\gear\crafting\data\wooden_stick_damage.rvmat"}},
+						{0,{"dz\gear\crafting\data\wooden_stick_destruct.rvmat"}}
+					};
+				};
+			};
+		};
+	};
+
+	// The Fish Tank: a 60 x 30 x 35 cm tabletop aquarium (gravel, plants, a rock, an air stone) with four
+	// mini reef fish -- Siamese tigerfish, blue tang, angelfish, redhead cichlid -- swimming loops. A trader
+	// or admin item: never world loot and never crafted (typesxml.c writes it with nominal 0). The fish move on
+	// Model.cfg fishtank's "time" animations, no script; the air stone's bubbles are a client-side particle
+	// (geb_fishtank.c). Placed like the drying rack: a heavy item set down with vanilla's hologram and
+	// deploy actions. "placing" is only the opaque section (frame, hood, gravel, rocks, sword plants), so the
+	// hologram ghosts that while the glass, water, plants and fish show as they are. The glass and water
+	// are one alpha-blended layer (fishtank_glass, drawn last), the elder plants alpha-tested.
+	class geb_FishTank: Inventory_Base {
+		scope = 2;
+		displayName = "$STR_tools_fishtank";
+		descriptionShort = "$STR_tools_fishtank_desc";
+		model = "\gebsfish\data\tools\fishtank.p3d";
+		inventorySlot[] = {"GebFishTank"};
+		weight = 14000;
+		itemSize[] = {6,4};
+		itemBehaviour = 0;
+		physLayer = "item_large";
+		rotationFlags = 2;
+		// 0: the opaque section (hologram), 1: the hood light strip, off until geb_fishtank.c turns it on.
+		hiddenSelections[] = {"placing","light_strip"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishtank_co.paa","#(argb,8,8,3)color(1,1,1,1,CO)"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishtank.rvmat","\gebsfish\data\tools\fishtank_light_off.rvmat"};
+		hologramMaterial = "fishmount";
+		hologramMaterialPath = "gebsfish\data\tools";
+		// The treasure chest lid (Model.cfg chest_lid): opened and closed by geb_fishtank.c, 3 s each way.
+		class AnimationSources {
+			class chest_lid {
+				source = "user";
+				animPeriod = 3;
+				initPhase = 0;
+			};
+		};
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 100;
+					healthLevels[] = {
+						{1,{"gebsfish\data\tools\fishtank.rvmat","gebsfish\data\tools\fishtank_glass.rvmat","gebsfish\data\tools\fishtank_plant.rvmat","gebsfish\data\tools\fishtank_backdrop.rvmat"}},
+						{0.7,{"gebsfish\data\tools\fishtank.rvmat","gebsfish\data\tools\fishtank_glass.rvmat","gebsfish\data\tools\fishtank_plant.rvmat","gebsfish\data\tools\fishtank_backdrop.rvmat"}},
+						{0.5,{"gebsfish\data\tools\fishtank_damage.rvmat","gebsfish\data\tools\fishtank_glass_damage.rvmat","gebsfish\data\tools\fishtank_plant_damage.rvmat","gebsfish\data\tools\fishtank_backdrop_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tools\fishtank_damage.rvmat","gebsfish\data\tools\fishtank_glass_damage.rvmat","gebsfish\data\tools\fishtank_plant_damage.rvmat","gebsfish\data\tools\fishtank_backdrop_damage.rvmat"}},
+						{0,{"gebsfish\data\tools\fishtank_destruct.rvmat","gebsfish\data\tools\fishtank_glass_destruct.rvmat","gebsfish\data\tools\fishtank_plant_destruct.rvmat","gebsfish\data\tools\fishtank_backdrop_destruct.rvmat"}}
+					};
+				};
+			};
+		};
+	};
+
+	// The Fish Tank Stand: a varnished wooden aquarium cabinet, 0.66 x 0.36 x 0.75 m, with two panelled
+	// doors and a 10x5 cupboard for fish food and tackle. The Fish Tank stands on its top (slot
+	// GebFishTank). Like the tank, a trader or admin item: no recipe, nominal 0 in typesxml.c. A placed
+	// container like the Fishing Locker (geb_fishtankstand.c): vanilla's hologram and place actions,
+	// carried in both hands and only when empty. Every face is on vanilla's wardrobe photo (almara02).
+	class geb_FishTankStand: Container_Base {
+		scope = 2;
+		displayName = "$STR_tools_fishtankstand";
+		descriptionShort = "$STR_tools_fishtankstand_desc";
+		model = "\gebsfish\data\tools\fishtankstand.p3d";
+		weight = 18000;
+		itemSize[] = {10,10};
+		itemBehaviour = 0;
+		physLayer = "item_large";
+		carveNavmesh = 1;
+		canBeDigged = 0;
+		rotationFlags = 2;
+		hiddenSelections[] = {"placing"};
+		hiddenSelectionsTextures[] = {"dz\structures\furniture\cases\almara\data\almara02_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishtankstand.rvmat"};
+		hologramMaterial = "fishmount";
+		hologramMaterialPath = "gebsfish\data\tools";
+		slopeTolerance = 0.4;
+		yawPitchRollLimit[] = {45,45,45};
+		soundImpactType = "wood";
+		attachments[] = {"GebFishTank"};
+		class Cargo {
+			itemsCargoSize[] = {10,5};
+			openable = 0;
+			allowOwnedCargoManipulation = 1;
+		};
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 200;
+					healthLevels[] = {
+						{1,{"gebsfish\data\tools\fishtankstand.rvmat"}},
+						{0.7,{"gebsfish\data\tools\fishtankstand.rvmat"}},
+						{0.5,{"gebsfish\data\tools\fishtankstand_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tools\fishtankstand_damage.rvmat"}},
+						{0,{"gebsfish\data\tools\fishtankstand_destruct.rvmat"}}
+					};
+				};
+			};
+		};
+	};
+
 	class geb_FishingRodRepairKit: Inventory_Base {
 		scope = 2;
 		displayName = "$STR_tools_fishingrodrepairkit";
@@ -302,7 +561,6 @@ class cfgVehicles {
 		scope=2;
 		displayName="$STR_tools_bluefishknife";
 		descriptionShort="$STR_tools_fishingknife_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishknife_blue_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishknife.rvmat"};
 	};
@@ -310,7 +568,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_tools_orangefishknife";
 		descriptionShort="$STR_tools_fishingknife_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishknife_orange_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishknife.rvmat"};
 	};
@@ -318,7 +575,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_tools_greenfishknife";
 		descriptionShort="$STR_tools_fishingknife_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishknife_green_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishknife.rvmat"};
 	};
@@ -326,7 +582,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_tools_yellowfishknife";
 		descriptionShort="$STR_tools_fishingknife_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishknife_yellow_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishknife.rvmat"};
 	};
@@ -334,7 +589,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_tools_redfishknife";
 		descriptionShort="$STR_tools_fishingknife_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishknife_red_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishknife.rvmat"};
 	};
@@ -342,7 +596,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_tools_purplefishknife";
 		descriptionShort="$STR_tools_fishingknife_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishknife_purple_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishknife.rvmat"};
 	};
@@ -350,7 +603,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_tools_limefishknife";
 		descriptionShort="$STR_tools_fishingknife_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishknife_lime_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishknife.rvmat"};
 	};
@@ -358,7 +610,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_tools_lightbluefishknife";
 		descriptionShort="$STR_tools_fishingknife_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishknife_lightblue_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishknife.rvmat"};
 	};
@@ -366,15 +617,34 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_tools_camofishknife";
 		descriptionShort="$STR_tools_fishingknife_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishknife_camo_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishknife.rvmat"};
+	};
+	class geb_DesertCamoFishKnife: geb_FishKnife_Base {
+		scope = 2;
+		displayName = "$STR_tools_desertcamofishknife";
+		descriptionShort="$STR_tools_fishingknife_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishknife_desertcamo_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishknife.rvmat"};
+	};
+	class geb_SnowCamoFishKnife: geb_FishKnife_Base {
+		scope = 2;
+		displayName = "$STR_tools_snowcamofishknife";
+		descriptionShort="$STR_tools_fishingknife_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishknife_snowcamo_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishknife.rvmat"};
+	};
+	class geb_PinkCamoFishKnife: geb_FishKnife_Base {
+		scope = 2;
+		displayName = "$STR_tools_pinkcamofishknife";
+		descriptionShort="$STR_tools_fishingknife_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishknife_pinkcamo_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishknife.rvmat"};
 	};
 	class geb_BrownFishKnife: geb_FishKnife_Base {
 		scope = 2;
 		displayName = "$STR_tools_brownfishknife";
 		descriptionShort="$STR_tools_fishingknife_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishknife_brown_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishknife.rvmat"};
 	};
@@ -382,13 +652,13 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_tools_pinkfishknife";
 		descriptionShort="$STR_tools_fishingknife_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishknife_pink_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\fishknife.rvmat"};
 	};
 	// Restated DamageSystem block on the modded FishingRod base so every
 	// rod variant (vanilla FishingRod + geb_RedFishingRod / Green / Blue /
-	// Purple / Orange / Yellow / Brown / LightBlue / Lime / Pink) shares a single source of truth for HP and visual-state
+	// Purple / Orange / Yellow / Brown / LightBlue / Lime / Pink, and the Camo / DesertCamo / SnowCamo /
+	// PinkCamo rods) shares a single source of truth for HP and visual-state
 	// thresholds. hitpoints=150 and the healthLevels[] paths below are
 	// identical to vanilla's FishingRod config -- carried over verbatim so
 	// repair kits, market mods, and any other system that reads rod HP
@@ -434,71 +704,191 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_tools_redrod";
 		descriptionShort = "$STR_tools_redrod_desc";
-		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishingrod_red_co.paa"};
 	};
 	class geb_GreenFishingRod: FishingRod {
 		scope = 2;
 		displayName = "$STR_tools_greenrod";
 		descriptionShort = "$STR_tools_greenrod_desc";
-		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishingrod_green_co.paa"};
 	};
 	class geb_BlueFishingRod: FishingRod {
 		scope = 2;
 		displayName = "$STR_tools_bluerod";
 		descriptionShort = "$STR_tools_bluerod_desc";
-		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishingrod_blue_co.paa"};
 	};
 	class geb_PurpleFishingRod: FishingRod {
 		scope = 2;
 		displayName = "$STR_tools_purplerod";
 		descriptionShort = "$STR_tools_purplerod_desc";
-		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishingrod_purple_co.paa"};
 	};
 	class geb_OrangeFishingRod: FishingRod {
 		scope = 2;
 		displayName = "$STR_tools_orangerod";
 		descriptionShort = "$STR_tools_orangerod_desc";
-		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishingrod_orange_co.paa"};
 	};
 	class geb_YellowFishingRod: FishingRod {
 		scope = 2;
 		displayName = "$STR_tools_yellowrod";
 		descriptionShort = "$STR_tools_yellowrod_desc";
-		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishingrod_yellow_co.paa"};
 	};
 	class geb_BrownFishingRod: FishingRod {
 		scope = 2;
 		displayName = "$STR_tools_brownrod";
 		descriptionShort = "$STR_tools_brownrod_desc";
-		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishingrod_brown_co.paa"};
 	};
 	class geb_LightBlueFishingRod: FishingRod {
 		scope = 2;
 		displayName = "$STR_tools_lightbluerod";
 		descriptionShort = "$STR_tools_lightbluerod_desc";
-		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishingrod_lightblue_co.paa"};
 	};
 	class geb_LimeFishingRod: FishingRod {
 		scope = 2;
 		displayName = "$STR_tools_limerod";
 		descriptionShort = "$STR_tools_limerod_desc";
-		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishingrod_lime_co.paa"};
 	};
 	class geb_PinkFishingRod: FishingRod {
 		scope = 2;
 		displayName = "$STR_tools_pinkrod";
 		descriptionShort = "$STR_tools_pinkrod_desc";
-		hiddenSelections[] = {"zbytek"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishingrod_pink_co.paa"};
+	};
+	class geb_CamoFishingRod: FishingRod {
+		scope = 2;
+		displayName = "$STR_tools_camorod";
+		descriptionShort = "$STR_tools_camorod_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishingrod_camo_co.paa"};
+	};
+	class geb_DesertCamoFishingRod: FishingRod {
+		scope = 2;
+		displayName = "$STR_tools_desertcamorod";
+		descriptionShort = "$STR_tools_desertcamorod_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishingrod_desertcamo_co.paa"};
+	};
+	class geb_SnowCamoFishingRod: FishingRod {
+		scope = 2;
+		displayName = "$STR_tools_snowcamorod";
+		descriptionShort = "$STR_tools_snowcamorod_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishingrod_snowcamo_co.paa"};
+	};
+	class geb_PinkCamoFishingRod: FishingRod {
+		scope = 2;
+		displayName = "$STR_tools_pinkcamorod";
+		descriptionShort = "$STR_tools_pinkcamorod_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\fishingrod_pinkcamo_co.paa"};
+	};
+	// The fly, spincast, baitcast and heavy surf rods are models of their own
+	// (built by tools/rods, no vanilla geometry), not retextures. Everything else they get
+	// from FishingRod: they fish, wear, repair and carry like the colour rods,
+	// and the hands hold them as they hold vanilla's, since each model keeps
+	// vanilla's frame (rod along +Y, grip round y 0.06-0.16, crank on the left).
+	// Like vanilla's rod they telescope out while fishing: AnimateRod drives
+	// the five sections' translations in data/tools/Model.cfg (the surf rod's
+	// reach about 2.6 m, the others vanilla's 1.4 m). hiddenSelections
+	// is "camo", the one section of all three models, so a colour variant only
+	// needs another texture on the same layout.
+	class geb_FlyFishingRod: FishingRod {
+		scope = 2;
+		displayName = "$STR_tools_flyrod";
+		descriptionShort = "$STR_tools_flyrod_desc";
+		model = "\gebsfish\data\tools\flyfishingrod.p3d";
+		weight = 700;
+		hiddenSelections[] = {"camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\flyfishingrod_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\flyfishingrod.rvmat"};
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 150;
+					healthLevels[] = {
+						{1, {"gebsfish\data\tools\flyfishingrod.rvmat"}},
+						{0.7, {"gebsfish\data\tools\flyfishingrod.rvmat"}},
+						{0.5, {"gebsfish\data\tools\flyfishingrod_damage.rvmat"}},
+						{0.3, {"gebsfish\data\tools\flyfishingrod_damage.rvmat"}},
+						{0, {"gebsfish\data\tools\flyfishingrod_destruct.rvmat"}}
+					};
+				};
+			};
+		};
+	};
+	class geb_SpincastFishingRod: FishingRod {
+		scope = 2;
+		displayName = "$STR_tools_spincastrod";
+		descriptionShort = "$STR_tools_spincastrod_desc";
+		model = "\gebsfish\data\tools\spincastfishingrod.p3d";
+		weight = 950;
+		hiddenSelections[] = {"camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\spincastfishingrod_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\spincastfishingrod.rvmat"};
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 150;
+					healthLevels[] = {
+						{1, {"gebsfish\data\tools\spincastfishingrod.rvmat"}},
+						{0.7, {"gebsfish\data\tools\spincastfishingrod.rvmat"}},
+						{0.5, {"gebsfish\data\tools\spincastfishingrod_damage.rvmat"}},
+						{0.3, {"gebsfish\data\tools\spincastfishingrod_damage.rvmat"}},
+						{0, {"gebsfish\data\tools\spincastfishingrod_destruct.rvmat"}}
+					};
+				};
+			};
+		};
+	};
+	class geb_BaitcastFishingRod: FishingRod {
+		scope = 2;
+		displayName = "$STR_tools_baitcastrod";
+		descriptionShort = "$STR_tools_baitcastrod_desc";
+		model = "\gebsfish\data\tools\baitcastfishingrod.p3d";
+		weight = 850;
+		hiddenSelections[] = {"camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\baitcastfishingrod_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\baitcastfishingrod.rvmat"};
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 150;
+					healthLevels[] = {
+						{1, {"gebsfish\data\tools\baitcastfishingrod.rvmat"}},
+						{0.7, {"gebsfish\data\tools\baitcastfishingrod.rvmat"}},
+						{0.5, {"gebsfish\data\tools\baitcastfishingrod_damage.rvmat"}},
+						{0.3, {"gebsfish\data\tools\baitcastfishingrod_damage.rvmat"}},
+						{0, {"gebsfish\data\tools\baitcastfishingrod_destruct.rvmat"}}
+					};
+				};
+			};
+		};
+	};
+	class geb_HeavySurfRod: FishingRod {
+		scope = 2;
+		displayName = "$STR_tools_heavysurfrod";
+		descriptionShort = "$STR_tools_heavysurfrod_desc";
+		model = "\gebsfish\data\tools\heavysurfrod.p3d";
+		weight = 1400;
+		hiddenSelections[] = {"camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tools\heavysurfrod_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\tools\heavysurfrod.rvmat"};
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 150;
+					healthLevels[] = {
+						{1, {"gebsfish\data\tools\heavysurfrod.rvmat"}},
+						{0.7, {"gebsfish\data\tools\heavysurfrod.rvmat"}},
+						{0.5, {"gebsfish\data\tools\heavysurfrod_damage.rvmat"}},
+						{0.3, {"gebsfish\data\tools\heavysurfrod_damage.rvmat"}},
+						{0, {"gebsfish\data\tools\heavysurfrod_destruct.rvmat"}}
+					};
+				};
+			};
+		};
 	};
 	class geb_BambooFishingNet : Container_Base {
 		scope = 2;
@@ -545,5 +935,35 @@ class cfgVehicles {
 				};
 			};
 		};
+	};
+};
+
+// The Fish Tank's soft sounds (geb_fishtank.c plays both, looping, while the tank runs): vanilla's geyser bubbling
+// and water stream samples, quiet and audible only within about four metres.
+class CfgSoundShaders {
+	class geb_FishTankHum_SoundShader {
+		samples[] = {{"DZ\sounds\environment\water\Geyser_bubbling_loop", 1}};
+		volume = 0.16;
+		range = 4;
+	};
+	class geb_FishTankTrickle_SoundShader {
+		samples[] = {{"DZ\sounds\environment\water\WaterStream_1_-30db", 1}, {"DZ\sounds\environment\water\WaterStream_2_-30db", 1}};
+		volume = 0.30;
+		range = 4;
+	};
+};
+class CfgSoundSets {
+	class geb_FishTankHum_SoundSet {
+		soundShaders[] = {"geb_FishTankHum_SoundShader"};
+		volumeFactor = 1;
+		frequencyRandomizer = 0;
+		spatial = 1;
+		doppler = 0;
+		loop = 1;
+		volumeCurve = "objectInner7VolumeCurve";
+		distanceFilter = "BaseCharacter_AttenuationFilter";
+	};
+	class geb_FishTankTrickle_SoundSet: geb_FishTankHum_SoundSet {
+		soundShaders[] = {"geb_FishTankTrickle_SoundShader"};
 	};
 };

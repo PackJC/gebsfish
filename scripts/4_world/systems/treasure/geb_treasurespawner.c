@@ -31,15 +31,16 @@ class GebsTreasureSpawner {
     // Remaining CE lifetime of a freshly pulled container: two hours.
     protected static const float UNTOUCHED_LIFETIME_SECS = 7200.0;
 
-    static void TryPull(PlayerBase player, ItemBase rod, string logTag = "Treasure") {
+    // True when a treasure container came up.
+    static bool TryPull(PlayerBase player, ItemBase rod, string logTag = "Treasure") {
         if (!player || !g_Game.IsServer())
-            return;
+            return false;
         if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.TreasureSettings)
-            return;
+            return false;
 
         TreasureConf ts = m_gebsConfig.General.TreasureSettings;
         if (!ts.Enable || ts.Chance <= 0)
-            return;
+            return false;
 
         int debugLevel = GebGetDebugLevel();
 
@@ -56,19 +57,19 @@ class GebsTreasureSpawner {
                     rodType = rod.GetType();
                 GebsfishLogger.Debug("skipped: RequireRealRod is on and the rod in hand is " + rodType, logTag);
             }
-            return;
+            return false;
         }
 
         float roll = RollPrecise01();
         if (roll > ts.Chance) {
             if (debugLevel == ELEVATED_DEBUG)
                 GebsfishLogger.Debug("miss: roll=" + roll + " chance=" + ts.Chance, logTag);
-            return;
+            return false;
         }
 
         TreasureContainerEntry container = PickContainer(debugLevel, logTag);
         if (!container)
-            return;
+            return false;
 
         // Containers are bulky, so they go on the ground at the player's feet
         // rather than attempting an inventory placement that would usually fail.
@@ -79,7 +80,7 @@ class GebsTreasureSpawner {
             // argument list and then wants ',' or ')', so a continuation '+' on the
             // next line will not parse. Long lines are the norm in this codebase.
             GebsfishLogger.Error("treasure hit but CreateObjectEx returned null for container '" + container.Classname + "' -- check the classname exists on this server.", logTag);
-            return;
+            return false;
         }
 
         ItemBase containerItem = ItemBase.Cast(spawned);
@@ -106,6 +107,7 @@ class GebsTreasureSpawner {
             who = player.GetIdentity().GetName();
 
         GebsfishLogger.Info("TREASURE: " + container.Classname + " with " + placed + " item(s) for " + who + " (roll=" + roll + " chance=" + ts.Chance + ")", logTag);
+        return true;
     }
 
     // ---- picks ----

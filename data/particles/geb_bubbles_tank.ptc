@@ -1,0 +1,53 @@
+EffectDef {
+ Emitors {
+  EmitorDef tank_stream {
+   ShapeType Box
+   ShapeSize 0.008 0 0.008
+   ConeAngle 360 0 8
+   MaxNum 24
+   BirthRate 9
+   BirthRateRND 3
+   BirthRateVel 0
+   LocalTransform 0
+   Material "{3E3B5AA16932182E}Graphics/Particles/materials/enviroment/bubbles_01_em.emat"
+   CenterX -0.167
+   CenterY -0.213
+   ScaleX 1
+   ScaleY 1
+   SizeMultiplier 0.007
+   SizeRND 0
+   RandomRotDir 1
+   RotMultiplier 500
+   StreakFullUV 0
+   VelAngle 0
+   RandomAngle 1
+   Sort 0
+   Velocity 0.1
+   VelocityRND 0.03
+   VelAffect 4
+   AirResistance 3
+   GravityMultiply -0.06
+   Spring 0.02
+   Wind 0
+   AnimOnce 0
+   AnimFPS 30
+   LifetimeByAnim 0
+   LifeTime 1.05
+   LifeTimeRND 0.1
+   Color {
+    0 0.6203 0.6392 0.6329 1 0.6076 0.5886 0.6139
+   }
+   Alpha {
+    0 0 0.06 0.85 0.88 0.85 1 0
+   }
+   RotationSpeed {
+    0 1 1 0
+   }
+   Size {
+    0 0.35 1 0.5
+   }
+   EffectTime 10
+   Repeat 1
+  }
+ }
+}

@@ -35,8 +35,36 @@ class FoodAnimationSources;
 class cfgVehicles {
 	//Instantiate Needed Classes
 	class Edible_Base;
-	class CarpFilletMeat;
-	class MackerelFilletMeat;
+	// Fish Drying Rack slots (geb_fishdryingrack.c): += appends them to
+	// vanilla's cooking and smoking slots, and DZ_Gear_Food in requiredAddons
+	// makes vanilla's definitions load first. Every gebsfish fillet inherits
+	// them from CarpFilletMeat or MackerelFilletMeat. The rack itself only
+	// takes fillets on the five vanilla fillet models it knows how to hang
+	// (GebHangPose), so the lobster tails and claws and the crab legs, which
+	// inherit these slots on their own models, are refused there.
+	class CarpFilletMeat: Edible_Base {
+		inventorySlot[] += {"GebDryingRackA", "GebDryingRackB", "GebDryingRackC", "GebDryingRackD", "GebDryingRackE", "GebDryingRackF"};
+	};
+	class MackerelFilletMeat: Edible_Base {
+		inventorySlot[] += {"GebDryingRackA", "GebDryingRackB", "GebDryingRackC", "GebDryingRackD", "GebDryingRackE", "GebDryingRackF"};
+	};
+	class SteelheadTroutFilletMeat: Edible_Base {
+		inventorySlot[] += {"GebDryingRackA", "GebDryingRackB", "GebDryingRackC", "GebDryingRackD", "GebDryingRackE", "GebDryingRackF"};
+	};
+	class WalleyePollockFilletMeat: Edible_Base {
+		inventorySlot[] += {"GebDryingRackA", "GebDryingRackB", "GebDryingRackC", "GebDryingRackD", "GebDryingRackE", "GebDryingRackF"};
+	};
+	// ---- Catfish-model fillets on the drying rack: BEGIN ----
+	// Vanilla's DayZ 1.30 catfish fillet lies along its own Y axis, so the rack
+	// turns it to hang by its tail like the others (GebHangPose's
+	// catfish_fillet row). To take catfish-model fillets off the rack, delete
+	// this block AND that row: the row alone also refuses the mod's fillets on
+	// the catfish model (flathead catfish, alligator gar ...), which get the
+	// slots from CarpFilletMeat above.
+	class CatfishFilletMeat: Edible_Base {
+		inventorySlot[] += {"GebDryingRackA", "GebDryingRackB", "GebDryingRackC", "GebDryingRackD", "GebDryingRackE", "GebDryingRackF"};
+	};
+	// ---- Catfish-model fillets on the drying rack: END ----
 	class Food;
 	class FoodStages;
 	class Raw;
@@ -788,7 +816,6 @@ class cfgVehicles {
 		displayName = "$STR_fish_redbreastsunfish";
 		descriptionShort = "$STR_fish_redbreastsunfish_desc";
 		itemSize[] = {3,2};
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\redbreastsunfish_co.paa"};
 		// Its own materials: the bluegill model it shares, with a relief map made
 		// from its own skin (the bluegill's would put the bluegill's relief on it).
@@ -1212,13 +1239,9 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_northernpike";
 		descriptionShort = "$STR_fish_northernpike_desc";
-		model = "\gebsfish\data\fish\northernpike.p3d";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\northernpike_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\northernpike.rvmat","\gebsfish\data\fish\northernpike_rotten.rvmat"};
 
-		itemSize[] = {6,2};
-		rotationFlags = 0;
 		weight = 3000;
 		weightPerQuantityUnit = 20;  // 23 kg full
 	};
@@ -1226,11 +1249,8 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_tigermuskellunge";
 		descriptionShort = "$STR_fish_tigermuskellunge_desc";
-		itemSize[] = {6,2};
-		rotationFlags = 0;
 		weight = 3261;
 		weightPerQuantityUnit = 21.739;  // 25 kg full
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\tigermuskellunge_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\tigermuskellunge.rvmat","\gebsfish\data\fish\tigermuskellunge_rotten.rvmat"};
 	};
@@ -1238,11 +1258,8 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_muskellunge";
 		descriptionShort = "$STR_fish_muskellunge_desc";
-		itemSize[] = {6,2};
-		rotationFlags = 0;
 		weight = 3261;
 		weightPerQuantityUnit = 21.739;  // 25 kg full
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\muskellunge_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\muskellunge.rvmat","\gebsfish\data\fish\muskellunge_rotten.rvmat"};
 	};
@@ -1250,11 +1267,8 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_spottedmuskellunge";
 		descriptionShort = "$STR_fish_spottedmuskellunge_desc";
-		itemSize[] = {6,2};
-		rotationFlags = 0;
 		weight = 3130;
 		weightPerQuantityUnit = 20.87;  // 24 kg full
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\spottedmuskellunge_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\spottedmuskellunge.rvmat","\gebsfish\data\fish\spottedmuskellunge_rotten.rvmat"};
 	};
@@ -1262,11 +1276,8 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_barredmuskellunge";
 		descriptionShort = "$STR_fish_barredmuskellunge_desc";
-		itemSize[] = {6,2};
-		rotationFlags = 0;
 		weight = 3130;
 		weightPerQuantityUnit = 20.87;  // 24 kg full
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\barredmuskellunge_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\barredmuskellunge.rvmat","\gebsfish\data\fish\barredmuskellunge_rotten.rvmat"};
 	};
@@ -1574,7 +1585,18 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\flatheadmullet_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\flatheadmullet.rvmat","\gebsfish\data\fish\flatheadmullet_rotten.rvmat"};
 	};
-	class geb_LeopardShark: geb_LargeFish_Base {
+	// The sharks lie on their belly when dropped. Their models' back is +X, and
+	// rotationFlags 8 turns +X up: vanilla's driver door model has its outer skin
+	// (handle, mirror) on +X and uses 8 to land outside up, and gebsfish's cooler
+	// and tackle boxes (lid on +X) use 8 to stand upright. A dropped item rests on its loot box
+	// (the Memory LOD's boundingbox_min/max), fitted belly-down in each model;
+	// the inventory keeps its old picture from a second box and camera
+	// (boundingbox_min2/max2, invView2), which the script class always shows.
+	class geb_Shark_Base: geb_LargeFish_Base {
+		scope = 0;
+		rotationFlags = 8;
+	};
+	class geb_LeopardShark: geb_Shark_Base {
 		scope = 2;
 		displayName = "$STR_fish_leopardshark";
 		descriptionShort = "$STR_fish_leopardshark_desc";
@@ -1585,7 +1607,7 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\leopardshark_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\leopardshark.rvmat","\gebsfish\data\fish\leopardshark_rotten.rvmat"};
 	};
-	class geb_HammerHeadShark: geb_LargeFish_Base {
+	class geb_HammerHeadShark: geb_Shark_Base {
 		scope = 2;
 		displayName = "$STR_fish_hammerheadshark";
 		descriptionShort = "$STR_fish_hammerheadshark_desc";
@@ -1699,7 +1721,7 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\siamesetigerfish_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\siamesetigerfish.rvmat","\gebsfish\data\fish\siamesetigerfish_rotten.rvmat"};
 	};
-	class geb_AngelShark: geb_LargeFish_Base {
+	class geb_AngelShark: geb_Shark_Base {
 		scope = 2;
 		displayName = "$STR_fish_angelshark";
 		descriptionShort = "$STR_fish_angelshark_desc";
@@ -1710,7 +1732,7 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\angelshark_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\angelshark.rvmat","\gebsfish\data\fish\angelshark_rotten.rvmat"};
 	};
-	class geb_GreatWhiteShark: geb_LargeFish_Base {
+	class geb_GreatWhiteShark: geb_Shark_Base {
 		scope = 2;
 		displayName = "$STR_fish_greatwhiteshark";
 		descriptionShort = "$STR_fish_greatwhiteshark_desc";
@@ -1885,15 +1907,205 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\snowcrab_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\snowcrab.rvmat","\gebsfish\data\fish\snowcrab_rotten.rvmat"};
 	};
+	// Squid. The models' back faces +Z, so the inherited rotationFlags 17 lays a
+	// squid flat on its belly or back with its fins spread, and the inventory
+	// camera looks down on it. Cleaning one gives its Squid Meat. The base also
+	// gives the six one-handed ones their carry (geb_dayzplayercfgbase.c).
+	class geb_Squid_Base: geb_SaltFish_Base {
+		scope = 0;
+		hiddenSelections[] = {"Camo"};
+	};
+	class geb_HumboldtSquid: geb_Squid_Base {
+		scope = 2;
+		displayName = "$STR_fish_humboldtsquid";
+		descriptionShort = "$STR_fish_humboldtsquid_desc";
+		model = "\gebsfish\data\fish\humboldtsquid.p3d";
+		weight = 913;
+		weightPerQuantityUnit = 6.087;  // 7 kg full
+		// 1.2 m from fin tip to arm tips, carried two-handed like the barracuda
+		itemSize[] = {6,2};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\humboldtsquid_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\humboldtsquid.rvmat","\gebsfish\data\fish\humboldtsquid_rotten.rvmat"};
+	};
+	class geb_NorthernShortfinSquid: geb_Squid_Base {
+		scope = 2;
+		displayName = "$STR_fish_northernshortfinsquid";
+		descriptionShort = "$STR_fish_northernshortfinsquid_desc";
+		model = "\gebsfish\data\fish\northernshortfinsquid.p3d";
+		weight = 33;
+		weightPerQuantityUnit = 0.217;  // 250 g full
+		itemSize[] = {4,1};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\northernshortfinsquid_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\northernshortfinsquid.rvmat","\gebsfish\data\fish\northernshortfinsquid_rotten.rvmat"};
+	};
+	class geb_ArgentineShortfinSquid: geb_Squid_Base {
+		scope = 2;
+		displayName = "$STR_fish_argentineshortfinsquid";
+		descriptionShort = "$STR_fish_argentineshortfinsquid_desc";
+		model = "\gebsfish\data\fish\argentineshortfinsquid.p3d";
+		weight = 46;
+		weightPerQuantityUnit = 0.304;  // 350 g full
+		itemSize[] = {4,1};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\argentineshortfinsquid_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\argentineshortfinsquid.rvmat","\gebsfish\data\fish\argentineshortfinsquid_rotten.rvmat"};
+	};
+	class geb_JapaneseFlyingSquid: geb_Squid_Base {
+		scope = 2;
+		displayName = "$STR_fish_japaneseflyingsquid";
+		descriptionShort = "$STR_fish_japaneseflyingsquid_desc";
+		model = "\gebsfish\data\fish\japaneseflyingsquid.p3d";
+		weight = 59;
+		weightPerQuantityUnit = 0.391;  // 450 g full
+		itemSize[] = {4,2};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\japaneseflyingsquid_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\japaneseflyingsquid.rvmat","\gebsfish\data\fish\japaneseflyingsquid_rotten.rvmat"};
+	};
+	class geb_PurplebackFlyingSquid: geb_Squid_Base {
+		scope = 2;
+		displayName = "$STR_fish_purplebackflyingsquid";
+		descriptionShort = "$STR_fish_purplebackflyingsquid_desc";
+		model = "\gebsfish\data\fish\purplebackflyingsquid.p3d";
+		weight = 78;
+		weightPerQuantityUnit = 0.522;  // 600 g full
+		itemSize[] = {4,2};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\purplebackflyingsquid_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\purplebackflyingsquid.rvmat","\gebsfish\data\fish\purplebackflyingsquid_rotten.rvmat"};
+	};
+	class geb_EuropeanFlyingSquid: geb_Squid_Base {
+		scope = 2;
+		displayName = "$STR_fish_europeanflyingsquid";
+		descriptionShort = "$STR_fish_europeanflyingsquid_desc";
+		model = "\gebsfish\data\fish\europeanflyingsquid.p3d";
+		weight = 196;
+		weightPerQuantityUnit = 1.304;  // 1.5 kg full
+		itemSize[] = {5,2};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanflyingsquid_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\europeanflyingsquid.rvmat","\gebsfish\data\fish\europeanflyingsquid_rotten.rvmat"};
+	};
+	class geb_NeonFlyingSquid: geb_Squid_Base {
+		scope = 2;
+		displayName = "$STR_fish_neonflyingsquid";
+		descriptionShort = "$STR_fish_neonflyingsquid_desc";
+		model = "\gebsfish\data\fish\neonflyingsquid.p3d";
+		weight = 326;
+		weightPerQuantityUnit = 2.174;  // 2.5 kg full
+		itemSize[] = {5,2};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\neonflyingsquid_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\neonflyingsquid.rvmat","\gebsfish\data\fish\neonflyingsquid_rotten.rvmat"};
+	};
+	// Juvenile squid: hand-sized young of the four small species, the bait ones.
+	// Like the minnow they are built on vanilla Shrimp, so they go on a hook or in
+	// a trap as bait (the mod's Shrimp gives them class Fishing and class Trapping)
+	// and cook and eat whole; with no fish.json result they can't be cleaned.
+	// Each uses its species' skin (the adult's model scaled down), with cooked,
+	// dried and burned looks from it. The models lie like the minnow's (head -Z,
+	// back +X), because Shrimp's hand pose holds them that way, so rotationFlags
+	// 12 lays them on the belly or back.
+	class geb_SquidJuvenile_Base: Shrimp {
+		scope = 0;
+		weight = 4;
+		weightPerQuantityUnit = 0.174497;  // 30 g full
+		itemSize[] = {2,1};
+		rotationFlags = 12;
+		// A full list, so the fire's cooking and smoking slots vanilla Shrimp
+		// has are named again here, or this list would drop them.
+		inventorySlot[]=
+		{
+			"Trap_Bait",
+			"Bait",
+			"Trap_Bait_1",
+			"Trap_Bait_2",
+			"GebFishMount",
+			"DirectCookingA",
+			"DirectCookingB",
+			"DirectCookingC",
+			"SmokingA",
+			"SmokingB",
+			"SmokingC",
+			"SmokingD"
+		};
+		hiddenSelections[] = {"Camo"};
+		// ": Food" keeps Shrimp's FoodStageTransitions (see geb_FatHeadMinnow).
+		class Food: Food
+		{
+			class FoodStages: FoodStages
+			{
+				class Raw
+				{
+					visual_properties[]={0, 0, 0};
+					nutrition_properties[]={5, 8, 18, 1, 0, 16, 1, 8};
+					cooking_properties[]={0, 0};
+				};
+				class Rotten
+				{
+					visual_properties[]={-1, -1, 5};
+					nutrition_properties[]={10, 4, 7, 1, 0, 20, 1, 16};
+					cooking_properties[]={0, 0};
+				};
+				class Baked
+				{
+					visual_properties[]={0, 1, 1};
+					nutrition_properties[]={2, 40, 10, 1, 0};
+					cooking_properties[]={70, 45};
+				};
+				class Boiled
+				{
+					visual_properties[]={0, 2, 2};
+					nutrition_properties[]={2, 32, 28, 1, 0};
+					cooking_properties[]={105, 55};
+				};
+				class Dried
+				{
+					visual_properties[]={0, 3, 3};
+					nutrition_properties[]={3, 34, 4, 1, 0};
+					cooking_properties[]={70, 45, 80};
+				};
+				class Burned
+				{
+					visual_properties[]={0, 4, 4};
+					nutrition_properties[]={5, 8, 0, 1, 0, 16, 1, 3};
+					cooking_properties[]={100, 30};
+				};
+			};
+		};
+	};
+	class geb_NorthernShortfinSquidJuvenile: geb_SquidJuvenile_Base {
+		scope = 2;
+		displayName = "$STR_fish_northernshortfinsquid_juvenile";
+		descriptionShort = "$STR_fish_northernshortfinsquid_juvenile_desc";
+		model = "\gebsfish\data\fish\northernshortfinsquid_juvenile.p3d";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\northernshortfinsquid_co.paa","\gebsfish\data\fish\northernshortfinsquid_juvenile_baked_co.paa","\gebsfish\data\fish\northernshortfinsquid_juvenile_boiled_co.paa","\gebsfish\data\fish\northernshortfinsquid_juvenile_dried_co.paa","\gebsfish\data\fish\northernshortfinsquid_juvenile_burned_co.paa","\gebsfish\data\fish\northernshortfinsquid_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\northernshortfinsquid.rvmat","\gebsfish\data\fish\northernshortfinsquid_juvenile_baked.rvmat","\gebsfish\data\fish\northernshortfinsquid_juvenile_boiled.rvmat","\gebsfish\data\fish\northernshortfinsquid_juvenile_dried.rvmat","\gebsfish\data\fish\northernshortfinsquid_juvenile_burned.rvmat","\gebsfish\data\fish\northernshortfinsquid_rotten.rvmat"};
+	};
+	class geb_ArgentineShortfinSquidJuvenile: geb_SquidJuvenile_Base {
+		scope = 2;
+		displayName = "$STR_fish_argentineshortfinsquid_juvenile";
+		descriptionShort = "$STR_fish_argentineshortfinsquid_juvenile_desc";
+		model = "\gebsfish\data\fish\argentineshortfinsquid_juvenile.p3d";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\argentineshortfinsquid_co.paa","\gebsfish\data\fish\argentineshortfinsquid_juvenile_baked_co.paa","\gebsfish\data\fish\argentineshortfinsquid_juvenile_boiled_co.paa","\gebsfish\data\fish\argentineshortfinsquid_juvenile_dried_co.paa","\gebsfish\data\fish\argentineshortfinsquid_juvenile_burned_co.paa","\gebsfish\data\fish\argentineshortfinsquid_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\argentineshortfinsquid.rvmat","\gebsfish\data\fish\argentineshortfinsquid_juvenile_baked.rvmat","\gebsfish\data\fish\argentineshortfinsquid_juvenile_boiled.rvmat","\gebsfish\data\fish\argentineshortfinsquid_juvenile_dried.rvmat","\gebsfish\data\fish\argentineshortfinsquid_juvenile_burned.rvmat","\gebsfish\data\fish\argentineshortfinsquid_rotten.rvmat"};
+	};
+	class geb_JapaneseFlyingSquidJuvenile: geb_SquidJuvenile_Base {
+		scope = 2;
+		displayName = "$STR_fish_japaneseflyingsquid_juvenile";
+		descriptionShort = "$STR_fish_japaneseflyingsquid_juvenile_desc";
+		model = "\gebsfish\data\fish\japaneseflyingsquid_juvenile.p3d";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\japaneseflyingsquid_co.paa","\gebsfish\data\fish\japaneseflyingsquid_juvenile_baked_co.paa","\gebsfish\data\fish\japaneseflyingsquid_juvenile_boiled_co.paa","\gebsfish\data\fish\japaneseflyingsquid_juvenile_dried_co.paa","\gebsfish\data\fish\japaneseflyingsquid_juvenile_burned_co.paa","\gebsfish\data\fish\japaneseflyingsquid_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\japaneseflyingsquid.rvmat","\gebsfish\data\fish\japaneseflyingsquid_juvenile_baked.rvmat","\gebsfish\data\fish\japaneseflyingsquid_juvenile_boiled.rvmat","\gebsfish\data\fish\japaneseflyingsquid_juvenile_dried.rvmat","\gebsfish\data\fish\japaneseflyingsquid_juvenile_burned.rvmat","\gebsfish\data\fish\japaneseflyingsquid_rotten.rvmat"};
+	};
+	class geb_PurplebackFlyingSquidJuvenile: geb_SquidJuvenile_Base {
+		scope = 2;
+		displayName = "$STR_fish_purplebackflyingsquid_juvenile";
+		descriptionShort = "$STR_fish_purplebackflyingsquid_juvenile_desc";
+		model = "\gebsfish\data\fish\purplebackflyingsquid_juvenile.p3d";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\purplebackflyingsquid_co.paa","\gebsfish\data\fish\purplebackflyingsquid_juvenile_baked_co.paa","\gebsfish\data\fish\purplebackflyingsquid_juvenile_boiled_co.paa","\gebsfish\data\fish\purplebackflyingsquid_juvenile_dried_co.paa","\gebsfish\data\fish\purplebackflyingsquid_juvenile_burned_co.paa","\gebsfish\data\fish\purplebackflyingsquid_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\purplebackflyingsquid.rvmat","\gebsfish\data\fish\purplebackflyingsquid_juvenile_baked.rvmat","\gebsfish\data\fish\purplebackflyingsquid_juvenile_boiled.rvmat","\gebsfish\data\fish\purplebackflyingsquid_juvenile_dried.rvmat","\gebsfish\data\fish\purplebackflyingsquid_juvenile_burned.rvmat","\gebsfish\data\fish\purplebackflyingsquid_rotten.rvmat"};
+	};
 	//Freshwater crustaceans
 	class  geb_EuropeanCrayFish: geb_Crayfish_Base {
 		scope = 2;
 		displayName = "$STR_fish_europeancrayfish";
 		descriptionShort = "$STR_fish_europeancrayfish_desc";
-		hiddenSelections[] =
-		{
-			"Camo"
-		};
 		hiddenSelectionsTextures[] =
 		{
 			"\gebsfish\data\fish\crayfish_european_co.paa",
@@ -1917,10 +2129,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_signalcrayfish";
 		descriptionShort = "$STR_fish_signalcrayfish_desc";
-		hiddenSelections[] =
-		{
-			"Camo"
-		};
 		hiddenSelectionsTextures[] =
 		{
 			"\gebsfish\data\fish\crayfish_signal_co.paa",
@@ -1944,10 +2152,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_floridacrayfish";
 		descriptionShort = "$STR_fish_floridacrayfish_desc";
-		hiddenSelections[] =
-		{
-			"Camo"
-		};
 		hiddenSelectionsTextures[] =
 		{
 			"\gebsfish\data\fish\crayfish_florida_co.paa",
@@ -1971,10 +2175,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_rustycrayfish";
 		descriptionShort = "$STR_fish_rustycrayfish_desc";
-		hiddenSelections[] =
-		{
-			"Camo"
-		};
 		hiddenSelectionsTextures[] =
 		{
 			"\gebsfish\data\fish\crayfish_rusty_co.paa",
@@ -1998,10 +2198,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_redswampcrayfish";
 		descriptionShort = "$STR_fish_redswampcrayfish_desc";
-		hiddenSelections[] =
-		{
-			"Camo"
-		};
 		hiddenSelectionsTextures[] =
 		{
 			"\gebsfish\data\fish\crayfish_redswamp_co.paa",
@@ -2025,10 +2221,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_monongahelacrayfish";
 		descriptionShort = "$STR_fish_monongahelacrayfish_desc";
-		hiddenSelections[] =
-		{
-			"Camo"
-		};
 		hiddenSelectionsTextures[] =
 		{
 			"\gebsfish\data\fish\crayfish_monongahela_co.paa",
@@ -2052,10 +2244,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_cavecrayfish";
 		descriptionShort = "$STR_fish_cavecrayfish_desc";
-		hiddenSelections[] =
-		{
-			"Camo"
-		};
 		hiddenSelectionsTextures[] =
 		{
 			"\gebsfish\data\fish\crayfish_cave_co.paa",
@@ -2081,7 +2269,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_bluegill_fillet";
 		descriptionShort = "$STR_fish_bluegill_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\bluegill_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
 		};
@@ -2092,7 +2279,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_spottedbass_fillet";
 		descriptionShort = "$STR_fish_spottedbass_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\spottedbass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
 		};
@@ -2101,7 +2287,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_stripedbass_fillet";
 		descriptionShort = "$STR_fish_stripedbass_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\stripedbass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
 		};
@@ -2110,7 +2295,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_neoshobass_fillet";
 		descriptionShort = "$STR_fish_neoshobass_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\neoshobass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
 		};
@@ -2119,7 +2303,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_Smallmouthbass_fillet";
 		descriptionShort = "$STR_fish_Smallmouthbass_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\smallmouthbass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
 		};
@@ -2150,7 +2333,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_redbreastsunfish_fillet";
 		descriptionShort = "$STR_fish_redbreastsunfish_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\redbreastsunfish_fillet_raw_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
 		};
@@ -2159,16 +2341,21 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_flatheadcatfish_fillet";
 		descriptionShort = "$STR_fish_flatheadcatfish_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
+		// DayZ 1.30 catfish fillet model; cooked stages share vanilla's catfish textures, rotten = vanilla rot rvmat.
+		model = "\dz\gear\food\catfish_fillet.p3d";
+		rotationFlags = 17;
+		hiddenSelections[] = {"cs_raw"};
 		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\flatheadcatfish_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
+			"\gebsfish\data\fish\flatheadcatfish_fillet_co.paa","dz\gear\food\data\catfish_fillet_baked_co.paa","dz\gear\food\data\catfish_fillet_boiled_co.paa","dz\gear\food\data\catfish_fillet_dried_co.paa","dz\gear\food\data\catfish_fillet_burnt_co.paa"
+		};
+		hiddenSelectionsMaterials[] = {
+			"dz\gear\food\data\catfish_fillet_raw.rvmat","dz\gear\food\data\catfish_fillet_baked.rvmat","dz\gear\food\data\catfish_fillet_boiled.rvmat","dz\gear\food\data\catfish_fillet_dried.rvmat","dz\gear\food\data\catfish_fillet_burnt.rvmat","dz\gear\food\data\catfish_fillet_rotten.rvmat"
 		};
 	};
 	class geb_LargeMouthBassFilletMeat: geb_FreshWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_largemouthbass_fillet";
 		descriptionShort = "$STR_fish_largemouthbass_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\largemouthbass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
 		};
@@ -2177,7 +2364,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_northernpike_fillet";
 		descriptionShort = "$STR_fish_northernpike_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\northernpike_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
 		};
@@ -2186,7 +2372,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_muskellunge_fillet";
 		descriptionShort = "$STR_fish_muskellunge_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\muskellunge_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
 		};
@@ -2195,7 +2380,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_spottedmuskellunge_fillet";
 		descriptionShort = "$STR_fish_spottedmuskellunge_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\spottedmuskellunge_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
 		};
@@ -2204,7 +2388,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_barredmuskellunge_fillet";
 		descriptionShort = "$STR_fish_barredmuskellunge_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\barredmuskellunge_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
 		};
@@ -2213,7 +2396,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_tigermuskellunge_fillet";
 		descriptionShort = "$STR_fish_tigermuskellunge_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\tigermuskellunge_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
 		};
@@ -2222,18 +2404,30 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_alligatorgar_fillet";
 		descriptionShort = "$STR_fish_alligatorgar_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
+		// DayZ 1.30 catfish fillet model; cooked stages share vanilla's catfish textures, rotten = vanilla rot rvmat.
+		model = "\dz\gear\food\catfish_fillet.p3d";
+		rotationFlags = 17;
+		hiddenSelections[] = {"cs_raw"};
 		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\alligatorgar_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
+			"\gebsfish\data\fish\alligatorgar_fillet_co.paa","dz\gear\food\data\catfish_fillet_baked_co.paa","dz\gear\food\data\catfish_fillet_boiled_co.paa","dz\gear\food\data\catfish_fillet_dried_co.paa","dz\gear\food\data\catfish_fillet_burnt_co.paa"
+		};
+		hiddenSelectionsMaterials[] = {
+			"dz\gear\food\data\catfish_fillet_raw.rvmat","dz\gear\food\data\catfish_fillet_baked.rvmat","dz\gear\food\data\catfish_fillet_boiled.rvmat","dz\gear\food\data\catfish_fillet_dried.rvmat","dz\gear\food\data\catfish_fillet_burnt.rvmat","dz\gear\food\data\catfish_fillet_rotten.rvmat"
 		};
 	};
 	class geb_NorthernSnakeHeadFilletMeat: geb_FreshWater_Fillet_Heavy {
 		scope = 2;
 		displayName = "$STR_fish_northernsnakehead_fillet";
 		descriptionShort = "$STR_fish_northernsnakehead_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
+		// DayZ 1.30 catfish fillet model; cooked stages share vanilla's catfish textures, rotten = vanilla rot rvmat.
+		model = "\dz\gear\food\catfish_fillet.p3d";
+		rotationFlags = 17;
+		hiddenSelections[] = {"cs_raw"};
 		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\northernsnakehead_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
+			"\gebsfish\data\fish\northernsnakehead_fillet_co.paa","dz\gear\food\data\catfish_fillet_baked_co.paa","dz\gear\food\data\catfish_fillet_boiled_co.paa","dz\gear\food\data\catfish_fillet_dried_co.paa","dz\gear\food\data\catfish_fillet_burnt_co.paa"
+		};
+		hiddenSelectionsMaterials[] = {
+			"dz\gear\food\data\catfish_fillet_raw.rvmat","dz\gear\food\data\catfish_fillet_baked.rvmat","dz\gear\food\data\catfish_fillet_boiled.rvmat","dz\gear\food\data\catfish_fillet_dried.rvmat","dz\gear\food\data\catfish_fillet_burnt.rvmat","dz\gear\food\data\catfish_fillet_rotten.rvmat"
 		};
 	};
 	class geb_YellowPerchFilletMeat: geb_FreshWater_Fillet_Lean {
@@ -2373,16 +2567,21 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_lakesturgeon_fillet";
 		descriptionShort = "$STR_fish_lakesturgeon_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
+		// DayZ 1.30 catfish fillet model; cooked stages share vanilla's catfish textures, rotten = vanilla rot rvmat.
+		model = "\dz\gear\food\catfish_fillet.p3d";
+		rotationFlags = 17;
+		hiddenSelections[] = {"cs_raw"};
 		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\lakesturgeon_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
+			"\gebsfish\data\fish\lakesturgeon_fillet_co.paa","dz\gear\food\data\catfish_fillet_baked_co.paa","dz\gear\food\data\catfish_fillet_boiled_co.paa","dz\gear\food\data\catfish_fillet_dried_co.paa","dz\gear\food\data\catfish_fillet_burnt_co.paa"
+		};
+		hiddenSelectionsMaterials[] = {
+			"dz\gear\food\data\catfish_fillet_raw.rvmat","dz\gear\food\data\catfish_fillet_baked.rvmat","dz\gear\food\data\catfish_fillet_boiled.rvmat","dz\gear\food\data\catfish_fillet_dried.rvmat","dz\gear\food\data\catfish_fillet_burnt.rvmat","dz\gear\food\data\catfish_fillet_rotten.rvmat"
 		};
 	};
 	class geb_WhiteBassFilletMeat: geb_FreshWater_Fillet_Medium {
 		scope = 2;
 		displayName = "$STR_fish_whitebass_fillet";
 		descriptionShort = "$STR_fish_whitebass_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\whitebass_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
 		};
@@ -2391,16 +2590,21 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_bowfin_fillet";
 		descriptionShort = "$STR_fish_bowfin_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
+		// DayZ 1.30 catfish fillet model; cooked stages share vanilla's catfish textures, rotten = vanilla rot rvmat.
+		model = "\dz\gear\food\catfish_fillet.p3d";
+		rotationFlags = 17;
+		hiddenSelections[] = {"cs_raw"};
 		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\bowfin_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
+			"\gebsfish\data\fish\bowfin_fillet_co.paa","dz\gear\food\data\catfish_fillet_baked_co.paa","dz\gear\food\data\catfish_fillet_boiled_co.paa","dz\gear\food\data\catfish_fillet_dried_co.paa","dz\gear\food\data\catfish_fillet_burnt_co.paa"
+		};
+		hiddenSelectionsMaterials[] = {
+			"dz\gear\food\data\catfish_fillet_raw.rvmat","dz\gear\food\data\catfish_fillet_baked.rvmat","dz\gear\food\data\catfish_fillet_boiled.rvmat","dz\gear\food\data\catfish_fillet_dried.rvmat","dz\gear\food\data\catfish_fillet_burnt.rvmat","dz\gear\food\data\catfish_fillet_rotten.rvmat"
 		};
 	};
 	class geb_SlimySculpinFilletMeat: geb_FreshWater_Fillet_Lean {
 		scope = 2;
 		displayName = "$STR_fish_slimysculpin_fillet";
 		descriptionShort = "$STR_fish_slimysculpin_desc";
-		model = "\dz\gear\food\carp_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\slimysculpin_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
 		};
@@ -2411,7 +2615,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_angelfish_fillet";
 		descriptionShort = "$STR_fish_angelfish_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\angelfish_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
@@ -2420,7 +2623,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_asianseabass_fillet";
 		descriptionShort = "$STR_fish_asianseabass_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\asianseabass_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
@@ -2429,7 +2631,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_atlanticbluemarlin_fillet";
 		descriptionShort = "$STR_fish_atlanticbluemarlin_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\bluemarlin_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
@@ -2438,7 +2639,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_atlanticsailfish_fillet";
 		descriptionShort = "$STR_fish_atlanticsailfish_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\sailfish_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
@@ -2447,7 +2647,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_mahimahi_fillet";
 		descriptionShort = "$STR_fish_mahimahi_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\mahimahi_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
@@ -2456,16 +2655,20 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_pacificbonito_fillet";
 		descriptionShort = "$STR_fish_pacificbonito_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\pacificbonito_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
+	};
+	// The fillet's pre-3.3.3 class name, a hidden alias like geb_Bonita: stored
+	// fillets keep loading until the next wipe (remove it then); one loose on
+	// the ground is gone after the second restart. The XML generators leave it out.
+	class geb_BonitaFilletMeat: geb_PacificBonitoFilletMeat {
+		scope = 1;
 	};
 	class geb_GreatBarracudaFilletMeat: geb_SaltWater_Fillet_Lean {
 		scope = 2;
 		displayName = "$STR_fish_greatbarracuda_fillet";
 		descriptionShort = "$STR_fish_greatbarracuda_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\greatbarracuda_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
@@ -2531,7 +2734,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_flatheadmullet_fillet";
 		descriptionShort = "$STR_fish_flatheadmullet_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\flatheadmullet_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
@@ -2540,16 +2742,21 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_leopardshark_fillet";
 		descriptionShort = "$STR_fish_leopardshark_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
+		// DayZ 1.30 catfish fillet model; cooked stages share vanilla's catfish textures, rotten = vanilla rot rvmat.
+		model = "\dz\gear\food\catfish_fillet.p3d";
+		rotationFlags = 17;
+		hiddenSelections[] = {"cs_raw"};
 		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\leopardshark_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
+			"\gebsfish\data\fish\leopardshark_fillet_co.paa","dz\gear\food\data\catfish_fillet_baked_co.paa","dz\gear\food\data\catfish_fillet_boiled_co.paa","dz\gear\food\data\catfish_fillet_dried_co.paa","dz\gear\food\data\catfish_fillet_burnt_co.paa"
+		};
+		hiddenSelectionsMaterials[] = {
+			"dz\gear\food\data\catfish_fillet_raw.rvmat","dz\gear\food\data\catfish_fillet_baked.rvmat","dz\gear\food\data\catfish_fillet_boiled.rvmat","dz\gear\food\data\catfish_fillet_dried.rvmat","dz\gear\food\data\catfish_fillet_burnt.rvmat","dz\gear\food\data\catfish_fillet_rotten.rvmat"
 		};
 	};
 	class geb_HammerHeadSharkFilletMeat: geb_SaltWater_Fillet_Predator{
 		scope = 2;
 		displayName = "$STR_fish_hammerheadshark_fillet";
 		descriptionShort = "$STR_fish_hammerheadshark_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\hammerheadshark_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
@@ -2577,7 +2784,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_redheadcichlid_fillet";
 		descriptionShort = "$STR_fish_redheadcichlid_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\redheadcichlid_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
@@ -2587,7 +2793,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_rougheyerock_fillet";
 		descriptionShort = "$STR_fish_rougheyerock_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\rougheyerock_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
@@ -2596,7 +2801,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_severum_fillet";
 		descriptionShort = "$STR_fish_severum_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\severum_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
@@ -2605,7 +2809,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_bluetang_fillet";
 		descriptionShort = "$STR_fish_bluetang_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\bluetang_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
@@ -2614,7 +2817,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_largeheadhairtailfish_fillet";
 		descriptionShort = "$STR_fish_largeheadhairtailfish_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\hairtailfish_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
@@ -2626,7 +2828,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_humpheadwrasse_fillet";
 		descriptionShort = "$STR_fish_humpheadwrasse_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\humpheadwrasse_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
@@ -2635,7 +2836,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_siamesetigerfish_fillet";
 		descriptionShort = "$STR_fish_siamesetigerfish_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\siamesetigerfish_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
@@ -2644,7 +2844,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_greatwhiteshark_fillet";
 		descriptionShort = "$STR_fish_greatwhiteshark_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\greatwhiteshark_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
@@ -2653,16 +2852,21 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_angelshark_fillet";
 		descriptionShort = "$STR_fish_angelshark_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
+		// DayZ 1.30 catfish fillet model; cooked stages share vanilla's catfish textures, rotten = vanilla rot rvmat.
+		model = "\dz\gear\food\catfish_fillet.p3d";
+		rotationFlags = 17;
+		hiddenSelections[] = {"cs_raw"};
 		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\angelshark_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
+			"\gebsfish\data\fish\angelshark_fillet_co.paa","dz\gear\food\data\catfish_fillet_baked_co.paa","dz\gear\food\data\catfish_fillet_boiled_co.paa","dz\gear\food\data\catfish_fillet_dried_co.paa","dz\gear\food\data\catfish_fillet_burnt_co.paa"
+		};
+		hiddenSelectionsMaterials[] = {
+			"dz\gear\food\data\catfish_fillet_raw.rvmat","dz\gear\food\data\catfish_fillet_baked.rvmat","dz\gear\food\data\catfish_fillet_boiled.rvmat","dz\gear\food\data\catfish_fillet_dried.rvmat","dz\gear\food\data\catfish_fillet_burnt.rvmat","dz\gear\food\data\catfish_fillet_rotten.rvmat"
 		};
 	};
 	class geb_YellowFinTunaFilletMeat: geb_SaltWater_Fillet_Fatty{
 		scope = 2;
 		displayName = "$STR_fish_yellowfintuna_fillet";
 		descriptionShort = "$STR_fish_yellowfintuna_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\yellowfintuna_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
@@ -2671,7 +2875,6 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_whitegrunt_fillet";
 		descriptionShort = "$STR_fish_whitegrunt_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\whitegrunt_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
@@ -2680,16 +2883,21 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_fish_southernflounder_fillet";
 		descriptionShort = "$STR_fish_southernflounder_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
+		// DayZ 1.30 catfish fillet model; cooked stages share vanilla's catfish textures, rotten = vanilla rot rvmat.
+		model = "\dz\gear\food\catfish_fillet.p3d";
+		rotationFlags = 17;
+		hiddenSelections[] = {"cs_raw"};
 		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\southernflounder_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
+			"\gebsfish\data\fish\southernflounder_fillet_co.paa","dz\gear\food\data\catfish_fillet_baked_co.paa","dz\gear\food\data\catfish_fillet_boiled_co.paa","dz\gear\food\data\catfish_fillet_dried_co.paa","dz\gear\food\data\catfish_fillet_burnt_co.paa"
+		};
+		hiddenSelectionsMaterials[] = {
+			"dz\gear\food\data\catfish_fillet_raw.rvmat","dz\gear\food\data\catfish_fillet_baked.rvmat","dz\gear\food\data\catfish_fillet_boiled.rvmat","dz\gear\food\data\catfish_fillet_dried.rvmat","dz\gear\food\data\catfish_fillet_burnt.rvmat","dz\gear\food\data\catfish_fillet_rotten.rvmat"
 		};
 	};
 	class geb_YellowSnapperFilletMeat: geb_SaltWater_Fillet_Fatty{
 		scope = 2;
 		displayName = "$STR_fish_yellowsnapper_fillet";
 		descriptionShort = "$STR_fish_yellowsnapper_desc";
-		model = "\dz\gear\food\mackerel_fillet.p3d";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\yellowsnapper_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
@@ -2773,6 +2981,60 @@ class cfgVehicles {
 			};
 		};
 	};
+	// Squid meat: one cleaned squid tube model (squidmeat.p3d, its "Camo" part)
+	// for every species. Raw shows the species' own skin; the baked, boiled,
+	// dried and burned looks are shared, each from a photo of real cooked squid
+	// with its own relief and sheen. Lean white meat, laid flat like vanilla's fillets.
+	class geb_SquidMeat_Base: geb_SaltWater_Fillet_Lean {
+		scope = 0;
+		model = "\gebsfish\data\fish\squidmeat.p3d";
+		itemSize[] = {2,1};
+		weightPerQuantityUnit = 0.5;  // 250 g full
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\squidmeat.rvmat","\gebsfish\data\fish\squidmeat_baked.rvmat","\gebsfish\data\fish\squidmeat_boiled.rvmat","\gebsfish\data\fish\squidmeat_dried.rvmat","\gebsfish\data\fish\squidmeat_burned.rvmat","\gebsfish\data\fish\squidmeat_rotten.rvmat"};
+	};
+	class geb_HumboldtSquidMeat: geb_SquidMeat_Base {
+		scope = 2;
+		displayName = "$STR_fish_humboldtsquid_meat";
+		descriptionShort = "$STR_fish_humboldtsquid_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\humboldtsquid_meat_co.paa","\gebsfish\data\fish\squidmeat_baked_co.paa","\gebsfish\data\fish\squidmeat_boiled_co.paa","\gebsfish\data\fish\squidmeat_dried_co.paa","\gebsfish\data\fish\squidmeat_burned_co.paa"};
+	};
+	class geb_NorthernShortfinSquidMeat: geb_SquidMeat_Base {
+		scope = 2;
+		displayName = "$STR_fish_northernshortfinsquid_meat";
+		descriptionShort = "$STR_fish_northernshortfinsquid_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\northernshortfinsquid_meat_co.paa","\gebsfish\data\fish\squidmeat_baked_co.paa","\gebsfish\data\fish\squidmeat_boiled_co.paa","\gebsfish\data\fish\squidmeat_dried_co.paa","\gebsfish\data\fish\squidmeat_burned_co.paa"};
+	};
+	class geb_ArgentineShortfinSquidMeat: geb_SquidMeat_Base {
+		scope = 2;
+		displayName = "$STR_fish_argentineshortfinsquid_meat";
+		descriptionShort = "$STR_fish_argentineshortfinsquid_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\argentineshortfinsquid_meat_co.paa","\gebsfish\data\fish\squidmeat_baked_co.paa","\gebsfish\data\fish\squidmeat_boiled_co.paa","\gebsfish\data\fish\squidmeat_dried_co.paa","\gebsfish\data\fish\squidmeat_burned_co.paa"};
+	};
+	class geb_JapaneseFlyingSquidMeat: geb_SquidMeat_Base {
+		scope = 2;
+		displayName = "$STR_fish_japaneseflyingsquid_meat";
+		descriptionShort = "$STR_fish_japaneseflyingsquid_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\japaneseflyingsquid_meat_co.paa","\gebsfish\data\fish\squidmeat_baked_co.paa","\gebsfish\data\fish\squidmeat_boiled_co.paa","\gebsfish\data\fish\squidmeat_dried_co.paa","\gebsfish\data\fish\squidmeat_burned_co.paa"};
+	};
+	class geb_PurplebackFlyingSquidMeat: geb_SquidMeat_Base {
+		scope = 2;
+		displayName = "$STR_fish_purplebackflyingsquid_meat";
+		descriptionShort = "$STR_fish_purplebackflyingsquid_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\purplebackflyingsquid_meat_co.paa","\gebsfish\data\fish\squidmeat_baked_co.paa","\gebsfish\data\fish\squidmeat_boiled_co.paa","\gebsfish\data\fish\squidmeat_dried_co.paa","\gebsfish\data\fish\squidmeat_burned_co.paa"};
+	};
+	class geb_EuropeanFlyingSquidMeat: geb_SquidMeat_Base {
+		scope = 2;
+		displayName = "$STR_fish_europeanflyingsquid_meat";
+		descriptionShort = "$STR_fish_europeanflyingsquid_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\europeanflyingsquid_meat_co.paa","\gebsfish\data\fish\squidmeat_baked_co.paa","\gebsfish\data\fish\squidmeat_boiled_co.paa","\gebsfish\data\fish\squidmeat_dried_co.paa","\gebsfish\data\fish\squidmeat_burned_co.paa"};
+	};
+	class geb_NeonFlyingSquidMeat: geb_SquidMeat_Base {
+		scope = 2;
+		displayName = "$STR_fish_neonflyingsquid_meat";
+		descriptionShort = "$STR_fish_neonflyingsquid_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\neonflyingsquid_meat_co.paa","\gebsfish\data\fish\squidmeat_baked_co.paa","\gebsfish\data\fish\squidmeat_boiled_co.paa","\gebsfish\data\fish\squidmeat_dried_co.paa","\gebsfish\data\fish\squidmeat_burned_co.paa"};
+	};
 	class geb_AmericanLobsterTail : geb_LobsterTail_Base {
 		scope = 2;
 		displayName = "$STR_fish_americanlobster_tail";
@@ -2809,10 +3071,6 @@ class cfgVehicles {
 		scope=2;
 		displayName="$STR_fish_YellowCaviar";
 		descriptionShort="$STR_fish_YellowCaviar_desc";
-		hiddenSelections[]=
-		{
-			"cs_raw"
-		};
 		hiddenSelectionsTextures[]=
 		{
 			"\gebsfish\data\fish\pike_caviar_raw_co.paa",
@@ -2823,10 +3081,6 @@ class cfgVehicles {
 		scope=2;
 		displayName="$STR_fish_BlackCaviar";
 		descriptionShort="$STR_fish_BlackCaviar_desc";
-		hiddenSelections[]=
-		{
-			"cs_raw"
-		};
 		hiddenSelectionsTextures[]=
 		{
 			"\gebsfish\data\fish\sturgeon_caviar_raw_co.paa",

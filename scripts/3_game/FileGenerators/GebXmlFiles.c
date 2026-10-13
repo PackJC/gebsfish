@@ -15,8 +15,8 @@ class GebXmlFiles {
     static const string DIRECTORY_PATH = "$profile:Gebs/mpmissions/";
     static const string VERSION_PREFIX = "<!-- Version: ";
 
-    // The five jon boat colours.
-    static ref TStringArray s_JonBoats = {"geb_jonboat_greenaluminum", "geb_jonboat_grayaluminum", "geb_jonboat_camo_desert", "geb_jonboat_camo_snow", "geb_jonboat_camo_forest"};
+    // The six jon boat colours.
+    static ref TStringArray s_JonBoats = {"geb_jonboat_greenaluminum", "geb_jonboat_grayaluminum", "geb_jonboat_camo_desert", "geb_jonboat_camo_snow", "geb_jonboat_camo_forest", "geb_jonboat_camo_pink"};
 
     static void EnsureDirectoryExists() {
         GebMakeConfigDir();
@@ -26,6 +26,21 @@ class GebXmlFiles {
     // The line IsCurrentVersion reads back.
     static void WriteVersionLine(FileHandle file, string version) {
         FPrintln(file, VERSION_PREFIX + version + " -->");
+    }
+
+    // <name>number</name> on one line gives the number. The mission's
+    // db/types.xml and db/events.xml write one element per line.
+    static bool ReadElement(string line, string name, out int value) {
+        string open = "<" + name + ">";
+        int start = line.IndexOf(open);
+        if (start == -1)
+            return false;
+        start += open.Length();
+        int end = line.IndexOf("</" + name + ">");
+        if (end <= start)
+            return false;
+        value = line.Substring(start, end - start).Trim().ToInt();
+        return true;
     }
 
     static bool IsCurrentVersion(string filePath, string expectedVersion) {
