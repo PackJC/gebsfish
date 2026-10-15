@@ -261,7 +261,7 @@ class cfgVehicles {
 		inventorySlot[] += {"GebLockerTrap1","GebLockerTrap2"};
 	};
 
-	// Crafted from 12 planks and 24 nails with a hammer on you (CraftFishingLocker,
+	// Crafted from 10 planks and 20 nails with a hammer on you (CraftFishingLocker,
 	// RecipeToggles.CraftFishingLocker), carried in both hands and placed with
 	// vanilla's hologram like the sea chest and the wooden crate it is built
 	// like; it can only be picked up again once it is empty. The cargo is the

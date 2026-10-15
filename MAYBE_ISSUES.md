@@ -1222,8 +1222,9 @@ table still returns no catch; add sea/both entries if sea netting is desired.
 109. (2026-10-06) Yellow Crankbait lip (A23): up close in hands and on the
     ground, the clear lip reads as smooth clear plastic (no body relief or
     sheen across it), as on the Purple Crankbait, also when damaged and ruined.
-139. (2026-10-13) Fishing Locker (new): craft it from 12 stacked planks plus
-    24 nails with a hammer or hatchet on you (refused without one, or with
+139. (2026-10-13) Fishing Locker (new): craft it from a full stack of 10 planks
+    plus 20 nails with a hammer or hatchet on you (12 until 2026-10-14: planks
+    stack to 10, so it could never be crafted) (refused without one, or with
     CraftFishingLocker 0); it lands on the ground. Carry it in two hands and
     place it (white hologram, open front facing you, upright on a slope).
     Fill every spot from the inventory: six rods (vanilla, improvised and the
@@ -1238,6 +1239,36 @@ table still returns no catch; add sea/both entries if sea netting is desired.
     both sides from each item's loot box). Check the slot names and ghost icons,
     the cargo (10x5), that it can't be picked up with anything in or on it, its
     damaged and ruined looks, and that ruining it spills the contents.
+162. (2026-10-14) Old tackle boxes in the hand (data/tackle/mediumtackle.p3d moved
+    4.4 cm down, 0.4 cm and 3.4 cm sideways, so its handle bar sits where the
+    large tackle box's does: the hand grips the origin). Pick one up: the hand
+    closes around the handle's middle, not on the lid beside it. On the ground
+    it lies as before; on a jon boat deck slot it sits 4 cm lower than before
+    (closer to the deck it floated over); the locker shelf fits it from its
+    loot box as always. Compare with the large tackle box in the hand.
+161. (2026-10-14) Fish Tank Stand recipe (geb_craftfishtankstand.c, a subclass of
+    the Fishing Locker's recipe, which now takes its amounts from methods). With a
+    hammer or hatchet on you, 8 planks + 16 nails make the stand on the ground
+    ("Craft Fish Tank Stand" in every language); without a tool, or with
+    CraftFishTankStand 0 in general.json, no recipe. An existing general.json gets
+    CraftFishTankStand 1 added at start. The locker's recipe still takes 10 + 20.
+    The stand's description ends with how it's built. Its types.xml row becomes
+    crafted="1" once gebsfish-types.xml is written again.
+160. (2026-10-14) Fish drying rack kit (data/tools/config.cpp, geb_fishdryingrack.c,
+    geb_actionassembledryingrack.c, geb_craftdryingrack.c). Long sticks don't
+    stack in 1.30 (varStackMax 1), so 7 from one stack was never craftable.
+    Craft the kit from one long stick and a rope: it drops on the ground. Drag
+    long sticks onto its Long Stick slot one at a time: it takes six, stacked
+    in the slot; not while the kit is held or in a bag. With sticks in, the kit
+    can't be picked up or put in cargo; take them out and it can. With all six,
+    look at it empty-handed: "Assemble drying rack" (vanilla's empty-handed
+    interact loop, as picking a bush by hand: the building animation needs a
+    tool and froze the player with the circle never finishing in the first
+    build; vanilla's empty-handed building time) leaves the rack where the kit lay,
+    turned its way, and the kit and sticks are gone; fewer than six, no prompt.
+    Name, description and prompt in every language; the slot's stick icon.
+    The kit only gets its types.xml row (45-day lifetime) once
+    gebsfish-types.xml is written again.
 159. (2026-10-14) A boat launched after a tow stays where it was launched, for
     every player (geb_boattrailer.c: GebResyncBoat moves the carried boat with
     SetPosition at each 0.2 s sync, at release and 1 s after; GebClearGround
@@ -1602,15 +1633,17 @@ table still returns no catch; add sea/both entries if sea netting is desired.
     the hologram ghosts only the frame and decor; plants never draw over
     the glass; wear looks at 50% and 0%; it sits on the floor; inventory
     picture. It must not appear in world loot (nominal 0) or any recipe.
-138. (2026-10-13) Fish drying rack (new): craft it from 7 stacked long wooden
-    sticks plus a rope (refused with CraftDryingRack 0); carry it in two hands,
-    place it (white hologram, deploy animation). Hang vanilla carp, mackerel,
+138. (2026-10-13) Fish drying rack (new): build it from its kit (case 160;
+    the kit is refused with CraftDryingRack 0). Once built it stays put: no
+    "Pick up", and it can't be dragged into hands or any inventory (Cole,
+    2026-10-14; it was carried and placed with a hologram before the kit).
+    Hang vanilla carp, mackerel,
     steelhead, walleye pollock and catfish fillets and mod fillets: each hangs
     by its tail on its loop, flesh out (if one shows upside down, flip that
     model's turn sign in GebHangPose). With MinutesToDry 1 they turn dried;
     rain or snow above StallThreshold stops it, wind speeds it up; decay is
     paused only while drying. Restart: progress and poses kept. Refused:
-    rotten fillets, lobster/crab parts, anything while the rack is carried.
+    rotten fillets and lobster/crab parts.
     Check its damaged looks, that it sits on the ground, and its inventory picture.
 137. (2026-10-13) Fly, spincast, baitcast and heavy surf rods (new): rebuild
     the PBO with the four rods in data/tools (p3d, _co/_normals/_smdi, three
@@ -1683,19 +1716,20 @@ table still returns no catch; add sea/both entries if sea netting is desired.
     inventory with an angelfish next to a severum and a blue tang: the
     angelfish sits level like them (its invViewCameraRoll is 190; if it now
     tilts the other way try about 197, if worse 220).
-132. (2026-10-12) Fishing effects: with *.ptc in AddonBuilder's files to copy,
-    the script log has no "Particle file not found" for
-    gebsfish/data/particles. A carp or anything lighter bites with vanilla's
-    small splash, a salmon or cod (2.3-15 kg) with a bigger one, a pike or
-    shark (over 15 kg) with the biggest, and landing one of the two heavier
-    kinds splashes at the cast point again. Bubbles show at the float about
-    1.5 s before each bite; a treasure catch (Chance 1 to test) bubbles at the
-    cast point. Each spear stab and net haul splashes. Filleting leaves blood
-    drops at your feet for a minute. A rotten fish or fillet dropped on the
-    ground gets flies, which stop when it is picked up. A cooler on the ground
-    holding a frozen fish puffs cold mist from its lid every 4 s, and stops
-    when picked up or emptied of frozen food. Judge the splash and bubble
-    sizes; data/particles/*.ptc are easy to scale.
+132. (2026-10-12, reduced 2026-10-14) Fishing effects. The splashes by fish
+    weight, the bubbles before a bite and on treasure, and the spear and net
+    splashes were taken out (Cole: "more confusing"): every bite shows
+    vanilla's own small splash, nothing else at the cast point, and the script
+    log has no "Particle file not found". Filleting leaves blood drops at your
+    feet for a minute. A rotten fish or fillet dropped on the ground gets
+    flies, which stop when it is picked up. A cooler is chilly at all times: on
+    the ground, a boat's deck or the locker, empty or full, it puffs vanilla's
+    heavy breath vapour just above its highest point every 4 s, whichever way it
+    lies; not while ruined or carried by a player. The TEMPORARY "[gebsfish
+    cooler check]" lines in the client log give each cooler's state when it
+    changes (the earlier versions, waiting for frozen or 0 C food, were never
+    seen in game). The bigger cooler still sits flat on the jon boat's
+    deck slots and the Fishing Locker's shelf, about 1 cm clear of the bait slot.
 131. (2026-10-11) DayZ 1.30 (bzed's version-130 notes): boot on 1.30 (on
     Experimental, CF-Test instead of CF until 1.30 stable) and read
     script_*.log: no (E) from gebsfish, and no "obsolete" warning for

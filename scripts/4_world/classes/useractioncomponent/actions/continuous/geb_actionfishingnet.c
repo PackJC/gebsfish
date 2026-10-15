@@ -144,9 +144,6 @@ class ActionBambooFishingNet : ActionGebWaterBase {
 			GebsfishLogger.Error("Missing valid net water type; skipping catch.", "NetSpawn");
 			return;
 		}
-		// The net comes out of the water with a splash, full or empty.
-		GebFishingFx.Play(action_data.m_Target.GetCursorHitPos(), ParticleList.GEB_SPLASH_MEDIUM);
-
 		PlayerBase player = action_data.m_Player;
 		ItemBase net = action_data.m_MainItem;
 

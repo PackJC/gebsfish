@@ -153,9 +153,6 @@ class ActionGebSpearFishing : ActionGebWaterBase {
 			return;
 		}
 
-		// A splash where the spear went in, caught or not.
-		GebFishingFx.Play(action_data.m_Target.GetCursorHitPos(), ParticleList.FISHING_SIGNAL_SPLASH);
-
 		PlayerBase player = action_data.m_Player;
 		ItemBase spear = action_data.m_MainItem;
 		SpearFishingConf settings = GetSpearSettings();

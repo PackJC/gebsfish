@@ -8,14 +8,12 @@
 
 */
 
-// Craft the Fish Drying Rack: 7 Long Wooden Sticks + 1 Rope, the way vanilla's
-// Shelter Kit takes a rope and 4 sticks. Long sticks stack to 10, so the seven
-// come off one stack and the rest stays; the rope is used up. The rack is a
-// heavy item (two hands, never in cargo), so it is made on the ground at the
-// player's feet. Vanilla's crafting animation, like every recipe.
+// Craft the Fish Drying Rack Kit: a Long Wooden Stick + a Rope, made on the
+// ground like vanilla's Shelter Kit. The rack takes seven long sticks, but they
+// don't stack in DayZ 1.30 (varStackMax 1), so the other six go into the kit's
+// slot one at a time and "Assemble drying rack" builds the rack from it
+// (geb_fishdryingrack.c). Vanilla's crafting animation, like every recipe.
 class CraftDryingRack extends RecipeBase {
-
-	static const int GEB_STICKS = 7;
 
 	override void Init() {
 		m_Name = "#STR_craft_fishdryingrack";
@@ -28,7 +26,7 @@ class CraftDryingRack extends RecipeBase {
 		m_MinDamageIngredient[0] = -1;
 		m_MaxDamageIngredient[0] = 3;// anything short of ruined
 
-		m_MinQuantityIngredient[0] = GEB_STICKS;
+		m_MinQuantityIngredient[0] = -1;
 		m_MaxQuantityIngredient[0] = -1;
 
 		m_MinDamageIngredient[1] = -1;
@@ -39,13 +37,13 @@ class CraftDryingRack extends RecipeBase {
 		//----------------------------------------------------------------------------------------------------------------------
 
 		//INGREDIENTS
-		//ingredient 1 -- the poles: four legs, the ridge and two rails
+		//ingredient 1 -- the first pole
 		InsertIngredient(0,"LongWoodenStick");
 
 		m_IngredientAddHealth[0] = 0;
 		m_IngredientSetHealth[0] = -1;
-		m_IngredientAddQuantity[0] = -GEB_STICKS;
-		m_IngredientDestroy[0] = false; // take seven, keep the rest of the stack
+		m_IngredientAddQuantity[0] = 0;
+		m_IngredientDestroy[0] = true;
 		m_IngredientUseSoftSkills[0] = false;
 
 		//ingredient 2 -- the lashings and the fillet loops
@@ -59,14 +57,14 @@ class CraftDryingRack extends RecipeBase {
 		//----------------------------------------------------------------------------------------------------------------------
 
 		//result1
-		AddResult("geb_FishDryingRack");
+		AddResult("geb_FishDryingRackKit");
 
 		m_ResultSetFullQuantity[0] = false;
 		m_ResultSetQuantity[0] = -1;
 		m_ResultSetHealth[0] = -1;
 		m_ResultInheritsHealth[0] = -1;
 		m_ResultInheritsColor[0] = -1;
-		m_ResultToInventory[0] = -2;// on the ground: a heavy item fits nowhere else
+		m_ResultToInventory[0] = -2;// on the ground, where the kit takes its sticks
 		m_ResultUseSoftSkills[0] = false;
 		m_ResultReplacesIngredient[0] = -1;
 

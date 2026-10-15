@@ -104,7 +104,7 @@ Gebsfish layers several configurable environmental systems on top of vanilla fis
 
 * **Fish foods** — fourteen more on vanilla's other packaging, each feeding and spawning like the vanilla item it's built on: cod roe spread, salmon pâté and smoked fish spread in pâté tins; fish soup, clam chowder, fish balls in tomato sauce and herring in mustard sauce in 250 g cans; pickled herring, red caviar and pickled mussels in glass jars; prawn crackers and dried squid in snack bags, fish jerky in a stick pack and bonito flakes in a box.
 
-* **Fishing effects** — a bite's splash shows the fish's size (vanilla's small splash up to a carp, bigger up to 15 kg, big beyond), and landing a heavy fish splashes again. Bubbles rise at the float just before a bite and boil up when treasure is hooked; spear stabs and net hauls splash; filleting leaves blood on the ground; flies swarm over rotten fish left lying around; and a cooler holding frozen food breathes cold mist. All made from vanilla's particles and textures.
+* **Fishing effects** — filleting leaves blood on the ground; flies swarm over rotten fish left lying around; and coolers breathe a cold mist. All made from vanilla's particles and textures.
 
 * **Configurable junk catches** — rods can pull junk instead of fish (nets and traps never do), about one catch in ten on every map and in every season by default (`JunkShare`): a weighted table of items (wellies, anything you add) with per-entry spawn-damage ranges, plus a separate table for liquid containers that come up empty (the default is a cooking pot). Fully tunable in `junk.json`.
 

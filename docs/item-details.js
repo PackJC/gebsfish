@@ -86,7 +86,7 @@ const ITEMDETAIL = {
 },
 "geb_BoatTrailer": {
 "cat": "boat",
-"desc": "A galvanized single-axle boat trailer with carpeted bunks, a winch and a jack, on two Gunter 2 wheels. It carries a jon boat or a rubber boat: winch one on at the bow, then back the trailer into the water to launch it. Back a car up until its hitch meets the coupler, then hitch up. Back up slowly: if it jackknifes or the car crashes, it breaks loose.",
+"desc": "BETA TESTING - NOT COMPLETED. USE AT YOUR OWN RISK. A galvanized single-axle boat trailer with carpeted bunks, a winch and a jack, on two Gunter 2 wheels. It carries a jon boat or a rubber boat: winch one on at the bow, then back the trailer into the water to launch it. Back a car up until its hitch meets the coupler, then hitch up. Back up slowly: if it jackknifes or the car crashes, it breaks loose.",
 "img": "items/geb_BoatTrailer.webp",
 "name": "Boat Trailer"
 },
@@ -440,13 +440,13 @@ const ITEMDETAIL = {
 },
 "geb_FishTankStand": {
 "cat": "gear",
-"desc": "A varnished wooden aquarium cabinet with two panelled doors and a cupboard inside for fish food and tackle. Set a Fish Tank on top and it sits there fully running: lit by its hood light, its fish swimming, its filter trickling and its bubbles rising, just as on the floor. Too big for a backpack, so it is carried in the hands, and only once the tank is off and the cupboard is empty.",
+"desc": "A varnished wooden aquarium cabinet with two panelled doors and a cupboard inside for fish food and tackle. Set a Fish Tank on top and it sits there fully running: lit by its hood light, its fish swimming, its filter trickling and its bubbles rising, just as on the floor. Too big for a backpack, so it is carried in the hands, and only once the tank is off and the cupboard is empty. Built from 8 planks and 16 nails with a hammer or a hatchet on you.",
 "img": "items/geb_FishTankStand.webp",
 "name": "Fish Tank Stand"
 },
 "geb_FishingLocker": {
 "cat": "gear",
-"desc": "A tall locker of weathered planks that keeps a whole fishing kit in sight: a rack for six rods, a shelf for a hat and gloves, pegs for a raincoat, a shirt and a vest, shelves for two tackle boxes, a cooler, a bait bucket and a worm container or bug catcher, a spot for wellies, a peg outside for a backpack, room on the roof for two fish traps and a cabinet along the top for everything else. Built from 12 planks and 24 nails with a hammer or a hatchet on you. Too big for a backpack: it is carried in both hands, and only once it is empty.",
+"desc": "A tall locker of weathered planks that keeps a whole fishing kit in sight: a rack for six rods, a shelf for a hat and gloves, pegs for a raincoat, a shirt and a vest, shelves for two tackle boxes, a cooler, a bait bucket and a worm container or bug catcher, a spot for wellies, a peg outside for a backpack, room on the roof for two fish traps and a cabinet along the top for everything else. Built from 10 planks and 20 nails with a hammer or a hatchet on you. Too big for a backpack: it is carried in both hands, and only once it is empty.",
 "img": "items/geb_FishingLocker.webp",
 "name": "Fishing Locker"
 },

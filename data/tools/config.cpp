@@ -76,7 +76,10 @@ class CfgPatches {
 		// its plain inventorySlot[]={"Backpack_1"} wiped the Shoulder/Melee
 		// slots we add -- the long-standing "rod bug".
 		"DZ_Gear_Tools",
-		"DZ_Weapons_Melee_Blade"  // HuntingKnife, parent of the fish knives
+		"DZ_Weapons_Melee_Blade",  // HuntingKnife, parent of the fish knives
+		// Defines LongWoodenStick, whose inventorySlot[] gets the drying rack
+		// kit's slot below: vanilla must load first or its list wipes ours.
+		"DZ_Gear_Crafting"
 		};
 	};
 };
@@ -125,6 +128,15 @@ class CfgSlots {
 		name = "GebDryingRackF";
 		displayName = "$STR_tools_fishdryingrack_slot";
 		ghostIcon = "set:gebsfish image:fishmount";
+	};
+	// The Fish Drying Rack Kit's slot for the six long sticks still to go in. Long
+	// sticks only stack in a slot of their own (vanilla's varStackMax is 1, the
+	// shelter frame slot takes 4), so stackMax here is what lets six in.
+	class Slot_GebDryingRackSticks {
+		name = "GebDryingRackSticks";
+		displayName = "$STR_CfgVehicles_LongWoodenStick0";
+		ghostIcon = "set:dayz_inventory image:woodenstick";
+		stackMax = 6;
 	};
 	// The Fish Tank Stand's one slot: the Fish Tank stands on it (geb_FishTank lists it in inventorySlot[]).
 	class Slot_GebFishTank {
@@ -291,9 +303,9 @@ class cfgVehicles {
 	// of long sticks lashed with rope, every face on vanilla's long wooden stick
 	// material. Six fillet slots; raw fillets hung on a rack standing in the
 	// world dry to the dried stage without a fire (general.json
-	// DryingRackSettings). Crafted from 7 long sticks and a rope (CraftDryingRack)
-	// and placed with vanilla's hologram and deploy actions. A heavy item
-	// (itemBehaviour 0): carried in both hands, never in cargo.
+	// DryingRackSettings). Assembled where its kit (geb_FishDryingRackKit below)
+	// lies, and it stays there: a built rack can't be picked up or carried
+	// (geb_fishdryingrack.c). itemBehaviour 0, a heavy item, never in cargo.
 	class geb_FishDryingRack: Inventory_Base {
 		scope = 2;
 		displayName = "$STR_tools_fishdryingrack";
@@ -371,6 +383,46 @@ class cfgVehicles {
 		};
 	};
 
+	// The Fish Drying Rack Kit (geb_fishdryingrack.c): a long stick and a rope
+	// (CraftDryingRack), made on the ground like vanilla's Shelter Kit and on its
+	// model. Long sticks don't stack in 1.30, so the other six go into the kit's
+	// GebDryingRackSticks slot one at a time while it lies there, as a shelter's
+	// frame takes its sticks; "Assemble drying rack" then turns kit and sticks
+	// into the rack. A kit holding sticks stays where it is.
+	class geb_FishDryingRackKit: Inventory_Base {
+		scope = 2;
+		displayName = "$STR_tools_fishdryingrackkit";
+		descriptionShort = "$STR_tools_fishdryingrackkit_desc";
+		model = "\DZ\gear\camping\watchtower_kit.p3d";
+		rotationFlags = 17;
+		itemSize[] = {1,5};
+		weight = 950;   // a long stick (670 g) and a rope (280 g)
+		itemBehaviour = 1;
+		attachments[] = {"GebDryingRackSticks"};
+		soundImpactType = "wood";
+		// Vanilla's Shelter Kit damage values, written out: "class DamageSystem:
+		// DamageSystem" only compiles against a class in this same config.
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 200;
+					healthLevels[] = {
+						{1,{}},
+						{0.7,{}},
+						{0.5,{}},
+						{0.3,{}},
+						{0,{}}
+					};
+				};
+			};
+		};
+	};
+	// Long sticks also fit the kit's slot. The vanilla class itself, so += keeps
+	// vanilla's Shoulder, Melee and shelter frame slots.
+	class LongWoodenStick: Inventory_Base {
+		inventorySlot[] += {"GebDryingRackSticks"};
+	};
+
 	// The Fish Tank: a 60 x 30 x 35 cm tabletop aquarium (gravel, plants, a rock, an air stone) with four
 	// mini reef fish -- Siamese tigerfish, blue tang, angelfish, redhead cichlid -- swimming loops. A trader
 	// or admin item: never world loot and never crafted (typesxml.c writes it with nominal 0). The fish move on
@@ -422,7 +474,8 @@ class cfgVehicles {
 
 	// The Fish Tank Stand: a varnished wooden aquarium cabinet, 0.66 x 0.36 x 0.75 m, with two panelled
 	// doors and a 10x5 cupboard for fish food and tackle. The Fish Tank stands on its top (slot
-	// GebFishTank). Like the tank, a trader or admin item: no recipe, nominal 0 in typesxml.c. A placed
+	// GebFishTank). Crafted from 8 planks and 16 nails (CraftFishTankStand; trader or admin only until
+	// 2026-10-14), nominal 0 in typesxml.c. A placed
 	// container like the Fishing Locker (geb_fishtankstand.c): vanilla's hologram and place actions,
 	// carried in both hands and only when empty. Every face is on vanilla's wardrobe photo (almara02).
 	class geb_FishTankStand: Container_Base {

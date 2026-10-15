@@ -11,6 +11,7 @@ modded class PluginRecipesManager {
         RegisterRecipe(new CraftLargeFishMount);
         RegisterRecipe(new CraftDryingRack);
         RegisterRecipe(new CraftFishingLocker);
+        RegisterRecipe(new CraftFishTankStand);
         RegisterRecipe(new GebPrepareFishData);
     }
 };

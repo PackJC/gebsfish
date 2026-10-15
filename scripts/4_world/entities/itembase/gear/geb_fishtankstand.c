@@ -11,8 +11,8 @@
 // The Fish Tank Stand (geb_FishTankStand in data/tools/config.cpp): a wooden
 // aquarium cabinet with a 10x5 cupboard, and one slot, GebFishTank, on its top.
 // The Fish Tank attached there renders on the proxy gebfishtank and keeps its
-// own swimming fish and bubbles (geb_fishtank.c). A trader or admin item like
-// the tank: no recipe, never world loot (typesxml.c, nominal 0).
+// own swimming fish and bubbles (geb_fishtank.c). Crafted from 8 planks and 16
+// nails (CraftFishTankStand), never world loot (typesxml.c, nominal 0).
 //
 // A placed container like the Fishing Locker: vanilla's DeployableContainer_Base
 // gives the hologram and place actions and spills the contents when ruined.

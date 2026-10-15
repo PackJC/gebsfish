@@ -22,9 +22,9 @@
 // snow they decay as usual. Progress is kept per slot through restarts and
 // starts over when a fillet is taken off.
 //
-// Placed with vanilla's hologram and deploy actions, like the fish mounts; the
-// rack is a heavy item (itemBehaviour 0), so it is crafted on the ground and
-// carried in both hands.
+// The rack is assembled on the ground where its kit lies (geb_FishDryingRackKit,
+// below) and stays there: once built it can't be picked up, carried or put in
+// any inventory (Cole, 2026-10-14), so lay the kit where the rack should stand.
 class geb_FishDryingRack : ItemBase {
 
 	static const int GEB_DRY_SLOTS = 6;
@@ -304,17 +304,84 @@ class geb_FishDryingRack : ItemBase {
 		}
 	}
 
-	// ------------------------------------------------------------ placement
+	// ------------------------------------------------------------ staying put
 
-	// ItemBase.IsDeployable() is false by default, so without this the
-	// hold-to-place hologram never appears.
-	override bool IsDeployable() {
-		return true;
+	// A built rack stays where it was assembled: no "Pick up", no dragging it
+	// into hands or any inventory. (It used to be carried and placed with
+	// vanilla's hologram; the kit took over its placing.)
+	override bool CanPutIntoHands(EntityAI parent) {
+		return false;
+	}
+
+	override bool CanPutInCargo(EntityAI parent) {
+		return false;
+	}
+}
+
+// The Fish Drying Rack Kit: a long stick and a rope (CraftDryingRack). Long
+// sticks don't stack in DayZ 1.30 (varStackMax 1) outside a slot that allows it,
+// so the rack's other six go into the kit's GebDryingRackSticks slot (stackMax 6,
+// data/tools/config.cpp), one at a time, with the kit lying on the ground, the
+// way a shelter's frame takes its sticks. With all six in, "Assemble drying
+// rack" (GebActionAssembleDryingRack) turns the kit and its sticks into the rack
+// where the kit lies.
+class geb_FishDryingRackKit : ItemBase {
+
+	static const int GEB_KIT_STICKS = 6;
+
+	// Long sticks in the kit's slot, 0 to GEB_KIT_STICKS.
+	int GebStickCount() {
+		if (!GetInventory())
+			return 0;
+		ItemBase sticks = ItemBase.Cast(GetInventory().FindAttachment(InventorySlots.GetSlotIdFromString("GebDryingRackSticks")));
+		if (!sticks)
+			return 0;
+		int count = sticks.GetQuantity();
+		return count;
+	}
+
+	// Ready to assemble: lying in the world, not ruined, all six sticks in.
+	bool GebCanAssemble() {
+		return !GetHierarchyParent() && !IsRuined() && GebStickCount() >= GEB_KIT_STICKS;
+	}
+
+	// Sticks go in only while the kit lies on the ground ...
+	override bool CanReceiveAttachment(EntityAI attachment, int slotId) {
+		if (!super.CanReceiveAttachment(attachment, slotId))
+			return false;
+		return !GetHierarchyParent();
+	}
+
+	// ... and a kit holding sticks stays there: six 1x8 long sticks must not
+	// travel as one 1x5 kit in a backpack.
+	override bool CanPutInCargo(EntityAI parent) {
+		if (!super.CanPutInCargo(parent))
+			return false;
+		return GebStickCount() == 0;
+	}
+
+	override bool CanPutIntoHands(EntityAI parent) {
+		if (!super.CanPutIntoHands(parent))
+			return false;
+		return GebStickCount() == 0;
+	}
+
+	// Server: the rack takes the kit's place, upright and turned the kit's way;
+	// the kit and its sticks are used up.
+	void GebAssemble() {
+		if (!g_Game.IsServer() || !GebCanAssemble())
+			return;
+		vector at = GetPosition();
+		vector turn = GetOrientation();
+		EntityAI rack = EntityAI.Cast(g_Game.CreateObjectEx("geb_FishDryingRack", at, ECE_PLACE_ON_SURFACE));
+		if (!rack)
+			return;
+		rack.SetOrientation(Vector(turn[0], 0, 0));
+		DeleteSafe();
 	}
 
 	override void SetActions() {
 		super.SetActions();
-		AddAction(ActionTogglePlaceObject);
-		AddAction(ActionDeployObject);
+		AddAction(GebActionAssembleDryingRack);
 	}
 }

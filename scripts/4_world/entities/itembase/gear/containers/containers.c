@@ -343,10 +343,15 @@ class geb_Cooler_base : geb_FilteredContainerBase {
 		return !IsRuined();
 	}
 
-	// A cooler standing in the world breathes a faint cold mist every few
-	// seconds while it holds something frozen. Client-side: the contents'
-	// frozen state is synced. The puff rises from the lid (cooler.p3d's top).
+	// A cooler is chilly at all times (Cole, 2026-10-14): wherever it stands,
+	// on the ground, a boat's deck or the locker, empty or full, it breathes a
+	// cold mist every few seconds. Not while ruined or carried by a player.
+	// Client-side. It first waited for frozen contents (the better part of half
+	// an hour after stocking it), then for contents at 0 C, used the faint
+	// breath puff and rose from the cooler's end rather than its lid
+	// (cooler.p3d's lid is +X); Cole saw it in neither build.
 	protected const int GEB_MIST_INTERVAL_MS = 4000;
+	protected string m_GebMistState;   // TEMPORARY: the last state logged
 
 	override void EEInit() {
 		super.EEInit();
@@ -361,18 +366,55 @@ class geb_Cooler_base : geb_FilteredContainerBase {
 	}
 
 	protected void GebColdMist() {
-		if (IsRuined() || GetHierarchyParent() || !GetInventory() || !GetInventory().GetCargo())
-			return;
-		CargoBase cargo = GetInventory().GetCargo();
-		for (int i = 0; i < cargo.GetItemCount(); i++) {
-			ItemBase item = ItemBase.Cast(cargo.GetItem(i));
-			if (item && item.GetIsFrozen()) {
-				EffectParticle mist = new EffBreathVapourLight();
-				mist.SetAutodestroy(true);
-				SEffectManager.PlayInWorld(mist, ModelToWorld(Vector(-0.115, 0.3, 0.02)));
-				return;
-			}
+		string state = GebMistState();
+		// TEMPORARY (2026-10-14, Cole: "the cooler still doesn't have the cold
+		// particles"): each client logs a cooler's state when it changes.
+		if (state != m_GebMistState) {
+			m_GebMistState = state;
+			Print("[gebsfish cooler check] " + GetType() + " at " + GetPosition().ToString() + ": " + state);
 		}
+		if (state != "mist")
+			return;
+		EffectParticle mist = new EffBreathVapourHeavy();
+		mist.SetAutodestroy(true);
+		SEffectManager.PlayInWorld(mist, GebMistPoint());
+	}
+
+	// "mist", or why not.
+	protected string GebMistState() {
+		if (IsRuined())
+			return "no mist: ruined";
+		if (GetHierarchyRootPlayer())
+			return "no mist: carried by a player";
+		return "mist";
+	}
+
+	// Just above the cooler's highest point in the world, over the middle of
+	// its collision box, whichever way it lies.
+	protected vector GebMistPoint() {
+		vector box[2];
+		if (!GetCollisionBox(box))
+			return GetPosition() + Vector(0, 0.3, 0);
+		vector lo = box[0];
+		vector hi = box[1];
+		vector mid = ModelToWorld((lo + hi) * 0.5);
+		float top = mid[1];
+		for (int c = 0; c < 8; c++) {
+			float cx = lo[0];
+			if ((c & 1) != 0)
+				cx = hi[0];
+			float cy = lo[1];
+			if ((c & 2) != 0)
+				cy = hi[1];
+			float cz = lo[2];
+			if ((c & 4) != 0)
+				cz = hi[2];
+			vector corner = ModelToWorld(Vector(cx, cy, cz));
+			if (corner[1] > top)
+				top = corner[1];
+		}
+		mid[1] = top + 0.03;
+		return mid;
 	}
 
 	// The cooling runs on the Central Economy's periodic item update, the
