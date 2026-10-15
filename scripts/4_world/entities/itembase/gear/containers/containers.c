@@ -5,7 +5,7 @@
   https://github.com/PackJC/gebsfish
   https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
   https://discord.com/invite/G8uSGZ8yyf
-  https://www.smokymountainsoftware.com/ Contributions welcome via github
+  Contributions welcome via github
 
 */
 
@@ -37,32 +37,9 @@ class geb_FilteredContainerBase : Container_Base {
 	// check, so overriding both keeps disallowed items out of moves such as
 	// quickbar swaps, and out of save-load. A new item created straight into
 	// the cargo by classname (CreateInInventory, a craft result) is checked
-	// by neither: see GebAcceptsType below.
+	// by neither: see GebAcceptsType below, the same rule by classname.
 	protected bool IsAllowedCargoItem(EntityAI item) {
-		if (!item)
-			return false;
-
-		TStringArray refused = GetRefusedItemKinds();
-		if (refused) {
-			foreach (string kind : refused) {
-				if (item.IsKindOf(kind))
-					return false;
-			}
-		}
-
-		if (GebTypeIsExact(item.GetType(), GetExactItemKinds()))
-			return true;
-
-		TStringArray allowed = GetAllowedItemKinds();
-		if (!allowed || allowed.Count() == 0)
-			return false;
-
-		for (int i = 0; i < allowed.Count(); i++) {
-			if (item.IsKindOf(allowed.Get(i)))
-				return true;
-		}
-
-		return false;
+		return item && GebAcceptsType(item.GetType());
 	}
 
 	// The same rule by classname, for an item that doesn't exist yet. The
@@ -151,6 +128,18 @@ class geb_FilteredContainerBase : Container_Base {
 			return false;
 		return IsAllowedCargoItem(item);
 	}
+
+	// Never inside one of its own kind (a worm container in a worm container,
+	// any cooler in any cooler): the allow lists already refuse it on the
+	// receiving side, but vanilla doesn't route every inventory move through
+	// that check. ClassName() is the script class, which the colour variants
+	// share (a red cooler runs as geb_Cooler_base), and IsKindOf walks the
+	// config chain every variant is on.
+	override bool CanPutInCargo(EntityAI parent) {
+		if (!super.CanPutInCargo(parent))
+			return false;
+		return !parent || !parent.IsKindOf(ClassName());
+	}
 };
 
 class geb_WormContainer : geb_FilteredContainerBase {
@@ -158,17 +147,6 @@ class geb_WormContainer : geb_FilteredContainerBase {
 
 	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
-	}
-
-	override bool CanPutInCargo(EntityAI parent) {
-		if (!super.CanPutInCargo(parent))
-			return false;
-		// Self-nesting guard, matching the other geb containers. The allow
-		// list already blocks this on the receiving side, but vanilla does
-		// not route every inventory move through the same check.
-		if (parent && parent.IsKindOf("geb_WormContainer"))
-			return false;
-		return true;
 	}
 };
 
@@ -181,18 +159,6 @@ class geb_BugContainer : geb_FilteredContainerBase {
 
 	// No IsContainer() override: vanilla Container_Base already returns true.
 
-	override bool CanPutInCargo(EntityAI parent) {
-		if (!super.CanPutInCargo(parent))
-			return false;
-
-		// Prevent bug containers from being placed inside other bug containers.
-		// This blocks self-nesting while still allowing normal cargo rules elsewhere.
-		if (parent && parent.IsKindOf("geb_BugContainer"))
-			return false;
-
-		return true;
-	}
-
 	override void SetActions() {
 		super.SetActions();
 		AddAction(ActionDigBugs);
@@ -200,24 +166,19 @@ class geb_BugContainer : geb_FilteredContainerBase {
 };
 
 class geb_BambooFishingNet : geb_FilteredContainerBase {
-	// geb_Crayfish_Base covers all seven crayfish, so any of them an admin
-	// adds to the net's catch table fits in the net.
-	static ref TStringArray s_Allowed = { "Worm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm", "geb_RubberWorm", "geb_FatHeadMinnow", "geb_Crayfish_Base", "geb_AmericanBullFrog", "geb_RedSalamander" };
+	// geb_Crayfish_Base covers all seven crayfish and geb_SquidJuvenile_Base
+	// the four juvenile bait squid, the net's default catches with the
+	// minnow, frog and salamander. Vanilla Shrimp, its sea catch, is matched
+	// exactly: the snails, clams and other catches built on it stay out.
+	static ref TStringArray s_Allowed = { "Worm", "geb_GrassHopper", "geb_FieldCricket", "geb_GrubWorm", "geb_RubberWorm", "geb_FatHeadMinnow", "geb_Crayfish_Base", "geb_SquidJuvenile_Base", "geb_AmericanBullFrog", "geb_RedSalamander" };
+	static ref TStringArray s_Exact = { "Shrimp" };
 
 	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
 	}
 
-	override bool CanPutInCargo(EntityAI parent) {
-		if (!super.CanPutInCargo(parent))
-			return false;
-
-		// Prevent bamboo fishing nets from being placed inside other bamboo fishing nets.
-		// This blocks self-nesting while still allowing normal cargo rules elsewhere.
-		if (parent && parent.IsKindOf("geb_BambooFishingNet"))
-			return false;
-
-		return true;
+	override protected TStringArray GetExactItemKinds() {
+		return s_Exact;
 	}
 
 	override void SetActions() {
@@ -239,15 +200,6 @@ class geb_MinnowBucket : geb_FilteredContainerBase {
 
 	override protected TStringArray GetAllowedItemKinds() {
 		return s_Allowed;
-	}
-
-	override bool CanPutInCargo(EntityAI parent) {
-		if (!super.CanPutInCargo(parent))
-			return false;
-		// Self-nesting guard, matching the other geb containers.
-		if (parent && parent.IsKindOf("geb_MinnowBucket"))
-			return false;
-		return true;
 	}
 };
 
@@ -482,34 +434,10 @@ class geb_Cooler_base : geb_FilteredContainerBase {
 			item.SetTemperature(next);
 		}
 	}
-
-	override bool CanPutInCargo(EntityAI parent) {
-		if (!super.CanPutInCargo(parent))
-			return false;
-
-		// Prevent coolers-inside-coolers. IsKindOf walks the config
-		// inheritance chain, so all colored variants are caught by the
-		// base check.
-		if (parent && parent.IsKindOf("geb_Cooler_base"))
-			return false;
-
-		return true;
-	}
 };
 
+// The colours (geb_RedTackle, geb_OldRedTackle, ...) have no script class of
+// their own: they run as their config parent's, like the coolers.
 class geb_SmallTackle : geb_SmallTackleBase {};
-class geb_OldRedTackle : geb_LargeTackleBase {};
-class geb_OldGreenTackle : geb_LargeTackleBase {};
-class geb_OldBlueTackle : geb_LargeTackleBase {};
-class geb_OldPurpleTackle : geb_LargeTackleBase {};
-class geb_OldOrangeTackle : geb_LargeTackleBase {};
-class geb_OldYellowTackle : geb_LargeTackleBase {};
-class geb_OldBrownTackle : geb_LargeTackleBase {};
-class geb_OldPinkTackle : geb_LargeTackleBase {};
-class geb_OldLimeTackle : geb_LargeTackleBase {};
-class geb_OldLightBlueTackle : geb_LargeTackleBase {};
-class geb_OldCamoTackle : geb_LargeTackleBase {};
-class geb_OldDesertCamoTackle : geb_LargeTackleBase {};
-class geb_OldSnowCamoTackle : geb_LargeTackleBase {};
-class geb_OldPinkCamoTackle : geb_LargeTackleBase {};
+class geb_OldTackleBase : geb_LargeTackleBase {};
 class geb_Tackle_Base : geb_LargeTackleBase {};

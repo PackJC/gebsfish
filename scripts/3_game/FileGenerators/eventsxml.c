@@ -21,12 +21,18 @@ class gebsfishEvents {
     private const string MISSION_EVENTS_PATH = "$mission:db/events.xml";
     private const string BOAT_EVENT = "VehicleBoat";
 
-    // Written at every start, not only on a version change like the types
-    // files: the counts and flags come from the mission's db/events.xml, which
-    // an admin can edit, and a server can change maps.
+    // Written only when the mod's version changes (or the file is missing),
+    // like the types files. The counts and flags are read from the mission's
+    // db/events.xml at that moment: after editing its VehicleBoat event or
+    // changing maps, delete this file to have it written again.
     void GenerateEventsXML() {
         if (!g_Game || !g_Game.IsServer())
             return;
+
+        if (GebXmlFiles.IsCurrentVersion(FILE_PATH, VERSION_GEBSFISH)) {
+            GebsfishLogger.Info("Events XML already at version " + VERSION_GEBSFISH + ". Skipping regeneration.", "Events");
+            return;
+        }
 
         TStringArray boats = GebXmlFiles.s_JonBoats;
         int nominal;
@@ -56,7 +62,7 @@ class gebsfishEvents {
             FPrintln(file, "<events>");
             FPrintln(file, "</events>");
             CloseFile(file);
-            GebsfishLogger.Info("gebsfish-events.xml written without an event: the mission's db/events.xml " + why + ".", "Events");
+            GebsfishLogger.Notice("gebsfish-events.xml written without an event: the mission's db/events.xml " + why + ".", "Events");
             return;
         }
 
@@ -81,7 +87,7 @@ class gebsfishEvents {
         }
         FPrintln(file, "     The flags line is db/events.xml's own: the economy clears an event's flags when a later file leaves");
         FPrintln(file, "     them out, which would stop wrecked boats being cleaned up. If you change the VehicleBoat event in");
-        FPrintln(file, "     db/events.xml (its nominal, max or flags), copy this file again after the next start, which rewrites it.");
+        FPrintln(file, "     db/events.xml (its nominal, max or flags), delete this file, restart to have it written again, and copy it again.");
         FPrintln(file, "     Or skip this file: paste the six child lines into the VehicleBoat event in db/events.xml and add");
         FPrintln(file, "     six to its nominal and max. -->");
         FPrintln(file, "<events>");
@@ -104,9 +110,9 @@ class gebsfishEvents {
         CloseFile(file);
 
         if (counts)
-            GebsfishLogger.Info("gebsfish-events.xml written: the six jon boats join the VehicleBoat event, nominal " + nominal.ToString() + " to " + newNominal.ToString() + ", max " + max.ToString() + " to " + newMax.ToString() + ".", "Events");
+            GebsfishLogger.Notice("gebsfish-events.xml written: the six jon boats join the VehicleBoat event, nominal " + nominal.ToString() + " to " + newNominal.ToString() + ", max " + max.ToString() + " to " + newMax.ToString() + ".", "Events");
         else
-            GebsfishLogger.Info("gebsfish-events.xml written: the six jon boats join the VehicleBoat event; its nominal and max couldn't be read, so they share its count.", "Events");
+            GebsfishLogger.Notice("gebsfish-events.xml written: the six jon boats join the VehicleBoat event; its nominal and max couldn't be read, so they share its count.", "Events");
     }
 
     // The VehicleBoat event's nominal, max, active and flags in the mission's

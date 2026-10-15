@@ -8,9 +8,15 @@ class gebsfishTypes {
 
         string version = VERSION_GEBSFISH;
 
-        // Written at every start, not only on a version change: the canned fish
-        // rows come from the mission's db/types.xml, which an admin can edit,
-        // and a server can change maps.
+        // Written only when the mod's version changes (or the file is missing),
+        // like the spawnable types. The canned fish rows are copied from the
+        // mission's db/types.xml at that moment: after editing those rows or
+        // changing maps, delete this file to have it written again.
+        if (GebXmlFiles.IsCurrentVersion(FILE_PATH, version)) {
+            GebsfishLogger.Info("Types XML already at version " + version + ". Skipping regeneration.", "Types");
+            return;
+        }
+
         GebXmlFiles.EnsureDirectoryExists();
 
         FileHandle file = OpenFile(FILE_PATH, FileMode.WRITE);
@@ -27,7 +33,7 @@ class gebsfishTypes {
         WriteFooter(file);
 
         CloseFile(file);
-        GebsfishLogger.Info("gebsfish-types.xml successfully generated in $profile:Gebs/mpmissions/.", "Types");
+        GebsfishLogger.Notice("gebsfish-types.xml successfully generated in $profile:Gebs/mpmissions/.", "Types");
     }
 
     protected void WriteHeader(FileHandle file, string version) {
@@ -217,7 +223,7 @@ class gebsfishTypes {
         FPrintln(file, "         after vanilla's own rows. A merge tool that replaces whole rows would lose the rest of vanilla's row:");
         FPrintln(file, "         set vanilla's nominal and min to these numbers by hand instead (later copies of this file would then");
         FPrintln(file, "         split the lowered numbers). Each new can copies its vanilla can's row from this mission's db/types.xml,");
-        FPrintln(file, "         which this file is rewritten from at every start. -->");
+        FPrintln(file, "         as it was when this file was written (it's written again when the mod's version changes, or if you delete it). -->");
         WriteSharedFamily(file, "TunaCan", s_FlatTins, rows, true);
         WriteSharedFamily(file, "SardinesCan", s_RoundCans, rows, true);
         FPrintln(file, "    <!-- Fish Oil Pills share vanilla VitaminBottle's spawns the same way. -->");
@@ -367,6 +373,21 @@ class gebsfishTypes {
             FPrintln(file, "        <flags count_in_cargo=\"0\" count_in_hoarder=\"0\" count_in_map=\"1\" count_in_player=\"0\" crafted=\"0\" deloot=\"0\"/>");
             FPrintln(file, "    </type>");
         }
+
+        // The boat trailer (a vehicle since 2026-10-13, an item before) keeps
+        // a placed item's lifetime (45 days untouched, as a tent) rather than
+        // the boats' 3 seconds. Nominal 0: not loot (admins and traders place
+        // it; it comes with its wheels).
+        FPrintln(file, "    <type name=\"geb_BoatTrailer\">");
+        FPrintln(file, "        <nominal>0</nominal>");
+        FPrintln(file, "        <lifetime>3888000</lifetime>");
+        FPrintln(file, "        <restock>0</restock>");
+        FPrintln(file, "        <min>0</min>");
+        FPrintln(file, "        <quantmin>-1</quantmin>");
+        FPrintln(file, "        <quantmax>-1</quantmax>");
+        FPrintln(file, "        <cost>100</cost>");
+        FPrintln(file, "        <flags count_in_cargo=\"0\" count_in_hoarder=\"0\" count_in_map=\"1\" count_in_player=\"0\" crafted=\"0\" deloot=\"0\"/>");
+        FPrintln(file, "    </type>");
     }
 
     // crafted=1 means "only made by players": the CE loot spawner skips the

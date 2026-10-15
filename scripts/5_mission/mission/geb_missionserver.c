@@ -2,7 +2,7 @@ modded class MissionServer {
 	override void OnInit() {
 		super.OnInit();
 		if(m_gebsConfig) {
-			GebsfishLogger.Info("Version " + VERSION_GEBSFISH + " loaded successfully!", "MissionServer Init");
+			GebsfishLogger.Notice("Version " + VERSION_GEBSFISH + " loaded successfully!", "MissionServer Init");
 		}
 
 		// Clients register the RPCs in DayZGame.DeferredInit, which a
@@ -30,8 +30,9 @@ modded class MissionServer {
 		foreach (NetEntry entry : m_gebsConfig.General.BambooFishingNetSettings.Catches) {
 			if (!entry || entry.Classname == "" || entry.CatchChance <= 0)
 				continue;
-			// The same check the net action makes before spawning a catch.
-			if (!geb_FilteredContainerBase.GebTypeMatches(entry.Classname, geb_BambooFishingNet.s_Allowed))
+			// The same check the net action makes before spawning a catch
+			// (GebAcceptsType): its kinds, or one of its exact classes (Shrimp).
+			if (!geb_FilteredContainerBase.GebTypeMatches(entry.Classname, geb_BambooFishingNet.s_Allowed) && !geb_FilteredContainerBase.GebTypeIsExact(entry.Classname, geb_BambooFishingNet.s_Exact))
 				GebsfishLogger.Warn("Net catch '" + entry.Classname + "' isn't on the net's allow-list (geb_BambooFishingNet in containers.c), so it will always drop at the player's feet instead of going into the net.", "NetConfig");
 		}
 	}

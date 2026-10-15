@@ -55,16 +55,16 @@ class GebsfishMigration {
         int removed = RemoveEmptyDirs(stale, leftover);
 
         if (moved > 0)
-            GebsfishLogger.Info("Archived " + moved + " old-layout file(s) into gebs_oldfiles.", "Migrate");
+            GebsfishLogger.Notice("Archived " + moved + " old-layout file(s) into gebs_oldfiles.", "Migrate");
         if (removed > 0)
-            GebsfishLogger.Info("Removed " + removed + " emptied old-layout folder(s).", "Migrate");
+            GebsfishLogger.Notice("Removed " + removed + " emptied old-layout folder(s).", "Migrate");
         if (leftover.Count() > 0) {
             string list = "";
             foreach (string s : leftover) {
                 if (list != "") list = list + ", ";
                 list = list + s;
             }
-            GebsfishLogger.Info("These emptied old folders could not be removed and are safe to delete by hand: " + list, "Migrate");
+            GebsfishLogger.Notice("These emptied old folders could not be removed and are safe to delete by hand: " + list, "Migrate");
         }
     }
 

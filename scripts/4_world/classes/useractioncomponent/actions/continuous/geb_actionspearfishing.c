@@ -33,11 +33,11 @@ class ActionGebSpearFishingCB : ActionContinuousBaseCB {
 
 class ActionGebSpearFishing : ActionGebWaterBase {
 	// How far away the water may be, and what a stab costs the spear (vanilla's
-	// tool wear, as digging worms takes 4 from a hoe): at 2 a 100-health spear
-	// shows Worn after 15 stabs and lasts 50, about seven fish at the default
-	// FindChance (0.15).
+	// tool wear, as digging worms takes 4 from a hoe): at 3 a 100-health spear
+	// shows Worn after 10 stabs and lasts 34, about five fish at the default
+	// FindChance (0.15). It was 2 (50 stabs) until Cole found it too gentle.
 	protected const float SPEAR_REACH = 3.0;
-	protected const float SPEAR_DAMAGE_PER_STAB = 2.0;
+	protected const float SPEAR_DAMAGE_PER_STAB = 3.0;
 
 	// The farming hoe's worm-digging loop (vanilla's two-handed DigWorms), a
 	// downward jab in front, standing or crouched as vanilla's dig-worms action

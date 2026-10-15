@@ -12,7 +12,7 @@ modded class PrepareFish {
     // row, that fish falls back to vanilla's result: two fillets (and the
     // steelhead's caviar, gated by CaviarChance like every caviar). The hidden
     // geb_Bonita alias (data/fish/config.cpp), a Pacific Bonito under its
-    // pre-3.3.3 name, fillets by the Pacific Bonito's row. CanDo and
+    // pre-4.0.0 name, fillets by the Pacific Bonito's row. CanDo and
     // SpawnItems both ask this, so the check and the result agree.
     protected FishConf GebResolveRecipe(ItemBase fish) {
         if (!fish) return null;

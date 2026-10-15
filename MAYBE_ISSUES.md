@@ -477,9 +477,9 @@ and #26 and #28 are lower-priority notes.
 
 Findings E1-E5 (E for this pass): all settled the same day (the list at the
 top); E1 and E4 are under Watch. A test server that generated
-gebsfish-types.xml / -spawnabletypes.xml under an earlier 3.3.3 build keeps
-those lists until VERSION_GEBSFISH changes: delete both once before testing
-(as runtime case 122 does).
+gebsfish-types.xml / -spawnabletypes.xml / -events.xml under an earlier
+3.3.3 build keeps those files until VERSION_GEBSFISH changes: delete them
+once before testing (as runtime case 122 does).
 
 ## Open — 2026-10-08 audit (sixth pass)
 
@@ -508,7 +508,27 @@ under Watch. A36 closed 2026-10-11 (everything committed).
 
 ## Also noted — lower priority
 
-Nothing open: #26 and #28 were fixed 2026-10-09 (the list at the top).
+### F1. Fish with an alpha-flagged skin look like they're above the water (2026-10-14, for later)
+Underwater, the alligator gar (Cole's screenshot) is drawn crisp and bright on top
+of the water instead of tinted and blurred like the vanilla fish and the white grunt.
+Its `alligatorgar_co.paa` is DXT5 with the PAA "has alpha" flag, so DayZ draws the
+whole fish in the transparent pass, after the water surface. Opaque fish (DXT1, no
+flag) look right. 21 skins carry the flag: alligator gar, Asian seabass, bluegill,
+bowfin, brook / lake / rainbow / cutthroat trout, humphead wrasse, king crab,
+largemouth / smallmouth / spotted (geb_BlackBass) / striped / white / Neosho bass,
+yellow perch, redbreast sunfish, sockeye salmon, Atlantic sailfish, walleye.
+- **Tried and undone (Cole: "undo the texture changes, let them look like that"):**
+  opaque DXT1 versions, each see-through pixel filled from the solid fin pixels
+  next to it (only alpha >= 250 as sources for photo cut-outs; >= 16 for the two
+  translucent-fin skins, cutthroat 20% and wrasse 16% half-transparent), then
+  ImageToPAA. Most looked the same; the fins lost their cut-out or see-through
+  edge, and the cutthroat's dorsal fin picked up the texture's white background
+  (the fill should only take colour from inside the model's UV pieces). Scripts
+  and before/after renders: session scratchpad `fishfix/`, `fishfix_opaque.py`.
+- Untested alternative: hard-edged (1-bit) alpha, which the engine usually treats
+  as alpha-tested and draws with the solid objects. Try it on one fish first.
+
+#26 and #28 were fixed 2026-10-09 (the list at the top).
 
 ## Watch — verified benign, keep in mind
 
@@ -713,8 +733,8 @@ table still returns no catch; add sea/both entries if sea netting is desired.
     conditions (map, date, hour, rain, bait) and compare its odds with a few
     hundred DebugLogs=1 casts.
 29. (2026-10-02) Main menu: start the game with no `Gebs` folder in the
-    profile and stay at the menu — no `general/bait/junk/fish.json` appear (a
-    `logs` folder still can; that's the logger). Start an offline game with a
+    profile and stay at the menu — no `general/bait/junk/fish.json` and no
+    `logs` folder appear. Start an offline game with a
     customised fish.json: it's used. Join a server: fishing works once the
     server's config arrives, and leaving to the menu and joining another server
     uses the new server's config.
@@ -1218,6 +1238,328 @@ table still returns no catch; add sea/both entries if sea netting is desired.
     both sides from each item's loot box). Check the slot names and ghost icons,
     the cargo (10x5), that it can't be picked up with anything in or on it, its
     damaged and ruined looks, and that ruining it spills the contents.
+159. (2026-10-14) A boat launched after a tow stays where it was launched, for
+    every player (geb_boattrailer.c: GebResyncBoat moves the carried boat with
+    SetPosition at each 0.2 s sync, at release and 1 s after; GebClearGround
+    lifts it clear of rising ground). In the 23:07 test the server had the boat
+    at the launch spot while the player's game drew it ~350 m back along the
+    road, where its last update had left it. Winch a jon boat on, tow it a few
+    hundred metres at speed (80+ km/h), unhitch and launch on land, then again
+    into water: the boat stays by the trailer for you and a second player. The
+    TEMPORARY "after launch server/client" lines should give the same position.
+158. (2026-10-14) Jon boat damage looks, battery and refuelling (config.cpp,
+    geb_jonboat.p3d, geb_jonboat.c). COT health at 60%, 40% and 0% on each colour:
+    hull, motor and tank/battery tray go worn, damaged, ruined; white motors stay
+    white. Shoot a float and the motor: those zones show it. Attach a car battery:
+    it stands visibly in the low tray (still invisible in the 23:07 test, so since
+    then it hangs on the boat's own proxy, data/proxy/gebboatbattery.p3d with
+    Proxygebboatbattery in CfgNonAIVehicles, like the deck slots, instead of
+    vanilla's car-battery proxy), the red clamp on its + post and the black on
+    its - post at the stern side (if the posts show by the fuel tank instead, the
+    clamps need mirroring); the switch panel's wires look attached; attach,
+    "Switch lights" at the box and the
+    lights still work. Refuel with a gasoline can from either side while wading,
+    from the shore and from inside the boat; not from about 3 m away.
+157. (2026-10-14) Fish tank effects in the right places (geb_fishtank.c: attached
+    in the tank's own frame instead of with world rotation). Place the tank
+    facing each of the four ways: the air stone's, the volcano's and the chest's
+    bubbles rise from those three, and the filter's stream and splash fall into the
+    tank from its spout, never outside the glass.
+156. (2026-10-14) Gebsfish clothes can be worn again (data/clothes/config.cpp:
+    full inventorySlot lists instead of "+="). Put on a fishing hat, shirt,
+    raincoat, vest, wellies and gloves, in a colour and a camo: each goes in
+    its body slot. Then hang each on the Fishing Locker: its spot still takes it.
+155. (2026-10-14) Condensed canned fish and containers (geb_cannedfish.c,
+    containers.c). Open one can of each vanilla kind (a flat tin, a round can
+    with a tool, the pate, spread, pork-can and lunchmeat ones): each turns
+    into its own opened can, not vanilla's. A worm container won't go into
+    a worm container, a cooler into any cooler, a net into a net; bait still
+    goes into the tackle boxes, food into coolers, and nothing else does.
+    An old tackle box of any colour takes the large box's list (pliers,
+    hunting knife).
+154. (2026-10-14) Sharks' inventory pictures (geb_Shark_Base now the script
+    parent of the four sharks, so its GetViewIndex runs). A great white,
+    hammerhead, leopard and angel shark in hands, in a cooler and on the
+    ground: in inventory they show the old side-on picture, on the ground
+    they lie belly-down; still carried two-handed.
+153. (2026-10-14) Trailer review fixes. (a) Hitch the trailer, push it a
+    little, drive off: it rolls freely (the push used to leave its brakes
+    on until unhitched). (b) Winch a boat on, unhitch, push the parked
+    trailer a few metres, restart: the boat is still on it (the server used
+    to leave its boat where the trailer was parked). (c) Delete the boat on
+    a parked trailer: the trailer offers "Winch boat on" again, not
+    "Launch boat". (d) Jon boat with its lights on, restart: it's lit for
+    everyone at once. Also: the server RPT has no "Net catch 'Shrimp'"
+    warning, and with DebugLogs 0 it still shows "Version ... loaded
+    successfully!" and any merge notes.
+152. (2026-10-14) No Gebs log at DebugLogs 0 (GebsfishLogger.LoggingOn).
+    With DebugLogs 0, delete the server's and the client's Gebs/logs
+    folders, start the server and join: neither folder comes back, and
+    warnings or errors still show in the RPT. Set 1 and restart: the server
+    log opens with the banner and the startup lines ("Initializing gebsfish
+    config." included), and the client starts its own log once the
+    server's config arrives ("Client received config data").
+151. (2026-10-14) Rubber boat lights-key spam (modded BoatScript.GetActions
+    in geb_actionswitchboatlights.c). Sit in a vanilla rubber boat for a
+    few seconds, get out, walk around: the client script log has no
+    "NULL pointer ... possibleActions" (ToggleVehicleLightsActionInput)
+    lines. Then sit in a jon boat and a car and press the lights key: both
+    still switch their lights.
+150. (2026-10-14) Trailer rubber band (GebSnapToBall). Tow at 30, 60
+    and 90 km/h and in turns, as the driver and as a second player watching:
+    the trailer's coupler stays on the car's hitch at every speed instead of
+    hanging behind and catching up when the car slows. The client tow log
+    line shows "client snap N m" (how far behind it was before the snap, about
+    speed x lag). If that number is large but the trailer still hangs back
+    on screen, the engine moves the copy again after the post-update queue:
+    say so. Also check: no shudder or jolt on the driver's car, the trailer
+    doesn't sink or float on the client, a boat on it rides along, and a
+    hitched trailer far away (over 6 m off on screen) isn't yanked.
+149. (2026-10-13) Boat trailer, stage 3 (never compiled or run here).
+    Restart: hitch a trailer (with and without a boat on it), restart the
+    server: about 2.5 s after start it is hitched to the same car again, jack
+    up, and tows; move the car away first (or delete it) and restart: the
+    trailer is parked where it stood, jack down. Tow list: general.json gets
+    BoatTrailerSettings.TowVehicles with the six vanilla families; remove
+    Hatchback_02, restart, rejoin: the Gunter gets no "Hitch trailer" (and an
+    already-hitched Gunter isn't re-hitched after a restart); set [] and a
+    modded car hitches. The config editor shows a Boat trailer card that
+    edits the list. Rubber boat (each colour): winch it on and off as the jon
+    boat; it sits on the bunks with its keel just over the keel roller, side
+    tubes over the fenders, bow tube at the bow roller, its motor clear of
+    the light bar; it launches and floats. Its motor doesn't tilt.
+148. (2026-10-13) Jon boat motors (tools/jonboat_motor): in Buldozer and in
+    game, by day and at dusk, look at both motors up close: glossy paint with
+    soft highlights, duller chips and matte rust, no crackle over the paint,
+    flat stickers, darker crevices (the new _as map). The black cowling
+    reflects the lake environment map only at grazing angles: if it turns
+    mirror-like or foil-like (env maps read stronger in engine than in a
+    render), lower the paint shine in build.py (PAINT) or drop Stage7. Check
+    worn, damaged and ruined looks.
+147. (2026-10-13) Jon boat motor tilt (Model.cfg EngineFolding, TrailerTilt
+    and the tiller's two counter-turns, on the new sideways axis_folding pin
+    at y 0.62, z 2.55). Winch a jon boat onto the trailer: the motor swings
+    up 25 deg over ~2 s, the lower unit up and aft, the cowling forward over
+    the stern without going into the fuel tank or battery box, the tiller
+    staying level (if the tiller swings down through the deck instead, the
+    binarizer gave its vertices to the motor bone, not the tiller: say so).
+    Launch: it tilts back down. Steer on the water: steering still turns the
+    motor as before. Drive onto a beach and into shallows: does vanilla's
+    own tilt lift it (up to 30 deg)? On the trailer the two can add up: if
+    the motor ever goes past ~30 deg and into the tank, say so and one of
+    them goes. The fuel line still doesn't follow the motor.
+146. (2026-10-13) Boat trailer lights and weight (never run here). Tow it
+    at night with the headlights on: both tail lenses glow red; brake: they
+    glow brighter, for the driver and a watcher; headlights off: dark;
+    unhitched: dark; a damaged trailer glows a little less, a ruined one not
+    at all. Weight: from a standstill the car pulls away noticeably slower
+    with the trailer and slower again with a boat on it, brakes longer, and
+    nothing rocks or surges (the push is capped at 60% of the car's mass; if
+    it shudders, lower GEB_PULL_MAX). A watcher sees the same, and a car
+    with nobody in it rolling on a slope is held back too. Sounds (vanilla
+    sets): a clunk on hitching and unhitching (wheel attach/remove), a metal
+    crash when it breaks loose, ratchet clicks while winching (combination
+    lock dial, every 0.25 s; too quiet or too fast?), a thud as the boat
+    settles; nothing plays when a hitched trailer streams in.
+145. (2026-10-13) Boat trailer, stage 2, the jon boat on it (never compiled
+    or run here). Float a jon boat (any colour, with deck gear, battery and
+    fuel) with its bow within ~8 m of the parked trailer's bow roller (so
+    just behind the trailer is enough), facing within ~60 deg of the trailer's
+    way, nobody in it, still: "Winch boat on" shows only standing within ~4 m
+    of the roller (widened from 3.5 m / 40 deg / 2.5 m on 2026-10-13: Cole
+    got no prompt). It slides onto the bunks in a few
+    seconds, smoothly for you and a second player: bottom on the carpet, bow
+    at the roller, motor past the rear. Nobody can get in or push it. Hitch
+    and tow, back up, break it loose: the boat stays on the bunks for the
+    driver and a watcher (no sliding or lag), and doesn't shove cars or
+    players. Back the trailer into the water and "Launch boat": it slides
+    back ~5.4 m and floats, drivable, gear, fuel and battery as before. On
+    dry ground it settles behind the trailer without damage. Restart with a
+    boat on a parked trailer: back on it within a few seconds. Delete the
+    trailer with a boat on: the boat drops and is a normal boat again. Delete
+    the boat on it: the trailer takes another. The boat's own physics after
+    launching (float, drive, beach) are as before it was loaded.
+144. (2026-10-13) Boat trailer, stage 1 (new; its script was never compiled
+    here, so watch the server and client script logs first): spawn
+    geb_BoatTrailer. Within a second it has two Gunter 2 wheels, at the hubs
+    with the hubcaps out, and it stands level on them and its jack. With
+    each vanilla car (Gunter, Olga, Sarka, Ada, M1025, the M3S truck): back
+    it up to the coupler; "Hitch trailer" shows standing within ~3.5 m of the
+    coupler, looking at the trailer or at the car (since 2026-10-13 the car
+    offers it too), only once the car's hitch point (0.2-0.3 m behind its
+    bumper) is within ~2.5 m of the coupler, the car stopped and pointing
+    within ~65 deg of the line the trailer will swing onto; "Unhitch trailer"
+    likewise from either. The M3S cargo truck (no rear damage zone, no engine
+    point) must get its hitch at the back, not the front. TEMPORARY: while no prompt shows,
+    geb_boattrailer.c/geb_actiontrailerhitch.c log "[gebsfish trailer check]"
+    lines to the client script log (what the hitch and winch prompts see);
+    read them, then remove the block and the three marked calls.
+    First hitch test (18:42): it hitched but never moved and the car hit it like
+    a wall: no frame events reach an item, and an item at rest has only static
+    collision (fixed: hitched it gets a kinematic body on the small-item layer).
+    Check that, and that a parked trailer still blocks. Second test (19:36): no hitch at all; every lined-up
+    car sat at the trailer's z -4 (the p3d's tongue is +4.2): the game's model
+    space looks like the p3d turned 180 deg. The script measures it from the
+    "coupler" memory point (log lines start "turn -1" if so) and converts its
+    numbers. Check: hitch at the tongue, the trailer follows with the tongue
+    forward, a jon boat winches on bow-first to the roller and launches off the
+    back. Third test (20:28): "turn -1" confirmed and hitch/unhitch work, but
+    the trailer never followed: making it ACTIVE didn't bring frame events
+    either (the car drove 7.5 m off; it neither moved nor broke loose). It now
+    ticks from the game's post-update queue (both machines, after the cars
+    move). The winch refused a jon boat lying 70 deg off the trailer's line:
+    any boat not pointing away (within 100 deg) now winches on.
+    REBUILT the same night (Cole: "something like dJointCreateBallSocket",
+    after LM's semi trailer, which couples two physics vehicles): the trailer
+    is now a CarScript with no engine or seats, rolling freely on its wheels
+    (Rear axle, no brakes) and parked on a jack caster (Front axle: two 5 cm
+    hubs with no wheel at the jack foot, 4 cm above level ground, braked by
+    the always-on driverless brake). Hitching sets it down with the coupler on
+    the ball and joins them with PhysicsJoint.CreateBallSocket on the server
+    (collisions between the two off); unhitching destroys the joint. Old
+    trailers saved as items won't load: spawn a new one. Check: it spawns and
+    gets its wheels, parks level-ish on its wheels and jack caster without
+    rolling away, wheels turn and spring as it moves, push it by hand ("Push"),
+    hitch (it jumps onto the ball once), it follows tongue-first, corners and
+    backs up, bounces over bumps, never hits the car, stays hitched through
+    hard braking, breaks loose on a jackknife past 80 deg or a crash, the jack
+    caster doesn't drag while towing (ball 0.50 m up), the car isn't held
+    back or rubber-banded by the joint (it lives on the server only; if the
+    driver gets yanked or the trailer stutters, say so), and a jon boat
+    winched on rides on it without shoving it. First boot (23:17) crashed the
+    server creating the type: the jack caster's wheels had inventorySlot ""
+    ("wheel inventory slot '' doesn't exist", then a null read); every vehicle
+    wheel needs a real CfgSlots slot, so they got GebTrailerJack_L/R (no item
+    fits, not in attachments). Second boot (23:35): the boat winched on
+    perfectly, but the trailer never followed the car (client: hitched, ball
+    1 m off and then 18 m off, no break-off) and the boat wouldn't launch.
+    The joint was server-only; vanilla's car push applies its force on both
+    machines (a client simulates its copy of a driverless car), so now every
+    machine joins its own copies (GebJoin; brakes-without-driver off while
+    hitched, as vanilla's push). Launch/hitch prompts also work looking at the
+    carried boat (GebCarrierOf; the game only offers the looked-at object's
+    actions, so boats register "Launch boat" too, modded BoatScript.SetActions). TEMPORARY "[gebsfish trailer check] tow
+    server/client" lines once a second while hitched (joint, coupler to ball,
+    speeds, position): read both logs. Cole saw the trailer "in the ground a
+    little": not explained yet. Six old item-saved trailers load corrupted:
+    delete them. Third boot (00:52, 2026-10-14): it follows the car and the
+    boat launches and winches back on, but it dragged, the wheels may not have
+    turned, and it sat ~1 m in the ground. Both logs: "coupler to ball 1.2 m"
+    all along = the two bodies' centre-of-mass offsets (joint points are in
+    each body's centre-of-mass frame): now ball/coupler less
+    dBodyGetCenterOfMass. The wheels were on the driven axle (DRIVE_RWD,
+    geared to an engine that never runs): the drive moved to the jack caster
+    (DRIVE_FWD). The tow log now also prints the gap in car space and both
+    centres of mass: the gap should read about 0.
+    Fourth boot (01:41): gap 0 (the centre-of-mass fix works), but parked it sat
+    low with its tyres sunk, towed by the Gunter it lifted the car's rear
+    wheels, and behind the M3S its nose was on the ground with its wheels in
+    the air: the jack-caster hubs near the tongue levered it about. The Front
+    axle is now two dummy hubs up on the tongue (never reach the ground) and
+    the parked trailer stands on a jack-foot collision box. A TEMPORARY wheel
+    line (looking at the trailer and while towing, both logs): wheel count,
+    present, each wheel's item, hub position, contact, locked, spin, and the
+    axle's height over the ground (0.30 on tyres, 0.14 on bare hubs).
+    Fifth boot (02:01): "wheels 4 (present 0)", every wheel at 0 0 0 with no
+    contact, axle 0.08 m over the ground: the engine never set up the trailer's
+    wheel simulation at all (not even the bare dummy hubs). Engine decompile: a
+    tyre is linked to its wheel only in Car's attach handler, via the type's
+    slot table. Two differences from every working vehicle fixed in the model:
+    a real driver place (view-geometry seat_driver box, vanilla crew_driver
+    proxy on selection crewdriver in view+fire geometry, pos_driver points: the
+    engine had rejected ours, "Action selection 'seat_driver' was not found")
+    and per-wheel axis memory pairs (wheel_X_Y_axis, which the wheel
+    animations now turn about). Check the wheel line again: present 2, hub
+    positions at x +-0.88, contact true, axle ~0.30 m over the ground.
+    Sixth boot (10:05): still present 0, all at 0 0 0; the Sarka's rear jacked
+    up so it could barely move. Cause of the jacking: the client's own joint
+    tied the driver's car to its copy of the trailer, which a client doesn't
+    simulate ("body active false"): the joint is server-only again (clients
+    see the trailer move through the network, as the 00:52+ logs showed).
+    The engine now found the seat box but logged "Proxy with bone name
+    'crewDriver' was not found": Model.cfg skeleton got a crewdriver bone.
+    TEMPORARY wheel probe (server log, "wheel probe 0"): 3-4 s after spawn
+    or load it logs the wheels.
+    Root cause of "present 0", found in the engine decompile (CarType's fire-
+    geometry load): the engine finds each wheel by its inventory slot among the
+    proxies of the model's FIRE GEOMETRY, and takes from that proxy the wheel's
+    place and its tyre link. Vanilla's cars have every wheel proxy there (and
+    in the view geometry); ours had them only in the visual LODs, so no wheel
+    had a place or a tyre and the trailer slid on its hub cylinders (sunk,
+    dragging, tyres still). The view and fire geometry now carry the two wheel
+    proxies and two new hidden ones for the dummy Front hubs
+    (data/proxy/gebtrailerjack_l/r.p3d, slots GebTrailerJack_L/R). The
+    engine's "not found in FireGeometry" message is never printed in a retail
+    RPT, which is why the logs never showed it.
+    Also from the 10:05 RPT: 1.8 million (01:41) and 1.0 million (02:01) script
+    exceptions, "Could not find zone Engine" from CarScript.OnUpdate: vanilla
+    damages a car's engine once its engine point is under water, and the
+    trailer backed into the water has none. The trailer's OnUpdate is now its
+    own (empty). Next boot: "wheel probe 0" and the tow line should read
+    "present 2", hubs at x +-0.88, contact true, axle ~0.30 m; the tyres spin
+    when towed; the RPT has no "zone Engine" lines; no crewDriver error.
+    With real wheels it could roll off a parked spot, so the tyres now have a
+    parking brake (vanilla's driverless brake, rear maxBrakeTorque 400): parked
+    on a ramp it stays put, pushing it by hand rolls it (vanilla's push lets
+    the brake off), hitched it rolls freely (the hitch lets it off too).
+    Seventh boot (11:00): "present 2", contact true, the tyres spin. But the
+    ball sat at the bottom of the car and the Gunter's rear wheels hung in the
+    air: the ball's ground came from WheelGetPositionLS, which is in the car's
+    centre-of-mass frame (0.64 m up on the Gunter), not its model space, so the
+    ball was ~0.6 m low and the trailer's nose (its jack foot) levered the car
+    up. The ground is now where the car's tyres touch it. The tow line prints
+    "ball height in car space" (about 0.5 on the Gunter) and "car wheels on
+    the ground" (should stay 4 of 4 while towing).
+    Since 2026-10-13 hitching is zone to zone: any part of the car's back end
+    (its bumper's full width) within ~2 m of any part of the trailer's front
+    (tongue, A-frame arms, cross-member); the trailer then swings onto the
+    ball in the middle. Also TEMPORARY (Cole asked): backing in that close
+    of a parked trailer's coupler (under ~4 m/s, lined up) hitches it by itself
+    (GebAutoHitchScan, 4x a second, server); "Unhitch trailer" also shows in
+    the driver seat while towing and stopped (GebActionUnhitchTrailerSeat). After
+    letting go, that car must drive ~3.5 m off before it can auto-hitch again
+    (the prompt uses the same 2 m). First log (16:52): Cole had backed the
+    Sarka onto the trailer's bed, 4.5 m from the tongue tip, lined up within
+    10 deg.
+    Remove both (and the PlayerBase/ActionConstructor lines) once the normal
+    prompts work. Hitch: the
+    coupler sits on a point just behind the bumper about 45 cm up, the jack
+    winds up (~1 s). Drive: the trailer follows smoothly for the driver and
+    for a second player watching (no jitter, no lag behind the car), the
+    wheels turn the right way, it pitches over hills and rolls on side
+    slopes, on roads and bridges; full-lock forward turns don't break it off.
+    Back up: it swings out like a real trailer; past ~80 deg it breaks loose
+    onto its raised jack. Crash into a tree at speed, roll the car, wreck
+    it, delete it: each time it breaks loose. Unhitch stopped: jack down,
+    parked. Wheels come off only unhitched. Restart mid-tow: back parked
+    where it was, jack down. No collision with the car while hitched; it
+    blocks again once parked; it can't be picked up. gebsfish-types.xml lists
+    geb_BoatTrailer with lifetime 3888000; check the economy keeps it.
+144. (2026-10-14) Net catches: in a pond the bamboo net brings up minnows,
+    bullfrogs, salamanders and now crayfish (about a quarter of catches); at
+    sea, shrimp and juvenile bait squid instead of nothing. All land in the
+    net's cargo (no startup warning about unplaceable net catches); vanilla
+    Shrimp goes in but a snail or clam (built on Shrimp) is still refused.
+    An existing general.json gains the eleven rows after a version bump.
+143. (2026-10-13) Jon boat tank, battery, lights: put a charged car battery in
+    the box (both ways: drag it onto the boat's Battery slot in the vicinity
+    inventory, and hold it looking at the box for "Attach", added after Cole
+    couldn't put one on; it went in on the next test). Switch the lights off
+    at the battery box after getting out: they go out for you and for a
+    second player (they used to stay lit until the battery was removed; the
+    boat now syncs its own copy of the light switch); in the driver seat press L (does the key reach boats?) and use
+    the seat's "Switch lights" prompt (scroll past get out); the hand move
+    (DriverShiftGear) finishes, no freeze. Standing by the box, its prompt
+    works within ~1.6 m. Refuel with a canister aimed at the red tank within
+    ~1.5 m of the cap; the motor top no longer offers it. At night: flood bar
+    (brightness 16, 45 m, 110 deg), nav and stern lights, lens glow, deck
+    strips; battery visible in the box. Lights on with the motor off drain a
+    full battery in ~80 min, the running motor recharges it, removing it
+    turns the lights off. Walk into the tank and box (blocked), get in/out of
+    the seat, the 0.58 m stern pole doesn't clip the camera, and the boat
+    floats as before. The fuel line doesn't follow the motor at full lock.
+    The lens glow switches on and off with the lights (geb_lights section in
+    Model.cfg).
 142. (2026-10-13) Floating catches and the barracuda's inventory picture: drop
     the severum, a pike, the blue marlin, mahi-mahi, angelfish, hairtail,
     alligator gar, lobster and snow crab legs; each lies on the ground with no

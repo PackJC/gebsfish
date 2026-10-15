@@ -881,6 +881,27 @@ function rowToggle(kind, obj, key, label, help){
   return f;
 }
 
+// A list of names edited as one comma-separated line (left empty, the list is empty).
+function rowList(kind, obj, key, label, help){
+  const f = document.createElement("div");
+  f.className = "field";
+  const id = "l_" + Math.random().toString(36).slice(2);
+  f.innerHTML = '<label for="' + id + '">' + label + "</label>";
+  const t = document.createElement("input");
+  t.type = "text"; t.id = id; t.className = "cfg";
+  t.style.width = "100%"; t.style.minWidth = "240px";
+  t.value = Array.isArray(obj[key]) ? obj[key].join(", ") : "";
+  t.setAttribute("aria-label", label);
+  t.addEventListener("change", () => {
+    obj[key] = t.value.split(",").map(x => x.trim()).filter(x => x);
+    t.value = obj[key].join(", ");
+    markDirty(kind);
+  });
+  f.appendChild(t);
+  attachHelp(f, helpFor(obj, key, help));
+  return f;
+}
+
 function rowSlider(kind, obj, key, label, min, max, step, help, fmt){
   const f = document.createElement("div");
   f.className = "field";
@@ -1737,7 +1758,8 @@ function pct(v){ return Math.round(v * 1000) / 10 + "%"; }
 
 // general.json's sections of settings (the lists beside them are checked where they're drawn).
 const GENERAL_SECTIONS = ["GeneralSettings", "RecipeToggles", "WeatherSettings", "TreasureSettings", "PredatorSettings",
-  "BambooFishingNetSettings", "SpearFishingSettings", "DigWormsSettings", "DigBugsSettings", "DryingRackSettings"];
+  "BambooFishingNetSettings", "SpearFishingSettings", "DigWormsSettings", "DigBugsSettings", "DryingRackSettings",
+  "BoatTrailerSettings"];
 function renderGeneral(){
   const host = document.getElementById("general-editor");
   host.innerHTML = "";
@@ -1830,6 +1852,15 @@ function renderGeneral(){
     const rw = rowSlider("general", r, "WindScale", "Wind speed-up", 0, 3, 0.1);
     rw._setSub(v => "the strongest wind dries fillets " + fmtNum(1 + v) + "× as fast");
     c.appendChild(rw);
+    host.appendChild(c);
+  }
+
+  /* boat trailer */
+  if (d.BoatTrailerSettings) {
+    const c = document.createElement("div");
+    c.className = "card";
+    c.innerHTML = "<h3>🚚 Boat trailer</h3>";
+    c.appendChild(rowList("general", d.BoatTrailerSettings, "TowVehicles", "Cars that may tow (classnames; empty = any car)"));
     host.appendChild(c);
   }
 
@@ -2170,7 +2201,7 @@ const SIM_WEATHER_DEFAULTS = {
   DawnCatchMultiplier: 1.1, DayCatchMultiplier: 1.0, DuskCatchMultiplier: 1.1, NightCatchMultiplier: 1.15,
   MaxStackedMultiplier: 2.0,
   MoonPhaseEnable: 1, FullMoonMultiplier: 1.2, NewMoonMultiplier: 0.9,
-  TemperatureEffectEnable: 1, MinTempMultiplier: 0.1, MaxTempMultiplier: 0.1, WaterTempOffset: 0,
+  TemperatureEffectEnable: 0, MinTempMultiplier: 0.1, MaxTempMultiplier: 0.1, WaterTempOffset: 0,
   BiteSpeedEnable: 1
 };
 const SIM_WEATHER_BOOLS = ["WeatherCatchBoostEnable", "MoonPhaseEnable", "TemperatureEffectEnable", "BiteSpeedEnable"];
@@ -2193,7 +2224,7 @@ function simObj(v){ return v && typeof v === "object" && !Array.isArray(v) ? v :
 // keeping its tuning) or drops it when the new name has a row of its own,
 // and does the same bait by bait in bait.json (RenameLegacyFish in
 // FishConfig and BaitSettingsConf).
-const SIM_RENAMED = [["geb_Bonita", "geb_PacificBonito", "3.3.3"]];
+const SIM_RENAMED = [["geb_Bonita", "geb_PacificBonito", "4.0.0"]];
 
 // The classname each row of a list has once those renames are applied:
 // `names` holds the row's own name, the new name, false for a row the rename
@@ -2249,14 +2280,15 @@ function simReadWeather(general, notes){
   const missing = [];
   const w = {};
   Object.keys(SIM_WEATHER_DEFAULTS).forEach(k => {
-    const v = simVal(src, k, SIM_WEATHER_DEFAULTS[k], missing);
+    // a section in the file reads a field it lacks as 0; a missing section is backfilled
+    const v = simVal(src, k, src ? 0 : SIM_WEATHER_DEFAULTS[k], missing);
     w[k] = SIM_WEATHER_BOOLS.indexOf(k) >= 0 ? v !== 0 : SIM_WEATHER_INTS.indexOf(k) >= 0 ? Math.trunc(v) : SIM_F(v);
   });
   if (!g) notes.push("general.json isn't loaded, so weather, time-of-day, moon, water-temperature and treasure settings use the mod's built-in defaults.");
   else if (!src) notes.push("general.json has no WeatherSettings section. The server fills in the defaults when it loads the file, and so does this page.");
-  // A section that exists but lacks a field: the game most likely keeps the
-  // field's built-in default (see the mod's MAYBE_ISSUES #26), unconfirmed.
-  else if (missing.length) notes.push("general.json → WeatherSettings doesn't have " + simListNames(missing) + ", so this page uses the mod's default for " + (missing.length === 1 ? "it" : "them") + ". The game most likely does too, but that's untested for hand-edited files; a file the server wrote always has every field.");
+  // A section that exists but lacks a field: the game reads it as 0 (the
+  // loader makes the section without its class defaults; gebsfishConfig.c).
+  else if (missing.length) notes.push("general.json → WeatherSettings doesn't have " + simListNames(missing) + ", so the game reads " + (missing.length === 1 ? "it" : "them") + " as 0, and so does this page. A file the server wrote always has every field.");
   return w;
 }
 
@@ -2264,8 +2296,9 @@ function simReadTreasure(general){
   const g = simObj(general);
   const src = g ? simObj(g.TreasureSettings) : null;
   return {
-    enable: simVal(src, "Enable", SIM_TREASURE_DEFAULTS.Enable) !== 0,
-    chance: SIM_F(simVal(src, "Chance", SIM_TREASURE_DEFAULTS.Chance)),
+    // a section in the file reads a field it lacks as 0; a missing section is backfilled
+    enable: simVal(src, "Enable", src ? 0 : SIM_TREASURE_DEFAULTS.Enable) !== 0,
+    chance: SIM_F(simVal(src, "Chance", src ? 0 : SIM_TREASURE_DEFAULTS.Chance)),
     // GeneralConfig.Backfill switches RequireRealRod on for a file without the key.
     requireRealRod: simVal(src, "RequireRealRod", SIM_TREASURE_DEFAULTS.RequireRealRod) !== 0
   };
@@ -2482,7 +2515,7 @@ function simFindBait(prefs, baitCls, fishCls){
     for (let j = 0; j < row.Preferences.length; j++) {
       const p = row.Preferences[j];
       if (simObj(p) && typeof p.FishClassname === "string" && p.FishClassname.toLowerCase() === f) {
-        const m = SIM_F(simVal(p, "Multiplier", 1));
+        const m = SIM_F(simVal(p, "Multiplier", 0));   // a row without one reads 0 in the game
         return m < 0 ? 0 : m;
       }
     }

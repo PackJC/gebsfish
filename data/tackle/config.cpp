@@ -43,7 +43,10 @@ class cfgVehicles {
 		// Deck-mountable on the jon boat (see data/vehicles/config.cpp).
 		// ...and the Fishing Locker's two tackle spots (data/locker/config.cpp).
 		inventorySlot[] = {"GebBoatDeck1", "GebBoatDeck2", "GebLockerTackle1", "GebLockerTackle2"};
-		scope = 0;
+		// Hidden (1), not just a base (0): until 3.3.2 this class was itself a
+		// spawnable box, so a stored one keeps loading until the next wipe. Every
+		// colour sets its own scope 2; the XML generators list colours only.
+		scope = 1;
 		displayName = "Tackle Base";
 		descriptionShort = "Tackle Base Class";
 		model = "\gebsfish\data\tackle\largetackle.p3d";
@@ -179,7 +182,7 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_pinkcamo_co.paa"};
 	};
 	// The four "Fun" boxes were the Yellow, Red, Purple and Green Tackle Box
-	// under a second class name until 3.3.3. These hidden aliases (scope 1:
+	// under a second class name until 4.0.0. These hidden aliases (scope 1:
 	// never spawned or listed, but a stored one still loads) keep the boxes
 	// already on a server, with everything in them, until the next wipe;
 	// remove them then. Only boxes inside something (a tent, a container, a
@@ -561,7 +564,10 @@ class cfgVehicles {
 		// Deck-mountable on the jon boat (see data/vehicles/config.cpp).
 		// ...and the Fishing Locker's two tackle spots (data/locker/config.cpp).
 		inventorySlot[] = {"GebBoatDeck1", "GebBoatDeck2", "GebLockerTackle1", "GebLockerTackle2"};
-		scope = 0;
+		// Hidden (1), not just a base (0): until 3.3.2 this class was itself a
+		// spawnable box, so a stored one keeps loading until the next wipe. Every
+		// colour sets its own scope 2; the XML generators list colours only.
+		scope = 1;
 		displayName = "$STR_tools_oldgreentackle";
 		descriptionShort = "$STR_tools_tackle_desc";
 		model = "\gebsfish\data\tackle\mediumtackle.p3d";
@@ -570,7 +576,7 @@ class cfgVehicles {
 		rotationFlags = 8;
 		weight = 1400;  // a plastic cantilever box this size (47 x 26 x 21 cm) weighs about 1.4 kg
 		itemSize[] = {3,2};
-		itemsCargoSize[] = {3,2};
+		itemsCargoSize[] = {6,2};  // 12 slots (6 until 4.0.0), the small tackle box's grid
 		allowOwnedCargoManipulation = 1;
 		randomQuantity = 2;
 		canBeDigged = 1;

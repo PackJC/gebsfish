@@ -30,7 +30,7 @@ class gebsfishSpawnableTypes {
         WriteFooter(file);
 
         CloseFile(file);
-        GebsfishLogger.Info("gebsfish-spawnabletypes.xml successfully generated in $profile:Gebs/mpmissions/.", "SpawnableTypes");
+        GebsfishLogger.Notice("gebsfish-spawnabletypes.xml successfully generated in $profile:Gebs/mpmissions/.", "SpawnableTypes");
     }
 
     protected void WriteHeader(FileHandle file, string version) {

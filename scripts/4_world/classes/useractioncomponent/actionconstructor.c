@@ -14,5 +14,15 @@ modded class ActionConstructor {
 		actions.Insert(ActionDigBugs);
 		actions.Insert(ActionBambooFishingNet);
 		actions.Insert(ActionGebSpearFishing);
+		actions.Insert(GebActionSwitchBoatLights);
+		actions.Insert(GebActionSwitchBoatLightsSeat);
+		actions.Insert(GebActionSwitchBoatLightsAtBattery);
+		actions.Insert(GebActionHitchTrailer);
+		actions.Insert(GebActionUnhitchTrailer);
+		actions.Insert(GebActionHitchTrailerCar);
+		actions.Insert(GebActionUnhitchTrailerCar);
+		actions.Insert(GebActionUnhitchTrailerSeat);
+		actions.Insert(GebActionWinchBoatOn);
+		actions.Insert(GebActionLaunchBoat);
 	}
 };

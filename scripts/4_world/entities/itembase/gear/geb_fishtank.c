@@ -102,7 +102,7 @@ class geb_FishTank : ItemBase {
 		if (step == 0)
 			SetAnimationPhase("chest_lid", 1);
 		else if (step == 3)
-			ParticleManager.GetInstance().PlayOnObject(ParticleList.GEB_BUBBLES_CHEST, this, GetMemoryPointPos("chest_bubbles"), "0 0 0", true);
+			ParticleManager.GetInstance().PlayOnObject(ParticleList.GEB_BUBBLES_CHEST, this, GetMemoryPointPos("chest_bubbles"), "0 0 0", false);
 		else if (step == 5)
 			SetAnimationPhase("chest_lid", 0);
 		m_GebChestStep++;
@@ -119,7 +119,12 @@ class geb_FishTank : ItemBase {
 			GebStopEffects();
 			return;
 		}
-		// World rotation, so the bubbles rise straight up even on a slope.
+		// Attached in the tank's own frame, so each effect turns with the tank.
+		// With the world-rotation flag the engine laid the memory-point offsets
+		// along the world's axes: on a tank turned 90 degrees the chest's, the
+		// volcano's and the air stone's bubbles and the filter's splash all came
+		// up a quarter turn round the tank (Cole's screenshots, 2026-10-14). A
+		// placed tank stands level, so the streams still rise straight up.
 		if (!m_GebBubbles)
 			m_GebBubbles = GebPlayBubbles(ParticleList.GEB_BUBBLES_TANK, "bubbles");
 		if (!m_GebVolcano)
@@ -145,7 +150,7 @@ class geb_FishTank : ItemBase {
 	}
 
 	protected ParticleSource GebPlayBubbles(int particleId, string memoryPoint) {
-		ParticleSource p = ParticleManager.GetInstance().PlayOnObject(particleId, this, GetMemoryPointPos(memoryPoint), "0 0 0", true);
+		ParticleSource p = ParticleManager.GetInstance().PlayOnObject(particleId, this, GetMemoryPointPos(memoryPoint), "0 0 0", false);
 		if (p)
 			p.SetParticleAutoDestroyFlags(ParticleAutoDestroyFlags.ON_STOP);
 		return p;

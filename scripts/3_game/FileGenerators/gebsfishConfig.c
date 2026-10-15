@@ -364,6 +364,8 @@ class GeneralConfig {
     ref WeatherConf                   WeatherSettings;
     string DryingRackSettingsInfo = "Fish Drying Rack: raw fillets hung on a standing rack dry to the dried food stage without a fire (each field inside has its own *Info).";
     ref DryingRackConf                DryingRackSettings;
+    string BoatTrailerSettingsInfo = "Boat Trailer: which cars may tow it (TowVehicles; its own *Info inside).";
+    ref BoatTrailerConf               BoatTrailerSettings;
 
     private const static string PATH = "$profile:Gebs/general.json";
 
@@ -379,7 +381,7 @@ class GeneralConfig {
             if (ConfigVersion != VERSION_GEBSFISH) {
                 int added = MergeNewDefaults();
                 if (added > 0)
-                    GebsfishLogger.Info("general.json: added " + added.ToString() + " new default entries (update '" + ConfigVersion + "' -> '" + VERSION_GEBSFISH + "'). Existing entries untouched.", "Migrate");
+                    GebsfishLogger.Notice("general.json: added " + added.ToString() + " new default entries (update '" + ConfigVersion + "' -> '" + VERSION_GEBSFISH + "'). Existing entries untouched.", "Migrate");
                 ConfigVersion = VERSION_GEBSFISH;
                 changed = true;
             }
@@ -413,6 +415,7 @@ class GeneralConfig {
         n += GebRefreshInfo(DigWormsSettings, new DigWormsConf());
         n += GebRefreshInfo(WeatherSettings, new WeatherConf());
         n += GebRefreshInfo(DryingRackSettings, new DryingRackConf());
+        n += GebRefreshInfo(BoatTrailerSettings, new BoatTrailerConf());
         if (HookFromFishCatches) {
             HookFromFishEntry freshHook = new HookFromFishEntry();
             foreach (HookFromFishEntry hook : HookFromFishCatches)
@@ -478,6 +481,16 @@ class GeneralConfig {
         if (!WeatherSettings || !file.Has("WeatherSettings"))   { WeatherSettings = new WeatherConf;      changed = true; }
         if (!TreasureSettings || !file.Has("TreasureSettings")) { TreasureSettings = new TreasureConf;    changed = true; }
         if (!DryingRackSettings || !file.Has("DryingRackSettings")) { DryingRackSettings = new DryingRackConf; changed = true; }
+        // The tow list is seeded only when the file lacks it, so an admin's
+        // list stays as written (an empty one lets any car tow).
+        if (!BoatTrailerSettings || !file.Has("BoatTrailerSettings")) {
+            BoatTrailerSettings = new BoatTrailerConf;
+            SeedDefaultTowVehicles();
+            changed = true;
+        } else if (!file.Has("BoatTrailerSettings.TowVehicles")) {
+            SeedDefaultTowVehicles();
+            changed = true;
+        }
         // Settings added to an EXISTING section need their own check: the
         // section is there, the field just isn't, and the loader leaves a
         // field missing from a section at 0 / false (it builds sections
@@ -683,6 +696,8 @@ class GeneralConfig {
         PredatorSettings = new PredatorConf;
         WeatherSettings = new WeatherConf;
         DryingRackSettings = new DryingRackConf;
+        BoatTrailerSettings = new BoatTrailerConf;
+        SeedDefaultTowVehicles();
         BambooFishingNetSettings = new BambooFishingNetConf;
         SpearFishingSettings = new SpearFishingConf;
         DigBugsSettings = new DigBugsConf;
@@ -696,6 +711,15 @@ class GeneralConfig {
         SeedDefaultSpearCatches();
         SeedDefaultDigBugsCatches();
         SeedDefaultDigWormsCatches();
+    }
+
+    // Every vanilla car family: the Olga (CivilianSedan), Gunter (Hatchback_02),
+    // Sarka (Sedan_02), Ada (OffroadHatchback), M1025 (Offroad_02) and M3S
+    // trucks (Truck_01_Base).
+    void SeedDefaultTowVehicles() {
+        if (!BoatTrailerSettings)
+            BoatTrailerSettings = new BoatTrailerConf;
+        BoatTrailerSettings.TowVehicles = {"CivilianSedan", "Hatchback_02", "Sedan_02", "OffroadHatchback", "Offroad_02", "Truck_01_Base"};
     }
 
     void SeedHookFromFish() {
@@ -737,6 +761,8 @@ class GeneralConfig {
         l = new TreasureLootEntry(); l.Classname = "Compass";          l.Weight = 1.0; l.MinHealthLevel = 0; l.MaxHealthLevel = 2; TreasureLoot.Insert(l);
         l = new TreasureLootEntry(); l.Classname = "Binoculars";       l.Weight = 0.5; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
         l = new TreasureLootEntry(); l.Classname = "geb_BlackCaviar";  l.Weight = 0.5; l.MinHealthLevel = 0; l.MaxHealthLevel = 1; TreasureLoot.Insert(l);
+        // 6x4: fits a sea chest, a crate or an empty dry bag; a slot it no longer fits is skipped
+        l = new TreasureLootEntry(); l.Classname = "geb_FishTank";     l.Weight = 0.5; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
     }
 
     // ---- default seed tables ----
@@ -756,6 +782,29 @@ class GeneralConfig {
         NetEntry minnow = new NetEntry();     minnow.Classname = "geb_FatHeadMinnow";    minnow.CatchChance = 1.0;     minnow.Environment = 1;     BambooFishingNetSettings.Catches.Insert(minnow);
         NetEntry frog = new NetEntry();       frog.Classname = "geb_AmericanBullFrog";   frog.CatchChance = 1.0;       frog.Environment = 1;       BambooFishingNetSettings.Catches.Insert(frog);
         NetEntry salamander = new NetEntry(); salamander.Classname = "geb_RedSalamander"; salamander.CatchChance = 1.0; salamander.Environment = 1; BambooFishingNetSettings.Catches.Insert(salamander);
+        // Crayfish in fresh water, about a quarter of the pond catches between
+        // the seven; at sea, shrimp and the juvenile bait squid, so a net cast
+        // into the sea isn't always empty.
+        AddNetCatch("geb_EuropeanCrayFish", 0.15, 1);
+        AddNetCatch("geb_SignalCrayFish", 0.15, 1);
+        AddNetCatch("geb_RustyCrayFish", 0.15, 1);
+        AddNetCatch("geb_RedSwampCrayFish", 0.15, 1);
+        AddNetCatch("geb_FloridaCrayFish", 0.15, 1);
+        AddNetCatch("geb_MonongahelaCrayFish", 0.15, 1);
+        AddNetCatch("geb_CaveCrayFish", 0.15, 1);
+        AddNetCatch("Shrimp", 1.0, 2);
+        AddNetCatch("geb_NorthernShortfinSquidJuvenile", 0.25, 2);
+        AddNetCatch("geb_ArgentineShortfinSquidJuvenile", 0.25, 2);
+        AddNetCatch("geb_JapaneseFlyingSquidJuvenile", 0.25, 2);
+        AddNetCatch("geb_PurplebackFlyingSquidJuvenile", 0.25, 2);
+    }
+
+    protected void AddNetCatch(string classname, float weight, int environment) {
+        NetEntry entry = new NetEntry();
+        entry.Classname = classname;
+        entry.CatchChance = weight;
+        entry.Environment = environment;
+        BambooFishingNetSettings.Catches.Insert(entry);
     }
 
     // Fish that come into the shallows: panfish, carp, bass, bowfin and
@@ -834,7 +883,7 @@ class BaitSettingsConf {
             if (ConfigVersion != VERSION_GEBSFISH) {
                 int added = MergeNewDefaults();
                 if (added > 0)
-                    GebsfishLogger.Info("bait.json: added " + added.ToString() + " new default bait rows / fish preferences (update '" + ConfigVersion + "' -> '" + VERSION_GEBSFISH + "'). Existing multipliers untouched.", "Migrate");
+                    GebsfishLogger.Notice("bait.json: added " + added.ToString() + " new default bait rows / fish preferences (update '" + ConfigVersion + "' -> '" + VERSION_GEBSFISH + "'). Existing multipliers untouched.", "Migrate");
                 ConfigVersion = VERSION_GEBSFISH;
                 changed = true;
             }
@@ -849,7 +898,7 @@ class BaitSettingsConf {
         return true;
     }
 
-    // 3.3.3 renamed geb_Bonita to geb_PacificBonito. A preference written
+    // 4.0.0 renamed geb_Bonita to geb_PacificBonito. A preference written
     // before that takes the new name, keeping its multiplier; where the bait
     // already has a geb_PacificBonito preference the old one is dropped.
     // Runs before the merge, so the merge doesn't add a second, default row.
@@ -879,7 +928,7 @@ class BaitSettingsConf {
             }
         }
         if (changed)
-            GebsfishLogger.Info("bait.json: preferences for geb_Bonita now name geb_PacificBonito (renamed in 3.3.3; multipliers kept).", "Migrate");
+            GebsfishLogger.Notice("bait.json: preferences for geb_Bonita now name geb_PacificBonito (renamed in 4.0.0; multipliers kept).", "Migrate");
         return changed;
     }
     void Save() {
@@ -1140,7 +1189,7 @@ class JunkConfig {
             if (ConfigVersion != VERSION_GEBSFISH) {
                 int added = MergeNewDefaults();
                 if (added > 0)
-                    GebsfishLogger.Info("junk.json: added " + added.ToString() + " new default entries (update '" + ConfigVersion + "' -> '" + VERSION_GEBSFISH + "'). Existing entries untouched.", "Migrate");
+                    GebsfishLogger.Notice("junk.json: added " + added.ToString() + " new default entries (update '" + ConfigVersion + "' -> '" + VERSION_GEBSFISH + "'). Existing entries untouched.", "Migrate");
                 ConfigVersion = VERSION_GEBSFISH;
                 changed = true;
             }
@@ -1285,7 +1334,7 @@ class FishConfig {
             if (ConfigVersion != VERSION_GEBSFISH) {
                 int added = MergeNewDefaults();
                 if (added > 0)
-                    GebsfishLogger.Info("fish.json: added " + added.ToString() + " new default species (update '" + ConfigVersion + "' -> '" + VERSION_GEBSFISH + "'). Existing entries untouched.", "Migrate");
+                    GebsfishLogger.Notice("fish.json: added " + added.ToString() + " new default species (update '" + ConfigVersion + "' -> '" + VERSION_GEBSFISH + "'). Existing entries untouched.", "Migrate");
                 ConfigVersion = VERSION_GEBSFISH;
                 changed = true;
             }
@@ -1299,7 +1348,7 @@ class FishConfig {
         if (changed) Save();
         return true;
     }
-    // 3.3.3 renamed geb_Bonita to geb_PacificBonito (and its fillet). A row
+    // 4.0.0 renamed geb_Bonita to geb_PacificBonito (and its fillet). A row
     // written before that takes the new names, keeping the admin's tuning;
     // if geb_PacificBonito already has a row the old one is dropped. Runs
     // before the merge, so the merge doesn't add a second, default row.
@@ -1318,11 +1367,11 @@ class FishConfig {
                 continue;
             if (hasNew) {
                 Species.RemoveOrdered(i);
-                GebsfishLogger.Info("fish.json: dropped the old geb_Bonita row; geb_PacificBonito already has one.", "Migrate");
+                GebsfishLogger.Notice("fish.json: dropped the old geb_Bonita row; geb_PacificBonito already has one.", "Migrate");
             } else {
                 f.Classname = "geb_PacificBonito";
                 hasNew = true;
-                GebsfishLogger.Info("fish.json: renamed geb_Bonita to geb_PacificBonito (renamed in 3.3.3; its settings kept).", "Migrate");
+                GebsfishLogger.Notice("fish.json: renamed geb_Bonita to geb_PacificBonito (renamed in 4.0.0; its settings kept).", "Migrate");
             }
             changed = true;
         }
@@ -1625,7 +1674,7 @@ static int GebGetDebugLevel() {
 
 //general settings config data
 class GenSetConf {
-    string DebugInfo = "Debug log level for the logs in $profile:Gebs/logs (warnings and errors also go to the server RPT). 0 = off, 1 = standard (per cast: date, hour, rain, water temperature, the species in the pool, the fish picked, the BiteSpeed aggregate and any multiplier clamp), 2 = elevated (adds the pool table, the per-fish BiteSpeed table and the bite chance on every tick). Set to 1 when tuning fishing config; 2 only when reproducing a specific bug since it is very chatty.";
+    string DebugInfo = "Debug log level for the logs in $profile:Gebs/logs. 0 = off: no log file at all (warnings, errors and notes about changes to your files still go to the server RPT), 1 = standard (per cast: date, hour, rain, water temperature, the species in the pool, the fish picked, the BiteSpeed aggregate and any multiplier clamp), 2 = elevated (adds the pool table, the per-fish BiteSpeed table and the bite chance on every tick). Set to 1 when tuning fishing config; 2 only when reproducing a specific bug since it is very chatty.";
     int DebugLogs = 0;
     string FishQualityInfo = "How full every caught fish comes out, from 0 to 1 (1 = a whole, full fish), and with it how much the fish weighs. Vanilla DayZ calls this catch quality and uses 0.35, then the rod, hook and bait add a small random bonus on top. The result is capped at 1, so values above 1.0 behave exactly like 1.0. Trader mods (DayZ-Expansion-Market, TraderPlus, Dr. Jones, etc.) look at how full an item is, and several refuse anything that is not full, so the default of 1.0 keeps every fish sellable. Lower it (e.g. 0.35) only if your trader buys partly-full items and you want vanilla-style size variation.";
     float FishQuality = 1.0;
@@ -1733,8 +1782,8 @@ class WeatherConf {
     float FullMoonMultiplier = 1.20;
     float NewMoonMultiplier = 0.90;
 
-    string TemperatureInfo = "Per-species water-temperature catch buff. Each cast's water temperature is the map's own water temperature from the game's world data (Chernarus 15 C fresh / 23 C sea, Livonia 20 / 25, Sakhal 2 / -0.5; other maps use Chernarus's unless they define their own), swung by season (up to +/-6 C in fresh water and +/-3 C at sea, warmest in early August), plus WaterTempOffset. Each fish gets a bell curve: 1.0x at its TempOptimal, falling linearly to MinTempMultiplier as water drops to TempMin and to MaxTempMultiplier as it rises to TempMax, and clamped at those floors outside that range so no fish fully shuts down. All temps in degrees Celsius. Set TemperatureEffectEnable to 0 to disable entirely; set a fish's TempMin equal to its TempMax to disable just that fish. Independent of WeatherCatchBoostEnable.";
-    bool TemperatureEffectEnable = 1;
+    string TemperatureInfo = "Per-species water-temperature catch buff. Each cast's water temperature is the map's own water temperature from the game's world data (Chernarus 15 C fresh / 23 C sea, Livonia 20 / 25, Sakhal 2 / -0.5; other maps use Chernarus's unless they define their own), swung by season (up to +/-6 C in fresh water and +/-3 C at sea, warmest in early August), plus WaterTempOffset. Each fish gets a bell curve: 1.0x at its TempOptimal, falling linearly to MinTempMultiplier as water drops to TempMin and to MaxTempMultiplier as it rises to TempMax, and clamped at those floors outside that range so no fish fully shuts down. All temps in degrees Celsius. Off by default: set TemperatureEffectEnable to 1 to turn it on; set a fish's TempMin equal to its TempMax to disable just that fish. Independent of WeatherCatchBoostEnable.";
+    bool TemperatureEffectEnable = 0;    // ships off (Cole, 2026-10-14)
     float MinTempMultiplier = 0.1;
     float MaxTempMultiplier = 0.1;
     string WaterTempOffsetInfo = "Admin offset (degrees Celsius) added to the water temperature before the per-fish curve is applied. Default 0 uses the map's own water temperature unchanged, which already makes cold maps cold (on Sakhal the cold-water species dominate) and warm seas warm. Use it for maps whose water doesn't fit: NEGATIVE for winter/cold-themed servers or custom maps that inherit Chernarus's values, POSITIVE for tropical servers. This shifts the curve globally without editing every fish's TempOptimal/TempMin/TempMax. Examples: -5 = a cooler year (trout/salmon/cod favoured, bass struggles); -10 = frozen-lake roleplay (only cold-water species feed); +5 = tropical (reef fish/marlin/mahi dominate, trout shut down). Water never goes below freezing.";
@@ -1744,6 +1793,12 @@ class WeatherConf {
     bool BiteSpeedEnable = 1;
 
     string SpeciesBuffsInfo = "Per-species multipliers live on each fish in fish.json (RainMultiplier, StormMultiplier, DawnMultiplier, DayMultiplier, DuskMultiplier, NightMultiplier, TempOptimal, TempMin, TempMax). They decide WHICH fish bites; the global multipliers above decide how OFTEN anything bites, and the two never multiply together. 1.0 = no effect, higher = more likely, lower = less likely.";
+}
+
+// Boat Trailer (geb_boattrailer.c): which cars may tow it.
+class BoatTrailerConf {
+    string TowVehiclesInfo = "Cars that may tow the Boat Trailer, by classname. A listed class covers every car built on it: Truck_01_Base covers every M3S, CivilianSedan every Olga colour. An empty list [] lets any car tow, modded ones included (the hitch sits behind the car's collision box, at the middle, so a car of an odd shape may hitch oddly). Default: the six vanilla car families. Players see the change after a restart.";
+    ref TStringArray TowVehicles;
 }
 
 // Fish Drying Rack (geb_fishdryingrack.c, FUTURE_IDEAS F21). Raw fillets hung on
@@ -2047,6 +2102,9 @@ static void GebValidateFishConfig(FishConfig config) {
             GebsfishLogger.Error(field + "CatchMethod invalid; disabling method eligibility.", "ConfigValidation");
             f.CatchMethod = 0;
         }
+        // a key missing from a hand-added row reads 0, which matches nothing
+        if (f.CatchProbability > 0 && (f.Environment == 0 || f.CatchMethod == 0))
+            GebsfishLogger.Warn(field + "Environment " + f.Environment + " / CatchMethod " + f.CatchMethod + ": 0 matches no water or catch method, so this fish is never caught.", "ConfigValidation");
         f.RecipeShape = GebValidateNumber(f.RecipeShape, 0, 2, field + "RecipeShape");
         f.MeatMin = GebValidateNumber(f.MeatMin, 0, 10, field + "MeatMin");
         f.MeatMax = GebValidateNumber(f.MeatMax, f.MeatMin, 10, field + "MeatMax");

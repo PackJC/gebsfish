@@ -9,7 +9,7 @@
 <h3 align="center">The Ultimate Fishing Expansion for DayZ</h3>
 
 <p align="center">
-  <img alt="Mod Version" src="https://img.shields.io/badge/Mod-v3.3.3-blue?style=for-the-badge">
+  <img alt="Mod Version" src="https://img.shields.io/badge/Mod-v4.0.0-blue?style=for-the-badge">
   <img alt="DayZ Version" src="https://img.shields.io/badge/DayZ-v1.30-teal?style=for-the-badge">
   <img alt="Workshop Subscribers" src="https://img.shields.io/steam/subscriptions/2757509117?style=for-the-badge&color=purple&label=Workshop%20Subs">
   <a href="https://packjc.github.io/gebsfish/"><img alt="Website" src="https://img.shields.io/badge/Website-Gebsfish%20Wiki-ff8c00?style=for-the-badge"></a>
@@ -72,7 +72,7 @@ Gebsfish layers several configurable environmental systems on top of vanilla fis
 
 * **Moon phase system** — accurate synodic moon-phase calculation (Meeus algorithm) from the in-game date drives a small night-only catch buff. Full-moon nights bite up to **+20%**, new-moon nights up to **-10%**. Independent toggle in config; runs even if the rain/time-of-day buffs are disabled.
 
-* **Water temperature simulation** — each species has `TempOptimal`, `TempMin`, and `TempMax` fields (in degrees Celsius). The water itself comes from the map's own world data — Chernarus lakes 15 °C and sea 23 °C, Livonia 20 / 25, Sakhal 2 / -0.5 — with a seasonal swing (lakes ±6 °C, the sea ±3 °C, warmest in early August). Bass and sunfish dominate summer lakes, trout and salmon take over in cold water, tropical species stay active in warm seas, and Sakhal fishes like an arctic map out of the box. A `WaterTempOffset` admin knob shifts the whole curve for custom maps or themed servers (frozen lake roleplay: `-10`, tropical: `+5`) without editing every fish.
+* **Water temperature simulation** (ships off: set `TemperatureEffectEnable` to 1 to use it) — each species has `TempOptimal`, `TempMin`, and `TempMax` fields (in degrees Celsius). The water itself comes from the map's own world data — Chernarus lakes 15 °C and sea 23 °C, Livonia 20 / 25, Sakhal 2 / -0.5 — with a seasonal swing (lakes ±6 °C, the sea ±3 °C, warmest in early August). Bass and sunfish dominate summer lakes, trout and salmon take over in cold water, tropical species stay active in warm seas, and Sakhal fishes like an arctic map out of the box. A `WaterTempOffset` admin knob shifts the whole curve for custom maps or themed servers (frozen lake roleplay: `-10`, tropical: `+5`) without editing every fish.
 
 * **Bite-speed cycle scaling** — every fish has a 24-hour `BiteSpeed` array tuned to its real-world circadian pattern. The catching system aggregates this across the active fish pool to drive how long you wait between bites, weighted by per-fish abundance and the current time-of-day multiplier. Catfish bite slow at noon; panfish bite slow at midnight.
 
@@ -116,7 +116,7 @@ Gebsfish layers several configurable environmental systems on top of vanilla fis
 
 * **Trader compatibility** — `FishQuality` is how full each caught fish comes out (0–1; values above 1 act as 1), and with it how much the fish weighs. It defaults to `1.0`, a whole fish, because popular trader mods (DayZ-Expansion-Market, TraderPlus, Dr. Jones, etc.) refuse items that aren't full. Lower it (e.g. vanilla's `0.35`) only if your trader buys partly-full items.
 
-* **Admin logging** — every session writes a timestamped log to `$profile:Gebs/logs/`. `DebugLogs` has three levels: `0` off, `1` per-cast summaries (the cast's time, rain and water temperature, the species in the pool, the bite-speed aggregate and which fish was picked), `2` elevated — adds per-fish tables (each species' abundance, environment and method masks, weather/temperature multiplier and bite speed) plus the bite-rate numbers on every tick. Built for answering "why isn't fish X spawning" without guesswork. Logs older than 3 days are deleted automatically at startup so an unattended server doesn't accumulate one file per restart (the logger keeps their names in `sessions.txt` in the same folder). With `DebugLogs` on, each log file opens with the gebsfish banner.
+* **Admin logging** — with `DebugLogs` at 1 or 2, every session writes a timestamped log to `$profile:Gebs/logs/`. `DebugLogs` has three levels: `0` off (no log file at all; warnings, errors and notes about changes to your files still go to the RPT), `1` per-cast summaries (the cast's time, rain and water temperature, the species in the pool, the bite-speed aggregate and which fish was picked), `2` elevated — adds per-fish tables (each species' abundance, environment and method masks, weather/temperature multiplier and bite speed) plus the bite-rate numbers on every tick. Built for answering "why isn't fish X spawning" without guesswork. Logs older than 3 days are deleted automatically when a logged session starts, so an unattended server doesn't accumulate one file per restart (the logger keeps their names in `sessions.txt` in the same folder). With `DebugLogs` on, each log file opens with the gebsfish banner.
 * **Visual config editor** — open `docs/config-editor.html` (or the wiki's 🛠️ Config Editor), drop in your four JSON files, edit them with sliders, toggles and tables, and download them again. Everything stays in your browser. The **What will bite?** tab shows each species' odds for a map, date, hour, rain, water and bait, using your own files and the same maths as the server, so you can see what a change does before you restart.
 
 ## Configuration Examples
@@ -169,7 +169,7 @@ All configuration options are located in the `Gebs` folder inside your server's 
     "MoonPhaseEnable": 1,
     "FullMoonMultiplier": 1.20,
     "NewMoonMultiplier": 0.90,
-    "TemperatureEffectEnable": 1,
+    "TemperatureEffectEnable": 0,
     "MinTempMultiplier": 0.1,
     "MaxTempMultiplier": 0.1,
     "WaterTempOffset": 0.0,
@@ -244,7 +244,7 @@ In `general.json`:
 "WeatherSettings": {
     "WeatherCatchBoostEnable": 1,
     "MoonPhaseEnable": 1,
-    "TemperatureEffectEnable": 1,
+    "TemperatureEffectEnable": 0,
     "BiteSpeedEnable": 1
 }
 ```

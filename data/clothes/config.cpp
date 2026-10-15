@@ -51,8 +51,11 @@ class cfgVehicles {
 	//own material (knit relief and a matte knit, the rubber's grain and soft sheen) and its damaged and ruined copies.
 	class geb_FishGloves_Base: NBCGloves_ColorBase {
 		scope=0;
-		// The Fishing Locker's spot for gloves (data/locker/config.cpp), added to the Gloves slot.
-		inventorySlot[] += {"GebLockerGloves"};
+		// The vanilla slot it's worn in, then the Fishing Locker's spot
+		// (data/locker/config.cpp). Written out in full: "+=" in a new class
+		// built on a vanilla one left only the locker slot, so none of the
+		// clothes could be worn (Cole, 2026-10-14). Same reason as FishingRod.
+		inventorySlot[] = {"Gloves", "GebLockerGloves"};
 		hiddenSelectionsMaterials[]=
 		{
 			"gebsfish\data\clothes\geb_fishgloves.rvmat",
@@ -250,7 +253,11 @@ class cfgVehicles {
 	// (data/locker/config.cpp), added to the slot it is worn in.
 	class geb_FishHat_Base: BaseballCap_ColorBase {
 		scope=0;
-		inventorySlot[] += {"GebLockerHat"};
+		// The vanilla slot it's worn in, then the Fishing Locker's spot
+		// (data/locker/config.cpp). Written out in full: "+=" in a new class
+		// built on a vanilla one left only the locker slot, so none of the
+		// clothes could be worn (Cole, 2026-10-14). Same reason as FishingRod.
+		inventorySlot[] = {"Headgear", "GebLockerHat"};
 	};
 	class geb_BlueFishHat: geb_FishHat_Base {
 		displayName="$STR_clothes_bluefishinghat";
@@ -426,7 +433,11 @@ class cfgVehicles {
 	// (data/locker/config.cpp), added to the slot it is worn in.
 	class geb_FishShirt_Base: TShirt_ColorBase {
 		scope=0;
-		inventorySlot[] += {"GebLockerShirt"};
+		// The vanilla slot it's worn in, then the Fishing Locker's spot
+		// (data/locker/config.cpp). Written out in full: "+=" in a new class
+		// built on a vanilla one left only the locker slot, so none of the
+		// clothes could be worn (Cole, 2026-10-14). Same reason as FishingRod.
+		inventorySlot[] = {"Body", "GebLockerShirt"};
 	};
 	class geb_RedFishShirt: geb_FishShirt_Base {
 		displayName="$STR_clothes_redfishingshirt";
@@ -589,7 +600,11 @@ class cfgVehicles {
 	// (data/locker/config.cpp), added to the slot it is worn in.
 	class geb_FishRaincoat_Base: Raincoat_ColorBase {
 		scope=0;
-		inventorySlot[] += {"GebLockerCoat"};
+		// The vanilla slot it's worn in, then the Fishing Locker's spot
+		// (data/locker/config.cpp). Written out in full: "+=" in a new class
+		// built on a vanilla one left only the locker slot, so none of the
+		// clothes could be worn (Cole, 2026-10-14). Same reason as FishingRod.
+		inventorySlot[] = {"Body", "GebLockerCoat"};
 	};
 	class geb_RedFishRaincoat: geb_FishRaincoat_Base {
 		displayName="$STR_clothes_redfishingraincoat";
@@ -751,7 +766,11 @@ class cfgVehicles {
 	// (data/locker/config.cpp), added to the slot it is worn in.
 	class geb_FishWellies_Base: Wellies_ColorBase {
 		scope=0;
-		inventorySlot[] += {"GebLockerBoots"};
+		// The vanilla slot it's worn in, then the Fishing Locker's spot
+		// (data/locker/config.cpp). Written out in full: "+=" in a new class
+		// built on a vanilla one left only the locker slot, so none of the
+		// clothes could be worn (Cole, 2026-10-14). Same reason as FishingRod.
+		inventorySlot[] = {"Feet", "GebLockerBoots"};
 	};
 	class geb_RedFishWellies: geb_FishWellies_Base {
 		displayName="$STR_clothes_redfishingwellies";
@@ -915,7 +934,11 @@ class cfgVehicles {
 	// (data/locker/config.cpp), added to the slot it is worn in.
 	class geb_FishVest_Base: HuntingVest {
 		scope=0;
-		inventorySlot[] += {"GebLockerVest"};
+		// The vanilla slot it's worn in, then the Fishing Locker's spot
+		// (data/locker/config.cpp). Written out in full: "+=" in a new class
+		// built on a vanilla one left only the locker slot, so none of the
+		// clothes could be worn (Cole, 2026-10-14). Same reason as FishingRod.
+		inventorySlot[] = {"Vest", "GebLockerVest"};
 	};
 	class geb_RedFishVest: geb_FishVest_Base {
 		displayName="$STR_clothes_redfishingvest";

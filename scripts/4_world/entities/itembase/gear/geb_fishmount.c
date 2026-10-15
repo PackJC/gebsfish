@@ -147,7 +147,7 @@ class geb_WoodenFishMount : ItemBase {
 	//
 	// One way out: a trophy too big for its board. The 3.3.2 Wooden Fish Mount
 	// took any catch and is now the small plaque (same class), so a pike or a
-	// shark mounted on it before 3.3.3 can be taken off and hung on a medium or
+	// shark mounted on it before 4.0.0 can be taken off and hung on a medium or
 	// large board, where it is permanent again.
 	override bool CanReleaseAttachment(EntityAI attachment) {
 		if (!attachment)

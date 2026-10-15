@@ -1515,7 +1515,7 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\pacificbonito_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\pacificbonito.rvmat","\gebsfish\data\fish\pacificbonito_rotten.rvmat"};
 	};
-	// geb_Bonita was the Pacific Bonito's class name until 3.3.3. This hidden
+	// geb_Bonita was the Pacific Bonito's class name until 4.0.0. This hidden
 	// alias (scope 1: never spawned or listed, but a stored one still loads)
 	// keeps the bonitos already on a server, in inventories, coolers and on
 	// mounts, until the next wipe; remove it then. One lying loose on the
@@ -2659,10 +2659,21 @@ class cfgVehicles {
 			"\gebsfish\data\fish\pacificbonito_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
 		};
 	};
-	// The fillet's pre-3.3.3 class name, a hidden alias like geb_Bonita: stored
+	// The fillet's pre-4.0.0 class name, a hidden alias like geb_Bonita: stored
 	// fillets keep loading until the next wipe (remove it then); one loose on
 	// the ground is gone after the second restart. The XML generators leave it out.
 	class geb_BonitaFilletMeat: geb_PacificBonitoFilletMeat {
+		scope = 1;
+	};
+	// Fillets 3.3.2 had and 4.0.0 dropped (a fathead minnow and a blue jellyfish
+	// can't be filleted any more): hidden aliases on the vanilla fillets they
+	// were built on, so stored ones keep loading until the next wipe (remove
+	// them then). Their own names left the stringtable, so they read as a carp
+	// and a mackerel fillet. The XML generators leave them out.
+	class geb_FatHeadMinnowFilletMeat: CarpFilletMeat {
+		scope = 1;
+	};
+	class geb_BlueJellyFishFilletMeat: MackerelFilletMeat {
 		scope = 1;
 	};
 	class geb_GreatBarracudaFilletMeat: geb_SaltWater_Fillet_Lean {

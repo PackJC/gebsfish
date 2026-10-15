@@ -37,11 +37,6 @@ server in lockstep and both must see the same value.
   repeated in every array entry); the fish table and bait matrix are ~33 KB.
   Send clients a slim object (Fish, Bait, the toggles they use), or move
   per-entry Info to the parent.
-- **Client log folder.** The client's routine lines (config sync, yield
-  registration) log only with DebugLogs on since 2026-10-08, so a player's PC
-  writes `$profile:Gebs/logs` only for a warning or an error. What's left: the
-  logger itself still makes that folder on any machine the first time it
-  writes; a client-only switch could send even those lines to the RPT alone.
 - **XML generators.** Regenerate when the content changes, not only on a
   version bump, so custom fish.json species get types entries; containers
   could get their own category as the clothes did (2026-10-05).

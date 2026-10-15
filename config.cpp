@@ -31,9 +31,12 @@ class CfgMods {
 		action="";
 		name="gebsfish";
 		creditsJson = "gebsfish/scripts/Credits.json";
+		// Without this the engine looks for gebsfish/Anims/cfg/skeletons.anim.xml and
+		// logs "ANIMATION (E): Can't load ..." on every start; point it at vanilla's.
+		skeletonDefinitions = "DZ/anims/cfg/skeletons.anim.xml";
 		author="Geb";
 		authorID="0";
-		version="3.3.3";
+		version="4.0.0";
 		extra=0;
 		type="mod";
 		dependencies[]= {

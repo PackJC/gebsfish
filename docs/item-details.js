@@ -84,6 +84,12 @@ const ITEMDETAIL = {
 "img": "items/geb_BlueTackle.webp",
 "name": "Blue Tackle Box"
 },
+"geb_BoatTrailer": {
+"cat": "boat",
+"desc": "A galvanized single-axle boat trailer with carpeted bunks, a winch and a jack, on two Gunter 2 wheels. It carries a jon boat or a rubber boat: winch one on at the bow, then back the trailer into the water to launch it. Back a car up until its hitch meets the coupler, then hitch up. Back up slowly: if it jackknifes or the car crashes, it breaks loose.",
+"img": "items/geb_BoatTrailer.webp",
+"name": "Boat Trailer"
+},
 "geb_BonitoCan": {
 "cat": "food",
 "desc": "A Spanish can of bonito del norte, albacore in olive oil, paler and milder than common tuna. It takes a tool to open, such as a knife or a can opener. If unopened, it will last two to five years depending on storage conditions.",

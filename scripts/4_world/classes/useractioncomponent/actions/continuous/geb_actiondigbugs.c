@@ -153,8 +153,12 @@ class ActionDigBugs : ActionContinuousBase {
 			geb_FilteredContainerBase filtered = geb_FilteredContainerBase.Cast(catcher);
 			if (catcher && catcher.GetInventory() && (!filtered || filtered.GebAcceptsType(selectedBug)))
 				bugEntity = catcher.GetInventory().CreateInInventory(selectedBug);
-			if (!bugEntity)
+			if (!bugEntity) {
+				// 1.30's CreateInInventory refuses an item that doesn't fit without a log line of its own.
+				if (debugLevel >= 1)
+					GebsfishLogger.Debug("Bug '" + selectedBug + "' didn't go into the Bug Catcher (full, or not on its allow-list in containers.c) -- dropped on the dug spot.", "DigBugs");
 				bugEntity = EntityAI.Cast(g_Game.CreateObjectEx(selectedBug, action_data.m_Target.GetCursorHitPos(), ECE_PLACE_ON_SURFACE));
+			}
 			ItemBase bugs = ItemBase.Cast(bugEntity);
 			if (bugs) {
 				bugs.SetQuantity(1, false);

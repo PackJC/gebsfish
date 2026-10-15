@@ -1,6 +1,6 @@
 ImageSetClass {
  Name "gebsfish"
- RefSize 256 256
+ RefSize 512 512
  Textures {
   ImageSetTextureClass {
    mpix 1
@@ -11,6 +11,24 @@ ImageSetClass {
   ImageSetDefClass fishmount {
    Name "fishmount"
    Pos 0 0
+   Size 256 256
+   Flags 0
+  }
+  ImageSetDefClass boat {
+   Name "boat"
+   Pos 256 0
+   Size 256 256
+   Flags 0
+  }
+  ImageSetDefClass battery {
+   Name "battery"
+   Pos 0 256
+   Size 256 256
+   Flags 0
+  }
+  ImageSetDefClass outboard {
+   Name "outboard"
+   Pos 256 256
    Size 256 256
    Flags 0
   }

@@ -22,6 +22,7 @@ class GebsfishLogger {
     private static const int LOG_RETENTION_DAYS = 3;
     private static string m_SessionFilePath = "";
     private static bool m_Initialized = false;
+    private static bool m_InitFailed = false;
     // No session-lifetime handle on purpose. Enforce exposes no flush, so
     // CloseFile is the only thing that commits bytes to disk: opening and
     // closing around each write means a hard crash can never take the tail
@@ -29,7 +30,7 @@ class GebsfishLogger {
     // or moved while the server is running.
 
     static void Init(string tag = "gebsfish") {
-        if (m_Initialized)
+        if (m_Initialized || m_InitFailed)
             return;
 
         EnsureDirectory(LOG_DIR);
@@ -41,18 +42,21 @@ class GebsfishLogger {
         string sessionName = BuildDateTimeCompact() + "_" + safeTag + ".log";
         m_SessionFilePath = LOG_DIR + "/" + sessionName;
 
+        // A log that can't be opened is said once, not tried again every line.
         FileHandle file = OpenFile(m_SessionFilePath, FileMode.WRITE);
         if (file == 0) {
+            ToRPT(GebsfishLogLevel.WARN, "Can't write " + m_SessionFilePath + "; no Gebs log this session.", "Logs");
             m_SessionFilePath = "";
+            m_InitFailed = true;
             return;
         }
 
         string side = GetExecutionSide();
         string worldName = GetWorldNameSafe();
 
-        // With DebugLogs on, the banner opens the log, ahead of the header.
-        if (DebugLogsOn())
-            GebsAsciiArt.Write(file);
+        // The banner opens the log, ahead of the header (a log only exists
+        // with DebugLogs on).
+        GebsAsciiArt.Write(file);
         FPrintln(file, "==================== LOGGING SESSION START ====================");
         FPrintln(file, "World: " + worldName);
         FPrintln(file, "Log Type: " + side);
@@ -69,14 +73,29 @@ class GebsfishLogger {
         PruneOldLogs(sessionName);
     }
 
+    // Whether this side writes its Gebs log: DebugLogs 1 or 2. The loaded
+    // config answers once general.json is in (a client's once the server's
+    // config arrives); before that, general.json's own text does.
+    private static bool LoggingOn() {
+        if (m_gebsConfig && m_gebsConfig.General && m_gebsConfig.General.GeneralSettings)
+            return GebGetDebugLevel() >= 1;
+        return DebugLogsOn();
+    }
+
     // DebugLogs read from general.json's text: the logger starts on its first
     // line, while general.json is still loading, so the loaded config can't
-    // answer yet. No file (a first boot, or a client) counts as off.
+    // answer yet. No file (a first boot, or a client) counts as off. Read once
+    // (-1 = not yet): the main menu and a client before the server's config
+    // arrives ask on every line.
+    private static int m_FileDebugLogs = -1;
+
     private static bool DebugLogsOn() {
+        if (m_FileDebugLogs >= 0)
+            return m_FileDebugLogs > 0;
+        m_FileDebugLogs = 0;
         FileHandle file = OpenFile(GEB_CONFIG_DIR + "/general.json", FileMode.READ);
         if (!file)
             return false;
-        bool on = false;
         string line;
         while (FGets(file, line) >= 0) {
             int at = line.IndexOf("\"DebugLogs\"");
@@ -85,11 +104,13 @@ class GebsfishLogger {
             string value = line.Substring(at + 11, line.Length() - at - 11);   // after "DebugLogs"
             value.Replace(":", "");
             value.Replace(",", "");
-            on = value.Trim().ToInt() > 0;
+            m_FileDebugLogs = value.Trim().ToInt();
+            if (m_FileDebugLogs < 0)
+                m_FileDebugLogs = 0;
             break;
         }
         CloseFile(file);
-        return on;
+        return m_FileDebugLogs > 0;
     }
 
     // Delete session logs older than LOG_RETENTION_DAYS so an unattended server
@@ -285,15 +306,30 @@ class GebsfishLogger {
         Log(GebsfishLogLevel.ERROR, msg, category);
     }
 
+    // An admin hears of this whatever DebugLogs says: the mod changed their
+    // files (merged rows, renames, a new XML to copy) or left them something to
+    // do. The RPT always, the Gebs log too when there is one.
+    static void Notice(string msg, string category = "") {
+        ToRPT(GebsfishLogLevel.INFO, msg, category);
+        Log(GebsfishLogLevel.INFO, msg, category);
+    }
+
+    private static void ToRPT(GebsfishLogLevel level, string message, string category) {
+        string rptLine = "[Gebsfish][" + LevelToString(level) + "] ";
+        if (category != string.Empty)
+            rptLine += "[" + category + "] ";
+        PrintToRPT(rptLine + message);
+    }
+
     static void Log(GebsfishLogLevel level, string message, string category = "") {
         // Warnings and errors also go to the RPT, where admins look first --
         // and where they still land if the Gebs log file can't be written.
-        if (level >= GebsfishLogLevel.WARN) {
-            string rptLine = "[Gebsfish][" + LevelToString(level) + "] ";
-            if (category != string.Empty)
-                rptLine += "[" + category + "] ";
-            PrintToRPT(rptLine + message);
-        }
+        if (level >= GebsfishLogLevel.WARN)
+            ToRPT(level, message, category);
+
+        // DebugLogs 0 writes no Gebs log at all, not even the file.
+        if (!LoggingOn())
+            return;
 
         if (!m_Initialized)
             Init();

@@ -35,16 +35,6 @@ class geb_FreshFish_Base extends geb_FishBase {}
 class geb_SaltFish_Base extends geb_FishBase {}
 class geb_LargeFish_Base extends geb_FishBase {}
 
-// The sharks (data/fish/config.cpp geb_Shark_Base): their first loot box is fitted
-// belly-down for dropping, and a second box and camera (boundingbox_min2/max2,
-// invView2) hold the inventory picture they always had. Vanilla shows view 1 only
-// on the ground and as an attachment; the sharks show it everywhere.
-class geb_Shark_Base extends geb_LargeFish_Base {
-	override int GetViewIndex() {
-		return 1;
-	}
-}
-
 // Big fish: carried two-handed like a heavy item.
 class geb_EdibleBase extends geb_FishBase {
 	// No CanSaveItemInHands here: the game asks the holder (the player), never
@@ -58,12 +48,24 @@ class geb_EdibleBase extends geb_FishBase {
 	}
 }
 
-class geb_AngelShark extends geb_EdibleBase {}
+// The sharks (data/fish/config.cpp geb_Shark_Base): their first loot box is fitted
+// belly-down for dropping, and a second box and camera (boundingbox_min2/max2,
+// invView2) hold the inventory picture they always had. Vanilla shows view 1 only
+// on the ground and as an attachment; the sharks show it everywhere. The script
+// class is the config name, so each shark's script class must extend this one
+// (they extended geb_EdibleBase, and the override never ran).
+class geb_Shark_Base extends geb_EdibleBase {
+	override int GetViewIndex() {
+		return 1;
+	}
+}
+
+class geb_AngelShark extends geb_Shark_Base {}
 class geb_AtlanticBlueMarlin extends geb_EdibleBase {}
 class geb_AtlanticSailFish extends geb_EdibleBase {}
-class geb_GreatWhiteShark extends geb_EdibleBase {}
-class geb_HammerHeadShark extends geb_EdibleBase {}
-class geb_LeopardShark extends geb_EdibleBase {}
+class geb_GreatWhiteShark extends geb_Shark_Base {}
+class geb_HammerHeadShark extends geb_Shark_Base {}
+class geb_LeopardShark extends geb_Shark_Base {}
 class geb_MahiMahi extends geb_EdibleBase {}
 class geb_LakeSturgeon extends geb_EdibleBase {}
 
@@ -195,7 +197,7 @@ modded class Edible_Base {
 	// vanilla's whole fish), the minnow and the juvenile squid. Worms and insects age in modded
 	// Worm, which doesn't look at barrels, so they still die there.
 	protected bool GebsfishIsLiveCatch() {
-		return IsKindOf("geb_FreshFish_Base") || IsKindOf("geb_SaltFish_Base") || IsKindOf("geb_LargeFish_Base") || IsKindOf("geb_FatHeadMinnow") || IsKindOf("geb_SquidJuvenile_Base") || IsKindOf("Carp") || IsKindOf("Mackerel") || IsKindOf("WalleyePollock") || IsKindOf("SteelheadTrout") || IsKindOf("Sardines") || IsKindOf("Bitterlings");
+		return IsKindOf("geb_FreshFish_Base") || IsKindOf("geb_SaltFish_Base") || IsKindOf("geb_LargeFish_Base") || IsKindOf("geb_FatHeadMinnow") || IsKindOf("geb_SquidJuvenile_Base") || IsKindOf("Carp") || IsKindOf("Mackerel") || IsKindOf("WalleyePollock") || IsKindOf("SteelheadTrout") || IsKindOf("Catfish") || IsKindOf("Sardines") || IsKindOf("Bitterlings");
 	}
 
 	// Trophy check: the fish attaches directly to the plaque, so a single
@@ -256,8 +258,8 @@ modded class Edible_Base {
 	protected void GebsfishUpdateFlies() {
 		if (g_Game.IsDedicatedServer())
 			return;
-		bool fishFood = GebsfishIsLiveCatch() || IsKindOf("CarpFilletMeat") || IsKindOf("MackerelFilletMeat") || IsKindOf("WalleyePollockFilletMeat") || IsKindOf("SteelheadTroutFilletMeat");
-		if (IsFoodRotten() && !GetHierarchyParent() && fishFood) {
+		// the cheap checks first: this runs for every food item on every client
+		if (IsFoodRotten() && !GetHierarchyParent() && (GebsfishIsLiveCatch() || IsKindOf("CarpFilletMeat") || IsKindOf("MackerelFilletMeat") || IsKindOf("WalleyePollockFilletMeat") || IsKindOf("SteelheadTroutFilletMeat") || IsKindOf("CatfishFilletMeat"))) {
 			if (!m_GebsfishFlies) {
 				m_GebsfishFlies = new EffSwarmingFlies();
 				SEffectManager.PlayOnObject(m_GebsfishFlies, this, "0 0.15 0");

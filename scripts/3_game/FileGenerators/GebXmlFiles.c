@@ -10,7 +10,8 @@
 
 // What the files written to $profile:Gebs/mpmissions share (gebsfish-types,
 // gebsfish-spawnabletypes and gebsfish-events): the folder, the version line
-// at the top of each, and the jon boats all three list.
+// at the top of each, and the jon boats all three list. Each file is written
+// only when it's missing or its version line isn't the mod's version.
 class GebXmlFiles {
     static const string DIRECTORY_PATH = "$profile:Gebs/mpmissions/";
     static const string VERSION_PREFIX = "<!-- Version: ";
