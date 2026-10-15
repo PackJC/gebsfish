@@ -812,7 +812,7 @@ function fmtNum(v){ return Math.abs(v) >= 1000 ? v.toLocaleString("en-US") : Str
 const HELP_GROUP = {
   DebugLogs: "DebugInfo",
   HookFromFishEnable: "HookFromFishInfo", HookFromFishChance: "HookFromFishInfo",
-  CraftBambooFishingNet: "RecipeToggleInfo", CraftHookFromWire: "RecipeToggleInfo", CraftFishMount: "RecipeToggleInfo", CraftDryingRack: "RecipeToggleInfo", CraftFishingLocker: "RecipeToggleInfo",
+  CraftBambooFishingNet: "RecipeToggleInfo", CraftHookFromWire: "RecipeToggleInfo", CraftFishMount: "RecipeToggleInfo", CraftDryingRack: "RecipeToggleInfo", CraftFishingLocker: "RecipeToggleInfo", CraftFishTankStand: "RecipeToggleInfo",
   RepairFishingPole: "RecipeToggleInfo", RepairBambooFishingNet: "RecipeToggleInfo",
   PredatorSpawnChanceFishing: "PredatorSpawnChanceInfo", PredatorSpawnChancePreparing: "PredatorSpawnChanceInfo",
   PredatorSpawnChanceFailCatch: "PredatorSpawnChanceInfo",
@@ -1828,8 +1828,8 @@ function renderGeneral(){
     g.className = "grid2";
     [["CraftBambooFishingNet", "Craft bamboo fishing net"], ["CraftHookFromWire", "Craft hook from wire"],
      ["CraftFishMount", "Craft fish mounts (small, medium, large)"], ["RepairFishingPole", "Repair fishing pole"],
-     ["RepairBambooFishingNet", "Repair bamboo net"], ["CraftDryingRack", "Craft fish drying rack"],
-     ["CraftFishingLocker", "Craft fishing locker"]].forEach(([k, lbl]) => {
+     ["RepairBambooFishingNet", "Repair bamboo net"], ["CraftDryingRack", "Craft fish drying rack kit"],
+     ["CraftFishingLocker", "Craft fishing locker"], ["CraftFishTankStand", "Craft fish tank stand"]].forEach(([k, lbl]) => {
       if (k in d.RecipeToggles) g.appendChild(rowToggle("general", d.RecipeToggles, k, lbl));
     });
     c.appendChild(g);

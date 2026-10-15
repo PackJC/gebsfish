@@ -24,5 +24,6 @@ modded class ActionConstructor {
 		actions.Insert(GebActionUnhitchTrailerSeat);
 		actions.Insert(GebActionWinchBoatOn);
 		actions.Insert(GebActionLaunchBoat);
+		actions.Insert(GebActionAssembleDryingRack);
 	}
 };

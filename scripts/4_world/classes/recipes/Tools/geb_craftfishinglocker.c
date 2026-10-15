@@ -8,9 +8,11 @@
 
 */
 
-// Craft the Fishing Locker: 12 planks + 24 nails, with a hammer or a hatchet on
+// Craft the Fishing Locker: 10 planks + 20 nails, with a hammer or a hatchet on
 // you (the tools vanilla nails with when building). Vanilla's wooden crate is
-// 8 planks + 16 nails; the locker is a bigger piece of joinery. Like the crate
+// 8 planks + 16 nails; the locker is a bigger piece of joinery. 10 is a full
+// stack: planks stack to 10 in DayZ 1.30 (varStackMax), so 12 from one stack
+// could never be crafted. Like the crate
 // it comes out on the ground, as it is far too big for any inventory.
 //
 // The tool isn't an ingredient for the same reason as on the fish mounts
@@ -19,12 +21,34 @@
 // player, which Do then wears as an ingredient-slot tool would be.
 class CraftFishingLocker extends RecipeBase {
 
-	private const int PLANKS = 12;
-	private const int NAILS = 24;
 	private const float TOOL_WEAR = 5.0;
 
+	// What the recipe takes and makes. The Fish Tank Stand's recipe
+	// (CraftFishTankStand, geb_craftfishtankstand.c) is this one with its own.
+	protected int GebPlanks() {
+		return 10;
+	}
+
+	protected int GebNails() {
+		return 20;
+	}
+
+	protected string GebResult() {
+		return "geb_FishingLocker";
+	}
+
+	protected string GebName() {
+		return "#STR_craft_fishinglocker";
+	}
+
+	protected bool GebEnabled() {
+		if (m_gebsConfig && m_gebsConfig.General && m_gebsConfig.General.RecipeToggles)
+			return m_gebsConfig.General.RecipeToggles.CraftFishingLocker;
+		return true;
+	}
+
 	override void Init() {
-		m_Name = "#STR_craft_fishinglocker";
+		m_Name = GebName();
 		m_IsInstaRecipe = false;
 		m_AnimationLength = 3;
 		m_Specialty = 0.02;// roughness
@@ -34,13 +58,13 @@ class CraftFishingLocker extends RecipeBase {
 		m_MinDamageIngredient[0] = -1;
 		m_MaxDamageIngredient[0] = 3;// anything short of ruined
 
-		m_MinQuantityIngredient[0] = PLANKS;
+		m_MinQuantityIngredient[0] = GebPlanks();
 		m_MaxQuantityIngredient[0] = -1;
 
 		m_MinDamageIngredient[1] = -1;
 		m_MaxDamageIngredient[1] = 3;
 
-		m_MinQuantityIngredient[1] = NAILS;
+		m_MinQuantityIngredient[1] = GebNails();
 		m_MaxQuantityIngredient[1] = -1;
 		//----------------------------------------------------------------------------------------------------------------------
 
@@ -50,7 +74,7 @@ class CraftFishingLocker extends RecipeBase {
 
 		m_IngredientAddHealth[0] = 0;
 		m_IngredientSetHealth[0] = -1;
-		m_IngredientAddQuantity[0] = -PLANKS;
+		m_IngredientAddQuantity[0] = -GebPlanks();
 		m_IngredientDestroy[0] = false; // consume the planks, keep the rest of the stack
 		m_IngredientUseSoftSkills[0] = false;
 
@@ -59,13 +83,13 @@ class CraftFishingLocker extends RecipeBase {
 
 		m_IngredientAddHealth[1] = 0;
 		m_IngredientSetHealth[1] = -1;
-		m_IngredientAddQuantity[1] = -NAILS;
+		m_IngredientAddQuantity[1] = -GebNails();
 		m_IngredientDestroy[1] = false;
 		m_IngredientUseSoftSkills[1] = false;
 		//----------------------------------------------------------------------------------------------------------------------
 
 		//result1
-		AddResult("geb_FishingLocker");
+		AddResult(GebResult());
 
 		m_ResultSetFullQuantity[0] = false;
 		m_ResultSetQuantity[0] = -1;
@@ -98,7 +122,7 @@ class CraftFishingLocker extends RecipeBase {
 	}
 
 	override bool CanDo(ItemBase ingredients[], PlayerBase player) {
-		if (m_gebsConfig && m_gebsConfig.General && m_gebsConfig.General.RecipeToggles && !m_gebsConfig.General.RecipeToggles.CraftFishingLocker)
+		if (!GebEnabled())
 			return false;
 
 		// Planks and nails also sit in fence, gate and watchtower slots (some

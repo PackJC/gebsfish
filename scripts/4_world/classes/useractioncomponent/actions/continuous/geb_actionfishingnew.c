@@ -125,15 +125,8 @@ modded class ActionFishingNew: ActionContinuousBase {
     // spawn anything. Runs where vanilla calls it: the server, or offline.
     override protected EntityAI TrySpawnCatch(FishingActionData action_data) {
         EntityAI caught = super.TrySpawnCatch(action_data);
-        if (caught) {
+        if (caught)
             action_data.m_GebCatchSpawned = true;
-            // A fish heavier than a carp leaves the water with a splash of its size.
-            if (caught.IsInherited(Edible_Base)) {
-                int splash = GebFishingFx.SplashFor(caught.GetType());
-                if (splash != ParticleList.FISHING_SIGNAL_SPLASH)
-                    GebFishingFx.Play(action_data.m_Target.GetCursorHitPos(), splash);
-            }
-        }
         return caught;
     }
 
@@ -187,8 +180,8 @@ modded class ActionFishingNew: ActionContinuousBase {
         // competing with the species, so tuning it never quietly starves
         // anything else, and it can be set far finer than the catch pool's 0-25
         // integer weights allow.
-        if (caught && GebsTreasureSpawner.TryPull(fad.m_Player, fad.m_MainItem, "Treasure"))
-            GebFishingFx.Play(fad.m_Target.GetCursorHitPos(), ParticleList.GEB_BUBBLES_TREASURE, 6);
+        if (caught)
+            GebsTreasureSpawner.TryPull(fad.m_Player, fad.m_MainItem, "Treasure");
     }
 }
 

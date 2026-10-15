@@ -4,8 +4,6 @@
    ============================================================================ */
 class geb_YieldFishGeneric : GebYieldFishBase {
     protected ref FishConf m_Conf;
-    // The splash at the bobber when this fish bites, by its weight (GebFishingFx).
-    protected int m_GebSplashParticle = ParticleList.FISHING_SIGNAL_SPLASH;
 
     // NOTE: we deliberately declare NO constructor here. The vanilla base
     // (FishYieldItemBase) requires an int (catch probability) in its
@@ -41,12 +39,5 @@ class geb_YieldFishGeneric : GebYieldFishBase {
                    m_Conf.DawnMultiplier, m_Conf.DayMultiplier, m_Conf.DuskMultiplier,
                    m_Conf.CatchProbability, m_Conf.GetBiteSpeedArray());
         SetTemperature(m_Conf.TempOptimal, m_Conf.TempMin, m_Conf.TempMax);
-        m_GebSplashParticle = GebFishingFx.SplashFor(m_Conf.Classname);
-    }
-
-    // Vanilla shows the picked species' particle when it bites
-    // (ActionFishingNew.PlaySplashEffectSynced, on the server).
-    override int GetCatchParticleID() {
-        return m_GebSplashParticle;
     }
 }

@@ -509,6 +509,10 @@ class GeneralConfig {
             RecipeToggles.CraftFishingLocker = true;
             changed = true;
         }
+        if (RecipeToggles && !file.Has("RecipeToggles.CraftFishTankStand")) {
+            RecipeToggles.CraftFishTankStand = true;
+            changed = true;
+        }
         if (TreasureSettings && !file.Has("TreasureSettings.RequireRealRod")) {
             TreasureSettings.RequireRealRod = true;
             changed = true;
@@ -1694,6 +1698,7 @@ class RecipeToggleConf {
     bool CraftFishMount = 1;
     bool CraftDryingRack = 1;
     bool CraftFishingLocker = 1;
+    bool CraftFishTankStand = 1;
     bool RepairFishingPole = 1;
     bool RepairBambooFishingNet = 1;
 };

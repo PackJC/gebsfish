@@ -159,21 +159,22 @@ class gebsfishTypes {
             WriteType(file, bait, 0, 7200, 0, 0, -1, -1, 200, "tools", false, true);
         }
 
-        // The fish mounts, the Fish Drying Rack and the Fishing Locker are placed structures, not pocket loot: crafted with
+        // The fish mounts, the Fish Drying Rack, the Fishing Locker and the Fish Tank Stand are placed structures, not pocket loot: crafted with
         // nominal 0 like vanilla's WoodenCrate, and the tent/barrel lifetime
         // (45 days untouched) instead of the 4-hour gear lifetime, so wall
         // trophies persist like any base fixture and abandoned ones decay
-        // away on the same schedule as tents.
+        // away on the same schedule as tents. The drying rack's kit too: it
+        // lies on the ground while its long sticks go in.
         FPrintln(file, "    <!-- Placed structures -->");
-        TStringArray mounts = {"geb_WoodenFishMount", "geb_MediumFishMount", "geb_LargeFishMount", "geb_FishDryingRack", "geb_FishingLocker"};
+        TStringArray mounts = {"geb_WoodenFishMount", "geb_MediumFishMount", "geb_LargeFishMount", "geb_FishDryingRack", "geb_FishDryingRackKit", "geb_FishingLocker", "geb_FishTankStand"};
         foreach (string mount : mounts) {
             WriteType(file, mount, 0, 3888000, 0, 0, -1, -1, 200, "tools", false, true);
         }
-        // The Fish Tank and its stand are placed the same way but come from traders
-        // and admins, never a recipe: nominal 0 / min 0 so the CE knows the classes
-        // and never spawns them (as with the jon boats), crafted=0, and the
-        // structures' lifetime.
-        TStringArray traderOnly = {"geb_FishTank", "geb_FishTankStand"};
+        // The Fish Tank is placed the same way but comes from traders and admins
+        // (or, rarely, a treasure catch), never a recipe: nominal 0 / min 0 so the
+        // CE knows the class and never spawns it (as with the jon boats),
+        // crafted=0, and the structures' lifetime. Its stand is crafted (above).
+        TStringArray traderOnly = {"geb_FishTank"};
         foreach (string traderItem : traderOnly) {
             WriteType(file, traderItem, 0, 3888000, 0, 0, -1, -1, 200, "tools", false, false);
         }
