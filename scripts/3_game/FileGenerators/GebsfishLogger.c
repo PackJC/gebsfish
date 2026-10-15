@@ -6,14 +6,23 @@ enum GebsfishLogLevel {
 };
 
 class GebsfishLogger {
+    // The last argument for every FindFile call in the mod. 1.30's script
+    // binding hands it to the engine as the file system to search rather than
+    // as flags (Bohemia's DZEXP-134): FindFileFlags.ALL is 2, which picks the
+    // server's own folder, while -1 searches the normal way, so $profile:
+    // paths resolve again. Once Bohemia fixes the binding, -1 is no valid
+    // flag and listings may come back empty again; the log pruner still has
+    // sessions.txt then.
+    static const int FIND_FILE_FLAGS = -1;
+
     private static const string LOG_DIR = "$profile:Gebs/logs";
+    // Names of the session logs still on disk, one per line (see PruneOldLogs).
+    private static const string LOG_INDEX = "$profile:Gebs/logs/sessions.txt";
     // Session logs older than this are deleted on startup (see PruneOldLogs).
-    // A constant rather than a config field for now -- say the word and it moves
-    // into GeneralSettings alongside DebugLogs.
     private static const int LOG_RETENTION_DAYS = 3;
     private static string m_SessionFilePath = "";
-    private static GebsfishLogLevel m_MinLevel = GebsfishLogLevel.DEBUG;
     private static bool m_Initialized = false;
+    private static bool m_InitFailed = false;
     // No session-lifetime handle on purpose. Enforce exposes no flush, so
     // CloseFile is the only thing that commits bytes to disk: opening and
     // closing around each write means a hard crash can never take the tail
@@ -21,7 +30,7 @@ class GebsfishLogger {
     // or moved while the server is running.
 
     static void Init(string tag = "gebsfish") {
-        if (m_Initialized)
+        if (m_Initialized || m_InitFailed)
             return;
 
         EnsureDirectory(LOG_DIR);
@@ -30,17 +39,24 @@ class GebsfishLogger {
         if (safeTag == string.Empty)
             safeTag = "gebsfish";
 
-        m_SessionFilePath = LOG_DIR + "/" + BuildDateTimeCompact() + "_" + safeTag + ".log";
+        string sessionName = BuildDateTimeCompact() + "_" + safeTag + ".log";
+        m_SessionFilePath = LOG_DIR + "/" + sessionName;
 
+        // A log that can't be opened is said once, not tried again every line.
         FileHandle file = OpenFile(m_SessionFilePath, FileMode.WRITE);
         if (file == 0) {
+            ToRPT(GebsfishLogLevel.WARN, "Can't write " + m_SessionFilePath + "; no Gebs log this session.", "Logs");
             m_SessionFilePath = "";
+            m_InitFailed = true;
             return;
         }
 
         string side = GetExecutionSide();
         string worldName = GetWorldNameSafe();
 
+        // The banner opens the log, ahead of the header (a log only exists
+        // with DebugLogs on).
+        GebsAsciiArt.Write(file);
         FPrintln(file, "==================== LOGGING SESSION START ====================");
         FPrintln(file, "World: " + worldName);
         FPrintln(file, "Log Type: " + side);
@@ -54,7 +70,47 @@ class GebsfishLogger {
 
         // Safe to log from here: m_Initialized is set, so the Info() below
         // re-enters Init() and returns immediately instead of recursing.
-        PruneOldLogs();
+        PruneOldLogs(sessionName);
+    }
+
+    // Whether this side writes its Gebs log: DebugLogs 1 or 2. The loaded
+    // config answers once general.json is in (a client's once the server's
+    // config arrives); before that, general.json's own text does.
+    private static bool LoggingOn() {
+        if (m_gebsConfig && m_gebsConfig.General && m_gebsConfig.General.GeneralSettings)
+            return GebGetDebugLevel() >= 1;
+        return DebugLogsOn();
+    }
+
+    // DebugLogs read from general.json's text: the logger starts on its first
+    // line, while general.json is still loading, so the loaded config can't
+    // answer yet. No file (a first boot, or a client) counts as off. Read once
+    // (-1 = not yet): the main menu and a client before the server's config
+    // arrives ask on every line.
+    private static int m_FileDebugLogs = -1;
+
+    private static bool DebugLogsOn() {
+        if (m_FileDebugLogs >= 0)
+            return m_FileDebugLogs > 0;
+        m_FileDebugLogs = 0;
+        FileHandle file = OpenFile(GEB_CONFIG_DIR + "/general.json", FileMode.READ);
+        if (!file)
+            return false;
+        string line;
+        while (FGets(file, line) >= 0) {
+            int at = line.IndexOf("\"DebugLogs\"");
+            if (at < 0)
+                continue;
+            string value = line.Substring(at + 11, line.Length() - at - 11);   // after "DebugLogs"
+            value.Replace(":", "");
+            value.Replace(",", "");
+            m_FileDebugLogs = value.Trim().ToInt();
+            if (m_FileDebugLogs < 0)
+                m_FileDebugLogs = 0;
+            break;
+        }
+        CloseFile(file);
+        return m_FileDebugLogs > 0;
     }
 
     // Delete session logs older than LOG_RETENTION_DAYS so an unattended server
@@ -66,42 +122,102 @@ class GebsfishLogger {
     // so the date is right there. Anything that doesn't parse as that format is
     // left alone -- this only ever deletes files it positively recognises as its
     // own, never "everything in the folder".
-    private static void PruneOldLogs() {
+    // A directory listing can't tell a folder from a file by its attribute:
+    // the script enum makes FileAttr.DIRECTORY its first member (0), so
+    // "attr & FileAttr.DIRECTORY" is always 0. A folder is what can't be opened
+    // for reading as a file.
+    static bool IsRegularFile(string path) {
+        FileHandle file = OpenFile(path, FileMode.READ);
+        if (!file)
+            return false;
+        CloseFile(file);
+        return true;
+    }
+
+    // Finding the files: a folder listing (see FIND_FILE_FLAGS for why it
+    // passes -1), plus the names in sessions.txt, which the logger keeps so
+    // pruning doesn't depend on FindFile alone while Bohemia's DZEXP-134 is
+    // open. A name a broken listing takes from another folder doesn't open
+    // under Gebs/logs and is skipped, so it can't reach other files.
+    private static void PruneOldLogs(string sessionName) {
         int year, month, day;
         GetYearMonthDayUTC(year, month, day);   // filenames are UTC, so compare in UTC
         int today = DayNumber(year, month, day);
 
-        string fileName;
-        FileAttr attr;
-        FindFileHandle handle = FindFile(LOG_DIR + "/*.log", fileName, attr, FindFileFlags.ALL);
-        if (!handle)
-            return;
+        array<string> names = ReadLogIndex();
+        if (names.Find(sessionName) == -1)
+            names.Insert(sessionName);
 
         // Collect first, delete after: mutating a live directory listing risks
         // skipping entries (same reason GebsfishMigration.MoveDirFiles does this).
-        array<string> doomed = new array<string>();
-        bool more = true;
-        while (more) {
-            if (fileName != "" && (attr & FileAttr.DIRECTORY) == 0) {
-                int fileDay = ParseLogDayNumber(fileName);
-                if (fileDay > 0 && (today - fileDay) >= LOG_RETENTION_DAYS)
-                    doomed.Insert(fileName);
+        string fileName;
+        FileAttr attr;
+        FindFileHandle handle = FindFile(LOG_DIR + "/*.log", fileName, attr, FIND_FILE_FLAGS);
+        if (handle) {
+            bool more = true;
+            while (more) {
+                if (fileName != "" && names.Find(fileName) == -1)
+                    names.Insert(fileName);
+                more = FindNextFile(handle, fileName, attr);
             }
-            more = FindNextFile(handle, fileName, attr);
+            CloseFindFile(handle);
         }
-        CloseFindFile(handle);
 
+        array<string> kept = new array<string>();
         int deleted = 0;
-        foreach (string name : doomed) {
-            string full = LOG_DIR + "/" + name;
-            if (full == m_SessionFilePath)      // never the live session file
+        foreach (string name : names) {
+            int fileDay = ParseLogDayNumber(name);
+            if (fileDay <= 0 || !IsPlainLogName(name))
                 continue;
-            if (DeleteFile(full))
+            string full = LOG_DIR + "/" + name;
+            if (!IsRegularFile(full))
+                continue;                       // already gone, or not in Gebs/logs
+            // Never the live session file; a log that won't delete stays
+            // listed and is tried again next start.
+            if (full != m_SessionFilePath && (today - fileDay) >= LOG_RETENTION_DAYS && DeleteFile(full)) {
                 deleted++;
+                continue;
+            }
+            kept.Insert(name);
         }
+        WriteLogIndex(kept);
 
         if (deleted > 0)
             Info("Removed " + deleted + " log file(s) older than " + LOG_RETENTION_DAYS + " days.", "Logs");
+    }
+
+    // A bare file name ending in .log. sessions.txt is a text file anyone with
+    // access to the profile can edit, so nothing from it reaches DeleteFile
+    // with a folder in it.
+    private static bool IsPlainLogName(string name) {
+        if (name.Contains("/") || name.Contains("\\") || name.Contains(".."))
+            return false;
+        int len = name.Length();
+        return len > 4 && name.Substring(len - 4, 4) == ".log";
+    }
+
+    private static array<string> ReadLogIndex() {
+        array<string> names = new array<string>();
+        FileHandle file = OpenFile(LOG_INDEX, FileMode.READ);
+        if (!file)
+            return names;
+        string line;
+        while (FGets(file, line) >= 0) {
+            line = line.Trim();
+            if (line != "" && names.Find(line) == -1)
+                names.Insert(line);
+        }
+        CloseFile(file);
+        return names;
+    }
+
+    private static void WriteLogIndex(array<string> names) {
+        FileHandle file = OpenFile(LOG_INDEX, FileMode.WRITE);
+        if (!file)
+            return;
+        foreach (string entry : names)
+            FPrintln(file, entry);
+        CloseFile(file);
     }
 
     // Day number for the YYYYMMDD prefix of a log filename, or -1 if the name
@@ -174,24 +290,6 @@ class GebsfishLogger {
         return (y % 4 == 0);
     }
 
-    // Banner for the top of the log. Deliberately NOT written from Init():
-    // the logger initialises lazily on its first write, which happens while
-    // the config is still loading, so DebugLogs isn't known yet. The caller
-    // (MissionServer.OnInit) fires this once the config is up and only when
-    // debug logging is enabled.
-    static void WriteBanner() {
-        if (!m_Initialized)
-            Init();
-        if (!m_Initialized || m_SessionFilePath == string.Empty)
-            return;
-
-        FileHandle file = OpenFile(m_SessionFilePath, FileMode.APPEND);
-        if (file == 0)
-            return;
-        GebsAsciiArt.Write(file);
-        CloseFile(file);
-    }
-
     static void Debug(string msg, string category = "") {
         Log(GebsfishLogLevel.DEBUG, msg, category);
     }
@@ -208,8 +306,29 @@ class GebsfishLogger {
         Log(GebsfishLogLevel.ERROR, msg, category);
     }
 
+    // An admin hears of this whatever DebugLogs says: the mod changed their
+    // files (merged rows, renames, a new XML to copy) or left them something to
+    // do. The RPT always, the Gebs log too when there is one.
+    static void Notice(string msg, string category = "") {
+        ToRPT(GebsfishLogLevel.INFO, msg, category);
+        Log(GebsfishLogLevel.INFO, msg, category);
+    }
+
+    private static void ToRPT(GebsfishLogLevel level, string message, string category) {
+        string rptLine = "[Gebsfish][" + LevelToString(level) + "] ";
+        if (category != string.Empty)
+            rptLine += "[" + category + "] ";
+        PrintToRPT(rptLine + message);
+    }
+
     static void Log(GebsfishLogLevel level, string message, string category = "") {
-        if (level < m_MinLevel)
+        // Warnings and errors also go to the RPT, where admins look first --
+        // and where they still land if the Gebs log file can't be written.
+        if (level >= GebsfishLogLevel.WARN)
+            ToRPT(level, message, category);
+
+        // DebugLogs 0 writes no Gebs log at all, not even the file.
+        if (!LoggingOn())
             return;
 
         if (!m_Initialized)
@@ -230,12 +349,6 @@ class GebsfishLogger {
 
         FPrintln(file, line);
         CloseFile(file);
-    }
-
-    // Optional helper in case you ever want to force a new log file per session / reload.
-    static void Reset() {
-        m_SessionFilePath = "";
-        m_Initialized = false;
     }
 
     private static string GetExecutionSide() {

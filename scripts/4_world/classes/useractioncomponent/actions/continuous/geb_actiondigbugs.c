@@ -20,9 +20,12 @@ class ActionDigBugsCB : ActionContinuousBaseCB {
 class ActionDigBugs : ActionContinuousBase {
 	void ActionDigBugs() {
 		m_CallbackClass = ActionDigBugsCB;
-		m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DIGMANIPULATE;
+		// Crouch-only, set once here (the bug catcher is the only item with
+		// this action). Like vanilla crafting, a standing player is moved into
+		// a crouch before the dig starts, and standing up cancels it.
+		m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DEPLOY_1HD;
 		m_FullBody = true;
-		m_StanceMask = DayZPlayerConstants.STANCEMASK_ERECT;
+		m_StanceMask = DayZPlayerConstants.STANCEMASK_CROUCH;
 		m_SpecialtyWeight = UASoftSkillsWeight.ROUGH_MEDIUM;
 		m_Text = "#STR_action_digbugs";
 	}
@@ -64,16 +67,6 @@ class ActionDigBugs : ActionContinuousBase {
 		return true;
 	}
 
-	override bool SetupAction(PlayerBase player, ActionTarget target, ItemBase item, out ActionData action_data, Param extra_data = NULL) {
-		if (super.SetupAction(player, target, item, action_data, extra_data)) {
-			if (item) {
-				SetDiggingAnimation(item);
-			}
-			return true;
-		}
-		return false;
-	}
-
 	override bool HasTarget() {
 		return true;
 	}
@@ -85,10 +78,7 @@ class ActionDigBugs : ActionContinuousBase {
 		if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.DigBugsSettings)
 			return 1.0;
 
-		float chance = m_gebsConfig.General.DigBugsSettings.FindChance;
-		if (chance < 0.0) chance = 0.0;
-		if (chance > 1.0) chance = 1.0;
-		return chance;
+		return Math.Clamp(m_gebsConfig.General.DigBugsSettings.FindChance, 0.0, 1.0);
 	}
 
 	override void OnFinishProgressServer(ActionData action_data) {
@@ -124,12 +114,8 @@ class ActionDigBugs : ActionContinuousBase {
 
 		// Per-attempt find chance gate.
 		float findChance = GetDigBugsFindChance();
-		float findRoll = -1;
-		bool foundSomething = true;
-		if (findChance < 1.0) {
-			findRoll = Math.RandomFloat01();
-			foundSomething = (findRoll < findChance);
-		}
+		float findRoll;
+		bool foundSomething = GebRollChance(findChance, findRoll);
 		if (debugLevel >= 1) {
 			GebsfishLogger.Debug("Dig-bugs find-chance gate: findChance=" + findChance + " roll=" + findRoll + " result=" + foundSomething, "DigBugs");
 		}
@@ -152,26 +138,31 @@ class ActionDigBugs : ActionContinuousBase {
 			return;
 		string selectedBug = names[pick];
 
-		// Spawn the selected bug. Quantity 1 -- one bug per successful dig.
-		// CreateObjectEx, NOT CreateObject: CreateObject's third param is
+		// The bug goes into the Bug Catcher doing the digging, as the bamboo
+		// net keeps its catch, and onto the spot the player dug when it doesn't
+		// fit or isn't on the catcher's allow-list. The allow-list is checked by
+		// classname first: CreateInInventory places a new item by type without
+		// asking the cargo filter, so a refused type would go in now and be
+		// thrown out at the next restart. Quantity 1 -- one bug per successful
+		// dig. CreateObjectEx, NOT CreateObject: CreateObject's third param is
 		// `bool create_local` (a flag there silently coerces to true and the
 		// object never networks to clients); only CreateObjectEx takes ECE_ flags.
 		if (selectedBug != "") {
-			ItemBase bugs = ItemBase.Cast(g_Game.CreateObjectEx(selectedBug, action_data.m_Player.GetPosition(), ECE_PLACE_ON_SURFACE));
+			EntityAI catcher = action_data.m_MainItem;
+			EntityAI bugEntity;
+			geb_FilteredContainerBase filtered = geb_FilteredContainerBase.Cast(catcher);
+			if (catcher && catcher.GetInventory() && (!filtered || filtered.GebAcceptsType(selectedBug)))
+				bugEntity = catcher.GetInventory().CreateInInventory(selectedBug);
+			if (!bugEntity) {
+				// 1.30's CreateInInventory refuses an item that doesn't fit without a log line of its own.
+				if (debugLevel >= 1)
+					GebsfishLogger.Debug("Bug '" + selectedBug + "' didn't go into the Bug Catcher (full, or not on its allow-list in containers.c) -- dropped on the dug spot.", "DigBugs");
+				bugEntity = EntityAI.Cast(g_Game.CreateObjectEx(selectedBug, action_data.m_Target.GetCursorHitPos(), ECE_PLACE_ON_SURFACE));
+			}
+			ItemBase bugs = ItemBase.Cast(bugEntity);
 			if (bugs) {
 				bugs.SetQuantity(1, false);
 			}
-		}
-	}
-
-	void SetDiggingAnimation(ItemBase item) {
-		if (item.KindOf("CatchBugs")) {
-			m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DEPLOY_1HD;
-			m_StanceMask = DayZPlayerConstants.STANCEMASK_ERECT | DayZPlayerConstants.STANCEMASK_CROUCH;
-		}
-		else {
-			m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DIGMANIPULATE;
-			m_StanceMask = DayZPlayerConstants.STANCEMASK_ERECT;
 		}
 	}
 };

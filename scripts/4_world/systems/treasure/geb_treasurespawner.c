@@ -28,23 +28,26 @@
 //   RodCatchesToRuin  -> a successful pull wears the rod out, ruining a
 //                        pristine one in this many finds
 class GebsTreasureSpawner {
+    // Remaining CE lifetime of a freshly pulled container: two hours.
+    protected static const float UNTOUCHED_LIFETIME_SECS = 7200.0;
 
-    static void TryPull(PlayerBase player, ItemBase rod, string logTag = "Treasure") {
+    // True when a treasure container came up.
+    static bool TryPull(PlayerBase player, ItemBase rod, string logTag = "Treasure") {
         if (!player || !g_Game.IsServer())
-            return;
+            return false;
         if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.TreasureSettings)
-            return;
+            return false;
 
         TreasureConf ts = m_gebsConfig.General.TreasureSettings;
         if (!ts.Enable || ts.Chance <= 0)
-            return;
+            return false;
 
         int debugLevel = GebGetDebugLevel();
 
         // A crafted rod is a stick and a length of rope -- it has no business
         // winching a sea chest off the bottom. ImprovisedFishingRod is a SIBLING
         // of FishingRod (both extend FishingRod_Base_New) rather than a child, so
-        // testing for FishingRod admits the vanilla rod and the four gebsfish
+        // testing for FishingRod admits the vanilla rod and the ten gebsfish
         // colour variants while leaving the improvised one out. Gated before the
         // roll so an ineligible rod never burns a chance.
         if (ts.RequireRealRod && (!rod || !rod.IsInherited(FishingRod))) {
@@ -54,19 +57,19 @@ class GebsTreasureSpawner {
                     rodType = rod.GetType();
                 GebsfishLogger.Debug("skipped: RequireRealRod is on and the rod in hand is " + rodType, logTag);
             }
-            return;
+            return false;
         }
 
-        float roll = Math.RandomFloat01();
+        float roll = RollPrecise01();
         if (roll > ts.Chance) {
             if (debugLevel == ELEVATED_DEBUG)
                 GebsfishLogger.Debug("miss: roll=" + roll + " chance=" + ts.Chance, logTag);
-            return;
+            return false;
         }
 
         TreasureContainerEntry container = PickContainer(debugLevel, logTag);
         if (!container)
-            return;
+            return false;
 
         // Containers are bulky, so they go on the ground at the player's feet
         // rather than attempting an inventory placement that would usually fail.
@@ -77,19 +80,26 @@ class GebsTreasureSpawner {
             // argument list and then wants ',' or ')', so a continuation '+' on the
             // next line will not parse. Long lines are the norm in this codebase.
             GebsfishLogger.Error("treasure hit but CreateObjectEx returned null for container '" + container.Classname + "' -- check the classname exists on this server.", logTag);
-            return;
+            return false;
         }
 
         ItemBase containerItem = ItemBase.Cast(spawned);
         if (containerItem)
-            containerItem.SetHealthLevel(RollHealthLevel(container.MinHealthLevel, container.MaxHealthLevel), "");
+            containerItem.SetHealthLevel(GebRollHealthLevel(container.MinHealthLevel, container.MaxHealthLevel), "");
+
+        // CreateObjectEx hands the container its types.xml lifetime (a SeaChest
+        // sits 45-90 days and counts toward the CE nominal). Give an untouched
+        // haul a short one instead; players using it refresh it as usual.
+        spawned.SetLifetime(UNTOUCHED_LIFETIME_SECS);
 
         int placed = FillContainer(spawned, container, debugLevel, logTag);
 
         DamageRod(rod, ts.RodCatchesToRuin, debugLevel, logTag);
 
+        // A stringtable key: the player's chat widget translates it into the
+        // player's own language (this runs on the server).
         if (ts.Announce)
-            player.MessageImportant("Something heavy comes up with your line...");
+            player.MessageImportant("#STR_action_treasurecatch");
 
         // GetIdentity() is null for a player mid-disconnect, so don't chain off it.
         string who = "unknown";
@@ -97,6 +107,7 @@ class GebsTreasureSpawner {
             who = player.GetIdentity().GetName();
 
         GebsfishLogger.Info("TREASURE: " + container.Classname + " with " + placed + " item(s) for " + who + " (roll=" + roll + " chance=" + ts.Chance + ")", logTag);
+        return true;
     }
 
     // ---- picks ----
@@ -164,21 +175,27 @@ class GebsTreasureSpawner {
             if (!loot)
                 continue;
 
-            EntityAI made = container.GetInventory().CreateInInventory(loot.Classname);
+            // Where CreateInInventory would put it, but never inside a gebsfish
+            // container that refuses it: the treasure container itself if an
+            // admin listed one in TreasureContainers (a tackle box, cooler or
+            // bucket), or one an earlier slot put inside it. CreateInInventory
+            // doesn't ask their cargo filters, and the next restart would throw
+            // the item out.
+            EntityAI made = geb_FilteredContainerBase.GebCreateInInventory(container, loot.Classname);
             if (!made) {
                 if (debugLevel >= 1)
-                    GebsfishLogger.Debug("could not place '" + loot.Classname + "' (container full, or classname missing) -- skipping this slot.", logTag);
+                    GebsfishLogger.Debug("could not place '" + loot.Classname + "' (container full, a container there refuses it, or classname missing) -- skipping this slot.", logTag);
                 continue;
             }
 
             ItemBase item = ItemBase.Cast(made);
             if (item) {
-                item.SetHealthLevel(RollHealthLevel(loot.MinHealthLevel, loot.MaxHealthLevel), "");
+                item.SetHealthLevel(GebRollHealthLevel(loot.MinHealthLevel, loot.MaxHealthLevel), "");
                 // 0/0 means "leave the item at whatever it spawns with"
                 if (loot.MaxQuantity > 0) {
                     int qty = GetInclusiveRandomInt(loot.MinQuantity, loot.MaxQuantity);
                     if (qty > 0)
-                        item.SetQuantity(qty);
+                        SetLootQuantity(item, qty);
                 }
             }
             placed++;
@@ -219,19 +236,34 @@ class GebsTreasureSpawner {
 
     // ---- helpers ----
 
-    // Clamped so a typo'd config can't push SetHealthLevel out of range, and
-    // inversion-safe so Min > Max degrades to "always Min" instead of breaking.
-    protected static int RollHealthLevel(int minLevel, int maxLevel) {
-        if (minLevel < 0) minLevel = 0;
-        if (minLevel > 4) minLevel = 4;
-        if (maxLevel < minLevel) maxLevel = minLevel;
-        if (maxLevel > 4) maxLevel = 4;
-        return Math.RandomInt(minLevel, maxLevel + 1);
-    }
-
     protected static int GetInclusiveRandomInt(int min, int max) {
         if (min < 0) min = 0;
         if (max < min) max = min;
         return Math.RandomInt(min, max + 1);
+    }
+
+    // Ammo stacks and magazines count rounds, not varQuantity -- SetQuantity
+    // returns early for them -- so the configured amount goes in as rounds.
+    protected static void SetLootQuantity(ItemBase item, int qty) {
+        Magazine mag = Magazine.Cast(item);
+        if (mag) {
+            int rounds = qty;
+            if (rounds > mag.GetAmmoMax())
+                rounds = mag.GetAmmoMax();
+            mag.ServerSetAmmoCount(rounds);
+            return;
+        }
+        item.SetQuantity(qty);
+    }
+
+    // Math.RandomFloat01 sits on the engine's 15-bit rand(): only 32768
+    // distinct rolls, so a Chance of 0.0002 really hit about 1 in 4681 and
+    // nothing could be rarer than 1 in 32768. Two 15-bit draws make a 30-bit
+    // roll in [0, 1) that honours chances down to about one in a billion.
+    protected static float RollPrecise01() {
+        int high = Math.RandomInt(0, 32768);
+        int low = Math.RandomInt(0, 32768);
+        float combined = high * 32768 + low;
+        return combined / 1073741824.0;
     }
 }

@@ -2,8 +2,8 @@ ambient[]={1,1,1,1};
 diffuse[]={1,1,1,1};
 forcedDiffuse[]={0,0,0,0};
 emmisive[]={0,0,0,1};
-specular[]={0.2,0.2,0.2,1};
-specularPower=75;
+specular[]={0.866,0.7,0.81,1};
+specularPower=1000;
 PixelShaderID="Super";
 VertexShaderID="Super";
 class Stage1
@@ -56,7 +56,7 @@ class Stage4
 };
 class Stage5
 {
-	texture="dz\gear\food\data\carp_live_smdi.paa";
+	texture="gebsfish\data\fish\rainbowtrout_smdi.paa";
 	uvSource="tex";
 	class uvTransform
 	{

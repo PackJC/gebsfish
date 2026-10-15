@@ -3,6 +3,8 @@ class GebPrepareFishBase extends PrepareFish {}
 
 // Vanilla fish retain vanilla recipe IDs. Outputs are built by
 // PrepareFish.SpawnItems from current configuration for every preparation.
+// Each fillets only its own fish: vanilla's ingredient match would also take
+// another mod's fish built on it, which GebResolveRecipe refuses here.
 modded class PrepareCarp extends PrepareFish {
 	override void Init() {
 		super.Init();

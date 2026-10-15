@@ -13,12 +13,20 @@ const FISHDETAIL = {
 "img": "fish/geb_AmericanLobster.webp"
 },
 "geb_AngelFish": {
-"desc": "Angel Fish, particularly tilapia, are important food fishes, while others, such as the Cichla species, are valued game fish. The family also includes many popular freshwater aquarium fish kept by hobbyists, including the angelfish, oscars, and discus.",
+"desc": "The semicircle angelfish (Pomacanthus semicirculatus), also called the Koran angelfish, is a marine angelfish of the family Pomacanthidae, found in the Indo-West Pacific from the Red Sea and East Africa to Samoa, north to southern Japan and south to Australia. It lives on coral and rocky reefs, often near caves and ledges, usually alone, and grows to about 40 cm (16 in). Adults are brownish green, darkening to navy blue toward the tail, with a small blue spot on each scale, a yellowish face with blue lines edging the gill cover, blue-edged fins drawn out into long tips and yellow pectoral fins. Young fish are deep blue with white and pale blue semicircles, which give the species its name. It feeds on sponges, algae and tunicates. Marine angelfish are not related to the freshwater angelfish kept in aquariums, which is a South American cichlid.",
 "img": "fish/geb_AngelFish.webp"
 },
 "geb_AngelShark": {
 "desc": "Squatina squatina, the angelshark or monkfish, is a species of shark in the family Squatinidae, that were once widespread in the coastal waters of the northeastern Atlantic Ocean.",
 "img": "fish/geb_AngelShark.webp"
+},
+"geb_ArgentineShortfinSquid": {
+"desc": "The Argentine shortfin squid (Illex argentinus) is a squid of the family Ommastrephidae from the southwest Atlantic, found from southern Brazil to Patagonia and the Falkland Islands, over the continental shelf and slope from about 50 m to 800 m (160-2,600 ft). Like its northern cousin it lives only about a year, migrating along the shelf in huge shoals to feed and spawn.\n\nIts back is reddish to purplish brown with a darker stripe down the middle, its belly paler, and its short fins form an arrowhead at the end of the mantle. Adults reach a mantle length of about 40 cm (16 in) and weigh up to 1 kg (2.2 lb). It feeds on krill, small fish and other squid. Fleets of jigging ships catch it at night under rows of bright lamps, which can be seen from space, making it one of the most important squid fisheries in the world.",
+"img": "fish/geb_ArgentineShortfinSquid.webp"
+},
+"geb_ArgentineShortfinSquidJuvenile": {
+"desc": "A young Argentine shortfin squid (Illex argentinus) with a mantle of about 10 cm (4 in), no longer than a hand. Small whole squid are one of the best saltwater baits: tuna, marlin, sharks and big bottom fish take them readily. Put it on the hook as it is, or cook and eat it whole. It is too small to clean.",
+"img": "fish/geb_ArgentineShortfinSquidJuvenile.webp"
 },
 "geb_AsianSeaBass": {
 "desc": "The barramundi or Asian sea bass, is a species of catadromous fish in the family Latidae of the order Perciformes. The species is widely distributed in the Indo-West Pacific region from South Asia to Papua New Guinea and Northern Australia.",
@@ -60,10 +68,6 @@ const FISHDETAIL = {
 "desc": "Paracanthurus hepatus is a species of Indo-Pacific surgeonfish. A popular fish in marine aquaria, it is the only member of the genus Paracanthurus.",
 "img": "fish/geb_BlueTang.webp"
 },
-"geb_Bonita": {
-"desc": "Bonitos are a tribe of medium-sized, ray-finned predatory fish in the family Scombridae - a family it shares with the mackerel, tuna, and Spanish mackerel tribes, and also the butterfly kingfish.",
-"img": "fish/geb_Bonita.webp"
-},
 "geb_BowFin": {
 "desc": "The bowfin (Amia calva) is a ray-finned fish native to North America. Common names include mudfish, mud pike, dogfish, grindle, grinnel, swamp trout, and choupique. It is regarded as a relict, being one of only two surviving species of the Halecomorphi, a group of fish that first appeared during the Early Triassic, around 250 million years ago. The bowfin is often considered a &quot;living fossil&quot; because they have retained some morphological characteristics of their early ancestors. It is one of two species in the genus Amia, along with Amia ocellicauda, the eyespot bowfin. The closest living relatives of bowfins are gars, with the two groups being united in the clade Holostei.",
 "img": "fish/geb_BowFin.webp"
@@ -73,7 +77,7 @@ const FISHDETAIL = {
 "img": "fish/geb_BrookTrout.webp"
 },
 "geb_BrownTrout": {
-"desc": "The brown trout (Salmo trutta) is a species of salmonid ray-finned fish and the most widely distributed species of the genus Salmo, endemic to most of Europe, West Asia and parts of North Africa, and has been widely introduced globally as a game fish, even becoming one of the world&#x27;s worst invasive species outside of its native range.\n\nBrown trout are highly adaptable and have evolved numerous ecotypes/subspecies. These include three main ecotypes: a riverine ecotype called river trout or Salmo trutta morpha fario; a lacustrine ecotype or S. trutta morpha lacustris, also called the lake trout (not to be confused with the lake trout in North America); and anadromous populations known as the sea trout or S. trutta morpha trutta, which upon adulthood migrate downstream to the oceans for much of its life and only returns to fresh water to spawn in the gravel beds of headstreams.[citation needed] Sea trout in Ireland and Great Britain have many regional names: sewin in Wales, finnock in Scotland, peal in the West Country, mort in North West England, and white trout in Ireland.",
+"desc": "The brown trout (Salmo trutta) is a species of salmonid ray-finned fish and the most widely distributed species of the genus Salmo, endemic to most of Europe, West Asia and parts of North Africa, and has been widely introduced globally as a game fish, even becoming one of the world&#x27;s worst invasive species outside of its native range.\n\nBrown trout are highly adaptable and have evolved numerous ecotypes/subspecies. These include three main ecotypes: a riverine ecotype called river trout or Salmo trutta morpha fario; a lacustrine ecotype or S. trutta morpha lacustris, also called the lake trout (not to be confused with the lake trout in North America); and anadromous populations known as the sea trout or S. trutta morpha trutta, which upon adulthood migrate downstream to the oceans for much of its life and only returns to fresh water to spawn in the gravel beds of headstreams. Sea trout in Ireland and Great Britain have many regional names: sewin in Wales, finnock in Scotland, peal in the West Country, mort in North West England, and white trout in Ireland.",
 "img": "fish/geb_BrownTrout.webp"
 },
 "geb_CaveCrayFish": {
@@ -96,6 +100,10 @@ const FISHDETAIL = {
 "desc": "Astacus astacus, the European crayfish, noble crayfish, or broad-fingered crayfish, is the most common species of crayfish in Europe, and a traditional food source. Like other true crayfish, A. astacus is restricted to fresh water, living only in unpolluted streams, rivers, and lakes. It is found from France throughout Central Europe, to the Balkan Peninsula, and north as far as Scandinavia and Finland, and Eastern Europe. Males may grow up to 16 cm (6 in) long, and females up to 12 centimetres (5 inches).",
 "img": "fish/geb_EuropeanCrayFish.webp"
 },
+"geb_EuropeanFlyingSquid": {
+"desc": "The European flying squid (Todarodes sagittatus) is a large squid of the family Ommastrephidae from the eastern Atlantic, found from the Arctic waters off Norway to West Africa and throughout the Mediterranean, from the surface down to more than 1,000 m (3,300 ft). It roams the open sea and the edges of the continental shelf, coming closer to the surface at night.\n\nIts body is reddish brown to violet, with short fins, long arms and very long tentacles that carry suckers along their whole length. Most adults have a mantle of 25-35 cm (10-14 in), the largest reach 75 cm (30 in) and over 3 kg (6.6 lb). It hunts fish such as blue whiting and herring, crustaceans and other squid. It is caught by trawlers and on jigs, and is eaten above all in Spain, Portugal and Italy.",
+"img": "fish/geb_EuropeanFlyingSquid.webp"
+},
 "geb_EuropeanLobster": {
 "desc": "Homarus gammarus, known as the European lobster or common lobster, is a species of clawed lobster from the eastern Atlantic Ocean, Mediterranean Sea and parts of the Black Sea. It is closely related to the American lobster, H. americanus. It may grow to a length of 60 cm (24 in) and a mass of 6 kilograms (13 lb), and bears a conspicuous pair of claws. In life, the lobsters are blue, only becoming &quot;lobster red&quot; on cooking. Mating occurs in the summer, producing eggs which are carried by the females for up to a year before hatching into planktonic larvae. Homarus gammarus is a highly esteemed food, and is widely caught using lobster pots, mostly around the British Isles.",
 "img": "fish/geb_EuropeanLobster.webp"
@@ -113,27 +121,43 @@ const FISHDETAIL = {
 "img": "fish/geb_FlatHeadMullet.webp"
 },
 "geb_FloridaCrayFish": {
-"desc": "The Florida crayfish, the blue crayfish, the electric blue crayfish, or the sapphire crayfish, is a species of freshwater crayfish endemic to Florida in the United States. Its natural range is the area east of St. Johns River and all of Florida from Levy County and Marion County southwards, as well as on some of the Florida Keys. It is included on the IUCN Red List as a species of Least Concern. The blue crayfish is frequently kept in a freshwater aquaria.",
+"desc": "The Florida crayfish, the blue crayfish, the electric blue crayfish, or the sapphire crayfish, is a species of freshwater crayfish endemic to Florida in the United States. Its natural range is the area east of St. Johns River and all of Florida from Levy County and Marion County southwards, as well as on some of the Florida Keys. It is included on the IUCN Red List as a species of Least Concern. The blue crayfish is frequently kept in freshwater aquaria.",
 "img": "fish/geb_FloridaCrayFish.webp"
+},
+"geb_GreatBarracuda": {
+"desc": "The great barracuda (Sphyraena barracuda) is a large predatory ray-finned fish of the family Sphyraenidae, found in tropical and warm temperate waters of the Atlantic, Indian and Pacific oceans down to about 110 m (360 ft). Young fish stay close to shore among mangroves and seagrass beds, while adults range farther out to reefs, wrecks and rocky outcrops.\n\nIts long body is blue-grey above and silvery to chalky white below, often with dark bars along the upper side and black blotches low on the flanks. The lower jaw juts past the upper, and both are set with large, uneven, fang-like teeth. Adults are usually 60-100 cm (24-39 in) long and weigh 2.5-9 kg (5.5-20 lb), though some pass 1.5 m (4.9 ft) and 23 kg (51 lb). It hunts from ambush, mostly small fish such as sardines, anchovies and mullets, striking in bursts of up to 58 km/h (36 mph). It is a popular sport fish that fights hard on the hook, but its meat can cause ciguatera poisoning.",
+"img": "fish/geb_GreatBarracuda.webp"
 },
 "geb_GreatWhiteShark": {
 "desc": "The great white shark, also known as the white shark, white pointer, or simply great white, is a species of large mackerel shark which can be found in the coastal surface waters of all the major oceans.",
 "img": "fish/geb_GreatWhiteShark.webp"
 },
 "geb_HammerHeadShark": {
-"desc": "The hammerhead sharks are a group of sharks that form the family Sphyrnidae, named for the unusual and distinctive form of their heads, which are flattened and laterally extended into a cephalofoil (a T-shape or &quot;hammer&quot;). The shark&#x27;s eyes are placed one on each end of this T-shaped structure, with their small mouths directly centered and underneath. Most hammerhead species are placed in the genus Sphyrna, while the winghead shark is placed in its own genus, Eusphyra. Many different—but not necessarily mutually exclusive—functions have been postulated for the cephalofoil, including sensory reception, manoeuvering, and prey manipulation. The cephalofoil gives the shark superior binocular vision and depth perception, as well as increased surface area for electrocreceptors.",
+"desc": "The hammerhead sharks are a group of sharks that form the family Sphyrnidae, named for the unusual and distinctive form of their heads, which are flattened and laterally extended into a cephalofoil (a T-shape or &quot;hammer&quot;). The shark&#x27;s eyes are placed one on each end of this T-shaped structure, with their small mouths directly centered and underneath. Most hammerhead species are placed in the genus Sphyrna, while the winghead shark is placed in its own genus, Eusphyra. Many different—but not necessarily mutually exclusive—functions have been postulated for the cephalofoil, including sensory reception, manoeuvering, and prey manipulation. The cephalofoil gives the shark superior binocular vision and depth perception, as well as increased surface area for electroreceptors.",
 "img": "fish/geb_HammerHeadShark.webp"
 },
+"geb_HumboldtSquid": {
+"desc": "The Humboldt squid (Dosidicus gigas), also called the jumbo flying squid or &quot;diablo rojo&quot;, is a large predatory squid of the family Ommastrephidae. It lives in the eastern Pacific from southern Chile to California, in warm years as far north as Alaska, from the surface down to about 1,200 m (3,900 ft). By day it stays deep, often in water with very little oxygen; at night it rises to the surface to feed.\n\nIts body is deep red to purple, and it can flash red and white in an instant by working the pigment cells in its skin. Most caught at sea are 50-80 cm (20-31 in) in mantle length and weigh 5-15 kg (11-33 lb), but the largest reach a mantle of 1.5 m (4.9 ft) and 50 kg (110 lb). It hunts in shoals of hundreds, mostly lanternfish, small fish, shrimp and other squid, which it grabs with suckers ringed with sharp teeth. It is caught at night on jigs under bright lights and supports one of the largest squid fisheries in the world.",
+"img": "fish/geb_HumboldtSquid.webp"
+},
 "geb_HumpHeadWrasse": {
-"desc": "The humphead wrasse is a large species of wrasse mainly found on coral reefs in the Indo-Pacific region. It is also known as the M?ori wrasse, Napoleon wrasse, Napoleon fish, Napoleonfish, so mei ??, mameng, and merer in the Pohnpeian language of the Caroline Islands.",
+"desc": "The humphead wrasse is a large species of wrasse mainly found on coral reefs in the Indo-Pacific region. It is also known as the Maori wrasse, Napoleon wrasse, Napoleon fish, Napoleonfish, so mei, mameng, and merer in the Pohnpeian language of the Caroline Islands.",
 "img": "fish/geb_HumpHeadWrasse.webp"
 },
+"geb_JapaneseFlyingSquid": {
+"desc": "The Japanese flying squid (Todarodes pacificus) is a squid of the family Ommastrephidae from the northwest Pacific, found around Japan, Korea, eastern China and the Russian Far East, from the surface down to about 500 m (1,600 ft). It migrates north to feed in summer and south to spawn in winter, and like most squid it lives about a year.\n\nIts body is reddish brown, darker along the back, with short broad fins and long tentacles. Adults usually have a mantle of 25-30 cm (10-12 in), the largest reach 50 cm (20 in) and about 1 kg (2.2 lb). It feeds on krill, small fish and other squid. It is the most important squid in Japan, where it is eaten raw as sashimi, grilled, or dried as surume, and it is caught at night by boats hanging rows of bright lamps over the water.",
+"img": "fish/geb_JapaneseFlyingSquid.webp"
+},
+"geb_JapaneseFlyingSquidJuvenile": {
+"desc": "A young Japanese flying squid (Todarodes pacificus) with a mantle of about 10 cm (4 in), no longer than a hand. Small whole squid are one of the best saltwater baits: tuna, marlin, sharks and big bottom fish take them readily. Put it on the hook as it is, or cook and eat it whole. It is too small to clean.",
+"img": "fish/geb_JapaneseFlyingSquidJuvenile.webp"
+},
 "geb_KingCrab": {
-"desc": "King crabs are decapod crustaceans of the family Lithodidae[b] that are chiefly found in deep waters and are adapted to cold environments. They are composed of two subfamilies: Lithodinae, which tend to inhabit deep waters, are globally distributed, and comprise the majority of the family&#x27;s species diversity; and Hapalogastrinae, which are endemic to the North Pacific and inhabit exclusively shallow waters. King crabs superficially resemble true crabs but are generally understood to be closest to the pagurid hermit crabs. This placement of king crabs among the hermit crabs is supported by several anatomical peculiarities which are present only in king crabs and hermit crabs, making them a prominent example of carcinisation among decapods. Several species of king crabs, especially in Alaskan and southern South American waters, are targeted by commercial fisheries and have been subject to overfishing.",
+"desc": "King crabs are decapod crustaceans of the family Lithodidae that are chiefly found in deep waters and are adapted to cold environments. They are composed of two subfamilies: Lithodinae, which tend to inhabit deep waters, are globally distributed, and comprise the majority of the family&#x27;s species diversity; and Hapalogastrinae, which are endemic to the North Pacific and inhabit exclusively shallow waters. King crabs superficially resemble true crabs but are generally understood to be closest to the pagurid hermit crabs. This placement of king crabs among the hermit crabs is supported by several anatomical peculiarities which are present only in king crabs and hermit crabs, making them a prominent example of carcinisation among decapods. Several species of king crabs, especially in Alaskan and southern South American waters, are targeted by commercial fisheries and have been subject to overfishing.",
 "img": "fish/geb_KingCrab.webp"
 },
 "geb_LakeSturgeon": {
-"desc": "Sturgeons are long-lived, late-maturing fishes with distinctive characteristics, such as a heterocercal caudal fin similar to those of sharks, and an elongated, spindle-like body that is smooth-skinned, scaleless, and armored with five lateral rows of bony plates called scutes. Several species can grow quite large, typically ranging 2–3.5 m (7–12 ft) in length. The largest sturgeon on record was a beluga female captured in the Volga Delta in 1827, measuring 7.2 m (23 ft 7 in) long and weighing 1,571 kg (3,463 lb). Most sturgeons are anadromous bottom-feeders, migrating upstream to spawn but spending most of their lives feeding in river deltas and estuaries. Some species inhabit freshwater environments exclusively, while others primarily inhabit marine environments near coastal areas, and are known to venture into open ocean.",
+"desc": "The lake sturgeon (Acipenser fulvescens) is a North American freshwater sturgeon of the Great Lakes, the Hudson Bay basin and the Mississippi River basin. Like other sturgeons it has a shark-like tail, a scaleless body armored with five rows of bony plates called scutes, and four barbels in front of a toothless mouth, with which it sucks insect larvae, crayfish, snails and clams off the bottom. It is one of the largest and longest-lived fish in North American fresh water, reaching about 2.7 m (9 ft) and 125 kg (275 lb); one was aged at 152 years. Females mature at 14 to 33 years and spawn only every few years, in spring, over rocky river shoals and rapids. Overfishing for its meat and caviar in the late 1800s and the damming of its spawning rivers made it rare, and it is now protected in much of its range.",
 "img": "fish/geb_LakeSturgeon.webp"
 },
 "geb_LakeTrout": {
@@ -145,15 +169,15 @@ const FISHDETAIL = {
 "img": "fish/geb_LargeHeadHairTailFish.webp"
 },
 "geb_LargeMouthBass": {
-"desc": "The largemouth bass (Micropterus nigricans) is a carnivorous, freshwater, ray-finned fish in the Centrarchidae (sunfish) family, native to the eastern and central United States, southeastern Canada and northern Mexico. It is known by a variety of regional names, such as the widemouth bass, bigmouth bass, black bass, largie, Potter&#x27;s fish, Florida bass or Florida largemouth, green bass, bucketmouth bass, green trout, growler[citation needed], Gilsdorf bass, Oswego bass, LMB, and southern largemouth and northern largemouth.",
+"desc": "The largemouth bass (Micropterus nigricans) is a carnivorous, freshwater, ray-finned fish in the Centrarchidae (sunfish) family, native to the eastern and central United States, southeastern Canada and northern Mexico. It is known by a variety of regional names, such as the widemouth bass, bigmouth bass, black bass, largie, Potter&#x27;s fish, Florida bass or Florida largemouth, green bass, bucketmouth bass, green trout, growler, Gilsdorf bass, Oswego bass, LMB, and southern largemouth and northern largemouth.",
 "img": "fish/geb_LargeMouthBass.webp"
 },
 "geb_LeopardShark": {
-"desc": "The Leopard shark (Triakis semifasciata) is a species of houndshark, in the family Triakidae. Typically measuring 1.2-1.5 m (3.9-4.9 ft) long, this slender-bodied shark is immediately identifiable by the striking pattern of black saddle-like markings and large spots over its back, from which it derives its common name. Way too heavy to carry!",
+"desc": "The Leopard shark (Triakis semifasciata) is a species of houndshark, in the family Triakidae. Typically measuring 1.2-1.5 m (3.9-4.9 ft) long, this slender-bodied shark is immediately identifiable by the striking pattern of black saddle-like markings and large spots over its back, from which it derives its common name.",
 "img": "fish/geb_LeopardShark.webp"
 },
 "geb_MahiMahi": {
-"desc": "The mahi-mahi  or common dolphinfish (Coryphaena hippurus) is a surface-dwelling ray-finned fish found in off-shore temperate, tropical, and subtropical waters worldwide. It is also widely called dorado (not to be confused with Salminus brasiliensis, a freshwater fish) and dolphin (not to be confused with the aquatic mammal dolphin). It is one of two members of the family Coryphaenidae, the other being the pompano dolphinfish. These fish are most commonly found in the waters around the Gulf of Mexico, Costa Rica, Hawaii, and the Indian Ocean.",
+"desc": "The mahi-mahi or common dolphinfish (Coryphaena hippurus) is a surface-dwelling ray-finned fish found in off-shore temperate, tropical, and subtropical waters worldwide. It is also widely called dorado (not to be confused with Salminus brasiliensis, a freshwater fish) and dolphin (not to be confused with the aquatic mammal dolphin). It is one of two members of the family Coryphaenidae, the other being the pompano dolphinfish. These fish are most commonly found in the waters around the Gulf of Mexico, Costa Rica, Hawaii, and the Indian Ocean.",
 "img": "fish/geb_MahiMahi.webp"
 },
 "geb_MonongahelaCrayFish": {
@@ -168,28 +192,52 @@ const FISHDETAIL = {
 "desc": "Mussel is the common name used for members of several families of bivalve molluscs, from saltwater and freshwater habitats. These groups have in common a shell whose outline is elongated and asymmetrical compared with other edible clams, which are often more or less rounded or oval.",
 "img": "fish/geb_Mussel.webp"
 },
+"geb_NeonFlyingSquid": {
+"desc": "The neon flying squid (Ommastrephes bartramii) is a large ocean squid of the family Ommastrephidae, found in subtropical and temperate waters of every ocean, from the surface down to about 1,500 m (4,900 ft). In the North Pacific it makes long migrations between warm spawning grounds and cold feeding grounds, and it can glide over the surface to escape predators.\n\nIts back is dark red to purple and its belly silvery, with a glowing, silvery stripe along the underside of the mantle that gives it its name, and large diamond-shaped fins. Females grow much larger than males and reach a mantle of 60 cm (24 in) and about 5 kg (11 lb). It feeds on fish and other squid. It is fished with jigs under lights in the North Pacific and eaten fresh, dried and frozen.",
+"img": "fish/geb_NeonFlyingSquid.webp"
+},
 "geb_NeoshoBass": {
-"desc": "The Neosho Bass (Micropterus dolomieu velox) is a subspecies of Smallmouth Bass, found only in the Spring, Neosho, and Elk River basins of Missouri, Arkansas, Kansas, and Oklahoma. They’re perfectly adapted to the clear, gravel-bottomed streams of this region, playing a vital role in the ecosystem. Over time they are breeding with Smallmouth and it is getting harder to find a pure Neosho. That’s why proper identification is crucial when determining if you’ve successfully found one.",
+"desc": "The Neosho Bass (Micropterus velox) is a black bass found only in the Spring, Neosho, and Elk River basins of Missouri, Arkansas, Kansas, and Oklahoma. Long treated as a subspecies of the Smallmouth Bass, it is now usually recognized as a species of its own. They&#x27;re perfectly adapted to the clear, gravel-bottomed streams of this region, playing a vital role in the ecosystem. Over time they are breeding with Smallmouth and it is getting harder to find a pure Neosho. That&#x27;s why proper identification is crucial when determining if you&#x27;ve successfully found one.",
 "img": "fish/geb_NeoshoBass.webp"
 },
 "geb_NorthernPike": {
-"desc": "The northern pike (Esox lucius) is a species of carnivorous fish of the genus Esox (pikes). They are commonly found in moderately salty and fresh waters of the Northern Hemisphere (i.e. holarctic in distribution). They are known simply as a pike (PL: pike) in Great Britain, Ireland, most of Eastern Europe, Canada and the U.S., although in the Midwest, they may be called a Northern.\n\nPike can grow to a relatively large size. Their average length is about 40-55 cm (16-22 in), with maximum recorded lengths of up to 150 cm (59 in) and maximum weights of 28.4 kg (63 lb). The IGFA currently recognises a 25 kg (55 lb) pike caught by Lothar Louis on Greffern Lake, Germany, on 16 October 1986, as the all-tackle world-record holding northern pike. Northern pike grow to larger sizes in Eurasia than in North America, and in coastal Eurasian regions than inland ones.",
+"desc": "The northern pike (Esox lucius) is a species of carnivorous fish of the genus Esox (pikes). They are commonly found in moderately salty and fresh waters of the Northern Hemisphere (i.e. holarctic in distribution). They are known simply as a pike in Great Britain, Ireland, most of Eastern Europe, Canada and the U.S., although in the Midwest, they may be called a Northern.\n\nPike can grow to a relatively large size. Their average length is about 40-55 cm (16-22 in), with maximum recorded lengths of up to 150 cm (59 in) and maximum weights of 28.4 kg (63 lb). The IGFA currently recognises a 25 kg (55 lb) pike caught by Lothar Louis on Greffern Lake, Germany, on 16 October 1986, as the all-tackle world-record holding northern pike. Northern pike grow to larger sizes in Eurasia than in North America, and in coastal Eurasian regions than inland ones.",
 "img": "fish/geb_NorthernPike.webp"
+},
+"geb_NorthernShortfinSquid": {
+"desc": "The northern shortfin squid (Illex illecebrosus) is a small, fast squid of the family Ommastrephidae from the northwest Atlantic, found from Florida to Labrador and southern Greenland, from the surface down to about 1,000 m (3,300 ft). Every summer it moves onto the continental shelf to feed, and in autumn it returns to deep water to spawn. It lives only about a year.\n\nIts body is pale, speckled with reddish-brown and orange pigment spots and darker along the back, with short fins at the tip of the mantle. Adults reach a mantle length of 31 cm (12 in) and weigh up to about 0.5 kg (1.1 lb). It feeds on krill, small fish and other squid, including its own kind. It is fished commercially and is one of the most widely used baits for tuna, swordfish and sharks.",
+"img": "fish/geb_NorthernShortfinSquid.webp"
+},
+"geb_NorthernShortfinSquidJuvenile": {
+"desc": "A young northern shortfin squid (Illex illecebrosus) with a mantle of about 10 cm (4 in), no longer than a hand. Small whole squid are one of the best saltwater baits: tuna, marlin, sharks and big bottom fish take them readily. Put it on the hook as it is, or cook and eat it whole. It is too small to clean.",
+"img": "fish/geb_NorthernShortfinSquidJuvenile.webp"
 },
 "geb_NorthernSnakeHead": {
 "desc": "The northern snakehead (Channa argus) is a species of snakehead fish native to temperate East Asia, in China, Russia, North Korea, and South Korea. Their natural range goes from the Amur River watershed in Siberia and Manchuria down to Hainan. It is an important food fish and one of the most cultivated in its native region, with 510,000 tonnes annual production worldwide.",
 "img": "fish/geb_NorthernSnakeHead.webp"
 },
+"geb_PacificBonito": {
+"desc": "Bonitos are a tribe of medium-sized, ray-finned predatory fish in the family Scombridae - a family it shares with the mackerel, tuna, and Spanish mackerel tribes, and also the butterfly kingfish.",
+"img": "fish/geb_PacificBonito.webp"
+},
 "geb_PacificCod": {
 "desc": "The Pacific Cod, Gadus macrocephalus, is a species of ray-finned fish in the family Gadidae. It is a bottom-dwelling fish found in the northern Pacific Ocean, mainly on the continental shelf and upper slopes, to depths of about 900 m. It can grow to a length of a meter or so and is found in large schools.",
 "img": "fish/geb_PacificCod.webp"
+},
+"geb_PurplebackFlyingSquid": {
+"desc": "The purpleback flying squid (Sthenoteuthis oualaniensis) is a squid of the family Ommastrephidae from the warm Indian and Pacific oceans, including the Red Sea and the Arabian Sea, from the surface down to about 1,000 m (3,300 ft). It is one of the most common squid of tropical open seas, and like other flying squid it can launch itself out of the water and glide to escape predators.\n\nIts back is purple-red and its belly silvery, and the large form carries an oval patch of light organs on its back. Most adults have a mantle of 12-25 cm (5-10 in), but a giant form reaches 65 cm (26 in) and several kilograms. It feeds on lanternfish, crustaceans and other squid, and is itself food for tuna, dolphinfish and swordfish. It is caught at night on jigs under lights in the South China Sea and the Arabian Sea.",
+"img": "fish/geb_PurplebackFlyingSquid.webp"
+},
+"geb_PurplebackFlyingSquidJuvenile": {
+"desc": "A young purpleback flying squid (Sthenoteuthis oualaniensis) with a mantle of about 10 cm (4 in), no longer than a hand. Small whole squid are one of the best saltwater baits: tuna, marlin, sharks and big bottom fish take them readily. Put it on the hook as it is, or cook and eat it whole. It is too small to clean.",
+"img": "fish/geb_PurplebackFlyingSquidJuvenile.webp"
 },
 "geb_RainbowTrout": {
 "desc": "The rainbow trout (Oncorhynchus mykiss) is a species of trout native to cold-water tributaries of the Pacific Ocean in North America and Asia. The steelhead (sometimes called steelhead trout) is an anadromous (sea-run) form of the coastal rainbow trout (O. m. irideus) or Columbia River redband trout (O. m. gairdneri) that usually returns to freshwater to spawn after living two to three years in the ocean. Freshwater forms that have been introduced into the Great Lakes and migrate into tributaries to spawn are also called steelhead.\n\nAdult freshwater stream rainbow trout average between 0.5 and 2.5 kilograms (1 and 5 lb), while lake-dwelling and anadromous forms may reach 9 kg (20 lb). Coloration varies widely based on subspecies, forms, and habitat. Adult fish are distinguished by a broad reddish stripe along the lateral line, from gills to the tail, which is most vivid in breeding males.",
 "img": "fish/geb_RainbowTrout.webp"
 },
 "geb_RedHeadCichlid": {
-"desc": "Vieja melanurus, the quetzal cichlid, redhead cichlid or firehead cichlid, is a species of cichlid that is native to the Lake Pet-n system, the Grijalva-Usumacinta River basin and other Atlantic river drainages in southern Mexico, Belize and Guatemala, with introduced populations in a few other countries.",
+"desc": "Vieja melanurus, the quetzal cichlid, redhead cichlid or firehead cichlid, is a species of cichlid that is native to the Lake Petén system, the Grijalva-Usumacinta River basin and other Atlantic river drainages in southern Mexico, Belize and Guatemala, with introduced populations in a few other countries.",
 "img": "fish/geb_RedHeadCichlid.webp"
 },
 "geb_RedSalamander": {
@@ -197,7 +245,7 @@ const FISHDETAIL = {
 "img": "fish/geb_RedSalamander.webp"
 },
 "geb_RedSwampCrayFish": {
-"desc": "Procambarus clarkii, known variously as the red swamp crayfish, Louisiana crawfish or mudbug,[4] is a species of cambarid crayfish native to freshwater bodies of northern Mexico, and southern and southeastern United States, but also introduced elsewhere (both in North America and other continents), where it is often an invasive pest.",
+"desc": "Procambarus clarkii, known variously as the red swamp crayfish, Louisiana crawfish or mudbug, is a species of cambarid crayfish native to freshwater bodies of northern Mexico, and southern and southeastern United States, but also introduced elsewhere (both in North America and other continents), where it is often an invasive pest.",
 "img": "fish/geb_RedSwampCrayFish.webp"
 },
 "geb_RoughNeckRock": {
@@ -213,7 +261,7 @@ const FISHDETAIL = {
 "img": "fish/geb_Sauger.webp"
 },
 "geb_Severum": {
-"desc": "Heros severus, is a species of tropical freshwater cichlid native to the upper Orinoco and upper Rio Negro basins in South America. It has historically been confused with several other species in the genus, most recently H. liberifer. This species is rarely found in the aquarium trade.",
+"desc": "Heros severus is a species of tropical freshwater cichlid native to the upper Orinoco and upper Rio Negro basins in South America. It has historically been confused with several other species in the genus, most recently H. liberifer. This species is rarely found in the aquarium trade.",
 "img": "fish/geb_Severum.webp"
 },
 "geb_SiameseTigerFish": {
@@ -225,11 +273,11 @@ const FISHDETAIL = {
 "img": "fish/geb_SignalCrayFish.webp"
 },
 "geb_SlimySculpin": {
-"desc": "The slimy sculpin (Cottus cognatus) is a freshwater species of fish belonging to the family Cottidae, which is the largest sculpin family. They usually inhabit cold rocky streams or lakes across North America, ranging from the Great Lakes, southeast Minnesota, northeast Iowa, southwest Wisconsin and northeast Canada. Slimy sculpins have also been found roaming the cold streams of eastern Siberia. They are commonly confused with their closely related relatives, Mottled sculpin (Cottus bairdi), and with tubenose gobies who are both freshwater fishes as well. The slimy sculpin is a nocturnal fish that usually spends most of its time on the stream bottom and seeks shelter under rocks and logs, especially during spawning season. When it swims, it sometimes appears to be &quot;hopping&quot; along the bottom because of its inefficient ability to swim. This is partly due to the absence of a swim bladder, which normally gives buoyancy to a fish.",
+"desc": "The slimy sculpin (Cottus cognatus) is a freshwater species of fish belonging to the family Cottidae, which is the largest sculpin family. They usually inhabit cold rocky streams or lakes across North America, ranging from the Great Lakes, southeast Minnesota, northeast Iowa, southwest Wisconsin and northeast Canada. Slimy sculpins have also been found roaming the cold streams of eastern Siberia. They are commonly confused with their closely related relatives, Mottled sculpin (Cottus bairdii), and with tubenose gobies who are both freshwater fishes as well. The slimy sculpin is a nocturnal fish that usually spends most of its time on the stream bottom and seeks shelter under rocks and logs, especially during spawning season. When it swims, it sometimes appears to be &quot;hopping&quot; along the bottom because of its inefficient ability to swim. This is partly due to the absence of a swim bladder, which normally gives buoyancy to a fish.",
 "img": "fish/geb_SlimySculpin.webp"
 },
 "geb_SmallMouthBass": {
-"desc": "The smallmouth bass (Micropterus dolomieu) is a species of freshwater fish in the sunfish family (Centrarchidae) of the order Perciformes. It is the type species of its genus Micropterus (black basses), and is a popular game fish sought by anglers throughout the temperate zones of North America, and has been spread by stocking-as well as illegal introductions-to many cool-water tributaries and lakes in Canada and more so introduced in the United States.",
+"desc": "The smallmouth bass (Micropterus dolomieu) is a species of freshwater fish in the sunfish family (Centrarchidae) of the order Centrarchiformes. It is the type species of its genus Micropterus (black basses), and is a popular game fish sought by anglers throughout the temperate zones of North America, and has been spread by stocking, as well as illegal introductions, to many cool-water tributaries and lakes in Canada and even more in the United States.",
 "img": "fish/geb_SmallMouthBass.webp"
 },
 "geb_SnowCrab": {
@@ -257,7 +305,7 @@ const FISHDETAIL = {
 "img": "fish/geb_StripedBass.webp"
 },
 "geb_SunFish": {
-"desc": "Centrarchidae, better known as sunfishes, is a family of freshwater ray-finned fish belonging to the order Perciformes (formerly belonging to the deprecated order Centrarchiformes), native only to North America. There are eight universally included genera within the centrarchid family: Lepomis (true sunfishes), Micropterus (black basses), Pomoxis (crappies), Enneacanthus (banded sunfishes), Centrarchus (type genus, consisting solely of the flier C. macropterus), Archoplites (Sacramento perch), Ambloplites (rock basses), and Acantharchus (mud sunfish).",
+"desc": "The redbreast sunfish (Lepomis auritus) is a freshwater fish of the sunfish family (Centrarchidae) in the order Centrarchiformes. It is native to rivers and streams on the Atlantic side of North America, from New Brunswick in Canada south to Florida, and has been introduced to many other waters. It prefers rocky and sandy pools in streams and rivers, as well as lake shores. Its back is olive to bronze, its cheeks carry blue-green streaks, and it has a long, narrow, black ear flap. Breeding males get a bright orange-red breast, which gives the species its name. It eats aquatic insects, crustaceans, snails and small fish, usually grows to 10–20 cm (4–8 in) and rarely passes 0.5 kg (1 lb). A popular panfish, it bites readily on worms, crickets and small spinners.",
 "img": "fish/geb_SunFish.webp"
 },
 "geb_TigerMuskellunge": {
@@ -269,7 +317,7 @@ const FISHDETAIL = {
 "img": "fish/geb_WallEye.webp"
 },
 "geb_WhiteBass": {
-"desc": "The white bass, silver bass, or sand bass (Morone chrysops) is a freshwater fish of the temperate bass family Moronidae. commonly around 12-15 inches long. The species&#x27; main color is silver-white to pale green. Its back is dark, with white sides and belly, and with narrow dark stripes running lengthwise on its sides. It has large, rough scales and two dorsal fins. They are widely distributed across North America, inhabiting large reservoirs and rivers. When mating in the spring, they are more often found in shallow rivers, creeks, and streams. They have been introduced in some places as sport fish and also to predate on nuisance fish, such as gizzard shad. It is the state fish of Oklahoma.",
+"desc": "The white bass, silver bass, or sand bass (Morone chrysops) is a freshwater fish of the temperate bass family Moronidae. It is commonly around 12-15 inches long. The species&#x27; main color is silver-white to pale green. Its back is dark, with white sides and belly, and with narrow dark stripes running lengthwise on its sides. It has large, rough scales and two dorsal fins. They are widely distributed across North America, inhabiting large reservoirs and rivers. When mating in the spring, they are more often found in shallow rivers, creeks, and streams. They have been introduced in some places as sport fish and also to predate on nuisance fish, such as gizzard shad. It is the state fish of Oklahoma.",
 "img": "fish/geb_WhiteBass.webp"
 },
 "geb_WhiteGrunt": {
@@ -277,7 +325,7 @@ const FISHDETAIL = {
 "img": "fish/geb_WhiteGrunt.webp"
 },
 "geb_YellowFinTuna": {
-"desc": "The yellowfin tuna (Thunnus albacares) is a species of tuna found in pelagic waters of tropical and subtropical oceans worldwide.\n\nYellowfin is often marketed as ahi, from the Hawaiian ?ahi, a name also used there for the closely related bigeye tuna. The species name, albacares (&quot;white meat&quot;) can also lead to confusion: in English, the albacore (Thunnus alalunga) is a different species, while yellowfin is officially designated albacore in French and referred to as albacora by Portuguese fishermen.\n\nThe yellowfin tuna is among the larger tuna species, reaching weights over 180 kg (400 lb), but is significantly smaller than the Atlantic and Pacific bluefin tunas, which can reach over 450 kg (990 lb), and slightly smaller than the bigeye tuna and the southern bluefin tuna.",
+"desc": "The yellowfin tuna (Thunnus albacares) is a species of tuna found in pelagic waters of tropical and subtropical oceans worldwide.\n\nYellowfin is often marketed as ahi, from the Hawaiian &#x27;ahi, a name also used there for the closely related bigeye tuna. The species name, albacares (&quot;white meat&quot;) can also lead to confusion: in English, the albacore (Thunnus alalunga) is a different species, while yellowfin is officially designated albacore in French and referred to as albacora by Portuguese fishermen.\n\nThe yellowfin tuna is among the larger tuna species, reaching weights over 180 kg (400 lb), but is significantly smaller than the Atlantic and Pacific bluefin tunas, which can reach over 450 kg (990 lb), and slightly smaller than the bigeye tuna and the southern bluefin tuna.",
 "img": "fish/geb_YellowFinTuna.webp"
 },
 "geb_YellowPerch": {

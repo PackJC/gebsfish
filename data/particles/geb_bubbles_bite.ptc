@@ -1,0 +1,131 @@
+EffectDef {
+ Emitors {
+  EmitorDef bubbling_1 {
+   ShapeType Ellipse
+   ShapeSize 0.5 0 0.5
+   MaxNum 2
+   BirthRate 4
+   BirthRateRND 2
+   Offset 0 0 0
+   Material "{EA7A66771648210A}Graphics/Particles/materials/enviroment/boat_splash_white_3.emat"
+   CenterY -0.906
+   ScaleX 1
+   ScaleY 0.54
+   SizeMultiplier 0.6
+   SizeRND 0.5
+   Velocity 0
+   AnimFPS 30
+   LifetimeByAnim 1
+   LifeTime 1
+   Color {
+    0 1 1 1 1 1 1 1
+   }
+   Alpha {
+    0 0 0.62907 0.68826 1 0.7004
+   }
+   EffectTime 1.2
+   Repeat 0
+   SizeMast {
+    0 1 0.2061 0.85625 0.5 1 0.84821 0.8375 1 1
+   }
+   BRateMast {
+    0 1 0.10112 0.63968 0.21951 1 0.35671 0.57895 0.49339 1 0.61941 0.7166 0.72205 1 0.89736 1 0.99746 0.73279 1 1
+   }
+  }
+  EmitorDef bubbling_2 {
+   ShapeType Ellipse
+   ShapeSize 0.7 0 0.7
+   MaxNum 6
+   BirthRate 4
+   BirthRateRND 1
+   Offset 0 0 0
+   Material "{1E7221EF1B95497E}Graphics/Particles/materials/enviroment/boat_splash_white_2.emat"
+   CenterY -0.906
+   ScaleX 1
+   ScaleY 0.468
+   SizeMultiplier 0.5
+   SizeRND 1
+   Velocity 0
+   AnimFPS 30
+   LifetimeByAnim 1
+   LifeTime 1
+   Color {
+    0 1 1 1 1 1 1 1
+   }
+   Alpha {
+    0 0 0.48882 0.68016 1 0.74494
+   }
+   Size {
+    0 0 0.48831 1 1 1
+   }
+   EffectTime 1.2
+   SizeMast {
+    0 1 0.1503 0.69375 0.53869 1 0.78423 0.81875 1 1
+   }
+   BRateMast {
+    0 1 0.10772 0.48178 0.24848 1 0.41311 0.53036 0.55183 1 0.70427 0.54656 0.85061 1 0.95759 0.8125 1 1
+   }
+   Repeat 0
+  }
+  EmitorDef bubbling_3 {
+   ShapeType Ellipse
+   ShapeSize 0.35 0 0.35
+   MaxNum 3
+   BirthRate 1
+   BirthRateRND 2
+   Offset 0 0 0
+   Material "{EA7A66771648210A}Graphics/Particles/materials/enviroment/boat_splash_white_3.emat"
+   CenterY -0.906
+   ScaleX 1
+   ScaleY 0.848
+   SizeMultiplier 0.5
+   SizeRND 0.5
+   Velocity 0
+   AnimFPS 30
+   LifetimeByAnim 1
+   LifeTime 1
+   Color {
+    0 1 1 1 1 1 1 1
+   }
+   Alpha {
+    0 0 0.58943 0.68826 1 0.74494
+   }
+   Size {
+    0 0 0.23577 0.82186 1 1
+   }
+   EffectTime 1.2
+   SizeMast {
+    0 1 0.1994 0.90625 0.4933 1 0.80432 0.9 1 1
+   }
+   BRateMast {
+    0 1 0.09807 0.73279 0.21087 1 0.35315 0.72065 0.49898 1 0.64482 0.69231 0.8064 1 0.92327 0.73279 1 1
+   }
+   Repeat 0
+  }
+  EmitorDef bubbling_fishingsplash {
+   ShapeType Ellipse
+   ShapeSize 1 0 1
+   MaxNum 30
+   BirthRate 120
+   BirthRateRND 1
+   Offset 0 0 0
+   Material "{52BD61AA7D3F97EA}Graphics/Particles/materials/enviroment/Fishing_splash.emat"
+   CenterY -0.563
+   ScaleX 1
+   ScaleY 0.7
+   SizeMultiplier 0.05
+   SizeRND 0.2
+   Velocity 0
+   AnimOnce 1
+   AnimFPS 60
+   LifetimeByAnim 0
+   RandomFrame 0
+   LifeTime 0.5
+   EffectTime 1.2
+   BRateMast {
+    0 1 0.18445 0 0.34604 1 0.40854 0 0.48476 1 0.5564 0 0.60874 1 0.65295 0 0.71697 1 0.79573 0 0.84096 1 0.88839 0 0.99628 1 1 1
+   }
+   Repeat 0
+  }
+ }
+}

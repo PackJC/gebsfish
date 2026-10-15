@@ -1,10 +1,10 @@
 /*
 
-  CREATED BY PACKJC
-  https://github.com/PackJC/gebsfish
-  https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
-  https://discord.com/invite/G8uSGZ8yyf
-  Contributions welcome via github
+	CREATED BY PACKJC
+	https://github.com/PackJC/gebsfish
+	https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117
+	https://discord.com/invite/G8uSGZ8yyf
+	Contributions welcome via github
 
 */
 
@@ -14,8 +14,8 @@ class CfgPatches {
 			"JM_CF_Scripts",  // Required for GetRPCManager()
 			"DZ_Scripts",
 			"DZ_Data",
-            "DZ_Vehicles",
-            "DZ_Sounds_Effects",
+			"DZ_Vehicles_Water",  // Boat_01 (there is no "DZ_Vehicles" patch)
+			"DZ_Sounds_Effects",
 			"DZ_Weapons_Melee"
 		};
 	};
@@ -26,14 +26,17 @@ class CfgMods {
 		picture = "gebsfish\data\logo.paa";					// picture in expanded description
 		logoSmall = "gebsfish\data\logo.paa";				// icon next to mod name when description is not expanded
 		logo = "gebsfish\data\logo.paa";					// logo below game menu
-		logoHover = "gebsfish\data\logo_hover.paa";			// logo hovered
-		overview = "DayZ Fish Expansion";
+		logoOver = "gebsfish\data\logo_hover.paa";			// logo hovered (CfgMods reads logoOver, as mod.cpp does)
+		overview = "DayZ Fish Expansion";  // keep in step with mod.cpp's overview
 		action="";
 		name="gebsfish";
-		creditsJson = "gebsfish/Scripts/Credits.json";
+		creditsJson = "gebsfish/scripts/Credits.json";
+		// Without this the engine looks for gebsfish/Anims/cfg/skeletons.anim.xml and
+		// logs "ANIMATION (E): Can't load ..." on every start; point it at vanilla's.
+		skeletonDefinitions = "DZ/anims/cfg/skeletons.anim.xml";
 		author="Geb";
 		authorID="0";
-		version="3.3.2";
+		version="4.0.0";
 		extra=0;
 		type="mod";
 		dependencies[]= {
@@ -49,20 +52,26 @@ class CfgMods {
 			class gameScriptModule {
 				value="";
 				files[]= {
-					"gebsfish\scripts\3_Game"
+					"gebsfish/scripts/3_game"
 				};
 			};
 			class worldScriptModule {
 				value="";
 				files[]= {
-					"gebsfish\scripts\4_world"
+					"gebsfish/scripts/4_world"
 				};
 			};
 			class missionScriptModule {
 				value = "";
 				files[] =
 				{
-					"gebsfish\scripts\5_mission"
+					"gebsfish/scripts/5_mission"
+				};
+			};
+			// The mod's own inventory icons (the fish mount slot's ghost icon).
+			class imageSets {
+				files[] = {
+					"gebsfish/gui/gebsfish.imageset"
 				};
 			};
 		};
@@ -70,23 +79,27 @@ class CfgMods {
 };
 
 class CfgSoundSets {
-    class PredatorWarning_SoundSet {
-        soundShaders[] = { "PredatorWarning_SoundShader" };
-        volumeFactor = 1.0;
-        spatial = 1;
-        doppler = 0;
-        loop = 0;
-    };
+	// Played by each warned player's own client on its own character (the
+	// server picks who is in range), so it is a plain, non-positional sound:
+	// a positional one needs mono samples and a range, and these are stereo.
+	class PredatorWarning_SoundSet {
+		soundShaders[] = { "PredatorWarning_SoundShader" };
+		volumeFactor = 1.0;
+		spatial = 0;
+		doppler = 0;
+		loop = 0;
+	};
 };
 
 class CfgSoundShaders {
-    class PredatorWarning_SoundShader {
-        samples[] = { 
+	class PredatorWarning_SoundShader {
+		samples[] = {
 			{ "gebsfish\data\sounds\predator.ogg", 1 },
 			{ "gebsfish\data\sounds\loon-wail-3x.ogg", 1 } ,
-			{ "gebsfish\data\sounds\loon-short-warning.ogg", 1 } 
-			
+			{ "gebsfish\data\sounds\loon-short-warning.ogg", 1 }
+
 		};
-        volume = 1.0;
-    };
+		volume = 1.0;
+		range = 50;
+	};
 };

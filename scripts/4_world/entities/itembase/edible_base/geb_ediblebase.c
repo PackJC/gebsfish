@@ -8,7 +8,12 @@
 
 */
 
-class geb_EdibleBase extends Edible_Base {
+// Whole fish behave like vanilla Carp: a raw corpse that rots, cooked only
+// as fillets. A config class with no script class of its own runs as its
+// nearest scripted config ancestor, so the config-only fish bases need these
+// script twins -- without them every species under them ran as plain
+// Edible_Base, whose CanDecay() is false, and never rotted.
+class geb_FishBase extends Edible_Base {
 	override bool CanBeCookedOnStick() {
 		return false;
 	}
@@ -24,11 +29,16 @@ class geb_EdibleBase extends Edible_Base {
 	override bool CanDecay() {
 		return true;
 	}
+}
 
-	override bool CanSaveItemInHands(EntityAI item_in_hands) {
-		return false;
-	}
+class geb_FreshFish_Base extends geb_FishBase {}
+class geb_SaltFish_Base extends geb_FishBase {}
+class geb_LargeFish_Base extends geb_FishBase {}
 
+// Big fish: carried two-handed like a heavy item.
+class geb_EdibleBase extends geb_FishBase {
+	// No CanSaveItemInHands here: the game asks the holder (the player), never
+	// the item, so an override on the fish never ran.
 	override bool IsHeavyBehaviour() {
 		return true;
 	}
@@ -38,57 +48,33 @@ class geb_EdibleBase extends Edible_Base {
 	}
 }
 
-class geb_AngelShark extends geb_EdibleBase {}
+// The sharks (data/fish/config.cpp geb_Shark_Base): their first loot box is fitted
+// belly-down for dropping, and a second box and camera (boundingbox_min2/max2,
+// invView2) hold the inventory picture they always had. Vanilla shows view 1 only
+// on the ground and as an attachment; the sharks show it everywhere. The script
+// class is the config name, so each shark's script class must extend this one
+// (they extended geb_EdibleBase, and the override never ran).
+class geb_Shark_Base extends geb_EdibleBase {
+	override int GetViewIndex() {
+		return 1;
+	}
+}
+
+class geb_AngelShark extends geb_Shark_Base {}
 class geb_AtlanticBlueMarlin extends geb_EdibleBase {}
 class geb_AtlanticSailFish extends geb_EdibleBase {}
-class geb_GreatWhiteShark extends geb_EdibleBase {}
-class geb_HammerHeadShark extends geb_EdibleBase {}
-class geb_LeopardShark extends geb_EdibleBase {}
+class geb_GreatWhiteShark extends geb_Shark_Base {}
+class geb_HammerHeadShark extends geb_Shark_Base {}
+class geb_LeopardShark extends geb_Shark_Base {}
 class geb_MahiMahi extends geb_EdibleBase {}
 class geb_LakeSturgeon extends geb_EdibleBase {}
 
-class geb_FatHeadMinnow extends Edible_Base {
-    override void OnWasAttached(EntityAI parent, int slot_id) {
-		super.OnWasAttached(parent, slot_id);
-		
-		if (InventorySlots.GetSlotName(slot_id) == "Bait") {
-			SetAnimationPhase("bait_unhooked",1);
-			SetAnimationPhase("bait_hooked",0);
-		}
-	}
-	
-	override void OnWasDetached(EntityAI parent, int slot_id) {
-		super.OnWasDetached(parent, slot_id);
-		
-		if (InventorySlots.GetSlotName(slot_id) == "Bait") {
-			SetAnimationPhase("bait_unhooked",0);
-			SetAnimationPhase("bait_hooked",1);
-		}
-	}
-}
-
-class geb_AmericanBullFrog extends Edible_Base {
-    override void OnWasAttached(EntityAI parent, int slot_id) {
-		super.OnWasAttached(parent, slot_id);
-		
-		if (InventorySlots.GetSlotName(slot_id) == "Bait") {
-			SetAnimationPhase("bait_unhooked",1);
-			SetAnimationPhase("bait_hooked",0);
-		}
-	}
-	
-	override void OnWasDetached(EntityAI parent, int slot_id) {
-		super.OnWasDetached(parent, slot_id);
-		
-		if (InventorySlots.GetSlotName(slot_id) == "Bait") {
-			SetAnimationPhase("bait_unhooked",0);
-			SetAnimationPhase("bait_hooked",1);
-		}
-	}
-}
-
-class geb_RedSalamander extends Edible_Base {
-    override void OnWasAttached(EntityAI parent, int slot_id) {
+// The live baits are Shrimp in config, so they extend vanilla's Shrimp
+// script class too: that is what makes them cookable, eatable as meat, and
+// perishable (plain Edible_Base gave them none of it). On a hook they show
+// their hooked model instead of the loose one.
+class geb_LiveBaitBase extends Shrimp {
+	override void OnWasAttached(EntityAI parent, int slot_id) {
 		super.OnWasAttached(parent, slot_id);
 
 		if (InventorySlots.GetSlotName(slot_id) == "Bait") {
@@ -106,6 +92,10 @@ class geb_RedSalamander extends Edible_Base {
 		}
 	}
 }
+
+class geb_FatHeadMinnow extends geb_LiveBaitBase {}
+class geb_AmericanBullFrog extends geb_LiveBaitBase {}
+class geb_RedSalamander extends geb_LiveBaitBase {}
 
 // =============================================================================
 // geb_Cooler preservation hook
@@ -126,10 +116,8 @@ class geb_RedSalamander extends Edible_Base {
 //   2. Behavior is gated on the item actually being inside a geb_Cooler.
 //      Items not in a cooler hit the early-out and pass straight through
 //      to super with vanilla delta intact -- no global side effect.
-//   3. The preservation factor is a class-level constant (not a hardcoded
-//      literal scattered through the function). A sub-mod can extend
-//      Edible_Base further and override this constant to retune without
-//      copying the override.
+//   3. The preservation factor is one class-level constant, not a literal
+//      scattered through the function.
 //   4. Walks the full hierarchy parent chain rather than just the direct
 //      parent, so a fillet stored inside a ziploc / sealed bag / nested
 //      container that itself sits in the cooler still benefits.
@@ -145,9 +133,12 @@ modded class Edible_Base {
 
 	// Decay multiplier applied to ProcessDecay's `delta` when the item is
 	// hierarchy-parented to a geb_Cooler. See comment block above for the
-	// scale. Keep as `protected const` so sub-mods can override it via
-	// further inheritance without touching this file.
+	// scale.
 	protected const float GEBSFISH_COOLER_DECAY_MULTIPLIER = 0.0;
+
+	// A vanilla barrel at least this full of water is a live well for whole
+	// fish and minnows (see GebsfishIsInWaterBarrel).
+	protected const float GEBSFISH_BARREL_MIN_WATER = 0.5;
 
 	override void ProcessDecay(float delta, bool hasRootAsPlayer) {
 		// Only intervene when the item is inside one of our preserving
@@ -159,6 +150,10 @@ modded class Edible_Base {
 			delta = 0;   // worm/bug/minnow containers keep live bait fresh
 		else if (GebsfishIsMountedTrophy())
 			delta = 0;   // taxidermy: a fish on the wall mount never rots
+		else if (GebsfishIsDryingOnRack())
+			delta = 0;   // drying in the open air: no rot while the weather lets it dry
+		else if (GebsfishIsInWaterBarrel() && GebsfishIsLiveCatch())
+			delta = 0;   // a water barrel half full or more is a live well
 
 		super.ProcessDecay(delta, hasRootAsPlayer);
 	}
@@ -178,17 +173,45 @@ modded class Edible_Base {
 		EntityAI parent = GetHierarchyParent();
 		while (parent) {
 			geb_Cooler_base cooler;
-			if (Class.CastTo(cooler, parent))
+			// A ruined cooler is just a box: it no longer chills or preserves.
+			if (Class.CastTo(cooler, parent) && !cooler.IsRuined())
 				return true;
 			parent = parent.GetHierarchyParent();
 		}
 		return false;
 	}
 
+	// A vanilla barrel holding water (any kind, fresh, clean or salt) at least
+	// half full: the item sits in its cargo, in the water. Only the direct
+	// parent counts -- a fish inside a box inside the barrel isn't in the water.
+	protected bool GebsfishIsInWaterBarrel() {
+		Barrel_ColorBase barrel = Barrel_ColorBase.Cast(GetHierarchyParent());
+		if (!barrel || barrel.IsRuined() || barrel.GetQuantityMax() <= 0)
+			return false;
+		if ((barrel.GetLiquidType() & LIQUID_GROUP_WATER) == 0)
+			return false;
+		return barrel.GetQuantity() >= barrel.GetQuantityMax() * GEBSFISH_BARREL_MIN_WATER;
+	}
+
+	// What a water barrel keeps alive: whole fish (the mod's fish bases and
+	// vanilla's whole fish), the minnow and the juvenile squid. Worms and insects age in modded
+	// Worm, which doesn't look at barrels, so they still die there.
+	protected bool GebsfishIsLiveCatch() {
+		return IsKindOf("geb_FreshFish_Base") || IsKindOf("geb_SaltFish_Base") || IsKindOf("geb_LargeFish_Base") || IsKindOf("geb_FatHeadMinnow") || IsKindOf("geb_SquidJuvenile_Base") || IsKindOf("Carp") || IsKindOf("Mackerel") || IsKindOf("WalleyePollock") || IsKindOf("SteelheadTrout") || IsKindOf("Catfish") || IsKindOf("Sardines") || IsKindOf("Bitterlings");
+	}
+
 	// Trophy check: the fish attaches directly to the plaque, so a single
 	// parent hop is enough -- no full hierarchy walk needed.
 	protected bool GebsfishIsMountedTrophy() {
 		return geb_WoodenFishMount.Cast(GetHierarchyParent()) != null;
+	}
+
+	// A fillet hanging on a Fish Drying Rack while the rack is drying (it stands
+	// in the world, drying is on, and rain and snow are low): see
+	// geb_FishDryingRack.GebIsDrying. In rain or snow it decays as usual.
+	protected bool GebsfishIsDryingOnRack() {
+		geb_FishDryingRack rack = geb_FishDryingRack.Cast(GetHierarchyParent());
+		return rack && rack.GebIsDrying();
 	}
 
 	// Same hierarchy walk for the dedicated bait containers. Tackle boxes are
@@ -200,11 +223,57 @@ modded class Edible_Base {
 			geb_WormContainer wormContainer;
 			geb_BugContainer bugContainer;
 			geb_MinnowBucket minnowBucket;
-			if (Class.CastTo(wormContainer, parent) || Class.CastTo(bugContainer, parent) || Class.CastTo(minnowBucket, parent))
+			// A ruined one no longer keeps anything fresh.
+			if ((Class.CastTo(wormContainer, parent) || Class.CastTo(bugContainer, parent) || Class.CastTo(minnowBucket, parent)) && !parent.IsRuined())
 				return true;
 			parent = parent.GetHierarchyParent();
 		}
 		return false;
+	}
+
+	// Flies swarm over rotten fish and fillets lying loose on the ground. Each
+	// client runs its own swarm: the food stage and the item's place are synced.
+	protected ref EffectParticle m_GebsfishFlies;
+
+	override void EEInit() {
+		super.EEInit();
+		GebsfishUpdateFlies();
+	}
+
+	override void EEDelete(EntityAI parent) {
+		GebsfishStopFlies();
+		super.EEDelete(parent);
+	}
+
+	override void EEItemLocationChanged(notnull InventoryLocation oldLoc, notnull InventoryLocation newLoc) {
+		super.EEItemLocationChanged(oldLoc, newLoc);
+		GebsfishUpdateFlies();
+	}
+
+	override void OnVariablesSynchronized() {
+		super.OnVariablesSynchronized();
+		GebsfishUpdateFlies();
+	}
+
+	protected void GebsfishUpdateFlies() {
+		if (g_Game.IsDedicatedServer())
+			return;
+		// the cheap checks first: this runs for every food item on every client
+		if (IsFoodRotten() && !GetHierarchyParent() && (GebsfishIsLiveCatch() || IsKindOf("CarpFilletMeat") || IsKindOf("MackerelFilletMeat") || IsKindOf("WalleyePollockFilletMeat") || IsKindOf("SteelheadTroutFilletMeat") || IsKindOf("CatfishFilletMeat"))) {
+			if (!m_GebsfishFlies) {
+				m_GebsfishFlies = new EffSwarmingFlies();
+				SEffectManager.PlayOnObject(m_GebsfishFlies, this, "0 0.15 0");
+			}
+		} else {
+			GebsfishStopFlies();
+		}
+	}
+
+	protected void GebsfishStopFlies() {
+		if (m_GebsfishFlies) {
+			SEffectManager.DestroyEffect(m_GebsfishFlies);
+			m_GebsfishFlies = null;
+		}
 	}
 }
 
@@ -213,42 +282,39 @@ modded class Edible_Base {
 // modded class ages every live bait in the mod plus vanilla worms. The
 // artificial geb_RubberWorm also extends Worm and is explicitly exempted.
 //
-// Aging drains item health in steps; at Ruined the bait is dead. It pauses
-// while the bait sits in a worm/bug container (its natural habitat) or a
-// cooler (refrigerated bait keeps, like real anglers do with worms). Tackle
-// boxes do NOT pause it -- the dedicated containers are the point.
-//   BAIT_LIFETIME_SECS   = real seconds from pristine to ruined when exposed
-//   BAIT_AGING_TICK_SECS = seconds between aging steps
+// Aging drains item health; at Ruined the bait is dead. It pauses while the
+// bait sits in a worm/bug container (its natural habitat) or a cooler, as
+// long as that container isn't ruined
+// (refrigerated bait keeps, like real anglers do with worms). Tackle boxes do
+// NOT pause it -- the dedicated containers are the point.
+//
+// It runs on the Central Economy's periodic item update (OnCEIterate), the
+// same clock vanilla uses for food rot and item temperature, rather than a
+// timer per worm: hundreds of loose worms meant hundreds of timers ticking
+// every frame, and dead ones kept ticking. The update hands over the seconds
+// since the item's last one, so the rate doesn't depend on how often it runs.
+//   BAIT_LIFETIME_SECS = real seconds from pristine to ruined when exposed,
+//                        at the server's normal food decay (FoodDecay 1)
 modded class Worm {
-	protected const float BAIT_LIFETIME_SECS   = 5400.0;  // 90 minutes
-	protected const float BAIT_AGING_TICK_SECS = 300.0;   // 5 minutes
+	protected const float BAIT_LIFETIME_SECS = 5400.0;  // 90 minutes
 
-	protected ref Timer m_GebAgingTimer;
-
-	override void EEInit() {
-		super.EEInit();
-		if (!g_Game.IsServer())
+	override void OnCEIterate(float currentTime, float elapsedTime) {
+		super.OnCEIterate(currentTime, elapsedTime);
+		if (!g_Game.IsServer() || IsRuined())
 			return;
 		// Artificial lure: never dies.
 		if (IsKindOf("geb_RubberWorm"))
 			return;
-		m_GebAgingTimer = new Timer(CALL_CATEGORY_SYSTEM);
-		m_GebAgingTimer.Run(BAIT_AGING_TICK_SECS, this, "OnGebBaitAgingTick", null, true);
-	}
-
-	override void EEDelete(EntityAI parent) {
-		super.EEDelete(parent);
-		if (m_GebAgingTimer)
-			m_GebAgingTimer.Stop();
-	}
-
-	void OnGebBaitAgingTick() {
-		if (IsRuined())
+		if (elapsedTime <= 0 || GebsfishIsBaitPreserved())
 			return;
-		if (GebsfishIsBaitPreserved())
+		// The server's food decay setting (FoodDecay in the CE's globals.xml)
+		// sets the pace, as it does for vanilla food rot: 0 stops the clock,
+		// 0.5 doubles the 90 minutes.
+		float decay = g_Game.GetFoodDecayModifier();
+		if (decay <= 0)
 			return;
 
-		float step = GetMaxHealth("", "") * (BAIT_AGING_TICK_SECS / BAIT_LIFETIME_SECS);
+		float step = GetMaxHealth("", "") * (elapsedTime / BAIT_LIFETIME_SECS) * decay;
 		DecreaseHealth("", "", step);
 	}
 
@@ -265,7 +331,8 @@ modded class Worm {
 			geb_WormContainer wormContainer;
 			geb_BugContainer bugContainer;
 			geb_Cooler_base cooler;
-			if (Class.CastTo(wormContainer, parent) || Class.CastTo(bugContainer, parent) || Class.CastTo(cooler, parent))
+			// A ruined container no longer keeps bait alive.
+			if ((Class.CastTo(wormContainer, parent) || Class.CastTo(bugContainer, parent) || Class.CastTo(cooler, parent)) && !parent.IsRuined())
 				return true;
 			parent = parent.GetHierarchyParent();
 		}

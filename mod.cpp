@@ -1,13 +1,14 @@
 dir="gebsfish";
-overview = "Gebs Fishing Expansion";
+overview = "DayZ Fish Expansion";
 name="gebsfish";
 credits="Geb";
 author="Geb";
 authorID="0";
-version="3.3.2";
+version="4.0.0";
 picture = "gebsfish/data/logo.paa";							// picture in expanded description
 logoSmall = "gebsfish/data/logo.paa";						// icon next to mod name when description is not expanded
 logo = "gebsfish/data/logo.paa";							// logo below game menu
 logoOver = "gebsfish/data/logo_hover.paa";					// on mouse hover over logo
-tooltip = "Gebs Fishing Expansion";							// tool tip on mouse hover
+tooltip = "DayZ Fish Expansion";							// tool tip on mouse hover
+skeletonDefinitions = "DZ/anims/cfg/skeletons.anim.xml";	// stops the "Can't load gebsfish/Anims/cfg/skeletons.anim.xml" RPT error
 action = "https://discord.gg/G8uSGZ8yyf";					// link

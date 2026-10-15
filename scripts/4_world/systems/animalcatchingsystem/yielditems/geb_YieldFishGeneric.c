@@ -4,6 +4,8 @@
    ============================================================================ */
 class geb_YieldFishGeneric : GebYieldFishBase {
     protected ref FishConf m_Conf;
+    // The splash at the bobber when this fish bites, by its weight (GebFishingFx).
+    protected int m_GebSplashParticle = ParticleList.FISHING_SIGNAL_SPLASH;
 
     // NOTE: we deliberately declare NO constructor here. The vanilla base
     // (FishYieldItemBase) requires an int (catch probability) in its
@@ -19,7 +21,7 @@ class geb_YieldFishGeneric : GebYieldFishBase {
     // again (it only assigns a registration index and does a map insert).
     // So the setup has to be applied from here. Without this, SetupYield never
     // runs, m_Type stays "" and the enviro/method masks stay 0: the bank keys
-    // on GetType().Hash(), so all 79 species collapse onto one empty entry
+    // on GetType().Hash(), so every species collapses onto one empty entry
     // that matches no environment or catch method -- you catch only junk.
     void SetConf(FishConf conf) {
         m_Conf = conf;
@@ -39,5 +41,12 @@ class geb_YieldFishGeneric : GebYieldFishBase {
                    m_Conf.DawnMultiplier, m_Conf.DayMultiplier, m_Conf.DuskMultiplier,
                    m_Conf.CatchProbability, m_Conf.GetBiteSpeedArray());
         SetTemperature(m_Conf.TempOptimal, m_Conf.TempMin, m_Conf.TempMax);
+        m_GebSplashParticle = GebFishingFx.SplashFor(m_Conf.Classname);
+    }
+
+    // Vanilla shows the picked species' particle when it bites
+    // (ActionFishingNew.PlaySplashEffectSynced, on the server).
+    override int GetCatchParticleID() {
+        return m_GebSplashParticle;
     }
 }

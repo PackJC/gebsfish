@@ -34,7 +34,6 @@
   header img.logo { width: min(220px, 60vw); height: auto; margin: -20px auto -28px; display: block; filter: drop-shadow(0 6px 24px rgba(0,0,0,.55)); }
   header h1 { font-size: 1.25rem; margin-top: 10px; }
   header p.tag { color: var(--dim); font-size: 0.92rem; }
-  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
   nav { position: sticky; top: 0; z-index: 50; background: rgba(19,30,45,.88); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); display: flex; justify-content: center; flex-wrap: wrap; }
   nav button, nav a.navlink { background: none; border: none; color: var(--dim); font-size: 0.95rem; padding: 13px 16px; cursor: pointer; border-bottom: 3px solid transparent; }
@@ -70,7 +69,10 @@
 
   .banner { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--gold); border-radius: 8px; padding: 12px 16px; color: var(--dim); font-size: 0.9rem; margin: 14px 0; }
   .banner.good { border-left-color: #6fe0a8; }
+  .banner.err { border-left-color: var(--red); }
   .banner b { color: var(--text); }
+  .banner .badrow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .banner .badrow > span { flex: 1 1 260px; }
   .banner code, .card code, td code, .help code { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; font-size: 0.84em; color: var(--gold); font-family: Consolas, ui-monospace, monospace; }
 
   .pathbox { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; font-family: Consolas, ui-monospace, monospace; font-size: 0.88rem; margin: 12px 0 20px; overflow-x: auto; white-space: nowrap; }
@@ -104,6 +106,9 @@
 
   /* toggle switch */
   .switch { position: relative; display: inline-block; width: 46px; height: 24px; flex: 0 0 auto; }
+  /* A toggle is a <label> inside .field, so the generic ".field > label" rule
+     (more specific than ".switch") would stretch it to 150px+. */
+  .field > label.switch { flex: 0 0 auto; }
   .switch input { opacity: 0; width: 0; height: 0; }
   .switch i { position: absolute; inset: 0; background: var(--bg2); border: 1px solid var(--border); border-radius: 24px; transition: .15s; }
   .switch i::before { content: ""; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: var(--dim); border-radius: 50%; transition: .15s; }
@@ -121,6 +126,8 @@
   .pill.pond { background: #14432f; color: #6fe0a8; }
   .pill.sea { background: #14324c; color: #6fbce0; }
   .pill.both { background: #3b3054; color: #c1a3f0; }
+  .pill.off { background: #3a3a3a; color: #b8b8b8; }
+  .field .sub2.warn { color: var(--red); }
   .pill.abundant { background: #14432f; color: #6fe0a8; }
   .pill.common { background: #14324c; color: #6fbce0; }
   .pill.uncommon { background: #4c3a14; color: #e0c46f; }
@@ -181,6 +188,7 @@
   .prefrow:hover { background: rgba(33,49,74,.5); }
   .prefrow .names { flex: 1 1 140px; min-width: 120px; font-size: 0.88rem; }
   .prefrow .names small { display: block; color: var(--dim); font-family: Consolas, ui-monospace, monospace; font-size: 0.68rem; }
+  .fishrow .names small.warn, .prefrow .names small.warn { display: block; color: var(--red); font-family: inherit; }
   .prefrow input[type=range] { flex: 2 1 140px; }
   .prefrow .mul { width: 62px; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
   .mul.up { color: var(--accent2); }
@@ -195,6 +203,7 @@
   table.edit input[type=number] { width: 74px; }
   table.edit input[type=text].cfg { width: 180px; font-family: Consolas, ui-monospace, monospace; font-size: 0.82rem; }
   .tblnote { color: var(--dim); font-size: 0.78rem; margin: 4px 2px 0; }
+  table.edit td.badnote { color: var(--gold); font-size: 0.8rem; }
 
   /* ---------- download bar ---------- */
   #dlbar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 60; background: rgba(19,30,45,.94); backdrop-filter: blur(10px); border-top: 1px solid var(--border); padding: 10px 14px; display: none; }
@@ -215,6 +224,42 @@
 
   .placeholder { text-align: center; color: var(--dim); padding: 50px 20px; }
   .placeholder .big { font-size: 2.4rem; }
+
+  /* ---------- what will bite? ---------- */
+  .simctl { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 0 26px; }
+  .simctl .field { align-content: flex-start; }
+  .simctl .field > label { flex: 1 1 100%; color: var(--text); }
+  .simctl .field > label.switch { flex: 0 0 auto; }
+  .simctl .field > select.cfg { max-width: 100%; }
+  .simctl input[type=date].cfg { background: var(--bg2); color: var(--text); border: 1px solid var(--border); border-radius: 7px; padding: 4px 8px; font-size: 0.9rem; font-family: inherit; color-scheme: dark; max-width: 100%; }
+  .simctl input:disabled { opacity: 0.45; }
+  .simctl .pair { display: inline-flex; align-items: center; gap: 6px; color: var(--dim); font-size: 0.82rem; }
+  .simgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr)); gap: 10px; }
+  .simtile { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 13px; min-width: 0; }
+  .simtile .k { color: var(--dim); font-size: 0.72rem; text-transform: uppercase; letter-spacing: .05em; }
+  .simtile .v { font-size: 1.2rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.35; }
+  .simtile .d { color: var(--dim); font-size: 0.78rem; line-height: 1.45; overflow-wrap: anywhere; }
+  .simsys { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .simsys span { border: 1px solid var(--border); border-radius: 20px; padding: 2px 10px; font-size: 0.76rem; color: var(--dim); background: var(--bg2); }
+  .simsys span.on { color: var(--accent2); border-color: rgba(53,208,160,.5); }
+  .simsys span i { font-style: normal; opacity: .75; }
+  .simnotes div + div { margin-top: 4px; }
+  .simnotes, .simsum { overflow-wrap: anywhere; }
+  .simsum { color: var(--dim); font-size: 0.86rem; margin-bottom: 10px; }
+  .simsum b { color: var(--text); }
+  table.simtbl { min-width: 760px; }
+  table.simtbl th.n, table.simtbl td.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  table.simtbl td { padding: 5px 10px; }
+  table.simtbl tr.top td { background: rgba(53,208,160,.08); }
+  table.simtbl tr.junk td { background: rgba(232,193,90,.06); }
+  table.simtbl tr.zero td { opacity: .5; }
+  table.simtbl .mul { font-weight: 600; }
+  .simname b { display: block; font-size: 0.88rem; font-weight: 600; }
+  .simname small { display: block; color: var(--dim); font-family: Consolas, ui-monospace, monospace; font-size: 0.7rem; overflow-wrap: anywhere; }
+  .simname small.list { font-family: inherit; max-width: 300px; }
+  .simbar { height: 5px; background: var(--bg); border-radius: 3px; margin-top: 3px; min-width: 64px; overflow: hidden; }
+  .simbar i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 3px; }
+  tr.junk .simbar i { background: var(--gold); }
 
   @media (max-width: 620px) {
     .fishrow .quick { flex-basis: 100%; }
@@ -238,6 +283,7 @@
   <button data-tab="bait" id="nav-bait">🪱 Bait &amp; Lures<span class="dot"></span></button>
   <button data-tab="general" id="nav-general">⚙️ General<span class="dot"></span></button>
   <button data-tab="junk" id="nav-junk">🗑️ Junk<span class="dot"></span></button>
+  <button data-tab="sim" id="nav-sim">🎯 What will bite?</button>
   <a class="navlink" href="index.html">↩ Back to Wiki</a>
 </nav>
 
@@ -262,7 +308,7 @@
     <b>Where do these files live?</b> The mod generates them on first server start, inside your server's <b>profile</b> folder
     (the directory named by your server's <code>-profiles=</code> launch parameter):
   </div>
-  <div class="pathbox"><span class="dim">…\YourDayZServer\</span>profiles<span class="dim">\</span><b>Gebs</b><span class="dim">\</span>  →  <span class="f">general.json</span>  <span class="f">bait.json</span>  <span class="f">fish.json</span>  <span class="f">junk.json</span></div>
+  <div class="pathbox"><span class="dim">…/YourDayZServer/</span>profiles<span class="dim">/</span><b>Gebs</b><span class="dim">/</span>  →  <span class="f">general.json</span>  <span class="f">bait.json</span>  <span class="f">fish.json</span>  <span class="f">junk.json</span></div>
 
   <div class="banner good">
     <b>Safe to edit.</b> This editor only changes the values you touch. Every other field — including the built-in
@@ -296,8 +342,15 @@
 <!-- ============================ JUNK TAB ============================ -->
 <section class="tab" id="tab-junk">
   <h2>🗑️ Junk — <code style="font-size:1rem;color:var(--gold)">junk.json</code></h2>
-  <p class="lead">Items a rod or trap can drag up instead of a fish. Weighted 0–25 like fish probabilities; health is rolled in the min–max range.</p>
+  <p class="lead">Items a rod can drag up instead of a fish (nets and traps never catch junk). The junk share sets how often that happens; each item's weight (0–25) sets how often it turns up among the junk; health is rolled in the min–max range.</p>
   <div id="junk-editor"></div>
+</section>
+
+<!-- ============================ WHAT WILL BITE? TAB ============================ -->
+<section class="tab" id="tab-sim">
+  <h2>🎯 What will bite?</h2>
+  <p class="lead">Pick a map, a time, the weather and what's on the hook to see the odds the server will use for each catch, worked out with the mod's own math from the files you loaded. It only reads them: nothing here changes your config.</p>
+  <div id="sim-editor"></div>
 </section>
 
 </main>
@@ -341,9 +394,9 @@ const FISHNAME = {
   "geb_BarredMuskellunge":"Barred Muskellunge","geb_SpottedMuskellunge":"Spotted Muskellunge",
   "geb_TigerMuskellunge":"Tiger Muskellunge","geb_Muskellunge":"Muskellunge",
   "geb_AlligatorGar":"Alligator Gar","geb_LargeMouthBass":"Largemouth Bass",
-  "geb_SmallMouthBass":"Smallmouth Bass","geb_WallEye":"Walleye","geb_SunFish":"Sun Fish",
+  "geb_SmallMouthBass":"Smallmouth Bass","geb_WallEye":"Walleye","geb_SunFish":"Redbreast Sunfish",
   "geb_WhiteBass":"White Bass","geb_StripedBass":"Striped Bass","geb_NeoshoBass":"Neosho Bass",
-  "geb_BlackBass":"Black Bass","geb_RainbowTrout":"Rainbow Trout","geb_BrownTrout":"Brown Trout",
+  "geb_BlackBass":"Spotted Bass","geb_RainbowTrout":"Rainbow Trout","geb_BrownTrout":"Brown Trout",
   "geb_BrookTrout":"Brook Trout","geb_LakeTrout":"Lake Trout","geb_CutThroatTrout":"Cutthroat Trout",
   "geb_LakeSturgeon":"Lake Sturgeon","geb_YellowPerch":"Yellow Perch",
   "geb_FlatHeadCatFish":"Flathead Catfish","geb_FatHeadMinnow":"Fathead Minnow",
@@ -356,15 +409,15 @@ const FISHNAME = {
   "geb_RustyCrayFish":"Rusty Crayfish","geb_MahiMahi":"Mahi Mahi",
   "geb_AtlanticSailFish":"Atlantic Sailfish","geb_AngelFish":"Angelfish",
   "geb_AsianSeaBass":"Asian Seabass","geb_AtlanticBlueMarlin":"Atlantic Blue Marlin",
-  "geb_Bonita":"Bonita","geb_CherrySalmon":"Cherry Salmon","geb_ChinookSalmon":"Chinook Salmon",
+  "geb_PacificBonito":"Pacific Bonito","geb_GreatBarracuda":"Great Barracuda","geb_HumboldtSquid":"Humboldt Squid","geb_NorthernShortfinSquid":"Northern Shortfin Squid","geb_ArgentineShortfinSquid":"Argentine Shortfin Squid","geb_JapaneseFlyingSquid":"Japanese Flying Squid","geb_PurplebackFlyingSquid":"Purpleback Flying Squid","geb_EuropeanFlyingSquid":"European Flying Squid","geb_NeonFlyingSquid":"Neon Flying Squid","geb_NorthernShortfinSquidJuvenile":"Juvenile Northern Shortfin Squid","geb_ArgentineShortfinSquidJuvenile":"Juvenile Argentine Shortfin Squid","geb_JapaneseFlyingSquidJuvenile":"Juvenile Japanese Flying Squid","geb_PurplebackFlyingSquidJuvenile":"Juvenile Purpleback Flying Squid","geb_CherrySalmon":"Cherry Salmon","geb_ChinookSalmon":"Chinook Salmon",
   "geb_SockEyeSalmon":"Sockeye Salmon","geb_FlatHeadMullet":"Flathead Mullet",
   "geb_LeopardShark":"Leopard Shark","geb_HammerHeadShark":"Hammerhead Shark",
   "geb_PacificCod":"Pacific Cod","geb_RedHeadCichlid":"Redhead Cichlid",
-  "geb_RoughNeckRock":"Rough Neck Rock","geb_BlueTang":"Blue Tang",
+  "geb_RoughNeckRock":"Rougheye Rockfish","geb_BlueTang":"Blue Tang",
   "geb_LargeHeadHairTailFish":"Largehead Hairtail","geb_HumpHeadWrasse":"Humphead Wrasse",
   "geb_SiameseTigerFish":"Siamese Tigerfish","geb_GreatWhiteShark":"Great White Shark",
   "geb_AngelShark":"Angel Shark","geb_YellowFinTuna":"Yellowfin Tuna","geb_WhiteGrunt":"White Grunt",
-  "geb_SouthernFlounder":"Southern Flounder","geb_YellowSnapper":"Yellow Snapper",
+  "geb_SouthernFlounder":"Southern Flounder","geb_YellowSnapper":"Yellowtail Snapper",
   "geb_BloodClam":"Blood Clam","geb_Mussel":"Mussel","geb_BlackDevilSnail":"Black Devil Snail",
   "geb_StarFish":"Starfish","geb_KingCrab":"King Crab","geb_SnowCrab":"Snow Crab",
   "geb_BlueJellyFish":"Blue Jellyfish","geb_AmericanLobster":"American Lobster",
@@ -374,26 +427,52 @@ const BAITNAME = {
   "Worm":"Earthworm","geb_GrassHopper":"Grasshopper","geb_FieldCricket":"Field Cricket",
   "geb_GrubWorm":"Grub Worm","geb_RubberWorm":"Rubber Worm","geb_FatHeadMinnow":"Live Minnow",
   "geb_RedSalamander":"Live Salamander","Shrimp":"Live Shrimp",
-  "geb_SpinnerBait":"Spinner Baits","geb_SpoonLure":"Spoon Lures",
+  "geb_SpinnerBait":"In-Line Spinners","geb_SpoonLure":"Spoon Lures",
   "geb_Lure":"Hard Lures","geb_CurlyTailJig":"Curly Tail Jigs"
 };
+// Classnames this mod ships, lowercased (the server and the engine match a
+// classname whatever its case). A Species row, bait row or fish preference
+// naming anything else is flagged: renamed by an update, or a typo.
+const KNOWN_SPECIES = new Set(Object.keys(FISHNAME).map(c => c.toLowerCase()));
+const KNOWN_BAITS = new Set(Object.keys(BAITNAME).concat(Object.keys(FISHNAME), typeof ITEMDETAIL !== "undefined" ? Object.keys(ITEMDETAIL) : []).map(c => c.toLowerCase()));
+// fish-details.js and item-details.js escape their text for the wiki, which
+// sets it as HTML. Decode it once where it is used as plain text, or quotes
+// and apostrophes show as &quot; and &#x27;.
+function unesc(s){ const t = document.createElement("textarea"); t.innerHTML = String(s); return t.value; }
+// A classname read from a loaded file can be missing, null or not text at
+// all: the name and picture helpers treat anything but a string as "", so a
+// bad row can't make them throw. own() keeps a classname like "constructor"
+// from finding Object's built-ins in the lookup tables.
+function clsText(cls){ return typeof cls === "string" ? cls : ""; }
+function own(table, key){ return Object.prototype.hasOwnProperty.call(table, key); }
+function isObj(v){ return v !== null && typeof v === "object" && !Array.isArray(v); }
 function niceName(cls){
-  if (FISHNAME[cls]) return FISHNAME[cls];
-  if (BAITNAME[cls]) return BAITNAME[cls];
-  if (typeof ITEMDETAIL !== "undefined" && ITEMDETAIL[cls] && ITEMDETAIL[cls].name) return ITEMDETAIL[cls].name;
+  cls = clsText(cls);
+  if (own(FISHNAME, cls)) return FISHNAME[cls];
+  if (own(BAITNAME, cls)) return BAITNAME[cls];
+  if (typeof ITEMDETAIL !== "undefined" && own(ITEMDETAIL, cls) && ITEMDETAIL[cls].name) return unesc(ITEMDETAIL[cls].name);
   return cls.replace(/^geb_/, "").replace(/([a-z])([A-Z])/g, "$1 $2");
 }
 // Bait-context label: Shrimp/minnow/salamander are both catchable fish AND
 // baits, so in the bait tab prefer the bait wording ("Live Shrimp") over the
 // fish name that niceName() would return first.
-function baitName(cls){ return BAITNAME[cls] || niceName(cls); }
+function baitName(cls){ cls = clsText(cls); return own(BAITNAME, cls) ? BAITNAME[cls] : niceName(cls); }
+// The short ⚠️ text for a classname this mod doesn't ship, "" for one it
+// does. A name an update renamed (SIM_RENAMED) says what it's called now.
+function renamedTo(cls){ const k = clsText(cls).toLowerCase(); return SIM_RENAMED.find(r => r[0].toLowerCase() === k) || null; }
+function speciesFlag(cls){
+  if (KNOWN_SPECIES.has(clsText(cls).toLowerCase())) return "";
+  const r = renamedTo(cls);
+  return r ? "renamed " + r[1] + " in " + r[2] : "not one of this mod's species";
+}
+function baitFlag(cls){ return KNOWN_BAITS.has(clsText(cls).toLowerCase()) ? "" : "not one of this mod's baits or lures"; }
 // Escape before interpolating any loaded-file string into innerHTML — a
 // classname from the JSON is user-supplied and could otherwise inject markup.
 function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
 
 /* ---------- images: try known art, fall back to a themed emoji ---------- */
 function emojiFor(cls){
-  const c = cls.toLowerCase();
+  const c = clsText(cls).toLowerCase();
   if (c.includes("shrimp")) return "🦐";
   if (c.includes("crab")) return "🦀";
   if (c.includes("lobster") || c.includes("crayfish")) return "🦞";
@@ -411,22 +490,35 @@ function emojiFor(cls){
   return "🐟";
 }
 function imgCandidates(cls){
-  // Try the exact classname under fish/ then items/, then the lure-family
-  // image (geb_SpinnerBait -> items/geb_SpinnerBait1.webp) for numbered variants.
-  const fam = cls.replace(/\d+$/, "");
-  return ["fish/" + cls + ".webp", "items/" + cls + ".webp", "items/" + fam + "1.webp"];
+  // Only pictures the wiki's own lists name (fish-details.js, item-details.js):
+  // the species, then the item, then the lure family's first picture
+  // (geb_SpinnerBait7 -> geb_SpinnerBait1) for a numbered variant without one.
+  // Vanilla and unknown classes go straight to the emoji instead of asking for
+  // pictures that don't exist (a 404 each in the console).
+  cls = clsText(cls);
+  if (!cls) return [];
+  const out = [];
+  if (typeof FISHDETAIL !== "undefined" && own(FISHDETAIL, cls)) out.push("fish/" + cls + ".webp");
+  if (typeof ITEMDETAIL !== "undefined") {
+    const fam = cls.replace(/\d+$/, "") + "1";
+    if (own(ITEMDETAIL, cls) && ITEMDETAIL[cls].img) out.push(ITEMDETAIL[cls].img);
+    else if (own(ITEMDETAIL, fam) && ITEMDETAIL[fam].img) out.push(ITEMDETAIL[fam].img);
+  }
+  return out;
 }
 function makeThumb(cls, mini){
   const d = document.createElement("div");
   d.className = "thumb" + (mini ? " mini" : "");
+  const showEmoji = () => { const e = document.createElement("span"); e.className = "emoji"; e.textContent = emojiFor(cls); d.appendChild(e); };
+  const cands = imgCandidates(cls);
+  if (!cands.length) { showEmoji(); return d; }
   const img = document.createElement("img");
   img.alt = "";
-  const cands = imgCandidates(cls);
   let i = 0;
   img.onerror = () => {
     i++;
     if (i < cands.length) { img.src = cands[i]; }
-    else { img.remove(); const e = document.createElement("span"); e.className = "emoji"; e.textContent = emojiFor(cls); d.appendChild(e); }
+    else { img.remove(); showEmoji(); }
   };
   img.src = cands[0];
   d.appendChild(img);
@@ -465,6 +557,135 @@ function toast(msg, err){
   setTimeout(() => t.remove(), err ? 6000 : 3200);
 }
 
+/* ---------- rows the editor can't show, and draws that fail ---------- */
+// Why one row of a loaded list can't be drawn as an entry, or "" when it can.
+// `key` is the field that names the row (Classname, BaitClassname or
+// FishClassname); without a key only nulls and bare values count. The server
+// skips every row flagged here, and so does the simulator.
+function badRowWhy(row, key){
+  if (row === null || row === undefined) return "is empty (null)";
+  if (Array.isArray(row)) return "is a list, not an entry";
+  if (typeof row !== "object") return "is a bare value (" + shortJson(row) + "), not an entry";
+  if (!key) return "";
+  const c = row[key];
+  if (c === undefined || c === null) return "has no " + key;
+  if (typeof c !== "string") return "has a " + key + " that isn't text (" + shortJson(c) + ")";
+  if (c === "") return "has an empty " + key;
+  return "";
+}
+function shortJson(v){ const s = String(JSON.stringify(v)); return s.length > 40 ? s.slice(0, 39) + "…" : s; }
+// "Row 12 (after geb_BlueGill)": where a bad row sits, to find it in a text editor.
+function rowPlace(list, i, key, noun){
+  const name = r => isObj(r) && typeof r[key] === "string" ? r[key] : "";
+  const at = noun + " " + (i + 1);
+  for (let j = i - 1; j >= 0; j--) if (name(list[j])) return at + " (after " + name(list[j]) + ")";
+  for (let j = i + 1; j < list.length; j++) if (name(list[j])) return at + " (before " + name(list[j]) + ")";
+  return at;
+}
+// The notice above a list with rows it can't draw. Nothing is dropped: each
+// row stays in the file exactly as loaded until the admin gives it a
+// classname (it then shows as a normal entry) or removes it; o.after()
+// redraws once one has changed. o = { kind, list, bad: [{ i, why }], key,
+// noun, nouns, where, why, after }.
+function badRowsNotice(o){
+  const n = o.bad.length;
+  const box = document.createElement("div");
+  box.className = "banner badrows";
+  const intro = document.createElement("div");
+  intro.innerHTML = "<b>⚠️ " + n + " " + (n === 1 ? o.noun.toLowerCase() : o.nouns) + " in " + esc(o.where) + " can't be shown here.</b> " + esc(o.why) + " " +
+    (n === 1 ? "It stays in the file exactly as it is unless you fix or remove it below." : "They stay in the file exactly as they are unless you fix or remove them below.");
+  box.appendChild(intro);
+  o.bad.forEach(b => {
+    const row = o.list[b.i];
+    const place = rowPlace(o.list, b.i, o.key, o.noun);
+    const line = document.createElement("div");
+    line.className = "badrow";
+    const txt = document.createElement("span");
+    txt.textContent = place + " " + b.why + ".";
+    line.appendChild(txt);
+    if (isObj(row)) {
+      // An entry whose only fault is its classname is fixed by naming it.
+      const inp = document.createElement("input");
+      inp.type = "text"; inp.className = "cfg"; inp.placeholder = o.key;
+      inp.setAttribute("aria-label", o.key + " for " + place);
+      const set = document.createElement("button");
+      set.type = "button"; set.className = "btn small"; set.textContent = "Set " + o.key;
+      const apply = () => { const v = inp.value.trim(); if (!v) return; row[o.key] = v; markDirty(o.kind); o.after(b.i, false); };
+      set.addEventListener("click", apply);
+      inp.addEventListener("keydown", e => { if (e.key === "Enter") apply(); });
+      line.appendChild(inp);
+      line.appendChild(set);
+    }
+    const del = document.createElement("button");
+    del.type = "button"; del.className = "btn small danger"; del.textContent = "Remove";
+    del.setAttribute("aria-label", "Remove " + place);
+    del.addEventListener("click", () => { o.list.splice(b.i, 1); markDirty(o.kind); o.after(b.i, true); });
+    line.appendChild(del);
+    box.appendChild(line);
+  });
+  return box;
+}
+
+// The notice above a tab whose file names classnames this mod doesn't ship,
+// one line per name. items = [{ name, kind: "species" | "fish" | "bait", baits }]
+// ("fish" = a bait.json preference, listed in `baits` baits).
+function unknownNotice(file, items){
+  const box = document.createElement("div");
+  box.className = "banner oddnames";
+  const intro = document.createElement("div");
+  intro.innerHTML = "<b>⚠️ " + esc(file) + " names " + (items.length === 1 ? "a classname" : items.length + " classnames") + " this mod doesn't have.</b> " +
+    (items.length === 1 ? "It's" : "They're") + " flagged ⚠️ below, and nothing in the file is changed.";
+  box.appendChild(intro);
+  items.forEach(it => {
+    const r = renamedTo(it.name);
+    const line = document.createElement("div");
+    line.className = "badrow";
+    const span = document.createElement("span");
+    let txt = "<code>" + esc(it.name) + "</code>" + (it.kind === "fish" ? " (a fish, in " + it.baits + (it.baits === 1 ? " bait)" : " baits)") : it.kind === "bait" ? " (a bait row)" : "") + ": ";
+    if (r && it.kind === "species") txt += "renamed <code>" + esc(r[1]) + "</code> in " + esc(r[2]) + ". When the server loads this file it renames the row and keeps its settings, or drops it if " + esc(r[1]) + " has a row of its own; What will bite? counts it the same way.";
+    else if (r && it.kind === "fish") txt += "renamed <code>" + esc(r[1]) + "</code> in " + esc(r[2]) + ". When the server loads this file it moves these multipliers to " + esc(r[1]) + ", or drops them where a bait already lists " + esc(r[1]) + "; What will bite? does the same.";
+    else if (it.kind === "species") txt += "not one of this mod's species. Renamed or a typo? The server skips a row whose class doesn't exist, and What will bite? leaves it out.";
+    else if (it.kind === "fish") txt += "not one of this mod's species. Renamed or a typo? A multiplier only applies to a fish of that class.";
+    else txt += "not one of this mod's baits or lures. Renamed or a typo? The row only applies to an item of that class on the hook.";
+    span.innerHTML = txt;
+    line.appendChild(span);
+    box.appendChild(line);
+  });
+  return box;
+}
+
+// What a full draw of a tab found, for the "Loaded" toast: rows it couldn't
+// show as entries, and classnames this mod doesn't ship.
+let drawTally = null;
+function tallyBad(n){ if (drawTally) drawTally.bad += n; }
+function tallyUnknown(names){ if (drawTally) names.forEach(n => drawTally.unknown.add(n)); }
+
+// A tab that throws while drawing must never be left blank without a word:
+// what was drawn stays, a red notice at the top says what failed, and a toast
+// says it once. The loaded file isn't touched, so it can still be downloaded.
+let lastDrawFail = { key: "", at: 0 };
+function drawFailed(kind, host, err){
+  const file = FILES[kind] ? FILES[kind].label : "";
+  const msg = String(err && err.message ? err.message : err).slice(0, 160);
+  if (typeof console !== "undefined") console.error(err);
+  if (host) {
+    const box = document.createElement("div");
+    box.className = "banner err";
+    box.innerHTML = "<b>⚠️ Part of this couldn't be drawn.</b> The editor hit an error: <code>" + esc(msg) + "</code>. " +
+      (file ? "Drawing changes nothing in " + esc(file) + ", and you can still download it; check the file in a text editor near what's missing." : "Nothing in your files was changed.");
+    host.insertBefore(box, host.firstChild);
+  }
+  const key = kind + " " + msg, now = Date.now();
+  if (key !== lastDrawFail.key || now - lastDrawFail.at > 10000) {
+    lastDrawFail = { key: key, at: now };
+    toast("⚠️ Part of " + (file ? "the " + file + " tab" : "What will bite?") + " couldn't be drawn (" + msg + "). Nothing in " + (file ? "the file" : "your files") + " was changed by it.", true);
+  }
+}
+function guarded(kind, host, draw){
+  try { draw(); }
+  catch (err) { drawFailed(kind, host, err); }
+}
+
 /* ---------- file loading ---------- */
 const dz = document.getElementById("dropzone");
 const fi = document.getElementById("fileinput");
@@ -490,9 +711,15 @@ function loadFiles(list){
       if (!kind) { toast("❌ " + f.name + " doesn't look like a Gebsfish config file.", true); return; }
       FILES[kind].data = obj;
       FILES[kind].dirty = false;
-      renderEditor(kind);
+      const found = renderEditor(kind);
       refreshChrome();
+      if (simIsVisible()) simRefresh();
       toast("✅ Loaded " + FILES[kind].label + (f.name !== FILES[kind].label ? " (from " + f.name + ")" : ""));
+      const n = found.bad + found.unknown.length;
+      if (n) toast("⚠️ " + FILES[kind].label + " has " + [
+          found.bad ? found.bad + (found.bad === 1 ? " row" : " rows") + " the editor can't show" : "",
+          found.unknown.length ? found.unknown.length + (found.unknown.length === 1 ? " classname" : " classnames") + " this mod doesn't have (" + found.unknown.slice(0, 3).join(", ") + (found.unknown.length > 3 ? ", …" : "") + ")" : ""
+        ].filter(Boolean).join(" and ") + "; the " + document.getElementById("nav-" + kind).textContent.trim() + " tab flags " + (n === 1 ? "it" : "them") + ". Nothing in the file was changed.", true);
     };
     reader.readAsText(f);
   });
@@ -568,6 +795,9 @@ function activateTab(name){
   document.querySelectorAll("section.tab").forEach(x => x.classList.remove("active"));
   btn.classList.add("active");
   sec.classList.add("active");
+  // The simulator recomputes on every open, so edits made in the other
+  // tabs since it was last shown are always reflected.
+  if (name === "sim") simRefresh();
   window.scrollTo({ top: 0 });
 }
 document.querySelectorAll("nav button").forEach(b => b.addEventListener("click", () => activateTab(b.dataset.tab)));
@@ -577,19 +807,60 @@ document.querySelectorAll("nav button").forEach(b => b.addEventListener("click",
    ========================================================================= */
 function fmtNum(v){ return Math.abs(v) >= 1000 ? v.toLocaleString("en-US") : String(Math.round(v * 1000) / 1000); }
 
+// The config documents some fields as a group: one *Info string covers
+// several keys (RainInfo explains all four rain/storm fields, and so on).
+const HELP_GROUP = {
+  DebugLogs: "DebugInfo",
+  HookFromFishEnable: "HookFromFishInfo", HookFromFishChance: "HookFromFishInfo",
+  CraftBambooFishingNet: "RecipeToggleInfo", CraftHookFromWire: "RecipeToggleInfo", CraftFishMount: "RecipeToggleInfo", CraftDryingRack: "RecipeToggleInfo", CraftFishingLocker: "RecipeToggleInfo",
+  RepairFishingPole: "RecipeToggleInfo", RepairBambooFishingNet: "RecipeToggleInfo",
+  PredatorSpawnChanceFishing: "PredatorSpawnChanceInfo", PredatorSpawnChancePreparing: "PredatorSpawnChanceInfo",
+  PredatorSpawnChanceFailCatch: "PredatorSpawnChanceInfo",
+  PredatorWarningSoundEnable: "PredatorSpawnSoundInfo", PredatorWarningSoundRadius: "PredatorSpawnSoundInfo",
+  PredatorWarningMessageEnable: "PredatorWarningMessageInfo",
+  WeatherCatchBoostEnable: "WeatherCatchBoostInfo",
+  RainThreshold: "RainInfo", StormThreshold: "RainInfo", RainCatchMultiplier: "RainInfo", StormCatchMultiplier: "RainInfo",
+  MaxStackedMultiplier: "CapInfo",
+  MoonPhaseEnable: "MoonPhaseInfo", FullMoonMultiplier: "MoonPhaseInfo", NewMoonMultiplier: "MoonPhaseInfo",
+  TemperatureEffectEnable: "TemperatureInfo", MinTempMultiplier: "TemperatureInfo", MaxTempMultiplier: "TemperatureInfo",
+  PredatorSpawnChance: "PredatorChanceInfo",
+  Enable: "TreasureInfo", Chance: "TreasureInfo"
+};
+["Dawn", "Day", "Dusk", "Night"].forEach(w => ["StartHour", "EndHour", "CatchMultiplier"].forEach(s => { HELP_GROUP[w + s] = "TimeWindowInfo"; }));
+
+// The field's own <Key>Info, else the page's text, else its group's Info.
 function helpFor(obj, key, fallback){
-  const s = obj && typeof obj[key + "Info"] === "string" ? obj[key + "Info"] : null;
-  return s || fallback || null;
+  const own = obj && typeof obj[key + "Info"] === "string" ? obj[key + "Info"] : null;
+  if (own) return own;
+  if (fallback) return fallback;
+  const group = obj && HELP_GROUP[key] ? obj[HELP_GROUP[key]] : null;
+  return typeof group === "string" && group ? group : null;
 }
-function attachHelp(field, text){
+
+// A loaded value that isn't one of a dropdown's choices: show it (and what the
+// game does with it) instead of letting the browser display the first choice.
+function addUnlisted(sel, value, describe){
+  if (typeof value !== "number") return;
+  if (Array.from(sel.options).some(o => o.value !== "" && Number(o.value) === value)) return;
+  const o = document.createElement("option");
+  o.value = value;
+  o.textContent = describe ? describe(value) : value + " · not one of the listed values";
+  o.selected = true;
+  sel.insertBefore(o, sel.firstChild);
+}
+const DEBUG_UNLISTED = v => v > 2 ? v + " · Elevated (the game treats anything above 2 as 2)" : v + " · not a valid level";
+const ENV_UNLISTED = v => v === 0 ? "0 · Disabled (matches no water, never caught)" : v + " · Invalid (the server loads it as 0, disabled)";
+const NET_ENV_UNLISTED = v => v + " · Matches no water (this entry never catches)";
+// The "i" button goes in btnHost when given (the text still opens in field).
+function attachHelp(field, text, aria, btnHost){
   if (!text) return;
   const btn = document.createElement("button");
   btn.className = "helpbtn"; btn.type = "button"; btn.textContent = "i";
-  btn.setAttribute("aria-label", "What does this do?");
+  btn.setAttribute("aria-label", aria || "What does this do?");
   const div = document.createElement("div");
   div.className = "help"; div.textContent = text;
   btn.addEventListener("click", () => div.classList.toggle("open"));
-  field.appendChild(btn);
+  (btnHost || field).appendChild(btn);
   field.appendChild(div);
 }
 
@@ -606,6 +877,27 @@ function rowToggle(kind, obj, key, label, help){
   sw.appendChild(cb);
   sw.appendChild(document.createElement("i"));
   f.appendChild(sw);
+  attachHelp(f, helpFor(obj, key, help));
+  return f;
+}
+
+// A list of names edited as one comma-separated line (left empty, the list is empty).
+function rowList(kind, obj, key, label, help){
+  const f = document.createElement("div");
+  f.className = "field";
+  const id = "l_" + Math.random().toString(36).slice(2);
+  f.innerHTML = '<label for="' + id + '">' + label + "</label>";
+  const t = document.createElement("input");
+  t.type = "text"; t.id = id; t.className = "cfg";
+  t.style.width = "100%"; t.style.minWidth = "240px";
+  t.value = Array.isArray(obj[key]) ? obj[key].join(", ") : "";
+  t.setAttribute("aria-label", label);
+  t.addEventListener("change", () => {
+    obj[key] = t.value.split(",").map(x => x.trim()).filter(x => x);
+    t.value = obj[key].join(", ");
+    markDirty(kind);
+  });
+  f.appendChild(t);
   attachHelp(f, helpFor(obj, key, help));
   return f;
 }
@@ -654,14 +946,16 @@ function rowNumber(kind, obj, key, label, opts, help){
     if (opts.min !== undefined) v = Math.max(opts.min, v);
     if (opts.max !== undefined) v = Math.min(opts.max, v);
     if (opts.int) v = Math.round(v);
+    if (opts.clamp) v = opts.clamp(v);
     obj[key] = v; n.value = v; markDirty(kind);
+    if (opts.after) opts.after(v);
   });
   f.appendChild(n);
   attachHelp(f, helpFor(obj, key, help));
   return f;
 }
 
-function rowSelect(kind, obj, key, label, options, help){
+function rowSelect(kind, obj, key, label, options, help, unlisted){
   const f = document.createElement("div");
   f.className = "field";
   const id = "sel_" + Math.random().toString(36).slice(2);
@@ -675,6 +969,7 @@ function rowSelect(kind, obj, key, label, options, help){
     if (obj[key] === val) o.selected = true;
     s.appendChild(o);
   });
+  addUnlisted(s, obj[key], unlisted);
   s.addEventListener("change", () => { obj[key] = parseInt(s.value, 10); markDirty(kind); });
   f.appendChild(s);
   attachHelp(f, helpFor(obj, key, help));
@@ -685,7 +980,8 @@ const HEALTH_OPTS = [[0,"0 · Pristine"],[1,"1 · Worn"],[2,"2 · Damaged"],[3,"
 const ENV_OPTS = [[1,"Pond / fresh"],[2,"Sea / salt"],[3,"Both"]];
 
 /* generic add/remove table editor for entry arrays */
-function tableEditor(kind, arr, cols, addTemplate, note, showThumb){
+// help: the table's ...Info text from the file, behind an "i" by its Add button.
+function tableEditor(kind, arr, cols, addTemplate, note, showThumb, help){
   const wrap = document.createElement("div");
   const tw = document.createElement("div");
   tw.className = "tblwrap";
@@ -701,15 +997,26 @@ function tableEditor(kind, arr, cols, addTemplate, note, showThumb){
 
   function renderRows(){
     tbody.innerHTML = "";
-    arr.forEach((entry, idx) => {
+    guarded(kind, wrap, () => arr.forEach((entry, idx) => {
       const tr = document.createElement("tr");
-      if (showThumb) {
+      const why = badRowWhy(entry);
+      if (why) {
+        // A null or a bare value has no fields to edit (reading them would
+        // throw): say so across the row, and keep it until its ✕ removes it.
+        tallyBad(1);
+        const td = document.createElement("td");
+        td.colSpan = cols.length + (showThumb ? 1 : 0);
+        td.className = "badnote";
+        td.textContent = "⚠️ Row " + (idx + 1) + " " + why + ", so it has nothing to edit and the server skips it. It stays in the file until you remove it.";
+        tr.appendChild(td);
+      }
+      if (!why && showThumb) {
         const td = document.createElement("td");
         td.style.width = "56px";
         td.appendChild(makeThumb(entry.Classname || "", true));
         tr.appendChild(td);
       }
-      cols.forEach(c => {
+      if (!why) cols.forEach(c => {
         const td = document.createElement("td");
         if (c.type === "text") {
           const inp = document.createElement("input");
@@ -727,6 +1034,7 @@ function tableEditor(kind, arr, cols, addTemplate, note, showThumb){
             if (entry[c.key] === val) o.selected = true;
             s.appendChild(o);
           });
+          addUnlisted(s, entry[c.key], c.unlisted);
           s.addEventListener("change", () => { entry[c.key] = parseInt(s.value, 10); markDirty(kind); });
           td.appendChild(s);
         } else {
@@ -757,7 +1065,7 @@ function tableEditor(kind, arr, cols, addTemplate, note, showThumb){
       tdx.appendChild(del);
       tr.appendChild(tdx);
       tbody.appendChild(tr);
-    });
+    }));
   }
   renderRows();
 
@@ -767,6 +1075,7 @@ function tableEditor(kind, arr, cols, addTemplate, note, showThumb){
   add.className = "btn small"; add.textContent = "＋ Add entry";
   add.addEventListener("click", () => { arr.push(JSON.parse(JSON.stringify(addTemplate))); markDirty(kind); renderRows(); });
   foot.appendChild(add);
+  attachHelp(foot, help, "About this table");
   wrap.appendChild(foot);
   if (note) {
     const n = document.createElement("p");
@@ -811,8 +1120,11 @@ function rarityPill(p){
 }
 function envPill(env){
   const s = document.createElement("span");
-  s.className = "pill " + (env === 1 ? "pond" : env === 2 ? "sea" : "both");
-  s.textContent = env === 1 ? "pond" : env === 2 ? "sea" : "both";
+  const name = env === 1 ? "pond" : env === 2 ? "sea" : env === 3 ? "both" : null;
+  s.className = "pill " + (name || "off");
+  s.textContent = name || "disabled";
+  // 0 (or anything the validator resets to 0) matches no water at all.
+  if (!name) s.title = "Environment " + env + ": matches no water, so this fish is never caught";
   return s;
 }
 
@@ -822,6 +1134,24 @@ function renderFish(){
   const data = FILES.fish.data;
   if (!data) { host.appendChild(placeholderFor("fish")); return; }
   const species = data.Species || [];
+  // A row with no usable Classname (or no row at all, a null) can't be drawn
+  // as a fish: list it above the rest, which draw as usual.
+  const good = [], bad = [];
+  species.forEach((f, i) => { const why = badRowWhy(f, "Classname"); if (why) bad.push({ i: i, why: why }); else good.push({ f: f, i: i }); });
+  if (bad.length) {
+    tallyBad(bad.length);
+    host.appendChild(badRowsNotice({ kind: "fish", list: species, bad: bad, key: "Classname", noun: "Row", nouns: "rows", where: "fish.json's Species list",
+      why: "The server skips such rows (its log says “Skipping invalid fish.json Species row”), as the What will bite? tab does.",
+      after: () => renderEditor("fish") }));
+  }
+  // A classname this mod doesn't ship (renamed by an update, or a typo) is
+  // drawn as usual but flagged, here and on its row.
+  const unknown = [];
+  good.forEach(r => { if (speciesFlag(r.f.Classname) && unknown.indexOf(r.f.Classname) < 0) unknown.push(r.f.Classname); });
+  if (unknown.length) {
+    tallyUnknown(unknown);
+    host.appendChild(unknownNotice("fish.json", unknown.map(n => ({ name: n, kind: "species" }))));
+  }
 
   const bar = document.createElement("div");
   bar.className = "toolbar";
@@ -844,15 +1174,17 @@ function renderFish(){
 
   function redraw(){
     list.innerHTML = "";
-    let rows = species.map((f, i) => ({ f, i }));
-    const q = search.value.trim().toLowerCase();
-    if (q) rows = rows.filter(r => (niceName(r.f.Classname) + " " + r.f.Classname).toLowerCase().includes(q));
-    if (envSel.value) rows = rows.filter(r => String(r.f.Environment) === envSel.value);
-    if (sortSel.value === "name") rows.sort((a, b) => niceName(a.f.Classname).localeCompare(niceName(b.f.Classname)));
-    if (sortSel.value === "p") rows.sort((a, b) => b.f.CatchProbability - a.f.CatchProbability);
-    if (sortSel.value === "pr") rows.sort((a, b) => a.f.CatchProbability - b.f.CatchProbability);
-    count.textContent = rows.length + " of " + species.length + " species";
-    rows.forEach(r => list.appendChild(fishRow(r.f)));
+    guarded("fish", list, () => {
+      let rows = good.slice();
+      const q = search.value.trim().toLowerCase();
+      if (q) rows = rows.filter(r => (niceName(r.f.Classname) + " " + r.f.Classname).toLowerCase().includes(q));
+      if (envSel.value) rows = rows.filter(r => String(r.f.Environment) === envSel.value);
+      if (sortSel.value === "name") rows.sort((a, b) => niceName(a.f.Classname).localeCompare(niceName(b.f.Classname)));
+      if (sortSel.value === "p") rows.sort((a, b) => b.f.CatchProbability - a.f.CatchProbability);
+      if (sortSel.value === "pr") rows.sort((a, b) => a.f.CatchProbability - b.f.CatchProbability);
+      count.textContent = rows.length + " of " + good.length + " species";
+      rows.forEach(r => list.appendChild(fishRow(r.f)));
+    });
   }
   search.addEventListener("input", redraw);
   envSel.addEventListener("change", redraw);
@@ -871,6 +1203,8 @@ function fishRow(f){
   const names = document.createElement("div");
   names.className = "names";
   names.innerHTML = "<b>" + esc(niceName(f.Classname)) + "</b><small>" + esc(f.Classname) + "</small>";
+  const flag = speciesFlag(f.Classname);
+  if (flag) { const w = document.createElement("small"); w.className = "warn"; w.textContent = "⚠️ " + flag; names.appendChild(w); }
   head.appendChild(names);
   const pills = document.createElement("div");
   pills.style.cssText = "display:flex;gap:6px;align-items:center;flex:0 0 auto";
@@ -904,6 +1238,11 @@ function fishRow(f){
   const caret = document.createElement("span");
   caret.className = "caret"; caret.textContent = "▶";
   head.appendChild(caret);
+  // fish.json rows carry no ...Info text. Catch chance's "i" sits by its
+  // slider and its text opens under the header; neither may toggle the row.
+  attachHelp(head, "CatchProbability: how common this fish is, from 0 to 25. It's the fish's weight when the catch is picked among everything that can be caught there, before any weather, time-of-day, water-temperature or bait factor scales it; 0 = never caught. The tag reads it: abundant from 20, common from 12, uncommon from 7, rare below that.",
+    "About catch chance", quick);
+  [quick.lastElementChild, head.lastElementChild].forEach(el => ["click", "keydown"].forEach(t => el.addEventListener(t, e => e.stopPropagation())));
   row.appendChild(head);
 
   const body = document.createElement("div");
@@ -914,8 +1253,8 @@ function fishRow(f){
   function toggleOpen(){
     row.classList.toggle("open");
     if (row.classList.contains("open") && !built) {
-      buildFishDetail(body, f, () => pills.replaceChild(envPill(f.Environment), pills.firstElementChild));
       built = true;
+      guarded("fish", body, () => buildFishDetail(body, f, () => pills.replaceChild(envPill(f.Environment), pills.firstElementChild)));
     }
   }
   head.addEventListener("click", e => { if (e.target.tagName !== "INPUT") toggleOpen(); });
@@ -929,10 +1268,10 @@ function buildFishDetail(body, f, onEnvChange){
   const art = document.createElement("div");
   art.className = "art";
   art.appendChild(makeThumb(f.Classname));
-  if (typeof FISHDETAIL !== "undefined" && FISHDETAIL[f.Classname]) {
+  if (typeof FISHDETAIL !== "undefined" && own(FISHDETAIL, f.Classname)) {
     const p = document.createElement("p");
     p.style.cssText = "color:var(--dim);font-size:0.78rem;margin-top:8px;line-height:1.5";
-    const d = FISHDETAIL[f.Classname].desc || "";
+    const d = unesc(FISHDETAIL[f.Classname].desc || "");
     p.textContent = d.length > 260 ? d.slice(0, 260) + "…" : d;
     art.appendChild(p);
   }
@@ -946,7 +1285,8 @@ function buildFishDetail(body, f, onEnvChange){
   c1.className = "card";
   c1.innerHTML = "<h3>Basics</h3>";
   const envField = rowSelect("fish", f, "Environment", "Environment", ENV_OPTS,
-    "Where this fish can be caught: 1 = ponds/lakes, 2 = the sea, 3 = both.");
+    "Where this fish can be caught: 1 = ponds/lakes, 2 = the sea, 3 = both. 0 matches no water, so the fish is never caught (the server also turns any other value into 0).",
+    ENV_UNLISTED);
   if (onEnvChange) envField.querySelector("select").addEventListener("change", onEnvChange);
   c1.appendChild(envField);
   /* catch method bitmask as checkboxes */
@@ -968,19 +1308,28 @@ function buildFishDetail(body, f, onEnvChange){
   });
   attachHelp(cmField, "A bitmask you add together: 1 rod + 2 large trap + 4 small trap. So 3 = rod and large trap, 7 = everything. A fish with no method checked can never be caught.");
   c1.appendChild(cmField);
-  c1.appendChild(rowNumber("fish", f, "MeatMin", "Meat (min fillets)", { min: 0, max: 20, int: true }, "Minimum number of fillets when preparing this fish."));
-  c1.appendChild(rowNumber("fish", f, "MeatMax", "Meat (max fillets)", { min: 0, max: 20, int: true }, "Maximum number of fillets when preparing this fish."));
+  // Same limits the server applies when it loads fish.json: both 0-10
+  // (the engine's 10-result recipe cap) and the maximum never below the minimum.
+  const meatMax = rowNumber("fish", f, "MeatMax", "Meat (max fillets)", { min: 0, max: 10, int: true, clamp: v => Math.max(v, f.MeatMin) }, "Maximum number of fillets when preparing this fish (up to 10, never below the minimum).");
+  c1.appendChild(rowNumber("fish", f, "MeatMin", "Meat (min fillets)", { min: 0, max: 10, int: true, after: v => { if (f.MeatMax < v) { f.MeatMax = v; meatMax.querySelector("input").value = v; } } }, "Minimum number of fillets when preparing this fish (0-10). Raising it above the maximum raises the maximum too."));
+  c1.appendChild(meatMax);
   forms.appendChild(c1);
 
   /* weather */
   const c2 = document.createElement("div");
   c2.className = "card";
-  c2.innerHTML = "<h3>Weather &amp; time of day</h3><p class='sub'>1.0 = no effect · above 1.0 bites more · below 1.0 bites less</p>";
+  c2.innerHTML = "<h3>Weather &amp; time of day</h3><p class='sub'>1.0 = no effect · above 1.0 makes this fish a likelier pick · below 1.0 a rarer one (how often anything bites is set on the General tab)</p>";
   const g = document.createElement("div");
   g.className = "grid2";
-  [["RainMultiplier", "🌧 Rain"], ["StormMultiplier", "⛈ Storm"], ["DawnMultiplier", "🌅 Dawn"],
-   ["DayMultiplier", "☀️ Day"], ["DuskMultiplier", "🌆 Dusk"], ["NightMultiplier", "🌙 Night"]].forEach(([k, lbl]) => {
-    g.appendChild(rowSlider("fish", f, k, lbl, 0, 3, 0.05));
+  // fish.json rows carry no ...Info text: general.json's SpeciesBuffsInfo and
+  // TemperatureInfo cover these fields, so each one gets its own text here.
+  const mulHelp = " 1.0 = no change, 2.0 doubles this fish's weight in the pick, 0.5 halves it, 0 rules it out. This decides which fish bites, not how often anything bites (the General tab's buffs set that). The fish's weather, time-of-day and water-temperature factors multiply together, capped at the General tab's stacked multiplier cap, and the weather and time ones count only while Weather & time-of-day buffs are on.";
+  const winHelp = (name, hours) => "How this fish's odds change in the " + name + " window, " + hours + " unless the General tab's time windows say otherwise.";
+  [["RainMultiplier", "🌧 Rain", "How this fish's odds change while it rains or snows, from the rain threshold up to the storm threshold (General tab)."],
+   ["StormMultiplier", "⛈ Storm", "How this fish's odds change once rain or snow reaches the storm threshold (General tab). It takes the rain value's place then; the two never stack."],
+   ["DawnMultiplier", "🌅 Dawn", winHelp("Dawn", "5:00–7:00")], ["DayMultiplier", "☀️ Day", winHelp("Day", "7:00–17:00")],
+   ["DuskMultiplier", "🌆 Dusk", winHelp("Dusk", "17:00–20:00")], ["NightMultiplier", "🌙 Night", winHelp("Night", "20:00–5:00")]].forEach(([k, lbl, help]) => {
+    g.appendChild(rowSlider("fish", f, k, lbl, 0, 3, 0.05, help + mulHelp));
   });
   c2.appendChild(g);
   forms.appendChild(c2);
@@ -991,9 +1340,20 @@ function buildFishDetail(body, f, onEnvChange){
   c3.innerHTML = "<h3>Water temperature (°C)</h3><p class='sub'>Bites best at Optimal, tapering toward Min and Max.</p>";
   const g3 = document.createElement("div");
   g3.className = "grid2";
-  g3.appendChild(rowNumber("fish", f, "TempMin", "Coldest (TempMin)", { min: -20, max: 45 }));
-  g3.appendChild(rowNumber("fish", f, "TempOptimal", "Optimal", { min: -20, max: 45 }));
-  g3.appendChild(rowNumber("fish", f, "TempMax", "Warmest (TempMax)", { min: -20, max: 45 }));
+  // Kept in order, TempMin <= Optimal <= TempMax, as the server checks them
+  // when it loads fish.json (it clamps an Optimal outside the range and logs
+  // an error). Like the meat counts, raising the minimum carries the others up.
+  const tempHelp = " Each cast's water is the map's own temperature, moved by the season and by the General tab's water temp offset. Like the weather values, this decides which fish bites, not how often anything bites, and it counts only while Water temperature is on (General tab).";
+  const tMax = rowNumber("fish", f, "TempMax", "Warmest (TempMax)", { min: -20, max: 45, clamp: v => Math.max(v, f.TempOptimal, f.TempMin) },
+    "The warm end of this fish's water-temperature curve, in °C. In water this warm or warmer, its weight in the pick is multiplied by the General tab's too-warm floor (0.1 by default); from Optimal up to here it falls in a straight line." + tempHelp);
+  const tOpt = rowNumber("fish", f, "TempOptimal", "Optimal", { min: -20, max: 45, clamp: v => Math.min(Math.max(v, f.TempMin), f.TempMax) },
+    "The water temperature, in °C, this fish likes best: its weight is untouched (1.0×) here and falls off toward TempMin and TempMax. Keep it strictly between the two: if it equals either one, the server switches the curve off for this fish." + tempHelp);
+  g3.appendChild(rowNumber("fish", f, "TempMin", "Coldest (TempMin)", { min: -20, max: 45, after: v => {
+    if (f.TempOptimal < v) { f.TempOptimal = v; tOpt.querySelector("input").value = v; }
+    if (f.TempMax < v) { f.TempMax = v; tMax.querySelector("input").value = v; }
+  } }, "The cold end of this fish's water-temperature curve, in °C. In water this cold or colder, its weight in the pick is multiplied by the General tab's too-cold floor (0.1 by default); from here up to Optimal it climbs in a straight line back to full. Setting TempMin equal to TempMax switches the curve off for this fish." + tempHelp));
+  g3.appendChild(tOpt);
+  g3.appendChild(tMax);
   c3.appendChild(g3);
   forms.appendChild(c3);
 
@@ -1013,6 +1373,7 @@ function buildFishDetail(body, f, onEnvChange){
   rm.innerHTML = "<label>Fillet result</label>";
   const rmi = document.createElement("input");
   rmi.type = "text"; rmi.className = "cfg"; rmi.value = f.ResultMain || "";
+  rmi.setAttribute("aria-label", "Fillet result");
   rmi.addEventListener("change", () => { f.ResultMain = rmi.value.trim(); markDirty("fish"); });
   rm.appendChild(rmi);
   attachHelp(rm, "Classname spawned when this fish is filleted. Empty = the whole fish is the yield (bait fish, crustaceans).");
@@ -1022,12 +1383,26 @@ function buildFishDetail(body, f, onEnvChange){
   rb.innerHTML = "<label>Bonus result</label>";
   const rbi = document.createElement("input");
   rbi.type = "text"; rbi.className = "cfg"; rbi.value = f.ResultBonus || "";
-  rbi.addEventListener("change", () => { f.ResultBonus = rbi.value.trim(); markDirty("fish"); });
+  rbi.setAttribute("aria-label", "Bonus result");
+  // Shapes 1 and 2 need the bonus result: the server's validation (and the
+  // recipe itself) drop the whole prepare recipe when it is empty or unknown.
+  const rbWarn = document.createElement("div");
+  rbWarn.className = "sub2 warn";
+  const checkBonus = () => {
+    const needs = f.RecipeShape === 1 || f.RecipeShape === 2;
+    rbWarn.hidden = !(needs && !String(f.ResultBonus || "").trim());
+    rbWarn.textContent = "Recipe shape " + f.RecipeShape + " needs a bonus result. Left empty, the server drops this fish's prepare recipe (it can still be caught).";
+  };
+  rbi.addEventListener("change", () => { f.ResultBonus = rbi.value.trim(); markDirty("fish"); checkBonus(); });
   rb.appendChild(rbi);
-  attachHelp(rb, "Optional second result: caviar for roe fish, the tail for lobsters.");
+  attachHelp(rb, "Second result: the caviar for recipe shape 1, the lobster tail for shape 2. Those two shapes need it: if it's empty or isn't a real classname, the server logs an error and drops this fish's prepare recipe (the fish can still be caught). Shape 0 ignores it.");
+  rb.insertBefore(rbWarn, rb.querySelector(".help"));
   c5.appendChild(rb);
-  c5.appendChild(rowSelect("fish", f, "RecipeShape", "Recipe shape", [[0, "0 · Normal"], [1, "1 · Roe / caviar"], [2, "2 · Lobster (claws + tail)"]],
-    "How preparation behaves: normal fillets, caviar roll alongside fillets, or the lobster claw+tail split."));
+  const shapeField = rowSelect("fish", f, "RecipeShape", "Recipe shape", [[0, "0 · Normal"], [1, "1 · Roe / caviar"], [2, "2 · Lobster (claws + tail)"]],
+    "How preparation behaves: normal fillets, caviar roll alongside fillets, or the lobster claw+tail split. Shapes 1 and 2 also need a bonus result.");
+  shapeField.querySelector("select").addEventListener("change", checkBonus);
+  c5.appendChild(shapeField);
+  checkBonus();
   forms.appendChild(c5);
 
   flex.appendChild(forms);
@@ -1130,6 +1505,8 @@ function biteEditor(f){
   hint.className = "bitehint";
   hint.textContent = "Purple bars = night hours";
   foot.appendChild(hint);
+  attachHelp(foot, "BiteSpeed: how fast this fish bites at each hour of the in-game day, 24 values from midnight. 1.0 = vanilla speed, 0.5 = a bite takes twice as long. Each cast averages the hour's values over the fish that can be caught there, weighted by how common each is and by its weather, time-of-day and temperature factors, so this sets how long bites take, not which fish bites. It counts only while Bite-speed rhythm is on (General tab).",
+    "About the bite rhythm");
   wrap.appendChild(foot);
   return wrap;
 }
@@ -1139,12 +1516,28 @@ function hourLabel(h){ return h === 0 ? "12a" : h < 12 ? h + "a" : h === 12 ? "1
    BAIT editor
    ========================================================================= */
 let selectedBait = 0;
+// How many entries of one bait row its panel can't show: its bad entries, or
+// 1 for a Preferences that isn't a list at all (a missing one is just empty).
+function baitIssues(b){
+  if (Array.isArray(b.Preferences)) return b.Preferences.filter(p => badRowWhy(p, "FishClassname")).length;
+  return b.Preferences === undefined || b.Preferences === null ? 0 : 1;
+}
+// The fish a bait row lists that this mod doesn't ship (each name once).
+function baitOddFish(b){
+  const out = [];
+  if (Array.isArray(b.Preferences)) b.Preferences.forEach(p => { if (!badRowWhy(p, "FishClassname") && speciesFlag(p.FishClassname) && out.indexOf(p.FishClassname) < 0) out.push(p.FishClassname); });
+  return out;
+}
 function renderBait(){
   const host = document.getElementById("bait-editor");
   host.innerHTML = "";
   const data = FILES.bait.data;
   if (!data) { host.appendChild(placeholderFor("bait")); return; }
   const prefs = data.Preferences || [];
+  // A row with no usable BaitClassname (or a null) can't be drawn as a bait:
+  // it's listed above the strip instead of in it.
+  const good = [], bad = [];
+  prefs.forEach((b, i) => { const why = badRowWhy(b, "BaitClassname"); if (why) bad.push({ i: i, why: why }); else good.push(i); });
 
   if ("Enable" in data) {
     const master = document.createElement("div");
@@ -1153,10 +1546,31 @@ function renderBait(){
       "Master toggle. Off = every bait is neutral 1.0× for every fish; your tuned values stay in the file."));
     host.appendChild(master);
   }
+  if (bad.length) {
+    tallyBad(bad.length);
+    host.appendChild(badRowsNotice({ kind: "bait", list: prefs, bad: bad, key: "BaitClassname", noun: "Row", nouns: "rows", where: "bait.json's Preferences list",
+      why: "The server never uses such a row: without a BaitClassname it can't match a bait.",
+      after: (i, removed) => { if (removed && selectedBait > i) selectedBait--; renderEditor("bait"); } }));
+  }
+  // Classnames this mod doesn't ship, as baits or in their fish lists: all
+  // listed here, then flagged on their cards and rows.
+  const odd = [];
+  const oddFish = new Map();
+  good.forEach(i => {
+    const b = prefs[i];
+    if (baitFlag(b.BaitClassname) && !odd.some(x => x.name === b.BaitClassname)) odd.push({ name: b.BaitClassname, kind: "bait" });
+    baitOddFish(b).forEach(n => oddFish.set(n, (oddFish.get(n) || 0) + 1));
+  });
+  oddFish.forEach((baits, name) => odd.push({ name: name, kind: "fish", baits: baits }));
+  if (odd.length) {
+    tallyUnknown(odd.map(x => x.name));
+    host.appendChild(unknownNotice("bait.json", odd));
+  }
 
   const strip = document.createElement("div");
   strip.className = "baitstrip";
-  prefs.forEach((b, i) => {
+  good.forEach(i => {
+    const b = prefs[i];
     const c = document.createElement("div");
     c.className = "baitcard" + (i === selectedBait ? " sel" : "");
     c.setAttribute("role", "button");
@@ -1164,8 +1578,21 @@ function renderBait(){
     c.appendChild(makeThumb(b.BaitClassname));
     const nm = document.createElement("b");
     nm.textContent = baitName(b.BaitClassname);
+    // What its panel flags is marked on the card too, so it can be found
+    // without opening every bait.
+    const issues = baitIssues(b);
+    tallyBad(issues);
+    const look = [];
+    if (issues) look.push(issues + (issues === 1 ? " entry" : " entries") + " the editor can't show");
+    const oddN = baitOddFish(b).length;
+    if (oddN) look.push(oddN + " fish this mod doesn't have");
+    if (baitFlag(b.BaitClassname)) look.push("a bait this mod doesn't have");
+    if (look.length) {
+      nm.textContent = "⚠️ " + nm.textContent;
+      c.title = "Needs a look: " + look.join(", ");
+    }
     c.appendChild(nm);
-    const go = () => { selectedBait = i; renderBait(); };
+    const go = () => { selectedBait = i; renderEditor("bait"); };
     c.addEventListener("click", go);
     c.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
     strip.appendChild(c);
@@ -1181,13 +1608,13 @@ function renderBait(){
     prefs.push({ BaitClassname: cls.trim(), Preferences: [] });
     selectedBait = prefs.length - 1;
     markDirty("bait");
-    renderBait();
+    renderEditor("bait");
   });
   strip.appendChild(addC);
   host.appendChild(strip);
 
-  if (!prefs.length) return;
-  if (selectedBait >= prefs.length) selectedBait = 0;
+  if (!good.length) return;
+  if (good.indexOf(selectedBait) < 0) selectedBait = good[0];
   const bait = prefs[selectedBait];
 
   const panel = document.createElement("div");
@@ -1198,8 +1625,33 @@ function renderBait(){
   const sub = document.createElement("p");
   sub.className = "sub";
   sub.innerHTML = "Classname <code>" + esc(bait.BaitClassname) + "</code>" +
-    (/\D$/.test(bait.BaitClassname) ? " — also covers its numbered variants (e.g. <code>" + esc(bait.BaitClassname) + "1–4</code>)." : ".");
+    (/^geb_(SpinnerBait|SpoonLure|CurlyTailJig|Lure)$/.test(bait.BaitClassname) ? " — also covers its numbered variants (<code>" + esc(bait.BaitClassname) + "1–4</code>)." : ".");
   panel.appendChild(sub);
+  const bflag = baitFlag(bait.BaitClassname);
+  if (bflag) {
+    const warn = document.createElement("div");
+    warn.className = "banner";
+    warn.innerHTML = "<b>⚠️ <code>" + esc(bait.BaitClassname) + "</code> is " + esc(bflag) + ".</b> Renamed or a typo? This row only applies when an item of that class is on the hook.";
+    panel.appendChild(warn);
+  }
+
+  // Its fish list: a missing one is just empty (adding a fish creates it);
+  // one that isn't a list can't be shown or added to, so it's reported and
+  // left as it is. Entries with no usable FishClassname are listed apart.
+  const listOk = bait.Preferences === undefined || bait.Preferences === null || Array.isArray(bait.Preferences);
+  const fishList = Array.isArray(bait.Preferences) ? bait.Preferences : [];
+  const goodP = [], badP = [];
+  fishList.forEach((p, i) => { const why = badRowWhy(p, "FishClassname"); if (why) badP.push({ i: i, why: why }); else goodP.push(p); });
+  if (!listOk) {
+    const warn = document.createElement("div");
+    warn.className = "banner";
+    warn.innerHTML = "<b>⚠️ This bait's Preferences isn't a list</b> (it's <code>" + esc(shortJson(bait.Preferences)) + "</code>), so the editor can't show it or add to it; the server expects a list of fish here. It stays in the file as it is.";
+    panel.appendChild(warn);
+  }
+  if (badP.length) {
+    panel.appendChild(badRowsNotice({ kind: "bait", list: fishList, bad: badP, key: "FishClassname", noun: "Entry", nouns: "entries", where: "this bait's fish list",
+      why: "The server never uses such an entry: without a FishClassname it can't match a fish.", after: () => renderEditor("bait") }));
+  }
 
   const bar = document.createElement("div");
   bar.className = "toolbar";
@@ -1210,6 +1662,9 @@ function renderBait(){
   sortSel.setAttribute("aria-label", "Sort preferences");
   sortSel.innerHTML = '<option value="mul">Strongest first</option><option value="name">Name A–Z</option><option value="file">File order</option>';
   bar.appendChild(search); bar.appendChild(sortSel);
+  // One "i" for every multiplier below: bait.json explains them once, in MultiplierInfo.
+  attachHelp(bar, helpFor(data, "Multiplier", "How strongly this bait favours each fish in the catch pick. 1.0 = neutral (the same as leaving the fish out), above 1.0 likelier (2.0 = twice as likely), below 1.0 rarer, 0 rules the fish out. Only used while the bait preference system is on."),
+    "About the multipliers");
   panel.appendChild(bar);
 
   const listHost = document.createElement("div");
@@ -1217,21 +1672,23 @@ function renderBait(){
 
   function redraw(){
     listHost.innerHTML = "";
-    let rows = (bait.Preferences || []).slice();
-    const q = search.value.trim().toLowerCase();
-    if (q) rows = rows.filter(p => (niceName(p.FishClassname) + " " + p.FishClassname).toLowerCase().includes(q));
-    if (sortSel.value === "mul") rows.sort((a, b) => b.Multiplier - a.Multiplier);
-    if (sortSel.value === "name") rows.sort((a, b) => niceName(a.FishClassname).localeCompare(niceName(b.FishClassname)));
-    rows.forEach(p => listHost.appendChild(prefRow(p)));
+    guarded("bait", listHost, () => {
+      let rows = goodP.slice();
+      const q = search.value.trim().toLowerCase();
+      if (q) rows = rows.filter(p => (niceName(p.FishClassname) + " " + p.FishClassname).toLowerCase().includes(q));
+      if (sortSel.value === "mul") rows.sort((a, b) => b.Multiplier - a.Multiplier);
+      if (sortSel.value === "name") rows.sort((a, b) => niceName(a.FishClassname).localeCompare(niceName(b.FishClassname)));
+      rows.forEach(p => listHost.appendChild(prefRow(p)));
+    });
   }
   search.addEventListener("input", redraw);
   sortSel.addEventListener("change", redraw);
   redraw();
 
   /* add fish that aren't listed yet */
-  const listed = new Set((bait.Preferences || []).map(p => p.FishClassname));
+  const listed = new Set(goodP.map(p => p.FishClassname));
   const missing = Object.keys(FISHNAME).filter(c => !listed.has(c));
-  if (missing.length) {
+  if (listOk && missing.length) {
     const foot = document.createElement("div");
     foot.style.cssText = "display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap";
     const sel = document.createElement("select");
@@ -1244,7 +1701,7 @@ function renderBait(){
       if (!bait.Preferences) bait.Preferences = [];
       bait.Preferences.push({ FishClassname: sel.value, Multiplier: 1.5 });
       markDirty("bait");
-      renderBait();
+      renderEditor("bait");
     });
     foot.appendChild(sel);
     panel.appendChild(foot);
@@ -1263,6 +1720,8 @@ function prefRow(p){
   const names = document.createElement("div");
   names.className = "names";
   names.innerHTML = esc(niceName(p.FishClassname)) + "<small>" + esc(p.FishClassname) + "</small>";
+  const flag = speciesFlag(p.FishClassname);
+  if (flag) { const w = document.createElement("small"); w.className = "warn"; w.textContent = "⚠️ " + flag; names.appendChild(w); }
   row.appendChild(names);
   const r = document.createElement("input");
   r.type = "range"; r.min = 0; r.max = 5; r.step = 0.05;
@@ -1297,11 +1756,31 @@ function oneIn(chance){
 }
 function pct(v){ return Math.round(v * 1000) / 10 + "%"; }
 
+// general.json's sections of settings (the lists beside them are checked where they're drawn).
+const GENERAL_SECTIONS = ["GeneralSettings", "RecipeToggles", "WeatherSettings", "TreasureSettings", "PredatorSettings",
+  "BambooFishingNetSettings", "SpearFishingSettings", "DigWormsSettings", "DigBugsSettings", "DryingRackSettings",
+  "BoatTrailerSettings"];
 function renderGeneral(){
   const host = document.getElementById("general-editor");
   host.innerHTML = "";
-  const d = FILES.general.data;
-  if (!d) { host.appendChild(placeholderFor("general")); return; }
+  const file = FILES.general.data;
+  if (!file) { host.appendChild(placeholderFor("general")); return; }
+  // A section that isn't an object (say "RecipeToggles": 1) has nothing to
+  // edit, and reading it as one throws. Draw from a copy that leaves it out
+  // and say so; the file keeps it as it is. The copy shares every section
+  // and list with the file, so each edit below still lands in the file.
+  const d = Object.assign({}, file);
+  const odd = GENERAL_SECTIONS.filter(k => d[k] !== undefined && d[k] !== null && !isObj(d[k]));
+  if (odd.length) {
+    tallyBad(odd.length);
+    const warn = document.createElement("div");
+    warn.className = "banner";
+    warn.innerHTML = "<b>⚠️ " + (odd.length === 1 ? "1 section" : odd.length + " sections") + " of general.json can't be shown here:</b> " +
+      odd.map(k => "<code>" + esc(k) + "</code> is <code>" + esc(shortJson(d[k])) + "</code>").join(", ") +
+      ", not a section of settings like the mod writes. " + (odd.length === 1 ? "It stays" : "They stay") + " in the file as " + (odd.length === 1 ? "it is." : "they are.");
+    host.appendChild(warn);
+    odd.forEach(k => { d[k] = null; });
+  }
 
   /* master switchboard */
   const sb = document.createElement("div");
@@ -1318,6 +1797,7 @@ function renderGeneral(){
   if (d.TreasureSettings) sg.appendChild(rowToggle("general", d.TreasureSettings, "Enable", "💰 Treasure catches"));
   if (d.PredatorSettings) sg.appendChild(rowToggle("general", d.PredatorSettings, "PredatorSpawnEnabled", "🐺 Predator spawns"));
   if (d.GeneralSettings) sg.appendChild(rowToggle("general", d.GeneralSettings, "HookFromFishEnable", "🪝 Hook found in fish"));
+  if (d.DryingRackSettings) sg.appendChild(rowToggle("general", d.DryingRackSettings, "Enable", "🐟 Fish drying rack"));
   sb.appendChild(sg);
   host.appendChild(sb);
 
@@ -1327,8 +1807,8 @@ function renderGeneral(){
     const c = document.createElement("div");
     c.className = "card";
     c.innerHTML = "<h3>🔧 Core settings</h3>";
-    c.appendChild(rowSelect("general", gs, "DebugLogs", "Debug logging", [[0, "0 · Off"], [1, "1 · Standard (per-cast summaries)"], [2, "2 · Elevated (very chatty)"]]));
-    c.appendChild(rowSlider("general", gs, "FishQuality", "Fish quality (traders)", 0, 2, 0.05));
+    c.appendChild(rowSelect("general", gs, "DebugLogs", "Debug logging", [[0, "0 · Off"], [1, "1 · Standard (per-cast summaries)"], [2, "2 · Elevated (very chatty)"]], null, DEBUG_UNLISTED));
+    c.appendChild(rowSlider("general", gs, "FishQuality", "Fish quality (traders)", 0, 1, 0.05));
     c.appendChild(rowSlider("general", gs, "FishKnifeSpeedMultiplier", "Fish-knife fillet speed", 0.7, 1, 0.01));
     const cav = rowSlider("general", gs, "CaviarChance", "Caviar keep-chance", 0, 1, 0.05);
     cav._setSub(v => pct(v) + " of roe-fish fillets keep the caviar");
@@ -1347,11 +1827,40 @@ function renderGeneral(){
     const g = document.createElement("div");
     g.className = "grid2";
     [["CraftBambooFishingNet", "Craft bamboo fishing net"], ["CraftHookFromWire", "Craft hook from wire"],
-     ["CraftFishMount", "Craft wooden fish mount"], ["RepairFishingPole", "Repair fishing pole"],
-     ["RepairBambooFishingNet", "Repair bamboo net"]].forEach(([k, lbl]) => {
+     ["CraftFishMount", "Craft fish mounts (small, medium, large)"], ["RepairFishingPole", "Repair fishing pole"],
+     ["RepairBambooFishingNet", "Repair bamboo net"], ["CraftDryingRack", "Craft fish drying rack"],
+     ["CraftFishingLocker", "Craft fishing locker"]].forEach(([k, lbl]) => {
       if (k in d.RecipeToggles) g.appendChild(rowToggle("general", d.RecipeToggles, k, lbl));
     });
     c.appendChild(g);
+    host.appendChild(c);
+  }
+
+  /* drying rack */
+  if (d.DryingRackSettings) {
+    const r = d.DryingRackSettings;
+    const c = document.createElement("div");
+    c.className = "card";
+    c.innerHTML = "<h3>🐟 Fish drying rack</h3>";
+    c.appendChild(rowToggle("general", r, "Enable", "Drying on the rack"));
+    const rm = rowSlider("general", r, "MinutesToDry", "Minutes to dry", 5, 480, 5, null, v => fmtNum(v) + " min");
+    rm._setSub(v => "a raw fillet dries in " + fmtNum(v) + " real minutes in dry, still weather");
+    c.appendChild(rm);
+    const rs = rowSlider("general", r, "StallThreshold", "Rain / snow stall", 0, 1, 0.05);
+    rs._setSub(v => "drying stops above " + pct(v) + " rain or snowfall");
+    c.appendChild(rs);
+    const rw = rowSlider("general", r, "WindScale", "Wind speed-up", 0, 3, 0.1);
+    rw._setSub(v => "the strongest wind dries fillets " + fmtNum(1 + v) + "× as fast");
+    c.appendChild(rw);
+    host.appendChild(c);
+  }
+
+  /* boat trailer */
+  if (d.BoatTrailerSettings) {
+    const c = document.createElement("div");
+    c.className = "card";
+    c.innerHTML = "<h3>🚚 Boat trailer</h3>";
+    c.appendChild(rowList("general", d.BoatTrailerSettings, "TowVehicles", "Cars that may tow (classnames; empty = any car)"));
     host.appendChild(c);
   }
 
@@ -1360,7 +1869,7 @@ function renderGeneral(){
     const w = d.WeatherSettings;
     const c = document.createElement("div");
     c.className = "card";
-    c.innerHTML = "<h3>🌧 Weather, time &amp; temperature</h3><p class='sub'>Global multipliers that stack with each fish's own values, capped by the stacked-multiplier limit.</p>";
+    c.innerHTML = "<h3>🌧 Weather, time &amp; temperature</h3><p class='sub'>Global multipliers set how often anything bites. Each fish's own values (fish.json) set which fish it is; the two never multiply together, and each is capped by the stacked-multiplier limit.</p>";
     const g = document.createElement("div");
     g.className = "grid2";
     g.appendChild(rowSlider("general", w, "RainCatchMultiplier", "Rain buff", 0.5, 2.5, 0.05));
@@ -1375,7 +1884,7 @@ function renderGeneral(){
     g.appendChild(rowSlider("general", w, "FullMoonMultiplier", "Full-moon night buff", 0.5, 2, 0.05));
     g.appendChild(rowSlider("general", w, "NewMoonMultiplier", "New-moon night buff", 0.5, 2, 0.05));
     const off = rowSlider("general", w, "WaterTempOffset", "Water temp offset (°C)", -15, 15, 0.5);
-    off._setSub(v => v <= -8 ? "frozen-lake roleplay" : v <= -3 ? "cold map (e.g. Sakhal)" : v >= 4 ? "tropical server" : "standard map");
+    off._setSub(v => v <= -8 ? "frozen-lake roleplay" : v <= -3 ? "colder than the map's own water" : v >= 4 ? "tropical server" : "the map's own water");
     g.appendChild(off);
     g.appendChild(rowSlider("general", w, "MinTempMultiplier", "Too-cold floor", 0, 1, 0.05));
     g.appendChild(rowSlider("general", w, "MaxTempMultiplier", "Too-warm floor", 0, 1, 0.05));
@@ -1401,7 +1910,9 @@ function renderGeneral(){
     const c = document.createElement("div");
     c.className = "card";
     c.innerHTML = "<h3>💰 Treasure</h3><p class='sub'>An ultra-rare pull: a container picked from the pool below, filled with rolls from the loot pool.</p>";
-    const ch = rowSlider("general", t, "Chance", "Treasure chance per catch", 0, 0.005, 0.0001, null, v => v.toFixed(4));
+    // Steps of 0.00001 so rare settings like 0.00005 (1 in 20,000) can be set;
+    // the readout keeps three significant digits instead of rounding them away.
+    const ch = rowSlider("general", t, "Chance", "Treasure chance per catch", 0, 0.005, 0.00001, null, v => String(parseFloat(v.toPrecision(3))));
     ch._setSub(v => oneIn(v) + " successful catches");
     c.appendChild(ch);
     c.appendChild(rowToggle("general", t, "Announce", "Announce the find in chat"));
@@ -1420,7 +1931,7 @@ function renderGeneral(){
         { key: "MinItems", label: "Min items", min: 0, max: 50, int: true },
         { key: "MaxItems", label: "Max items", min: 0, max: 50, int: true }
       ], { Classname: "SeaChest", Weight: 1.0, MinHealthLevel: 1, MaxHealthLevel: 3, MinItems: 2, MaxItems: 5 },
-      "Weight 0 disables an entry without deleting it — deleted default entries come back on the next mod update."));
+      "Weight 0 disables an entry without deleting it — deleted default entries come back on the next mod update.", false, helpFor(d, "TreasureContainers")));
     }
     if (Array.isArray(d.TreasureLoot)) {
       const h4 = document.createElement("h3");
@@ -1435,7 +1946,7 @@ function renderGeneral(){
         { key: "MinQuantity", label: "Min qty", min: 0, int: true },
         { key: "MaxQuantity", label: "Max qty", min: 0, int: true }
       ], { Classname: "Rag", Weight: 1.0, MinHealthLevel: 1, MaxHealthLevel: 3, MinQuantity: 0, MaxQuantity: 0 },
-      "Any classname on your server works here — including items from other mods. Qty 0/0 = the item's own default."));
+      "Any classname on your server works here — including items from other mods. Qty 0/0 = the item's own default.", false, helpFor(d, "TreasureLoot")));
     }
     host.appendChild(c);
   }
@@ -1489,6 +2000,7 @@ function renderGeneral(){
       markDirty("general");
     });
     colField.appendChild(colSel);
+    attachHelp(colField, typeof p.PredatorWarningMessageInfo === "string" ? p.PredatorWarningMessageInfo : null);
     c.appendChild(colField);
 
     if (Array.isArray(d.Predators)) {
@@ -1504,7 +2016,7 @@ function renderGeneral(){
         { key: "MinRadius", label: "Min radius (m)", min: 0, step: 5 },
         { key: "MaxRadius", label: "Max radius (m)", min: 0, step: 5 }
       ], { Classname: "Animal_CanisLupus_Grey", SpawnChance: 0.5, MinCount: 1, MaxCount: 1, MinRadius: 50, MaxRadius: 200 },
-      "Weight is relative: wolf 0.6 vs bear 0.3 means wolves are two-thirds of all spawns."));
+      "Weight is relative: wolf 0.6 vs bear 0.3 means wolves are two-thirds of all spawns.", false, helpFor(d, "Predators")));
     }
     host.appendChild(c);
   }
@@ -1512,7 +2024,7 @@ function renderGeneral(){
   /* net + digging */
   const forage = document.createElement("div");
   forage.className = "card";
-  forage.innerHTML = "<h3>🥅 Net &amp; foraging</h3>";
+  forage.innerHTML = "<h3>🥅 Net, spear &amp; foraging</h3>";
   let hasForage = false;
   if (d.BambooFishingNetSettings) {
     hasForage = true;
@@ -1531,17 +2043,47 @@ function renderGeneral(){
       forage.appendChild(tableEditor("general", n.Catches, [
         { key: "Classname", label: "Classname", type: "text" },
         { key: "CatchChance", label: "Weight", min: 0, step: 0.5 },
-        { key: "Environment", label: "Water", type: "select", options: ENV_OPTS }
+        { key: "Environment", label: "Water", type: "select", options: ENV_OPTS, unlisted: NET_ENV_UNLISTED }
       ], { Classname: "geb_FatHeadMinnow", CatchChance: 1, Environment: 1 },
-      "Default entries removed here come back on the next mod update — set their weight to 0 instead.", true));
+      "Default entries removed here come back on the next mod update — set their weight to 0 instead.", true, helpFor(n, "Catches")));
     }
   }
-  [["DigWormsSettings", "🪱 Dig worms find chance", "Worm-dig catch table"], ["DigBugsSettings", "🦗 Dig bugs find chance", "Bug-dig catch table"]].forEach(([key, lbl, tbl]) => {
+  if (d.SpearFishingSettings) {
+    hasForage = true;
+    const s = d.SpearFishingSettings;
+    const sh = document.createElement("h3");
+    sh.style.cssText = "margin-top:14px;font-size:0.92rem;color:var(--accent)";
+    sh.textContent = "🔱 Spear fishing";
+    forage.appendChild(sh);
+    forage.appendChild(rowToggle("general", s, "Enable", "Spear fishing"));
+    const sf = rowSlider("general", s, "FindChance", "Spear find chance", 0, 0.5, 0.005);
+    sf._setSub(v => pct(v) + " of stabs catch something");
+    forage.appendChild(sf);
+    const sd = rowSlider("general", s, "MaxWaterDepth", "Deepest water", 0.2, 3, 0.1, null, v => fmtNum(v) + " m");
+    sd._setSub(v => "only where the water at the spot aimed at is at most " + fmtNum(v) + " m deep");
+    forage.appendChild(sd);
+    const sp = rowSlider("general", s, "PredatorSpawnChance", "Spear predator chance", 0, 0.3, 0.005);
+    sp._setSub(v => oneIn(v) + " fish landed");
+    forage.appendChild(sp);
+    if (Array.isArray(s.Catches)) {
+      const h4 = document.createElement("h3");
+      h4.style.cssText = "margin-top:12px;font-size:0.92rem;color:var(--accent)";
+      h4.textContent = "Spear catch table";
+      forage.appendChild(h4);
+      forage.appendChild(tableEditor("general", s.Catches, [
+        { key: "Classname", label: "Classname", type: "text" },
+        { key: "CatchChance", label: "Weight", min: 0, step: 0.5 },
+        { key: "Environment", label: "Water", type: "select", options: ENV_OPTS, unlisted: NET_ENV_UNLISTED }
+      ], { Classname: "Carp", CatchChance: 10, Environment: 1 },
+      "Default entries removed here come back on the next mod update — set their weight to 0 instead.", true, helpFor(s, "Catches")));
+    }
+  }
+  [["DigWormsSettings", "🪱 Dig worms find chance", "Worm-dig catch table", " per worm slot"], ["DigBugsSettings", "🦗 Dig bugs find chance", "Bug-dig catch table", " per dig"]].forEach(([key, lbl, tbl, per]) => {
     if (!d[key]) return;
     hasForage = true;
     const s = d[key];
     const f = rowSlider("general", s, "FindChance", lbl, 0, 1, 0.05);
-    f._setSub(v => pct(v) + " per attempt");
+    f._setSub(v => pct(v) + per);
     forage.appendChild(f);
     if (Array.isArray(s.Catches)) {
       const h4 = document.createElement("h3");
@@ -1551,7 +2093,7 @@ function renderGeneral(){
       forage.appendChild(tableEditor("general", s.Catches, [
         { key: "Classname", label: "Classname", type: "text" },
         { key: "CatchChance", label: "Weight", min: 0, step: 0.5 }
-      ], { Classname: "Worm", CatchChance: 1 }, null, true));
+      ], { Classname: "Worm", CatchChance: 1 }, null, true, helpFor(s, "Catches")));
     }
   });
   if (hasForage) host.appendChild(forage);
@@ -1566,7 +2108,7 @@ function renderGeneral(){
       { key: "Weight", label: "Weight", min: 0, step: 0.1 },
       { key: "MinHealthLevel", label: "Min health", type: "select", options: HEALTH_OPTS },
       { key: "MaxHealthLevel", label: "Max health", type: "select", options: HEALTH_OPTS }
-    ], { Classname: "Hook", Weight: 1.0, MinHealthLevel: 3, MaxHealthLevel: 3 }, null, true));
+    ], { Classname: "Hook", Weight: 1.0, MinHealthLevel: 3, MaxHealthLevel: 3 }, null, true, helpFor(d, "HookFromFishCatches")));
     host.appendChild(c);
   }
 }
@@ -1580,39 +2122,979 @@ function renderJunk(){
   const d = FILES.junk.data;
   if (!d) { host.appendChild(placeholderFor("junk")); return; }
 
+  {
+    // A file from before JunkShare existed doesn't have it; the server adds
+    // 0.1 when it loads the file, so show (and save) that value.
+    const added = typeof d.JunkShare !== "number";
+    if (added) d.JunkShare = 0.1;
+    const c = document.createElement("div");
+    c.className = "card";
+    c.innerHTML = "<h3>🎯 How often junk comes up</h3><p class='sub'>The share of rod catches that are junk instead of a fish. It holds on every map and in every season: each cast, junk is weighed against the fish that can bite there." +
+      (added ? " This file doesn't have the setting yet; the server adds it at 10% when it loads the file." : "") + "</p>";
+    const s = rowSlider("junk", d, "JunkShare", "Junk share of rod catches", 0, 0.9, 0.01,
+      "0.10 = about 1 catch in 10, close to vanilla DayZ (about 1 in 9 on Chernarus and Livonia). 0 = no junk. Where no fish can bite, a rod pulls only junk, as in vanilla.",
+      v => Math.round(v * 100) + "%");
+    s._setSub(v => v > 0 ? "about 1 rod catch in " + simRound(1 / v, 1) : "no junk at all");
+    c.appendChild(s);
+    host.appendChild(c);
+  }
+
   if (Array.isArray(d.Junk)) {
     const c = document.createElement("div");
     c.className = "card";
-    c.innerHTML = "<h3>🗑 Junk items</h3><p class='sub'>Weighted 0–25 alongside the fish pool — a boot at 22 competes with an abundant fish.</p>";
+    c.innerHTML = "<h3>🗑 Junk items</h3><p class='sub'>Each item's weight (0–25) sets how often it turns up among the junk; how often junk comes up at all is the share above.</p>";
     c.appendChild(tableEditor("junk", d.Junk, [
       { key: "Classname", label: "Classname", type: "text" },
       { key: "CatchProbability", label: "Weight (0–25)", min: 0, max: 25, int: true },
       { key: "MinHealthLevel", label: "Min health", type: "select", options: HEALTH_OPTS },
       { key: "MaxHealthLevel", label: "Max health", type: "select", options: HEALTH_OPTS }
     ], { Classname: "Wellies_Brown", CatchProbability: 5, MinHealthLevel: 3, MaxHealthLevel: 3 },
-    "Any item classname works, including from other mods. Set weight 0 to disable an entry without deleting it.", true));
+    "Any item classname works, including from other mods. Set weight 0 to disable an entry without deleting it.", true, helpFor(d, "Junk")));
     host.appendChild(c);
   }
   if (Array.isArray(d.ContainerJunk)) {
     const c = document.createElement("div");
     c.className = "card";
-    c.innerHTML = "<h3>🧴 Container junk</h3><p class='sub'>Junk that spawns holding cargo (liquid containers, cans).</p>";
+    c.innerHTML = "<h3>🧴 Container junk</h3><p class='sub'>Liquid containers (pots, bottles, canteens) that come up empty. They share the junk share with the items above.</p>";
     c.appendChild(tableEditor("junk", d.ContainerJunk, [
       { key: "Classname", label: "Classname", type: "text" },
       { key: "CatchProbability", label: "Weight (0–25)", min: 0, max: 25, int: true },
       { key: "MinHealthLevel", label: "Min health", type: "select", options: HEALTH_OPTS },
       { key: "MaxHealthLevel", label: "Max health", type: "select", options: HEALTH_OPTS }
-    ], { Classname: "Pot", CatchProbability: 3, MinHealthLevel: 3, MaxHealthLevel: 3 }, null, true));
+    ], { Classname: "Pot", CatchProbability: 3, MinHealthLevel: 3, MaxHealthLevel: 3 }, null, true, helpFor(d, "ContainerJunk")));
     host.appendChild(c);
   }
 }
 
+/* =========================================================================
+   WHAT WILL BITE? — read-only catch simulator
+   A port of the mod's weighted catch pick (geb_CatchingContextFishingRodAction.c)
+   on top of vanilla's pool build (CatchingContextBase.SetupProbabilityArray).
+   It only READS FILES.*.data: its controls keep their own state (SIM below)
+   and never write into a config or call markDirty.
+   ========================================================================= */
+/* SIM-CORE-BEGIN: pure functions, no DOM. The verification harness runs this block as-is. */
+
+// Enforce Script floats are 32-bit. Rounding where the game holds a float keeps
+// the boundary comparisons (rain bands, temperature edges, the stacking cap)
+// and the moon's date maths identical to the game's.
+const SIM_F = Math.fround;
+
+// Each map's own water temperature in degrees C: vanilla WorldData's liquid
+// table (3_game/worlddata.c, which Chernarus and maps without their own table
+// use, plus enoch.c and sakhal.c).
+const SIM_MAPS = {
+  chernarus: { label: "Chernarus", fresh: 15, sea: 23 },
+  livonia:   { label: "Livonia",   fresh: 20, sea: 25 },
+  sakhal:    { label: "Sakhal",    fresh: 2,  sea: -0.5 },
+  custom:    { label: "Custom map", fresh: 15, sea: 23 }
+};
+
+// Compiled defaults from gebsfishConfig.c, used for a file that isn't loaded or
+// a field it doesn't have: WeatherConf, TreasureConf, and JunkConfig's
+// SeedDefaultJunk / SeedDefaultContainerJunk.
+const SIM_WEATHER_DEFAULTS = {
+  WeatherCatchBoostEnable: 1, RainThreshold: 0.3, StormThreshold: 0.7,
+  RainCatchMultiplier: 1.25, StormCatchMultiplier: 1.5,
+  DawnStartHour: 5, DawnEndHour: 7, DayStartHour: 7, DayEndHour: 17,
+  DuskStartHour: 17, DuskEndHour: 20, NightStartHour: 20, NightEndHour: 5,
+  DawnCatchMultiplier: 1.1, DayCatchMultiplier: 1.0, DuskCatchMultiplier: 1.1, NightCatchMultiplier: 1.15,
+  MaxStackedMultiplier: 2.0,
+  MoonPhaseEnable: 1, FullMoonMultiplier: 1.2, NewMoonMultiplier: 0.9,
+  TemperatureEffectEnable: 0, MinTempMultiplier: 0.1, MaxTempMultiplier: 0.1, WaterTempOffset: 0,
+  BiteSpeedEnable: 1
+};
+const SIM_WEATHER_BOOLS = ["WeatherCatchBoostEnable", "MoonPhaseEnable", "TemperatureEffectEnable", "BiteSpeedEnable"];
+const SIM_WEATHER_INTS = ["DawnStartHour", "DawnEndHour", "DayStartHour", "DayEndHour", "DuskStartHour", "DuskEndHour", "NightStartHour", "NightEndHour"];
+const SIM_TREASURE_DEFAULTS = { Enable: 1, Chance: 0.0002, RequireRealRod: 1 };
+const SIM_DEFAULT_JUNK = [
+  { Classname: "Wellies_Brown", CatchProbability: 5 }, { Classname: "Wellies_Grey", CatchProbability: 5 },
+  { Classname: "Wellies_Green", CatchProbability: 5 }, { Classname: "Wellies_Black", CatchProbability: 5 }
+];
+const SIM_DEFAULT_CONTAINER_JUNK = [{ Classname: "Pot", CatchProbability: 5 }];
+const SIM_JUNK_SHARE_DEFAULT = 0.1;   // JunkConfig.JunkShare
+const SIM_WINDOWS = ["Dawn", "Day", "Dusk", "Night"];
+// Vanilla YieldItemJunk.GetChanceForYieldItem: junk bites at this flat chance every cycle.
+const SIM_JUNK_BITE_CHANCE = 0.2;
+
+function simObj(v){ return v && typeof v === "object" && !Array.isArray(v) ? v : null; }
+
+// Classnames an update renamed: [old, new, version]. Loading a file that
+// still has an old name, the server renames the fish.json row (the last one,
+// keeping its tuning) or drops it when the new name has a row of its own,
+// and does the same bait by bait in bait.json (RenameLegacyFish in
+// FishConfig and BaitSettingsConf).
+const SIM_RENAMED = [["geb_Bonita", "geb_PacificBonito", "4.0.0"]];
+
+// The classname each row of a list has once those renames are applied:
+// `names` holds the row's own name, the new name, false for a row the rename
+// drops, or null for a row without a name (left to the validator); `hits`
+// says which renames applied and how.
+function simRenamed(list, key){
+  const names = list.map(r => simObj(r) && typeof r[key] === "string" ? r[key] : null);
+  const hits = [];
+  SIM_RENAMED.forEach(([from, to, version]) => {
+    const f = from.toLowerCase(), t = to.toLowerCase();
+    let hasNew = names.some(n => typeof n === "string" && n.toLowerCase() === t);
+    let renamed = 0, dropped = 0;
+    for (let i = names.length - 1; i >= 0; i--) {
+      if (typeof names[i] !== "string" || names[i].toLowerCase() !== f) continue;
+      if (hasNew) { names[i] = false; dropped++; }
+      else { names[i] = to; hasNew = true; renamed++; }
+    }
+    if (renamed || dropped) hits.push({ from: from, to: to, version: version, renamed: renamed, dropped: dropped });
+  });
+  return { names: names, hits: hits };
+}
+
+// A config number as the game holds it. A key the object doesn't have takes
+// `def` (and is reported through `missing`); JSON true/false count as 1/0.
+function simVal(obj, key, def, missing){
+  const v = obj ? obj[key] : undefined;
+  if (typeof v === "number" && isFinite(v)) return v;
+  if (typeof v === "boolean") return v ? 1 : 0;
+  if (obj && missing) missing.push(key);
+  return def;
+}
+// GebValidateNumber: NaN or below the minimum gives the minimum, then the maximum caps it.
+function simValidate(v, lo, hi){ return !(v >= lo) ? lo : Math.min(v, hi); }
+// GebBoundCatchFactor: each pick factor is bounded to 0..1e6 (NaN -> 0) before multiplying.
+function simBound(v){ return !(v >= 0) ? 0 : Math.min(v, 1000000); }
+function simLerp(a, b, t){ return SIM_F(a + SIM_F(SIM_F(b - a) * t)); }
+
+// FishConf.GetBiteSpeedArray + GebValidateFishConfig: split on single spaces,
+// skip empty parts, ToFloat each (no number -> 0); anything other than 24
+// values becomes 1 for every hour; then each hour is clamped to 0..1.
+function simParseBite(s){
+  let vals = [];
+  if (typeof s === "string") s.split(" ").forEach(t => { if (t !== "") { const v = parseFloat(t); vals.push(isNaN(v) ? 0 : v); } });
+  if (vals.length !== 24) vals = new Array(24).fill(1);
+  return vals.map(v => SIM_F(simValidate(v, 0, 1)));
+}
+
+function simListNames(list){ return list.slice(0, 3).join(", ") + (list.length > 3 ? " and " + (list.length - 3) + " more" : ""); }
+
+function simReadWeather(general, notes){
+  const g = simObj(general);
+  const src = g ? simObj(g.WeatherSettings) : null;
+  const missing = [];
+  const w = {};
+  Object.keys(SIM_WEATHER_DEFAULTS).forEach(k => {
+    // a section in the file reads a field it lacks as 0; a missing section is backfilled
+    const v = simVal(src, k, src ? 0 : SIM_WEATHER_DEFAULTS[k], missing);
+    w[k] = SIM_WEATHER_BOOLS.indexOf(k) >= 0 ? v !== 0 : SIM_WEATHER_INTS.indexOf(k) >= 0 ? Math.trunc(v) : SIM_F(v);
+  });
+  if (!g) notes.push("general.json isn't loaded, so weather, time-of-day, moon, water-temperature and treasure settings use the mod's built-in defaults.");
+  else if (!src) notes.push("general.json has no WeatherSettings section. The server fills in the defaults when it loads the file, and so does this page.");
+  // A section that exists but lacks a field: the game reads it as 0 (the
+  // loader makes the section without its class defaults; gebsfishConfig.c).
+  else if (missing.length) notes.push("general.json → WeatherSettings doesn't have " + simListNames(missing) + ", so the game reads " + (missing.length === 1 ? "it" : "them") + " as 0, and so does this page. A file the server wrote always has every field.");
+  return w;
+}
+
+function simReadTreasure(general){
+  const g = simObj(general);
+  const src = g ? simObj(g.TreasureSettings) : null;
+  return {
+    // a section in the file reads a field it lacks as 0; a missing section is backfilled
+    enable: simVal(src, "Enable", src ? 0 : SIM_TREASURE_DEFAULTS.Enable) !== 0,
+    chance: SIM_F(simVal(src, "Chance", src ? 0 : SIM_TREASURE_DEFAULTS.Chance)),
+    // GeneralConfig.Backfill switches RequireRealRod on for a file without the key.
+    requireRealRod: simVal(src, "RequireRealRod", SIM_TREASURE_DEFAULTS.RequireRealRod) !== 0
+  };
+}
+
+function simReadBait(bait, notes){
+  const b = simObj(bait);
+  if (!b) {
+    notes.push("bait.json isn't loaded, so every bait counts as neutral (×1).");
+    return { loaded: false, enable: false, prefs: [] };
+  }
+  const missing = [];
+  const enable = simVal(b, "Enable", 1, missing) !== 0;
+  if (missing.length) notes.push("bait.json has no Enable switch, so this page treats bait preferences as on, the mod's default. The game most likely does too, but that's untested for hand-edited files; a file the server wrote always has it.");
+  // The server's renames, bait by bait, applied to copies: this page never
+  // writes into a file.
+  const found = {};
+  const prefs = (Array.isArray(b.Preferences) ? b.Preferences : []).map(row => {
+    if (!simObj(row) || !Array.isArray(row.Preferences)) return row;
+    const ren = simRenamed(row.Preferences, "FishClassname");
+    if (!ren.hits.length) return row;
+    ren.hits.forEach(h => { const f = found[h.from] || (found[h.from] = { from: h.from, to: h.to, version: h.version, baits: 0 }); f.baits++; });
+    const list = [];
+    row.Preferences.forEach((p, i) => {
+      if (ren.names[i] === false) return;
+      list.push(ren.names[i] === null || ren.names[i] === p.FishClassname ? p : Object.assign({}, p, { FishClassname: ren.names[i] }));
+    });
+    return Object.assign({}, row, { Preferences: list });
+  });
+  Object.keys(found).forEach(k => {
+    const h = found[k];
+    notes.push("bait.json still lists " + h.from + ", which " + h.version + " renamed " + h.to + ", in " + h.baits + (h.baits === 1 ? " bait" : " baits") + ". When the server loads the file it moves those multipliers to " + h.to + " (dropping them where a bait already lists " + h.to + "), and so does this page.");
+  });
+  return { loaded: true, enable: enable, prefs: prefs };
+}
+
+function simReadJunk(junk, notes){
+  const j = simObj(junk);
+  if (!j) notes.push("junk.json isn't loaded, so the default junk table is used (four pairs of wellies and a pot, weight 5 each) with a junk share of 10%.");
+  else if (!Array.isArray(j.Junk) || !Array.isArray(j.ContainerJunk)) notes.push("junk.json is missing a whole table. The server re-adds the default one when it loads the file, and so does this page (an empty table stays empty).");
+  // JunkConfig.Backfill re-seeds a table the file doesn't have at all, and
+  // adds JunkShare (0.1) to a file written before it existed.
+  const missing = [];
+  const share = simVal(j, "JunkShare", SIM_JUNK_SHARE_DEFAULT, missing);
+  if (missing.length) notes.push("junk.json has no JunkShare yet, so this page uses 0.1, the value the server adds when it loads the file.");
+  return {
+    share: share,
+    junk: j && Array.isArray(j.Junk) ? j.Junk : SIM_DEFAULT_JUNK,
+    container: j && Array.isArray(j.ContainerJunk) ? j.ContainerJunk : SIM_DEFAULT_CONTAINER_JUNK
+  };
+}
+
+// FishConfig.RenameLegacyFish, then GebValidateFishConfig: rows without a
+// Classname, rows whose class doesn't exist and repeated classnames
+// (case-insensitive) are skipped; every number is clamped the way the server
+// clamps it. FishConf has no initializers, so a number a row doesn't have is 0.
+// `known` (optional, a Set of lowercased classnames) stands in for the
+// server's class check: this page can only check the mod's own species.
+function simReadFish(fish, notes, known){
+  const list = Array.isArray(fish && fish.Species) ? fish.Species : [];
+  const ren = simRenamed(list, "Classname");
+  const seen = Object.create(null);
+  const rows = [];
+  const partial = [];
+  const unknown = [];
+  let invalid = 0, dupes = 0;
+  list.forEach((f, idx) => {
+    if (!simObj(f) || typeof f.Classname !== "string" || f.Classname === "") { invalid++; return; }
+    const cls = ren.names[idx];
+    if (cls === false) return;
+    const lower = cls.toLowerCase();
+    if (known && !known.has(lower)) { if (unknown.indexOf(cls) < 0) unknown.push(cls); return; }
+    if (seen[lower]) { dupes++; return; }
+    seen[lower] = true;
+    const missing = [];
+    const num = k => simVal(f, k, 0, missing);
+    const flt = k => SIM_F(num(k));
+    const mul = k => SIM_F(simValidate(flt(k), 0, 1000));
+    let env = Math.trunc(num("Environment"));
+    if (env < 0 || env > 3) env = 0;
+    let method = Math.trunc(num("CatchMethod"));
+    if (method < 0 || method > 7) method = 0;
+    const tmin = SIM_F(simValidate(flt("TempMin"), -100, 100));
+    const tmax = SIM_F(simValidate(flt("TempMax"), tmin, 100));
+    const topt = SIM_F(simValidate(flt("TempOptimal"), tmin, tmax));
+    if (typeof f.BiteSpeed !== "string") missing.push("BiteSpeed");
+    rows.push({
+      cls: cls, env: env, method: method,
+      count: simValidate(Math.trunc(num("CatchProbability")), 0, 25),
+      rain: mul("RainMultiplier"), storm: mul("StormMultiplier"),
+      dawn: mul("DawnMultiplier"), day: mul("DayMultiplier"), dusk: mul("DuskMultiplier"), night: mul("NightMultiplier"),
+      tmin: tmin, tmax: tmax, topt: topt, bite: simParseBite(f.BiteSpeed)
+    });
+    if (missing.length) partial.push(cls);
+  });
+  ren.hits.forEach(h => notes.push(h.renamed
+    ? "fish.json still names " + h.from + ", which " + h.version + " renamed " + h.to + ". When the server loads the file it renames that row and keeps its settings, and so does this page."
+    : "fish.json still has a " + h.from + " row, which " + h.version + " renamed " + h.to + ", beside a " + h.to + " row. When the server loads the file it drops the old row, and so does this page."));
+  if (unknown.length) notes.push("fish.json names " + simListNames(unknown) + ", " + (unknown.length === 1 ? "which isn't one of this mod's species" : "which aren't this mod's species") + " (renamed or a typo?). The server skips a row whose class doesn't exist, so this page leaves " + (unknown.length === 1 ? "it" : "them") + " out; another mod's fish that does exist on your server would still be caught.");
+  if (invalid || dupes) {
+    const parts = [];
+    if (invalid) parts.push(invalid + (invalid === 1 ? " row without a Classname" : " rows without a Classname"));
+    if (dupes) parts.push(dupes + (dupes === 1 ? " repeated classname" : " repeated classnames"));
+    notes.push("fish.json has " + parts.join(" and ") + ". The server skips those rows, and so does this page.");
+  }
+  if (partial.length) notes.push("fish.json: " + simListNames(partial) + (partial.length === 1 ? " is" : " are") + " missing some fields. The game reads a missing number as 0 (a missing BiteSpeed as 1 for every hour), and so does this page.");
+  return rows;
+}
+
+// HourInWindow: start inclusive, end exclusive, start > end wraps past
+// midnight, start == end is a switched-off window.
+function simHourIn(h, s, e){
+  if (s === e) return false;
+  if (s < e) return h >= s && h < e;
+  return h >= s || h < e;
+}
+// ResolveTimeWindow: 0 Dawn, 1 Day, 2 Dusk, 3 Night, -1 none; first match wins.
+function simWindow(w, h){
+  if (simHourIn(h, w.DawnStartHour, w.DawnEndHour)) return 0;
+  if (simHourIn(h, w.DayStartHour, w.DayEndHour)) return 1;
+  if (simHourIn(h, w.DuskStartHour, w.DuskEndHour)) return 2;
+  if (simHourIn(h, w.NightStartHour, w.NightEndHour)) return 3;
+  return -1;
+}
+
+// ComputeMoonPhase, in the game's 32-bit floats: 0 new moon, 0.5 full.
+// (The Julian date lands near 2.46 million, where a float steps in quarter
+// days, so the game's phase moves in six-hour steps.)
+function simMoonPhase(year, month, day, hour){
+  const F = SIM_F;
+  let y = year, m = month;
+  if (m <= 2) { y = y - 1; m = m + 12; }
+  const a = Math.trunc(y / 100);
+  const b = 2 - a + Math.trunc(a / 4);
+  const yearTerm = Math.floor(F(F(365.25) * (y + 4716)));
+  const monthTerm = Math.floor(F(F(30.6001) * (m + 1)));
+  const dayTerm = F((day + b) - 1524.5);
+  const hourTerm = F(hour / 24);
+  const jd = F(F(F(yearTerm + monthTerm) + dayTerm) + hourTerm);
+  let phase = F(F(jd - F(2451550.26)) / F(29.530588853));
+  phase = F(phase - Math.floor(phase));
+  if (phase < 0) phase = F(phase + 1);
+  return phase;
+}
+
+// GetCurrentWaterTemp: the map's base water + the seasonal swing (±6 fresh,
+// ±3 sea, warmest on day 217) + WaterTempOffset, floored at freezing.
+function simWaterTemp(inp, w){
+  const F = SIM_F;
+  const sea = !!inp.sea;
+  const map = SIM_MAPS[inp.map] || SIM_MAPS.chernarus;
+  let base = sea ? map.sea : map.fresh;
+  if (inp.map === "custom") {
+    const c = sea ? inp.customSea : inp.customFresh;
+    if (typeof c === "number" && isFinite(c)) base = c;
+  }
+  base = F(base);
+  const swing = sea ? 3 : 6;
+  const floor = sea ? F(-1.8) : 0;
+  const dayOfYear = F(F((inp.month - 1) * F(30.44)) + inp.day);
+  const season = F(Math.cos(F(F(F(Math.PI * 2) * F(dayOfYear - 217)) / 365)));
+  const seasonC = F(swing * season);
+  const raw = F(F(base + seasonC) + w.WaterTempOffset);
+  const computed = Math.max(raw, floor);
+  const out = { sea: sea, map: SIM_MAPS[inp.map] ? inp.map : "chernarus", base: base, swing: swing, season: season, seasonC: seasonC,
+    offset: w.WaterTempOffset, raw: raw, floor: floor, floored: raw < floor, computed: computed, used: computed, override: false };
+  if (typeof inp.overrideTemp === "number" && isFinite(inp.overrideTemp)) { out.override = true; out.used = F(inp.overrideTemp); }
+  return out;
+}
+
+// GetSpeciesTempMultiplier.
+function simTempMul(r, w, water){
+  if (!w.TemperatureEffectEnable) return { v: 1, how: "off" };
+  if (r.tmin === r.tmax || r.topt <= r.tmin || r.topt >= r.tmax) return { v: 1, how: "none" };
+  if (water <= r.tmin) return { v: w.MinTempMultiplier, how: "cold" };
+  if (water >= r.tmax) return { v: w.MaxTempMultiplier, how: "hot" };
+  if (water === r.topt) return { v: 1, how: "optimal" };
+  if (water < r.topt) return { v: simLerp(w.MinTempMultiplier, 1, SIM_F(SIM_F(water - r.tmin) / SIM_F(r.topt - r.tmin))), how: "cool" };
+  return { v: simLerp(1, w.MaxTempMultiplier, SIM_F(SIM_F(water - r.topt) / SIM_F(r.tmax - r.topt))), how: "warm" };
+}
+
+// GetSpeciesWeatherMultiplier: rain or storm band x time window x water
+// temperature, capped at MaxStackedMultiplier.
+function simSpeciesWeather(r, w, rain, win, water){
+  const F = SIM_F;
+  const d = { rainStorm: 1, time: 1, temp: 1, tempHow: "off", capped: false, before: 0, mul: 1 };
+  if (!w.WeatherCatchBoostEnable && !w.TemperatureEffectEnable) return d;
+  let m = 1;
+  if (w.WeatherCatchBoostEnable) {
+    const sr = r.rain < 0 ? 0 : r.rain, ss = r.storm < 0 ? 0 : r.storm;
+    if (rain >= w.StormThreshold) { d.rainStorm = ss; if (ss !== 1) m = F(m * ss); }
+    else if (rain >= w.RainThreshold) { d.rainStorm = sr; if (sr !== 1) m = F(m * sr); }
+    let t = win === 0 ? r.dawn : win === 1 ? r.day : win === 2 ? r.dusk : win === 3 ? r.night : 1;
+    if (t < 0) t = 0;
+    d.time = t;
+    if (t !== 1) m = F(m * t);
+  }
+  const tm = simTempMul(r, w, water);
+  d.temp = tm.v < 0 ? 0 : tm.v;
+  d.tempHow = tm.how;
+  if (d.temp !== 1) m = F(m * d.temp);
+  if (w.MaxStackedMultiplier > 0 && m > w.MaxStackedMultiplier) { d.capped = true; d.before = m; m = w.MaxStackedMultiplier; }
+  d.mul = m;
+  return d;
+}
+
+// FindBaitMultiplier: every bait row with this classname (case-insensitive),
+// first row that lists the fish wins; a negative multiplier counts as 0.
+function simFindBait(prefs, baitCls, fishCls){
+  const b = baitCls.toLowerCase(), f = fishCls.toLowerCase();
+  for (let i = 0; i < prefs.length; i++) {
+    const row = prefs[i];
+    if (!simObj(row) || !Array.isArray(row.Preferences) || typeof row.BaitClassname !== "string" || row.BaitClassname.toLowerCase() !== b) continue;
+    for (let j = 0; j < row.Preferences.length; j++) {
+      const p = row.Preferences[j];
+      if (simObj(p) && typeof p.FishClassname === "string" && p.FishClassname.toLowerCase() === f) {
+        const m = SIM_F(simVal(p, "Multiplier", 0));   // a row without one reads 0 in the game
+        return m < 0 ? 0 : m;
+      }
+    }
+  }
+  return null;
+}
+// GetBaitMultiplier: the exact classname first, then its family without the
+// trailing digits (geb_SpinnerBait3 -> geb_SpinnerBait), else neutral.
+function simBaitMul(fishCls, baitCls, bait){
+  if (!baitCls) return { v: 1, how: "none" };
+  if (!bait.loaded) return { v: 1, how: "neutral" };
+  if (!bait.enable) return { v: 1, how: "off" };
+  let m = simFindBait(bait.prefs, baitCls, fishCls);
+  if (m !== null) return { v: m, how: "listed" };
+  const fam = baitCls.replace(/[0-9]+$/, "");
+  if (fam !== "" && fam !== baitCls) {
+    m = simFindBait(bait.prefs, fam, fishCls);
+    if (m !== null) return { v: m, how: "family" };
+  }
+  return { v: 1, how: "unlisted" };
+}
+
+// One cast. src = { fish, bait, general, junk } (the loaded JSON objects, or
+// null) plus knownSpecies (optional: the lowercased classnames a species row
+// may name, others are left out as the server skips a class that doesn't
+// exist); inp = { map, customFresh, customSea, sea, year, month, day, hour,
+// rain, bait, realRod, overrideTemp }.
+function simCompute(src, inp){
+  const F = SIM_F;
+  const notes = [];
+  const res = { ok: false, notes: notes };
+  if (!src || !simObj(src.fish)) return res;
+  res.ok = true;
+  const W = simReadWeather(src.general, notes);
+  const T = simReadTreasure(src.general);
+  const B = simReadBait(src.bait, notes);
+  const J = simReadJunk(src.junk, notes);
+  const fish = simReadFish(src.fish, notes, src.knownSpecies);
+
+  // The cast's snapshot (GebFishingSnapshot): date, whole hour, rain.
+  const hour = Math.min(23, Math.max(0, Math.trunc(inp.hour) || 0));
+  const rain = F(Math.min(1, Math.max(0, +inp.rain || 0)));
+  const year = Math.trunc(inp.year) || 2000;
+  const month = Math.min(12, Math.max(1, Math.trunc(inp.month) || 1));
+  const day = Math.min(31, Math.max(1, Math.trunc(inp.day) || 1));
+  const sea = !!inp.sea;
+  const water = simWaterTemp({ map: inp.map, customFresh: inp.customFresh, customSea: inp.customSea, sea: sea, month: month, day: day, overrideTemp: inp.overrideTemp }, W);
+  const win = simWindow(W, hour);
+  const band = rain >= W.StormThreshold ? "storm" : rain >= W.RainThreshold ? "rain" : "dry";
+
+  // The pool (vanilla SetupProbabilityArray): every registered yield whose
+  // masks match the context (water 1 pond / 2 sea, method 1 rod), repeated
+  // GetYieldWeight() times: CatchProbability for a fish, 0 means absent.
+  const envMask = sea ? 2 : 1;
+  const pool = [];
+  const left = { water: 0, method: 0, zero: 0 };
+  fish.forEach(r => {
+    if (!(r.env & envMask)) left.water++;
+    else if (!(r.method & 1)) left.method++;
+    else if (r.count <= 0) left.zero++;
+    else pool.push(r);
+  });
+  // Junk registers after every fish and skips a classname already in the
+  // bank. Its masks are both waters + rod; its weight is Clamp(CatchProbability, 0, 25).
+  const taken = Object.create(null);
+  fish.forEach(r => { taken[r.cls] = true; });
+  const junk = [];
+  let junkDupes = 0;
+  [[J.junk, "Junk"], [J.container, "ContainerJunk"]].forEach(pair => pair[0].forEach(e => {
+    if (!simObj(e) || typeof e.Classname !== "string" || e.Classname === "") return;
+    if (taken[e.Classname]) { junkDupes++; return; }
+    taken[e.Classname] = true;
+    const n = simValidate(Math.trunc(simVal(e, "CatchProbability", 0)), 0, 25);
+    if (n > 0) junk.push({ cls: e.Classname, count: n, table: pair[1] });
+  }));
+  if (junkDupes) notes.push("junk.json repeats " + junkDupes + (junkDupes === 1 ? " classname" : " classnames") + " already registered as a fish or earlier junk. The server skips the repeat, and so does this page.");
+  const junkCount = junk.reduce((s, j) => s + j.count, 0);
+
+  // PickWeightedYieldIndex (always used): a fish entry weighs bound(weather)
+  // x bound(bait), both 1 when their systems are off. Normalising by the
+  // largest weight doesn't change the shares, so share = weight / total.
+  const baitOn = B.loaded && B.enable;
+  const rows = pool.map(r => {
+    const sw = simSpeciesWeather(r, W, rain, win, water.used);
+    const bm = simBaitMul(r.cls, inp.bait || "", B);
+    const factor = F(simBound(sw.mul) * simBound(bm.v));
+    return { cls: r.cls, count: r.count, tmin: r.tmin, topt: r.topt, tmax: r.tmax, sw: sw, bait: bm, factor: factor,
+      weight: r.count * factor, biteSpeed: r.bite[hour], share: 0 };
+  });
+  // Junk is scaled to the rest of the pool: its entries together weigh
+  // catch weight x JunkShare / (1 - JunkShare), split per entry; with nothing
+  // else able to bite they weigh 1 each. GebJunkShare: NaN or below 0 -> 0,
+  // at most 0.9.
+  let catchTotal = 0;
+  rows.forEach(x => { catchTotal = F(catchTotal + F(x.weight)); });
+  const setting = !(J.share >= 0) ? 0 : Math.min(J.share, 0.9);
+  let junkEach = 0;
+  if (junkCount > 0 && setting > 0) junkEach = catchTotal > 0 ? F(F(F(catchTotal * setting) / F(1 - setting)) / junkCount) : 1;
+  const junkWeight = F(junkCount * junkEach);
+  const total = catchTotal + junkWeight;
+  let maxFactor = junkCount > 0 ? junkEach : 0;
+  rows.forEach(x => { if (x.factor > maxFactor) maxFactor = x.factor; });
+  const fishEntries = rows.reduce((s, x) => s + x.count, 0);
+  const empty = fishEntries + junkCount === 0;
+  // All weights zero: GenerateResult gives up and the cast can't even start.
+  const allZero = !empty && maxFactor <= 0;
+  if (!empty && !allZero && total > 0) rows.forEach(x => { x.share = x.weight / total; });
+  const junkShare = !empty && !allZero && total > 0 ? junkWeight / total : 0;
+
+  // ComputeAggregateBiteSpeed: BiteSpeed[hour] averaged over the pool's fish,
+  // each weighted by CatchProbability x its weather multiplier (no bait);
+  // floor 0.05. The signal-cycle targets are divided by it.
+  const agg = { on: W.BiteSpeedEnable, value: 1, floored: false, reason: "" };
+  if (!W.BiteSpeedEnable) agg.reason = "off";
+  else if (empty) agg.reason = "empty";
+  else {
+    let num = 0, den = 0;
+    rows.forEach(x => {
+      const wt = F(x.count * x.sw.mul);
+      if (wt <= 0) return;
+      num = F(num + F(x.biteSpeed * wt));
+      den = F(den + wt);
+    });
+    if (den <= 0) agg.reason = "nofish";
+    else {
+      let v = F(num / den);
+      if (v < 0.05) { v = F(0.05); agg.floored = true; }
+      agg.value = v;
+    }
+  }
+
+  // GetMoonMultiplier: night window only, lerp full -> new moon.
+  const phase = simMoonPhase(year, month, day, hour);
+  const moon = { phase: phase, dist: F(Math.abs(phase - 0.5) * 2), mul: 1, reason: "" };
+  if (!W.MoonPhaseEnable) moon.reason = "off";
+  else if (W.FullMoonMultiplier === 1 && W.NewMoonMultiplier === 1) moon.reason = "neutral";
+  else if (win !== 3) moon.reason = "day";
+  else moon.mul = simLerp(W.FullMoonMultiplier, W.NewMoonMultiplier, moon.dist);
+
+  // GetWeatherCatchMultiplier: the global per-cycle bite-chance multiplier
+  // (fish only), rain or storm x time window x moon, capped.
+  const glob = { on: W.WeatherCatchBoostEnable || W.MoonPhaseEnable, rainStorm: 1, time: 1, moon: moon.mul, capped: false, before: 0, value: 1 };
+  if (glob.on) {
+    let m = 1;
+    if (W.WeatherCatchBoostEnable) {
+      if (rain >= W.StormThreshold) { glob.rainStorm = W.StormCatchMultiplier; if (W.StormCatchMultiplier !== 1) m = F(m * W.StormCatchMultiplier); }
+      else if (rain >= W.RainThreshold) { glob.rainStorm = W.RainCatchMultiplier; if (W.RainCatchMultiplier !== 1) m = F(m * W.RainCatchMultiplier); }
+      const t = win === 0 ? W.DawnCatchMultiplier : win === 1 ? W.DayCatchMultiplier : win === 2 ? W.DuskCatchMultiplier : win === 3 ? W.NightCatchMultiplier : 1;
+      glob.time = t;
+      if (t !== 1) m = F(m * t);
+    }
+    if (moon.mul !== 1) m = F(m * moon.mul);
+    if (W.MaxStackedMultiplier > 0 && m > W.MaxStackedMultiplier) { glob.capped = true; glob.before = m; m = W.MaxStackedMultiplier; }
+    glob.value = m;
+  }
+
+  // GebsTreasureSpawner.TryPull: once per successful catch.
+  const treasure = { chance: 0, reason: "", requireRealRod: T.requireRealRod };
+  if (!T.enable) treasure.reason = "off";
+  else if (!(T.chance > 0)) treasure.reason = "zero";
+  else if (T.requireRealRod && !inp.realRod) treasure.reason = "rod";
+  else treasure.chance = Math.min(1, T.chance);
+
+  return Object.assign(res, {
+    W: W, hour: hour, rain: rain, year: year, month: month, day: day, sea: sea, water: water, win: win, band: band,
+    baitLoaded: B.loaded, baitOn: baitOn, rows: rows,
+    junk: { items: junk, count: junkCount, share: junkShare, setting: setting, each: junkEach, weight: junkWeight },
+    fishEntries: fishEntries, total: total, empty: empty, allZero: allZero, left: left,
+    agg: agg, moon: moon, glob: glob, treasure: treasure
+  });
+}
+/* SIM-CORE-END */
+
+/* ---------- simulator UI (its state lives here, never in FILES) ---------- */
+const SIM = { map: "chernarus", customFresh: 15, customSea: 23, sea: false, date: "", hour: 12, rain: 0, bait: "", realRod: true, override: false, overrideTemp: 20, built: false };
+// Moon names by phase; new, quarter and full moon get about a day either side.
+const SIM_MOON = [[0.0339, "🌑", "New moon"], [0.2161, "🌒", "Waxing crescent"], [0.2839, "🌓", "First quarter"], [0.4661, "🌔", "Waxing gibbous"],
+  [0.5339, "🌕", "Full moon"], [0.7161, "🌖", "Waning gibbous"], [0.7839, "🌗", "Last quarter"], [0.9661, "🌘", "Waning crescent"], [1.01, "🌑", "New moon"]];
+const SIM_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+function simTodayISO(){
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+function simIsVisible(){
+  const s = document.getElementById("tab-sim");
+  return !!s && s.classList.contains("active");
+}
+function simHH(h){ return String(h).padStart(2, "0") + ":00"; }
+function simRound(v, d){ const p = Math.pow(10, d); const r = Math.round(v * p) / p; return r === 0 ? 0 : r; }
+function simFx(v){
+  if (v === 0) return "×0";
+  return "×" + (Math.abs(v) >= 0.01 ? simRound(v, 2).toFixed(2) : v.toPrecision(2));
+}
+function simPct(s){
+  if (!(s > 0)) return "0%";
+  const p = s * 100;
+  if (p >= 99.995) return "100%";
+  return (p >= 0.1 ? p.toFixed(2) : p.toLocaleString("en-US", { maximumSignificantDigits: 2, maximumFractionDigits: 12 })) + "%";
+}
+function simC(v){ return simRound(v, 1).toFixed(1).replace("-", "−") + " °C"; }
+function simSigned(v, d){ const r = simRound(v, d); return (r > 0 ? "+" : r < 0 ? "−" : "±") + Math.abs(r).toFixed(d); }
+function simMulCls(v){ return v > 1.0001 ? "up" : v < 0.9999 ? "down" : "neutral"; }
+function simWeightTxt(v){ return Number.isInteger(v) ? String(v) : simRound(v, 2).toFixed(2); }
+function simWindowRange(W, i){
+  const k = SIM_WINDOWS[i];
+  return W[k + "StartHour"] + "–" + W[k + "EndHour"];
+}
+
+function simPlaceholder(){
+  const d = document.createElement("div");
+  d.className = "placeholder";
+  d.innerHTML = '<div class="big">🎯</div><p>Load your <b>fish.json</b> to see what will bite.</p>' +
+    '<p style="margin-top:6px;font-size:0.88rem">general.json, bait.json and junk.json are optional. Anything not loaded falls back to the mod\'s built-in defaults.</p><p style="margin-top:12px"></p>';
+  const b = document.createElement("button");
+  b.className = "btn primary"; b.textContent = "Load files";
+  b.addEventListener("click", () => activateTab("load"));
+  d.lastElementChild.appendChild(b);
+  return d;
+}
+
+// Called whenever the tab opens or a file loads while it's open: rebuilds the
+// controls if needed, refreshes the hook list from bait.json, recomputes.
+function simRefresh(){
+  const host = document.getElementById("sim-editor");
+  if (!host) return;
+  if (!FILES.fish.data) {
+    SIM.built = false;
+    host.innerHTML = "";
+    host.appendChild(simPlaceholder());
+    return;
+  }
+  if (!SIM.built) simBuild(host);
+  simSyncBaitOptions();
+  simUpdate();
+}
+
+function simSelect(id, options, value, onChange){
+  const s = document.createElement("select");
+  s.className = "cfg"; s.id = id;
+  options.forEach(([v, t]) => {
+    const o = document.createElement("option");
+    o.value = v; o.textContent = t;
+    s.appendChild(o);
+  });
+  s.value = value;
+  s.addEventListener("change", () => onChange(s.value));
+  return s;
+}
+function simNumber(id, value, label, onChange){
+  const n = document.createElement("input");
+  n.type = "number"; n.id = id; n.step = "any"; n.value = value;
+  n.setAttribute("aria-label", label);
+  n.addEventListener("input", () => { const v = parseFloat(n.value); if (!isNaN(v)) onChange(v); });
+  return n;
+}
+function simRange(id, min, max, step, value, label, onInput){
+  const r = document.createElement("input");
+  r.type = "range"; r.id = id; r.min = min; r.max = max; r.step = step; r.value = value;
+  r.setAttribute("aria-label", label);
+  r.addEventListener("input", () => onInput(parseFloat(r.value)));
+  return r;
+}
+function simField(label, forId, nodes, subId, subText){
+  const f = document.createElement("div");
+  f.className = "field";
+  const l = document.createElement("label");
+  l.textContent = label;
+  if (forId) l.htmlFor = forId;
+  f.appendChild(l);
+  nodes.forEach(n => f.appendChild(n));
+  if (subId || subText) {
+    const s = document.createElement("div");
+    s.className = "sub2";
+    if (subId) s.id = subId;
+    if (subText) s.textContent = subText;
+    f.appendChild(s);
+  }
+  return f;
+}
+
+function simBuild(host){
+  host.innerHTML = "";
+  if (!SIM.date) SIM.date = simTodayISO();
+  const notes = document.createElement("div");
+  notes.id = "sim-notes";
+  host.appendChild(notes);
+
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = "<h3>🧭 The cast</h3><p class='sub'>Your what-if inputs. They live on this page only and are never written into a file.</p>";
+  const grid = document.createElement("div");
+  grid.className = "simctl";
+
+  let customRow = null;
+  const deg = v => String(v).replace("-", "−") + " °C";
+  const mapOpts = Object.keys(SIM_MAPS).map(k => [k, k === "custom" ? "Custom: enter its water below" : SIM_MAPS[k].label + " · " + deg(SIM_MAPS[k].fresh) + " fresh / " + deg(SIM_MAPS[k].sea) + " sea"]);
+  grid.appendChild(simField("Map", "sim-map", [simSelect("sim-map", mapOpts, SIM.map, v => {
+    SIM.map = v;
+    customRow.style.display = v === "custom" ? "" : "none";
+    simUpdate();
+  })], null, "The map's own water temperature from the game's world data. A map without its own uses Chernarus's."));
+  const pair = document.createElement("span");
+  pair.className = "pair";
+  pair.append("fresh", simNumber("sim-fresh", SIM.customFresh, "Custom map fresh water °C", v => { SIM.customFresh = v; simUpdate(); }),
+    "sea", simNumber("sim-seabase", SIM.customSea, "Custom map sea water °C", v => { SIM.customSea = v; simUpdate(); }));
+  customRow = simField("Custom map water (°C)", "sim-fresh", [pair]);
+  customRow.style.display = SIM.map === "custom" ? "" : "none";
+  grid.appendChild(customRow);
+
+  grid.appendChild(simField("Water", "sim-water", [simSelect("sim-water", [["pond", "Pond, lake or river (fresh)"], ["sea", "Sea (salt)"]], SIM.sea ? "sea" : "pond", v => { SIM.sea = v === "sea"; simUpdate(); })]));
+
+  const date = document.createElement("input");
+  date.type = "date"; date.id = "sim-date"; date.className = "cfg"; date.value = SIM.date;
+  const onDate = () => { if (/^\d{4}-\d{2}-\d{2}$/.test(date.value)) { SIM.date = date.value; simUpdate(); } };
+  date.addEventListener("input", onDate);
+  date.addEventListener("change", onDate);
+  const today = document.createElement("button");
+  today.type = "button"; today.className = "btn small"; today.textContent = "Today";
+  today.addEventListener("click", () => { date.value = simTodayISO(); onDate(); });
+  grid.appendChild(simField("In-game date", "sim-date", [date, today], "sim-date-sub"));
+
+  const hourVal = document.createElement("span");
+  hourVal.className = "val"; hourVal.id = "sim-hour-val";
+  grid.appendChild(simField("Hour", "sim-hour", [simRange("sim-hour", 0, 23, 1, SIM.hour, "In-game hour", v => { SIM.hour = v; simUpdate(); }), hourVal], "sim-hour-sub"));
+
+  const rainVal = document.createElement("span");
+  rainVal.className = "val"; rainVal.id = "sim-rain-val";
+  grid.appendChild(simField("Rain or snow intensity", "sim-rain", [simRange("sim-rain", 0, 1, 0.01, SIM.rain, "Rain or snow intensity", v => { SIM.rain = v; simUpdate(); }), rainVal], "sim-rain-sub"));
+
+  grid.appendChild(simField("On the hook", "sim-bait", [simSelect("sim-bait", [["", "Plain hook / no bait"]], SIM.bait, v => { SIM.bait = v; simUpdate(); })], "sim-bait-sub"));
+
+  grid.appendChild(simField("Rod", "sim-rod", [simSelect("sim-rod", [["real", "Fishing rod (vanilla or gebsfish)"], ["improvised", "Improvised rod"]], SIM.realRod ? "real" : "improvised", v => { SIM.realRod = v === "real"; simUpdate(); })], null, "Only matters for treasure (RequireRealRod)."));
+
+  const sw = document.createElement("label");
+  sw.className = "switch";
+  const cb = document.createElement("input");
+  cb.type = "checkbox"; cb.id = "sim-ovr"; cb.checked = SIM.override;
+  sw.appendChild(cb);
+  sw.appendChild(document.createElement("i"));
+  const ovr = simNumber("sim-ovr-temp", SIM.overrideTemp, "Override water temperature °C", v => { SIM.overrideTemp = v; if (SIM.override) simUpdate(); });
+  ovr.disabled = !SIM.override;
+  cb.addEventListener("change", () => { SIM.override = cb.checked; ovr.disabled = !cb.checked; simUpdate(); });
+  const unit = document.createElement("span");
+  unit.className = "pair"; unit.textContent = "°C";
+  grid.appendChild(simField("Override water temperature", "sim-ovr", [sw, ovr, unit], null, "Ask “what if the water were this warm?” instead of map + season + offset."));
+
+  card.appendChild(grid);
+  host.appendChild(card);
+  const out = document.createElement("div");
+  out.id = "sim-out";
+  host.appendChild(out);
+  SIM.built = true;
+}
+
+// The hook list: plain hook plus every bait.json row (one per classname).
+function simSyncBaitOptions(){
+  const sel = document.getElementById("sim-bait");
+  if (!sel) return;
+  const choices = [["", "Plain hook / no bait"]];
+  const d = FILES.bait.data;
+  const seen = {};
+  if (d && Array.isArray(d.Preferences)) d.Preferences.forEach(b => {
+    if (!b || typeof b.BaitClassname !== "string" || !b.BaitClassname) return;
+    const k = b.BaitClassname.toLowerCase();
+    if (seen[k]) return;
+    seen[k] = true;
+    choices.push([b.BaitClassname, baitName(b.BaitClassname) + (/^geb_(SpinnerBait|SpoonLure|CurlyTailJig|Lure)$/.test(b.BaitClassname) ? " (any variant)" : "")]);
+  });
+  const key = JSON.stringify(choices);
+  if (sel.dataset.key !== key) {
+    sel.innerHTML = "";
+    choices.forEach(([v, t]) => {
+      const o = document.createElement("option");
+      o.value = v; o.textContent = t;
+      sel.appendChild(o);
+    });
+    sel.dataset.key = key;
+  }
+  if (!choices.some(c => c[0] === SIM.bait)) SIM.bait = "";
+  sel.value = SIM.bait;
+}
+
+function simUpdate(){
+  if (!SIM.built || !FILES.fish.data || !document.getElementById("sim-out")) return;
+  // As in the editor tabs, a failure is reported in place of the results.
+  try {
+    const parts = SIM.date.split("-").map(Number);
+    const res = simCompute({ fish: FILES.fish.data, bait: FILES.bait.data, general: FILES.general.data, junk: FILES.junk.data, knownSpecies: KNOWN_SPECIES }, {
+      map: SIM.map, customFresh: SIM.customFresh, customSea: SIM.customSea, sea: SIM.sea,
+      year: parts[0], month: parts[1], day: parts[2], hour: SIM.hour, rain: SIM.rain,
+      bait: SIM.bait, realRod: SIM.realRod, overrideTemp: SIM.override ? SIM.overrideTemp : null
+    });
+    const notes = document.getElementById("sim-notes");
+    notes.innerHTML = res.notes.length ? '<div class="banner simnotes">' + res.notes.map(n => "<div>" + esc(n) + "</div>").join("") + "</div>" : "";
+    simRenderLabels(res);
+    document.getElementById("sim-out").innerHTML = simRenderOut(res);
+  } catch (err) {
+    const out = document.getElementById("sim-out");
+    out.innerHTML = "";
+    drawFailed("sim", out, err);
+  }
+}
+
+function simRenderLabels(res){
+  const W = res.W;
+  document.getElementById("sim-hour-val").textContent = simHH(res.hour);
+  document.getElementById("sim-hour-sub").textContent = res.win >= 0
+    ? SIM_WINDOWS[res.win] + " window (" + W[SIM_WINDOWS[res.win] + "StartHour"] + ":00 to " + W[SIM_WINDOWS[res.win] + "EndHour"] + ":00)"
+    : "No time window covers this hour, so no time-of-day factor applies.";
+  document.getElementById("sim-rain-val").textContent = res.rain.toFixed(2);
+  const bandTxt = res.band === "storm" ? "Storm" : res.band === "rain" ? "Rain" : "Dry";
+  document.getElementById("sim-rain-sub").textContent = bandTxt + " — rain or snow counts from " + simRound(W.RainThreshold, 3) + ", storm from " + simRound(W.StormThreshold, 3) + ".";
+  document.getElementById("sim-date-sub").textContent = "Drives the seasonal water swing and the moon phase.";
+  document.getElementById("sim-bait-sub").textContent = !FILES.bait.data ? "Load bait.json to list your baits and lures; without it bait is neutral."
+    : SIM.bait && !res.baitOn ? "Bait preferences are switched off in bait.json, so this bait is neutral." : "Lists every bait and lure row in your bait.json.";
+}
+
+function simTile(k, v, d){ return '<div class="simtile"><div class="k">' + k + '</div><div class="v">' + v + '</div><div class="d">' + d + "</div></div>"; }
+function simCell(txt, cls, title){ return '<td class="n"' + (title ? ' title="' + esc(title) + '"' : "") + '><span class="mul ' + (cls || "neutral") + '">' + txt + "</span></td>"; }
+
+function simRenderOut(res){
+  const W = res.W, wt = res.water;
+  let h = "";
+
+  /* ---- conditions ---- */
+  const mapLbl = wt.map === "custom" ? "custom map" : SIM_MAPS[wt.map].label;
+  let wd = mapLbl + " " + (wt.sea ? "sea" : "fresh water") + " " + simC(wt.base) + " · season " + simSigned(wt.seasonC, 1) + " (" + res.day + " " + SIM_MONTHS[res.month - 1] + ", swing ±" + wt.swing + ") · offset " + simSigned(wt.offset, 1);
+  if (wt.floored) wd += " · floored at " + simC(wt.floor) + ", the freezing point";
+  if (wt.override) wd = "Your override. Map + season + offset would give " + simC(wt.computed) + " (" + wd + ").";
+  h += '<div class="card"><h3>🌡 This cast</h3><div class="simgrid">';
+  h += simTile("Water temperature", simC(wt.used), wd);
+  h += simTile("Time of day", res.win >= 0 ? SIM_WINDOWS[res.win] : "No window", simHH(res.hour) + " · " + SIM_WINDOWS.map((n, i) => n + " " + simWindowRange(W, i)).join(" · "));
+  h += simTile("Weather", res.band === "storm" ? "⛈ Storm" : res.band === "rain" ? "🌧 Rain" : "☀️ Dry", "intensity " + res.rain.toFixed(2) + " · rain from " + simRound(W.RainThreshold, 3) + ", storm from " + simRound(W.StormThreshold, 3));
+  h += "</div>";
+  const sys = [
+    ["🌧 Weather & time of day", W.WeatherCatchBoostEnable, "what bites + how often"],
+    ["🌡 Water temperature", W.TemperatureEffectEnable, "what bites"],
+    ["🪱 Bait preferences", res.baitOn, "what bites", res.baitLoaded ? "" : "not loaded"],
+    ["🌕 Moon phase", W.MoonPhaseEnable, "how often, at night"],
+    ["⏱ Bite-speed rhythm", W.BiteSpeedEnable, "how long between bites"]
+  ];
+  h += '<div class="simsys">' + sys.map(s => '<span class="' + (s[1] ? "on" : "") + '">' + s[0] + ": " + (s[3] || (s[1] ? "on" : "off")) + " <i>(" + s[2] + ")</i></span>").join("") + "</div></div>";
+
+  /* ---- what bites ---- */
+  h += '<div class="card"><h3>🎣 What bites</h3>';
+  const fishCount = res.rows.length;
+  let sum = "<b>" + fishCount + "</b> species (" + res.fishEntries + " entries) and <b>" + res.junk.items.length + "</b> junk item" + (res.junk.items.length === 1 ? "" : "s") + " (" + res.junk.count + " entries) can come up " + (res.sea ? "at sea" : "in fresh water") + " on a rod.";
+  const notHere = res.left.water + res.left.method + res.left.zero;
+  if (notHere) {
+    const why = [];
+    if (res.left.water) why.push(res.left.water + " aren't found in this water");
+    if (res.left.method) why.push(res.left.method + " are trap-only");
+    if (res.left.zero) why.push(res.left.zero + " have abundance 0");
+    sum += " Not in this pool: " + why.join(", ") + ".";
+  }
+  h += '<p class="simsum">' + sum + "</p>";
+  if (res.empty) {
+    h += '<div class="banner">Nothing can be caught here with a rod: no fish or junk matches this water.</div></div>';
+  } else if (res.allZero) {
+    h += '<div class="banner">Every catch in this pool weighs 0 under these conditions, so the server can\'t pick anything and the cast won\'t even start.</div></div>';
+  } else {
+    const list = res.rows.map(r => ({ r: r, share: r.share, name: niceName(r.cls) }));
+    if (res.junk.count > 0) list.push({ r: null, share: res.junk.share, name: "Junk" });
+    list.sort((a, b) => b.share - a.share || a.name.localeCompare(b.name));
+    const maxShare = list.reduce((m, x) => Math.max(m, x.share), 0);
+    const top = list.find(x => x.r && x.share > 0);
+    const winName = res.win >= 0 ? SIM_WINDOWS[res.win] : "no window";
+    // Chance sits right after the name so it stays in view when a phone
+    // scrolls the factor columns sideways inside the table box.
+    h += '<div class="tblwrap"><table class="edit simtbl"><thead><tr>' +
+      '<th>Catch</th>' +
+      '<th class="n" title="Share of catches: weight ÷ total">Chance</th>' +
+      '<th class="n" title="CatchProbability: how many times it sits in the pool">Abundance</th>' +
+      '<th class="n" title="RainMultiplier or StormMultiplier, from the rain band">' + (res.band === "storm" ? "Storm" : "Rain") + '</th>' +
+      '<th class="n" title="The fish\'s multiplier for the current time window">Time (' + winName + ')</th>' +
+      '<th class="n" title="Water-temperature curve: TempMin, TempOptimal, TempMax">Water temp</th>' +
+      '<th class="n" title="MaxStackedMultiplier caps rain × time × temperature">Cap</th>' +
+      '<th class="n" title="This bait\'s multiplier for the fish (bait.json)">Bait</th>' +
+      '<th class="n" title="Abundance × factors">Weight</th></tr></thead><tbody>';
+    list.forEach(x => {
+      const bar = '<div class="simbar"><i style="width:' + (maxShare > 0 ? (x.share / maxShare * 100).toFixed(1) : 0) + '%"></i></div>';
+      const chance = '<td class="n"><b>' + simPct(x.share) + "</b>" + bar + "</td>";
+      if (!x.r) {
+        const items = res.junk.items.map(j => niceName(j.cls) + " " + j.count).join(" · ");
+        const why = res.fishEntries > 0 && res.junk.each > 0 && res.junk.each !== 1
+          ? "Junk isn't affected by weather, temperature or bait: together its entries weigh JunkShare (" + simPct(res.junk.setting) + ") of everything that can bite, so its chance holds whatever the fish do."
+          : "Junk isn't affected by weather, temperature or bait.";
+        const dash = simCell("—", "neutral", why);
+        h += '<tr class="junk"><td><div class="simname"><b>🗑️ Junk</b><small class="list">' + esc(items) + "</small></div></td>" + chance +
+          '<td class="n">' + res.junk.count + "</td>" + dash + dash + dash + dash + dash +
+          '<td class="n">' + simWeightTxt(res.junk.weight) + "</td></tr>";
+        return;
+      }
+      const r = x.r, sw = r.sw;
+      const off = (why) => simCell("off", "neutral", why);
+      let rainCell, timeCell, tempCell, capCell, baitCell;
+      rainCell = !W.WeatherCatchBoostEnable ? off("Weather & time-of-day buffs are off")
+        : res.band === "dry" ? simCell("—", "neutral", "Dry: no rain or storm factor")
+        : simCell(simFx(sw.rainStorm), simMulCls(sw.rainStorm), res.band === "storm" ? "StormMultiplier" : "RainMultiplier");
+      timeCell = !W.WeatherCatchBoostEnable ? off("Weather & time-of-day buffs are off")
+        : res.win < 0 ? simCell("—", "neutral", "No time window covers this hour")
+        : simCell(simFx(sw.time), simMulCls(sw.time), SIM_WINDOWS[res.win] + "Multiplier");
+      const tempTitle = "TempMin " + simRound(r.tmin, 2) + " · optimal " + simRound(r.topt, 2) + " · TempMax " + simRound(r.tmax, 2) + " °C";
+      tempCell = !W.TemperatureEffectEnable ? off("Water temperature is off")
+        : sw.tempHow === "none" ? simCell("—", "neutral", "No temperature curve for this fish (" + tempTitle + ")")
+        : simCell(simFx(sw.temp), simMulCls(sw.temp), tempTitle);
+      capCell = sw.capped ? simCell(simFx(sw.mul), "down", "Capped by MaxStackedMultiplier; uncapped it was " + simFx(sw.before)) : simCell("—", "neutral", "Under the cap");
+      const bm = r.bait;
+      baitCell = bm.how === "none" ? simCell("—", "neutral", "Nothing on the hook")
+        : bm.how === "neutral" ? simCell("—", "neutral", "bait.json isn't loaded: neutral")
+        : bm.how === "off" ? off("Bait preferences are off in bait.json")
+        : simCell(simFx(bm.v), simMulCls(bm.v), bm.how === "family" ? "From the lure family's row" : bm.how === "unlisted" ? "This bait doesn't list the fish: neutral" : "Listed for this fish");
+      const cls = (x === top ? "top" : "") + (x.share <= 0 ? " zero" : "");
+      h += '<tr class="' + cls.trim() + '"><td><div class="simname"><b>' + (x === top ? "★ " : "") + esc(x.name) + "</b><small>" + esc(r.cls) + "</small></div></td>" + chance +
+        '<td class="n">' + r.count + "</td>" + rainCell + timeCell + tempCell + capCell + baitCell +
+        '<td class="n">' + simWeightTxt(r.weight) + "</td></tr>";
+    });
+    h += "</tbody></table></div>";
+    h += '<p class="tblnote">Weight = abundance × rain or storm × time × water temperature (capped at ' + (W.MaxStackedMultiplier > 0 ? simFx(W.MaxStackedMultiplier) : "no cap") + ") × bait; junk together weighs the junk share (" + simPct(res.junk.setting) + ") of the total; chance = weight ÷ total. " +
+      "Shares are per catch: the server picks the catch once, when the cast starts, and nothing afterwards swaps it. Bite timing, hook loss and quality only change when it bites, whether the hook survives and how full the fish is.</p></div>";
+  }
+
+  /* ---- bite timing ---- */
+  const a = res.agg, g = res.glob, m = res.moon;
+  let at;
+  if (a.reason === "off") at = simTile("Bite speed at " + simHH(res.hour), "off", "The bite-speed rhythm is switched off, so fish bite at vanilla speed every hour.");
+  else if (a.reason) at = simTile("Bite speed at " + simHH(res.hour), "×1.00", "No fish in this pool to average, so the wait stays vanilla.");
+  else {
+    const slow = 1 / a.value;
+    at = simTile("Bite speed at " + simHH(res.hour), simFx(a.value), "This pool's BiteSpeed for the hour, averaged by abundance × weather and temperature" + (a.floored ? " (floored at 0.05)" : "") +
+      ". The server divides the number of cycles a bite takes by it, so the wait between fish bites ≈ vanilla ÷ " + simRound(a.value, 2) + (slow > 1.005 ? ", about " + simRound(slow, 2) + "× as long." : ", about the same as vanilla."));
+  }
+  let gd;
+  if (!g.on) gd = "Weather &amp; time-of-day and moon buffs are both off.";
+  else {
+    const p = [];
+    if (W.WeatherCatchBoostEnable) {
+      p.push((res.band === "storm" ? "storm " + simFx(g.rainStorm) : res.band === "rain" ? "rain " + simFx(g.rainStorm) : "dry ×1"));
+      p.push((res.win >= 0 ? SIM_WINDOWS[res.win] : "no window") + " " + simFx(g.time));
+    }
+    if (W.MoonPhaseEnable) p.push("moon " + (m.reason ? "—" : simFx(m.mul)));
+    gd = p.join(" · ") + (g.capped ? " · capped at " + simFx(g.value) + " (was " + simFx(g.before) + ")" : "") + ". Multiplies every cycle's chance that a fish bites.";
+  }
+  const mn = SIM_MOON.find(x => m.phase < x[0]).slice(1);
+  const lit = Math.round((1 - Math.cos(2 * Math.PI * m.phase)) / 2 * 100);
+  const md = lit + "% lit · " + simRound(m.phase * 29.53, 1) + " days into the cycle (" + res.year + "-" + String(res.month).padStart(2, "0") + "-" + String(res.day).padStart(2, "0") + " " + simHH(res.hour) + "). " +
+    (m.reason === "off" ? "The moon buff is switched off." : m.reason === "neutral" ? "Full and new moon are both ×1, so it has no effect."
+      : m.reason === "day" ? "No effect now: it only counts in the Night window." : "Tonight it multiplies the bite chance by " + simFx(m.mul) + ".");
+  h += '<div class="card"><h3>⏱ Bite timing: how often, not what</h3><div class="simgrid">' + at +
+    simTile("Bite chance per cycle", g.on ? simFx(g.value) : "×1.00", gd) +
+    simTile("Moon", mn[0] + " " + mn[1], md) + "</div>" +
+    '<p class="tblnote">These only make fish bite sooner or later; they never change which fish. Junk ignores them: once junk is picked it bites with vanilla\'s flat ' + Math.round(SIM_JUNK_BITE_CHANCE * 100) + "% chance every cycle.</p></div>";
+
+  /* ---- treasure ---- */
+  const t = res.treasure;
+  const rodTxt = SIM.realRod ? "a fishing rod" : "an improvised rod";
+  let tv, td;
+  if (t.reason === "off") { tv = "off"; td = "Treasure is switched off in general.json (TreasureSettings → Enable)."; }
+  else if (t.reason === "zero") { tv = "0%"; td = "The treasure Chance is 0."; }
+  else if (t.reason === "rod") { tv = "0%"; td = "RequireRealRod is on, so an improvised rod never pulls treasure."; }
+  else { tv = simPct(t.chance); td = (t.chance >= 1 ? "Every successful catch" : "≈ 1 in " + Math.round(1 / t.chance).toLocaleString("en-US") + " successful catches") + " on " + rodTxt + "."; }
+  h += '<div class="card"><h3>💰 Treasure</h3><div class="simgrid">' + simTile("Chance per successful catch", tv, td) + "</div>" +
+    '<p class="tblnote">Rolled once per catch that actually lands, fish or junk, and never on a failed cast. Tune it under ⚙️ General → Treasure.</p></div>';
+  return h;
+}
+
 /* ---------- dispatch ---------- */
+// Draws one tab, guarded, and returns what it flagged: { bad: rows it
+// couldn't show, unknown: [classnames this mod doesn't ship] }.
 function renderEditor(kind){
-  if (kind === "fish") renderFish();
-  else if (kind === "bait") renderBait();
-  else if (kind === "general") renderGeneral();
-  else if (kind === "junk") renderJunk();
+  const draw = { fish: renderFish, bait: renderBait, general: renderGeneral, junk: renderJunk }[kind];
+  if (!draw) return { bad: 0, unknown: [] };
+  const outer = drawTally;
+  drawTally = { bad: 0, unknown: new Set() };
+  guarded(kind, document.getElementById(kind + "-editor"), draw);
+  const found = { bad: drawTally.bad, unknown: [...drawTally.unknown] };
+  drawTally = outer;
+  return found;
 }
 Object.keys(FILES).forEach(renderEditor);
 refreshChrome();

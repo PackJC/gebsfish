@@ -1,0 +1,40 @@
+EffectDef {
+ Emitors {
+  EmitorDef filter_sheet {
+   ConeAngle 360 0 2
+   MaxNum 40
+   BirthRate 160
+   BirthRateVel 0
+   Offset 0 0 0
+   Material "{8FE2383D6913E098}Graphics/Particles/materials/enviroment/water_splash_01_NoEm.emat"
+   SizeMultiplier 0.012
+   SizeRND 0.15
+   RandomRotDir 1
+   RotMultiplier 50
+   RandomAngle 1
+   Velocity -0.25
+   VelocityRND 0.05
+   VelAffect 1
+   AirResistance 0
+   AirResistanceRND 0
+   GravityMultiply 1
+   Wind 0
+   RandomFrame 1
+   LifeTime 0.075
+   LifeTimeRND 0.01
+   Color {
+    0 0.8861 0.9241 1 1 0.8291 0.9367 1
+   }
+   Alpha {
+    0 0 0.125 0.99367 1 0
+   }
+   Size {
+    0 0.48734 1 1
+   }
+   EffectTime 10
+   ShapeType Box
+   ShapeSize 0.07 0 0.003
+   Repeat 1
+  }
+ }
+}

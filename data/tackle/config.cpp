@@ -13,42 +13,47 @@ class CfgNonAIVehicles {
 };
 
 class CfgPatches {
-	class gebsTackleCfgPatches { 	
+	class gebsTackleCfgPatches {
 		//Never Use same name for patch, because conflict message.
+		// The patches defining each vanilla parent, so they always load first.
 		requiredAddons[] = {
 		"DZ_Data",
-		"DZ_Scripts"
+		"DZ_Scripts",
+		"DZ_Gear_Consumables",  // Jig
+		"DZ_Gear_Food",         // Worm
+		"DZ_Gear_Drinks"        // WaterBottle
 		};
 	};
 };
-class cfgVehicles {		
+class cfgVehicles {
 	//Instantiate Needed Classes
-	class Rope;
 	class Jig;
 	class Worm;
-	class NotCookable;
 	class Edible_Base;
 	class WaterBottle;
 	class Container_Base;
 	class Inventory_Base;
-	class FoodAnimationSources;
-	
-    /*
+
+	/*
 
 		CONTAINERS
 
 	*/
 	class geb_Tackle_Base: Container_Base {
 		// Deck-mountable on the jon boat (see data/vehicles/config.cpp).
-		inventorySlot[] = {"GebBoatDeck1", "GebBoatDeck2"};
-		scope = 0;
+		// ...and the Fishing Locker's two tackle spots (data/locker/config.cpp).
+		inventorySlot[] = {"GebBoatDeck1", "GebBoatDeck2", "GebLockerTackle1", "GebLockerTackle2"};
+		// Hidden (1), not just a base (0): until 3.3.2 this class was itself a
+		// spawnable box, so a stored one keeps loading until the next wipe. Every
+		// colour sets its own scope 2; the XML generators list colours only.
+		scope = 1;
 		displayName = "Tackle Base";
 		descriptionShort = "Tackle Base Class";
 		model = "\gebsfish\data\tackle\largetackle.p3d";
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_red_co.paa"};
 		hiddenSelections[] = {"Camo"};
 		rotationFlags = 8;
-		weight = 140;
+		weight = 4500;  // the Plano 737 it is modelled on (54 x 30 x 30 cm) weighs about 4.5 kg empty
 		itemSize[] = {3,2};
 		// Cargo grid bumped from {9,1} to {9,3} so the 2x2
 		// geb_FishingRodRepairKit fits alongside lures and bait. 27 slots
@@ -60,7 +65,9 @@ class cfgVehicles {
 		isMeleeWeapon = 1;
 		allowOwnedCargoManipulation = 1;
 		randomQuantity = 2;
-		repairableWithKits[] = {5,2};
+		// Kit ids: 5 = DuctTape, 8 = EpoxyPutty (vanilla's hard cases use
+		// epoxy). 2 is the SewingKit, which was here by mistake.
+		repairableWithKits[] = {5,8};
 		repairCosts[] = {30,25};
 		lootTag[] = {"Hunting","Work","Camping"};
 		class DamageSystem {
@@ -68,11 +75,11 @@ class cfgVehicles {
 				class Health {
 					hitpoints = 80;
 					healthLevels[] = {
-						{1,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.7,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.5,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0.3,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0,{"DZ\gear\containers\data\FirsAidKit_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\largetackle.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\largetackle.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\largetackle_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\largetackle_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\largetackle_destruct.rvmat"}}
 					};
 				};
 			};
@@ -94,116 +101,117 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_tools_redtackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_red_co.paa"};
 	};
 	class geb_YellowTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_yellowtackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] ={"\gebsfish\data\tackle\largetackle_yellow_co.paa"};
 	};
 	class geb_BlueTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_bluetackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_blue_co.paa"};
 	};
 	class geb_OrangeTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_orangetackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_orange_co.paa"};
 	};
 	class geb_BrownTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_browntackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_brown_co.paa"};
 	};
 	class geb_PurpleTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_purpletackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_purple_co.paa"};
 	};
 	class geb_PinkTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_pinktackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_pink_co.paa"};
 	};
 	class geb_LimeTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_limetackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_lime_co.paa"};
 	};
 	class geb_LightBlueTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_lightbluetackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_lightblue_co.paa"};
 	};
 	class geb_GreenTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_greentackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_green_co.paa"};
 	};
 	class geb_CamoTackle: geb_Tackle_Base {
 		scope = 2;
 		displayName = "$STR_tools_camotackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_camo_co.paa"};
 	};
-	class geb_FunYellowTackle: geb_Tackle_Base {
+	class geb_DesertCamoTackle: geb_Tackle_Base {
 		scope = 2;
-		displayName = "$STR_tools_funyellowtackle";
+		displayName = "$STR_tools_desertcamotackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_yellow_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_desertcamo_co.paa"};
 	};
-	class geb_FunRedTackle: geb_Tackle_Base {
+	class geb_SnowCamoTackle: geb_Tackle_Base {
 		scope = 2;
-		displayName = "$STR_tools_funredtackle";
+		displayName = "$STR_tools_snowcamotackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_red_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_snowcamo_co.paa"};
 	};
-	class geb_FunPurpleTackle: geb_Tackle_Base {
+	class geb_PinkCamoTackle: geb_Tackle_Base {
 		scope = 2;
-		displayName = "$STR_tools_funpurpletackle";
+		displayName = "$STR_tools_pinkcamotackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_purple_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_pinkcamo_co.paa"};
 	};
-	class geb_FunGreenTackle: geb_Tackle_Base {
-		scope = 2;
-		displayName = "$STR_tools_fungreentackle";
-		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\largetackle_green_co.paa"};
+	// The four "Fun" boxes were the Yellow, Red, Purple and Green Tackle Box
+	// under a second class name until 4.0.0. These hidden aliases (scope 1:
+	// never spawned or listed, but a stored one still loads) keep the boxes
+	// already on a server, with everything in them, until the next wipe;
+	// remove them then. Only boxes inside something (a tent, a container, a
+	// vehicle, a jon boat deck, an inventory) are saved again: the world save
+	// skips a loose item with no Central Economy profile, which a scope 1
+	// class can't have, so one lying on the ground is gone after the second
+	// restart (Cole: accepted). The XML generators leave them out.
+	class geb_FunYellowTackle: geb_YellowTackle {
+		scope = 1;
+	};
+	class geb_FunRedTackle: geb_RedTackle {
+		scope = 1;
+	};
+	class geb_FunPurpleTackle: geb_PurpleTackle {
+		scope = 1;
+	};
+	class geb_FunGreenTackle: geb_GreenTackle {
+		scope = 1;
 	};
 	class geb_SmallTackle: Container_Base {
 		// Deck-mountable on the jon boat (see data/vehicles/config.cpp).
-		inventorySlot[] = {"GebBoatDeck1", "GebBoatDeck2"};
+		// ...and the Fishing Locker's two tackle spots (data/locker/config.cpp).
+		inventorySlot[] = {"GebBoatDeck1", "GebBoatDeck2", "GebLockerTackle1", "GebLockerTackle2"};
 		scope = 2;
 		displayName = "$STR_tools_smalltackle";
 		descriptionShort = "$STR_tools_smalltackle_desc";
 		model = "\gebsfish\data\tackle\smalltackle.p3d";
 		rotationFlags = 17;
-		weight = 140;
+		weight = 110;  // a two-latch utility box this size (19 x 10 x 4.5 cm) weighs about 110 g
 		itemSize[] = {2,1};
 		// Cargo grid bumped from {6,1} to {6,2} so the 2x2
 		// geb_FishingRodRepairKit can fit. 12 slots total, room for a
@@ -212,19 +220,19 @@ class cfgVehicles {
 		allowOwnedCargoManipulation = 1;
 		randomQuantity = 2;
 		canBeDigged = 1;
-		repairableWithKits[] = {2};
-		repairCosts[] = {25};
+		repairableWithKits[] = {5,8};  // duct tape or epoxy -- same as tackle boxes
+		repairCosts[] = {30,25};
 		isMeleeWeapon = 1;
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
 					hitpoints = 80;
 					healthLevels[] = {
-						{1,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.7,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.5,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0.3,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0,{"DZ\gear\containers\data\FirsAidKit_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\smalltackle.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\smalltackle.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\smalltackle_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\smalltackle_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\smalltackle_destruct.rvmat"}}
 					};
 				};
 			};
@@ -255,7 +263,8 @@ class cfgVehicles {
 	*/
 	class geb_Cooler_base: Container_Base {
 		// Deck-mountable on the jon boat (see data/vehicles/config.cpp).
-		inventorySlot[] = {"GebBoatDeck1", "GebBoatDeck2"};
+		// ...and the Fishing Locker's cooler spot (data/locker/config.cpp).
+		inventorySlot[] = {"GebBoatDeck1", "GebBoatDeck2", "GebLockerCooler"};
 		scope = 0;  // base class stays non-spawnable; the color variants below are scope = 2
 		displayName = "$STR_tools_cooler";
 		descriptionShort = "$STR_tools_cooler_desc";
@@ -263,25 +272,30 @@ class cfgVehicles {
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_blue_co.paa"};  // base default; each color variant overrides this
 		rotationFlags = 8;
-		weight = 1200;  // a cooler is heavier than a tackle box -- ~1.2kg empty
+		weight = 1200;  // about what a 12-16 quart hard cooler weighs empty
 		itemSize[] = {4,3};
 		itemsCargoSize[] = {6,4};  // 24 slots -- generous fillet storage
+		// Insulation. When the cooler isn't the root item (carried, or inside a
+		// tent or vehicle), vanilla's ambient drift also works on its contents
+		// between chilling ticks; that drift multiplies this coefficient down
+		// the item tree, so 0.1 = contents warm ten times slower.
+		varHeatPermeabilityCoef = 0.1;
 		allowOwnedCargoManipulation = 1;
 		randomQuantity = 2;
 		canBeDigged = 1;
-		repairableWithKits[] = {2};  // duct tape -- same as tackle boxes
-		repairCosts[] = {25};
+		repairableWithKits[] = {5,8};  // duct tape or epoxy -- same as tackle boxes
+		repairCosts[] = {30,25};
 		isMeleeWeapon = 1;
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
 					hitpoints = 150;  // sturdier than tackle (80) since coolers are usually hard plastic
 					healthLevels[] = {
-						{1,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.7,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.5,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0.3,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0,{"DZ\gear\containers\data\FirsAidKit_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\cooler.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\cooler.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\cooler_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\cooler_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\cooler_destruct.rvmat"}}
 					};
 				};
 			};
@@ -308,79 +322,72 @@ class cfgVehicles {
 	class geb_RedCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_redcooler";
-		descriptionShort = "$STR_tools_cooler_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_red_co.paa"};
 	};
 	class geb_YellowCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_yellowcooler";
-		descriptionShort = "$STR_tools_cooler_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_yellow_co.paa"};
 	};
 	class geb_BlueCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_bluecooler";
-		descriptionShort = "$STR_tools_cooler_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_blue_co.paa"};
 	};
 	class geb_OrangeCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_orangecooler";
-		descriptionShort = "$STR_tools_cooler_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_orange_co.paa"};
 	};
 	class geb_BrownCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_browncooler";
-		descriptionShort = "$STR_tools_cooler_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_brown_co.paa"};
 	};
 	class geb_PurpleCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_purplecooler";
-		descriptionShort = "$STR_tools_cooler_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_purple_co.paa"};
 	};
 	class geb_PinkCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_pinkcooler";
-		descriptionShort = "$STR_tools_cooler_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_pink_co.paa"};
 	};
 	class geb_LimeCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_limecooler";
-		descriptionShort = "$STR_tools_cooler_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_lime_co.paa"};
 	};
 	class geb_LightBlueCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_lightbluecooler";
-		descriptionShort = "$STR_tools_cooler_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_lightblue_co.paa"};
 	};
 	class geb_GreenCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_greencooler";
-		descriptionShort = "$STR_tools_cooler_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_green_co.paa"};
 	};
 	class geb_CamoCooler: geb_Cooler_base {
 		scope = 2;
 		displayName = "$STR_tools_camocooler";
-		descriptionShort = "$STR_tools_cooler_desc";
-		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_camo_co.paa"};
+	};
+	class geb_DesertCamoCooler: geb_Cooler_base {
+		scope = 2;
+		displayName = "$STR_tools_desertcamocooler";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_desertcamo_co.paa"};
+	};
+	class geb_SnowCamoCooler: geb_Cooler_base {
+		scope = 2;
+		displayName = "$STR_tools_snowcamocooler";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_snowcamo_co.paa"};
+	};
+	class geb_PinkCamoCooler: geb_Cooler_base {
+		scope = 2;
+		displayName = "$STR_tools_pinkcamocooler";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\cooler_pinkcamo_co.paa"};
 	};
 
 	class geb_WormContainer: Container_Base {
@@ -388,25 +395,27 @@ class cfgVehicles {
 		displayName = "$STR_tools_wormcontainer";
 		descriptionShort = "$STR_tools_wormcontainer_desc";
 		model = "\gebsfish\data\tackle\wormcontainer.p3d";
+		// The Fishing Locker's bait spot (data/locker/config.cpp).
+		inventorySlot[] = {"GebLockerBait"};
 		weight = 140;
 		itemSize[] = {2,2};
 		itemsCargoSize[] = {3,2};
 		allowOwnedCargoManipulation = 1;
 		randomQuantity = 2;
 		canBeDigged = 1;
-		repairableWithKits[] = {2};
-		repairCosts[] = {25};
+		repairableWithKits[] = {5,8};  // duct tape or epoxy -- same as tackle boxes
+		repairCosts[] = {30,25};
 		isMeleeWeapon = 1;
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
 					hitpoints = 80;
 					healthLevels[] = {
-						{1,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.7,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.5,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0.3,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0,{"DZ\gear\containers\data\FirsAidKit_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\wormcontainer.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\wormcontainer.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\wormcontainer_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\wormcontainer_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\wormcontainer_destruct.rvmat"}}
 					};
 				};
 			};
@@ -428,9 +437,11 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_tools_bugcontainer";
 		descriptionShort = "$STR_tools_bugcontainer_desc";
-		model = "\gebsfish\data\tackle\bugcontainer.p3d"; 
+		model = "\gebsfish\data\tackle\bugcatcher.p3d";
+		// The Fishing Locker's bait spot (data/locker/config.cpp).
+		inventorySlot[] = {"GebLockerBait"};
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\bugcontainer_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\bugcatcher_co.paa"};
 		itemInfo[] = {"CatchBugs"};
 		rotationFlags = 12;
 		weight = 140;
@@ -439,19 +450,19 @@ class cfgVehicles {
 		allowOwnedCargoManipulation = 1;
 		randomQuantity = 2;
 		canBeDigged = 1;
-		repairableWithKits[] = {2};
-		repairCosts[] = {25};
+		repairableWithKits[] = {5,8};  // duct tape or epoxy -- same as tackle boxes
+		repairCosts[] = {30,25};
 		isMeleeWeapon = 1;
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
 					hitpoints = 80;
 					healthLevels[] = {
-						{1,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.7,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.5,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0.3,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0,{"DZ\gear\containers\data\FirsAidKit_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\bugcatcher.rvmat","gebsfish\data\tackle\bugcatcher_mesh.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\bugcatcher.rvmat","gebsfish\data\tackle\bugcatcher_mesh.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\bugcatcher_damage.rvmat","gebsfish\data\tackle\bugcatcher_mesh_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\bugcatcher_damage.rvmat","gebsfish\data\tackle\bugcatcher_mesh_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\bugcatcher_destruct.rvmat","gebsfish\data\tackle\bugcatcher_mesh_destruct.rvmat"}}
 					};
 				};
 			};
@@ -475,13 +486,22 @@ class cfgVehicles {
 		descriptionShort = "$STR_tools_baitbucket_desc";
 		model = "\gebsfish\data\tackle\baitbucket.p3d";
 		debug_ItemCategory = 6;
-		weight = 25;
+		// A two-piece galvanized minnow bucket (pail, perforated insert, lid) this
+		// size (33 cm across, 34 cm tall) weighs about 2.9 kg empty; the water adds
+		// up to 1 kg more.
+		weight = 2900;
 		itemSize[] = {3,3};
 		itemsCargoSize[] = {4,4};
-		destroyOnEmpty = 0;
+		// WaterBottle (for the water the bait lives in) passes on Edible_Base's
+		// DirectCookingA/B/C slots, and a stone oven or closed barrel takes any
+		// Edible_Base there as food. The bucket is gear: its one slot is the Fishing
+		// Locker's bucket spot (data/locker/config.cpp).
+		inventorySlot[] = {"GebLockerBucket"};
 		varQuantityDestroyOnMin = 0;
 		varLiquidTypeInit = 512;
-		liquidContainerType = "1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 + 512 + 1024 + 2048 + 4096 + 8192 + 16384 + 32768 + 65536	- (1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256) -32768";
+		// Vanilla WaterBottle's mask, with the fresh, clean, salt, snow and hot
+		// water types (pond, well and rain water) that game updates added.
+		liquidContainerType = "1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 + 512 + 1024 + 2048 + 4096 + 8192 + 16384 + 32768 + 65536 + 131072 + 262144 + 524288 + 2097152 + 4194304 - (1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256) - 32768";
 		varQuantityInit = 1000;
 		varQuantityMin = 0;
 		varQuantityMax = 1000;
@@ -491,11 +511,11 @@ class cfgVehicles {
 				class Health {
 					hitpoints = 50;
 					healthLevels[] = {
-						{1,{"DZ\gear\drinks\data\Loot_WaterBottle.rvmat"}},
-						{0.7,{"DZ\gear\drinks\data\Loot_WaterBottle.rvmat"}},
-						{0.5,{"DZ\gear\drinks\data\Loot_WaterBottle_damage.rvmat"}},
-						{0.3,{"DZ\gear\drinks\data\Loot_WaterBottle_damage.rvmat"}},
-						{0,{"DZ\gear\drinks\data\Loot_WaterBottle_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\baitbucket.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\baitbucket.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\baitbucket_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\baitbucket_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\baitbucket_destruct.rvmat"}}
 					};
 				};
 			};
@@ -522,9 +542,9 @@ class cfgVehicles {
 					soundSet = "WaterBottle_out_B_SoundSet";
 					id = 206;
 				};
-				class WellPond_loop
+				class PondBottle_loop
 				{
-					soundSet = "WellPond_loop_SoundSet";
+					soundSet = "PondBottle_loop_SoundSet";
 					id = 209;
 				};
 				class WellBottle_loop
@@ -542,33 +562,37 @@ class cfgVehicles {
 	};
 	class geb_OldTackleBase: Container_Base {
 		// Deck-mountable on the jon boat (see data/vehicles/config.cpp).
-		inventorySlot[] = {"GebBoatDeck1", "GebBoatDeck2"};
-		scope = 0;
+		// ...and the Fishing Locker's two tackle spots (data/locker/config.cpp).
+		inventorySlot[] = {"GebBoatDeck1", "GebBoatDeck2", "GebLockerTackle1", "GebLockerTackle2"};
+		// Hidden (1), not just a base (0): until 3.3.2 this class was itself a
+		// spawnable box, so a stored one keeps loading until the next wipe. Every
+		// colour sets its own scope 2; the XML generators list colours only.
+		scope = 1;
 		displayName = "$STR_tools_oldgreentackle";
 		descriptionShort = "$STR_tools_tackle_desc";
 		model = "\gebsfish\data\tackle\mediumtackle.p3d";
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_green.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_green_co.paa"};
 		rotationFlags = 8;
-		weight = 140;
+		weight = 1400;  // a plastic cantilever box this size (47 x 26 x 21 cm) weighs about 1.4 kg
 		itemSize[] = {3,2};
-		itemsCargoSize[] = {3,2};
+		itemsCargoSize[] = {6,2};  // 12 slots (6 until 4.0.0), the small tackle box's grid
 		allowOwnedCargoManipulation = 1;
 		randomQuantity = 2;
 		canBeDigged = 1;
-		repairableWithKits[] = {2};
-		repairCosts[] = {25};
+		repairableWithKits[] = {5,8};  // duct tape or epoxy -- same as tackle boxes
+		repairCosts[] = {30,25};
 		isMeleeWeapon = 1;
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
 					hitpoints = 80;
 					healthLevels[] = {
-						{1,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.7,{"DZ\gear\containers\data\FirsAidKit.rvmat"}},
-						{0.5,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0.3,{"DZ\gear\containers\data\FirsAidKit_damage.rvmat"}},
-						{0,{"DZ\gear\containers\data\FirsAidKit_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\mediumtackle.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\mediumtackle.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\mediumtackle_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\mediumtackle_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\mediumtackle_destruct.rvmat"}}
 					};
 				};
 			};
@@ -590,29 +614,85 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_tools_oldgreentackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_green.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_green_co.paa"};
 	};
 	class geb_OldRedTackle: geb_OldTackleBase {
 		scope = 2;
 		displayName = "$STR_tools_oldredtackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_red.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_red_co.paa"};
 	};
 	class geb_OldBlueTackle: geb_OldTackleBase {
 		scope = 2;
 		displayName = "$STR_tools_oldbluetackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_blue.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_blue_co.paa"};
 	};
 	class geb_OldPurpleTackle: geb_OldTackleBase {
 		scope = 2;
 		displayName = "$STR_tools_oldpurpletackle";
 		descriptionShort = "$STR_tools_tackle_desc";
-		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_purple.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_purple_co.paa"};
+	};
+	class geb_OldOrangeTackle: geb_OldTackleBase {
+		scope = 2;
+		displayName = "$STR_tools_oldorangetackle";
+		descriptionShort = "$STR_tools_tackle_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_orange_co.paa"};
+	};
+	class geb_OldYellowTackle: geb_OldTackleBase {
+		scope = 2;
+		displayName = "$STR_tools_oldyellowtackle";
+		descriptionShort = "$STR_tools_tackle_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_yellow_co.paa"};
+	};
+	class geb_OldBrownTackle: geb_OldTackleBase {
+		scope = 2;
+		displayName = "$STR_tools_oldbrowntackle";
+		descriptionShort = "$STR_tools_tackle_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_brown_co.paa"};
+	};
+	class geb_OldPinkTackle: geb_OldTackleBase {
+		scope = 2;
+		displayName = "$STR_tools_oldpinktackle";
+		descriptionShort = "$STR_tools_tackle_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_pink_co.paa"};
+	};
+	class geb_OldLimeTackle: geb_OldTackleBase {
+		scope = 2;
+		displayName = "$STR_tools_oldlimetackle";
+		descriptionShort = "$STR_tools_tackle_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_lime_co.paa"};
+	};
+	class geb_OldLightBlueTackle: geb_OldTackleBase {
+		scope = 2;
+		displayName = "$STR_tools_oldlightbluetackle";
+		descriptionShort = "$STR_tools_tackle_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_lightblue_co.paa"};
+	};
+	class geb_OldCamoTackle: geb_OldTackleBase {
+		scope = 2;
+		displayName = "$STR_tools_oldcamotackle";
+		descriptionShort = "$STR_tools_tackle_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_camo_co.paa"};
+	};
+	class geb_OldDesertCamoTackle: geb_OldTackleBase {
+		scope = 2;
+		displayName = "$STR_tools_olddesertcamotackle";
+		descriptionShort = "$STR_tools_tackle_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_desertcamo_co.paa"};
+	};
+	class geb_OldSnowCamoTackle: geb_OldTackleBase {
+		scope = 2;
+		displayName = "$STR_tools_oldsnowcamotackle";
+		descriptionShort = "$STR_tools_tackle_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_snowcamo_co.paa"};
+	};
+	class geb_OldPinkCamoTackle: geb_OldTackleBase {
+		scope = 2;
+		displayName = "$STR_tools_oldpinkcamotackle";
+		descriptionShort = "$STR_tools_tackle_desc";
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\mediumtackle_pinkcamo_co.paa"};
 	};
 
 	/*
@@ -627,6 +707,24 @@ class cfgVehicles {
 		model = "\gebsfish\data\tackle\grasshopper.p3d";
 		rotationFlags = 17;
 		weight = 21;
+		// The DamageSystem below restates the vanilla parent's hit points in full:
+		// "class DamageSystem: DamageSystem" only compiles against a class defined
+		// in this same config, and the parent here comes from another addon.
+		// 10 hit points as vanilla Worm, with this model's materials
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 10;
+					healthLevels[] = {
+						{1,{"gebsfish\data\tackle\grasshopper.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\grasshopper.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\grasshopper_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\grasshopper_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\grasshopper_destruct.rvmat"}}
+					};
+				};
+			};
+		};
 	};
 	class geb_FieldCricket: Worm {
 		scope = 2;
@@ -635,6 +733,21 @@ class cfgVehicles {
 		model = "\gebsfish\data\tackle\fieldcricket.p3d";
 		rotationFlags = 17;
 		weight = 21;
+		// 10 hit points as vanilla Worm, with this model's materials
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 10;
+					healthLevels[] = {
+						{1,{"gebsfish\data\tackle\fieldcricket.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\fieldcricket.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\fieldcricket_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\fieldcricket_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\fieldcricket_destruct.rvmat"}}
+					};
+				};
+			};
+		};
 	};
 	class geb_GrubWorm: Worm {
 		scope=2;
@@ -642,6 +755,21 @@ class cfgVehicles {
 		descriptionShort = "$STR_tools_grubworm_desc";
 		model = "\gebsfish\data\tackle\grub.p3d";
 		rotationFlags = 17;
+		// 10 hit points as vanilla Worm, with this model's materials
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 10;
+					healthLevels[] = {
+						{1,{"gebsfish\data\tackle\grub.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\grub.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\grub_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\grub_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\grub_destruct.rvmat"}}
+					};
+				};
+			};
+		};
 	};
 	class geb_RubberWorm: Worm {
 		scope = 2;
@@ -649,8 +777,7 @@ class cfgVehicles {
 		descriptionShort = "$STR_tools_rubberworm_desc";
 		model = "\dz\gear\food\bait_worm.p3d";
 		rotationFlags = 17;
-		hiddenSelections[] = {"cs_raw"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\rubberworm_co.paa","\gebsfish\data\tackle\rubberworm_co.paa","\gebsfish\data\tackle\rubberworm_co.paa"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\rubberworm_co.paa"};
 	};
 
 	/*
@@ -669,12 +796,14 @@ class cfgVehicles {
 			class GlobalHealth {
 				class Health {
 					hitpoints = 18;
+					// One material per lure model built on this base (curly-tail
+					// jig, spinnerbait, spoon); each model only has its own.
 					healthLevels[] = {
-						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\curlytailjig.rvmat","gebsfish\data\tackle\spinner.rvmat","gebsfish\data\tackle\spoonlure.rvmat","gebsfish\data\tackle\spoonlure_metal.rvmat","gebsfish\data\tackle\lure_hook.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\curlytailjig.rvmat","gebsfish\data\tackle\spinner.rvmat","gebsfish\data\tackle\spoonlure.rvmat","gebsfish\data\tackle\spoonlure_metal.rvmat","gebsfish\data\tackle\lure_hook.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\curlytailjig_damage.rvmat","gebsfish\data\tackle\spinner_damage.rvmat","gebsfish\data\tackle\spoonlure_damage.rvmat","gebsfish\data\tackle\spoonlure_metal_damage.rvmat","gebsfish\data\tackle\lure_hook_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\curlytailjig_damage.rvmat","gebsfish\data\tackle\spinner_damage.rvmat","gebsfish\data\tackle\spoonlure_damage.rvmat","gebsfish\data\tackle\spoonlure_metal_damage.rvmat","gebsfish\data\tackle\lure_hook_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\curlytailjig_destruct.rvmat","gebsfish\data\tackle\spinner_destruct.rvmat","gebsfish\data\tackle\spoonlure_destruct.rvmat","gebsfish\data\tackle\spoonlure_metal_destruct.rvmat","gebsfish\data\tackle\lure_hook_destruct.rvmat"}}
 					};
 				};
 			};
@@ -685,7 +814,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_spinnerbait1";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
 		model = "\gebsfish\data\tackle\spinner.p3d";
-		hookType = "geb_SpinnerBait1";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinner1_co.paa"};
 	};
@@ -694,7 +822,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_spinnerbait2";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
 		model = "\gebsfish\data\tackle\spinner.p3d";
-		hookType = "geb_SpinnerBait2";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinner2_co.paa"};
 	};
@@ -703,7 +830,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_spinnerbait3";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
 		model = "\gebsfish\data\tackle\spinner.p3d";
-		hookType = "geb_SpinnerBait3";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinner3_co.paa"};
 	};
@@ -712,7 +838,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_spinnerbait4";
 		descriptionShort = "$STR_tools_spinnerbait_desc";
 		model = "\gebsfish\data\tackle\spinner.p3d";
-		hookType = "geb_SpinnerBait4";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spinner4_co.paa"};
 	};
@@ -722,17 +847,16 @@ class cfgVehicles {
 		descriptionShort = "$STR_tools_lure1_desc";
 		model = "\gebsfish\data\tackle\popper.p3d";
 		inventorySlot[] = {"Hook"};
-		hookType = "geb_Lure1";
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
 					hitpoints = 18;
 					healthLevels[] = {
-						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\popper.rvmat","gebsfish\data\tackle\lure_hook.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\popper.rvmat","gebsfish\data\tackle\lure_hook.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\popper_damage.rvmat","gebsfish\data\tackle\lure_hook_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\popper_damage.rvmat","gebsfish\data\tackle\lure_hook_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\popper_destruct.rvmat","gebsfish\data\tackle\lure_hook_destruct.rvmat"}}
 					};
 				};
 			};
@@ -742,19 +866,18 @@ class cfgVehicles {
 		scope = 2;
 		displayName = "$STR_tools_lure2";
 		descriptionShort = "$STR_tools_lure2_desc";
-		model = "\gebsfish\data\tackle\redcrank.p3d";
+		model = "\gebsfish\data\tackle\purplecrank.p3d";
 		inventorySlot[] = {"Hook"};
-		hookType = "geb_Lure2";
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
 					hitpoints = 18;
 					healthLevels[] = {
-						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\purplecrank.rvmat","gebsfish\data\tackle\purplecrank_lip.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\purplecrank.rvmat","gebsfish\data\tackle\purplecrank_lip.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\purplecrank_damage.rvmat","gebsfish\data\tackle\purplecrank_lip_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\purplecrank_damage.rvmat","gebsfish\data\tackle\purplecrank_lip_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\purplecrank_destruct.rvmat","gebsfish\data\tackle\purplecrank_lip_destruct.rvmat"}}
 					};
 				};
 			};
@@ -766,17 +889,16 @@ class cfgVehicles {
 		descriptionShort = "$STR_tools_lure3_desc";
 		model = "\gebsfish\data\tackle\yellowcrank.p3d";
 		inventorySlot[] = {"Hook"};
-		hookType = "geb_Lure3";
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
 					hitpoints = 18;
 					healthLevels[] = {
-						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\yellowcrank.rvmat","gebsfish\data\tackle\yellowcrank_lip.rvmat","gebsfish\data\tackle\lure_hook.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\yellowcrank.rvmat","gebsfish\data\tackle\yellowcrank_lip.rvmat","gebsfish\data\tackle\lure_hook.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\yellowcrank_damage.rvmat","gebsfish\data\tackle\yellowcrank_lip_damage.rvmat","gebsfish\data\tackle\lure_hook_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\yellowcrank_damage.rvmat","gebsfish\data\tackle\yellowcrank_lip_damage.rvmat","gebsfish\data\tackle\lure_hook_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\yellowcrank_destruct.rvmat","gebsfish\data\tackle\yellowcrank_lip_destruct.rvmat","gebsfish\data\tackle\lure_hook_destruct.rvmat"}}
 					};
 				};
 			};
@@ -788,17 +910,16 @@ class cfgVehicles {
 		descriptionShort = "$STR_tools_lure4_desc";
 		model = "\gebsfish\data\tackle\squarebill.p3d";
 		inventorySlot[] = {"Hook"};
-		hookType = "geb_Lure4";
 		class DamageSystem {
 			class GlobalHealth {
 				class Health {
 					hitpoints = 18;
 					healthLevels[] = {
-						{1,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.7,{"DZ\gear\consumables\data\bait.rvmat"}},
-						{0.5,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0.3,{"DZ\gear\consumables\data\bait_damage.rvmat"}},
-						{0,{"DZ\gear\consumables\data\bait_destruct.rvmat"}}
+						{1,{"gebsfish\data\tackle\squarebill.rvmat","gebsfish\data\tackle\lure_hook.rvmat","gebsfish\data\tackle\squarebill_lip.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\squarebill.rvmat","gebsfish\data\tackle\lure_hook.rvmat","gebsfish\data\tackle\squarebill_lip.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\squarebill_damage.rvmat","gebsfish\data\tackle\lure_hook_damage.rvmat","gebsfish\data\tackle\squarebill_lip_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\squarebill_damage.rvmat","gebsfish\data\tackle\lure_hook_damage.rvmat","gebsfish\data\tackle\squarebill_lip_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\squarebill_destruct.rvmat","gebsfish\data\tackle\lure_hook_destruct.rvmat","gebsfish\data\tackle\squarebill_lip_destruct.rvmat"}}
 					};
 				};
 			};
@@ -813,7 +934,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_spoonlure1";
 		descriptionShort = "$STR_tools_spoonlure_desc";
 		model = "\gebsfish\data\tackle\spoonlure.p3d";
-		hookType = "geb_SpoonLure1";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spoonlure_blue_co.paa"};
 
@@ -823,7 +943,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_spoonlure2";
 		descriptionShort = "$STR_tools_spoonlure_desc";
 		model = "\gebsfish\data\tackle\spoonlure.p3d";
-		hookType = "geb_SpoonLure2";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spoonlure_white_co.paa"};
 	};
@@ -832,7 +951,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_spoonlure3";
 		descriptionShort = "$STR_tools_spoonlure_desc";
 		model = "\gebsfish\data\tackle\spoonlure.p3d";
-		hookType = "geb_SpoonLure3";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spoonlure_red_co.paa"};
 	};
@@ -841,7 +959,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_spoonlure4";
 		descriptionShort = "$STR_tools_spoonlure_desc";
 		model = "\gebsfish\data\tackle\spoonlure.p3d";
-		hookType = "geb_SpoonLure4";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\spoonlure_yellow_co.paa"};
 	};
@@ -852,7 +969,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_curlytailjig1";
 		descriptionShort = "$STR_tools_curlytailjig_desc";
 		model = "\gebsfish\data\tackle\curlytailjig.p3d";
-		hookType = "geb_CurlyTailJig1";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\curlytailjig_blue_co.paa"};
 	};
@@ -861,7 +977,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_curlytailjig2";
 		descriptionShort = "$STR_tools_curlytailjig_desc";
 		model = "\gebsfish\data\tackle\curlytailjig.p3d";
-		hookType = "geb_CurlyTailJig2";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\curlytailjig_green_co.paa"};
 	};
@@ -870,7 +985,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_curlytailjig3";
 		descriptionShort = "$STR_tools_curlytailjig_desc";
 		model = "\gebsfish\data\tackle\curlytailjig.p3d";
-		hookType = "geb_CurlyTailJig3";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\curlytailjig_red_co.paa"};
 	};
@@ -879,7 +993,6 @@ class cfgVehicles {
 		displayName = "$STR_tools_curlytailjig4";
 		descriptionShort = "$STR_tools_curlytailjig_desc";
 		model = "\gebsfish\data\tackle\curlytailjig.p3d";
-		hookType = "geb_CurlyTailJig4";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\curlytailjig_purple_co.paa"};
 	};

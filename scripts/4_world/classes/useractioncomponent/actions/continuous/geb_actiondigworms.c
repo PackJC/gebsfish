@@ -45,10 +45,7 @@ modded class ActionDigWorms {
 		if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.DigWormsSettings)
 			return 1.0;
 
-		float chance = m_gebsConfig.General.DigWormsSettings.FindChance;
-		if (chance < 0.0) chance = 0.0;
-		if (chance > 1.0) chance = 1.0;
-		return chance;
+		return Math.Clamp(m_gebsConfig.General.DigWormsSettings.FindChance, 0.0, 1.0);
 	}
 
 	override void OnFinishProgressServer(ActionData action_data) {
@@ -69,22 +66,19 @@ modded class ActionDigWorms {
 		// Each of the N attempts rolls its own find chance. On a miss, that
 		// slot produces nothing. So expected yield is roughly amount * findChance.
 		for (int i = 0; i < amount; i++) {
-			float perRoll = -1;
-			if (findChance < 1.0) {
-				perRoll = Math.RandomFloat01();
-				if (perRoll >= findChance) {
-					misses++;
-					if (debugLevel == ELEVATED_DEBUG)
-						GebsfishLogger.Debug("Dig-worms slot " + i + ": miss (roll=" + perRoll + ")", "DigWorms");
-					continue;
-				}
+			float perRoll;
+			if (!GebRollChance(findChance, perRoll)) {
+				misses++;
+				if (debugLevel == ELEVATED_DEBUG)
+					GebsfishLogger.Debug("Dig-worms slot " + i + ": miss (roll=" + perRoll + ")", "DigWorms");
+				continue;
 			}
 			hits++;
 
 			string spawnType = GetConfiguredDigWormSpawnType();
 			if (debugLevel == ELEVATED_DEBUG)
 				GebsfishLogger.Debug("Dig-worms slot " + i + ": hit (roll=" + perRoll + ") spawning " + spawnType, "DigWorms");
-			GetGame().CreateObjectEx(spawnType, action_data.m_Target.GetCursorHitPos(), ECE_PLACE_ON_SURFACE);
+			g_Game.CreateObjectEx(spawnType, action_data.m_Target.GetCursorHitPos(), ECE_PLACE_ON_SURFACE);
 		}
 
 		if (debugLevel >= 1) {

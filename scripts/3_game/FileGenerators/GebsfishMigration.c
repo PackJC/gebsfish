@@ -55,16 +55,16 @@ class GebsfishMigration {
         int removed = RemoveEmptyDirs(stale, leftover);
 
         if (moved > 0)
-            GebsfishLogger.Info("Archived " + moved + " old-layout file(s) into gebs_oldfiles.", "Migrate");
+            GebsfishLogger.Notice("Archived " + moved + " old-layout file(s) into gebs_oldfiles.", "Migrate");
         if (removed > 0)
-            GebsfishLogger.Info("Removed " + removed + " emptied old-layout folder(s).", "Migrate");
+            GebsfishLogger.Notice("Removed " + removed + " emptied old-layout folder(s).", "Migrate");
         if (leftover.Count() > 0) {
             string list = "";
             foreach (string s : leftover) {
                 if (list != "") list = list + ", ";
                 list = list + s;
             }
-            GebsfishLogger.Info("These emptied old folders could not be removed and are safe to delete by hand: " + list, "Migrate");
+            GebsfishLogger.Notice("These emptied old folders could not be removed and are safe to delete by hand: " + list, "Migrate");
         }
     }
 
@@ -98,7 +98,7 @@ class GebsfishMigration {
     protected static bool IsDirEmpty(string dir) {
         string fileName;
         FileAttr attr;
-        FindFileHandle handle = FindFile(dir + "/*", fileName, attr, FindFileFlags.ALL);
+        FindFileHandle handle = FindFile(dir + "/*", fileName, attr, GebsfishLogger.FIND_FILE_FLAGS);
         if (!handle)
             return true;              // nothing matched at all
 
@@ -134,7 +134,7 @@ class GebsfishMigration {
     protected static int MoveDirFiles(string fromDir, string toDir) {
         string fileName;
         FileAttr attr;
-        FindFileHandle handle = FindFile(fromDir + "*", fileName, attr, FindFileFlags.ALL);
+        FindFileHandle handle = FindFile(fromDir + "*", fileName, attr, GebsfishLogger.FIND_FILE_FLAGS);
         if (!handle)
             return 0;
 
@@ -143,7 +143,8 @@ class GebsfishMigration {
         array<string> names = new array<string>();
         bool more = true;
         while (more) {
-            if (fileName != "" && (attr & FileAttr.DIRECTORY) == 0)
+            // Subfolders (an old mission folder, say) stay where they are.
+            if (fileName != "" && GebsfishLogger.IsRegularFile(fromDir + fileName))
                 names.Insert(fileName);
             more = FindNextFile(handle, fileName, attr);
         }

@@ -9,7 +9,7 @@
 */
 
 // Centralised predator-spawn logic. Callers (fishing action, prepare-fish
-// recipe, fishing-net action) pass the triggering player, the chance from
+// recipe, net and spear actions) pass the triggering player, the chance from
 // config (e.g. PredatorSpawnChanceFishing / Preparing / FailCatch / FishingNet),
 // and a log tag so call sites stay identifiable in script.log.
 //
@@ -23,9 +23,33 @@
 //   - Spawning N instances per the predator's MinCount/MaxCount
 //   - Warning sound RPC to nearby players (PredatorWarningSoundEnable)
 //   - Chat warning to the triggering player (PredatorWarningMessageEnable + color flags)
+//   - Cleanup: these are plain AI animals that nothing else ever removes, so
+//     the spawner caps how many it has out and despawns old ones (see below)
 //
 // Returns true if at least one predator was spawned, false otherwise.
 class GebsPredatorSpawner {
+    // Most predators one spawn event can bring, whatever MaxCount says -- a
+    // config typo of 100 shouldn't drop a hundred wolves on a player.
+    protected static const int MAX_PER_SPAWN = 10;
+    // Living predators from this spawner allowed at once, server-wide. At the
+    // cap, new spawns are skipped until some are killed or despawned.
+    protected static const int MAX_ACTIVE = 30;
+    // A predator still alive this long after spawning is removed, once no
+    // player is within DESPAWN_PLAYER_RADIUS to see it vanish. Killed ones
+    // are left alone: the corpse is the game's to clean up.
+    protected static const float DESPAWN_AFTER_SECS = 900.0;
+    protected static const float DESPAWN_PLAYER_RADIUS = 150.0;
+    protected static const int SWEEP_INTERVAL_MS = 60000;
+    // How far the walkable surface may sit above the bare terrain at a spawn
+    // point: road surfaces, kerbs and small rocks pass, roofs and bridges don't.
+    protected static const float MAX_HEIGHT_ABOVE_GROUND = 1.0;
+
+    // Predators this spawner created and their spawn times (GetTickTime),
+    // kept in step. Entity references null themselves when the entity is
+    // deleted, so a dead or removed entry is simply dropped on the next pass.
+    protected static ref array<Object> s_GebActive;
+    protected static ref array<float> s_GebSpawnedAt;
+    protected static bool s_GebSweeping;
 
     static bool TrySpawn(PlayerBase player, float chance, string logTag) {
         if (!g_Game.IsServer() || !player)
@@ -66,8 +90,18 @@ class GebsPredatorSpawner {
         if (minCount < 0) minCount = 0;
         if (maxCount < 0) maxCount = 0;
         if (maxCount < minCount) maxCount = minCount;
+        if (maxCount > MAX_PER_SPAWN) maxCount = MAX_PER_SPAWN;
+        if (minCount > maxCount) minCount = maxCount;
 
         int count = Math.RandomInt(minCount, maxCount + 1);
+        int room = MAX_ACTIVE - GebActiveCount();
+        if (room <= 0) {
+            if (debugLogs)
+                GebsfishLogger.Debug("Predator cap reached (" + MAX_ACTIVE + " alive). Skipping this spawn.", logTag);
+            return false;
+        }
+        if (count > room)
+            count = room;
         if (debugLogs)
             GebsfishLogger.Debug("Spawning " + count + " " + selected.Classname + " around player.", logTag);
 
@@ -77,13 +111,13 @@ class GebsPredatorSpawner {
         for (int i = 0; i < count; i++) {
             bool foundLand;
             vector spawnPos = FindLandSpawnPosition(playerPos, selected.MinRadius, selected.MaxRadius, debugLogs, logTag, foundLand);
-            // Skip rather than spawn over water. Happens when the triggering
-            // player is fishing far from shore (boat in deep sea) and no
-            // random offset within [MinRadius, MaxRadius] hit terrain after
-            // the retry cap.
+            // Skip rather than spawn over water or on a roof. Happens when the
+            // triggering player is fishing far from shore (boat in deep sea) or
+            // in the middle of a town, and no random offset within
+            // [MinRadius, MaxRadius] hit open ground after the retry cap.
             if (!foundLand) {
                 if (debugLogs)
-                    GebsfishLogger.Debug("Skipping predator spawn -- no land found within [" + selected.MinRadius + "m, " + selected.MaxRadius + "m] of player. Likely too far from shore.", logTag);
+                    GebsfishLogger.Debug("Skipping predator spawn -- no open ground found within [" + selected.MinRadius + "m, " + selected.MaxRadius + "m] of player (water or buildings all round).", logTag);
                 continue;
             }
             if (SpawnOneAt(selected.Classname, spawnPos, player, cfg, debugLogs, logTag, soundPlayed))
@@ -123,16 +157,18 @@ class GebsPredatorSpawner {
     }
 
     // Picks a random offset in [minRadius..maxRadius] around center and
-    // retries up to 20 times to find a position that isn't over sea or pond.
-    // Sets foundLand=true on success. On failure (all 20 attempts landed
-    // over water, typically when fishing far from shore in a boat) returns
-    // center as a safe fallback with foundLand=false so the caller can skip
-    // the spawn instead of dropping a wolf underwater.
+    // retries up to 20 times to find open ground: not over sea or pond, and
+    // not on top of something (a roof, a bridge, a big rock -- the walkable
+    // surface more than MAX_HEIGHT_ABOVE_GROUND above the terrain). Sets
+    // foundLand=true on success. On failure (water or buildings all round,
+    // e.g. fishing far out in a boat or in the middle of a town) returns
+    // center with foundLand=false so the caller skips the spawn.
     //
-    // Pins the result's Y to the terrain surface via SurfaceY rather than
-    // reusing center's Y. This matters when the triggering player is on a
-    // boat, on a cliff, or wading in shallow water -- their Y is not the
-    // ground level the predator needs to spawn at.
+    // Pins the result's Y to the walkable surface via SurfaceRoadY (a road,
+    // a kerb or a small rock, else the terrain), the way vanilla snaps traps
+    // and stashes, rather than reusing center's Y. The triggering player may
+    // be on a boat, on a cliff, or wading in shallow water -- their Y is not
+    // the ground the predator needs to spawn on.
     protected static vector FindLandSpawnPosition(vector center, float minRadius, float maxRadius, int debugLogs, string logTag, out bool foundLand) {
         foundLand = false;
         if (minRadius < 0) minRadius = 0;
@@ -159,9 +195,19 @@ class GebsPredatorSpawner {
                 continue;
             }
 
-            // Use the terrain surface Y, not the player's Y. The player
-            // could be on a boat or cliff edge.
-            float candidateY = g_Game.SurfaceY(candidateX, candidateZ);
+            // Open ground only. SurfaceRoadY is the highest walkable surface,
+            // SurfaceY the bare terrain: where the first is well above the
+            // second something stands there (a roof, a bridge, a big rock), and
+            // an animal put on top of it is stuck. Vanilla never meets this: its
+            // wolves and bears come from the Central Economy's territories, out
+            // in the wild, never from a point picked next to a player.
+            float groundY = g_Game.SurfaceY(candidateX, candidateZ);
+            float candidateY = g_Game.SurfaceRoadY(candidateX, candidateZ);
+            if (candidateY - groundY > MAX_HEIGHT_ABOVE_GROUND) {
+                if (debugLogs == ELEVATED_DEBUG)
+                    GebsfishLogger.Debug("Surface selected for spawning predator is on a building or rock (" + (candidateY - groundY) + " m above the ground). Retrying.", logTag);
+                continue;
+            }
             spawnPos = Vector(candidateX, candidateY, candidateZ);
             foundLand = true;
             return spawnPos;
@@ -177,7 +223,11 @@ class GebsPredatorSpawner {
     // spawn within a single TrySpawn call, also fires the warning-sound RPC to
     // nearby players if PredatorWarningSoundEnable is on.
     protected static bool SpawnOneAt(string classname, vector position, PlayerBase triggeringPlayer, gebsfishConfig cfg, int debugLogs, string logTag, out bool soundPlayed) {
-        Object predator = g_Game.CreateObject(classname, position, false, true);
+        // Vanilla's own spawn path: AI (DZ_LightAI) goes through SpawnAI with
+        // ECE_PLACE_ON_SURFACE | ECE_INITAI | ECE_EQUIP_ATTACHMENTS, so it is
+        // traced onto the surface at `position` and set up the way the game
+        // sets up its own animals; anything else is placed on the surface too.
+        Object predator = triggeringPlayer.SpawnEntityOnGroundPos(classname, position);
         if (!predator) {
             if (debugLogs)
                 GebsfishLogger.Debug("Failed to spawn " + classname + ".", logTag);
@@ -186,6 +236,7 @@ class GebsPredatorSpawner {
 
         if (debugLogs)
             GebsfishLogger.Debug("Spawned " + classname + " at " + position.ToString(), logTag);
+        GebTrack(predator);
 
         // Warning sound RPC, fired once per TrySpawn call (the `out bool` flag).
         if (!cfg.General.PredatorSettings.PredatorWarningSoundEnable || soundPlayed)
@@ -223,6 +274,69 @@ class GebsPredatorSpawner {
         return true;
     }
 
+    protected static void GebTrack(Object predator) {
+        if (!s_GebActive) {
+            s_GebActive = new array<Object>();
+            s_GebSpawnedAt = new array<float>();
+        }
+        s_GebActive.Insert(predator);
+        s_GebSpawnedAt.Insert(g_Game.GetTickTime());
+        // One shared sweep for every predator, not a timer each.
+        if (!s_GebSweeping) {
+            s_GebSweeping = true;
+            g_Game.GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GebsPredatorSpawner.GebSweep, SWEEP_INTERVAL_MS, true);
+        }
+    }
+
+    // Living predators this spawner has out; drops entries that were killed
+    // or deleted since the last look.
+    protected static int GebActiveCount() {
+        if (!s_GebActive)
+            return 0;
+        for (int i = s_GebActive.Count() - 1; i >= 0; i--) {
+            Object animal = s_GebActive[i];
+            if (!animal || !animal.IsAlive()) {
+                s_GebActive.RemoveOrdered(i);
+                s_GebSpawnedAt.RemoveOrdered(i);
+            }
+        }
+        return s_GebActive.Count();
+    }
+
+    // Every SWEEP_INTERVAL_MS while any are out: removes living predators
+    // older than DESPAWN_AFTER_SECS that no player is close to, then stops
+    // itself once the list is empty.
+    static void GebSweep() {
+        if (GebActiveCount() > 0) {
+            float now = g_Game.GetTickTime();
+            array<Man> players = new array<Man>();
+            g_Game.GetPlayers(players);
+            for (int i = s_GebActive.Count() - 1; i >= 0; i--) {
+                if (now - s_GebSpawnedAt[i] < DESPAWN_AFTER_SECS)
+                    continue;
+                Object animal = s_GebActive[i];
+                if (GebPlayerNear(animal.GetPosition(), players))
+                    continue;
+                s_GebActive.RemoveOrdered(i);
+                s_GebSpawnedAt.RemoveOrdered(i);
+                animal.Delete();
+            }
+        }
+        if (!s_GebActive || s_GebActive.Count() == 0) {
+            g_Game.GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(GebsPredatorSpawner.GebSweep);
+            s_GebSweeping = false;
+        }
+    }
+
+    protected static bool GebPlayerNear(vector position, array<Man> players) {
+        float radiusSq = DESPAWN_PLAYER_RADIUS * DESPAWN_PLAYER_RADIUS;
+        foreach (Man man : players) {
+            if (man && vector.DistanceSq(man.GetPosition(), position) <= radiusSq)
+                return true;
+        }
+        return false;
+    }
+
     // Sends the configured chat warning to the triggering player only (not
     // a server-wide broadcast). Only fires if PredatorWarningMessageEnable
     // is on, then routes via the first color flag that's set.
@@ -230,7 +344,10 @@ class GebsPredatorSpawner {
         if (!cfg.General.PredatorSettings.PredatorWarningMessageEnable)
             return;
 
-        string pred_message = Widget.TranslateString("#STR_action_predatorspawn");
+        // Send the stringtable key, not translated text: this runs on the
+        // server, and the player's chat widget translates a "#" key into the
+        // player's own language when it shows the line.
+        string pred_message = "#STR_action_predatorspawn";
 
         if (cfg.General.PredatorSettings.PredatorWarningMessageGreen)
             player.MessageFriendly(pred_message);
