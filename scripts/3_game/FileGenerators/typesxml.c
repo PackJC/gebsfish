@@ -54,7 +54,7 @@ class gebsfishTypes {
             // Result classnames are shared across species (five pike and muskies
             // give geb_YellowCaviar), but types.xml needs each declared once.
             map<string, bool> written = new map<string, bool>();
-            foreach (FishConf f : cfg.Fish.Species) {
+            foreach (GebFishConf f : cfg.Fish.Species) {
                 if (!f || f.Classname == "") continue;
                 WriteTypeOnce(file, written, f.Classname);
                 if (f.ResultMain != "")  WriteTypeOnce(file, written, f.ResultMain);
@@ -80,7 +80,7 @@ class gebsfishTypes {
     }
 
     protected void WriteGearSection(FileHandle file) {
-        ref array<ref XmlTypeEntry> gearItems = new array<ref XmlTypeEntry>;
+        ref array<ref GebXmlTypeEntry> gearItems = new array<ref GebXmlTypeEntry>;
         gearItems.Reserve(100);
 
         // Fishing rods: the eighteen rods (ten colours, four camos, and the fly, spincast, baitcast and heavy surf rods)
@@ -145,7 +145,7 @@ class gebsfishTypes {
         // tools; at 2 hours a stocked cooler or tackle box left outside a
         // base vanished with everything in it.
         FPrintln(file, "    <!-- Gear Items -->");
-        foreach (XmlTypeEntry gearEntry : gearItems) {
+        foreach (GebXmlTypeEntry gearEntry : gearItems) {
             WriteType(file, gearEntry.Name, gearEntry.Nominal, 14400, 0, gearEntry.Min, -1, -1, 200, gearEntry.Category, true, false);
         }
 
@@ -180,9 +180,9 @@ class gebsfishTypes {
         }
     }
 
-    protected void InsertGearBatch(array<ref XmlTypeEntry> gearItems, TStringArray names, int nominal, int min, string category = "tools") {
+    protected void InsertGearBatch(array<ref GebXmlTypeEntry> gearItems, TStringArray names, int nominal, int min, string category = "tools") {
         foreach (string name : names) {
-            gearItems.Insert(new XmlTypeEntry(name, nominal, min, category));
+            gearItems.Insert(new GebXmlTypeEntry(name, nominal, min, category));
         }
     }
 
@@ -421,13 +421,13 @@ class gebsfishTypes {
     }
 }
 
-class XmlTypeEntry {
+class GebXmlTypeEntry {
     string Name;
     int Nominal;
     int Min;
     string Category;
 
-    void XmlTypeEntry(string name, int nominal, int min, string category = "tools") {
+    void GebXmlTypeEntry(string name, int nominal, int min, string category = "tools") {
         Name = name;
         Nominal = nominal;
         Min = min;

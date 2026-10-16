@@ -67,7 +67,7 @@ class ActionGebSpearFishing : ActionGebWaterBase {
 		return true;
 	}
 
-	protected SpearFishingConf GetSpearSettings() {
+	protected GebSpearFishingConf GetSpearSettings() {
 		if (!m_gebsConfig || !m_gebsConfig.General)
 			return null;
 		return m_gebsConfig.General.SpearFishingSettings;
@@ -85,7 +85,7 @@ class ActionGebSpearFishing : ActionGebWaterBase {
 		if (!target || player.IsPlacingLocal() || player.IsSwimming())
 			return false;
 
-		SpearFishingConf settings = GetSpearSettings();
+		GebSpearFishingConf settings = GetSpearSettings();
 		if (!settings || !settings.Enable)
 			return false;
 
@@ -113,14 +113,14 @@ class ActionGebSpearFishing : ActionGebWaterBase {
 
 	// Weighted pick from SpearFishingSettings.Catches among the entries for
 	// this water (Environment 1 pond, 2 sea, 3 both); empty when none apply.
-	string GetSpearCatchType(SpearFishingConf settings, int environment) {
+	string GetSpearCatchType(GebSpearFishingConf settings, int environment) {
 		int debugLevel = GebGetDebugLevel();
 		if (!settings || !settings.Catches || settings.Catches.Count() == 0)
 			return "";
 
 		TStringArray names = new TStringArray;
 		TFloatArray weights = new TFloatArray;
-		foreach (SpearEntry entry : settings.Catches) {
+		foreach (GebSpearEntry entry : settings.Catches) {
 			if (!entry || entry.Classname == "" || entry.CatchChance <= 0)
 				continue;
 			if (entry.Environment != 3 && entry.Environment != environment)
@@ -155,7 +155,7 @@ class ActionGebSpearFishing : ActionGebWaterBase {
 
 		PlayerBase player = action_data.m_Player;
 		ItemBase spear = action_data.m_MainItem;
-		SpearFishingConf settings = GetSpearSettings();
+		GebSpearFishingConf settings = GetSpearSettings();
 
 		if (settings) {
 			float findChance = Math.Clamp(settings.FindChance, 0.0, 1.0);

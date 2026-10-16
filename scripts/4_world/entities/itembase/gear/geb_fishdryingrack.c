@@ -231,14 +231,14 @@ class geb_FishDryingRack : ItemBase {
 
 	// ------------------------------------------------------------ drying
 
-	static DryingRackConf GebDryConf() {
+	static GebDryingRackConf GebDryConf() {
 		if (!m_gebsConfig || !m_gebsConfig.General)
 			return null;
 		return m_gebsConfig.General.DryingRackSettings;
 	}
 
 	// True while rain and snowfall are both at or below StallThreshold.
-	static bool GebIsDryingWeather(DryingRackConf cfg) {
+	static bool GebIsDryingWeather(GebDryingRackConf cfg) {
 		Weather weather = g_Game.GetWeather();
 		if (!cfg || !weather)
 			return false;
@@ -251,7 +251,7 @@ class geb_FishDryingRack : ItemBase {
 	}
 
 	// 1 in still air, 1 + WindScale at the map's strongest wind.
-	static float GebWindFactor(DryingRackConf cfg) {
+	static float GebWindFactor(GebDryingRackConf cfg) {
 		Weather weather = g_Game.GetWeather();
 		if (!cfg || !weather || weather.GetWindMaximumSpeed() <= 0)
 			return 1.0;
@@ -265,7 +265,7 @@ class geb_FishDryingRack : ItemBase {
 	bool GebIsDrying() {
 		if (GetHierarchyParent() || IsRuined())
 			return false;
-		DryingRackConf cfg = GebDryConf();
+		GebDryingRackConf cfg = GebDryConf();
 		return cfg && cfg.Enable && GebIsDryingWeather(cfg);
 	}
 
@@ -288,7 +288,7 @@ class geb_FishDryingRack : ItemBase {
 		}
 		if (!GebIsDrying())
 			return;
-		DryingRackConf cfg = GebDryConf();
+		GebDryingRackConf cfg = GebDryConf();
 		float minutes = Math.Max(cfg.MinutesToDry, 0.1);
 		float step = GEB_DRY_TICK * GebWindFactor(cfg) / (minutes * 60.0);
 		for (int i = 0; i < GEB_DRY_SLOTS; i++) {

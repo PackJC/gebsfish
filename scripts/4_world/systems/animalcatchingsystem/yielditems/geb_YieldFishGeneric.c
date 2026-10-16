@@ -1,15 +1,15 @@
 /* ============================================================================
-   One generic yield, seeded from a FishConf row. Registered once per
+   One generic yield, seeded from a GebFishConf row. Registered once per
    Species entry (see geb_missionbase).
    ============================================================================ */
 class geb_YieldFishGeneric : GebYieldFishBase {
-    protected ref FishConf m_Conf;
+    protected ref GebFishConf m_Conf;
 
     // NOTE: we deliberately declare NO constructor here. The vanilla base
     // (FishYieldItemBase) requires an int (catch probability) in its
     // constructor, so callers do `new geb_YieldFishGeneric(catchProb)` and the
     // arg forwards straight to the base.
-    // The FishConf row can't ride in the constructor (its type wouldn't match
+    // The GebFishConf row can't ride in the constructor (its type wouldn't match
     // the base's int prototype), so it comes through this setter.
     //
     // CRITICAL ORDERING: vanilla YieldItemBase's constructor calls Init()
@@ -21,7 +21,7 @@ class geb_YieldFishGeneric : GebYieldFishBase {
     // runs, m_Type stays "" and the enviro/method masks stay 0: the bank keys
     // on GetType().Hash(), so every species collapses onto one empty entry
     // that matches no environment or catch method -- you catch only junk.
-    void SetConf(FishConf conf) {
+    void SetConf(GebFishConf conf) {
         m_Conf = conf;
         ApplyConf();
     }

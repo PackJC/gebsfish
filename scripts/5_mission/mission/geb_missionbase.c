@@ -139,7 +139,7 @@ modded class MissionBase {
 
 		if (m_gebsConfig && m_gebsConfig.Fish && m_gebsConfig.Fish.Species) {
 			geb_YieldFishGeneric fishYield;
-			foreach (FishConf f : m_gebsConfig.Fish.Species) {
+			foreach (GebFishConf f : m_gebsConfig.Fish.Species) {
 				if (f && f.Classname != "" && !bank.GetYieldsMap().Contains(f.Classname.Hash())) {
 					// The int (catch probability) is REQUIRED by the vanilla base
 					// constructor (FishYieldItemBase) -- it's the weight the bank
@@ -170,7 +170,7 @@ modded class MissionBase {
 		int i;
 		if (m_gebsConfig.Junk && m_gebsConfig.Junk.Junk)
 		{
-			JunkEntry junkItem;
+			GebJunkEntry junkItem;
 			for (i = 0; i < m_gebsConfig.Junk.Junk.Count(); i++)
 			{
 				junkItem = m_gebsConfig.Junk.Junk[i];
@@ -185,7 +185,7 @@ modded class MissionBase {
 
 		if (m_gebsConfig.Junk && m_gebsConfig.Junk.ContainerJunk)
 		{
-			ContainerJunkEntry containerJunkItem;
+			GebContainerJunkEntry containerJunkItem;
 			for (i = 0; i < m_gebsConfig.Junk.ContainerJunk.Count(); i++)
 			{
 				containerJunkItem = m_gebsConfig.Junk.ContainerJunk[i];

@@ -27,7 +27,7 @@ modded class MissionServer {
 		if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.BambooFishingNetSettings || !m_gebsConfig.General.BambooFishingNetSettings.Catches)
 			return;
 
-		foreach (NetEntry entry : m_gebsConfig.General.BambooFishingNetSettings.Catches) {
+		foreach (GebNetEntry entry : m_gebsConfig.General.BambooFishingNetSettings.Catches) {
 			if (!entry || entry.Classname == "" || entry.CatchChance <= 0)
 				continue;
 			// The same check the net action makes before spawning a catch

@@ -292,7 +292,7 @@ Fixed 2026-10-06 on Cole's word ("fix all these"):
   gebsfishConfig.c, the dawn and storm examples, a vanilla method that doesn't
   exist, the caviar example and others); the unused `class ItemBase;` in
   data/tools/config.cpp, the Rubber Worm's two unread textures, a repeated
-  help-text refresh in JunkConfig.Backfill and three debug lines that never
+  help-text refresh in GebJunkConfig.Backfill and three debug lines that never
   printed on a client (checked before the server's config was in). On
   Cole's word, the stray grep.exe.stackdump at the repo root (an untracked
   crash dump from a Git Bash grep) went to the Recycle Bin.

@@ -99,7 +99,7 @@ class ActionBambooFishingNet : ActionGebWaterBase {
 				GebsfishLogger.Debug("Net spawn lookup: config missing -- returning empty", "NetSpawn");
 			return "";
 		}
-		ref array<ref NetEntry> catches = m_gebsConfig.General.BambooFishingNetSettings.Catches;
+		ref array<ref GebNetEntry> catches = m_gebsConfig.General.BambooFishingNetSettings.Catches;
 		if (!catches || catches.Count() == 0) {
 			if (debugLevel >= 1)
 				GebsfishLogger.Debug("Net spawn lookup: Catches table empty -- returning empty (env=" + environment + ")", "NetSpawn");
@@ -110,7 +110,7 @@ class ActionBambooFishingNet : ActionGebWaterBase {
 		// sum/walk can't disagree), then defer the roll to the shared picker.
 		TStringArray names = new TStringArray;
 		TFloatArray weights = new TFloatArray;
-		foreach (NetEntry netEntry : catches) {
+		foreach (GebNetEntry netEntry : catches) {
 			if (!netEntry || netEntry.Classname == "" || netEntry.CatchChance <= 0)
 				continue;
 			if (netEntry.Environment != 3 && netEntry.Environment != environment)

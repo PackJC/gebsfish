@@ -404,7 +404,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     // caller can fall back to the lure-family row.
     protected bool FindBaitMultiplier(string baitClassname, string fishClassname, out float mul) {
         mul = 1.0;
-        foreach (BaitConfig bait : m_gebsConfig.Bait.Preferences) {
+        foreach (GebBaitConfig bait : m_gebsConfig.Bait.Preferences) {
             // Case-insensitive on the classname match: m_Bait.GetType() comes
             // back in DayZ's canonical PascalCase, but admins hand-editing
             // the JSON sometimes type "worm" or "WORM" -- silently failing
@@ -412,7 +412,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
             // look broken on what's really a typo.
             if (!bait || !bait.Preferences || !GebSameClassname(bait.BaitClassname, baitClassname))
                 continue;
-            foreach (BaitPreferenceEntry pref : bait.Preferences) {
+            foreach (GebBaitPreferenceEntry pref : bait.Preferences) {
                 if (pref && GebSameClassname(pref.FishClassname, fishClassname)) {
                     // Floor at 0 so an admin typo (-2.0) can't drag the
                     // weighted-pick weight negative. Downstream rounds
@@ -506,7 +506,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
             return 1.0;
         if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
             return 1.0;
-        WeatherConf w = m_gebsConfig.General.WeatherSettings;
+        GebWeatherConf w = m_gebsConfig.General.WeatherSettings;
         if (!w.TemperatureEffectEnable)
             return 1.0;
 
@@ -546,7 +546,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 
     // Per-species multiplier overlay. Reads the per-species Rain/Storm/Dawn/
     // Day/Dusk/Night multipliers straight off the GebYieldFishBase (cached
-    // there at registration time from the matching FishConf), then applies
+    // there at registration time from the matching GebFishConf), then applies
     // the same rain/storm + time-of-day conditions as the global multiplier.
     // Stacks the per-species temperature curve on top. Yields that weren't
     // passed multipliers in SetupYield default to 1.0 (no effect). Bails
@@ -558,7 +558,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
             return 1.0;
 
-        WeatherConf w = m_gebsConfig.General.WeatherSettings;
+        GebWeatherConf w = m_gebsConfig.General.WeatherSettings;
         if (!w.WeatherCatchBoostEnable && !w.TemperatureEffectEnable)
             return 1.0;
 
@@ -566,7 +566,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
 
         if (w.WeatherCatchBoostEnable) {
             // Floor at 0 -- admin typo could set a negative multiplier on
-            // a FishConf and drag the running total negative. Downstream
+            // a GebFishConf and drag the running total negative. Downstream
             // weight rounds negatives to 0, but defending at source keeps
             // the multiplier semantically a non-negative scale factor and
             // makes future refactors safe.
@@ -664,7 +664,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     // four windows accept wrap configurations -- by default only Night uses
     // it, but admins running unusual schedules (post-apoc / arctic / fantasy
     // servers) may want a 23-2 Dawn or similar.
-    protected int ResolveTimeWindow(WeatherConf w, int hour) {
+    protected int ResolveTimeWindow(GebWeatherConf w, int hour) {
         if (HourInWindow(hour, w.DawnStartHour, w.DawnEndHour))
             return 0;
         if (HourInWindow(hour, w.DayStartHour, w.DayEndHour))
@@ -734,7 +734,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
     protected float GetMoonMultiplier() {
         if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
             return 1.0;
-        WeatherConf w = m_gebsConfig.General.WeatherSettings;
+        GebWeatherConf w = m_gebsConfig.General.WeatherSettings;
         if (!w.MoonPhaseEnable)
             return 1.0;
         if (w.FullMoonMultiplier == 1.0 && w.NewMoonMultiplier == 1.0)
@@ -772,7 +772,7 @@ modded class CatchingContextFishingRodAction : CatchingContextFishingBase {
         if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.WeatherSettings)
             return 1.0;
 
-        WeatherConf w = m_gebsConfig.General.WeatherSettings;
+        GebWeatherConf w = m_gebsConfig.General.WeatherSettings;
         // Bail out only if BOTH feature toggles are off -- moon is independent
         // of WeatherCatchBoostEnable.
         if (!w.WeatherCatchBoostEnable && !w.MoonPhaseEnable)

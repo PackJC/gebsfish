@@ -2191,7 +2191,7 @@ const SIM_MAPS = {
 };
 
 // Compiled defaults from gebsfishConfig.c, used for a file that isn't loaded or
-// a field it doesn't have: WeatherConf, TreasureConf, and JunkConfig's
+// a field it doesn't have: GebWeatherConf, GebTreasureConf, and GebJunkConfig's
 // SeedDefaultJunk / SeedDefaultContainerJunk.
 const SIM_WEATHER_DEFAULTS = {
   WeatherCatchBoostEnable: 1, RainThreshold: 0.3, StormThreshold: 0.7,
@@ -2212,7 +2212,7 @@ const SIM_DEFAULT_JUNK = [
   { Classname: "Wellies_Green", CatchProbability: 5 }, { Classname: "Wellies_Black", CatchProbability: 5 }
 ];
 const SIM_DEFAULT_CONTAINER_JUNK = [{ Classname: "Pot", CatchProbability: 5 }];
-const SIM_JUNK_SHARE_DEFAULT = 0.1;   // JunkConfig.JunkShare
+const SIM_JUNK_SHARE_DEFAULT = 0.1;   // GebJunkConfig.JunkShare
 const SIM_WINDOWS = ["Dawn", "Day", "Dusk", "Night"];
 // Vanilla YieldItemJunk.GetChanceForYieldItem: junk bites at this flat chance every cycle.
 const SIM_JUNK_BITE_CHANCE = 0.2;
@@ -2223,7 +2223,7 @@ function simObj(v){ return v && typeof v === "object" && !Array.isArray(v) ? v :
 // still has an old name, the server renames the fish.json row (the last one,
 // keeping its tuning) or drops it when the new name has a row of its own,
 // and does the same bait by bait in bait.json (RenameLegacyFish in
-// FishConfig and BaitSettingsConf).
+// GebFishConfig and GebBaitSettingsConf).
 const SIM_RENAMED = [["geb_Bonita", "geb_PacificBonito", "4.0.0"]];
 
 // The classname each row of a list has once those renames are applied:
@@ -2262,7 +2262,7 @@ function simValidate(v, lo, hi){ return !(v >= lo) ? lo : Math.min(v, hi); }
 function simBound(v){ return !(v >= 0) ? 0 : Math.min(v, 1000000); }
 function simLerp(a, b, t){ return SIM_F(a + SIM_F(SIM_F(b - a) * t)); }
 
-// FishConf.GetBiteSpeedArray + GebValidateFishConfig: split on single spaces,
+// GebFishConf.GetBiteSpeedArray + GebValidateFishConfig: split on single spaces,
 // skip empty parts, ToFloat each (no number -> 0); anything other than 24
 // values becomes 1 for every hour; then each hour is clamped to 0..1.
 function simParseBite(s){
@@ -2299,7 +2299,7 @@ function simReadTreasure(general){
     // a section in the file reads a field it lacks as 0; a missing section is backfilled
     enable: simVal(src, "Enable", src ? 0 : SIM_TREASURE_DEFAULTS.Enable) !== 0,
     chance: SIM_F(simVal(src, "Chance", src ? 0 : SIM_TREASURE_DEFAULTS.Chance)),
-    // GeneralConfig.Backfill switches RequireRealRod on for a file without the key.
+    // GebGeneralConfig.Backfill switches RequireRealRod on for a file without the key.
     requireRealRod: simVal(src, "RequireRealRod", SIM_TREASURE_DEFAULTS.RequireRealRod) !== 0
   };
 }
@@ -2339,7 +2339,7 @@ function simReadJunk(junk, notes){
   const j = simObj(junk);
   if (!j) notes.push("junk.json isn't loaded, so the default junk table is used (four pairs of wellies and a pot, weight 5 each) with a junk share of 10%.");
   else if (!Array.isArray(j.Junk) || !Array.isArray(j.ContainerJunk)) notes.push("junk.json is missing a whole table. The server re-adds the default one when it loads the file, and so does this page (an empty table stays empty).");
-  // JunkConfig.Backfill re-seeds a table the file doesn't have at all, and
+  // GebJunkConfig.Backfill re-seeds a table the file doesn't have at all, and
   // adds JunkShare (0.1) to a file written before it existed.
   const missing = [];
   const share = simVal(j, "JunkShare", SIM_JUNK_SHARE_DEFAULT, missing);
@@ -2351,10 +2351,10 @@ function simReadJunk(junk, notes){
   };
 }
 
-// FishConfig.RenameLegacyFish, then GebValidateFishConfig: rows without a
+// GebFishConfig.RenameLegacyFish, then GebValidateFishConfig: rows without a
 // Classname, rows whose class doesn't exist and repeated classnames
 // (case-insensitive) are skipped; every number is clamped the way the server
-// clamps it. FishConf has no initializers, so a number a row doesn't have is 0.
+// clamps it. GebFishConf has no initializers, so a number a row doesn't have is 0.
 // `known` (optional, a Set of lowercased classnames) stands in for the
 // server's class check: this page can only check the mod's own species.
 function simReadFish(fish, notes, known){

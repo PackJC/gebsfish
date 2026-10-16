@@ -1,5 +1,11 @@
 # Changelog
 
+## v4.0.1 — Unreleased
+
+### Fixed
+
+- **Runs alongside Zen's Sleeping Mod again** — the server stopped at "Can't compile "Game" script module!" with `Variable name 'GeneralConfig' already used as type name` (`zensleepconfig.c`, line 118). DayZ 1.30 refuses a variable named like any type it can see, in any loaded mod, and gebsfish's config classes had plain names (`GeneralConfig`, `FishConfig`, `BaitConfig`, `JunkConfig` and 25 more). All 29 now start with `Geb` (`GebGeneralConfig` and so on), so no other mod's variable can collide with them. The config files are unchanged: their keys are field names, not class names
+
 ## v4.0.0
 
 ### Requirements & Compatibility

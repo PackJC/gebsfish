@@ -1,16 +1,16 @@
 /* ============================================================================
    Gebsfish config -- four JSON files + a keyed fish table.
-   - general.json  -> GeneralConfig (mechanics / actions / predators / weather)
-   - bait.json     -> BaitSettingsConf (per-bait fish-preference table)
-   - junk.json     -> JunkConfig (world-junk + container-junk tables)
-   - fish.json     -> FishConfig (the keyed Species table + catch tuning)
+   - general.json  -> GebGeneralConfig (mechanics / actions / predators / weather)
+   - bait.json     -> GebBaitSettingsConf (per-bait fish-preference table)
+   - junk.json     -> GebJunkConfig (world-junk + container-junk tables)
+   - fish.json     -> GebFishConfig (the keyed Species table + catch tuning)
    The gebsfishConfig facade owns all four; GetGebSettingsConfig() returns it.
    Each class seeds its own defaults on a cold start via SeedDefaults() and
    backfills any missing section on load via Backfill().
    ============================================================================ */
 
 // ---- one fish row ----------------------------------------------------------
-class FishConf {
+class GebFishConf {
     string Classname;          // catch/spawn classname + recipe ingredient
     int    RecipeShape;        // 0 fillet | 1 caviar | 2 lobster  (NOT 'Shape' -- collides with an engine type)
     string ResultMain;         // repeated result (fillet meat / lobster claws); "" = no recipe
@@ -32,14 +32,14 @@ class FishConf {
     // BiteSpeed is 24 hourly values stored as a space-separated STRING, not a
     // dynamic float array. It became a string after fish.json crashed the JSON
     // reader; that crash was most likely an over-long default string (see the
-    // limit noted at FishConfig.SpeciesInfo), not the array -- vanilla loads a
+    // limit noted at GebFishConfig.SpeciesInfo), not the array -- vanilla loads a
     // ref array<float> inside each element of an array on every boot
     // (cfgeffectarea.json, Data.Pos). The string stays: it is what existing
     // fish.json files hold. GetBiteSpeedArray() parses it back into a
     // TFloatArray for runtime use.
     string BiteSpeed;
 
-    void FishConf() { }
+    void GebFishConf() { }
 
     TFloatArray GetBiteSpeedArray() {
         TFloatArray arr = new TFloatArray();
@@ -333,39 +333,39 @@ static bool GebJsonFileHasKey(string path, string key) {
     return file.Has(key);
 }
 
-class GeneralConfig {
+class GebGeneralConfig {
     string ConfigVersionInfo = "Mod config version this file was written with. Do NOT edit -- used to migrate the file on mod updates.";
     string ConfigVersion = "";
     string GeneralSettingsInfo = "Global mod settings (each field inside has its own *Info): debug log level, fish quality, knife fillet speed, caviar chance, and the hook-from-fish toggle/chance.";
-    ref GenSetConf                    GeneralSettings;
+    ref GebGenSetConf                    GeneralSettings;
     string RecipeTogglesInfo = "Enable(1)/disable(0) the gebsfish craft/repair recipes (one bool per recipe inside).";
-    ref RecipeToggleConf              RecipeToggles;
+    ref GebRecipeToggleConf              RecipeToggles;
     string HookFromFishCatchesInfo = "Weighted pool of hooks 'found' stuck in a fish while filleting (gated by GeneralSettings.HookFromFishEnable/Chance). Each entry: Classname (hook/lure to give), Weight (relative odds; 0 disables that entry), MinHealthLevel/MaxHealthLevel (0 pristine .. 4 ruined).";
-    ref array<ref HookFromFishEntry>  HookFromFishCatches;
+    ref array<ref GebHookFromFishEntry>  HookFromFishCatches;
     string TreasureSettingsInfo = "Switches for the ultra-rare treasure catch. The pools it draws from are TreasureContainers and TreasureLoot below.";
-    ref TreasureConf                  TreasureSettings;
+    ref GebTreasureConf                  TreasureSettings;
     string TreasureContainersInfo = "Weighted pool of CONTAINERS an ultra-rare treasure catch can arrive as (gated by TreasureSettings). One is picked per treasure, then filled from TreasureLoot. Give a container a bigger MinItems/MaxItems to make it worth more.";
-    ref array<ref TreasureContainerEntry> TreasureContainers;
+    ref array<ref GebTreasureContainerEntry> TreasureContainers;
     string TreasureLootInfo = "Weighted pool of ITEMS that can appear inside a treasure container. Each of the container's item slots rolls this pool independently, so contents differ every time. Add anything you like -- including modded classnames.";
-    ref array<ref TreasureLootEntry>  TreasureLoot;
+    ref array<ref GebTreasureLootEntry>  TreasureLoot;
     string PredatorSettingsInfo = "Predator-spawn settings: per-activity chances, enable toggle, and warning sound/message options (each field has its own *Info).";
-    ref PredatorConf                  PredatorSettings;
+    ref GebPredatorConf                  PredatorSettings;
     string PredatorsInfo = "Weighted pool of predators that can spawn. Each entry: Classname (animal), SpawnChance (relative weight), MinCount/MaxCount (how many), MinRadius/MaxRadius (metres from the player to spawn).";
-    ref array<ref PredatorEntry>      Predators;
+    ref array<ref GebPredatorEntry>      Predators;
     string BambooFishingNetSettingsInfo = "Bamboo-net action: FindChance (0-1 per cast), PredatorSpawnChance, and a Catches table (each entry: Classname, CatchChance, Environment 1 pond/2 sea/3 both).";
-    ref BambooFishingNetConf          BambooFishingNetSettings;
+    ref GebBambooFishingNetConf          BambooFishingNetSettings;
     string SpearFishingSettingsInfo = "Spear fishing: stab at fish in shallow water with an Improvised Spear (bone- or stone-tipped) in hand. Enable, FindChance (0-1 per stab), MaxWaterDepth (metres of water at the aim point), PredatorSpawnChance, and a Catches table (each entry: Classname, CatchChance, Environment 1 pond/2 sea/3 both).";
-    ref SpearFishingConf              SpearFishingSettings;
+    ref GebSpearFishingConf              SpearFishingSettings;
     string DigBugsSettingsInfo = "Dig-for-bugs action: FindChance (0-1) plus a Catches table (each entry: Classname, CatchChance).";
-    ref DigBugsConf                   DigBugsSettings;
+    ref GebDigBugsConf                   DigBugsSettings;
     string DigWormsSettingsInfo = "Dig-for-worms action: FindChance (0-1) plus a Catches table (each entry: Classname, CatchChance).";
-    ref DigWormsConf                  DigWormsSettings;
+    ref GebDigWormsConf                  DigWormsSettings;
     string WeatherSettingsInfo = "Global weather/time-of-day/temperature/moon catch modifiers and their thresholds (each field has its own *Info inside).";
-    ref WeatherConf                   WeatherSettings;
+    ref GebWeatherConf                   WeatherSettings;
     string DryingRackSettingsInfo = "Fish Drying Rack: raw fillets hung on a standing rack dry to the dried food stage without a fire (each field inside has its own *Info).";
-    ref DryingRackConf                DryingRackSettings;
+    ref GebDryingRackConf                DryingRackSettings;
     string BoatTrailerSettingsInfo = "Boat Trailer: which cars may tow it (TowVehicles; its own *Info inside).";
-    ref BoatTrailerConf               BoatTrailerSettings;
+    ref GebBoatTrailerConf               BoatTrailerSettings;
 
     private const static string PATH = "$profile:Gebs/general.json";
 
@@ -373,7 +373,7 @@ class GeneralConfig {
         bool changed = false;
         if (FileExist(PATH)) {
             string err;
-            if (!JsonFileLoader<GeneralConfig>.LoadFile(PATH, this, err)) {
+            if (!JsonFileLoader<GebGeneralConfig>.LoadFile(PATH, this, err)) {
                 GebsfishLogger.Error("general.json failed to load; file preserved, using defaults for this session: " + err, "Config");
                 return false;
             }
@@ -404,55 +404,55 @@ class GeneralConfig {
     // own, each section's, and every table row's (each row carries its own
     // copy). A new section or table must be added here. Returns how many changed.
     protected int RefreshInfoStrings() {
-        int n = GebRefreshInfo(this, new GeneralConfig());
-        n += GebRefreshInfo(GeneralSettings, new GenSetConf());
-        n += GebRefreshInfo(RecipeToggles, new RecipeToggleConf());
-        n += GebRefreshInfo(TreasureSettings, new TreasureConf());
-        n += GebRefreshInfo(PredatorSettings, new PredatorConf());
-        n += GebRefreshInfo(BambooFishingNetSettings, new BambooFishingNetConf());
-        n += GebRefreshInfo(SpearFishingSettings, new SpearFishingConf());
-        n += GebRefreshInfo(DigBugsSettings, new DigBugsConf());
-        n += GebRefreshInfo(DigWormsSettings, new DigWormsConf());
-        n += GebRefreshInfo(WeatherSettings, new WeatherConf());
-        n += GebRefreshInfo(DryingRackSettings, new DryingRackConf());
-        n += GebRefreshInfo(BoatTrailerSettings, new BoatTrailerConf());
+        int n = GebRefreshInfo(this, new GebGeneralConfig());
+        n += GebRefreshInfo(GeneralSettings, new GebGenSetConf());
+        n += GebRefreshInfo(RecipeToggles, new GebRecipeToggleConf());
+        n += GebRefreshInfo(TreasureSettings, new GebTreasureConf());
+        n += GebRefreshInfo(PredatorSettings, new GebPredatorConf());
+        n += GebRefreshInfo(BambooFishingNetSettings, new GebBambooFishingNetConf());
+        n += GebRefreshInfo(SpearFishingSettings, new GebSpearFishingConf());
+        n += GebRefreshInfo(DigBugsSettings, new GebDigBugsConf());
+        n += GebRefreshInfo(DigWormsSettings, new GebDigWormsConf());
+        n += GebRefreshInfo(WeatherSettings, new GebWeatherConf());
+        n += GebRefreshInfo(DryingRackSettings, new GebDryingRackConf());
+        n += GebRefreshInfo(BoatTrailerSettings, new GebBoatTrailerConf());
         if (HookFromFishCatches) {
-            HookFromFishEntry freshHook = new HookFromFishEntry();
-            foreach (HookFromFishEntry hook : HookFromFishCatches)
+            GebHookFromFishEntry freshHook = new GebHookFromFishEntry();
+            foreach (GebHookFromFishEntry hook : HookFromFishCatches)
                 n += GebRefreshInfo(hook, freshHook);
         }
         if (TreasureContainers) {
-            TreasureContainerEntry freshBox = new TreasureContainerEntry();
-            foreach (TreasureContainerEntry box : TreasureContainers)
+            GebTreasureContainerEntry freshBox = new GebTreasureContainerEntry();
+            foreach (GebTreasureContainerEntry box : TreasureContainers)
                 n += GebRefreshInfo(box, freshBox);
         }
         if (TreasureLoot) {
-            TreasureLootEntry freshLoot = new TreasureLootEntry();
-            foreach (TreasureLootEntry loot : TreasureLoot)
+            GebTreasureLootEntry freshLoot = new GebTreasureLootEntry();
+            foreach (GebTreasureLootEntry loot : TreasureLoot)
                 n += GebRefreshInfo(loot, freshLoot);
         }
         if (Predators) {
-            PredatorEntry freshPredator = new PredatorEntry();
-            foreach (PredatorEntry predator : Predators)
+            GebPredatorEntry freshPredator = new GebPredatorEntry();
+            foreach (GebPredatorEntry predator : Predators)
                 n += GebRefreshInfo(predator, freshPredator);
         }
         if (BambooFishingNetSettings && BambooFishingNetSettings.Catches) {
-            NetEntry freshNet = new NetEntry();
-            foreach (NetEntry net : BambooFishingNetSettings.Catches)
+            GebNetEntry freshNet = new GebNetEntry();
+            foreach (GebNetEntry net : BambooFishingNetSettings.Catches)
                 n += GebRefreshInfo(net, freshNet);
         }
         if (SpearFishingSettings && SpearFishingSettings.Catches) {
-            SpearEntry freshSpear = new SpearEntry();
-            foreach (SpearEntry spear : SpearFishingSettings.Catches)
+            GebSpearEntry freshSpear = new GebSpearEntry();
+            foreach (GebSpearEntry spear : SpearFishingSettings.Catches)
                 n += GebRefreshInfo(spear, freshSpear);
         }
-        BugEntry freshBug = new BugEntry();
+        GebBugEntry freshBug = new GebBugEntry();
         if (DigBugsSettings && DigBugsSettings.Catches) {
-            foreach (BugEntry bug : DigBugsSettings.Catches)
+            foreach (GebBugEntry bug : DigBugsSettings.Catches)
                 n += GebRefreshInfo(bug, freshBug);
         }
         if (DigWormsSettings && DigWormsSettings.Catches) {
-            foreach (BugEntry worm : DigWormsSettings.Catches)
+            foreach (GebBugEntry worm : DigWormsSettings.Catches)
                 n += GebRefreshInfo(worm, freshBug);
         }
         return n;
@@ -461,7 +461,7 @@ class GeneralConfig {
     void Save() {
         GebMakeConfigDir();
         string error;
-        if (!JsonFileLoader<GeneralConfig>.SaveFile(PATH, this, error))
+        if (!JsonFileLoader<GebGeneralConfig>.SaveFile(PATH, this, error))
             GebsfishLogger.Error("general.json could not be written: " + error, "Config");
     }
 
@@ -475,16 +475,16 @@ class GeneralConfig {
     bool Backfill() {
         bool changed = false;
         GebJsonKeys file = new GebJsonKeys(PATH, 2);
-        if (!GeneralSettings || !file.Has("GeneralSettings"))   { GeneralSettings = new GenSetConf;       changed = true; }
-        if (!RecipeToggles || !file.Has("RecipeToggles"))       { RecipeToggles = new RecipeToggleConf;   changed = true; }
-        if (!PredatorSettings || !file.Has("PredatorSettings")) { PredatorSettings = new PredatorConf;    changed = true; }
-        if (!WeatherSettings || !file.Has("WeatherSettings"))   { WeatherSettings = new WeatherConf;      changed = true; }
-        if (!TreasureSettings || !file.Has("TreasureSettings")) { TreasureSettings = new TreasureConf;    changed = true; }
-        if (!DryingRackSettings || !file.Has("DryingRackSettings")) { DryingRackSettings = new DryingRackConf; changed = true; }
+        if (!GeneralSettings || !file.Has("GeneralSettings"))   { GeneralSettings = new GebGenSetConf;       changed = true; }
+        if (!RecipeToggles || !file.Has("RecipeToggles"))       { RecipeToggles = new GebRecipeToggleConf;   changed = true; }
+        if (!PredatorSettings || !file.Has("PredatorSettings")) { PredatorSettings = new GebPredatorConf;    changed = true; }
+        if (!WeatherSettings || !file.Has("WeatherSettings"))   { WeatherSettings = new GebWeatherConf;      changed = true; }
+        if (!TreasureSettings || !file.Has("TreasureSettings")) { TreasureSettings = new GebTreasureConf;    changed = true; }
+        if (!DryingRackSettings || !file.Has("DryingRackSettings")) { DryingRackSettings = new GebDryingRackConf; changed = true; }
         // The tow list is seeded only when the file lacks it, so an admin's
         // list stays as written (an empty one lets any car tow).
         if (!BoatTrailerSettings || !file.Has("BoatTrailerSettings")) {
-            BoatTrailerSettings = new BoatTrailerConf;
+            BoatTrailerSettings = new GebBoatTrailerConf;
             SeedDefaultTowVehicles();
             changed = true;
         } else if (!file.Has("BoatTrailerSettings.TowVehicles")) {
@@ -576,13 +576,13 @@ class GeneralConfig {
         if (g_Game.ConfigIsExisting("CfgVehicles FishingHook"))
             return false;
         bool changed = false;
-        foreach (HookFromFishEntry hook : HookFromFishCatches) {
+        foreach (GebHookFromFishEntry hook : HookFromFishCatches) {
             if (hook && GebSameClassname(hook.Classname, "FishingHook")) {
                 hook.Classname = "Hook";
                 changed = true;
             }
         }
-        foreach (TreasureLootEntry loot : TreasureLoot) {
+        foreach (GebTreasureLootEntry loot : TreasureLoot) {
             if (loot && GebSameClassname(loot.Classname, "FishingHook")) {
                 loot.Classname = "Hook";
                 changed = true;
@@ -601,21 +601,21 @@ class GeneralConfig {
     // A row deleted from a list that still has entries is re-added; to
     // disable an entry permanently use weight/chance 0 instead of deleting it.
     int MergeNewDefaults() {
-        GeneralConfig defaults = new GeneralConfig();
+        GebGeneralConfig defaults = new GebGeneralConfig();
         defaults.SeedDefaults();
         int added = 0;
         if (Predators && Predators.Count() > 0 && defaults.Predators) {
-            foreach (PredatorEntry dp : defaults.Predators) {
+            foreach (GebPredatorEntry dp : defaults.Predators) {
                 if (dp && !HasPredator(dp.Classname)) { Predators.Insert(dp); added++; }
             }
         }
         if (BambooFishingNetSettings && BambooFishingNetSettings.Catches && BambooFishingNetSettings.Catches.Count() > 0 && defaults.BambooFishingNetSettings && defaults.BambooFishingNetSettings.Catches) {
-            foreach (NetEntry dn : defaults.BambooFishingNetSettings.Catches) {
+            foreach (GebNetEntry dn : defaults.BambooFishingNetSettings.Catches) {
                 if (dn && !HasNetCatch(dn.Classname)) { BambooFishingNetSettings.Catches.Insert(dn); added++; }
             }
         }
         if (SpearFishingSettings && SpearFishingSettings.Catches && SpearFishingSettings.Catches.Count() > 0 && defaults.SpearFishingSettings && defaults.SpearFishingSettings.Catches) {
-            foreach (SpearEntry ds : defaults.SpearFishingSettings.Catches) {
+            foreach (GebSpearEntry ds : defaults.SpearFishingSettings.Catches) {
                 if (ds && !HasSpearCatch(ds.Classname)) { SpearFishingSettings.Catches.Insert(ds); added++; }
             }
         }
@@ -624,17 +624,17 @@ class GeneralConfig {
         if (DigWormsSettings && defaults.DigWormsSettings)
             added += MergeBugCatches(DigWormsSettings.Catches, defaults.DigWormsSettings.Catches);
         if (HookFromFishCatches && defaults.HookFromFishCatches) {
-            foreach (HookFromFishEntry dh : defaults.HookFromFishCatches) {
+            foreach (GebHookFromFishEntry dh : defaults.HookFromFishCatches) {
                 if (dh && !HasHookCatch(dh.Classname)) { HookFromFishCatches.Insert(dh); added++; }
             }
         }
         if (TreasureContainers && defaults.TreasureContainers) {
-            foreach (TreasureContainerEntry dc : defaults.TreasureContainers) {
+            foreach (GebTreasureContainerEntry dc : defaults.TreasureContainers) {
                 if (dc && !HasTreasureContainer(dc.Classname)) { TreasureContainers.Insert(dc); added++; }
             }
         }
         if (TreasureLoot && defaults.TreasureLoot) {
-            foreach (TreasureLootEntry dl : defaults.TreasureLoot) {
+            foreach (GebTreasureLootEntry dl : defaults.TreasureLoot) {
                 if (dl && !HasTreasureLoot(dl.Classname)) { TreasureLoot.Insert(dl); added++; }
             }
         }
@@ -645,47 +645,47 @@ class GeneralConfig {
         // in a later version loads as 0 on every server whose config predates
         // it -- indistinguishable from an admin deliberately switching it off.
         // Backfill() settles that by asking the file text whether the key is
-        // there (GebJsonKeys), never by version number. A new RecipeToggleConf
+        // there (GebJsonKeys), never by version number. A new GebRecipeToggleConf
         // bool needs its own key check in Backfill(); copy the CraftFishMount
         // block there.
         return added;
     }
     protected bool HasPredator(string classname) {
-        foreach (PredatorEntry e : Predators) if (e && GebSameClassname(e.Classname, classname)) return true;
+        foreach (GebPredatorEntry e : Predators) if (e && GebSameClassname(e.Classname, classname)) return true;
         return false;
     }
     protected bool HasNetCatch(string classname) {
-        foreach (NetEntry e : BambooFishingNetSettings.Catches) if (e && GebSameClassname(e.Classname, classname)) return true;
+        foreach (GebNetEntry e : BambooFishingNetSettings.Catches) if (e && GebSameClassname(e.Classname, classname)) return true;
         return false;
     }
     protected bool HasSpearCatch(string classname) {
-        foreach (SpearEntry e : SpearFishingSettings.Catches) if (e && GebSameClassname(e.Classname, classname)) return true;
+        foreach (GebSpearEntry e : SpearFishingSettings.Catches) if (e && GebSameClassname(e.Classname, classname)) return true;
         return false;
     }
     protected bool HasHookCatch(string classname) {
-        foreach (HookFromFishEntry e : HookFromFishCatches) if (e && GebSameClassname(e.Classname, classname)) return true;
+        foreach (GebHookFromFishEntry e : HookFromFishCatches) if (e && GebSameClassname(e.Classname, classname)) return true;
         return false;
     }
 
     bool HasTreasureContainer(string classname) {
         if (!TreasureContainers) return false;
-        foreach (TreasureContainerEntry c : TreasureContainers) if (c && GebSameClassname(c.Classname, classname)) return true;
+        foreach (GebTreasureContainerEntry c : TreasureContainers) if (c && GebSameClassname(c.Classname, classname)) return true;
         return false;
     }
 
     bool HasTreasureLoot(string classname) {
         if (!TreasureLoot) return false;
-        foreach (TreasureLootEntry l : TreasureLoot) if (l && GebSameClassname(l.Classname, classname)) return true;
+        foreach (GebTreasureLootEntry l : TreasureLoot) if (l && GebSameClassname(l.Classname, classname)) return true;
         return false;
     }
-    protected static int MergeBugCatches(array<ref BugEntry> into, array<ref BugEntry> defs) {
+    protected static int MergeBugCatches(array<ref GebBugEntry> into, array<ref GebBugEntry> defs) {
         if (!into || into.Count() == 0 || !defs)      // emptied on purpose: left alone
             return 0;
         int added = 0;
-        foreach (BugEntry d : defs) {
+        foreach (GebBugEntry d : defs) {
             if (!d) continue;
             bool found = false;
-            foreach (BugEntry e : into) {
+            foreach (GebBugEntry e : into) {
                 if (e && GebSameClassname(e.Classname, d.Classname)) { found = true; break; }
             }
             if (!found) { into.Insert(d); added++; }
@@ -695,19 +695,19 @@ class GeneralConfig {
 
     void SeedDefaults() {
         ConfigVersion = VERSION_GEBSFISH;
-        GeneralSettings = new GenSetConf;
-        RecipeToggles = new RecipeToggleConf;
-        PredatorSettings = new PredatorConf;
-        WeatherSettings = new WeatherConf;
-        DryingRackSettings = new DryingRackConf;
-        BoatTrailerSettings = new BoatTrailerConf;
+        GeneralSettings = new GebGenSetConf;
+        RecipeToggles = new GebRecipeToggleConf;
+        PredatorSettings = new GebPredatorConf;
+        WeatherSettings = new GebWeatherConf;
+        DryingRackSettings = new GebDryingRackConf;
+        BoatTrailerSettings = new GebBoatTrailerConf;
         SeedDefaultTowVehicles();
-        BambooFishingNetSettings = new BambooFishingNetConf;
-        SpearFishingSettings = new SpearFishingConf;
-        DigBugsSettings = new DigBugsConf;
-        DigWormsSettings = new DigWormsConf;
+        BambooFishingNetSettings = new GebBambooFishingNetConf;
+        SpearFishingSettings = new GebSpearFishingConf;
+        DigBugsSettings = new GebDigBugsConf;
+        DigWormsSettings = new GebDigWormsConf;
         SeedHookFromFish();
-        TreasureSettings = new TreasureConf;
+        TreasureSettings = new GebTreasureConf;
         SeedTreasureContainers();
         SeedTreasureLoot();
         SeedDefaultPredators();
@@ -722,13 +722,13 @@ class GeneralConfig {
     // trucks (Truck_01_Base).
     void SeedDefaultTowVehicles() {
         if (!BoatTrailerSettings)
-            BoatTrailerSettings = new BoatTrailerConf;
+            BoatTrailerSettings = new GebBoatTrailerConf;
         BoatTrailerSettings.TowVehicles = {"CivilianSedan", "Hatchback_02", "Sedan_02", "OffroadHatchback", "Offroad_02", "Truck_01_Base"};
     }
 
     void SeedHookFromFish() {
-        if (!HookFromFishCatches) HookFromFishCatches = new array<ref HookFromFishEntry>();
-        HookFromFishEntry h = new HookFromFishEntry();
+        if (!HookFromFishCatches) HookFromFishCatches = new array<ref GebHookFromFishEntry>();
+        GebHookFromFishEntry h = new GebHookFromFishEntry();
         h.Classname = "Hook"; h.Weight = 1.0; h.MinHealthLevel = 3; h.MaxHealthLevel = 3;
         HookFromFishCatches.Insert(h);
     }
@@ -738,54 +738,54 @@ class GeneralConfig {
     // another mod. They are meant to be replaced: this is the one feature where
     // the whole point is that the admin decides what is worth finding.
     void SeedTreasureContainers() {
-        if (!TreasureContainers) TreasureContainers = new array<ref TreasureContainerEntry>();
-        TreasureContainerEntry c;
-        c = new TreasureContainerEntry();
+        if (!TreasureContainers) TreasureContainers = new array<ref GebTreasureContainerEntry>();
+        GebTreasureContainerEntry c;
+        c = new GebTreasureContainerEntry();
         c.Classname = "SeaChest";    c.Weight = 1.0;  c.MinHealthLevel = 1; c.MaxHealthLevel = 3; c.MinItems = 3; c.MaxItems = 6;
         TreasureContainers.Insert(c);
-        c = new TreasureContainerEntry();
+        c = new GebTreasureContainerEntry();
         c.Classname = "WoodenCrate"; c.Weight = 2.0;  c.MinHealthLevel = 2; c.MaxHealthLevel = 3; c.MinItems = 2; c.MaxItems = 4;
         TreasureContainers.Insert(c);
-        c = new TreasureContainerEntry();
+        c = new GebTreasureContainerEntry();
         c.Classname = "DryBag_Black"; c.Weight = 3.0; c.MinHealthLevel = 1; c.MaxHealthLevel = 3; c.MinItems = 1; c.MaxItems = 3;
         TreasureContainers.Insert(c);
     }
 
     void SeedTreasureLoot() {
-        if (!TreasureLoot) TreasureLoot = new array<ref TreasureLootEntry>();
-        TreasureLootEntry l;
-        l = new TreasureLootEntry(); l.Classname = "Rag";              l.Weight = 6.0; l.MinHealthLevel = 2; l.MaxHealthLevel = 4; TreasureLoot.Insert(l);
-        l = new TreasureLootEntry(); l.Classname = "Nail";             l.Weight = 5.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; l.MinQuantity = 5; l.MaxQuantity = 30; TreasureLoot.Insert(l);
-        l = new TreasureLootEntry(); l.Classname = "Rope";             l.Weight = 4.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
-        l = new TreasureLootEntry(); l.Classname = "DuctTape";         l.Weight = 3.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
-        l = new TreasureLootEntry(); l.Classname = "Hook";      l.Weight = 3.0; l.MinHealthLevel = 0; l.MaxHealthLevel = 2; TreasureLoot.Insert(l);
-        l = new TreasureLootEntry(); l.Classname = "Canteen";          l.Weight = 2.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
-        l = new TreasureLootEntry(); l.Classname = "Screwdriver";      l.Weight = 2.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
-        l = new TreasureLootEntry(); l.Classname = "Matchbox";         l.Weight = 2.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
-        l = new TreasureLootEntry(); l.Classname = "Compass";          l.Weight = 1.0; l.MinHealthLevel = 0; l.MaxHealthLevel = 2; TreasureLoot.Insert(l);
-        l = new TreasureLootEntry(); l.Classname = "Binoculars";       l.Weight = 0.5; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
-        l = new TreasureLootEntry(); l.Classname = "geb_BlackCaviar";  l.Weight = 0.5; l.MinHealthLevel = 0; l.MaxHealthLevel = 1; TreasureLoot.Insert(l);
+        if (!TreasureLoot) TreasureLoot = new array<ref GebTreasureLootEntry>();
+        GebTreasureLootEntry l;
+        l = new GebTreasureLootEntry(); l.Classname = "Rag";              l.Weight = 6.0; l.MinHealthLevel = 2; l.MaxHealthLevel = 4; TreasureLoot.Insert(l);
+        l = new GebTreasureLootEntry(); l.Classname = "Nail";             l.Weight = 5.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; l.MinQuantity = 5; l.MaxQuantity = 30; TreasureLoot.Insert(l);
+        l = new GebTreasureLootEntry(); l.Classname = "Rope";             l.Weight = 4.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
+        l = new GebTreasureLootEntry(); l.Classname = "DuctTape";         l.Weight = 3.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
+        l = new GebTreasureLootEntry(); l.Classname = "Hook";      l.Weight = 3.0; l.MinHealthLevel = 0; l.MaxHealthLevel = 2; TreasureLoot.Insert(l);
+        l = new GebTreasureLootEntry(); l.Classname = "Canteen";          l.Weight = 2.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
+        l = new GebTreasureLootEntry(); l.Classname = "Screwdriver";      l.Weight = 2.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
+        l = new GebTreasureLootEntry(); l.Classname = "Matchbox";         l.Weight = 2.0; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
+        l = new GebTreasureLootEntry(); l.Classname = "Compass";          l.Weight = 1.0; l.MinHealthLevel = 0; l.MaxHealthLevel = 2; TreasureLoot.Insert(l);
+        l = new GebTreasureLootEntry(); l.Classname = "Binoculars";       l.Weight = 0.5; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
+        l = new GebTreasureLootEntry(); l.Classname = "geb_BlackCaviar";  l.Weight = 0.5; l.MinHealthLevel = 0; l.MaxHealthLevel = 1; TreasureLoot.Insert(l);
         // 6x4: fits a sea chest, a crate or an empty dry bag; a slot it no longer fits is skipped
-        l = new TreasureLootEntry(); l.Classname = "geb_FishTank";     l.Weight = 0.5; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
+        l = new GebTreasureLootEntry(); l.Classname = "geb_FishTank";     l.Weight = 0.5; l.MinHealthLevel = 1; l.MaxHealthLevel = 3; TreasureLoot.Insert(l);
     }
 
     // ---- default seed tables ----
     void SeedDefaultPredators() {
-        if (!Predators) Predators = new array<ref PredatorEntry>();
-        PredatorEntry wolf = new PredatorEntry();
+        if (!Predators) Predators = new array<ref GebPredatorEntry>();
+        GebPredatorEntry wolf = new GebPredatorEntry();
         wolf.Classname = "Animal_CanisLupus_Grey"; wolf.SpawnChance = 0.6; wolf.MinCount = 1; wolf.MaxCount = 1; wolf.MinRadius = 50; wolf.MaxRadius = 200;
         Predators.Insert(wolf);
-        PredatorEntry bear = new PredatorEntry();
+        GebPredatorEntry bear = new GebPredatorEntry();
         bear.Classname = "Animal_UrsusArctos"; bear.SpawnChance = 0.3; bear.MinCount = 1; bear.MaxCount = 1; bear.MinRadius = 100; bear.MaxRadius = 300;
         Predators.Insert(bear);
     }
 
     void SeedDefaultNetCatches() {
-        if (!BambooFishingNetSettings) BambooFishingNetSettings = new BambooFishingNetConf;
-        if (!BambooFishingNetSettings.Catches) BambooFishingNetSettings.Catches = new array<ref NetEntry>();
-        NetEntry minnow = new NetEntry();     minnow.Classname = "geb_FatHeadMinnow";    minnow.CatchChance = 1.0;     minnow.Environment = 1;     BambooFishingNetSettings.Catches.Insert(minnow);
-        NetEntry frog = new NetEntry();       frog.Classname = "geb_AmericanBullFrog";   frog.CatchChance = 1.0;       frog.Environment = 1;       BambooFishingNetSettings.Catches.Insert(frog);
-        NetEntry salamander = new NetEntry(); salamander.Classname = "geb_RedSalamander"; salamander.CatchChance = 1.0; salamander.Environment = 1; BambooFishingNetSettings.Catches.Insert(salamander);
+        if (!BambooFishingNetSettings) BambooFishingNetSettings = new GebBambooFishingNetConf;
+        if (!BambooFishingNetSettings.Catches) BambooFishingNetSettings.Catches = new array<ref GebNetEntry>();
+        GebNetEntry minnow = new GebNetEntry();     minnow.Classname = "geb_FatHeadMinnow";    minnow.CatchChance = 1.0;     minnow.Environment = 1;     BambooFishingNetSettings.Catches.Insert(minnow);
+        GebNetEntry frog = new GebNetEntry();       frog.Classname = "geb_AmericanBullFrog";   frog.CatchChance = 1.0;       frog.Environment = 1;       BambooFishingNetSettings.Catches.Insert(frog);
+        GebNetEntry salamander = new GebNetEntry(); salamander.Classname = "geb_RedSalamander"; salamander.CatchChance = 1.0; salamander.Environment = 1; BambooFishingNetSettings.Catches.Insert(salamander);
         // Crayfish in fresh water, about a quarter of the pond catches between
         // the seven; at sea, shrimp and the juvenile bait squid, so a net cast
         // into the sea isn't always empty.
@@ -804,7 +804,7 @@ class GeneralConfig {
     }
 
     protected void AddNetCatch(string classname, float weight, int environment) {
-        NetEntry entry = new NetEntry();
+        GebNetEntry entry = new GebNetEntry();
         entry.Classname = classname;
         entry.CatchChance = weight;
         entry.Environment = environment;
@@ -815,8 +815,8 @@ class GeneralConfig {
     // bullfrogs in fresh water; flounder (gigged in real life), grunts and
     // reef tang at sea; mullet and gar in both.
     void SeedDefaultSpearCatches() {
-        if (!SpearFishingSettings) SpearFishingSettings = new SpearFishingConf;
-        if (!SpearFishingSettings.Catches) SpearFishingSettings.Catches = new array<ref SpearEntry>();
+        if (!SpearFishingSettings) SpearFishingSettings = new GebSpearFishingConf;
+        if (!SpearFishingSettings.Catches) SpearFishingSettings.Catches = new array<ref GebSpearEntry>();
         AddSpearCatch("Carp", 20, 1);
         AddSpearCatch("geb_BlueGill", 18, 1);
         AddSpearCatch("geb_YellowPerch", 15, 1);
@@ -831,7 +831,7 @@ class GeneralConfig {
         AddSpearCatch("geb_BlueTang", 6, 2);
     }
     protected void AddSpearCatch(string classname, float weight, int environment) {
-        SpearEntry entry = new SpearEntry();
+        GebSpearEntry entry = new GebSpearEntry();
         entry.Classname = classname;
         entry.CatchChance = weight;
         entry.Environment = environment;
@@ -839,26 +839,26 @@ class GeneralConfig {
     }
 
     void SeedDefaultDigBugsCatches() {
-        if (!DigBugsSettings) DigBugsSettings = new DigBugsConf;
-        if (!DigBugsSettings.Catches) DigBugsSettings.Catches = new array<ref BugEntry>();
-        BugEntry cricket = new BugEntry(); cricket.Classname = "geb_FieldCricket"; cricket.CatchChance = 0.25; DigBugsSettings.Catches.Insert(cricket);
-        BugEntry hopper = new BugEntry();  hopper.Classname = "geb_GrassHopper";   hopper.CatchChance = 0.25;  DigBugsSettings.Catches.Insert(hopper);
-        BugEntry grub = new BugEntry();    grub.Classname = "geb_GrubWorm";        grub.CatchChance = 0.75;    DigBugsSettings.Catches.Insert(grub);
-        BugEntry worm = new BugEntry();    worm.Classname = "Worm";                worm.CatchChance = 0.25;    DigBugsSettings.Catches.Insert(worm);
+        if (!DigBugsSettings) DigBugsSettings = new GebDigBugsConf;
+        if (!DigBugsSettings.Catches) DigBugsSettings.Catches = new array<ref GebBugEntry>();
+        GebBugEntry cricket = new GebBugEntry(); cricket.Classname = "geb_FieldCricket"; cricket.CatchChance = 0.25; DigBugsSettings.Catches.Insert(cricket);
+        GebBugEntry hopper = new GebBugEntry();  hopper.Classname = "geb_GrassHopper";   hopper.CatchChance = 0.25;  DigBugsSettings.Catches.Insert(hopper);
+        GebBugEntry grub = new GebBugEntry();    grub.Classname = "geb_GrubWorm";        grub.CatchChance = 0.75;    DigBugsSettings.Catches.Insert(grub);
+        GebBugEntry worm = new GebBugEntry();    worm.Classname = "Worm";                worm.CatchChance = 0.25;    DigBugsSettings.Catches.Insert(worm);
     }
 
     void SeedDefaultDigWormsCatches() {
-        if (!DigWormsSettings) DigWormsSettings = new DigWormsConf;
-        if (!DigWormsSettings.Catches) DigWormsSettings.Catches = new array<ref BugEntry>();
-        BugEntry worm = new BugEntry(); worm.Classname = "Worm";         worm.CatchChance = 0.75; DigWormsSettings.Catches.Insert(worm);
-        BugEntry grub = new BugEntry(); grub.Classname = "geb_GrubWorm"; grub.CatchChance = 0.25; DigWormsSettings.Catches.Insert(grub);
+        if (!DigWormsSettings) DigWormsSettings = new GebDigWormsConf;
+        if (!DigWormsSettings.Catches) DigWormsSettings.Catches = new array<ref GebBugEntry>();
+        GebBugEntry worm = new GebBugEntry(); worm.Classname = "Worm";         worm.CatchChance = 0.75; DigWormsSettings.Catches.Insert(worm);
+        GebBugEntry grub = new GebBugEntry(); grub.Classname = "geb_GrubWorm"; grub.CatchChance = 0.25; DigWormsSettings.Catches.Insert(grub);
     }
 
 }
 
 // Bait-preference block: the master toggle + its info live WITH the table they
 // control (parallel to BambooFishingNetSettings = FindChance + Catches).
-class BaitSettingsConf {
+class GebBaitSettingsConf {
     string ConfigVersionInfo = "Mod config version this file was written with. Do NOT edit -- used to migrate the file on mod updates.";
     string ConfigVersion = "";
     string EnableInfo = "Master toggle for the bait / lure preference system. Each entry in Preferences pairs a bait classname with per-fish multipliers that bias the weighted catch pick while that bait is on the hook (e.g. a Worm makes BlueGill 2.0x more likely but large saltwater fish 0.3x). Set to 0 to disable the bias -- every bait becomes neutral 1.0x and only CatchProbability drives the pick. Bait still functions mechanically (a bite eats it, whether you land the fish or let it go; reeling in with no bite keeps it), and Preferences still loads from JSON so a server can flip this on/off without losing tuned values. Useful when bait should work but not influence outcomes, or to check whether unexpected fish come from bait bias vs weather/temperature/time-of-day multipliers.";
@@ -866,14 +866,14 @@ class BaitSettingsConf {
     string PreferencesInfo = "Per-bait fish-preference table. Each entry pairs a bait/lure Classname with its own list of per-fish multipliers (the entry's Preferences array, each: a fish classname + a multiplier). Multiplier >1 = that fish is more likely on this bait, <1 = less, 1.0 = neutral. A Classname without a trailing number also covers its numbered variants (geb_SpinnerBait matches geb_SpinnerBait1 through geb_SpinnerBait4) -- add an entry with the exact numbered classname to tune one variant separately; the exact entry wins. Multipliers are rounded to the nearest 0.01 when this file is written. Only applied when Enable = 1.";
     // Multiplier semantics documented once here, not on every bait or fish entry.
     string MultiplierInfo = "How strongly this bait favours this fish in the weighted catch pick. 1.0 = neutral (same as having no entry), above 1.0 makes the fish more likely (2.0 = twice as likely), below 1.0 makes it less likely (0.3 = much rarer), 0 effectively removes it. Only used while the Enable toggle at the top of this file is on.";
-    ref array<ref BaitConfig> Preferences;
+    ref array<ref GebBaitConfig> Preferences;
 
     private const static string PATH = "$profile:Gebs/bait.json";
     bool Load() {
         bool changed = false;
         if (FileExist(PATH)) {
             string err;
-            if (!JsonFileLoader<BaitSettingsConf>.LoadFile(PATH, this, err)) {
+            if (!JsonFileLoader<GebBaitSettingsConf>.LoadFile(PATH, this, err)) {
                 GebsfishLogger.Error("bait.json failed to load; file preserved, using defaults for this session: " + err, "Config");
                 return false;
             }
@@ -892,7 +892,7 @@ class BaitSettingsConf {
                 changed = true;
             }
             // the current help text (the rows carry none)
-            if (GebRefreshInfo(this, new BaitSettingsConf()) > 0)
+            if (GebRefreshInfo(this, new GebBaitSettingsConf()) > 0)
                 changed = true;
         } else {
             SeedDefaults();
@@ -910,16 +910,16 @@ class BaitSettingsConf {
         if (!Preferences)
             return false;
         bool changed = false;
-        foreach (BaitConfig bait : Preferences) {
+        foreach (GebBaitConfig bait : Preferences) {
             if (!bait || !bait.Preferences)
                 continue;
             bool hasNew = false;
-            foreach (BaitPreferenceEntry seen : bait.Preferences) {
+            foreach (GebBaitPreferenceEntry seen : bait.Preferences) {
                 if (seen && GebSameClassname(seen.FishClassname, "geb_PacificBonito"))
                     hasNew = true;
             }
             for (int i = bait.Preferences.Count() - 1; i >= 0; i--) {
-                BaitPreferenceEntry pref = bait.Preferences[i];
+                GebBaitPreferenceEntry pref = bait.Preferences[i];
                 if (!pref || !GebSameClassname(pref.FishClassname, "geb_Bonita"))
                     continue;
                 if (hasNew) {
@@ -938,7 +938,7 @@ class BaitSettingsConf {
     void Save() {
         GebMakeConfigDir();
         string error;
-        if (!JsonFileLoader<BaitSettingsConf>.SaveFile(PATH, this, error)) {
+        if (!JsonFileLoader<GebBaitSettingsConf>.SaveFile(PATH, this, error)) {
             GebsfishLogger.Error("bait.json could not be written: " + error, "Config");
             return;
         }
@@ -1016,13 +1016,13 @@ class BaitSettingsConf {
         if (!Preferences || Preferences.Count() == 0)
             return 0;
         GebJsonKeys file;
-        BaitSettingsConf defaults = new BaitSettingsConf();
+        GebBaitSettingsConf defaults = new GebBaitSettingsConf();
         defaults.SeedDefaultPreferences();
         int added = 0;
-        foreach (BaitConfig db : defaults.Preferences) {
+        foreach (GebBaitConfig db : defaults.Preferences) {
             if (!db)
                 continue;
-            BaitConfig mine = FindBait(db.BaitClassname);
+            GebBaitConfig mine = FindBait(db.BaitClassname);
             if (!mine) {
                 Preferences.Insert(db);
                 added++;
@@ -1042,12 +1042,12 @@ class BaitSettingsConf {
                     continue;
             }
             if (!mine.Preferences)
-                mine.Preferences = new array<ref BaitPreferenceEntry>();
-            foreach (BaitPreferenceEntry dp : db.Preferences) {
+                mine.Preferences = new array<ref GebBaitPreferenceEntry>();
+            foreach (GebBaitPreferenceEntry dp : db.Preferences) {
                 if (!dp)
                     continue;
                 bool found = false;
-                foreach (BaitPreferenceEntry mp : mine.Preferences) {
+                foreach (GebBaitPreferenceEntry mp : mine.Preferences) {
                     if (mp && GebSameClassname(mp.FishClassname, dp.FishClassname)) { found = true; break; }
                 }
                 if (!found) { mine.Preferences.Insert(dp); added++; }
@@ -1055,8 +1055,8 @@ class BaitSettingsConf {
         }
         return added;
     }
-    protected BaitConfig FindBait(string baitClassname) {
-        foreach (BaitConfig b : Preferences) {
+    protected GebBaitConfig FindBait(string baitClassname) {
+        foreach (GebBaitConfig b : Preferences) {
             if (b && GebSameClassname(b.BaitClassname, baitClassname)) return b;
         }
         return null;
@@ -1065,7 +1065,7 @@ class BaitSettingsConf {
     // with its 13 category multipliers; the JSON output still lists every
     // fish-bait pair so admins can tune individual entries.
     void SeedDefaultPreferences() {
-        Preferences = new array<ref BaitConfig>();
+        Preferences = new array<ref GebBaitConfig>();
         EnsureCategories();
 
         // Column order: panfish, bass, pike/musky, walleye, trout/salmon,
@@ -1138,7 +1138,7 @@ class BaitSettingsConf {
 
     // Builds one bait entry from its 13 category multipliers and inserts it.
     protected void SeedBait(string baitName, float panfish, float bass, float pikeMusky, float walleye, float troutSalmon, float catfishBottom, float carp, float amphibian, float baitFish, float saltLarge, float saltMed, float saltSmall, float reefTropical) {
-        BaitConfig bait = new BaitConfig();
+        GebBaitConfig bait = new GebBaitConfig();
         bait.BaitClassname = baitName;
         AppendBaitPrefsByCategory(bait, s_CatPanfish, panfish);
         AppendBaitPrefsByCategory(bait, s_CatBass, bass);
@@ -1155,13 +1155,13 @@ class BaitSettingsConf {
         AppendBaitPrefsByCategory(bait, s_CatReefTropical, reefTropical);
         Preferences.Insert(bait);
     }
-    // Helper: append a BaitPreferenceEntry to `conf.Preferences` for
+    // Helper: append a GebBaitPreferenceEntry to `conf.Preferences` for
     // every fish classname in `fishList`, all with the same multiplier.
     // Lets SeedBait emit per-category preferences in one line per
     // (bait, category) pair instead of per fish.
-    protected void AppendBaitPrefsByCategory(BaitConfig conf, array<string> fishList, float mul) {
+    protected void AppendBaitPrefsByCategory(GebBaitConfig conf, array<string> fishList, float mul) {
         foreach (string fish : fishList) {
-            BaitPreferenceEntry pref = new BaitPreferenceEntry();
+            GebBaitPreferenceEntry pref = new GebBaitPreferenceEntry();
             pref.FishClassname = fish;
             pref.Multiplier = mul;
             conf.Preferences.Insert(pref);
@@ -1170,22 +1170,22 @@ class BaitSettingsConf {
 }
 
 // junk.json: world-junk + container-junk catch tables.
-class JunkConfig {
+class GebJunkConfig {
     string ConfigVersionInfo = "Mod config version this file was written with. Do NOT edit.";
     string ConfigVersion = "";
     string JunkShareInfo = "Share of rod catches that come up as junk instead of a fish, from 0 to 0.9 (0.1 = about 1 catch in 10, close to vanilla DayZ's rate; 0 = no junk). It holds on every map, in every season and at every hour: each cast, junk's weight is set from the fish that can bite there. In water where no fish can bite, a rod pulls only junk, as in vanilla.";
     float JunkShare = 0.1;
     string JunkInfo = "Table of 'junk' items a rod can pull instead of a fish (nets and traps never catch junk). JunkShare sets how often junk comes up; each entry's CatchProbability (0-25) only sets how often that item turns up compared with the other junk (0 = never). MinHealthLevel/MaxHealthLevel = health range, 0 pristine .. 4 ruined (the spawned item's health is rolled in this range).";
-    ref array<ref JunkEntry>          Junk;
+    ref array<ref GebJunkEntry>          Junk;
     string ContainerJunkInfo = "Like Junk, but for liquid containers (e.g. the Pot), which come up empty. They share JunkShare with the Junk items. Same fields: Classname, CatchProbability (0-25), MinHealthLevel/MaxHealthLevel (0-4).";
-    ref array<ref ContainerJunkEntry> ContainerJunk;
+    ref array<ref GebContainerJunkEntry> ContainerJunk;
 
     private const static string PATH = "$profile:Gebs/junk.json";
     bool Load() {
         bool changed = false;
         if (FileExist(PATH)) {
             string err;
-            if (!JsonFileLoader<JunkConfig>.LoadFile(PATH, this, err)) {
+            if (!JsonFileLoader<GebJunkConfig>.LoadFile(PATH, this, err)) {
                 GebsfishLogger.Error("junk.json failed to load; file preserved, using defaults for this session: " + err, "Config");
                 return false;
             }
@@ -1209,7 +1209,7 @@ class JunkConfig {
     void Save() {
         GebMakeConfigDir();
         string error;
-        if (!JsonFileLoader<JunkConfig>.SaveFile(PATH, this, error))
+        if (!JsonFileLoader<GebJunkConfig>.SaveFile(PATH, this, error))
             GebsfishLogger.Error("junk.json could not be written: " + error, "Config");
     }
     // Re-seeds a table the file doesn't have (or has as null). Whether it is
@@ -1225,7 +1225,7 @@ class JunkConfig {
         // at the class default -- but ask the file anyway: a file without it
         // gets it written in, and a deliberate 0 is kept.
         if (!file.Has("JunkShare")) {
-            JunkConfig defaults = new JunkConfig();
+            GebJunkConfig defaults = new GebJunkConfig();
             JunkShare = defaults.JunkShare;
             changed = true;
         }
@@ -1236,15 +1236,15 @@ class JunkConfig {
     // file's own and every row's (each row carries its own copy). Returns how
     // many changed.
     protected int RefreshInfoStrings() {
-        int n = GebRefreshInfo(this, new JunkConfig());
+        int n = GebRefreshInfo(this, new GebJunkConfig());
         if (Junk) {
-            JunkEntry freshJunk = new JunkEntry();
-            foreach (JunkEntry j : Junk)
+            GebJunkEntry freshJunk = new GebJunkEntry();
+            foreach (GebJunkEntry j : Junk)
                 n += GebRefreshInfo(j, freshJunk);
         }
         if (ContainerJunk) {
-            ContainerJunkEntry freshContainer = new ContainerJunkEntry();
-            foreach (ContainerJunkEntry c : ContainerJunk)
+            GebContainerJunkEntry freshContainer = new GebContainerJunkEntry();
+            foreach (GebContainerJunkEntry c : ContainerJunk)
                 n += GebRefreshInfo(c, freshContainer);
         }
         return n;
@@ -1256,28 +1256,28 @@ class JunkConfig {
     // file doesn't have) and is left alone (emptied on purpose). Permanently
     // remove one entry by setting CatchProbability 0, not deletion.
     int MergeNewDefaults() {
-        JunkConfig defaults = new JunkConfig();
+        GebJunkConfig defaults = new GebJunkConfig();
         defaults.SeedDefaultJunk();
         defaults.SeedDefaultContainerJunk();
         int added = 0;
         if (Junk && Junk.Count() > 0 && defaults.Junk) {
-            foreach (JunkEntry dj : defaults.Junk) {
+            foreach (GebJunkEntry dj : defaults.Junk) {
                 if (dj && !HasJunk(dj.Classname)) { Junk.Insert(dj); added++; }
             }
         }
         if (ContainerJunk && ContainerJunk.Count() > 0 && defaults.ContainerJunk) {
-            foreach (ContainerJunkEntry dc : defaults.ContainerJunk) {
+            foreach (GebContainerJunkEntry dc : defaults.ContainerJunk) {
                 if (dc && !HasContainerJunk(dc.Classname)) { ContainerJunk.Insert(dc); added++; }
             }
         }
         return added;
     }
     protected bool HasJunk(string classname) {
-        foreach (JunkEntry e : Junk) if (e && GebSameClassname(e.Classname, classname)) return true;
+        foreach (GebJunkEntry e : Junk) if (e && GebSameClassname(e.Classname, classname)) return true;
         return false;
     }
     protected bool HasContainerJunk(string classname) {
-        foreach (ContainerJunkEntry e : ContainerJunk) if (e && GebSameClassname(e.Classname, classname)) return true;
+        foreach (GebContainerJunkEntry e : ContainerJunk) if (e && GebSameClassname(e.Classname, classname)) return true;
         return false;
     }
     void SeedDefaults() {
@@ -1286,22 +1286,22 @@ class JunkConfig {
         SeedDefaultContainerJunk();
     }
     void SeedDefaultJunk() {
-        if (!Junk) Junk = new array<ref JunkEntry>();
-        JunkEntry brown = new JunkEntry(); brown.Classname = "Wellies_Brown"; brown.CatchProbability = 5; brown.MinHealthLevel = 3; brown.MaxHealthLevel = 3; Junk.Insert(brown);
-        JunkEntry grey = new JunkEntry();  grey.Classname = "Wellies_Grey";   grey.CatchProbability = 5;  grey.MinHealthLevel = 3;  grey.MaxHealthLevel = 3;  Junk.Insert(grey);
-        JunkEntry green = new JunkEntry(); green.Classname = "Wellies_Green"; green.CatchProbability = 5; green.MinHealthLevel = 3; green.MaxHealthLevel = 3; Junk.Insert(green);
-        JunkEntry black = new JunkEntry(); black.Classname = "Wellies_Black"; black.CatchProbability = 5; black.MinHealthLevel = 3; black.MaxHealthLevel = 3; Junk.Insert(black);
+        if (!Junk) Junk = new array<ref GebJunkEntry>();
+        GebJunkEntry brown = new GebJunkEntry(); brown.Classname = "Wellies_Brown"; brown.CatchProbability = 5; brown.MinHealthLevel = 3; brown.MaxHealthLevel = 3; Junk.Insert(brown);
+        GebJunkEntry grey = new GebJunkEntry();  grey.Classname = "Wellies_Grey";   grey.CatchProbability = 5;  grey.MinHealthLevel = 3;  grey.MaxHealthLevel = 3;  Junk.Insert(grey);
+        GebJunkEntry green = new GebJunkEntry(); green.Classname = "Wellies_Green"; green.CatchProbability = 5; green.MinHealthLevel = 3; green.MaxHealthLevel = 3; Junk.Insert(green);
+        GebJunkEntry black = new GebJunkEntry(); black.Classname = "Wellies_Black"; black.CatchProbability = 5; black.MinHealthLevel = 3; black.MaxHealthLevel = 3; Junk.Insert(black);
     }
     void SeedDefaultContainerJunk() {
-        if (!ContainerJunk) ContainerJunk = new array<ref ContainerJunkEntry>();
-        ContainerJunkEntry pot = new ContainerJunkEntry(); pot.Classname = "Pot"; pot.CatchProbability = 5; pot.MinHealthLevel = 3; pot.MaxHealthLevel = 3; ContainerJunk.Insert(pot);
+        if (!ContainerJunk) ContainerJunk = new array<ref GebContainerJunkEntry>();
+        GebContainerJunkEntry pot = new GebContainerJunkEntry(); pot.Classname = "Pot"; pot.CatchProbability = 5; pot.MinHealthLevel = 3; pot.MaxHealthLevel = 3; ContainerJunk.Insert(pot);
     }
 }
 
 // ===========================================================================
 // FILE 4: fish.json  (just the Species table now)
 // ===========================================================================
-class FishConfig {
+class GebFishConfig {
     string ConfigVersionInfo = "Mod config version this file was written with. Do NOT edit -- used to migrate the file on mod updates.";
     string ConfigVersion = "";
     // ENGINE LIMIT: ReadFromString access-violates (illegal read, stack smeared
@@ -1313,15 +1313,15 @@ class FishConfig {
     // edit to the file can fix the crash. Keep every string literal in this
     // file under ~900 bytes.
     string SpeciesInfo = "One object per fish/catchable. Classname = catchable item classname (also the fillet-recipe ingredient). RecipeShape: 0 = fillet only, 1 = caviar (ResultBonus caviar at index 0, gated by GeneralSettings.CaviarChance), 2 = lobster (ResultBonus tail at index 0). ResultMain = repeated fillet/claw result classname ('' = catch-only, no recipe). MeatMin/MeatMax = fillets per prepare. Environment: 1 pond, 2 sea, 3 both. CatchMethod bitmask: 1 rod + 2 largetrap + 4 smalltrap, added together (7 = all). CatchProbability = 0-25 abundance weight (0 = uncatchable). Rain/Storm/Dawn/Day/Dusk/NightMultiplier = per-species catch-bias multipliers (1.0 = no effect). TempOptimal/TempMin/TempMax = water-temperature preference in degrees Celsius. BiteSpeed = 24 space-separated hourly bite-speed values (index 0 = 12AM), each 0.0-1.0 where 1.0 = vanilla speed.";
-    ref array<ref FishConf>           Species;
+    ref array<ref GebFishConf>           Species;
 
     private const static string PATH = "$profile:Gebs/fish.json";
 
     // Case-blind (GebSameClassname): the caught fish's type is the config's
     // spelling, the row is the admin's.
-    FishConf Get(string classname) {
+    GebFishConf Get(string classname) {
         if (!Species) return null;
-        foreach (FishConf f : Species) if (f && GebSameClassname(f.Classname, classname)) return f;
+        foreach (GebFishConf f : Species) if (f && GebSameClassname(f.Classname, classname)) return f;
         return null;
     }
 
@@ -1329,7 +1329,7 @@ class FishConfig {
         bool changed = false;
         if (FileExist(PATH)) {
             string err;
-            if (!JsonFileLoader<FishConfig>.LoadFile(PATH, this, err)) {
+            if (!JsonFileLoader<GebFishConfig>.LoadFile(PATH, this, err)) {
                 GebsfishLogger.Error("fish.json failed to load; file preserved, using defaults for this session: " + err, "Config");
                 return false;
             }
@@ -1343,7 +1343,7 @@ class FishConfig {
                 changed = true;
             }
             // the current help text (the species rows carry none)
-            if (GebRefreshInfo(this, new FishConfig()) > 0)
+            if (GebRefreshInfo(this, new GebFishConfig()) > 0)
                 changed = true;
         } else {
             SeedDefaults();
@@ -1360,13 +1360,13 @@ class FishConfig {
         if (!Species)
             return false;
         bool hasNew = false;
-        foreach (FishConf seen : Species) {
+        foreach (GebFishConf seen : Species) {
             if (seen && GebSameClassname(seen.Classname, "geb_PacificBonito"))
                 hasNew = true;
         }
         bool changed = false;
         for (int i = Species.Count() - 1; i >= 0; i--) {
-            FishConf f = Species[i];
+            GebFishConf f = Species[i];
             if (!f || !GebSameClassname(f.Classname, "geb_Bonita"))
                 continue;
             if (hasNew) {
@@ -1382,7 +1382,7 @@ class FishConfig {
         // The fillet's old name, on the bonito's row or any other an admin
         // gave it to: the class is gone, so a row still naming it would
         // fillet into nothing.
-        foreach (FishConf row : Species) {
+        foreach (GebFishConf row : Species) {
             if (!row)
                 continue;
             if (GebSameClassname(row.ResultMain, "geb_BonitaFilletMeat")) {
@@ -1400,7 +1400,7 @@ class FishConfig {
     void Save() {
         GebMakeConfigDir();
         string error;
-        if (!JsonFileLoader<FishConfig>.SaveFile(PATH, this, error))
+        if (!JsonFileLoader<GebFishConfig>.SaveFile(PATH, this, error))
             GebsfishLogger.Error("fish.json could not be written: " + error, "Config");
     }
 
@@ -1422,10 +1422,10 @@ class FishConfig {
     int MergeNewDefaults() {
         if (!Species || Species.Count() == 0)
             return 0;
-        FishConfig defaults = new FishConfig();
+        GebFishConfig defaults = new GebFishConfig();
         defaults.SeedSpecies();
         int added = 0;
-        foreach (FishConf def : defaults.Species) {
+        foreach (GebFishConf def : defaults.Species) {
             if (def && !Get(def.Classname)) { Species.Insert(def); added++; }
         }
         return added;
@@ -1437,12 +1437,12 @@ class FishConfig {
     }
 
     void SeedSpecies() {
-        Species = new array<ref FishConf>();
+        Species = new array<ref GebFishConf>();
         SeedSpeciesA(); SeedSpeciesB(); SeedSpeciesC(); SeedSpeciesD(); SeedSpeciesE();
     }
     // ---- shared 24-hour BiteSpeed curves (index 0 = 12AM .. 23 = 11PM) ----
     // Each helper returns the 24 values as one space-separated string
-    // (FishConf.BiteSpeed is a string; GetBiteSpeedArray parses it per fish).
+    // (GebFishConf.BiteSpeed is a string; GetBiteSpeedArray parses it per fish).
     // Fastest 8PM-2AM, slowest midday -- catfish, crayfish, frogs, sharks, lobsters.
     protected string BiteNocturnal() { return "1 1 1 0.95 0.85 0.75 0.65 0.55 0.5 0.45 0.45 0.45 0.45 0.45 0.5 0.55 0.65 0.75 0.85 0.9 1 1 1 1"; }
     // Sharp dawn + dusk peaks, slow night and midday -- bass, trout, salmon.
@@ -1460,120 +1460,120 @@ class FishConfig {
     // Flat 1.0 around the clock -- starfish.
     protected string BiteConstant() { return "1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1"; }
     void SeedSpeciesA() {
-        FishConf f;
+        GebFishConf f;
         // freshwater + vanilla
-        f = new FishConf(); f.Classname="Mackerel"; f.RecipeShape=0; f.ResultMain="MackerelFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=3; f.CatchProbability=22; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.1; f.DayMultiplier=1.0; f.DuskMultiplier=1.1; f.NightMultiplier=1.0; f.TempOptimal=18.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteSteady(); Species.Insert(f);
-        f = new FishConf(); f.Classname="Carp"; f.RecipeShape=0; f.ResultMain="CarpFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=22; f.RainMultiplier=0.9; f.StormMultiplier=0.8; f.DawnMultiplier=1.2; f.DayMultiplier=0.9; f.DuskMultiplier=1.2; f.NightMultiplier=0.9; f.TempOptimal=24.0; f.TempMin=14.0; f.TempMax=30.0; f.BiteSpeed=BiteSteady(); Species.Insert(f);
-        f = new FishConf(); f.Classname="Sardines"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=6; f.CatchProbability=24; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=1.1; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=18.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="Bitterlings"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=1; f.CatchMethod=6; f.CatchProbability=24; f.RainMultiplier=1.1; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.1; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="WalleyePollock"; f.RecipeShape=0; f.ResultMain="WalleyePollockFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=3; f.CatchProbability=20; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.0; f.DuskMultiplier=1.1; f.NightMultiplier=1.1; f.TempOptimal=8.0; f.TempMin=1.0; f.TempMax=14.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
-        f = new FishConf(); f.Classname="SteelheadTrout"; f.RecipeShape=1; f.ResultMain="SteelheadTroutFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=9; f.RainMultiplier=1.4; f.StormMultiplier=1.3; f.DawnMultiplier=1.5; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=13.0; f.TempMin=4.0; f.TempMax=20.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
-        f = new FishConf(); f.Classname="Shrimp"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=6; f.CatchProbability=22; f.RainMultiplier=0.9; f.StormMultiplier=1.0; f.DawnMultiplier=0.9; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.3; f.TempOptimal=20.0; f.TempMin=12.0; f.TempMax=30.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_NorthernSnakeHead"; f.RecipeShape=0; f.ResultMain="geb_NorthernSnakeHeadFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=1; f.CatchMethod=1; f.CatchProbability=5; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.2; f.DayMultiplier=0.8; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=21.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_NorthernPike"; f.RecipeShape=1; f.ResultMain="geb_NorthernPikeFilletMeat"; f.ResultBonus="geb_YellowCaviar"; f.MeatMin=2; f.MeatMax=4; f.Environment=1; f.CatchMethod=1; f.CatchProbability=8; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.4; f.TempOptimal=18.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_BarredMuskellunge"; f.RecipeShape=1; f.ResultMain="geb_BarredMuskellungeFilletMeat"; f.ResultBonus="geb_YellowCaviar"; f.MeatMin=2; f.MeatMax=4; f.Environment=1; f.CatchMethod=1; f.CatchProbability=3; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.4; f.TempOptimal=19.0; f.TempMin=10.0; f.TempMax=25.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_SpottedMuskellunge"; f.RecipeShape=1; f.ResultMain="geb_SpottedMuskellungeFilletMeat"; f.ResultBonus="geb_YellowCaviar"; f.MeatMin=2; f.MeatMax=4; f.Environment=1; f.CatchMethod=1; f.CatchProbability=3; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.4; f.TempOptimal=19.0; f.TempMin=10.0; f.TempMax=25.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_TigerMuskellunge"; f.RecipeShape=1; f.ResultMain="geb_TigerMuskellungeFilletMeat"; f.ResultBonus="geb_YellowCaviar"; f.MeatMin=2; f.MeatMax=4; f.Environment=1; f.CatchMethod=1; f.CatchProbability=3; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.4; f.TempOptimal=19.0; f.TempMin=10.0; f.TempMax=25.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_Muskellunge"; f.RecipeShape=1; f.ResultMain="geb_MuskellungeFilletMeat"; f.ResultBonus="geb_YellowCaviar"; f.MeatMin=2; f.MeatMax=4; f.Environment=1; f.CatchMethod=1; f.CatchProbability=4; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.4; f.TempOptimal=19.0; f.TempMin=10.0; f.TempMax=25.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_AlligatorGar"; f.RecipeShape=0; f.ResultMain="geb_AlligatorGarFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=3; f.CatchMethod=1; f.CatchProbability=4; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.2; f.DayMultiplier=0.8; f.DuskMultiplier=1.3; f.NightMultiplier=1.4; f.TempOptimal=26.0; f.TempMin=16.0; f.TempMax=32.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_LargeMouthBass"; f.RecipeShape=0; f.ResultMain="geb_LargeMouthBassFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=14; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.4; f.NightMultiplier=1.1; f.TempOptimal=24.0; f.TempMin=14.0; f.TempMax=30.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_SmallMouthBass"; f.RecipeShape=0; f.ResultMain="geb_SmallMouthBassFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=13; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.4; f.NightMultiplier=1.1; f.TempOptimal=21.0; f.TempMin=12.0; f.TempMax=27.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="Mackerel"; f.RecipeShape=0; f.ResultMain="MackerelFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=3; f.CatchProbability=22; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.1; f.DayMultiplier=1.0; f.DuskMultiplier=1.1; f.NightMultiplier=1.0; f.TempOptimal=18.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteSteady(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="Carp"; f.RecipeShape=0; f.ResultMain="CarpFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=22; f.RainMultiplier=0.9; f.StormMultiplier=0.8; f.DawnMultiplier=1.2; f.DayMultiplier=0.9; f.DuskMultiplier=1.2; f.NightMultiplier=0.9; f.TempOptimal=24.0; f.TempMin=14.0; f.TempMax=30.0; f.BiteSpeed=BiteSteady(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="Sardines"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=6; f.CatchProbability=24; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=1.1; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=18.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="Bitterlings"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=1; f.CatchMethod=6; f.CatchProbability=24; f.RainMultiplier=1.1; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.1; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="WalleyePollock"; f.RecipeShape=0; f.ResultMain="WalleyePollockFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=3; f.CatchProbability=20; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.0; f.DuskMultiplier=1.1; f.NightMultiplier=1.1; f.TempOptimal=8.0; f.TempMin=1.0; f.TempMax=14.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="SteelheadTrout"; f.RecipeShape=1; f.ResultMain="SteelheadTroutFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=9; f.RainMultiplier=1.4; f.StormMultiplier=1.3; f.DawnMultiplier=1.5; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=13.0; f.TempMin=4.0; f.TempMax=20.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="Shrimp"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=6; f.CatchProbability=22; f.RainMultiplier=0.9; f.StormMultiplier=1.0; f.DawnMultiplier=0.9; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.3; f.TempOptimal=20.0; f.TempMin=12.0; f.TempMax=30.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_NorthernSnakeHead"; f.RecipeShape=0; f.ResultMain="geb_NorthernSnakeHeadFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=1; f.CatchMethod=1; f.CatchProbability=5; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.2; f.DayMultiplier=0.8; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=21.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_NorthernPike"; f.RecipeShape=1; f.ResultMain="geb_NorthernPikeFilletMeat"; f.ResultBonus="geb_YellowCaviar"; f.MeatMin=2; f.MeatMax=4; f.Environment=1; f.CatchMethod=1; f.CatchProbability=8; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.4; f.TempOptimal=18.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_BarredMuskellunge"; f.RecipeShape=1; f.ResultMain="geb_BarredMuskellungeFilletMeat"; f.ResultBonus="geb_YellowCaviar"; f.MeatMin=2; f.MeatMax=4; f.Environment=1; f.CatchMethod=1; f.CatchProbability=3; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.4; f.TempOptimal=19.0; f.TempMin=10.0; f.TempMax=25.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_SpottedMuskellunge"; f.RecipeShape=1; f.ResultMain="geb_SpottedMuskellungeFilletMeat"; f.ResultBonus="geb_YellowCaviar"; f.MeatMin=2; f.MeatMax=4; f.Environment=1; f.CatchMethod=1; f.CatchProbability=3; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.4; f.TempOptimal=19.0; f.TempMin=10.0; f.TempMax=25.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_TigerMuskellunge"; f.RecipeShape=1; f.ResultMain="geb_TigerMuskellungeFilletMeat"; f.ResultBonus="geb_YellowCaviar"; f.MeatMin=2; f.MeatMax=4; f.Environment=1; f.CatchMethod=1; f.CatchProbability=3; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.4; f.TempOptimal=19.0; f.TempMin=10.0; f.TempMax=25.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_Muskellunge"; f.RecipeShape=1; f.ResultMain="geb_MuskellungeFilletMeat"; f.ResultBonus="geb_YellowCaviar"; f.MeatMin=2; f.MeatMax=4; f.Environment=1; f.CatchMethod=1; f.CatchProbability=4; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.4; f.TempOptimal=19.0; f.TempMin=10.0; f.TempMax=25.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_AlligatorGar"; f.RecipeShape=0; f.ResultMain="geb_AlligatorGarFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=3; f.CatchMethod=1; f.CatchProbability=4; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.2; f.DayMultiplier=0.8; f.DuskMultiplier=1.3; f.NightMultiplier=1.4; f.TempOptimal=26.0; f.TempMin=16.0; f.TempMax=32.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_LargeMouthBass"; f.RecipeShape=0; f.ResultMain="geb_LargeMouthBassFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=14; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.4; f.NightMultiplier=1.1; f.TempOptimal=24.0; f.TempMin=14.0; f.TempMax=30.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_SmallMouthBass"; f.RecipeShape=0; f.ResultMain="geb_SmallMouthBassFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=13; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.4; f.NightMultiplier=1.1; f.TempOptimal=21.0; f.TempMin=12.0; f.TempMax=27.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
     }
     void SeedSpeciesB() {
-        FishConf f;
-        f = new FishConf(); f.Classname="geb_WallEye"; f.RecipeShape=0; f.ResultMain="geb_WallEyeFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=12; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.3; f.DayMultiplier=0.7; f.DuskMultiplier=1.5; f.NightMultiplier=1.5; f.TempOptimal=18.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_SunFish"; f.RecipeShape=0; f.ResultMain="geb_SunFishFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=20; f.RainMultiplier=1.1; f.StormMultiplier=0.9; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=25.0; f.TempMin=15.0; f.TempMax=30.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_WhiteBass"; f.RecipeShape=0; f.ResultMain="geb_WhiteBassFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=11; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.2; f.DayMultiplier=1.0; f.DuskMultiplier=1.3; f.NightMultiplier=1.3; f.TempOptimal=21.0; f.TempMin=12.0; f.TempMax=27.0; f.BiteSpeed=BiteSteady(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_StripedBass"; f.RecipeShape=0; f.ResultMain="geb_StripedBassFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=10; f.RainMultiplier=1.0; f.StormMultiplier=1.4; f.DawnMultiplier=1.2; f.DayMultiplier=0.9; f.DuskMultiplier=1.4; f.NightMultiplier=1.3; f.TempOptimal=20.0; f.TempMin=10.0; f.TempMax=26.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_NeoshoBass"; f.RecipeShape=0; f.ResultMain="geb_NeoshoBassFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=7; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=22.0; f.TempMin=13.0; f.TempMax=28.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_BlackBass"; f.RecipeShape=0; f.ResultMain="geb_BlackBassFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=13; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=23.0; f.TempMin=13.0; f.TempMax=29.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_RainbowTrout"; f.RecipeShape=1; f.ResultMain="geb_RainbowTroutFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=14; f.RainMultiplier=1.4; f.StormMultiplier=1.3; f.DawnMultiplier=1.5; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=14.0; f.TempMin=4.0; f.TempMax=21.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_BrownTrout"; f.RecipeShape=1; f.ResultMain="geb_BrownTroutFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=12; f.RainMultiplier=1.4; f.StormMultiplier=1.3; f.DawnMultiplier=1.5; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=14.0; f.TempMin=4.0; f.TempMax=21.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_BrookTrout"; f.RecipeShape=1; f.ResultMain="geb_BrookTroutFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=12; f.RainMultiplier=1.4; f.StormMultiplier=1.3; f.DawnMultiplier=1.5; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=13.0; f.TempMin=4.0; f.TempMax=20.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_LakeTrout"; f.RecipeShape=1; f.ResultMain="geb_LakeTroutFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=8; f.RainMultiplier=1.3; f.StormMultiplier=1.2; f.DawnMultiplier=1.3; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.1; f.TempOptimal=10.0; f.TempMin=2.0; f.TempMax=16.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_CutThroatTrout"; f.RecipeShape=1; f.ResultMain="geb_CutThroatTroutFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=9; f.RainMultiplier=1.4; f.StormMultiplier=1.3; f.DawnMultiplier=1.5; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=13.0; f.TempMin=4.0; f.TempMax=20.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_LakeSturgeon"; f.RecipeShape=1; f.ResultMain="geb_LakeSturgeonFilletMeat"; f.ResultBonus="geb_BlackCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=3; f.RainMultiplier=1.1; f.StormMultiplier=1.4; f.DawnMultiplier=1.1; f.DayMultiplier=0.9; f.DuskMultiplier=1.1; f.NightMultiplier=1.0; f.TempOptimal=15.0; f.TempMin=5.0; f.TempMax=22.0; f.BiteSpeed=BiteSteady(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_YellowPerch"; f.RecipeShape=0; f.ResultMain="geb_YellowPerchFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=21; f.RainMultiplier=1.1; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=19.0; f.TempMin=10.0; f.TempMax=25.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_FlatHeadCatFish"; f.RecipeShape=0; f.ResultMain="geb_FlatHeadCatFishFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=4; f.Environment=1; f.CatchMethod=3; f.CatchProbability=5; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.2; f.DayMultiplier=0.7; f.DuskMultiplier=1.4; f.NightMultiplier=1.6; f.TempOptimal=26.0; f.TempMin=16.0; f.TempMax=32.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_FatHeadMinnow"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=5; f.CatchProbability=25; f.RainMultiplier=1.2; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.1; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_AmericanBullFrog"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=5; f.CatchProbability=12; f.RainMultiplier=1.5; f.StormMultiplier=1.2; f.DawnMultiplier=1.4; f.DayMultiplier=1.0; f.DuskMultiplier=1.5; f.NightMultiplier=1.3; f.TempOptimal=25.0; f.TempMin=15.0; f.TempMax=32.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        GebFishConf f;
+        f = new GebFishConf(); f.Classname="geb_WallEye"; f.RecipeShape=0; f.ResultMain="geb_WallEyeFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=12; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.3; f.DayMultiplier=0.7; f.DuskMultiplier=1.5; f.NightMultiplier=1.5; f.TempOptimal=18.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_SunFish"; f.RecipeShape=0; f.ResultMain="geb_SunFishFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=20; f.RainMultiplier=1.1; f.StormMultiplier=0.9; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=25.0; f.TempMin=15.0; f.TempMax=30.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_WhiteBass"; f.RecipeShape=0; f.ResultMain="geb_WhiteBassFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=11; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.2; f.DayMultiplier=1.0; f.DuskMultiplier=1.3; f.NightMultiplier=1.3; f.TempOptimal=21.0; f.TempMin=12.0; f.TempMax=27.0; f.BiteSpeed=BiteSteady(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_StripedBass"; f.RecipeShape=0; f.ResultMain="geb_StripedBassFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=10; f.RainMultiplier=1.0; f.StormMultiplier=1.4; f.DawnMultiplier=1.2; f.DayMultiplier=0.9; f.DuskMultiplier=1.4; f.NightMultiplier=1.3; f.TempOptimal=20.0; f.TempMin=10.0; f.TempMax=26.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_NeoshoBass"; f.RecipeShape=0; f.ResultMain="geb_NeoshoBassFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=7; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=22.0; f.TempMin=13.0; f.TempMax=28.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_BlackBass"; f.RecipeShape=0; f.ResultMain="geb_BlackBassFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=13; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=23.0; f.TempMin=13.0; f.TempMax=29.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_RainbowTrout"; f.RecipeShape=1; f.ResultMain="geb_RainbowTroutFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=14; f.RainMultiplier=1.4; f.StormMultiplier=1.3; f.DawnMultiplier=1.5; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=14.0; f.TempMin=4.0; f.TempMax=21.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_BrownTrout"; f.RecipeShape=1; f.ResultMain="geb_BrownTroutFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=12; f.RainMultiplier=1.4; f.StormMultiplier=1.3; f.DawnMultiplier=1.5; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=14.0; f.TempMin=4.0; f.TempMax=21.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_BrookTrout"; f.RecipeShape=1; f.ResultMain="geb_BrookTroutFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=12; f.RainMultiplier=1.4; f.StormMultiplier=1.3; f.DawnMultiplier=1.5; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=13.0; f.TempMin=4.0; f.TempMax=20.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_LakeTrout"; f.RecipeShape=1; f.ResultMain="geb_LakeTroutFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=8; f.RainMultiplier=1.3; f.StormMultiplier=1.2; f.DawnMultiplier=1.3; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.1; f.TempOptimal=10.0; f.TempMin=2.0; f.TempMax=16.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_CutThroatTrout"; f.RecipeShape=1; f.ResultMain="geb_CutThroatTroutFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=9; f.RainMultiplier=1.4; f.StormMultiplier=1.3; f.DawnMultiplier=1.5; f.DayMultiplier=0.8; f.DuskMultiplier=1.4; f.NightMultiplier=1.0; f.TempOptimal=13.0; f.TempMin=4.0; f.TempMax=20.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_LakeSturgeon"; f.RecipeShape=1; f.ResultMain="geb_LakeSturgeonFilletMeat"; f.ResultBonus="geb_BlackCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=3; f.RainMultiplier=1.1; f.StormMultiplier=1.4; f.DawnMultiplier=1.1; f.DayMultiplier=0.9; f.DuskMultiplier=1.1; f.NightMultiplier=1.0; f.TempOptimal=15.0; f.TempMin=5.0; f.TempMax=22.0; f.BiteSpeed=BiteSteady(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_YellowPerch"; f.RecipeShape=0; f.ResultMain="geb_YellowPerchFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=21; f.RainMultiplier=1.1; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=19.0; f.TempMin=10.0; f.TempMax=25.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_FlatHeadCatFish"; f.RecipeShape=0; f.ResultMain="geb_FlatHeadCatFishFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=4; f.Environment=1; f.CatchMethod=3; f.CatchProbability=5; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.2; f.DayMultiplier=0.7; f.DuskMultiplier=1.4; f.NightMultiplier=1.6; f.TempOptimal=26.0; f.TempMin=16.0; f.TempMax=32.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_FatHeadMinnow"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=5; f.CatchProbability=25; f.RainMultiplier=1.2; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.1; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_AmericanBullFrog"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=5; f.CatchProbability=12; f.RainMultiplier=1.5; f.StormMultiplier=1.2; f.DawnMultiplier=1.4; f.DayMultiplier=1.0; f.DuskMultiplier=1.5; f.NightMultiplier=1.3; f.TempOptimal=25.0; f.TempMin=15.0; f.TempMax=32.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
     }
     void SeedSpeciesC() {
-        FishConf f;
-        f = new FishConf(); f.Classname="geb_RedSalamander"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=5; f.CatchProbability=7; f.RainMultiplier=1.6; f.StormMultiplier=1.3; f.DawnMultiplier=1.2; f.DayMultiplier=1.0; f.DuskMultiplier=1.3; f.NightMultiplier=1.2; f.TempOptimal=15.0; f.TempMin=6.0; f.TempMax=22.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_BlueGill"; f.RecipeShape=0; f.ResultMain="geb_BlueGillFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=22; f.RainMultiplier=1.1; f.StormMultiplier=0.9; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=25.0; f.TempMin=15.0; f.TempMax=30.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_Sauger"; f.RecipeShape=0; f.ResultMain="geb_SaugerFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=10; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.3; f.DayMultiplier=0.7; f.DuskMultiplier=1.5; f.NightMultiplier=1.5; f.TempOptimal=18.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_BowFin"; f.RecipeShape=0; f.ResultMain="geb_BowFinFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=8; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.2; f.DayMultiplier=0.8; f.DuskMultiplier=1.3; f.NightMultiplier=1.4; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_SlimySculpin"; f.RecipeShape=0; f.ResultMain="geb_SlimySculpinFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=16; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=1.0; f.DuskMultiplier=1.0; f.NightMultiplier=1.2; f.TempOptimal=10.0; f.TempMin=2.0; f.TempMax=16.0; f.BiteSpeed=BiteSteady(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_Severum"; f.RecipeShape=0; f.ResultMain="geb_SeverumFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=3; f.RainMultiplier=1.1; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=1.0; f.TempOptimal=27.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_SignalCrayFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=18; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_EuropeanCrayFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=11; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_FloridaCrayFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=8; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=25.0; f.TempMin=15.0; f.TempMax=30.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_CaveCrayFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=2; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.0; f.DuskMultiplier=1.0; f.NightMultiplier=1.5; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=18.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_MonongahelaCrayFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=7; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_RedSwampCrayFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=18; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=24.0; f.TempMin=14.0; f.TempMax=30.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_RustyCrayFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=14; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        GebFishConf f;
+        f = new GebFishConf(); f.Classname="geb_RedSalamander"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=5; f.CatchProbability=7; f.RainMultiplier=1.6; f.StormMultiplier=1.3; f.DawnMultiplier=1.2; f.DayMultiplier=1.0; f.DuskMultiplier=1.3; f.NightMultiplier=1.2; f.TempOptimal=15.0; f.TempMin=6.0; f.TempMax=22.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_BlueGill"; f.RecipeShape=0; f.ResultMain="geb_BlueGillFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=22; f.RainMultiplier=1.1; f.StormMultiplier=0.9; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=25.0; f.TempMin=15.0; f.TempMax=30.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_Sauger"; f.RecipeShape=0; f.ResultMain="geb_SaugerFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=10; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.3; f.DayMultiplier=0.7; f.DuskMultiplier=1.5; f.NightMultiplier=1.5; f.TempOptimal=18.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteTwilightNight(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_BowFin"; f.RecipeShape=0; f.ResultMain="geb_BowFinFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=8; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.2; f.DayMultiplier=0.8; f.DuskMultiplier=1.3; f.NightMultiplier=1.4; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_SlimySculpin"; f.RecipeShape=0; f.ResultMain="geb_SlimySculpinFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=16; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=1.0; f.DuskMultiplier=1.0; f.NightMultiplier=1.2; f.TempOptimal=10.0; f.TempMin=2.0; f.TempMax=16.0; f.BiteSpeed=BiteSteady(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_Severum"; f.RecipeShape=0; f.ResultMain="geb_SeverumFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=3; f.RainMultiplier=1.1; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=1.0; f.TempOptimal=27.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_SignalCrayFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=18; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_EuropeanCrayFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=11; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_FloridaCrayFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=8; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=25.0; f.TempMin=15.0; f.TempMax=30.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_CaveCrayFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=2; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.0; f.DuskMultiplier=1.0; f.NightMultiplier=1.5; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=18.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_MonongahelaCrayFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=7; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_RedSwampCrayFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=18; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=24.0; f.TempMin=14.0; f.TempMax=30.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_RustyCrayFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=14; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
         // saltwater
-        f = new FishConf(); f.Classname="geb_MahiMahi"; f.RecipeShape=0; f.ResultMain="geb_MahiMahiFilletMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=7; f.Environment=2; f.CatchMethod=1; f.CatchProbability=10; f.RainMultiplier=1.2; f.StormMultiplier=1.5; f.DawnMultiplier=1.1; f.DayMultiplier=1.1; f.DuskMultiplier=1.0; f.NightMultiplier=1.0; f.TempOptimal=27.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_AtlanticSailFish"; f.RecipeShape=0; f.ResultMain="geb_AtlanticSailFishFilletMeat"; f.ResultBonus=""; f.MeatMin=4; f.MeatMax=7; f.Environment=2; f.CatchMethod=1; f.CatchProbability=4; f.RainMultiplier=1.2; f.StormMultiplier=1.4; f.DawnMultiplier=1.2; f.DayMultiplier=1.1; f.DuskMultiplier=1.2; f.NightMultiplier=1.0; f.TempOptimal=27.0; f.TempMin=21.0; f.TempMax=32.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_AngelFish"; f.RecipeShape=0; f.ResultMain="geb_AngelFishFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=1; f.CatchProbability=10; f.RainMultiplier=0.9; f.StormMultiplier=0.8; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=0.8; f.TempOptimal=27.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_MahiMahi"; f.RecipeShape=0; f.ResultMain="geb_MahiMahiFilletMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=7; f.Environment=2; f.CatchMethod=1; f.CatchProbability=10; f.RainMultiplier=1.2; f.StormMultiplier=1.5; f.DawnMultiplier=1.1; f.DayMultiplier=1.1; f.DuskMultiplier=1.0; f.NightMultiplier=1.0; f.TempOptimal=27.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_AtlanticSailFish"; f.RecipeShape=0; f.ResultMain="geb_AtlanticSailFishFilletMeat"; f.ResultBonus=""; f.MeatMin=4; f.MeatMax=7; f.Environment=2; f.CatchMethod=1; f.CatchProbability=4; f.RainMultiplier=1.2; f.StormMultiplier=1.4; f.DawnMultiplier=1.2; f.DayMultiplier=1.1; f.DuskMultiplier=1.2; f.NightMultiplier=1.0; f.TempOptimal=27.0; f.TempMin=21.0; f.TempMax=32.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_AngelFish"; f.RecipeShape=0; f.ResultMain="geb_AngelFishFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=1; f.CatchProbability=10; f.RainMultiplier=0.9; f.StormMultiplier=0.8; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=0.8; f.TempOptimal=27.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
     }
     void SeedSpeciesD() {
-        FishConf f;
-        f = new FishConf(); f.Classname="geb_AsianSeaBass"; f.RecipeShape=0; f.ResultMain="geb_AsianSeaBassFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=3; f.CatchMethod=3; f.CatchProbability=10; f.RainMultiplier=1.2; f.StormMultiplier=1.3; f.DawnMultiplier=1.2; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.2; f.TempOptimal=28.0; f.TempMin=20.0; f.TempMax=33.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_AtlanticBlueMarlin"; f.RecipeShape=0; f.ResultMain="geb_AtlanticBlueMarlinFilletMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=3; f.RainMultiplier=1.2; f.StormMultiplier=1.4; f.DawnMultiplier=1.2; f.DayMultiplier=1.0; f.DuskMultiplier=1.2; f.NightMultiplier=1.0; f.TempOptimal=26.0; f.TempMin=20.0; f.TempMax=30.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_PacificBonito"; f.RecipeShape=0; f.ResultMain="geb_PacificBonitoFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=3; f.CatchProbability=10; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.2; f.DayMultiplier=1.0; f.DuskMultiplier=1.2; f.NightMultiplier=1.0; f.TempOptimal=22.0; f.TempMin=14.0; f.TempMax=28.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_GreatBarracuda"; f.RecipeShape=0; f.ResultMain="geb_GreatBarracudaFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=2; f.CatchMethod=1; f.CatchProbability=6; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=1.0; f.DuskMultiplier=1.3; f.NightMultiplier=0.7; f.TempOptimal=26.0; f.TempMin=18.0; f.TempMax=32.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_CherrySalmon"; f.RecipeShape=1; f.ResultMain="geb_CherrySalmonFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=6; f.RainMultiplier=1.3; f.StormMultiplier=1.2; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.0; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=18.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_ChinookSalmon"; f.RecipeShape=1; f.ResultMain="geb_ChinookSalmonFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=8; f.RainMultiplier=1.3; f.StormMultiplier=1.2; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.0; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=18.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_SockEyeSalmon"; f.RecipeShape=1; f.ResultMain="geb_SockEyeSalmonFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=8; f.RainMultiplier=1.3; f.StormMultiplier=1.2; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.0; f.TempOptimal=13.0; f.TempMin=4.0; f.TempMax=18.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_FlatHeadMullet"; f.RecipeShape=0; f.ResultMain="geb_FlatHeadMulletFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=18; f.RainMultiplier=1.3; f.StormMultiplier=1.2; f.DawnMultiplier=1.3; f.DayMultiplier=1.1; f.DuskMultiplier=1.2; f.NightMultiplier=1.0; f.TempOptimal=25.0; f.TempMin=15.0; f.TempMax=30.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_LeopardShark"; f.RecipeShape=0; f.ResultMain="geb_LeopardSharkFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=2; f.CatchMethod=1; f.CatchProbability=9; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.2; f.NightMultiplier=1.4; f.TempOptimal=18.0; f.TempMin=10.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_HammerHeadShark"; f.RecipeShape=0; f.ResultMain="geb_HammerHeadSharkFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=2; f.CatchMethod=1; f.CatchProbability=5; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.1; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=26.0; f.TempMin=18.0; f.TempMax=30.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_PacificCod"; f.RecipeShape=0; f.ResultMain="geb_PacificCodFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=3; f.CatchProbability=16; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.1; f.DayMultiplier=1.0; f.DuskMultiplier=1.1; f.NightMultiplier=1.2; f.TempOptimal=8.0; f.TempMin=2.0; f.TempMax=14.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_RedHeadCichlid"; f.RecipeShape=0; f.ResultMain="geb_RedHeadCichlidFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=4; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.1; f.DuskMultiplier=1.0; f.NightMultiplier=1.0; f.TempOptimal=27.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_RoughNeckRock"; f.RecipeShape=0; f.ResultMain="geb_RoughNeckRockFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=3; f.CatchProbability=14; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.1; f.DayMultiplier=1.0; f.DuskMultiplier=1.2; f.NightMultiplier=1.2; f.TempOptimal=17.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_BlueTang"; f.RecipeShape=0; f.ResultMain="geb_BlueTangFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=3; f.CatchProbability=12; f.RainMultiplier=0.9; f.StormMultiplier=0.8; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=26.0; f.TempMin=20.0; f.TempMax=30.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_LargeHeadHairTailFish"; f.RecipeShape=0; f.ResultMain="geb_LargeHeadHairTailFishFilletMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=5; f.Environment=2; f.CatchMethod=3; f.CatchProbability=9; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.2; f.NightMultiplier=1.4; f.TempOptimal=17.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_HumpHeadWrasse"; f.RecipeShape=0; f.ResultMain="geb_HumpHeadWrasseFilletMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=5; f.Environment=2; f.CatchMethod=3; f.CatchProbability=4; f.RainMultiplier=0.9; f.StormMultiplier=0.8; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=0.8; f.TempOptimal=27.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_SiameseTigerFish"; f.RecipeShape=0; f.ResultMain="geb_SiameseTigerFishFilletMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=6; f.Environment=1; f.CatchMethod=3; f.CatchProbability=6; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.1; f.DayMultiplier=1.0; f.DuskMultiplier=1.2; f.NightMultiplier=1.2; f.TempOptimal=27.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        GebFishConf f;
+        f = new GebFishConf(); f.Classname="geb_AsianSeaBass"; f.RecipeShape=0; f.ResultMain="geb_AsianSeaBassFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=3; f.CatchMethod=3; f.CatchProbability=10; f.RainMultiplier=1.2; f.StormMultiplier=1.3; f.DawnMultiplier=1.2; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.2; f.TempOptimal=28.0; f.TempMin=20.0; f.TempMax=33.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_AtlanticBlueMarlin"; f.RecipeShape=0; f.ResultMain="geb_AtlanticBlueMarlinFilletMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=3; f.RainMultiplier=1.2; f.StormMultiplier=1.4; f.DawnMultiplier=1.2; f.DayMultiplier=1.0; f.DuskMultiplier=1.2; f.NightMultiplier=1.0; f.TempOptimal=26.0; f.TempMin=20.0; f.TempMax=30.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_PacificBonito"; f.RecipeShape=0; f.ResultMain="geb_PacificBonitoFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=3; f.CatchProbability=10; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.2; f.DayMultiplier=1.0; f.DuskMultiplier=1.2; f.NightMultiplier=1.0; f.TempOptimal=22.0; f.TempMin=14.0; f.TempMax=28.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_GreatBarracuda"; f.RecipeShape=0; f.ResultMain="geb_GreatBarracudaFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=2; f.CatchMethod=1; f.CatchProbability=6; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=1.0; f.DuskMultiplier=1.3; f.NightMultiplier=0.7; f.TempOptimal=26.0; f.TempMin=18.0; f.TempMax=32.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_CherrySalmon"; f.RecipeShape=1; f.ResultMain="geb_CherrySalmonFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=6; f.RainMultiplier=1.3; f.StormMultiplier=1.2; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.0; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=18.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_ChinookSalmon"; f.RecipeShape=1; f.ResultMain="geb_ChinookSalmonFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=8; f.RainMultiplier=1.3; f.StormMultiplier=1.2; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.0; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=18.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_SockEyeSalmon"; f.RecipeShape=1; f.ResultMain="geb_SockEyeSalmonFilletMeat"; f.ResultBonus="RedCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=8; f.RainMultiplier=1.3; f.StormMultiplier=1.2; f.DawnMultiplier=1.4; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.0; f.TempOptimal=13.0; f.TempMin=4.0; f.TempMax=18.0; f.BiteSpeed=BiteCrepuscular(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_FlatHeadMullet"; f.RecipeShape=0; f.ResultMain="geb_FlatHeadMulletFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=3; f.CatchMethod=3; f.CatchProbability=18; f.RainMultiplier=1.3; f.StormMultiplier=1.2; f.DawnMultiplier=1.3; f.DayMultiplier=1.1; f.DuskMultiplier=1.2; f.NightMultiplier=1.0; f.TempOptimal=25.0; f.TempMin=15.0; f.TempMax=30.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_LeopardShark"; f.RecipeShape=0; f.ResultMain="geb_LeopardSharkFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=2; f.CatchMethod=1; f.CatchProbability=9; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.2; f.NightMultiplier=1.4; f.TempOptimal=18.0; f.TempMin=10.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_HammerHeadShark"; f.RecipeShape=0; f.ResultMain="geb_HammerHeadSharkFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=2; f.CatchMethod=1; f.CatchProbability=5; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.1; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=26.0; f.TempMin=18.0; f.TempMax=30.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_PacificCod"; f.RecipeShape=0; f.ResultMain="geb_PacificCodFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=3; f.CatchProbability=16; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.1; f.DayMultiplier=1.0; f.DuskMultiplier=1.1; f.NightMultiplier=1.2; f.TempOptimal=8.0; f.TempMin=2.0; f.TempMax=14.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_RedHeadCichlid"; f.RecipeShape=0; f.ResultMain="geb_RedHeadCichlidFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=4; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.1; f.DuskMultiplier=1.0; f.NightMultiplier=1.0; f.TempOptimal=27.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_RoughNeckRock"; f.RecipeShape=0; f.ResultMain="geb_RoughNeckRockFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=3; f.CatchProbability=14; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.1; f.DayMultiplier=1.0; f.DuskMultiplier=1.2; f.NightMultiplier=1.2; f.TempOptimal=17.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_BlueTang"; f.RecipeShape=0; f.ResultMain="geb_BlueTangFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=3; f.CatchProbability=12; f.RainMultiplier=0.9; f.StormMultiplier=0.8; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=26.0; f.TempMin=20.0; f.TempMax=30.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_LargeHeadHairTailFish"; f.RecipeShape=0; f.ResultMain="geb_LargeHeadHairTailFishFilletMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=5; f.Environment=2; f.CatchMethod=3; f.CatchProbability=9; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.2; f.NightMultiplier=1.4; f.TempOptimal=17.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_HumpHeadWrasse"; f.RecipeShape=0; f.ResultMain="geb_HumpHeadWrasseFilletMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=5; f.Environment=2; f.CatchMethod=3; f.CatchProbability=4; f.RainMultiplier=0.9; f.StormMultiplier=0.8; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=0.8; f.TempOptimal=27.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_SiameseTigerFish"; f.RecipeShape=0; f.ResultMain="geb_SiameseTigerFishFilletMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=6; f.Environment=1; f.CatchMethod=3; f.CatchProbability=6; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.1; f.DayMultiplier=1.0; f.DuskMultiplier=1.2; f.NightMultiplier=1.2; f.TempOptimal=27.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
     }
     void SeedSpeciesE() {
-        FishConf f;
-        f = new FishConf(); f.Classname="geb_GreatWhiteShark"; f.RecipeShape=0; f.ResultMain="geb_GreatWhiteSharkFilletMeat"; f.ResultBonus=""; f.MeatMin=5; f.MeatMax=10; f.Environment=2; f.CatchMethod=1; f.CatchProbability=2; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.2; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.4; f.TempOptimal=17.0; f.TempMin=10.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_AngelShark"; f.RecipeShape=0; f.ResultMain="geb_AngelSharkFilletMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=8; f.Environment=2; f.CatchMethod=1; f.CatchProbability=7; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.2; f.NightMultiplier=1.5; f.TempOptimal=18.0; f.TempMin=10.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_YellowFinTuna"; f.RecipeShape=0; f.ResultMain="geb_YellowFinTunaFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=8; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.3; f.DayMultiplier=1.0; f.DuskMultiplier=1.3; f.NightMultiplier=1.0; f.TempOptimal=25.0; f.TempMin=18.0; f.TempMax=30.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_WhiteGrunt"; f.RecipeShape=0; f.ResultMain="geb_WhiteGruntFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=14; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.2; f.DayMultiplier=1.0; f.DuskMultiplier=1.2; f.NightMultiplier=1.2; f.TempOptimal=25.0; f.TempMin=18.0; f.TempMax=30.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_SouthernFlounder"; f.RecipeShape=0; f.ResultMain="geb_SouthernFlounderFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=11; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.2; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.4; f.TempOptimal=18.0; f.TempMin=10.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_YellowSnapper"; f.RecipeShape=0; f.ResultMain="geb_YellowSnapperFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=13; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=1.0; f.DuskMultiplier=1.3; f.NightMultiplier=1.3; f.TempOptimal=25.0; f.TempMin=18.0; f.TempMax=30.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        GebFishConf f;
+        f = new GebFishConf(); f.Classname="geb_GreatWhiteShark"; f.RecipeShape=0; f.ResultMain="geb_GreatWhiteSharkFilletMeat"; f.ResultBonus=""; f.MeatMin=5; f.MeatMax=10; f.Environment=2; f.CatchMethod=1; f.CatchProbability=2; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.2; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.4; f.TempOptimal=17.0; f.TempMin=10.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_AngelShark"; f.RecipeShape=0; f.ResultMain="geb_AngelSharkFilletMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=8; f.Environment=2; f.CatchMethod=1; f.CatchProbability=7; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.2; f.NightMultiplier=1.5; f.TempOptimal=18.0; f.TempMin=10.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_YellowFinTuna"; f.RecipeShape=0; f.ResultMain="geb_YellowFinTunaFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=8; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.3; f.DayMultiplier=1.0; f.DuskMultiplier=1.3; f.NightMultiplier=1.0; f.TempOptimal=25.0; f.TempMin=18.0; f.TempMax=30.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_WhiteGrunt"; f.RecipeShape=0; f.ResultMain="geb_WhiteGruntFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=14; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.2; f.DayMultiplier=1.0; f.DuskMultiplier=1.2; f.NightMultiplier=1.2; f.TempOptimal=25.0; f.TempMin=18.0; f.TempMax=30.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_SouthernFlounder"; f.RecipeShape=0; f.ResultMain="geb_SouthernFlounderFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=11; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.2; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.4; f.TempOptimal=18.0; f.TempMin=10.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_YellowSnapper"; f.RecipeShape=0; f.ResultMain="geb_YellowSnapperFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=13; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=1.0; f.DuskMultiplier=1.3; f.NightMultiplier=1.3; f.TempOptimal=25.0; f.TempMin=18.0; f.TempMax=30.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
         // shellfish / crustaceans
-        f = new FishConf(); f.Classname="geb_BloodClam"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=4; f.CatchProbability=14; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=1.0; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=18.0; f.TempMin=4.0; f.TempMax=30.0; f.BiteSpeed=BiteFilterFeeder(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_Mussel"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=3; f.CatchMethod=6; f.CatchProbability=20; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=1.0; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=16.0; f.TempMin=4.0; f.TempMax=28.0; f.BiteSpeed=BiteFilterFeeder(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_BlackDevilSnail"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=1; f.CatchMethod=6; f.CatchProbability=10; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.0; f.NightMultiplier=1.2; f.TempOptimal=22.0; f.TempMin=10.0; f.TempMax=30.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_StarFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=6; f.CatchProbability=16; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.0; f.DuskMultiplier=1.0; f.NightMultiplier=1.0; f.TempOptimal=16.0; f.TempMin=4.0; f.TempMax=28.0; f.BiteSpeed=BiteConstant(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_KingCrab"; f.RecipeShape=0; f.ResultMain="geb_KingCrabLegs"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=6; f.CatchProbability=5; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.1; f.NightMultiplier=1.3; f.TempOptimal=5.0; f.TempMin=0.0; f.TempMax=12.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_SnowCrab"; f.RecipeShape=0; f.ResultMain="geb_SnowCrabLegs"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=6; f.CatchProbability=7; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.1; f.NightMultiplier=1.3; f.TempOptimal=4.0; f.TempMin=0.0; f.TempMax=10.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_BlueJellyFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=6; f.CatchProbability=12; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.0; f.NightMultiplier=1.4; f.TempOptimal=20.0; f.TempMin=8.0; f.TempMax=30.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_AmericanLobster"; f.RecipeShape=2; f.ResultMain="geb_AmericanLobsterClaw"; f.ResultBonus="geb_AmericanLobsterTail"; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=6; f.CatchProbability=9; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=18.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_EuropeanLobster"; f.RecipeShape=2; f.ResultMain="geb_EuropeanLobsterClaw"; f.ResultBonus="geb_EuropeanLobsterTail"; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=6; f.CatchProbability=9; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=14.0; f.TempMin=5.0; f.TempMax=20.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_BloodClam"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=4; f.CatchProbability=14; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=1.0; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=18.0; f.TempMin=4.0; f.TempMax=30.0; f.BiteSpeed=BiteFilterFeeder(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_Mussel"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=3; f.CatchMethod=6; f.CatchProbability=20; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=1.0; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=16.0; f.TempMin=4.0; f.TempMax=28.0; f.BiteSpeed=BiteFilterFeeder(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_BlackDevilSnail"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=1; f.CatchMethod=6; f.CatchProbability=10; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.0; f.NightMultiplier=1.2; f.TempOptimal=22.0; f.TempMin=10.0; f.TempMax=30.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_StarFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=6; f.CatchProbability=16; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.0; f.DuskMultiplier=1.0; f.NightMultiplier=1.0; f.TempOptimal=16.0; f.TempMin=4.0; f.TempMax=28.0; f.BiteSpeed=BiteConstant(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_KingCrab"; f.RecipeShape=0; f.ResultMain="geb_KingCrabLegs"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=6; f.CatchProbability=5; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.1; f.NightMultiplier=1.3; f.TempOptimal=5.0; f.TempMin=0.0; f.TempMax=12.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_SnowCrab"; f.RecipeShape=0; f.ResultMain="geb_SnowCrabLegs"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=6; f.CatchProbability=7; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.1; f.NightMultiplier=1.3; f.TempOptimal=4.0; f.TempMin=0.0; f.TempMax=10.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_BlueJellyFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=6; f.CatchProbability=12; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.9; f.DuskMultiplier=1.0; f.NightMultiplier=1.4; f.TempOptimal=20.0; f.TempMin=8.0; f.TempMax=30.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_AmericanLobster"; f.RecipeShape=2; f.ResultMain="geb_AmericanLobsterClaw"; f.ResultBonus="geb_AmericanLobsterTail"; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=6; f.CatchProbability=9; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=18.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_EuropeanLobster"; f.RecipeShape=2; f.ResultMain="geb_EuropeanLobsterClaw"; f.ResultBonus="geb_EuropeanLobsterTail"; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=6; f.CatchProbability=9; f.RainMultiplier=1.0; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=14.0; f.TempMin=5.0; f.TempMax=20.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
         SeedSpeciesSquid();
     }
     // Squid feed at night near the surface and are caught on a rod (jigging);
     // calm water suits them better than a storm. The juveniles are bait-sized
     // and also come up in fish traps; they have no cleaning recipe.
     void SeedSpeciesSquid() {
-        FishConf f;
-        f = new FishConf(); f.Classname="geb_HumboldtSquid"; f.RecipeShape=0; f.ResultMain="geb_HumboldtSquidMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=4; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=18.0; f.TempMin=10.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_NorthernShortfinSquid"; f.RecipeShape=0; f.ResultMain="geb_NorthernShortfinSquidMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=1; f.CatchProbability=10; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=20.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_ArgentineShortfinSquid"; f.RecipeShape=0; f.ResultMain="geb_ArgentineShortfinSquidMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=1; f.CatchProbability=9; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=10.0; f.TempMin=4.0; f.TempMax=16.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_JapaneseFlyingSquid"; f.RecipeShape=0; f.ResultMain="geb_JapaneseFlyingSquidMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=1; f.CatchProbability=9; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=16.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_PurplebackFlyingSquid"; f.RecipeShape=0; f.ResultMain="geb_PurplebackFlyingSquidMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=1; f.CatchProbability=7; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=26.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_EuropeanFlyingSquid"; f.RecipeShape=0; f.ResultMain="geb_EuropeanFlyingSquidMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=3; f.Environment=2; f.CatchMethod=1; f.CatchProbability=6; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=15.0; f.TempMin=10.0; f.TempMax=22.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_NeonFlyingSquid"; f.RecipeShape=0; f.ResultMain="geb_NeonFlyingSquidMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=2; f.CatchMethod=1; f.CatchProbability=4; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=17.0; f.TempMin=10.0; f.TempMax=25.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_NorthernShortfinSquidJuvenile"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=7; f.CatchProbability=14; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=20.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_ArgentineShortfinSquidJuvenile"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=7; f.CatchProbability=12; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=10.0; f.TempMin=4.0; f.TempMax=16.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_JapaneseFlyingSquidJuvenile"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=7; f.CatchProbability=12; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=16.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
-        f = new FishConf(); f.Classname="geb_PurplebackFlyingSquidJuvenile"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=7; f.CatchProbability=10; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=26.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        GebFishConf f;
+        f = new GebFishConf(); f.Classname="geb_HumboldtSquid"; f.RecipeShape=0; f.ResultMain="geb_HumboldtSquidMeat"; f.ResultBonus=""; f.MeatMin=3; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=4; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=18.0; f.TempMin=10.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_NorthernShortfinSquid"; f.RecipeShape=0; f.ResultMain="geb_NorthernShortfinSquidMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=1; f.CatchProbability=10; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=20.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_ArgentineShortfinSquid"; f.RecipeShape=0; f.ResultMain="geb_ArgentineShortfinSquidMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=1; f.CatchProbability=9; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=10.0; f.TempMin=4.0; f.TempMax=16.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_JapaneseFlyingSquid"; f.RecipeShape=0; f.ResultMain="geb_JapaneseFlyingSquidMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=1; f.CatchProbability=9; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=16.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_PurplebackFlyingSquid"; f.RecipeShape=0; f.ResultMain="geb_PurplebackFlyingSquidMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=2; f.CatchMethod=1; f.CatchProbability=7; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=26.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_EuropeanFlyingSquid"; f.RecipeShape=0; f.ResultMain="geb_EuropeanFlyingSquidMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=3; f.Environment=2; f.CatchMethod=1; f.CatchProbability=6; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=15.0; f.TempMin=10.0; f.TempMax=22.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_NeonFlyingSquid"; f.RecipeShape=0; f.ResultMain="geb_NeonFlyingSquidMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=2; f.CatchMethod=1; f.CatchProbability=4; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=17.0; f.TempMin=10.0; f.TempMax=25.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_NorthernShortfinSquidJuvenile"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=7; f.CatchProbability=14; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=12.0; f.TempMin=4.0; f.TempMax=20.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_ArgentineShortfinSquidJuvenile"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=7; f.CatchProbability=12; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=10.0; f.TempMin=4.0; f.TempMax=16.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_JapaneseFlyingSquidJuvenile"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=7; f.CatchProbability=12; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=16.0; f.TempMin=8.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_PurplebackFlyingSquidJuvenile"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=7; f.CatchProbability=10; f.RainMultiplier=0.9; f.StormMultiplier=0.7; f.DawnMultiplier=1.1; f.DayMultiplier=0.6; f.DuskMultiplier=1.3; f.NightMultiplier=1.5; f.TempOptimal=26.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
     }
 }
 
@@ -1594,16 +1594,16 @@ static bool GebIsMainMenu() {
 }
 
 class gebsfishConfig {
-    ref GeneralConfig     General;   // general.json
-    ref BaitSettingsConf  Bait;      // bait.json
-    ref JunkConfig        Junk;      // junk.json
-    ref FishConfig        Fish;      // fish.json
+    ref GebGeneralConfig     General;   // general.json
+    ref GebBaitSettingsConf  Bait;      // bait.json
+    ref GebJunkConfig        Junk;      // junk.json
+    ref GebFishConfig        Fish;      // fish.json
 
     void LoadAll() {
-        General = new GeneralConfig();
-        Bait    = new BaitSettingsConf();
-        Junk    = new JunkConfig();
-        Fish    = new FishConfig();
+        General = new GebGeneralConfig();
+        Bait    = new GebBaitSettingsConf();
+        Junk    = new GebJunkConfig();
+        Fish    = new GebFishConfig();
         if (!g_Game.IsServer() || GebIsMainMenu()) {
             // Server owns disk config; clients receive it by RPC. The main
             // menu counts as a server (it's an offline session) but must not
@@ -1620,22 +1620,22 @@ class gebsfishConfig {
 
         if (!General.Load()) {
             // Discard any partially deserialized state; never save over a failed load.
-            General = new GeneralConfig();
+            General = new GebGeneralConfig();
             General.SeedDefaults();
         }
         if (!Bait.Load()) {
             // Discard any partially deserialized state; never save over a failed load.
-            Bait = new BaitSettingsConf();
+            Bait = new GebBaitSettingsConf();
             Bait.SeedDefaults();
         }
         if (!Junk.Load()) {
             // Discard any partially deserialized state; never save over a failed load.
-            Junk = new JunkConfig();
+            Junk = new GebJunkConfig();
             Junk.SeedDefaults();
         }
         if (!Fish.Load()) {
             // Discard any partially deserialized state; never save over a failed load.
-            Fish = new FishConfig();
+            Fish = new GebFishConfig();
             Fish.SeedDefaults();
         }
         GebValidateFishConfig(Fish);
@@ -1677,7 +1677,7 @@ static int GebGetDebugLevel() {
 }
 
 //general settings config data
-class GenSetConf {
+class GebGenSetConf {
     string DebugInfo = "Debug log level for the logs in $profile:Gebs/logs. 0 = off: no log file at all (warnings, errors and notes about changes to your files still go to the server RPT), 1 = standard (per cast: date, hour, rain, water temperature, the species in the pool, the fish picked, the BiteSpeed aggregate and any multiplier clamp), 2 = elevated (adds the pool table, the per-fish BiteSpeed table and the bite chance on every tick). Set to 1 when tuning fishing config; 2 only when reproducing a specific bug since it is very chatty.";
     int DebugLogs = 0;
     string FishQualityInfo = "How full every caught fish comes out, from 0 to 1 (1 = a whole, full fish), and with it how much the fish weighs. Vanilla DayZ calls this catch quality and uses 0.35, then the rod, hook and bait add a small random bonus on top. The result is capped at 1, so values above 1.0 behave exactly like 1.0. Trader mods (DayZ-Expansion-Market, TraderPlus, Dr. Jones, etc.) look at how full an item is, and several refuse anything that is not full, so the default of 1.0 keeps every fish sellable. Lower it (e.g. 0.35) only if your trader buys partly-full items and you want vanilla-style size variation.";
@@ -1691,7 +1691,7 @@ class GenSetConf {
     float HookFromFishChance = 0.004;
 };
 
-class RecipeToggleConf {
+class GebRecipeToggleConf {
     string RecipeToggleInfo = "Enables(1) or disables(0) Gebsfish non-fish-prep recipes. Fish prepare/fillet recipes are not controlled here.";
     bool CraftBambooFishingNet = 1;
     bool CraftHookFromWire = 1;
@@ -1732,10 +1732,10 @@ class RecipeToggleConf {
 // silent filter (no land within [MinRadius, MaxRadius]) can drop the
 // effective rate below these nominal fractions when the player is far
 // from shore -- not configurable here, see geb_predatorspawner.c.
-class PredatorConf {
+class GebPredatorConf {
     string PredatorSpawnEnabledInfo = "Turns on(1) and off(0) the predators feature of the mod. When on, it will enable the random spawning of predators when fishing, filleting, using the bamboo net or spear fishing; off turns all of them off.";
     bool PredatorSpawnEnabled = 1;
-    string PredatorSpawnChanceInfo = "Gate 1 of 3 for predator spawning -- the per-action chance that ANY predator is selected. Fishing is when a fish is caught, preparing is when filleting, failcatch is when fishing rolls nothing. Bamboo fishing net and spear fishing have their own predator chances under BambooFishingNetSettings.PredatorSpawnChance and SpearFishingSettings.PredatorSpawnChance. Set any to 0 to disable that path entirely. Final per-catch odds = thisChance * (predator weight / sum of weights), so 0.01 here with default wolf/bear weights gives wolves 1/150 and bear 1/300. See the comment above PredatorConf for the full three-gate breakdown.";
+    string PredatorSpawnChanceInfo = "Gate 1 of 3 for predator spawning -- the per-action chance that ANY predator is selected. Fishing is when a fish is caught, preparing is when filleting, failcatch is when fishing rolls nothing. Bamboo fishing net and spear fishing have their own predator chances under BambooFishingNetSettings.PredatorSpawnChance and SpearFishingSettings.PredatorSpawnChance. Set any to 0 to disable that path entirely. Final per-catch odds = thisChance * (predator weight / sum of weights), so 0.01 here with default wolf/bear weights gives wolves 1/150 and bear 1/300. See the comment above GebPredatorConf for the full three-gate breakdown.";
     float PredatorSpawnChanceFishing = 0.01;
     float PredatorSpawnChancePreparing = 0.01;
     float PredatorSpawnChanceFailCatch = 0.01;
@@ -1755,7 +1755,7 @@ class PredatorConf {
 //are clamped to MaxStackedMultiplier so a stormy night does not become a printer.
 //Set WeatherCatchBoostEnable = 0 to fully disable. Any individual multiplier
 //of 1.0 means "no effect" for that condition.
-class WeatherConf {
+class GebWeatherConf {
     string WeatherCatchBoostInfo = "Controls the rain / storm / night catch-rate buff. Set WeatherCatchBoostEnable to 0 to disable entirely. Multipliers below 1.0 act as penalties.";
     bool WeatherCatchBoostEnable = 1;
 
@@ -1801,7 +1801,7 @@ class WeatherConf {
 }
 
 // Boat Trailer (geb_boattrailer.c): which cars may tow it.
-class BoatTrailerConf {
+class GebBoatTrailerConf {
     string TowVehiclesInfo = "Cars that may tow the Boat Trailer, by classname. A listed class covers every car built on it: Truck_01_Base covers every M3S, CivilianSedan every Olga colour. An empty list [] lets any car tow, modded ones included (the hitch sits behind the car's collision box, at the middle, so a car of an odd shape may hitch oddly). Default: the six vanilla car families. Players see the change after a restart.";
     ref TStringArray TowVehicles;
 }
@@ -1810,7 +1810,7 @@ class BoatTrailerConf {
 // a rack standing in the world dry to the dried food stage without a fire,
 // stalled by rain or snow and sped up by wind; while they can dry they don't
 // rot. Crafting the rack is RecipeToggles.CraftDryingRack.
-class DryingRackConf {
+class GebDryingRackConf {
     string EnableInfo = "Turns the Fish Drying Rack's drying on (1) or off (0). On: raw fillets hung on a rack standing in the world dry to the dried food stage without a fire, and fillets on the rack don't rot while the weather lets them dry. Off: the rack still holds fillets, but nothing dries and they rot as usual. Crafting the rack is switched by RecipeToggles.CraftDryingRack.";
     bool Enable = 1;
     string MinutesToDryInfo = "Real minutes a raw fillet takes to dry on the rack in dry, still weather (default 60). Wind makes it quicker (see WindScale); rain or snow above StallThreshold pauses it. Progress is kept for each slot through server restarts and starts over when the fillet is taken off the rack.";
@@ -1821,10 +1821,10 @@ class DryingRackConf {
     float WindScale = 1.0;
 }
 
-class PredatorEntry {
+class GebPredatorEntry {
     string ClassnameInfo = "Classname of the predator to spawn (e.g. Animal_CanisLupus_Grey for a grey wolf, Animal_UrsusArctos for a bear).";
     string Classname;   //Classname of predator
-    string SpawnChanceInfo = "Relative weight for this predator in the weighted pick (NOT a 0-1 percentage). The chance of this predator being chosen is its weight divided by the sum of all predator weights. Defaults: wolf 0.6 and bear 0.3 give the wolf 2/3 and the bear 1/3 of all spawns. This is Gate 2 of 3 -- see the comment above PredatorConf.";
+    string SpawnChanceInfo = "Relative weight for this predator in the weighted pick (NOT a 0-1 percentage). The chance of this predator being chosen is its weight divided by the sum of all predator weights. Defaults: wolf 0.6 and bear 0.3 give the wolf 2/3 and the bear 1/3 of all spawns. This is Gate 2 of 3 -- see the comment above GebPredatorConf.";
     float SpawnChance;  //Spawn percentage chance
     string MinCountInfo = "Minimum number of this predator to spawn at once (uniform random between MinCount and MaxCount). 1/1 means always exactly one.";
     int MinCount;       //Minimum count of predators spawned
@@ -1838,19 +1838,19 @@ class PredatorEntry {
 
 //bug config data
 
-class BugEntry {
+class GebBugEntry {
     string ClassnameInfo = "Classname of the bug / worm this entry can produce (e.g. Worm, geb_GrubWorm, geb_FieldCricket, geb_GrassHopper).";
     string Classname;
     string CatchChanceInfo = "Relative weight for this entry within the action's Catches table (NOT a 0-1 chance, and separate from the action's FindChance). Once the action decides it found something, the result is picked from all entries by weight: an entry's odds are its weight divided by the sum of all weights. Set to 0 (or below) to disable this entry without deleting it.";
     float CatchChance;
 }
 
-// Bamboo fishing net spawn-table entry. Mirrors BugEntry's Classname /
+// Bamboo fishing net spawn-table entry. Mirrors GebBugEntry's Classname /
 // CatchChance contract, but adds an Environment field so the same Catches
 // array can hold both freshwater and saltwater entries. 1=pond, 2=sea,
 // 3=both. Entries whose Environment doesn't match the current water surface
 // are skipped before the weighted roll.
-class NetEntry {
+class GebNetEntry {
     string ClassnameInfo = "Classname of the creature this net entry can produce (e.g. geb_FatHeadMinnow, geb_AmericanBullFrog, geb_RedSalamander).";
     string Classname;
     string CatchChanceInfo = "Relative weight for this entry within the net's Catches table (NOT a 0-1 chance, and separate from the net's FindChance). Among the entries valid for the current water surface, an entry's odds are its weight divided by the sum of those weights. Set to 0 (or below) to disable this entry without deleting it.";
@@ -1862,7 +1862,7 @@ class NetEntry {
 // One per fish that a given bait/lure favours. Multiplier > 1.0 makes the
 // fish more likely to be the selected catch when this bait is on the hook;
 // < 1.0 makes it less likely. 1.0 = neutral, same as omitting the entry.
-class BaitPreferenceEntry {
+class GebBaitPreferenceEntry {
     string FishClassname;
     float Multiplier = 1.0;
 }
@@ -1872,19 +1872,19 @@ class BaitPreferenceEntry {
 // in the Preferences list at all, or when the bait is configured but the
 // specific fish isn't listed. So admins can opt in incrementally without
 // listing every fish-bait pair.
-class BaitConfig {
+class GebBaitConfig {
     string BaitClassname;
-    ref array<ref BaitPreferenceEntry> Preferences;
+    ref array<ref GebBaitPreferenceEntry> Preferences;
 
-    void BaitConfig() {
-        Preferences = new array<ref BaitPreferenceEntry>();
+    void GebBaitConfig() {
+        Preferences = new array<ref GebBaitPreferenceEntry>();
     }
 }
 
 // Settings for ActionBambooFishingNet. Owns the per-attempt find-chance
 // roll, the predator-spawn chance after the action completes, and the
 // weighted Catches table.
-class BambooFishingNetConf {
+class GebBambooFishingNetConf {
     string FindChanceInfo = "Per-attempt probability the net produces any catch. 0-1; 1.0 = always finds, 0.0 = never finds.";
     float FindChance = 0.5;
 
@@ -1892,16 +1892,16 @@ class BambooFishingNetConf {
     float PredatorSpawnChance = 0.01;
 
     string CatchesInfo = "Weighted spawn table. Environment: 1=pond, 2=sea, 3=both. Entries whose Environment doesn't match the cast surface are skipped before the weighted roll.";
-    ref array<ref NetEntry> Catches;
+    ref array<ref GebNetEntry> Catches;
 
-    void BambooFishingNetConf() {
+    void GebBambooFishingNetConf() {
         // Allocate so consumers can iterate without an extra null guard.
-        Catches = new array<ref NetEntry>();
+        Catches = new array<ref GebNetEntry>();
     }
 }
 
-// One entry in SpearFishingSettings.Catches: the same shape as NetEntry.
-class SpearEntry {
+// One entry in SpearFishingSettings.Catches: the same shape as GebNetEntry.
+class GebSpearEntry {
     string ClassnameInfo = "Classname of the catch this entry can produce (a fish, a frog or any other item).";
     string Classname;
     string CatchChanceInfo = "Relative weight within the spear's Catches table (not a 0-1 chance, and separate from FindChance). Among the entries valid for the water stabbed into, an entry's odds are its weight divided by the sum of those weights. 0 disables it without deleting it.";
@@ -1913,7 +1913,7 @@ class SpearEntry {
 // Settings for ActionGebSpearFishing: the master switch, the per-stab find
 // chance, how deep the water may be, the predator chance and the weighted
 // Catches table.
-class SpearFishingConf {
+class GebSpearFishingConf {
     string EnableInfo = "Turns spear fishing on (1) or off (0). Off, spears get no fishing action.";
     bool Enable = true;
 
@@ -1927,42 +1927,42 @@ class SpearFishingConf {
     float PredatorSpawnChance = 0.01;
 
     string CatchesInfo = "Weighted catch table. Environment: 1=pond, 2=sea, 3=both. Entries whose Environment doesn't match the water stabbed into are skipped before the weighted roll.";
-    ref array<ref SpearEntry> Catches;
+    ref array<ref GebSpearEntry> Catches;
 
-    void SpearFishingConf() {
-        Catches = new array<ref SpearEntry>();
+    void GebSpearFishingConf() {
+        Catches = new array<ref GebSpearEntry>();
     }
 }
 
 // Settings for ActionDigBugs. Owns the per-attempt find-chance roll and
 // the weighted Catches table.
-class DigBugsConf {
+class GebDigBugsConf {
     string FindChanceInfo = "Per-attempt probability the bug catcher action produces any catch. 0-1; 1.0 = always finds, 0.0 = never finds.";
     float FindChance = 0.65;
 
     string CatchesInfo = "Weighted spawn table for the bug catcher action. Seeded with a cricket, grasshopper, grub and worm; add entries or change their weights.";
-    ref array<ref BugEntry> Catches;
+    ref array<ref GebBugEntry> Catches;
 
-    void DigBugsConf() {
-        Catches = new array<ref BugEntry>();
+    void GebDigBugsConf() {
+        Catches = new array<ref GebBugEntry>();
     }
 }
 
 // Settings for ActionDigWorms. Owns the per-slot find-chance roll and
 // the weighted Catches table.
-class DigWormsConf {
+class GebDigWormsConf {
     string FindChanceInfo = "Per-slot probability the dig-worms action produces a worm in each dirt slot. 0-1.";
     float FindChance = 0.85;
 
     string CatchesInfo = "Weighted spawn table for the worm digging action.";
-    ref array<ref BugEntry> Catches;
+    ref array<ref GebBugEntry> Catches;
 
-    void DigWormsConf() {
-        Catches = new array<ref BugEntry>();
+    void GebDigWormsConf() {
+        Catches = new array<ref GebBugEntry>();
     }
 }
 
-class JunkEntry {
+class GebJunkEntry {
     string ClassnameInfo = "Any classname for a junk item that's not a liquid container.";
     string Classname;
     string CatchProbInfo = "How often this item turns up compared with the other junk, 0-25 (0 = never). How often junk comes up at all is JunkShare, at the top of the file.";
@@ -1972,7 +1972,7 @@ class JunkEntry {
     int MaxHealthLevel = 3;
 };
 
-class ContainerJunkEntry {
+class GebContainerJunkEntry {
     string ClassnameInfo = "Any classname for a junk item that's a liquid container.";
     string Classname;
     string CatchProbInfo = "How often this container turns up compared with the other junk, 0-25 (0 = never). It shares JunkShare with the Junk items.";
@@ -1986,7 +1986,7 @@ class ContainerJunkEntry {
 // a fish' fillet feature (gated by GeneralSettings.HookFromFishEnable /
 // HookFromFishChance). MinHealthLevel/MaxHealthLevel work the same way as the
 // junk entries: 0 pristine, 1 worn, 2 damaged, 3 badly damaged, 4 ruined.
-class HookFromFishEntry {
+class GebHookFromFishEntry {
     string ClassnameInfo = "Hook classname to spawn (e.g. Hook for vanilla, or any gebsfish lure/hook).";
     string Classname;
     string WeightInfo = "Relative weight in the weighted pick. Set to 0 to disable an entry without deleting it. Pure ratios -- 2.0 is twice as likely as 1.0.";
@@ -2011,7 +2011,7 @@ class HookFromFishEntry {
 // bool/float added to an existing section would load as 0 instead and need a
 // key check of its own (see CraftFishMount) -- that is why every switchable
 // system here is a section rather than scalars on GeneralSettings.
-class TreasureConf {
+class GebTreasureConf {
     string TreasureInfo = "Ultra-rare treasure catch. On a SUCCESSFUL catch (not a failed cast) this rolls once: on a hit, one container is picked from the top-level TreasureContainers pool and filled with a random number of items rolled independently from TreasureLoot, so no two hauls are the same. Enable set to 0 turns the feature off entirely; Chance is the per-catch probability and 0 also disables it. Default 0.0002 is about 1 in 5000 CATCHES -- that is catches, not casts, so a session landing 60 fish has roughly a 1.2 percent chance of seeing one. For reference: 0.0005 is ~1 in 2000, 0.002 is ~1 in 500, 0.00005 is ~1 in 20000. Keep it low -- this is meant to be a story someone tells, not a farm. The container spawns at the player's feet (they are usually too big for a pocket). Edit the TreasureContainers / TreasureLoot pools rather than this line to change what actually appears.";
     bool Enable = 1;
     float Chance = 0.0002;
@@ -2023,7 +2023,7 @@ class TreasureConf {
     int RodCatchesToRuin = 3;
 };
 
-class TreasureContainerEntry {
+class GebTreasureContainerEntry {
     string ClassnameInfo = "Container classname the treasure spawns as. Anything with cargo works -- SeaChest, WoodenCrate, Fur_Backpack, a barrel, an ammo box. Items are placed into its cargo, so a container with no cargo space will arrive empty.";
     string Classname;
     string WeightInfo = "Relative weight among containers. 0 disables this entry without deleting it (deleting gets it re-added on the next version bump).";
@@ -2036,7 +2036,7 @@ class TreasureContainerEntry {
     int MaxItems = 5;
 };
 
-class TreasureLootEntry {
+class GebTreasureLootEntry {
     string ClassnameInfo = "Item classname that can appear inside a treasure container. Any classname on the server is valid, including items from other mods.";
     string Classname;
     string WeightInfo = "Relative weight in the loot pick. 0 disables this entry without deleting it. Pure ratios -- a 0.1 entry is a tenth as likely as a 1.0 entry.";
@@ -2060,13 +2060,13 @@ static float GebValidateNumber(float value, float minimum, float maximum, string
     return fixedValue;
 }
 
-static void GebValidateFishConfig(FishConfig config) {
+static void GebValidateFishConfig(GebFishConfig config) {
     if (!config || !config.Species)
         return;
     map<int, string> seen = new map<int, string>();
     int removed = 0;
     for (int i = 0; i < config.Species.Count(); i++) {
-        FishConf f = config.Species[i];
+        GebFishConf f = config.Species[i];
         // Every removal shifts the later rows down, so i + removed is the row's
         // place in the file (counting from 0), the one an admin can look up.
         int row = i + removed;
@@ -2181,21 +2181,21 @@ static void GebValidateRows(gebsfishConfig cfg) {
     if (!cfg)
         return;
     int warnings = 0;
-    GeneralConfig g = cfg.General;
+    GebGeneralConfig g = cfg.General;
     if (g && g.BambooFishingNetSettings && g.BambooFishingNetSettings.Catches) {
-        foreach (int ni, NetEntry net : g.BambooFishingNetSettings.Catches) {
+        foreach (int ni, GebNetEntry net : g.BambooFishingNetSettings.Catches) {
             if (net)
                 warnings += GebCheckCatchRow("general.json BambooFishingNetSettings.Catches", ni, net.Classname, net.Environment);
         }
     }
     if (g && g.SpearFishingSettings && g.SpearFishingSettings.Catches) {
-        foreach (int si, SpearEntry spear : g.SpearFishingSettings.Catches) {
+        foreach (int si, GebSpearEntry spear : g.SpearFishingSettings.Catches) {
             if (spear)
                 warnings += GebCheckCatchRow("general.json SpearFishingSettings.Catches", si, spear.Classname, spear.Environment);
         }
     }
     if (g && g.TreasureContainers) {
-        foreach (int ci, TreasureContainerEntry box : g.TreasureContainers) {
+        foreach (int ci, GebTreasureContainerEntry box : g.TreasureContainers) {
             if (!box)
                 continue;
             if (box.MaxItems < 1)
@@ -2206,7 +2206,7 @@ static void GebValidateRows(gebsfishConfig cfg) {
         }
     }
     if (g && g.TreasureLoot) {
-        foreach (int li, TreasureLootEntry loot : g.TreasureLoot) {
+        foreach (int li, GebTreasureLootEntry loot : g.TreasureLoot) {
             if (!loot)
                 continue;
             warnings += GebCheckLevels("general.json TreasureLoot", li, loot.Classname, loot.MinHealthLevel, loot.MaxHealthLevel);
@@ -2215,7 +2215,7 @@ static void GebValidateRows(gebsfishConfig cfg) {
         }
     }
     if (g && g.Predators) {
-        foreach (int pi, PredatorEntry predator : g.Predators) {
+        foreach (int pi, GebPredatorEntry predator : g.Predators) {
             if (!predator)
                 continue;
             if (predator.MaxCount < 1)
@@ -2227,19 +2227,19 @@ static void GebValidateRows(gebsfishConfig cfg) {
         }
     }
     if (cfg.Junk && cfg.Junk.Junk) {
-        foreach (int ji, JunkEntry junk : cfg.Junk.Junk) {
+        foreach (int ji, GebJunkEntry junk : cfg.Junk.Junk) {
             if (junk)
                 warnings += GebCheckLevels("junk.json Junk", ji, junk.Classname, junk.MinHealthLevel, junk.MaxHealthLevel);
         }
     }
     if (cfg.Junk && cfg.Junk.ContainerJunk) {
-        foreach (int ki, ContainerJunkEntry cjunk : cfg.Junk.ContainerJunk) {
+        foreach (int ki, GebContainerJunkEntry cjunk : cfg.Junk.ContainerJunk) {
             if (cjunk)
                 warnings += GebCheckLevels("junk.json ContainerJunk", ki, cjunk.Classname, cjunk.MinHealthLevel, cjunk.MaxHealthLevel);
         }
     }
     if (cfg.Bait && cfg.Bait.Preferences) {
-        foreach (int bi, BaitConfig bait : cfg.Bait.Preferences) {
+        foreach (int bi, GebBaitConfig bait : cfg.Bait.Preferences) {
             if (!bait)
                 continue;
             if (bait.BaitClassname == "")
@@ -2247,7 +2247,7 @@ static void GebValidateRows(gebsfishConfig cfg) {
             if (!bait.Preferences)
                 continue;
             string baitWhere = "bait.json " + bait.BaitClassname + " Preferences";
-            foreach (int fi, BaitPreferenceEntry pref : bait.Preferences) {
+            foreach (int fi, GebBaitPreferenceEntry pref : bait.Preferences) {
                 if (!pref)
                     continue;
                 if (pref.FishClassname == "")

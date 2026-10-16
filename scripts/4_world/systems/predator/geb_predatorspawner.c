@@ -78,7 +78,7 @@ class GebsPredatorSpawner {
             return false;
         }
 
-        PredatorEntry selected = PickWeightedPredator(cfg, debugLogs, logTag);
+        GebPredatorEntry selected = PickWeightedPredator(cfg, debugLogs, logTag);
         if (!selected) {
             if (debugLogs)
                 GebsfishLogger.Debug("No predator was selected to spawn from the config.", logTag);
@@ -130,7 +130,7 @@ class GebsPredatorSpawner {
     }
 
     // Weighted random over m_gebsConfig.General.Predators using SpawnChance as the weight.
-    protected static PredatorEntry PickWeightedPredator(gebsfishConfig cfg, int debugLogs, string logTag) {
+    protected static GebPredatorEntry PickWeightedPredator(gebsfishConfig cfg, int debugLogs, string logTag) {
         if (!cfg.General || !cfg.General.Predators || cfg.General.Predators.Count() == 0) {
             if (debugLogs)
                 GebsfishLogger.Debug("No predators are configured.", logTag);
@@ -138,11 +138,11 @@ class GebsPredatorSpawner {
         }
 
         // Filter to eligible entries once, keeping a parallel ref list so the
-        // shared picker's returned index maps back to the PredatorEntry.
-        array<ref PredatorEntry> eligible = new array<ref PredatorEntry>();
+        // shared picker's returned index maps back to the GebPredatorEntry.
+        array<ref GebPredatorEntry> eligible = new array<ref GebPredatorEntry>();
         TStringArray names = new TStringArray;
         TFloatArray weights = new TFloatArray;
-        foreach (PredatorEntry predator : cfg.General.Predators) {
+        foreach (GebPredatorEntry predator : cfg.General.Predators) {
             if (!predator || predator.Classname == "" || predator.SpawnChance <= 0)
                 continue;
             eligible.Insert(predator);

@@ -1127,9 +1127,15 @@ junk weight <span class="op">=</span> fishTotal <span class="op">×</span> JunkS
 <!-- ============ CHANGELOG ============ -->
 <section class="tab" id="tab-changelog">
   <h2>Changelog</h2>
-  <div class="banner good">✅ <b>v4.0.0 is the current release</b> and needs DayZ 1.30. Older releases are collapsed below. Source of truth is <a href="https://github.com/PackJC/gebsfish/blob/master/CHANGELOG.md">CHANGELOG.md</a> — this tab is generated from it by <code>tools/build_changelog_html.py</code>.</div>
+  <div class="banner good">✅ <b>v4.0.0 is the current release</b> and needs DayZ 1.30. The v4.0.1 entry at the top ships with the next update; older releases are collapsed below. Source of truth is <a href="https://github.com/PackJC/gebsfish/blob/master/CHANGELOG.md">CHANGELOG.md</a> — this tab is generated from it by <code>tools/build_changelog_html.py</code>.</div>
 <!-- CHANGELOG:START -->
-  <details class="faq-item" open><summary>v4.0.0</summary><div class="chg">
+  <details class="faq-item" open><summary>v4.0.1 — Unreleased</summary><div class="chg">
+    <h3>Fixed</h3>
+    <ul>
+      <li><b>Runs alongside Zen's Sleeping Mod again</b> — the server stopped at "Can't compile "Game" script module!" with <code>Variable name 'GeneralConfig' already used as type name</code> (<code>zensleepconfig.c</code>, line 118). DayZ 1.30 refuses a variable named like any type it can see, in any loaded mod, and gebsfish's config classes had plain names (<code>GeneralConfig</code>, <code>FishConfig</code>, <code>BaitConfig</code>, <code>JunkConfig</code> and 25 more). All 29 now start with <code>Geb</code> (<code>GebGeneralConfig</code> and so on), so no other mod's variable can collide with them. The config files are unchanged: their keys are field names, not class names</li>
+    </ul>
+  </div></details>
+  <details class="faq-item"><summary>v4.0.0</summary><div class="chg">
     <h3>Requirements &amp; Compatibility</h3>
     <ul>
       <li>DayZ 1.30 compatibility. This version no longer loads on 1.29</li>

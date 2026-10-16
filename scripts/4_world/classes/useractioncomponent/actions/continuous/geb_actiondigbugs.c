@@ -105,7 +105,7 @@ class ActionDigBugs : ActionContinuousBase {
 				GebsfishLogger.Debug("Dig-bugs: config missing -- skipping", "DigBugs");
 			return;
 		}
-		ref array<ref BugEntry> catches = m_gebsConfig.General.DigBugsSettings.Catches;
+		ref array<ref GebBugEntry> catches = m_gebsConfig.General.DigBugsSettings.Catches;
 		if (!catches || catches.Count() == 0) {
 			if (debugLevel >= 1)
 				GebsfishLogger.Debug("Dig-bugs: Catches table empty -- skipping", "DigBugs");
@@ -126,7 +126,7 @@ class ActionDigBugs : ActionContinuousBase {
 		// picker (single filter pass -> sum and walk can't disagree).
 		TStringArray names = new TStringArray;
 		TFloatArray weights = new TFloatArray;
-		foreach (BugEntry bug : catches) {
+		foreach (GebBugEntry bug : catches) {
 			if (!bug || bug.Classname == "" || bug.CatchChance <= 0)
 				continue;
 			names.Insert(bug.Classname);

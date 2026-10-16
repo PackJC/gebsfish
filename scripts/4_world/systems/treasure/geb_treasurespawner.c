@@ -38,7 +38,7 @@ class GebsTreasureSpawner {
         if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.TreasureSettings)
             return false;
 
-        TreasureConf ts = m_gebsConfig.General.TreasureSettings;
+        GebTreasureConf ts = m_gebsConfig.General.TreasureSettings;
         if (!ts.Enable || ts.Chance <= 0)
             return false;
 
@@ -67,7 +67,7 @@ class GebsTreasureSpawner {
             return false;
         }
 
-        TreasureContainerEntry container = PickContainer(debugLevel, logTag);
+        GebTreasureContainerEntry container = PickContainer(debugLevel, logTag);
         if (!container)
             return false;
 
@@ -112,17 +112,17 @@ class GebsTreasureSpawner {
 
     // ---- picks ----
 
-    protected static TreasureContainerEntry PickContainer(int debugLevel, string logTag) {
-        ref array<ref TreasureContainerEntry> pool = m_gebsConfig.General.TreasureContainers;
+    protected static GebTreasureContainerEntry PickContainer(int debugLevel, string logTag) {
+        ref array<ref GebTreasureContainerEntry> pool = m_gebsConfig.General.TreasureContainers;
         if (!pool || pool.Count() == 0) {
             GebsfishLogger.Error("treasure hit but TreasureContainers is empty -- nothing to spawn.", logTag);
             return null;
         }
 
-        array<ref TreasureContainerEntry> eligible = new array<ref TreasureContainerEntry>();
+        array<ref GebTreasureContainerEntry> eligible = new array<ref GebTreasureContainerEntry>();
         TStringArray names = new TStringArray;
         TFloatArray weights = new TFloatArray;
-        foreach (TreasureContainerEntry c : pool) {
+        foreach (GebTreasureContainerEntry c : pool) {
             if (!c || c.Classname == "" || c.Weight <= 0)
                 continue;
             eligible.Insert(c);
@@ -136,15 +136,15 @@ class GebsTreasureSpawner {
         return eligible[pick];
     }
 
-    protected static TreasureLootEntry PickLoot(int debugLevel, string logTag) {
-        ref array<ref TreasureLootEntry> pool = m_gebsConfig.General.TreasureLoot;
+    protected static GebTreasureLootEntry PickLoot(int debugLevel, string logTag) {
+        ref array<ref GebTreasureLootEntry> pool = m_gebsConfig.General.TreasureLoot;
         if (!pool || pool.Count() == 0)
             return null;
 
-        array<ref TreasureLootEntry> eligible = new array<ref TreasureLootEntry>();
+        array<ref GebTreasureLootEntry> eligible = new array<ref GebTreasureLootEntry>();
         TStringArray names = new TStringArray;
         TFloatArray weights = new TFloatArray;
-        foreach (TreasureLootEntry l : pool) {
+        foreach (GebTreasureLootEntry l : pool) {
             if (!l || l.Classname == "" || l.Weight <= 0)
                 continue;
             eligible.Insert(l);
@@ -163,7 +163,7 @@ class GebsTreasureSpawner {
     // Returns how many items actually made it in. Each slot rolls the pool
     // separately, and a slot that fails (bad classname, container full) is just
     // skipped -- a treasure with fewer items is far better than no treasure.
-    protected static int FillContainer(EntityAI container, TreasureContainerEntry conf, int debugLevel, string logTag) {
+    protected static int FillContainer(EntityAI container, GebTreasureContainerEntry conf, int debugLevel, string logTag) {
         if (!container || !container.GetInventory())
             return 0;
 
@@ -171,7 +171,7 @@ class GebsTreasureSpawner {
         int placed = 0;
 
         for (int i = 0; i < slots; ++i) {
-            TreasureLootEntry loot = PickLoot(debugLevel, logTag);
+            GebTreasureLootEntry loot = PickLoot(debugLevel, logTag);
             if (!loot)
                 continue;
 

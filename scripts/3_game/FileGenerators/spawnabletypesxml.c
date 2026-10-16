@@ -60,7 +60,7 @@ class gebsfishSpawnableTypes {
             "geb_CurlyTailJig1", "geb_CurlyTailJig2", "geb_CurlyTailJig3", "geb_CurlyTailJig4",
             "geb_SpoonLure1", "geb_SpoonLure2", "geb_SpoonLure3", "geb_SpoonLure4"
         };
-        ref array<ref XmlCargoItem> tackleCargo = new array<ref XmlCargoItem>;
+        ref array<ref GebXmlCargoItem> tackleCargo = new array<ref GebXmlCargoItem>;
         InsertCargoBatch(tackleCargo, lures, 0.33);
 
         FPrintln(file, "    <!-- Tackle -->");
@@ -74,15 +74,15 @@ class gebsfishSpawnableTypes {
         ref TStringArray clothingItems = {"geb_GreenFishShirt", "geb_BlueFishShirt", "geb_PurpleFishShirt", "geb_RedFishShirt", "geb_OrangeFishShirt", "geb_YellowFishShirt", "geb_BrownFishShirt", "geb_LightBlueFishShirt", "geb_LimeFishShirt", "geb_PinkFishShirt", "geb_CamoFishShirt", "geb_DesertCamoFishShirt", "geb_SnowCamoFishShirt", "geb_PinkCamoFishShirt"};
 
         TStringArray knives = {"geb_BlueFishKnife", "geb_OrangeFishKnife", "geb_GreenFishKnife", "geb_YellowFishKnife", "geb_RedFishKnife", "geb_PurpleFishKnife", "geb_LimeFishKnife", "geb_LightBlueFishKnife", "geb_CamoFishKnife", "geb_BrownFishKnife", "geb_PinkFishKnife", "geb_DesertCamoFishKnife", "geb_SnowCamoFishKnife", "geb_PinkCamoFishKnife"};
-        ref array<ref XmlCargoItem> knifeCargo = new array<ref XmlCargoItem>;
+        ref array<ref GebXmlCargoItem> knifeCargo = new array<ref GebXmlCargoItem>;
         InsertCargoBatch(knifeCargo, knives, 0.09);
 
         TStringArray hats = {"geb_BlueFishHat", "geb_GreenFishHat", "geb_PurpleFishHat", "geb_RedFishHat", "geb_OrangeFishHat", "geb_YellowFishHat", "geb_BrownFishHat", "geb_LightBlueFishHat", "geb_LimeFishHat", "geb_PinkFishHat", "geb_CamoFishHat", "geb_DesertCamoFishHat", "geb_SnowCamoFishHat", "geb_PinkCamoFishHat"};
-        ref array<ref XmlCargoItem> hatCargo = new array<ref XmlCargoItem>;
+        ref array<ref GebXmlCargoItem> hatCargo = new array<ref GebXmlCargoItem>;
         InsertCargoBatch(hatCargo, hats, 0.10);
 
         TStringArray gloves = {"geb_BlueFishGloves", "geb_OrangeFishGloves", "geb_YellowFishGloves", "geb_RedFishGloves", "geb_GreenFishGloves", "geb_PurpleFishGloves", "geb_BrownFishGloves", "geb_LightBlueFishGloves", "geb_LimeFishGloves", "geb_PinkFishGloves", "geb_CamoFishGloves", "geb_DesertCamoFishGloves", "geb_SnowCamoFishGloves", "geb_PinkCamoFishGloves"};
-        ref array<ref XmlCargoItem> gloveCargo = new array<ref XmlCargoItem>;
+        ref array<ref GebXmlCargoItem> gloveCargo = new array<ref GebXmlCargoItem>;
         InsertCargoBatch(gloveCargo, gloves, 0.10);
 
         FPrintln(file, "    <!-- Clothes -->");
@@ -99,21 +99,21 @@ class gebsfishSpawnableTypes {
     protected void WriteContainerSection(FileHandle file) {
         FPrintln(file, "    <!-- Containers -->");
 
-        ref array<ref XmlCargoItem> wormCargo = new array<ref XmlCargoItem>;
-        wormCargo.Insert(new XmlCargoItem("Worm", 1.00));
+        ref array<ref GebXmlCargoItem> wormCargo = new array<ref GebXmlCargoItem>;
+        wormCargo.Insert(new GebXmlCargoItem("Worm", 1.00));
         WriteTypeWithRepeatedCargo(file, "geb_WormContainer", 6, 0.20, wormCargo);
 
-        ref array<ref XmlCargoItem> bugCargo = new array<ref XmlCargoItem>;
-        bugCargo.Insert(new XmlCargoItem("Worm", 0.27));
-        bugCargo.Insert(new XmlCargoItem("geb_GrassHopper", 0.26));
-        bugCargo.Insert(new XmlCargoItem("geb_FieldCricket", 0.20));
-        bugCargo.Insert(new XmlCargoItem("geb_GrubWorm", 0.27));
+        ref array<ref GebXmlCargoItem> bugCargo = new array<ref GebXmlCargoItem>;
+        bugCargo.Insert(new GebXmlCargoItem("Worm", 0.27));
+        bugCargo.Insert(new GebXmlCargoItem("geb_GrassHopper", 0.26));
+        bugCargo.Insert(new GebXmlCargoItem("geb_FieldCricket", 0.20));
+        bugCargo.Insert(new GebXmlCargoItem("geb_GrubWorm", 0.27));
         WriteTypeWithRepeatedCargo(file, "geb_BugContainer", 12, 0.20, bugCargo);
 
-        ref array<ref XmlCargoItem> minnowCargo = new array<ref XmlCargoItem>;
-        minnowCargo.Insert(new XmlCargoItem("geb_FatHeadMinnow", 1.00));
-        minnowCargo.Insert(new XmlCargoItem("geb_AmericanBullFrog", 1.00));
-        minnowCargo.Insert(new XmlCargoItem("geb_RedSalamander", 1.00));
+        ref array<ref GebXmlCargoItem> minnowCargo = new array<ref GebXmlCargoItem>;
+        minnowCargo.Insert(new GebXmlCargoItem("geb_FatHeadMinnow", 1.00));
+        minnowCargo.Insert(new GebXmlCargoItem("geb_AmericanBullFrog", 1.00));
+        minnowCargo.Insert(new GebXmlCargoItem("geb_RedSalamander", 1.00));
         WriteTypeWithRepeatedCargo(file, "geb_MinnowBucket", 12, 0.20, minnowCargo);
     }
 
@@ -131,13 +131,13 @@ class gebsfishSpawnableTypes {
         }
     }
 
-    protected void WriteTypeWithSingleCargo(FileHandle file, string typeName, float cargoChance, array<ref XmlCargoItem> items) {
+    protected void WriteTypeWithSingleCargo(FileHandle file, string typeName, float cargoChance, array<ref GebXmlCargoItem> items) {
         FPrintln(file, "    <type name=\"" + typeName + "\">");
         WriteCargoBlock(file, cargoChance, items);
         FPrintln(file, "    </type>");
     }
 
-    protected void WriteTypeWithRepeatedCargo(FileHandle file, string typeName, int repeatCount, float cargoChance, array<ref XmlCargoItem> items) {
+    protected void WriteTypeWithRepeatedCargo(FileHandle file, string typeName, int repeatCount, float cargoChance, array<ref GebXmlCargoItem> items) {
         FPrintln(file, "    <type name=\"" + typeName + "\">");
 
         for (int i = 0; i < repeatCount; i++) {
@@ -147,16 +147,16 @@ class gebsfishSpawnableTypes {
         FPrintln(file, "    </type>");
     }
 
-    protected void InsertCargoBatch(array<ref XmlCargoItem> items, TStringArray names, float chance) {
+    protected void InsertCargoBatch(array<ref GebXmlCargoItem> items, TStringArray names, float chance) {
         foreach (string name : names) {
-            items.Insert(new XmlCargoItem(name, chance));
+            items.Insert(new GebXmlCargoItem(name, chance));
         }
     }
 
-    protected void WriteCargoBlock(FileHandle file, float cargoChance, array<ref XmlCargoItem> items) {
+    protected void WriteCargoBlock(FileHandle file, float cargoChance, array<ref GebXmlCargoItem> items) {
         FPrintln(file, "        <cargo chance=\"" + FormatChance(cargoChance) + "\">");
 
-        foreach (XmlCargoItem item : items) {
+        foreach (GebXmlCargoItem item : items) {
             FPrintln(file, "            <item name=\"" + item.Name + "\" chance=\"" + FormatChance(item.Chance) + "\" />");
         }
 
@@ -183,11 +183,11 @@ class gebsfishSpawnableTypes {
     }
 }
 
-class XmlCargoItem {
+class GebXmlCargoItem {
     string Name;
     float Chance;
 
-    void XmlCargoItem(string name, float chance) {
+    void GebXmlCargoItem(string name, float chance) {
         Name = name;
         Chance = chance;
     }

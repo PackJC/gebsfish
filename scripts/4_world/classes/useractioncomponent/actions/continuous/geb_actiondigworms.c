@@ -7,7 +7,7 @@ modded class ActionDigWorms {
 				GebsfishLogger.Debug("Dig-worms: config missing -- using fallback", "DigWorms");
 			return GetFallbackDigWormSpawnType();
 		}
-		ref array<ref BugEntry> catches = m_gebsConfig.General.DigWormsSettings.Catches;
+		ref array<ref GebBugEntry> catches = m_gebsConfig.General.DigWormsSettings.Catches;
 		if (!catches || catches.Count() == 0) {
 			if (debugLevel >= 1)
 				GebsfishLogger.Debug("Dig-worms: Catches table empty -- using fallback", "DigWorms");
@@ -16,7 +16,7 @@ modded class ActionDigWorms {
 
 		TStringArray names = new TStringArray;
 		TFloatArray weights = new TFloatArray;
-		foreach (BugEntry wormEntry : catches) {
+		foreach (GebBugEntry wormEntry : catches) {
 			if (!wormEntry || wormEntry.Classname == "" || wormEntry.CatchChance <= 0)
 				continue;
 			names.Insert(wormEntry.Classname);

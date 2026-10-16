@@ -14,7 +14,7 @@ modded class PrepareFish {
     // geb_Bonita alias (data/fish/config.cpp), a Pacific Bonito under its
     // pre-4.0.0 name, fillets by the Pacific Bonito's row. CanDo and
     // SpawnItems both ask this, so the check and the result agree.
-    protected FishConf GebResolveRecipe(ItemBase fish) {
+    protected GebFishConf GebResolveRecipe(ItemBase fish) {
         if (!fish) return null;
         string type = fish.GetType();
         if (m_GebFallbackSpecies != "" && !GebSameClassname(type, m_GebFallbackSpecies))
@@ -22,12 +22,12 @@ modded class PrepareFish {
         if (GebSameClassname(type, "geb_Bonita"))
             type = "geb_PacificBonito";
         if (m_gebsConfig && m_gebsConfig.Fish) {
-            FishConf configured = m_gebsConfig.Fish.Get(type);
+            GebFishConf configured = m_gebsConfig.Fish.Get(type);
             if (configured) return configured;
         }
         if (m_GebFallbackSpecies == "")
             return null;
-        FishConf fallback = new FishConf();
+        GebFishConf fallback = new GebFishConf();
         fallback.Classname = m_GebFallbackSpecies;
         fallback.ResultMain = m_GebFallbackMain;
         fallback.ResultBonus = m_GebFallbackBonus;
@@ -37,7 +37,7 @@ modded class PrepareFish {
         return fallback;
     }
 
-    protected bool GebHasValidResults(FishConf conf) {
+    protected bool GebHasValidResults(GebFishConf conf) {
         if (!conf || conf.ResultMain == "") return false;
         if (!g_Game.ConfigIsExisting("CfgVehicles " + conf.ResultMain)) return false;
         if (conf.RecipeShape == 1 || conf.RecipeShape == 2) {
@@ -51,7 +51,7 @@ modded class PrepareFish {
     // Rebuild here once per execution, never during CanDo/registration.
     override void SpawnItems(ItemBase ingredients[], PlayerBase player, array<ItemBase> spawned_objects) {
         if (m_GebConfiguredRecipe) {
-            FishConf conf = GebResolveRecipe(ingredients[0]);
+            GebFishConf conf = GebResolveRecipe(ingredients[0]);
             m_NumberOfResults = 0;
             m_GebCaviarResult = false;
             if (GebHasValidResults(conf)) {
@@ -249,7 +249,7 @@ modded class PrepareFish {
         if (!g_Game.IsServer()) return;
         if (!m_gebsConfig || !m_gebsConfig.General || !m_gebsConfig.General.GeneralSettings) return;
 
-        GenSetConf gs = m_gebsConfig.General.GeneralSettings;
+        GebGenSetConf gs = m_gebsConfig.General.GeneralSettings;
         if (!gs.HookFromFishEnable) return;
         if (gs.HookFromFishChance <= 0) return;
 
@@ -261,7 +261,7 @@ modded class PrepareFish {
             return;
         }
 
-        ref array<ref HookFromFishEntry> entries = m_gebsConfig.General.HookFromFishCatches;
+        ref array<ref GebHookFromFishEntry> entries = m_gebsConfig.General.HookFromFishCatches;
         if (!entries || entries.Count() == 0) {
             if (debugLevel >= 1)
                 GebsfishLogger.Debug("HookFromFish hit but Catches pool empty -- skipping", "HookFromFish");
@@ -270,10 +270,10 @@ modded class PrepareFish {
 
         // Filter to eligible hooks once, keeping a parallel ref list so the
         // shared picker's index maps back to the entry (for its health range).
-        array<ref HookFromFishEntry> eligible = new array<ref HookFromFishEntry>();
+        array<ref GebHookFromFishEntry> eligible = new array<ref GebHookFromFishEntry>();
         TStringArray names = new TStringArray;
         TFloatArray weights = new TFloatArray;
-        foreach (HookFromFishEntry e : entries) {
+        foreach (GebHookFromFishEntry e : entries) {
             if (!e || e.Classname == "" || e.Weight <= 0)
                 continue;
             eligible.Insert(e);
@@ -284,7 +284,7 @@ modded class PrepareFish {
         int pick = GebWeightedPick.Pick(names, weights, debugLevel, "HookFromFish");
         if (pick < 0)
             return;
-        HookFromFishEntry picked = eligible[pick];
+        GebHookFromFishEntry picked = eligible[pick];
 
         // A random health level inside the entry's configured range.
         int healthLevel = GebRollHealthLevel(picked.MinHealthLevel, picked.MaxHealthLevel);
