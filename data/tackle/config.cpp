@@ -789,6 +789,9 @@ class cfgVehicles {
 	class geb_Lure: Jig {
 		scope = 0;
 		weight = 15;
+		// Every lure model is thin along X: dropped, it lies on its side (X up either way). Vanilla Jig's
+		// 17 (Z up) stood them on their nose or hook once their loot boxes fitted the models.
+		rotationFlags = 12;
 		absorbency = 0.8;
 		itemSize[] = {1,1};
 		inventorySlot[] = {"Hook"};
@@ -995,5 +998,27 @@ class cfgVehicles {
 		model = "\gebsfish\data\tackle\curlytailjig.p3d";
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\tackle\curlytailjig_purple_co.paa"};
+	};
+	// Feather Jig: the Curly Tail Jig's lead head and hook dressed with brown chicken feathers
+	// (tools/featherjig builds the model). Loot only, no recipe.
+	class geb_FeatherJig: geb_Lure {
+		scope=2;
+		displayName = "$STR_tools_featherjig";
+		descriptionShort = "$STR_tools_featherjig_desc";
+		model = "\gebsfish\data\tackle\featherjig.p3d";
+		class DamageSystem {
+			class GlobalHealth {
+				class Health {
+					hitpoints = 18;
+					healthLevels[] = {
+						{1,{"gebsfish\data\tackle\featherjig.rvmat","gebsfish\data\tackle\featherjig_head.rvmat","gebsfish\data\tackle\lure_hook.rvmat"}},
+						{0.7,{"gebsfish\data\tackle\featherjig.rvmat","gebsfish\data\tackle\featherjig_head.rvmat","gebsfish\data\tackle\lure_hook.rvmat"}},
+						{0.5,{"gebsfish\data\tackle\featherjig_damage.rvmat","gebsfish\data\tackle\featherjig_head_damage.rvmat","gebsfish\data\tackle\lure_hook_damage.rvmat"}},
+						{0.3,{"gebsfish\data\tackle\featherjig_damage.rvmat","gebsfish\data\tackle\featherjig_head_damage.rvmat","gebsfish\data\tackle\lure_hook_damage.rvmat"}},
+						{0,{"gebsfish\data\tackle\featherjig_destruct.rvmat","gebsfish\data\tackle\featherjig_head_destruct.rvmat","gebsfish\data\tackle\lure_hook_destruct.rvmat"}}
+					};
+				};
+			};
+		};
 	};
 };

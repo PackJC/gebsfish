@@ -81,7 +81,7 @@ const FISHDETAIL = {
 "img": "fish/geb_BrownTrout.webp"
 },
 "geb_CaveCrayFish": {
-"desc": "Cambarus aculabrum is a rare species of cave-dwelling crayfish known by the common name Benton county cave crayfish. It is native to Arkansas in the United States, where it is known from only four locations. It is a federally listed endangered species of the United States.",
+"desc": "Cambarus aculabrum is a rare species of cave-dwelling crayfish known by the common name Benton county cave crayfish. It is native to Arkansas in the United States, where it is known from only four locations. It is a federally listed endangered species of the United States. Whole crayfish are a classic freshwater bait: bass take them above all, and catfish and walleye readily too. Put it on the hook as it is.",
 "img": "fish/geb_CaveCrayFish.webp"
 },
 "geb_CherrySalmon": {
@@ -97,7 +97,7 @@ const FISHDETAIL = {
 "img": "fish/geb_CutThroatTrout.webp"
 },
 "geb_EuropeanCrayFish": {
-"desc": "Astacus astacus, the European crayfish, noble crayfish, or broad-fingered crayfish, is the most common species of crayfish in Europe, and a traditional food source. Like other true crayfish, A. astacus is restricted to fresh water, living only in unpolluted streams, rivers, and lakes. It is found from France throughout Central Europe, to the Balkan Peninsula, and north as far as Scandinavia and Finland, and Eastern Europe. Males may grow up to 16 cm (6 in) long, and females up to 12 centimetres (5 inches).",
+"desc": "Astacus astacus, the European crayfish, noble crayfish, or broad-fingered crayfish, is the most common species of crayfish in Europe, and a traditional food source. Like other true crayfish, A. astacus is restricted to fresh water, living only in unpolluted streams, rivers, and lakes. It is found from France throughout Central Europe, to the Balkan Peninsula, and north as far as Scandinavia and Finland, and Eastern Europe. Males may grow up to 16 cm (6 in) long, and females up to 12 centimetres (5 inches). Whole crayfish are a classic freshwater bait: bass take them above all, and catfish and walleye readily too. Put it on the hook as it is.",
 "img": "fish/geb_EuropeanCrayFish.webp"
 },
 "geb_EuropeanFlyingSquid": {
@@ -121,7 +121,7 @@ const FISHDETAIL = {
 "img": "fish/geb_FlatHeadMullet.webp"
 },
 "geb_FloridaCrayFish": {
-"desc": "The Florida crayfish, the blue crayfish, the electric blue crayfish, or the sapphire crayfish, is a species of freshwater crayfish endemic to Florida in the United States. Its natural range is the area east of St. Johns River and all of Florida from Levy County and Marion County southwards, as well as on some of the Florida Keys. It is included on the IUCN Red List as a species of Least Concern. The blue crayfish is frequently kept in freshwater aquaria.",
+"desc": "The Florida crayfish, the blue crayfish, the electric blue crayfish, or the sapphire crayfish, is a species of freshwater crayfish endemic to Florida in the United States. Its natural range is the area east of St. Johns River and all of Florida from Levy County and Marion County southwards, as well as on some of the Florida Keys. It is included on the IUCN Red List as a species of Least Concern. The blue crayfish is frequently kept in freshwater aquaria. Whole crayfish are a classic freshwater bait: bass take them above all, and catfish and walleye readily too. Put it on the hook as it is.",
 "img": "fish/geb_FloridaCrayFish.webp"
 },
 "geb_GreatBarracuda": {
@@ -181,7 +181,7 @@ const FISHDETAIL = {
 "img": "fish/geb_MahiMahi.webp"
 },
 "geb_MonongahelaCrayFish": {
-"desc": "Cambarus monongalensis, the blue crayfish or Monongahela crayfish, is a species of burrowing crayfish native to Pennsylvania and West Virginia. It has also been found recently in Ohio. The common name refers to the Monongahela River, with the first specimens being collected from Edgewood Park, Allegheny County, Pennsylvania.",
+"desc": "Cambarus monongalensis, the blue crayfish or Monongahela crayfish, is a species of burrowing crayfish native to Pennsylvania and West Virginia. It has also been found recently in Ohio. The common name refers to the Monongahela River, with the first specimens being collected from Edgewood Park, Allegheny County, Pennsylvania. Whole crayfish are a classic freshwater bait: bass take them above all, and catfish and walleye readily too. Put it on the hook as it is.",
 "img": "fish/geb_MonongahelaCrayFish.webp"
 },
 "geb_Muskellunge": {
@@ -216,6 +216,10 @@ const FISHDETAIL = {
 "desc": "The northern snakehead (Channa argus) is a species of snakehead fish native to temperate East Asia, in China, Russia, North Korea, and South Korea. Their natural range goes from the Amur River watershed in Siberia and Manchuria down to Hainan. It is an important food fish and one of the most cultivated in its native region, with 510,000 tonnes annual production worldwide.",
 "img": "fish/geb_NorthernSnakeHead.webp"
 },
+"geb_OcellateRiverStingray": {
+"desc": "Potamotrygon motoro, the ocellate river stingray, lives in the rivers of South America, from the Orinoco and the Amazon south to the Paraná. Its nearly circular disc, up to about 50 cm across, is covered in orange eye-spots ringed with black, which is what gives the fish its name. It lies half buried in the sand of the shallows, and the venomous barb on its tail makes it the fish most feared by anyone wading those rivers.",
+"img": "fish/geb_OcellateRiverStingray.webp"
+},
 "geb_PacificBonito": {
 "desc": "Bonitos are a tribe of medium-sized, ray-finned predatory fish in the family Scombridae - a family it shares with the mackerel, tuna, and Spanish mackerel tribes, and also the butterfly kingfish.",
 "img": "fish/geb_PacificBonito.webp"
@@ -223,6 +227,10 @@ const FISHDETAIL = {
 "geb_PacificCod": {
 "desc": "The Pacific Cod, Gadus macrocephalus, is a species of ray-finned fish in the family Gadidae. It is a bottom-dwelling fish found in the northern Pacific Ocean, mainly on the continental shelf and upper slopes, to depths of about 900 m. It can grow to a length of a meter or so and is found in large schools.",
 "img": "fish/geb_PacificCod.webp"
+},
+"geb_Piranha": {
+"desc": "The red-bellied piranha (Pygocentrus nattereri), also known as the red piranha, is a species of piranha native to South America, found in the Amazon, Paraguay, Paraná and Essequibo basins as well as the coastal rivers of north-eastern Brazil. It is a deep-bodied, strongly laterally compressed characin that grows to about 13 in (33 cm) and at most 8.4 lb (3.9 kg), although most adults are far smaller. Adults are steel grey to olive above, silver along the flanks under a dense brassy spangling, and bright orange-red on the throat, breast and belly, with a broad dark band across the tail. The lower jaw carries a single row of triangular, blade-like teeth that interlock when the mouth closes, and the jaw muscles are powerful enough for the fish to shear flesh and bone from prey far larger than itself. Red-bellied piranhas live in shoals of twenty or more, which appear to be a defence against predators rather than a hunting pack: they are generalist predators and scavengers, taking insects, worms, crustaceans and fish, and they are themselves eaten by caimans, river dolphins, large birds and people. Feeding frenzies are real but uncommon, and happen mostly in the dry season, when falling water crowds the fish into shrinking pools with little in them to eat.",
+"img": "fish/geb_Piranha.webp"
 },
 "geb_PurplebackFlyingSquid": {
 "desc": "The purpleback flying squid (Sthenoteuthis oualaniensis) is a squid of the family Ommastrephidae from the warm Indian and Pacific oceans, including the Red Sea and the Arabian Sea, from the surface down to about 1,000 m (3,300 ft). It is one of the most common squid of tropical open seas, and like other flying squid it can launch itself out of the water and glide to escape predators.\n\nIts back is purple-red and its belly silvery, and the large form carries an oval patch of light organs on its back. Most adults have a mantle of 12-25 cm (5-10 in), but a giant form reaches 65 cm (26 in) and several kilograms. It feeds on lanternfish, crustaceans and other squid, and is itself food for tuna, dolphinfish and swordfish. It is caught at night on jigs under lights in the South China Sea and the Arabian Sea.",
@@ -245,7 +253,7 @@ const FISHDETAIL = {
 "img": "fish/geb_RedSalamander.webp"
 },
 "geb_RedSwampCrayFish": {
-"desc": "Procambarus clarkii, known variously as the red swamp crayfish, Louisiana crawfish or mudbug, is a species of cambarid crayfish native to freshwater bodies of northern Mexico, and southern and southeastern United States, but also introduced elsewhere (both in North America and other continents), where it is often an invasive pest.",
+"desc": "Procambarus clarkii, known variously as the red swamp crayfish, Louisiana crawfish or mudbug, is a species of cambarid crayfish native to freshwater bodies of northern Mexico, and southern and southeastern United States, but also introduced elsewhere (both in North America and other continents), where it is often an invasive pest. Whole crayfish are a classic freshwater bait: bass take them above all, and catfish and walleye readily too. Put it on the hook as it is.",
 "img": "fish/geb_RedSwampCrayFish.webp"
 },
 "geb_RoughNeckRock": {
@@ -253,7 +261,7 @@ const FISHDETAIL = {
 "img": "fish/geb_RoughNeckRock.webp"
 },
 "geb_RustyCrayFish": {
-"desc": "The rusty crayfish (Faxonius rusticus) is a large, aggressive species of freshwater crayfish which is native to the United States, in the Ohio River Basin in parts of Ohio, Kentucky, and Indiana. Its range is rapidly expanding across much of eastern North America, displacing native crayfishes in the process.",
+"desc": "The rusty crayfish (Faxonius rusticus) is a large, aggressive species of freshwater crayfish which is native to the United States, in the Ohio River Basin in parts of Ohio, Kentucky, and Indiana. Its range is rapidly expanding across much of eastern North America, displacing native crayfishes in the process. Whole crayfish are a classic freshwater bait: bass take them above all, and catfish and walleye readily too. Put it on the hook as it is.",
 "img": "fish/geb_RustyCrayFish.webp"
 },
 "geb_Sauger": {
@@ -269,7 +277,7 @@ const FISHDETAIL = {
 "img": "fish/geb_SiameseTigerFish.webp"
 },
 "geb_SignalCrayFish": {
-"desc": "The signal crayfish (Pacifastacus leniusculus) is a species of crayfish indigenous to North America. Introduced to Europe in the 1960s to supplement the North European Astacus astacus fisheries, which were being damaged by crayfish plague, it was subsequently discovered that the signal was itself a carrier of that disease. Consequently, the signal crayfish is now considered an invasive species across Europe, Japan, and California, having displaced the native species in these regions.",
+"desc": "The signal crayfish (Pacifastacus leniusculus) is a species of crayfish indigenous to North America. Introduced to Europe in the 1960s to supplement the North European Astacus astacus fisheries, which were being damaged by crayfish plague, it was subsequently discovered that the signal was itself a carrier of that disease. Consequently, the signal crayfish is now considered an invasive species across Europe, Japan, and California, having displaced the native species in these regions. Whole crayfish are a classic freshwater bait: bass take them above all, and catfish and walleye readily too. Put it on the hook as it is.",
 "img": "fish/geb_SignalCrayFish.webp"
 },
 "geb_SlimySculpin": {
@@ -291,6 +299,10 @@ const FISHDETAIL = {
 "geb_SouthernFlounder": {
 "desc": "Paralichthys lethostigma, the southern flounder, is a species of large-tooth flounder native to the East Coast of the United States and the northern Gulf of Mexico. It is a popular sport fish and is the largest and most commercially valuable flounder in the western North Atlantic Ocean and Gulf of Mexico. It is a &quot;left-eyed flounder&quot;, meaning the left side is pigmented and is the &quot;up side&quot;.",
 "img": "fish/geb_SouthernFlounder.webp"
+},
+"geb_SouthernStingray": {
+"desc": "Hypanus americanus, the southern stingray, is a whiptail ray of the warm western Atlantic, from New Jersey to south-eastern Brazil. Its flat, diamond-shaped disc grows to about 1.5 m across; it spends the day buried in sand with only its eyes and spiracles showing, and fans the bottom at night for molluscs, worms and crustaceans. The serrated spine partway along its tail is used only in defence, but it is venomous and leaves a deep, painful wound.",
+"img": "fish/geb_SouthernStingray.webp"
 },
 "geb_SpottedMuskellunge": {
 "desc": "The spotted muskie (Esox masquinongy) is a massive, torpedo-shaped freshwater ambush predator. It features an olive, brown, or silver background with distinct dark spots, blotches, or broken stripes along its sides. They generally reach 28–48 inches in length and are native to the Great Lakes and St. Lawrence River systems.",

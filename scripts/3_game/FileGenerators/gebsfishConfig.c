@@ -827,6 +827,8 @@ class GebGeneralConfig {
         AddSpearCatch("geb_FlatHeadMullet", 15, 3);
         AddSpearCatch("geb_AlligatorGar", 4, 3);
         AddSpearCatch("geb_SouthernFlounder", 20, 2);
+        AddSpearCatch("geb_SouthernStingray", 8, 2);
+        AddSpearCatch("geb_OcellateRiverStingray", 4, 1);
         AddSpearCatch("geb_WhiteGrunt", 10, 2);
         AddSpearCatch("geb_BlueTang", 6, 2);
     }
@@ -1092,6 +1094,17 @@ class GebBaitSettingsConf {
         SeedBait("geb_ArgentineShortfinSquidJuvenile", 0.3, 0.6, 0.6, 0.4, 0.5, 1.2, 0.2, 0.2, 0.4, 2.6, 2.2, 1.4, 1.0);
         SeedBait("geb_JapaneseFlyingSquidJuvenile",    0.3, 0.6, 0.6, 0.4, 0.5, 1.2, 0.2, 0.2, 0.4, 2.6, 2.2, 1.4, 1.0);
         SeedBait("geb_PurplebackFlyingSquidJuvenile",  0.3, 0.6, 0.6, 0.4, 0.5, 1.2, 0.2, 0.2, 0.4, 2.6, 2.2, 1.4, 1.0);
+        // Whole crayfish, from the bamboo net and small traps in fresh water:
+        // the classic bass bait, and catfish, sturgeon and walleye take them
+        // too; too big a mouthful for panfish, and little use at sea. One row
+        // per species, as for the juvenile squid.
+        SeedBait("geb_EuropeanCrayFish",    0.5, 2.5, 1.2, 2.0, 1.2, 2.3, 0.5, 0.6, 0.4, 0.3, 0.4, 0.4, 0.3);
+        SeedBait("geb_SignalCrayFish",      0.5, 2.5, 1.2, 2.0, 1.2, 2.3, 0.5, 0.6, 0.4, 0.3, 0.4, 0.4, 0.3);
+        SeedBait("geb_RustyCrayFish",       0.5, 2.5, 1.2, 2.0, 1.2, 2.3, 0.5, 0.6, 0.4, 0.3, 0.4, 0.4, 0.3);
+        SeedBait("geb_RedSwampCrayFish",    0.5, 2.5, 1.2, 2.0, 1.2, 2.3, 0.5, 0.6, 0.4, 0.3, 0.4, 0.4, 0.3);
+        SeedBait("geb_FloridaCrayFish",     0.5, 2.5, 1.2, 2.0, 1.2, 2.3, 0.5, 0.6, 0.4, 0.3, 0.4, 0.4, 0.3);
+        SeedBait("geb_MonongahelaCrayFish", 0.5, 2.5, 1.2, 2.0, 1.2, 2.3, 0.5, 0.6, 0.4, 0.3, 0.4, 0.4, 0.3);
+        SeedBait("geb_CaveCrayFish",        0.5, 2.5, 1.2, 2.0, 1.2, 2.3, 0.5, 0.6, 0.4, 0.3, 0.4, 0.4, 0.3);
 
         // One row per lure family: GetBaitMultiplier's trailing-digit
         // fallback resolves geb_SpinnerBait1..4 etc. to these rows, and an
@@ -1100,6 +1113,9 @@ class GebBaitSettingsConf {
         SeedBait("geb_SpoonLure",    0.6, 1.5, 2.0, 1.8, 2.5, 0.8, 0.3, 0.4, 1.0, 1.8, 2.0, 1.5, 1.0);
         SeedBait("geb_Lure",         0.7, 2.0, 1.8, 1.8, 1.5, 1.0, 0.3, 0.5, 1.0, 1.3, 1.5, 1.0, 0.7);
         SeedBait("geb_CurlyTailJig", 1.5, 2.2, 1.3, 2.0, 1.0, 0.8, 0.5, 0.5, 1.0, 0.7, 1.0, 0.8, 0.6);
+        // Feather jig: soft feathers that pulse on every twitch. A classic for crappie and the other panfish,
+        // trout and salmon; walleye and small sea fish (mackerel) take it too; little for catfish and carp.
+        SeedBait("geb_FeatherJig",   2.3, 1.5, 1.0, 1.8, 2.0, 0.5, 0.4, 0.3, 0.8, 0.8, 1.4, 1.9, 1.0);
     }
 
     // Fish-category buckets shared by every SeedBait row. Static so they are
@@ -1123,15 +1139,15 @@ class GebBaitSettingsConf {
             return;
         s_CatPanfish = {"geb_BlueGill", "geb_SunFish", "geb_YellowPerch", "Bitterlings"};
         s_CatBass = {"geb_LargeMouthBass", "geb_SmallMouthBass", "geb_BlackBass", "geb_NeoshoBass", "geb_StripedBass", "geb_WhiteBass"};
-        s_CatPikeMusky = {"geb_NorthernPike", "geb_Muskellunge", "geb_BarredMuskellunge", "geb_SpottedMuskellunge", "geb_TigerMuskellunge", "geb_NorthernSnakeHead", "geb_BowFin"};
+        s_CatPikeMusky = {"geb_NorthernPike", "geb_Muskellunge", "geb_BarredMuskellunge", "geb_SpottedMuskellunge", "geb_TigerMuskellunge", "geb_NorthernSnakeHead", "geb_BowFin", "geb_Piranha"};
         s_CatWalleye = {"geb_WallEye", "geb_Sauger"};
         s_CatTroutSalmon = {"SteelheadTrout", "geb_BrookTrout", "geb_BrownTrout", "geb_RainbowTrout", "geb_CutThroatTrout", "geb_LakeTrout", "geb_ChinookSalmon", "geb_CherrySalmon", "geb_SockEyeSalmon"};
-        s_CatCatfishBottom = {"geb_FlatHeadCatFish", "geb_AlligatorGar", "geb_LakeSturgeon"};
+        s_CatCatfishBottom = {"geb_FlatHeadCatFish", "geb_AlligatorGar", "geb_LakeSturgeon", "geb_OcellateRiverStingray"};
         s_CatCarp = {"Carp"};
         s_CatAmphibian = {"geb_AmericanBullFrog", "geb_RedSalamander"};
         s_CatBaitFish = {"geb_FatHeadMinnow", "geb_FlatHeadMullet", "geb_SlimySculpin"};
         s_CatSaltwaterLarge = {"geb_GreatWhiteShark", "geb_HammerHeadShark", "geb_AngelShark", "geb_LeopardShark", "geb_AtlanticBlueMarlin", "geb_AtlanticSailFish", "geb_YellowFinTuna"};
-        s_CatSaltwaterMed = {"geb_AsianSeaBass", "geb_PacificBonito", "geb_GreatBarracuda", "geb_MahiMahi", "geb_RoughNeckRock", "geb_SiameseTigerFish", "WalleyePollock", "geb_PacificCod", "geb_LargeHeadHairTailFish", "geb_SouthernFlounder", "geb_HumboldtSquid", "geb_EuropeanFlyingSquid", "geb_NeonFlyingSquid"};
+        s_CatSaltwaterMed = {"geb_AsianSeaBass", "geb_PacificBonito", "geb_GreatBarracuda", "geb_MahiMahi", "geb_RoughNeckRock", "geb_SiameseTigerFish", "WalleyePollock", "geb_PacificCod", "geb_LargeHeadHairTailFish", "geb_SouthernFlounder", "geb_SouthernStingray", "geb_HumboldtSquid", "geb_EuropeanFlyingSquid", "geb_NeonFlyingSquid"};
         s_CatSaltwaterSmall = {"Mackerel", "Sardines", "geb_YellowSnapper", "geb_WhiteGrunt", "geb_NorthernShortfinSquid", "geb_ArgentineShortfinSquid", "geb_JapaneseFlyingSquid", "geb_PurplebackFlyingSquid", "geb_NorthernShortfinSquidJuvenile", "geb_ArgentineShortfinSquidJuvenile", "geb_JapaneseFlyingSquidJuvenile", "geb_PurplebackFlyingSquidJuvenile"};
         s_CatReefTropical = {"geb_AngelFish", "geb_BlueTang", "geb_HumpHeadWrasse", "geb_Severum", "geb_RedHeadCichlid"};
     }
@@ -1495,6 +1511,7 @@ class GebFishConfig {
         f = new GebFishConf(); f.Classname="geb_LakeSturgeon"; f.RecipeShape=1; f.ResultMain="geb_LakeSturgeonFilletMeat"; f.ResultBonus="geb_BlackCaviar"; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=3; f.RainMultiplier=1.1; f.StormMultiplier=1.4; f.DawnMultiplier=1.1; f.DayMultiplier=0.9; f.DuskMultiplier=1.1; f.NightMultiplier=1.0; f.TempOptimal=15.0; f.TempMin=5.0; f.TempMax=22.0; f.BiteSpeed=BiteSteady(); Species.Insert(f);
         f = new GebFishConf(); f.Classname="geb_YellowPerch"; f.RecipeShape=0; f.ResultMain="geb_YellowPerchFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=21; f.RainMultiplier=1.1; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=19.0; f.TempMin=10.0; f.TempMax=25.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
         f = new GebFishConf(); f.Classname="geb_FlatHeadCatFish"; f.RecipeShape=0; f.ResultMain="geb_FlatHeadCatFishFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=4; f.Environment=1; f.CatchMethod=3; f.CatchProbability=5; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.2; f.DayMultiplier=0.7; f.DuskMultiplier=1.4; f.NightMultiplier=1.6; f.TempOptimal=26.0; f.TempMin=16.0; f.TempMax=32.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_OcellateRiverStingray"; f.RecipeShape=0; f.ResultMain="geb_OcellateRiverStingrayFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=6; f.RainMultiplier=1.1; f.StormMultiplier=1.1; f.DawnMultiplier=1.2; f.DayMultiplier=0.8; f.DuskMultiplier=1.3; f.NightMultiplier=1.4; f.TempOptimal=26.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
         f = new GebFishConf(); f.Classname="geb_FatHeadMinnow"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=5; f.CatchProbability=25; f.RainMultiplier=1.2; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.1; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
         f = new GebFishConf(); f.Classname="geb_AmericanBullFrog"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=5; f.CatchProbability=12; f.RainMultiplier=1.5; f.StormMultiplier=1.2; f.DawnMultiplier=1.4; f.DayMultiplier=1.0; f.DuskMultiplier=1.5; f.NightMultiplier=1.3; f.TempOptimal=25.0; f.TempMin=15.0; f.TempMax=32.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
     }
@@ -1506,6 +1523,7 @@ class GebFishConfig {
         f = new GebFishConf(); f.Classname="geb_BowFin"; f.RecipeShape=0; f.ResultMain="geb_BowFinFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=8; f.RainMultiplier=1.0; f.StormMultiplier=1.2; f.DawnMultiplier=1.2; f.DayMultiplier=0.8; f.DuskMultiplier=1.3; f.NightMultiplier=1.4; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
         f = new GebFishConf(); f.Classname="geb_SlimySculpin"; f.RecipeShape=0; f.ResultMain="geb_SlimySculpinFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=16; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=1.0; f.DuskMultiplier=1.0; f.NightMultiplier=1.2; f.TempOptimal=10.0; f.TempMin=2.0; f.TempMax=16.0; f.BiteSpeed=BiteSteady(); Species.Insert(f);
         f = new GebFishConf(); f.Classname="geb_Severum"; f.RecipeShape=0; f.ResultMain="geb_SeverumFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=3; f.RainMultiplier=1.1; f.StormMultiplier=1.0; f.DawnMultiplier=1.0; f.DayMultiplier=1.2; f.DuskMultiplier=1.0; f.NightMultiplier=1.0; f.TempOptimal=27.0; f.TempMin=20.0; f.TempMax=32.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_Piranha"; f.RecipeShape=0; f.ResultMain="geb_PiranhaFilletMeat"; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=3; f.CatchProbability=5; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=1.1; f.DuskMultiplier=1.3; f.NightMultiplier=0.6; f.TempOptimal=27.0; f.TempMin=20.0; f.TempMax=33.0; f.BiteSpeed=BiteDiurnal(); Species.Insert(f);
         f = new GebFishConf(); f.Classname="geb_SignalCrayFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=18; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
         f = new GebFishConf(); f.Classname="geb_EuropeanCrayFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=11; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=22.0; f.TempMin=12.0; f.TempMax=28.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
         f = new GebFishConf(); f.Classname="geb_FloridaCrayFish"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=2; f.Environment=1; f.CatchMethod=4; f.CatchProbability=8; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=0.8; f.DuskMultiplier=1.1; f.NightMultiplier=1.4; f.TempOptimal=25.0; f.TempMin=15.0; f.TempMax=30.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
@@ -1545,6 +1563,7 @@ class GebFishConfig {
         f = new GebFishConf(); f.Classname="geb_YellowFinTuna"; f.RecipeShape=0; f.ResultMain="geb_YellowFinTunaFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=8; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.3; f.DayMultiplier=1.0; f.DuskMultiplier=1.3; f.NightMultiplier=1.0; f.TempOptimal=25.0; f.TempMin=18.0; f.TempMax=30.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
         f = new GebFishConf(); f.Classname="geb_WhiteGrunt"; f.RecipeShape=0; f.ResultMain="geb_WhiteGruntFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=14; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.2; f.DayMultiplier=1.0; f.DuskMultiplier=1.2; f.NightMultiplier=1.2; f.TempOptimal=25.0; f.TempMin=18.0; f.TempMax=30.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
         f = new GebFishConf(); f.Classname="geb_SouthernFlounder"; f.RecipeShape=0; f.ResultMain="geb_SouthernFlounderFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=11; f.RainMultiplier=1.1; f.StormMultiplier=1.3; f.DawnMultiplier=1.2; f.DayMultiplier=0.9; f.DuskMultiplier=1.3; f.NightMultiplier=1.4; f.TempOptimal=18.0; f.TempMin=10.0; f.TempMax=24.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
+        f = new GebFishConf(); f.Classname="geb_SouthernStingray"; f.RecipeShape=0; f.ResultMain="geb_SouthernStingrayFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=4; f.Environment=2; f.CatchMethod=1; f.CatchProbability=7; f.RainMultiplier=1.1; f.StormMultiplier=1.2; f.DawnMultiplier=1.2; f.DayMultiplier=0.8; f.DuskMultiplier=1.3; f.NightMultiplier=1.4; f.TempOptimal=25.0; f.TempMin=17.0; f.TempMax=31.0; f.BiteSpeed=BiteNocturnal(); Species.Insert(f);
         f = new GebFishConf(); f.Classname="geb_YellowSnapper"; f.RecipeShape=0; f.ResultMain="geb_YellowSnapperFilletMeat"; f.ResultBonus=""; f.MeatMin=2; f.MeatMax=6; f.Environment=2; f.CatchMethod=1; f.CatchProbability=13; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.3; f.DayMultiplier=1.0; f.DuskMultiplier=1.3; f.NightMultiplier=1.3; f.TempOptimal=25.0; f.TempMin=18.0; f.TempMax=30.0; f.BiteSpeed=BitePelagic(); Species.Insert(f);
         // shellfish / crustaceans
         f = new GebFishConf(); f.Classname="geb_BloodClam"; f.RecipeShape=0; f.ResultMain=""; f.ResultBonus=""; f.MeatMin=1; f.MeatMax=1; f.Environment=2; f.CatchMethod=4; f.CatchProbability=14; f.RainMultiplier=1.0; f.StormMultiplier=1.1; f.DawnMultiplier=1.0; f.DayMultiplier=1.0; f.DuskMultiplier=1.0; f.NightMultiplier=0.9; f.TempOptimal=18.0; f.TempMin=4.0; f.TempMax=30.0; f.BiteSpeed=BiteFilterFeeder(); Species.Insert(f);

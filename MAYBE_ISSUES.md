@@ -2,6 +2,22 @@
 
 Living list of unresolved maybe-issues. Delete entries as they are resolved.
 
+Fixed 2026-10-18: F1, 21 fish drawn over the water (crisp and bright under it, not
+tinted like the other fish). Their skins' soft alpha made the engine alpha-blend them,
+and blended surfaces are drawn after the water. Their materials (`<fish>.rvmat` and
+`<fish>_rotten.rvmat`, 42 files) now set `renderFlags[]={"AlphaTest32"}`, as vanilla's
+hair, fur and leaf crowns do on the same kind of DXT5 soft-alpha texture, so the fins
+are cut at alpha 32 and the fish is drawn with the solid objects. The skins stay DXT5
+with their own alpha; only the cut edges changed: the photo background (white, black)
+was taken off the fin rims and the hidden texels padded with fin colour, and a few
+stray specks went. Threshold 32 keeps the cutthroat's and the wrasse's half-see-through
+fins whole (at 128 they break up). Runtime case 167.
+
+Resolved 2026-10-19: G1, the red-bellied piranha's provenance. The mesh and the
+photo-derived colour and normal maps `tools/piranha` builds it from
+(`Desktop/Piranha/Models_F0801A026`) are Cole's; he holds the rights to them, and
+README.md credits them.
+
 Latest review: 2026-10-09, a bug hunt over every script, config, material,
 tool and wiki page, then every open finding fixed or decided on Cole's word
 ("fix it all"; both in the list below). Nothing is open. Before it, 2026-10-05, evening — a
@@ -508,26 +524,6 @@ under Watch. A36 closed 2026-10-11 (everything committed).
 
 ## Also noted — lower priority
 
-### F1. Fish with an alpha-flagged skin look like they're above the water (2026-10-14, for later)
-Underwater, the alligator gar (Cole's screenshot) is drawn crisp and bright on top
-of the water instead of tinted and blurred like the vanilla fish and the white grunt.
-Its `alligatorgar_co.paa` is DXT5 with the PAA "has alpha" flag, so DayZ draws the
-whole fish in the transparent pass, after the water surface. Opaque fish (DXT1, no
-flag) look right. 21 skins carry the flag: alligator gar, Asian seabass, bluegill,
-bowfin, brook / lake / rainbow / cutthroat trout, humphead wrasse, king crab,
-largemouth / smallmouth / spotted (geb_BlackBass) / striped / white / Neosho bass,
-yellow perch, redbreast sunfish, sockeye salmon, Atlantic sailfish, walleye.
-- **Tried and undone (Cole: "undo the texture changes, let them look like that"):**
-  opaque DXT1 versions, each see-through pixel filled from the solid fin pixels
-  next to it (only alpha >= 250 as sources for photo cut-outs; >= 16 for the two
-  translucent-fin skins, cutthroat 20% and wrasse 16% half-transparent), then
-  ImageToPAA. Most looked the same; the fins lost their cut-out or see-through
-  edge, and the cutthroat's dorsal fin picked up the texture's white background
-  (the fill should only take colour from inside the model's UV pieces). Scripts
-  and before/after renders: session scratchpad `fishfix/`, `fishfix_opaque.py`.
-- Untested alternative: hard-edged (1-bit) alpha, which the engine usually treats
-  as alpha-tested and draws with the solid objects. Try it on one fish first.
-
 #26 and #28 were fixed 2026-10-09 (the list at the top).
 
 ## Watch — verified benign, keep in mind
@@ -552,6 +548,11 @@ Cole chose not to rename them (2026-10-08: "nah dont do the renames"); listed so
 - Note: Shrimp is now itself a *bait* with its own `SeedBait` row (reef/
   tropical 2.5x). That is a bait row, not a fish category — catching the
   Shrimp species is still bait-neutral, unchanged.
+- Since 2026-10-18 the seven crayfish are hook bait too, with a `SeedBait` row
+  each (bass 2.5x, catfish/bottom 2.3x, walleye 2x): bait rows again, not a
+  fish category. None of the 17 is a rod catch (CatchMethod 4 or 6, traps
+  only), so the missing category changes no cast unless an admin gives one
+  the rod bit (1).
 
 ### 4. Rod-holder slots are referenced but never defined
 - The `FishingRod` and `ImprovisedFishingRod` overrides add `fishingpole` +
@@ -1222,7 +1223,28 @@ table still returns no catch; add sea/both entries if sea netting is desired.
 109. (2026-10-06) Yellow Crankbait lip (A23): up close in hands and on the
     ground, the clear lip reads as smooth clear plastic (no body relief or
     sheen across it), as on the Purple Crankbait, also when damaged and ruined.
-139. (2026-10-13) Fishing Locker (new): craft it from a full stack of 10 planks
+165. (2026-10-18) Crayfish as hook bait (data/fish/config.cpp
+    geb_Crayfish_Base, the seven crayfish rows in gebsfishConfig.c's
+    SeedDefaultPreferences, the tackle boxes' lists in containers.c). A fresh
+    bait.json has a row for each of the seven crayfish; a 4.0.0 one gains them
+    on 4.0.1's first start (the log: "bait.json: added 7 new default bait rows
+    ... '4.0.0' -> '4.0.1'"), and its other rows keep their values. Put each
+    crayfish on a Hook and a Bone Hook on a rod: it attaches, and it sits on
+    the hook sensibly in the hand, on the ground and cast (its loose model, as
+    for the shrimp and sardines). It can't go in a trap's bait slot. Its
+    description ends with the bait tip (bass, then catfish and walleye) in
+    each language. Cast in fresh water with DebugLogs=1: the log names the
+    crayfish as the bait, bass, catfish and walleye weigh x2.5, x2.3 and x2
+    and panfish x0.5, and a bite eats it like a shrimp. A crayfish goes into
+    the small, large and old tackle boxes; a clam, mussel, snail, starfish or
+    jellyfish still goes into none of them, nor on a hook.
+164. (2026-10-14) Net catches: in a pond the bamboo net brings up minnows,
+    bullfrogs, salamanders and now crayfish (about a quarter of catches); at
+    sea, shrimp and juvenile bait squid instead of nothing. All land in the
+    net's cargo (no startup warning about unplaceable net catches); vanilla
+    Shrimp goes in but a snail or clam (built on Shrimp) is still refused.
+    An existing general.json gains the eleven rows after a version bump.
+163. (2026-10-13) Fishing Locker (new): craft it from a full stack of 10 planks
     plus 20 nails with a hammer or hatchet on you (12 until 2026-10-14: planks
     stack to 10, so it could never be crafted) (refused without one, or with
     CraftFishingLocker 0); it lands on the ground. Carry it in two hands and
@@ -1566,12 +1588,6 @@ table still returns no catch; add sea/both entries if sea netting is desired.
     where it was, jack down. No collision with the car while hitched; it
     blocks again once parked; it can't be picked up. gebsfish-types.xml lists
     geb_BoatTrailer with lifetime 3888000; check the economy keeps it.
-144. (2026-10-14) Net catches: in a pond the bamboo net brings up minnows,
-    bullfrogs, salamanders and now crayfish (about a quarter of catches); at
-    sea, shrimp and juvenile bait squid instead of nothing. All land in the
-    net's cargo (no startup warning about unplaceable net catches); vanilla
-    Shrimp goes in but a snail or clam (built on Shrimp) is still refused.
-    An existing general.json gains the eleven rows after a version bump.
 143. (2026-10-13) Jon boat tank, battery, lights: put a charged car battery in
     the box (both ways: drag it onto the boat's Battery slot in the vicinity
     inventory, and hold it looking at the box for "Attach", added after Cole
@@ -1903,3 +1919,151 @@ table still returns no catch; add sea/both entries if sea netting is desired.
     with a bait row without BaitClassname: every tab draws, the bad rows are
     named with Remove, geb_Bonita is flagged as renamed, the download keeps the
     file as loaded, and the nine fish fields have working "i" buttons.
+169. (2026-10-18) Lure inventory pictures and the ground (spinner, popper,
+    purplecrank, yellowcrank, squarebill, spoonlure and curlytailjig .p3d:
+    loot box fitted, invview from the side, from +X for the two jigs so their
+    hook point rides up, invviewcameraroll on the Geometry LOD; geb_Lure
+    rotationFlags 12): every lure fills its inventory slot, seen broadside
+    and turned diagonally with its head (eye, lip or line tie) up and to the
+    right, instead of small and seen from the head end. If one comes out head
+    down-left, the roll's sign is the other way round in game: flip the sign
+    of every lure's invviewcameraroll. On a rod's hook slot the
+    picture matches. Dropped, each lies on its side on the ground, not
+    hovering and not standing on its nose.
+168. (2026-10-18) Feather Jig (new; tools/featherjig builds data/tackle/
+    featherjig.*): rebuild the PBO. Spawn geb_FeatherJig: "Feather Jig" with
+    its description in each language. In the inventory it fills its slot
+    diagonally, head up and to the right. In hands, on a rod's hook slot and
+    on the ground (on its side) the lead head, silver hook with its eye on
+    top, thread collar and brown feather skirt look right; the feathers cut
+    out cleanly (no grey or white fringe, no holes) and stay visible under
+    water, tinted like the head. Walk away: four detail levels swap without
+    jumps. Damaged and ruined looks. bait.json has a geb_FeatherJig row (a
+    4.0.0 file gains it on 4.0.1's first start); with DebugLogs=1 panfish
+    weigh x2.3, trout and salmon x2, small saltwater x1.9. It spawns as loot
+    (types.xml 3/1, tools) and in tackle-box cargo, and tackle boxes take it.
+167. (2026-10-18) Fish over the water (F1): rebuild the PBO with AddonBuilder, so the
+    fish models are binarized again with their materials' AlphaTest32 (a test
+    binarize of the cutthroat turned its material flag word from 0 to 0x80). Drop
+    each of the 21 (alligator gar, Asian seabass, bluegill, bowfin, brook, lake,
+    rainbow and cutthroat trout, humphead wrasse, king crab and its legs,
+    largemouth, smallmouth, spotted, striped, white and Neosho bass, yellow perch,
+    redbreast sunfish, sockeye salmon, Atlantic sailfish, walleye) into shallow
+    water and look from above the surface and from under it: the water tints
+    and blurs it like the white grunt, it isn't drawn crisp on top. In the hand
+    and on the ground: the fins are whole (the cutthroat's and wrasse's
+    see-through fins show as solid fins, not lacy), no white or black rim runs
+    along a fin edge, and nothing on the body is see-through. Let one rot: the
+    rotten look keeps the same fins.
+166. (2026-10-18) Cherry salmon skin: hold a cherry salmon beside a steelhead
+    trout and a rainbow trout, in hands, in inventory and on the ground: the
+    cherry salmon is olive-backed with black spots and a row of dark oval parr
+    marks down a rosy flank, not the steelhead's blue-black back. Look along
+    its back and under its belly up close for a seam where the two sides meet,
+    and at the tail join for a pale patch. Fillet one: the skin side carries
+    the same marks, the flesh is a paler coral than a steelhead fillet's, and
+    the fillet still bakes, boils, dries, burns and rots with vanilla's looks.
+    Both sides render right on vanilla's fillet model, so this is a look check,
+    not a mapping one.
+171. (2026-10-18) Red-bellied Piranha (new; tools/piranha builds the model
+    and all four textures from the FBX and photo Cole supplied): in warm
+    fresh water with a rod, by day, catch one (/give geb_Piranha works too).
+    Check it in hands (one-handed, the carp grip, held by the body and not
+    through the arm), lying on the ground on its side, its inventory icon,
+    and at 10, 30 and 80 m: three detail levels switch without popping and
+    the fins stay thin at the far ones. Up close, from the side, from above,
+    from below and head on: a dark slate back, silver flanks under brassy
+    spangling, the orange-red throat, breast and belly, red at the base of
+    the anal fin, a broad dark band across the tail, and no seam along the
+    back, the belly or where the head meets the flank. The eye is the
+    photograph's own and must not read as painted. The mouth: the lower jaw
+    juts, the teeth are ivory against a dark gap. Scales and fin rays should
+    catch the light (the relief map is the model's own bake, flipped to the
+    mod's green-down convention and levelled to vanilla's strength, so a
+    wrong sign would show as lighting that runs backwards along the flank).
+    Let one rot: the rotten material swaps in and dulls the sheen. Fillet it
+    (1-2 fillets): the fillet shows piranha skin on one side and lean white
+    meat on the other, and bakes, boils, dries, burns and rots with vanilla's
+    carp looks. Hang it on a small mount: head right, upright, inside the
+    field. Put it in a cooler and a fish tank. Check `fish.json` gains its
+    row and `bait.json` its pike-and-muskellunge bait preferences on an
+    existing 4.0.0 server. Open piranha.p3d in Object Builder once.
+172. (2026-10-19) Southern Stingray and Ocellate River Stingray (new;
+    tools/stingray builds both models and all their textures from the
+    CadNav model Cole supplied and one photograph per species): catch each
+    one (/give geb_SouthernStingray, /give geb_OcellateRiverStingray) -
+    the southern on a rod in warm sea water at night, the river ray on a
+    rod or a large trap in warm fresh water. Check each in hands (the
+    southern two-handed like the flounder, the river ray one-handed like a
+    bass; neither should pass through the arm), lying on the ground, its
+    inventory icon, and at 10, 30 and 80 m: four detail levels switch
+    without popping and the tail stays unbroken at the far ones. Up close,
+    from above, below, head on and both three-quarters: the back is the
+    photograph (the southern's dull olive-brown with its eyes and
+    spiracles, the river ray's orange ocelli ringed with black), the belly
+    is plain cream with the mouth, nostrils, five pairs of gill slits and
+    the cloaca showing, and there must be no seam round the rim where the
+    two meet, none where the tail leaves the disc, and no background from
+    the photograph (white sheet, caption text, sand) anywhere on the skin.
+    The sting should read as a barbed spine lying on top of the tail about
+    a third along, not as a painted stripe. Let one rot: the rotten
+    material swaps in and dulls the sheen. Fillet each (2-4 and 1-2
+    fillets): white skate-wing meat on vanilla's catfish fillet model,
+    cooking and rotting with vanilla's catfish looks. Hang
+    each on a medium mount: head right, upright, inside the field, the disc
+    flat against the board. Put one in a cooler and in the fish tank. Spear
+    one in the shallows. Check `fish.json` gains both rows and `bait.json`
+    their bait preferences on an existing 4.0.0 server. Open
+    southernstingray.p3d in Object Builder once.
+
+170. (2026-10-18) Trout fillet skins: fillet a rainbow, a brook, a brown, a
+    cutthroat and a lake trout and a vanilla steelhead, and hold the six
+    fillets together, in hands, in inventory and on the ground. They should
+    no longer read as one item with six names. The rainbow's skin side is an
+    olive back under heavy black spotting with a rose stripe and a silvery
+    belly; the brook's has the pale worm-track vermiculations over the back,
+    yellow spots, red spots in blue haloes and an orange belly along the cut
+    edge; the brown's has big black spots in pale haloes with orange-red
+    spots along the flank; the cutthroat's is an olive-gold flank whose black
+    spotting crowds towards the tail, over a rose line and a cream belly; the
+    lake trout's is dark grey-green under the pale cream spots a lake trout
+    is covered in, fading to a white belly; the steelhead's is still its
+    blue-black back over pale silver. Hold each fillet beside its own live
+    fish: the markings should be the same fish -- same back, same spots, same
+    belly. Look along the cut edge at the belly for a seam or a smeared band,
+    and at the tail end for the pattern stretching. On the Lake Trout's belly
+    a black squiggle the live skin carries -- what is left of a watermark on
+    the photograph it was painted from -- is covered with a patch of the same
+    skin from further forward -- in two places, the big stroke and two
+    smaller fragments of the same ink on the cut edge further back -- so
+    look at both for a repeated run of scales.
+    Hold the flesh sides together too: the eight fillets on this model each
+    have their own flake pattern now (entry 173), and their colours run
+    deepest to palest -- cherry salmon, brook, rainbow, cutthroat, brown,
+    lake -- with the sockeye's deep red and the chinook's orange-red above
+    them. No two should read as the same meat, and the cut edge of each
+    should still step down from its face rather than being one flat colour.
+    Bake, boil, dry, burn and rot one of each: those stages use vanilla's
+    steelhead textures as they always have, so only the raw fillet differs.
+    The squiggle is still on the live Lake Trout itself, just behind its
+    pelvic fin: Cole decided on 2026-10-19 to leave it there, so it is not
+    a bug to report.
+
+173. (2026-10-19) Fillet meat pictures: fillet a rainbow, a brook, a brown, a
+    cutthroat and a lake trout and a cherry, sockeye and chinook salmon, and
+    lay the eight meat sides together in hands, in inventory and on the
+    ground. They were one photograph with eight tints on it; each is now its
+    own picture as well as its own colour, so no two should have a flake in
+    the same place. The Chinook's flakes are the broadest with the boldest
+    white fat lines, the Cherry Salmon's finer and converging, the Sockeye's
+    the darkest red; the Brown and Lake Trout are the pale ones, cream rather
+    than salmon pink, finely ribbed, the Lake Trout palest of all. Look along
+    the cut edge: the thick rim is the same flesh seen end on and should sit a
+    shade darker than the face, not left behind at some other colour. Look at
+    the thin front spur and the tail end for the pattern stretching or for a
+    streak that is not flesh. Check the skin sides are exactly as they were.
+    Bake, boil, dry, burn and rot one of each: those stages use vanilla's
+    steelhead textures as they always have, so only the raw fillet differs.
+    Not checked in game or in Buldozer -- the renders this was judged on were
+    made with the mirrored fillet model, which lights normal maps inside out,
+    so trust the game over those pictures.

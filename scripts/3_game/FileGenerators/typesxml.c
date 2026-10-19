@@ -134,6 +134,7 @@ class gebsfishTypes {
             "geb_Lure1", "geb_Lure2", "geb_Lure3", "geb_Lure4",
             "geb_SpoonLure1", "geb_SpoonLure2", "geb_SpoonLure3", "geb_SpoonLure4",
             "geb_CurlyTailJig1", "geb_CurlyTailJig2", "geb_CurlyTailJig3", "geb_CurlyTailJig4",
+            "geb_FeatherJig",
             "geb_FishingRodRepairKit"
         };
         InsertGearBatch(gearItems, gear, 3, 1);

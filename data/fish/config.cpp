@@ -81,16 +81,18 @@ class cfgVehicles {
 	// vanilla's cooking/smoking slots; DZ_Gear_Food in requiredAddons
 	// guarantees the vanilla definition loads first, which is what makes the
 	// append deterministic. The invertebrates that inherit from Shrimp
-	// (crayfish, clam, mussel, snail, starfish, jellyfish) must NOT become
-	// hookable, so they restate their slot list in full instead of using +=.
+	// (clam, mussel, snail, starfish, jellyfish) must NOT become hookable, so
+	// they restate their slot list in full instead of using +=. The crayfish
+	// restate it too, with the hook's Bait slot and no trap bait slot.
 	//
 	// The slots alone don't make it bait: vanilla only counts an item on the
 	// hook as bait if it has a Fishing class (CatchingContextFishingRodAction.
 	// InitItemValues), and only as trap bait with a Trapping class. Without
 	// them a hooked shrimp was never eaten and its bait-preference row never
-	// applied. Values match geb_FatHeadMinnow / vanilla Worm. The subclasses
-	// above inherit both classes but can't reach a bait slot, so they stay
-	// inert.
+	// applied. Values match geb_FatHeadMinnow / vanilla Worm. The other
+	// invertebrates inherit both classes but can't reach a bait slot, so they
+	// stay inert; the crayfish reach only the hook's, so they are hook bait
+	// and never trap bait.
 	class Shrimp: Edible_Base {
 		inventorySlot[] += {
 			"Trap_Bait",
@@ -561,7 +563,10 @@ class cfgVehicles {
 		itemSize[] = {2,1};
 		weight = 7;
 		weightPerQuantityUnit = 0.288591;  // 50 g full
-		inventorySlot[] = {"DirectCookingA", "DirectCookingB", "DirectCookingC", "SmokingA", "SmokingB", "SmokingC", "SmokingD", "GebFishMount"};
+		// Hook bait: the hook's "Bait" slot (class Fishing comes from the mod's
+		// Shrimp), but no Trap_Bait slots, so never trap bait. A full list, so
+		// the fire's cooking and smoking slots are named again here.
+		inventorySlot[] = {"Bait", "DirectCookingA", "DirectCookingB", "DirectCookingC", "SmokingA", "SmokingB", "SmokingC", "SmokingD", "GebFishMount"};
 		hiddenSelections[] =
 		{
 			"Camo"
@@ -1440,6 +1445,18 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\slimysculpin_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\slimysculpin.rvmat","\gebsfish\data\fish\slimysculpin_rotten.rvmat"};
 	};
+	class geb_Piranha: geb_FreshFish_Base {
+		scope = 2;
+		displayName = "$STR_fish_piranha";
+		descriptionShort = "$STR_fish_piranha_desc";
+		model = "\gebsfish\data\fish\piranha.p3d";
+		itemSize[] = {3,2};
+		weight = 130;
+		weightPerQuantityUnit = 0.870;  // 1 kg full
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\piranha_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\piranha.rvmat","\gebsfish\data\fish\piranha_rotten.rvmat"};
+	};
 
 	//22 Saltwater Fish
 	class geb_AngelFish: geb_SaltFish_Base {
@@ -1776,6 +1793,37 @@ class cfgVehicles {
 		hiddenSelections[] = {"Camo"};
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\southernflounder_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\southernflounder.rvmat","\gebsfish\data\fish\southernflounder_rotten.rvmat"};
+	};
+	class geb_SouthernStingray: geb_SaltFish_Base {
+		scope = 2;
+		displayName = "$STR_fish_southernstingray";
+		descriptionShort = "$STR_fish_southernstingray_desc";
+		model = "\gebsfish\data\fish\southernstingray.p3d";
+		weight = 3391;
+		weightPerQuantityUnit = 22.609;  // 26 kg full
+		// 0.9 m across the disc and 1.6 m to the tip of the tail, laid flat
+		// like the southern flounder (the mod's other flat fish): the disc in
+		// x and z, the back toward -y.
+		itemSize[] = {8,6};
+		rotationFlags = 0;
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\southernstingray_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\southernstingray.rvmat","\gebsfish\data\fish\southernstingray_rotten.rvmat"};
+	};
+	class geb_OcellateRiverStingray: geb_FreshFish_Base {
+		scope = 2;
+		displayName = "$STR_fish_ocellateriverstingray";
+		descriptionShort = "$STR_fish_ocellateriverstingray_desc";
+		model = "\gebsfish\data\fish\ocellateriverstingray.p3d";
+		weight = 652;
+		weightPerQuantityUnit = 4.348;  // 5 kg full
+		// 0.42 m across the disc, 0.79 m overall; laid out as the southern
+		// stingray is, and held one-handed like the other mid-sized catches.
+		itemSize[] = {5,4};
+		rotationFlags = 0;
+		hiddenSelections[] = {"Camo"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\ocellateriverstingray_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\ocellateriverstingray.rvmat","\gebsfish\data\fish\ocellateriverstingray_rotten.rvmat"};
 	};
 	class geb_YellowSnapper: geb_SaltFish_Base {
 		scope = 2;
@@ -2609,6 +2657,14 @@ class cfgVehicles {
 			"\gebsfish\data\fish\slimysculpin_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
 		};
 	};
+	class geb_PiranhaFilletMeat: geb_FreshWater_Fillet_Lean {
+		scope = 2;
+		displayName = "$STR_fish_piranha_fillet";
+		descriptionShort = "$STR_fish_piranha_desc";
+		hiddenSelectionsTextures[] = {
+			"\gebsfish\data\fish\piranha_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
+		};
+	};
 
 	//Saltwater Fish fillets
 	class geb_AngelFishFilletMeat: geb_SaltWater_Fillet_Lean {
@@ -2682,6 +2738,37 @@ class cfgVehicles {
 		descriptionShort = "$STR_fish_greatbarracuda_desc";
 		hiddenSelectionsTextures[] = {
 			"\gebsfish\data\fish\greatbarracuda_fillet_co.paa","dz\gear\food\data\mackerel_fillet_baked_co.paa","dz\gear\food\data\mackerel_fillet_boiled_co.paa","dz\gear\food\data\mackerel_fillet_dried_co.paa","dz\gear\food\data\mackerel_fillet_burnt_co.paa"
+		};
+	};
+	// Skate wing: white, lean meat. Both ride the DayZ 1.30 catfish fillet
+	// model the mod's other lean bottom fish use; cooked stages share
+	// vanilla's catfish textures, rotten = vanilla rot rvmat.
+	class geb_SouthernStingrayFilletMeat: geb_SaltWater_Fillet_Lean {
+		scope = 2;
+		displayName = "$STR_fish_southernstingray_fillet";
+		descriptionShort = "$STR_fish_southernstingray_desc";
+		model = "\dz\gear\food\catfish_fillet.p3d";
+		rotationFlags = 17;
+		hiddenSelections[] = {"cs_raw"};
+		hiddenSelectionsTextures[] = {
+			"\gebsfish\data\fish\southernstingray_fillet_co.paa","dz\gear\food\data\catfish_fillet_baked_co.paa","dz\gear\food\data\catfish_fillet_boiled_co.paa","dz\gear\food\data\catfish_fillet_dried_co.paa","dz\gear\food\data\catfish_fillet_burnt_co.paa"
+		};
+		hiddenSelectionsMaterials[] = {
+			"dz\gear\food\data\catfish_fillet_raw.rvmat","dz\gear\food\data\catfish_fillet_baked.rvmat","dz\gear\food\data\catfish_fillet_boiled.rvmat","dz\gear\food\data\catfish_fillet_dried.rvmat","dz\gear\food\data\catfish_fillet_burnt.rvmat","dz\gear\food\data\catfish_fillet_rotten.rvmat"
+		};
+	};
+	class geb_OcellateRiverStingrayFilletMeat: geb_FreshWater_Fillet_Lean {
+		scope = 2;
+		displayName = "$STR_fish_ocellateriverstingray_fillet";
+		descriptionShort = "$STR_fish_ocellateriverstingray_desc";
+		model = "\dz\gear\food\catfish_fillet.p3d";
+		rotationFlags = 17;
+		hiddenSelections[] = {"cs_raw"};
+		hiddenSelectionsTextures[] = {
+			"\gebsfish\data\fish\ocellateriverstingray_fillet_co.paa","dz\gear\food\data\catfish_fillet_baked_co.paa","dz\gear\food\data\catfish_fillet_boiled_co.paa","dz\gear\food\data\catfish_fillet_dried_co.paa","dz\gear\food\data\catfish_fillet_burnt_co.paa"
+		};
+		hiddenSelectionsMaterials[] = {
+			"dz\gear\food\data\catfish_fillet_raw.rvmat","dz\gear\food\data\catfish_fillet_baked.rvmat","dz\gear\food\data\catfish_fillet_boiled.rvmat","dz\gear\food\data\catfish_fillet_dried.rvmat","dz\gear\food\data\catfish_fillet_burnt.rvmat","dz\gear\food\data\catfish_fillet_rotten.rvmat"
 		};
 	};
 	class geb_CherrySalmonFilletMeat: geb_SaltWater_Fillet_Fatty{

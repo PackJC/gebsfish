@@ -133,28 +133,16 @@ of the point in `GebFishingSnapshot`; nothing new goes over the network.
   the "more boat content" the changelog promises.
 
 ### F20. Fish oil and byproducts (M, art: retextures)
-- Boil fatty fillets and skim off fish oil: it fuels torches, and a spoonful
-  gives vitamin-style immunity. Big fish leave scraps for garden fertilizer, and
-  bones for hooks.
+- Boil fatty fillets and skim off fish oil that fuels torches. Big fish leave
+  scraps for garden fertilizer, and bones for hooks. (The vitamin half shipped
+  in 4.0 as Fish Oil Pills, a `VitaminBottle` reskin.)
 - `geb_FishOil extends Lard`, so vanilla `UpgradeTorchWithLard` accepts it
   (recipes match on inheritance; vanilla's frying check compares the exact
-  `Lard` type, so frying needs a patch). `OnConsume` → `MDF_IMMUNITYBOOST` like
-  `VitaminBottle`. Recipe: a boiled (`IsFoodBoiled`) fatty fillet + a Pot as a
-  tool. Scraps: an extra result in `PrepareFish.SpawnItems` with a
-  `Horticulture` block and `ActionFertilizeSlot` (the `GardenLime` /
-  `PlantMaterial` pattern). Bones: vanilla `Bone`, which already feeds
-  `CraftBoneHook`.
-
-### F21. Stockfish drying rack (M, art: rack model)
-- Hang fillets on a rack to air-dry without fire; cold, dry, windy weather
-  dries fastest (Sakhal is ideal), rain or snow stalls it; dried fish keeps a
-  long time.
-- A placeable rack whose slots are added to the fillets' `inventorySlot[]`
-  (vanilla does this for the fireplace smoking slots `SmokingA–D`). A server
-  timer advances `SetCookingTime` while `GetRain()` and `GetSnowfall()` are low,
-  scaled by `GetWindSpeed()`; at the DRIED cook time call
-  `ChangeFoodStage(FoodStageType.DRIED)` like `Cooking.SmokeItem`. Pause decay
-  on the rack through the existing `ProcessDecay` hook.
+  `Lard` type, so frying needs a patch). Recipe: a boiled (`IsFoodBoiled`)
+  fatty fillet + a Pot as a tool. Scraps: an extra result in
+  `PrepareFish.SpawnItems` with a `Horticulture` block and
+  `ActionFertilizeSlot` (the `GardenLime` / `PlantMaterial` pattern). Bones:
+  vanilla `Bone`, which already feeds `CraftBoneHook`.
 
 ### F22. Shoreline and after-rain foraging (S, no art)
 - Dig clams and mussels at the waterline on beaches; nightcrawlers are easier
@@ -225,7 +213,7 @@ field, and show a summary of changes before download.
 
 ## Ideas from the 2026-10-05 review (F66–F90)
 
-From the fifth full pass, each checked against F1–F65 (where one is close, the entry says what is new). Sizes: S = a day or two, M = about a week, L = more. Ranked by value for effort: F69, F84, F87, F71, F77, F88, F75, F79.
+From the fifth full pass, each checked against F1–F65 (where one is close, the entry says what is new). Sizes: S = a day or two, M = about a week, L = more. Ranked by value for effort: F69, F84, F87, F71, F88, F75, F79. (F77, feather jigs, shipped in 4.0.1 as loot.)
 
 **Fishing loop and the world around the water**
 
@@ -278,19 +266,6 @@ listed parent class), the bait matrix and the wiki builders. Config:
 `Morphs[]` {BaseClassname, MorphClassname, Chance} in fish.json; art: each texture graded
 from the species' own photo texture and checked against photographs of the real morph,
 eyes untouched.
-
-### F77. Feather jigs (S, art: small model edit)
-A lure a player can make instead of loot: Hook (or Bone Hook) + Chicken Feathers gives a
-marabou-style feather jig that never rots. Vanilla `ChickenFeather` (a stack of up to 20
-from plucking chickens: `CraftFeathers`, `PrepareChicken`) is used only for arrows
-today (`CraftArrow`, 4_world/classes/recipes/recipes/craftarrow.c); the jig reuses
-vanilla `jig.p3d` (already a hook-slot lure, `hookType="Hook"`) with a texture made from
-the feather's own, and extends `geb_Lure` so the tackle boxes and hook slot take it.
-Normal two-ingredient recipe with vanilla's crafting animation (`CMD_ACTIONFB_CRAFTING`,
-recipebase.c), one feather used; bait.json row trout and salmon 2.0, panfish 1.8, bass
-1.3, and lower durability than a found lure. Config: `RecipeToggles.CraftFeatherJig`
-(with its key check in `GeneralConfig.Backfill`, like `CraftFishMount`); art: vanilla's jig
-has no hidden selections, so it needs a debinarized copy with a `camo` selection.
 
 **Trophies, base life and quality of life**
 

@@ -125,8 +125,10 @@ class GebMountPoses {
 		Add("geb_NorthernShortfinSquid", 0, 0, 0, 0, -0.0000, -0.0000, 0.0278, 0.096);
 		Add("geb_NorthernShortfinSquidJuvenile", 0, 90, 0, 90, -0.0100, -0.0145, 0.0074, 0.037);
 		Add("geb_NorthernSnakeHead", 1, 270, 0, 0, 0.1469, -0.0815, 0.1981, 0.258);
+		Add("geb_OcellateRiverStingray", 1, 90, 0, 180, -0.0000, -0.0000, 0.0395, 0.420);
 		Add("geb_PacificBonito", 0, 0, 0, 0, 0.0995, -0.0090, 0.0434, 0.159);
 		Add("geb_PacificCod", 1, 0, 0, 0, 0.0682, -0.0173, 0.0817, 0.295);
+		Add("geb_Piranha", 0, 0, 0, 0, 0.0788, -0.0161, 0.0366, 0.172);
 		Add("geb_PurplebackFlyingSquid", 0, 0, 0, 0, -0.0000, -0.0000, 0.0356, 0.144);
 		Add("geb_PurplebackFlyingSquidJuvenile", 0, 90, 0, 90, -0.0100, -0.0145, 0.0084, 0.048);
 		Add("geb_RainbowTrout", 0, 0, 0, 0, 0.0576, -0.0183, 0.0783, 0.212);
@@ -144,6 +146,7 @@ class GebMountPoses {
 		Add("geb_SnowCrab", 1, 180, 0, 270, 0.0161, -0.1198, 0.1653, 0.377);
 		Add("geb_SockEyeSalmon", 1, 0, 0, 0, 0.1166, -0.0299, 0.0546, 0.264);
 		Add("geb_SouthernFlounder", 1, 270, 0, 0, 0.0247, -0.0182, 0.1285, 0.538);
+		Add("geb_SouthernStingray", 1, 90, 0, 180, -0.0000, -0.0000, 0.0745, 0.900);
 		Add("geb_SpottedMuskellunge", 1, 270, 0, 0, 0.0281, -0.0699, 0.1786, 0.343);
 		Add("geb_StarFish", 0, 0, 270, 90, 0.0005, -0.0028, 0.0046, 0.177);
 		Add("geb_StripedBass", 0, 0, 0, 0, 0.1042, -0.0191, 0.0258, 0.130);

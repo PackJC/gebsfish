@@ -25,7 +25,7 @@ modded class ModItemRegisterCallbacks {
             "geb_Severum", "geb_SiameseTigerFish", "geb_AlligatorGar", "geb_NorthernPike",
             "geb_Muskellunge", "geb_TigerMuskellunge", "geb_BarredMuskellunge", "geb_SpottedMuskellunge",
             "geb_FlatHeadCatFish", "geb_LakeSturgeon", "geb_NorthernSnakeHead", "geb_SouthernFlounder",
-            "geb_GreatBarracuda", "geb_HumboldtSquid"
+            "geb_GreatBarracuda", "geb_HumboldtSquid", "geb_SouthernStingray"
         };
         foreach (string twoHandedName : twoHandedFish) {
             pType.AddItemInHandsProfileIK(twoHandedName, "dz/anims/workspaces/player/player_main/weapons/player_main_2h_extinguisher.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/firewood.anm");
@@ -56,7 +56,8 @@ modded class ModItemRegisterCallbacks {
             "geb_CherrySalmon", "geb_PacificBonito", "geb_PacificCod", "geb_YellowFinTuna",
             "geb_YellowSnapper", "geb_WhiteGrunt", "geb_RoughNeckRock", "geb_SunFish",
             "geb_SlimySculpin", "geb_AmericanLobster", "geb_EuropeanLobster", "geb_KingCrab",
-            "geb_SnowCrab", "geb_Squid_Base"
+            "geb_SnowCrab", "geb_Squid_Base", "geb_OcellateRiverStingray",
+            "geb_Piranha"
         };
         foreach (string fishName : oneHandedFish) {
             pType.AddItemInHandsProfileIK(fishName, "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");

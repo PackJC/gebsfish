@@ -384,6 +384,12 @@ const ITEMDETAIL = {
 "img": "items/geb_DriedSquidSnack.webp",
 "name": "Dried Squid"
 },
+"geb_FeatherJig": {
+"cat": "lure",
+"desc": "A feather jig is a lead-head jig dressed with a skirt of feathers, tied on behind the head with thread. The soft feathers breathe and pulse in the water with every twitch of the rod: a classic for crappie and other panfish, trout and salmon, and walleye and small sea fish such as mackerel take it too.",
+"img": "items/geb_FeatherJig.webp",
+"name": "Feather Jig"
+},
 "geb_FieldCricket": {
 "cat": "bait",
 "desc": "A cricket",

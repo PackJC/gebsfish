@@ -6,6 +6,7 @@ specular[]={0.7,0.62,0.52,1};
 specularPower=1300;
 PixelShaderID="Super";
 VertexShaderID="Super";
+renderFlags[]={"AlphaTest32"};
 class Stage1
 {
 	texture="gebsfish\data\fish\redbreastsunfish_normals.paa";

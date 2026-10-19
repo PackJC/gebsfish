@@ -1,7 +1,7 @@
 // Script twins mirror the config (CfgVehicles) inheritance chain: geb_Lure
 // extends Jig, and every lure/spinner/spoon/jig variant extends geb_Lure.
 // Keeping the script hierarchy identical to the config means any future
-// behaviour added to geb_Lure is inherited by all 16 variants (and the
+// behaviour added to geb_Lure is inherited by all 17 lures (and the
 // IsKindOf("geb_Lure") tackle-box filter stays correct).
 class geb_Lure: Jig {};
 
@@ -21,3 +21,4 @@ class geb_CurlyTailJig1: geb_Lure {};
 class geb_CurlyTailJig2: geb_Lure {};
 class geb_CurlyTailJig3: geb_Lure {};
 class geb_CurlyTailJig4: geb_Lure {};
+class geb_FeatherJig: geb_Lure {};

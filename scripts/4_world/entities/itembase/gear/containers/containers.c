@@ -210,7 +210,7 @@ class geb_MinnowBucket : geb_FilteredContainerBase {
 //      geb_Lure1-4 / geb_CurlyTailJig1-4 all extend geb_Lure). "Jig" stays
 //      for vanilla jigs.
 //   2. LIVE BAIT -- worms (vanilla + grub + rubber), insects (grasshopper +
-//      cricket), minnows, salamander, bullfrog, bitterlings, sardines, juvenile squid, and
+//      cricket), minnows, salamander, bullfrog, crayfish, bitterlings, sardines, juvenile squid, and
 //      vanilla shrimp as its own class only (s_Exact). Players can stash bait
 //      directly in the tackle box instead of always needing the dedicated
 //      worm/bug/minnow containers, while the dedicated containers still
@@ -221,8 +221,9 @@ class geb_MinnowBucket : geb_FilteredContainerBase {
 //      data/tackle/config.cpp) so the 2x2 repair kit fits.
 
 class geb_SmallTackleBase : geb_FilteredContainerBase {
-	// Vanilla Shrimp (hook bait) by its own class only: the crayfish, clams,
-	// mussels, snails, starfish and jellyfish are built on it too.
+	// Vanilla Shrimp (hook bait) by its own class only: the clams, mussels,
+	// snails, starfish and jellyfish are built on it too. The crayfish, hook
+	// bait as well, come in by geb_Crayfish_Base below.
 	static ref TStringArray s_Exact = { "Shrimp" };
 
 	override protected TStringArray GetExactItemKinds() {
@@ -236,7 +237,7 @@ class geb_SmallTackleBase : geb_FilteredContainerBase {
 		"Worm", "geb_GrubWorm", "geb_RubberWorm",
 		"geb_GrassHopper", "geb_FieldCricket",
 		"geb_FatHeadMinnow", "geb_RedSalamander", "geb_AmericanBullFrog",
-		"Bitterlings", "Sardines", "geb_SquidJuvenile_Base",
+		"geb_Crayfish_Base", "Bitterlings", "Sardines", "geb_SquidJuvenile_Base",
 		// Tools / containers
 		"geb_FishGloves_Base",  // every colour of fishing gloves, and any added later
 		"geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet",
@@ -250,8 +251,9 @@ class geb_SmallTackleBase : geb_FilteredContainerBase {
 };
 
 class geb_LargeTackleBase : geb_FilteredContainerBase {
-	// Vanilla Shrimp (hook bait) by its own class only: the crayfish, clams,
-	// mussels, snails, starfish and jellyfish are built on it too.
+	// Vanilla Shrimp (hook bait) by its own class only: the clams, mussels,
+	// snails, starfish and jellyfish are built on it too. The crayfish, hook
+	// bait as well, come in by geb_Crayfish_Base below.
 	static ref TStringArray s_Exact = { "Shrimp" };
 
 	override protected TStringArray GetExactItemKinds() {
@@ -265,7 +267,7 @@ class geb_LargeTackleBase : geb_FilteredContainerBase {
 		"Worm", "geb_GrubWorm", "geb_RubberWorm",
 		"geb_GrassHopper", "geb_FieldCricket",
 		"geb_FatHeadMinnow", "geb_RedSalamander", "geb_AmericanBullFrog",
-		"Bitterlings", "Sardines", "geb_SquidJuvenile_Base",
+		"geb_Crayfish_Base", "Bitterlings", "Sardines", "geb_SquidJuvenile_Base",
 		// Tools / containers
 		"geb_FishGloves_Base",  // every colour of fishing gloves, and any added later
 		"geb_WormContainer", "geb_BugContainer", "geb_BambooFishingNet",

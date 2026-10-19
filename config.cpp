@@ -36,7 +36,7 @@ class CfgMods {
 		skeletonDefinitions = "DZ/anims/cfg/skeletons.anim.xml";
 		author="Geb";
 		authorID="0";
-		version="4.0.0";
+		version="4.0.1";
 		extra=0;
 		type="mod";
 		dependencies[]= {

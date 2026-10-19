@@ -58,6 +58,7 @@ class gebsfishSpawnableTypes {
             "geb_Lure1", "geb_Lure2", "geb_Lure3", "geb_Lure4",
             "geb_SpinnerBait1", "geb_SpinnerBait2", "geb_SpinnerBait3", "geb_SpinnerBait4",
             "geb_CurlyTailJig1", "geb_CurlyTailJig2", "geb_CurlyTailJig3", "geb_CurlyTailJig4",
+            "geb_FeatherJig",
             "geb_SpoonLure1", "geb_SpoonLure2", "geb_SpoonLure3", "geb_SpoonLure4"
         };
         ref array<ref GebXmlCargoItem> tackleCargo = new array<ref GebXmlCargoItem>;

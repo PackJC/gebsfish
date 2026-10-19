@@ -6,6 +6,7 @@ specular[]={0.866,0.7,0.81,1};
 specularPower=1000;
 PixelShaderID="Super";
 VertexShaderID="Super";
+renderFlags[]={"AlphaTest32"};
 class Stage1
 {
 	texture="gebsfish\data\fish\rainbowtrout_normals.paa";
