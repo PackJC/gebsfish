@@ -1967,7 +1967,7 @@ table still returns no catch; add sea/both entries if sea netting is desired.
     not a mapping one.
 171. (2026-10-18) Red-bellied Piranha (new; tools/piranha builds the model
     and all four textures from the FBX and photo Cole supplied): in warm
-    fresh water with a rod, by day, catch one (/give geb_Piranha works too).
+    fresh water with a rod, by day, catch one (/give geb_RedBelliedPiranha works too).
     Check it in hands (one-handed, the carp grip, held by the body and not
     through the arm), lying on the ground on its side, its inventory icon,
     and at 10, 30 and 80 m: three detail levels switch without popping and
@@ -1987,7 +1987,7 @@ table still returns no catch; add sea/both entries if sea netting is desired.
     carp looks. Hang it on a small mount: head right, upright, inside the
     field. Put it in a cooler and a fish tank. Check `fish.json` gains its
     row and `bait.json` its pike-and-muskellunge bait preferences on an
-    existing 4.0.0 server. Open piranha.p3d in Object Builder once.
+    existing 4.0.0 server. Open redbelliedpiranha.p3d in Object Builder once.
 172. (2026-10-19) Southern Stingray and Ocellate River Stingray (new;
     tools/stingray builds both models and all their textures from the
     CadNav model Cole supplied and one photograph per species): catch each

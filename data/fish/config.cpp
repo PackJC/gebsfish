@@ -1445,17 +1445,17 @@ class cfgVehicles {
 		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\slimysculpin_co.paa"};
 		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\slimysculpin.rvmat","\gebsfish\data\fish\slimysculpin_rotten.rvmat"};
 	};
-	class geb_Piranha: geb_FreshFish_Base {
+	class geb_RedBelliedPiranha: geb_FreshFish_Base {
 		scope = 2;
-		displayName = "$STR_fish_piranha";
-		descriptionShort = "$STR_fish_piranha_desc";
-		model = "\gebsfish\data\fish\piranha.p3d";
+		displayName = "$STR_fish_redbelliedpiranha";
+		descriptionShort = "$STR_fish_redbelliedpiranha_desc";
+		model = "\gebsfish\data\fish\redbelliedpiranha.p3d";
 		itemSize[] = {3,2};
 		weight = 130;
 		weightPerQuantityUnit = 0.870;  // 1 kg full
 		hiddenSelections[] = {"Camo"};
-		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\piranha_co.paa"};
-		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\piranha.rvmat","\gebsfish\data\fish\piranha_rotten.rvmat"};
+		hiddenSelectionsTextures[] = {"\gebsfish\data\fish\redbelliedpiranha_co.paa"};
+		hiddenSelectionsMaterials[] = {"\gebsfish\data\fish\redbelliedpiranha.rvmat","\gebsfish\data\fish\redbelliedpiranha_rotten.rvmat"};
 	};
 
 	//22 Saltwater Fish
@@ -2657,12 +2657,12 @@ class cfgVehicles {
 			"\gebsfish\data\fish\slimysculpin_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
 		};
 	};
-	class geb_PiranhaFilletMeat: geb_FreshWater_Fillet_Lean {
+	class geb_RedBelliedPiranhaFilletMeat: geb_FreshWater_Fillet_Lean {
 		scope = 2;
-		displayName = "$STR_fish_piranha_fillet";
-		descriptionShort = "$STR_fish_piranha_desc";
+		displayName = "$STR_fish_redbelliedpiranha_fillet";
+		descriptionShort = "$STR_fish_redbelliedpiranha_desc";
 		hiddenSelectionsTextures[] = {
-			"\gebsfish\data\fish\piranha_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
+			"\gebsfish\data\fish\redbelliedpiranha_fillet_co.paa","dz\gear\food\data\carp_fillet_baked_co.paa","dz\gear\food\data\carp_fillet_boiled_co.paa","dz\gear\food\data\carp_fillet_dried_co.paa","dz\gear\food\data\carp_fillet_burnt_co.paa"
 		};
 	};
 

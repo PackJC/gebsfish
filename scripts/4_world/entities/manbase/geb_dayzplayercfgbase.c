@@ -57,7 +57,7 @@ modded class ModItemRegisterCallbacks {
             "geb_YellowSnapper", "geb_WhiteGrunt", "geb_RoughNeckRock", "geb_SunFish",
             "geb_SlimySculpin", "geb_AmericanLobster", "geb_EuropeanLobster", "geb_KingCrab",
             "geb_SnowCrab", "geb_Squid_Base", "geb_OcellateRiverStingray",
-            "geb_Piranha"
+            "geb_RedBelliedPiranha"
         };
         foreach (string fishName : oneHandedFish) {
             pType.AddItemInHandsProfileIK(fishName, "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");

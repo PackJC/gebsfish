@@ -128,10 +128,10 @@ class GebMountPoses {
 		Add("geb_OcellateRiverStingray", 1, 90, 0, 180, -0.0000, -0.0000, 0.0395, 0.420);
 		Add("geb_PacificBonito", 0, 0, 0, 0, 0.0995, -0.0090, 0.0434, 0.159);
 		Add("geb_PacificCod", 1, 0, 0, 0, 0.0682, -0.0173, 0.0817, 0.295);
-		Add("geb_Piranha", 0, 0, 0, 0, 0.0788, -0.0161, 0.0366, 0.172);
 		Add("geb_PurplebackFlyingSquid", 0, 0, 0, 0, -0.0000, -0.0000, 0.0356, 0.144);
 		Add("geb_PurplebackFlyingSquidJuvenile", 0, 90, 0, 90, -0.0100, -0.0145, 0.0084, 0.048);
 		Add("geb_RainbowTrout", 0, 0, 0, 0, 0.0576, -0.0183, 0.0783, 0.212);
+		Add("geb_RedBelliedPiranha", 0, 0, 0, 0, 0.0788, -0.0161, 0.0366, 0.172);
 		Add("geb_RedHeadCichlid", 1, 270, 0, 0, 0.0125, -0.1992, 0.1348, 0.354);
 		Add("geb_RedSalamander", 0, 270, 0, 270, -0.0030, 0.0090, 0.0130, 0.032);
 		Add("geb_RedSwampCrayFish", 0, 90, 0, 0, 0.0099, -0.0001, 0.0452, 0.069);
