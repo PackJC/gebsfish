@@ -37,7 +37,7 @@ Built from the ground up for modded servers, it adds dozens of new fish species,
 
 ## Key Features
 
-* **91 catchable yields** including fish, squid, crustaceans, marine invertebrates, and amphibians.
+* **94 catchable species** (87 new, plus vanilla's) including fish, squid, crustaceans, shellfish and other sea life, and amphibians.
 * New tools, baits, lures, jigs, storage containers, and clothing.
 * Fully featured logging system for dialing in your configs to your server's needs.
 * Extensive config system allows complete customizability to fit your server:
