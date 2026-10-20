@@ -9,12 +9,12 @@ __pycache__/
 /.rules
 /CF
 *.webp
-# ...but everything the wiki serves must ship: GitHub Pages publishes
-# docs/, so fish renders, item renders and anything added later need to
-# be tracked or they 404 on the site.
+# ...but everything the website serves must ship: GitHub Pages publishes
+# docs/, so renders and anything added later need to be tracked or they
+# 404 on the site.
 !docs/**/*.webp
 # Local only, never on GitHub: the Python build and render tools, and the
-# old Workbench project. Anchored to the top folder: data/tools and the
-# script folders called Tools are mod content and stay tracked.
+# old Workbench project. Anchored to the top folder, so a data/tools folder
+# or a script folder called Tools is mod content and stays tracked.
 /tools/
 /Workbench/

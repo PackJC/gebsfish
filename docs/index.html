@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gebsfish Wiki — The Ultimate Fishing Expansion for DayZ</title>
-<link rel="icon" type="image/png" href="logo.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta property="og:title" content="Gebsfish Wiki — The Ultimate Fishing Expansion for DayZ">
 <meta property="og:image" content="https://raw.githubusercontent.com/PackJC/gebsfish/master/.github/logo.png">
 <style>
@@ -936,7 +937,7 @@ junk weight <span class="op">=</span> fishTotal <span class="op">×</span> JunkS
   <p>Combine with a damaged rod to restore it, up to Worn: vanilla's fishing rod and every gebsfish rod (all the colours and camos, fly, spincast, baitcast and heavy surf). It doesn't work on the improvised rod or on spears. The kit holds <b>4 repairs</b> and is used up after the last one.</p>
 
   <h4>🕸 Bamboo Fishing Net</h4>
-  <p>Craft from a Long Stick + Netting; repair with more Netting. The net is an <b>action you perform at the water's edge, with its own catch table</b>, separate from the 91-species list — it pulls minnows, frogs and salamanders rather than the rod pool. Catches drop into its own <b>4×4 cargo</b>, falling back to your feet if that fills up.</p>
+  <p>Craft from a Long Stick + Netting; repair with more Netting. The net is an <b>action you perform at the water's edge, with its own catch table</b>, separate from the 94-species list — it pulls minnows, frogs and salamanders rather than the rod pool. Catches drop into its own <b>4×4 cargo</b>, falling back to your feet if that fills up.</p>
 
   <h4>🔱 Spear Fishing</h4>
   <p>Either <b>Improvised Spear</b> (bone- or stone-tipped) can fish. Stand in or beside the water, aim at a spot within 3 m where it is at most <b>1 m deep</b>, and stab: no bait, a short action, and a <b>15%</b> chance per stab (about one stab in 7, a fish every 40 seconds or so) to catch something from its own table — carp, bluegill, yellow perch, redbreast sunfish, largemouth bass, bowfin, bullfrogs and the ocellate river stingray in fresh water; southern flounder, southern stingray, white grunt and blue tang at sea; flathead mullet and alligator gar in both. The catch lands at your feet, and each stab wears the spear a little. Like a rod, which rolls for a predator once per cast, the spear rolls once per fish it lands. Admins tune it under <code>SpearFishingSettings</code> in <code>general.json</code> (on/off, find chance, maximum depth, predator chance, catch table), or in the Config Editor.</p>
@@ -1141,6 +1142,7 @@ junk weight <span class="op">=</span> fishTotal <span class="op">×</span> JunkS
     <p>Both rays are built from the CadNav stingray model Cole supplied, rebuilt at a usable resolution with the anatomy it had none of — eye bulges and spiracles, the mouth, nostrils, five pairs of gill slits and the cloaca underneath, pelvic fins, the fin folds along the tail and the barbed sting a third of the way down it — and each disc reshaped to its own species' outline, traced from that species' photograph. An existing <code>fish.json</code> gains both rows and their bait preferences when the mod updates</p>
     <h3>New &amp; Reworked Models</h3>
     <ul>
+      <li><b>New mod logo</b> — a largemouth bass leaping out of a splash, traced from the mod's own Largemouth Bass model: white in a black frame in the mod list and blue when hovered, in the same style as Geb's other mods. The wiki's browser-tab icon is the bass too</li>
       <li><b>The Cherry Salmon looks like a cherry salmon</b> — its skin was the Steelhead Trout's, so the fish and especially its fillet were hard to tell apart from a steelhead. Both are now painted from a photograph of a real yamame: an olive back with black spots, the row of dark oval parr marks down the flank, a rose stripe along the lateral line and a creamy belly, with olive fins above and orange-washed ones below. The fillet carries that skin on one side and a paler coral flesh on the other, lighter and less red than the steelhead's it used to copy</li>
       <li><b>The trout fillets are their own fish</b> — the skin side of every trout fillet in the mod was vanilla's Steelhead Trout fillet texture under a colour shift. One photograph of one fish, recoloured five ways: the brook, brown, cutthroat, lake and rainbow fillets all tracked Bohemia's lightness at 0.998 or better across the whole skin, and the Rainbow Trout's was not even recoloured — 98% of it was identical pixel for pixel. Since steelhead and the mod's trout are caught from the same ponds and share one catch category, a player could hold several fillets and see one picture with different names on it. All five are now painted from the fish's own body, carried across through the model's along-body frame, so the fillet shows the markings of the catch it came from:
         <ul>
