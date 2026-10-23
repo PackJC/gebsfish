@@ -54,7 +54,9 @@ modded class DeadfallData
 
 #ifdef BANOVMAP
 
-modded class banovData {
+// Banov's WorldData was banovData until Banov renamed it BanovData (BanovScripts.pbo, scripts/4_world/banov.c); the
+// old name stopped the World module compiling on Banov servers.
+modded class BanovData {
     override void InitYieldBank() {
         GetDayZGame().GetYieldDataInitInvoker().Invoke(m_YieldBank);
     }

@@ -904,28 +904,29 @@ function rowList(kind, obj, key, label, help){
   return f;
 }
 
-function rowSlider(kind, obj, key, label, min, max, step, help, fmt){
+function rowSlider(kind, obj, key, label, min, max, step, help, fmt, fallback = min){
   const f = document.createElement("div");
   f.className = "field";
   const id = "s_" + Math.random().toString(36).slice(2);
   f.innerHTML = '<label for="' + id + '">' + label + "</label>";
   const r = document.createElement("input");
   r.type = "range"; r.min = min; r.max = max; r.step = step; r.id = id;
-  r.value = typeof obj[key] === "number" ? obj[key] : min;
+  const readValue = () => typeof obj[key] === "number" ? obj[key] : fallback;
+  r.value = readValue();
   r.setAttribute("aria-label", label);
   const v = document.createElement("span");
   v.className = "val";
   // Read the true stored value, not r.value: a range input clamps to
   // [min,max] and snaps to step on assignment, so a loaded value outside the
   // slider's range would otherwise be displayed as the clamped value.
-  const show = () => { v.textContent = (fmt || fmtNum)(typeof obj[key] === "number" ? obj[key] : parseFloat(r.value)); };
+  const show = () => { v.textContent = (fmt || fmtNum)(readValue()); };
   show();
   r.addEventListener("input", () => { obj[key] = parseFloat(r.value); show(); sub(); markDirty(kind); });
   f.appendChild(r);
   f.appendChild(v);
   let subEl = null, sub = () => {};
   attachHelp(f, helpFor(obj, key, help));
-  f._setSub = fn => { subEl = document.createElement("div"); subEl.className = "sub2"; f.insertBefore(subEl, f.querySelector(".help")); sub = () => { subEl.textContent = fn(obj[key]); }; sub(); };
+  f._setSub = fn => { subEl = document.createElement("div"); subEl.className = "sub2"; f.insertBefore(subEl, f.querySelector(".help")); sub = () => { subEl.textContent = fn(readValue()); }; sub(); };
   return f;
 }
 
@@ -2125,17 +2126,16 @@ function renderJunk(){
   if (!d) { host.appendChild(placeholderFor("junk")); return; }
 
   {
-    // A file from before JunkShare existed doesn't have it; the server adds
-    // 0.1 when it loads the file, so show (and save) that value.
-    const added = typeof d.JunkShare !== "number";
-    if (added) d.JunkShare = 0.1;
+    // Older files omit JunkShare. Display its default without changing the loaded
+    // object; rowSlider writes the value and marks it dirty only on user input.
+    const missing = typeof d.JunkShare !== "number";
     const c = document.createElement("div");
     c.className = "card";
     c.innerHTML = "<h3>🎯 How often junk comes up</h3><p class='sub'>The share of rod catches that are junk instead of a fish. It holds on every map and in every season: each cast, junk is weighed against the fish that can bite there." +
-      (added ? " This file doesn't have the setting yet; the server adds it at 10% when it loads the file." : "") + "</p>";
+      (missing ? " No numeric junk share is stored in this file; 10% is shown until you edit this slider." : "") + "</p>";
     const s = rowSlider("junk", d, "JunkShare", "Junk share of rod catches", 0, 0.9, 0.01,
       "0.10 = about 1 catch in 10, close to vanilla DayZ (about 1 in 9 on Chernarus and Livonia). 0 = no junk. Where no fish can bite, a rod pulls only junk, as in vanilla.",
-      v => Math.round(v * 100) + "%");
+      v => Math.round(v * 100) + "%", 0.1);
     s._setSub(v => v > 0 ? "about 1 rod catch in " + simRound(1 / v, 1) : "no junk at all");
     c.appendChild(s);
     host.appendChild(c);

@@ -16,55 +16,53 @@ It's meant to add immersion, not to make survival easier: catch chances, prep ti
 
 [h1]Features[/h1]
 [list]
-[*] [b]Fish that behave like fish:[/b] each species has its own water (fresh, salt or both), catch method, weather and time-of-day habits and a 24-hour bite cycle. Moon phase changes night fishing, and water temperature can be turned on too.
-[*] [b]Bait matters:[/b] about 2,000 bait and fish pairings. Worms for panfish, spinners for bass and pike, live minnows for pike and walleye, crayfish for bass and catfish, shrimp for reef fish, squid for the big sea fish.
-[*] [b]Live bait:[/b] dig for worms and bugs. Live bait dies in about 90 minutes unless it's kept in a Worm Container, Bug Catcher or cooler, and the Bait Bucket keeps small aquatic catches fresh.
+[*] [b]Fish that behave like fish:[/b] each species has its own water (fresh, salt or both), catch method, weather and time-of-day habits and a 24-hour bite cycle; moon phase changes night fishing, and water temperature is optional.
+[*] [b]Bait matters:[/b] about 2,000 bait and fish pairings: worms for panfish, spinners for bass and pike, live minnows for pike and walleye, crayfish for bass and catfish, shrimp for reef fish, squid for the big sea fish.
+[*] [b]Live bait:[/b] dig for worms and bugs. It dies in about 90 minutes outside a Worm Container, Bug Catcher or cooler; the Bait Bucket keeps small aquatic catches fresh.
 [*] [b]More ways to fish:[/b] rods, fish traps, a bamboo fishing net, and spear fishing in the shallows.
-[*] [b]Coolers[/b] chill to -5°C and can freeze your catch; a frozen fish has to thaw before you can fillet it.
+[*] [b]Coolers[/b] chill to -5°C and can freeze your catch; frozen fish must thaw before filleting.
 [*] [b]Caviar[/b] from roe fish, lobster tails and claws, and crab legs.
-[*] [b]Ultra-rare treasure catches[/b] (about 1 in 5000 catches, on a proper rod only), and the odd hook or lure found inside a fish.
-[*] [b]Jon boat:[/b] a drivable boat in six looks, with two deck slots for coolers or tackle boxes, a fuel tank, a battery and lights. It spawns at the map's boat spawns.
+[*] [b]Junk catches[/b] (about one rod catch in ten), [b]ultra-rare treasure[/b] (about 1 in 5000, on a proper rod only) and the odd hook or lure inside a fish.
+[*] [b]Jon boat:[/b] a drivable boat in six looks, with deck slots for coolers or tackle boxes, a fuel tank, a battery and lights, at the map's boat spawns.
 [*] [b]Boat trailer:[/b] hitch it to a car, winch a boat on, tow it, back it into the water and launch.
-[*] [b]Fish mounts[/b] in three sizes. Hang the actual fish you caught on your wall.
-[*] [b]Fishing locker[/b], a [b]drying rack[/b] that dries fillets without a fire, and a [b]fish tank[/b] for your base.
-[*] [b]Canned fish and fish foods[/b] on vanilla's packaging. They share vanilla's spawns rather than adding loot.
-[*] [b]Fishing clothes:[/b] hats, shirts, raincoats, vests, wellies and gloves in ten colours and four camos. Each colour is the same shade on every item in the mod.
-[*] [b]Predators[/b] can turn up while you fish, fillet, net or spear fish. They spawn on land only, are capped, and despawn on their own.
-[*] [b]Junk catches[/b], about one rod catch in ten.
+[*] [b]For your base:[/b] fish mounts in three sizes for the fish you actually caught, a fishing locker, a drying rack (no fire needed) and a fish tank.
+[*] [b]Canned fish and fish foods[/b] on vanilla's packaging, sharing vanilla's spawns instead of adding loot.
+[*] [b]Fishing clothes:[/b] hats, shirts, raincoats, vests, wellies and gloves in ten colours and four camos, each colour the same shade on every item.
+[*] [b]Predators[/b] can turn up while you fish, fillet, net or spear: on land only, capped, and gone on their own.
 [*] [b]Fishing effects:[/b] blood when you fillet, flies over rotting fish, and a cold mist rising off every cooler.
 [*] [b]Works on custom maps[/b]: the map's own extra catches are kept. Deadfall is supported.
 [/list]
 
 [h1]Server Configuration[/h1]
-The config files are in your server profile, in [b]$profile:Gebs/[/b]:
+The config files live in your server profile, in [b]$profile:Gebs/[/b]:
 [list]
 [*] [b]general.json[/b]: weather, predators, nets, spear fishing, digging, treasure, recipes.
 [*] [b]fish.json[/b]: one row per species (water, method, chance, weather, temperature, bite cycle, fillets).
 [*] [b]bait.json[/b]: which fish each bait and lure attracts.
 [*] [b]junk.json[/b]: what junk comes up and how often.
 [/list]
-Every setting is explained inside the file, and every major system has its own on/off switch. A mod update only adds what's missing, so your values are kept. To turn something off, set its chance or weight to 0; a deleted entry comes back on the next update.
+Every setting is explained in its file, and every major system has an on/off switch. Updates only add what's missing, so your values are kept. To turn something off, set its chance or weight to 0 (a deleted entry comes back on update).
 
-The wiki has a [b]visual config editor[/b]: drop your files in, edit, download. Its "What will bite?" tab shows each species' odds.
+The wiki's [b]visual config editor[/b] edits your files in the browser and shows each species' odds.
 
-[b]Updating from 3.x:[/b] fishingsettings.json is replaced by the files above, with no migration. The old file is archived to $profile:Gebs/gebs_oldfiles/ so you can copy your tuning across by hand. The four Fun tackle boxes are gone and geb_Bonita is now geb_PacificBonito: take the old names out of your types and trader files.
+[b]Updating from 3.x:[/b] fishingsettings.json is replaced with no migration (the old file is archived in $profile:Gebs/gebs_oldfiles/). Take geb_Bonita (now geb_PacificBonito) and the four Fun tackle boxes out of your types and trader files.
 
-[h1]Types, Spawns & Events[/h1]
-The mod writes [b]gebsfish-types.xml[/b], [b]gebsfish-spawnabletypes.xml[/b] and [b]gebsfish-events.xml[/b] (jon boat spawns) to $profile:Gebs/mpmissions/ whenever the mod's version changes. Register them in cfgeconomycore.xml; each file's header shows how. Delete a file to have it written again.
+[b]Types, spawns & events:[/b] gebsfish-types.xml, gebsfish-spawnabletypes.xml and gebsfish-events.xml (jon boat spawns) are written to $profile:Gebs/mpmissions/ when the mod's version changes. Register them in cfgeconomycore.xml (each file's header shows how); delete one to rewrite it.
 
-[h1]Adjust Fishing Chances[/h1]
-In fish.json, [b]CatchProbability[/b] sets how common each species is. We recommend 0-25. Set it to 0 to stop a species being caught.
-
-[h1]Adjust Predator Chances[/h1]
-In general.json, each action has its own chance (fishing, filleting, a failed catch, the net, the spear). The default is 0.01, a 1% chance per action. Set it higher for more danger, or 0 to turn predators off.
-
-[h1]Trader Compatibility[/h1]
-Fish are caught full by default ([b]FishQuality[/b] 1.0), because most trader mods only buy full items.
+[b]Quick tuning:[/b]
+[list]
+[*] Fishing chances: CatchProbability in fish.json sets how common each species is: 0-25 is recommended, 0 stops it being caught.
+[*] Predators: each action (fishing, filleting, a failed catch, the net, the spear) has its own chance in general.json; the default 0.01 is 1% per action, 0 turns them off.
+[*] Traders: fish are caught full by default (FishQuality 1.0), since most trader mods only buy full items.
+[/list]
 
 [h1]Supported Languages[/h1]
-English, Czech, German, Russian, Polish, Hungarian, Italian, Spanish, French, Chinese (Traditional), Chinese (Simplified), Japanese, Portuguese.
+English, Czech, German, Russian, Polish, Hungarian, Italian, Spanish, French, Chinese (Traditional and Simplified), Japanese, Portuguese.
 
-If you're a native speaker and spot a bad translation, please tell us in the Discord.
+Native speaker and spot a bad translation? Please tell us in the Discord.
+
+[h1]The Geb's Family[/h1]
+More by Geb: [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2764114664]Geb's Animals[/url], [url=https://packjc.github.io/gebsplants/]Geb's Plants[/url], [url=https://packjc.github.io/gebsmushrooms/]Geb's Mushrooms[/url], [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2840597308]Alien Invasion[/url], [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2886269800]Thanksgiving[/url] and the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2812533524]Great Smoky Mountains[/url] map.
 
 [h1]Contributors & Credits[/h1]
 [list]
@@ -77,8 +75,7 @@ If you're a native speaker and spot a bad translation, please tell us in the Dis
 [*] NekoSensei and the players of the Le Murmure des Sans-Ames server
 [*] cadnav.com for models and textures of fish
 [*] The Cornell Lab's Macaulay Library for the loon call
-[*] Squid skins made from photos by Attila Oláh, Michael Vecchione (NOAA), Philip Schaffer, Fumikas Sagisavas, Ocdp, moriza, Binh Giang, Obsidian Soul, Chiswick Chap, Marina Drago Marchesi and Astromessier (CC BY, CC BY-SA, CC0 and public domain; licences and links on [url=https://github.com/PackJC/gebsfish]GitHub[/url])
-[*] Cherry salmon, rainbow trout fillet and stingray skins made from photos by Σ64, Ken Hammond (USDA), the US Food and Drug Administration and Jim Capaldi (CC BY 4.0, CC BY 2.0 and public domain; links on [url=https://github.com/PackJC/gebsfish]GitHub[/url])
+[*] Fish and squid skins made from photos by Attila Oláh, Michael Vecchione, Philip Schaffer, Fumikas Sagisavas, Ocdp, moriza, Binh Giang, Obsidian Soul, Chiswick Chap, Marina Drago Marchesi, Astromessier, Σ64, Ken Hammond, the FDA and Jim Capaldi (licences and links on [url=https://github.com/PackJC/gebsfish]GitHub[/url])
 [*] My close friends for motivation during this project
 [*] The DayZ Modding Community <3
 [/list]
