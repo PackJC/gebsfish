@@ -1,267 +1,289 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Gebsfish Config Editor — visual server tuning, no text editor needed</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta property="og:title" content="Gebsfish Config Editor">
 <meta property="og:description" content="Drop in the JSON files from your server's Gebs folder, tune everything visually, download them back. No text editor needed.">
 <meta property="og:image" content="https://raw.githubusercontent.com/PackJC/gebsfish/master/.github/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 <style>
+  /* The editor's own widgets, on top of styles.css. Its script colours things with these
+     names (--dim, --accent2, --gold, ...), so they map onto the family palette here. */
   :root {
-    --bg: #0d1520;
-    --bg2: #131e2d;
-    --card: #1a2739;
-    --card2: #21314a;
-    --border: #2c3e58;
-    --text: #dce6f2;
-    --dim: #8fa3bc;
-    --accent: #4db8ff;
-    --accent2: #35d0a0;
-    --gold: #e8c15a;
-    --red: #e87070;
+    --bg2: var(--tile);
+    --card: var(--surface);
+    --card2: var(--tile);
+    --border: var(--hair);
+    --dim: var(--muted);
+    --accent2: var(--green);
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--bg); color: var(--text); font-family: "Segoe UI", system-ui, sans-serif; line-height: 1.6; }
-  #waterbg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-  header, nav, main, footer, #dlbar { position: relative; z-index: 1; }
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
+  * { margin: 0; padding: 0; }
   button { font-family: inherit; }
+  code { color: var(--text); }
 
-  header { background: linear-gradient(180deg, rgba(10,26,46,.55) 0%, rgba(13,21,32,.15) 100%); border-bottom: 1px solid var(--border); padding: 18px 20px 14px; text-align: center; }
-  header img.logo { width: min(220px, 60vw); height: auto; margin: -20px auto -28px; display: block; filter: drop-shadow(0 6px 24px rgba(0,0,0,.55)); }
-  header h1 { font-size: 1.25rem; margin-top: 10px; }
-  header p.tag { color: var(--dim); font-size: 0.92rem; }
+  /* ---------- page head ---------- */
+  .hero { padding-top: 72px; }
+  .hero h1 { font-size: clamp(48px, 9vw, 96px); }
+  .tabs { position: sticky; top: 52px; z-index: 40; display: flex; justify-content: center; padding: 14px var(--gutter);
+    background: var(--nav); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--hair); margin-top: 48px; }
+  .tabs .seg { display: inline-flex; gap: 2px; padding: 4px; border-radius: 999px; background: var(--tile); max-width: 100%;
+    overflow-x: auto; scrollbar-width: none; }
+  .tabs .seg::-webkit-scrollbar { display: none; }
+  .tabs button { flex: none; border: 0; background: none; padding: 8px 18px; border-radius: 999px; cursor: pointer; font-size: 14px;
+    font-weight: 500; color: var(--muted); white-space: nowrap; transition: background .25s, color .25s, box-shadow .25s; }
+  .tabs button:hover { color: var(--text); }
+  .tabs button.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 1px rgba(0, 0, 0, .04); }
+  .tabs button .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent2); margin-left: 7px;
+    vertical-align: middle; opacity: 0; transition: opacity .2s; }
+  .tabs button.loaded .dot { opacity: 1; }
+  .tabs button.dirty .dot { background: var(--gold); }
 
-  nav { position: sticky; top: 0; z-index: 50; background: rgba(19,30,45,.88); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); display: flex; justify-content: center; flex-wrap: wrap; }
-  nav button, nav a.navlink { background: none; border: none; color: var(--dim); font-size: 0.95rem; padding: 13px 16px; cursor: pointer; border-bottom: 3px solid transparent; }
-  nav button:hover, nav a.navlink:hover { color: var(--text); text-decoration: none; }
-  nav button.active { color: var(--accent); border-bottom-color: var(--accent); }
-  nav button .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent2); margin-left: 6px; vertical-align: middle; opacity: 0; transition: opacity .2s; }
-  nav button.loaded .dot { opacity: 1; }
-  nav button.dirty .dot { background: var(--gold); }
-
-  main { max-width: 1100px; margin: 0 auto; padding: 26px 16px 130px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 48px var(--gutter) 140px; }
   section.tab { display: none; }
   section.tab.active { display: block; }
-  h2 { margin: 8px 0 6px; font-size: 1.45rem; }
-  p.lead { color: var(--dim); margin-bottom: 18px; }
+  h2 { margin: 0 0 8px; font-size: clamp(30px, 4vw, 40px); font-weight: 700; letter-spacing: -.03em; line-height: 1.1; }
+  h2 code { font-size: .5em; vertical-align: middle; }
+  p.lead { margin: 0 0 28px; color: var(--muted); font-size: 19px; line-height: 1.45; max-width: 820px; }
 
   /* ---------- load tab ---------- */
-  #dropzone { border: 2px dashed var(--border); border-radius: 16px; background: rgba(26,39,57,.55); padding: 44px 24px; text-align: center; cursor: pointer; transition: border-color .15s, background .15s, transform .1s; }
+  #dropzone { border: 2px dashed var(--line); border-radius: 26px; background: var(--surface); padding: 52px 24px; text-align: center;
+    cursor: pointer; transition: border-color .2s, background .2s, transform .2s var(--ease); }
   #dropzone:hover, #dropzone:focus-visible { border-color: var(--accent); }
-  #dropzone.drag { border-color: var(--accent2); background: rgba(53,208,160,.08); transform: scale(1.005); }
-  #dropzone .big { font-size: 2.6rem; line-height: 1.2; }
-  #dropzone b { font-size: 1.1rem; display: block; margin-top: 8px; }
-  #dropzone span.hint { color: var(--dim); font-size: 0.9rem; display: block; margin-top: 4px; }
-  #dropzone kbd { background: var(--bg2); border: 1px solid var(--border); border-radius: 5px; padding: 1px 7px; font-family: Consolas, ui-monospace, monospace; font-size: 0.82em; color: var(--gold); }
+  #dropzone.drag { border-color: var(--accent2); background: color-mix(in srgb, var(--accent2) 7%, var(--surface)); transform: scale(1.005); }
+  #dropzone .glyph { display: block; width: 64px; height: 64px; margin: 0 auto; background: var(--accent);
+    -webkit-mask: url(glyph.png) center / contain no-repeat; mask: url(glyph.png) center / contain no-repeat; }
+  #dropzone b { font-size: 21px; letter-spacing: -.02em; display: block; margin-top: 14px; }
+  #dropzone span.hint { color: var(--muted); font-size: 15px; display: block; margin-top: 4px; }
+  #dropzone kbd { background: var(--tile); border-radius: 6px; padding: 2px 8px; font-family: var(--mono); font-size: .82em; color: var(--text); }
 
-  .filecards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin: 18px 0; }
-  .filecard { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; gap: 12px; align-items: center; }
+  .filecards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin: 22px 0; }
+  .filecard { background: var(--surface); border: 1px solid var(--hair); border-radius: 20px; padding: 16px 18px; display: flex; gap: 12px; align-items: center; }
   .filecard .ico { font-size: 1.7rem; flex: 0 0 auto; }
-  .filecard b { display: block; font-size: 0.95rem; }
-  .filecard small { color: var(--dim); display: block; line-height: 1.4; }
-  .filecard.loaded { border-color: rgba(53,208,160,.55); }
-  .filecard .go { margin-left: auto; flex: 0 0 auto; background: var(--card2); color: var(--accent); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 0.85rem; }
-  .filecard .go:disabled { opacity: 0.35; cursor: default; }
+  .filecard b { display: block; font-size: 15px; }
+  .filecard small { color: var(--muted); display: block; line-height: 1.4; font-size: 13px; }
+  .filecard.loaded { border-color: color-mix(in srgb, var(--accent2) 55%, transparent); }
+  .filecard .go { margin-left: auto; flex: 0 0 auto; background: var(--tile); color: var(--link); border: 0; border-radius: 999px; padding: 6px 14px; cursor: pointer; font-size: 13px; font-weight: 500; }
+  .filecard .go:disabled { opacity: .35; cursor: default; }
 
-  .banner { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--gold); border-radius: 8px; padding: 12px 16px; color: var(--dim); font-size: 0.9rem; margin: 14px 0; }
-  .banner.good { border-left-color: #6fe0a8; }
-  .banner.err { border-left-color: var(--red); }
+  .banner { position: relative; margin: 16px 0; padding: 14px 18px 14px 42px; border-radius: 18px; color: var(--muted); font-size: 15px; line-height: 1.55;
+    --bc: var(--accent); background: var(--surface); background: color-mix(in srgb, var(--bc) 8%, var(--surface)); }
+  .banner::before { content: ""; position: absolute; left: 19px; top: 21px; width: 9px; height: 9px; border-radius: 50%; background: var(--bc); }
+  .banner.good { --bc: var(--accent2); }
+  .banner.err { --bc: var(--red); }
   .banner b { color: var(--text); }
   .banner .badrow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
   .banner .badrow > span { flex: 1 1 260px; }
-  .banner code, .card code, td code, .help code { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; font-size: 0.84em; color: var(--gold); font-family: Consolas, ui-monospace, monospace; }
+  .banner code, .card code, td code, .help code { background: var(--tile); border-radius: 6px; padding: .1em .35em; font-size: .84em; font-family: var(--mono); }
 
-  .pathbox { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; font-family: Consolas, ui-monospace, monospace; font-size: 0.88rem; margin: 12px 0 20px; overflow-x: auto; white-space: nowrap; }
-  .pathbox .dim { color: var(--dim); }
-  .pathbox .f { color: var(--accent2); }
+  .pathbox { background: var(--code-bg); color: var(--code-text); border-radius: 18px; padding: 16px 20px; font-family: var(--mono); font-size: 13.5px;
+    margin: 12px 0 20px; overflow-x: auto; white-space: nowrap; }
+  .pathbox .dim { color: #98989d; }
+  .pathbox .f { color: #64d2ff; }
 
   /* ---------- shared editor chrome ---------- */
-  .toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin: 4px 0 14px; align-items: center; }
-  .toolbar input[type=search], .toolbar select { background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 0.92rem; font-family: inherit; }
+  .toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin: 4px 0 16px; align-items: center; }
+  .toolbar input[type=search], .toolbar select { height: 40px; background: var(--tile); color: var(--text); border: 1px solid var(--hair); border-radius: 999px;
+    padding: 0 16px; font-size: 14px; font-family: inherit; }
   .toolbar input[type=search] { flex: 1 1 200px; }
-  .toolbar input:focus-visible, .toolbar select:focus-visible { outline: none; border-color: var(--accent); }
-  .count { color: var(--dim); font-size: 0.85rem; }
+  .toolbar input:focus-visible, .toolbar select:focus-visible { outline: none; border-color: var(--link); background: var(--surface); }
+  .count { color: var(--faint); font-size: 14px; }
 
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
-  .card > h3 { color: var(--accent2); font-size: 1.02rem; margin-bottom: 4px; }
-  .card > p.sub { color: var(--dim); font-size: 0.86rem; margin-bottom: 12px; }
+  .card { background: var(--surface); border: 1px solid var(--hair); border-radius: 22px; padding: 20px 22px; margin-bottom: 16px; }
+  .card > h3 { margin: 0 0 4px; font-size: 19px; font-weight: 600; letter-spacing: -.02em; color: var(--text); }
+  .card > p.sub { color: var(--muted); font-size: 14px; margin-bottom: 12px; }
 
-  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0 26px; }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0 28px; }
 
-  .field { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid rgba(44,62,88,.45); flex-wrap: wrap; }
+  .field { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--hair); flex-wrap: wrap; }
   .field:last-child { border-bottom: none; }
-  .field > label { flex: 1 1 150px; font-size: 0.9rem; }
-  .field .val { min-width: 52px; text-align: right; font-variant-numeric: tabular-nums; color: var(--accent); font-weight: 600; font-size: 0.9rem; }
-  .field .sub2 { flex-basis: 100%; color: var(--dim); font-size: 0.78rem; margin-top: -4px; }
+  .field > label { flex: 1 1 150px; font-size: 15px; }
+  .field .val { min-width: 52px; text-align: right; font-variant-numeric: tabular-nums; color: var(--accent); font-weight: 600; font-size: 15px; }
+  .field .sub2 { flex-basis: 100%; color: var(--muted); font-size: 13px; margin-top: -4px; }
 
   input[type=range] { flex: 2 1 130px; accent-color: var(--accent); height: 22px; cursor: pointer; }
-  input[type=number], input[type=text].cfg { background: var(--bg2); color: var(--text); border: 1px solid var(--border); border-radius: 7px; padding: 5px 8px; font-size: 0.9rem; width: 90px; font-family: inherit; }
+  input[type=number], input[type=text].cfg { background: var(--tile); color: var(--text); border: 1px solid var(--hair); border-radius: 10px; padding: 6px 10px; font-size: 14px; width: 90px; font-family: inherit; }
   input[type=text].cfg { width: 200px; }
-  input[type=number]:focus-visible, input[type=text].cfg:focus-visible { outline: none; border-color: var(--accent); }
-  select.cfg { background: var(--bg2); color: var(--text); border: 1px solid var(--border); border-radius: 7px; padding: 5px 8px; font-size: 0.88rem; font-family: inherit; }
+  input[type=number]:focus-visible, input[type=text].cfg:focus-visible { outline: none; border-color: var(--link); background: var(--surface); }
+  select.cfg { background: var(--tile); color: var(--text); border: 1px solid var(--hair); border-radius: 10px; padding: 6px 10px; font-size: 14px; font-family: inherit; }
 
   /* toggle switch */
-  .switch { position: relative; display: inline-block; width: 46px; height: 24px; flex: 0 0 auto; }
+  .switch { position: relative; display: inline-block; width: 46px; height: 28px; flex: 0 0 auto; }
   /* A toggle is a <label> inside .field, so the generic ".field > label" rule
      (more specific than ".switch") would stretch it to 150px+. */
   .field > label.switch { flex: 0 0 auto; }
   .switch input { opacity: 0; width: 0; height: 0; }
-  .switch i { position: absolute; inset: 0; background: var(--bg2); border: 1px solid var(--border); border-radius: 24px; transition: .15s; }
-  .switch i::before { content: ""; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: var(--dim); border-radius: 50%; transition: .15s; }
-  .switch input:checked + i { background: rgba(53,208,160,.25); border-color: var(--accent2); }
-  .switch input:checked + i::before { transform: translateX(22px); background: var(--accent2); }
-  .switch input:focus-visible + i { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .switch i { position: absolute; inset: 0; background: var(--line); border-radius: 28px; transition: .2s; }
+  .switch i::before { content: ""; position: absolute; width: 24px; height: 24px; left: 2px; top: 2px; background: #fff; border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .2); transition: .2s var(--ease); }
+  .switch input:checked + i { background: var(--accent2); }
+  .switch input:checked + i::before { transform: translateX(18px); }
+  .switch input:focus-visible + i { outline: 2px solid var(--link); outline-offset: 2px; }
 
   /* help popover */
-  .helpbtn { background: none; border: 1px solid var(--border); color: var(--dim); width: 20px; height: 20px; border-radius: 50%; font-size: 0.72rem; cursor: pointer; line-height: 1; flex: 0 0 auto; }
-  .helpbtn:hover { color: var(--accent); border-color: var(--accent); }
-  .help { flex-basis: 100%; background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 10px 13px; color: var(--dim); font-size: 0.82rem; line-height: 1.55; margin: 6px 0 4px; display: none; }
+  .helpbtn { background: none; border: 1px solid var(--line); color: var(--muted); width: 22px; height: 22px; border-radius: 50%; font-size: 12px; cursor: pointer; line-height: 1; flex: 0 0 auto; }
+  .helpbtn:hover { color: var(--link); border-color: var(--link); }
+  .help { flex-basis: 100%; background: var(--tile); border-radius: 14px; padding: 12px 15px; color: var(--muted); font-size: 13.5px; line-height: 1.55; margin: 6px 0 4px; display: none; }
   .help.open { display: block; }
 
-  .pill { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 0.74rem; font-weight: 600; white-space: nowrap; }
-  .pill.pond { background: #14432f; color: #6fe0a8; }
-  .pill.sea { background: #14324c; color: #6fbce0; }
-  .pill.both { background: #3b3054; color: #c1a3f0; }
-  .pill.off { background: #3a3a3a; color: #b8b8b8; }
+  .tag { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap;
+    color: var(--tc); background: var(--tile); background: color-mix(in srgb, var(--tc) 15%, transparent); }
+  .tag.pond { --tc: var(--green); }
+  .tag.sea { --tc: var(--sky); }
+  .tag.both { --tc: var(--violet); }
+  .tag.off { --tc: var(--faint); }
   .field .sub2.warn { color: var(--red); }
-  .pill.abundant { background: #14432f; color: #6fe0a8; }
-  .pill.common { background: #14324c; color: #6fbce0; }
-  .pill.uncommon { background: #4c3a14; color: #e0c46f; }
-  .pill.rare { background: #4c1d1d; color: #e08a8a; }
+  .tag.abundant { --tc: var(--green); }
+  .tag.common { --tc: var(--sky); }
+  .tag.uncommon { --tc: var(--gold); }
+  .tag.rare { --tc: var(--red); }
 
   /* ---------- fish list ---------- */
-  .fishrow { background: var(--card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
-  .fishrow > .head { display: flex; align-items: center; gap: 14px; padding: 10px 14px; cursor: pointer; flex-wrap: wrap; }
-  .fishrow > .head:hover { background: var(--card2); }
-  .fishrow.open > .head { background: var(--card2); }
-  .thumb { width: 74px; height: 46px; flex: 0 0 auto; border-radius: 8px; background: radial-gradient(circle at 50% 40%, #16344e, #0b1725 78%); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .fishrow { background: var(--surface); border: 1px solid var(--hair); border-radius: 20px; margin-bottom: 10px; overflow: hidden; }
+  .fishrow > .head { display: flex; align-items: center; gap: 14px; padding: 10px 16px; cursor: pointer; flex-wrap: wrap; transition: background .2s; }
+  .fishrow > .head:hover { background: var(--tile); }
+  .fishrow.open > .head { background: var(--tile); }
+  .thumb { width: 74px; height: 46px; flex: 0 0 auto; border-radius: 10px; background: radial-gradient(120% 90% at 50% 30%, var(--surface), var(--tile));
+    display: flex; align-items: center; justify-content: center; overflow: hidden; }
   .thumb img { width: 100%; height: 100%; object-fit: contain; }
-  .thumb.mini { width: 46px; height: 32px; border-radius: 6px; }
+  .thumb.mini { width: 46px; height: 32px; border-radius: 8px; }
   .thumb .emoji { font-size: 1.5rem; }
   .thumb.mini .emoji { font-size: 1.05rem; }
   .fishrow .names { flex: 1 1 160px; min-width: 130px; }
-  .fishrow .names b { display: block; font-size: 0.97rem; }
-  .fishrow .names small { color: var(--dim); font-family: Consolas, ui-monospace, monospace; font-size: 0.72rem; }
+  .fishrow .names b { display: block; font-size: 16px; }
+  .fishrow .names small { color: var(--muted); font-family: var(--mono); font-size: 12px; }
   .fishrow .quick { flex: 2 1 240px; display: flex; align-items: center; gap: 10px; min-width: 210px; }
-  .fishrow .quick label { color: var(--dim); font-size: 0.78rem; white-space: nowrap; }
-  .fishrow .caret { color: var(--dim); flex: 0 0 auto; transition: transform .15s; }
+  .fishrow .quick label { color: var(--muted); font-size: 13px; white-space: nowrap; }
+  .fishrow .caret { color: var(--faint); flex: 0 0 auto; transition: transform .2s var(--ease); }
   .fishrow.open .caret { transform: rotate(90deg); }
-  .fishrow .body { display: none; border-top: 1px solid var(--border); padding: 16px; background: var(--bg2); }
+  .fishrow .body { display: none; border-top: 1px solid var(--hair); padding: 18px; background: var(--soft); }
   .fishrow.open .body { display: block; }
+  .fishrow .body .card { background: var(--surface); }
 
   .detailflex { display: flex; gap: 22px; flex-wrap: wrap; }
   .detailflex .art { flex: 0 0 230px; }
-  .detailflex .art .thumb { width: 230px; height: 140px; border-radius: 10px; }
+  .detailflex .art .thumb { width: 230px; height: 140px; border-radius: 16px; background: radial-gradient(120% 90% at 50% 30%, var(--surface), var(--tile)); }
   .detailflex .art .thumb .emoji { font-size: 4rem; }
   .detailflex .forms { flex: 1 1 380px; min-width: 300px; }
 
   /* bitespeed painter */
   .bitewrap { margin-top: 6px; }
-  .bitechart { display: flex; align-items: flex-end; gap: 2px; height: 96px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 6px 6px 2px; touch-action: none; cursor: crosshair; }
-  .bitechart .bar { flex: 1; background: linear-gradient(180deg, var(--accent), #2a6ea6); border-radius: 3px 3px 0 0; min-height: 3px; position: relative; }
-  .bitechart .bar.night { background: linear-gradient(180deg, #7f6ce0, #4a3f8c); }
-  .bitechart:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .bitechart { display: flex; align-items: flex-end; gap: 2px; height: 96px; background: var(--surface); border: 1px solid var(--hair); border-radius: 12px; padding: 6px 6px 2px; touch-action: none; cursor: crosshair; }
+  .bitechart .bar { flex: 1; background: linear-gradient(180deg, var(--accent), color-mix(in srgb, var(--accent) 55%, var(--surface))); border-radius: 3px 3px 0 0; min-height: 3px; position: relative; }
+  .bitechart .bar.night { background: linear-gradient(180deg, var(--violet), color-mix(in srgb, var(--violet) 55%, var(--surface))); }
+  .bitechart:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
   .bitechart .bar.cur { outline: 2px solid var(--gold); outline-offset: 1px; }
   .bitelabels { display: flex; gap: 2px; margin-top: 3px; }
-  .bitelabels span { flex: 1; text-align: center; color: var(--dim); font-size: 0.6rem; }
-  .bitehint { color: var(--dim); font-size: 0.78rem; margin-top: 5px; }
+  .bitelabels span { flex: 1; text-align: center; color: var(--muted); font-size: 10px; }
+  .bitehint { color: var(--muted); font-size: 13px; margin-top: 5px; }
 
-  .btn { background: var(--card2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 7px 14px; cursor: pointer; font-size: 0.88rem; }
-  .btn:hover { border-color: var(--accent); color: var(--accent); }
-  .btn.primary { background: var(--accent); border-color: var(--accent); color: #06131f; font-weight: 600; }
-  .btn.primary:hover { filter: brightness(1.1); color: #06131f; }
-  .btn.small { padding: 3px 9px; font-size: 0.78rem; }
-  .btn.danger:hover { border-color: var(--red); color: var(--red); }
+  .btn { background: var(--tile); color: var(--text); border: 0; border-radius: 999px; padding: 8px 16px; cursor: pointer; font-size: 14px; font-weight: 500; transition: background .2s; }
+  .btn:hover { background: var(--line); }
+  .btn.primary { background: var(--accent); color: var(--accent-text); }
+  .btn.primary:hover { background: var(--accent-hover); }
+  .btn.small { padding: 4px 11px; font-size: 13px; }
+  .btn.danger:hover { color: var(--red); }
 
   /* ---------- bait tab ---------- */
-  .baitstrip { display: grid; grid-template-columns: repeat(auto-fill, minmax(108px, 1fr)); gap: 10px; margin-bottom: 16px; }
-  .baitcard { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 8px 6px 7px; text-align: center; cursor: pointer; }
-  .baitcard:hover { border-color: var(--accent); }
-  .baitcard.sel { border-color: var(--accent2); background: rgba(53,208,160,.08); }
+  .baitstrip { display: grid; grid-template-columns: repeat(auto-fill, minmax(108px, 1fr)); gap: 10px; margin-bottom: 18px; }
+  .baitcard { background: var(--surface); border: 1px solid var(--hair); border-radius: 16px; padding: 8px 6px 8px; text-align: center; cursor: pointer; transition: border-color .2s; }
+  .baitcard:hover { border-color: var(--link); }
+  .baitcard.sel { border-color: var(--accent2); background: color-mix(in srgb, var(--accent2) 8%, var(--surface)); }
   .baitcard .thumb { width: 100%; height: 54px; margin-bottom: 6px; }
-  .baitcard b { font-size: 0.74rem; line-height: 1.25; display: block; }
-  .prefrow { display: flex; align-items: center; gap: 12px; padding: 6px 10px; border-bottom: 1px solid rgba(44,62,88,.45); flex-wrap: wrap; }
-  .prefrow:hover { background: rgba(33,49,74,.5); }
-  .prefrow .names { flex: 1 1 140px; min-width: 120px; font-size: 0.88rem; }
-  .prefrow .names small { display: block; color: var(--dim); font-family: Consolas, ui-monospace, monospace; font-size: 0.68rem; }
+  .baitcard b { font-size: 12px; line-height: 1.25; display: block; }
+  .prefrow { display: flex; align-items: center; gap: 12px; padding: 6px 10px; border-bottom: 1px solid var(--hair); flex-wrap: wrap; }
+  .prefrow:hover { background: var(--tile); }
+  .prefrow .names { flex: 1 1 140px; min-width: 120px; font-size: 14px; }
+  .prefrow .names small { display: block; color: var(--muted); font-family: var(--mono); font-size: 11px; }
   .fishrow .names small.warn, .prefrow .names small.warn { display: block; color: var(--red); font-family: inherit; }
   .prefrow input[type=range] { flex: 2 1 140px; }
   .prefrow .mul { width: 62px; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
   .mul.up { color: var(--accent2); }
   .mul.down { color: var(--red); }
-  .mul.neutral { color: var(--dim); }
+  .mul.neutral { color: var(--muted); }
 
   /* ---------- tables ---------- */
-  .tblwrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; margin: 8px 0 6px; }
-  table.edit { width: 100%; border-collapse: collapse; font-size: 0.87rem; min-width: 560px; }
-  table.edit thead th { background: var(--card2); text-align: left; padding: 8px 10px; white-space: nowrap; font-size: 0.8rem; }
-  table.edit td { padding: 6px 10px; border-top: 1px solid var(--border); vertical-align: middle; }
+  .tblwrap { overflow-x: auto; border: 1px solid var(--hair); border-radius: 18px; background: var(--surface); margin: 8px 0 6px; }
+  table.edit { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 560px; }
+  table.edit thead th { text-align: left; padding: 10px 12px; white-space: nowrap; font-size: 12.5px; font-weight: 600; color: var(--muted); border-bottom: 1px solid var(--hair); }
+  table.edit td { padding: 7px 12px; border-top: 1px solid var(--hair); vertical-align: middle; }
   table.edit input[type=number] { width: 74px; }
-  table.edit input[type=text].cfg { width: 180px; font-family: Consolas, ui-monospace, monospace; font-size: 0.82rem; }
-  .tblnote { color: var(--dim); font-size: 0.78rem; margin: 4px 2px 0; }
-  table.edit td.badnote { color: var(--gold); font-size: 0.8rem; }
+  table.edit input[type=text].cfg { width: 180px; font-family: var(--mono); font-size: 13px; }
+  .tblnote { color: var(--muted); font-size: 13px; margin: 6px 2px 0; }
+  table.edit td.badnote { color: var(--gold); font-size: 13px; }
 
   /* ---------- download bar ---------- */
-  #dlbar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 60; background: rgba(19,30,45,.94); backdrop-filter: blur(10px); border-top: 1px solid var(--border); padding: 10px 14px; display: none; }
+  #dlbar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 60; background: var(--nav); backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px); border-top: 1px solid var(--hair); padding: 12px var(--gutter); display: none; }
   #dlbar.show { display: block; }
   #dlbar .inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  #dlbar .lbl { color: var(--dim); font-size: 0.85rem; margin-right: 4px; }
+  #dlbar .lbl { color: var(--muted); font-size: 14px; margin-right: 4px; }
   #dlbar .btn .b { display: inline-block; min-width: 8px; min-height: 8px; border-radius: 50%; background: var(--gold); margin-left: 7px; vertical-align: middle; visibility: hidden; }
-  #dlbar .btn.dirty { border-color: var(--gold); }
+  #dlbar .btn.dirty { box-shadow: inset 0 0 0 1.5px var(--gold); }
   #dlbar .btn.dirty .b { visibility: visible; }
 
   /* toast */
-  #toasts { position: fixed; top: 60px; right: 16px; z-index: 100; display: flex; flex-direction: column; gap: 8px; max-width: 340px; }
-  .toast { background: var(--card2); border: 1px solid var(--accent2); border-radius: 10px; padding: 10px 14px; font-size: 0.88rem; box-shadow: 0 6px 24px rgba(0,0,0,.4); animation: tin .2s ease-out; }
-  .toast.err { border-color: var(--red); }
+  #toasts { position: fixed; top: 128px; right: 16px; z-index: 100; display: flex; flex-direction: column; gap: 8px; max-width: 340px; }
+  .toast { background: rgba(29, 29, 31, .92); color: #f5f5f7; border-radius: 16px; padding: 11px 16px; font-size: 14px; box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+    backdrop-filter: blur(10px); animation: tin .3s var(--ease); border-left: 3px solid #30d158; }
+  .toast.err { border-left-color: #ff453a; }
   @keyframes tin { from { opacity: 0; transform: translateY(-8px); } }
 
-  footer { text-align: center; color: var(--dim); font-size: 0.82rem; padding: 26px 16px 40px; border-top: 1px solid var(--border); margin-top: 40px; }
-
-  .placeholder { text-align: center; color: var(--dim); padding: 50px 20px; }
+  .placeholder { text-align: center; color: var(--muted); padding: 56px 20px; }
   .placeholder .big { font-size: 2.4rem; }
 
   /* ---------- what will bite? ---------- */
-  .simctl { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 0 26px; }
+  .simctl { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 0 28px; }
   .simctl .field { align-content: flex-start; }
   .simctl .field > label { flex: 1 1 100%; color: var(--text); }
   .simctl .field > label.switch { flex: 0 0 auto; }
   .simctl .field > select.cfg { max-width: 100%; }
-  .simctl input[type=date].cfg { background: var(--bg2); color: var(--text); border: 1px solid var(--border); border-radius: 7px; padding: 4px 8px; font-size: 0.9rem; font-family: inherit; color-scheme: dark; max-width: 100%; }
-  .simctl input:disabled { opacity: 0.45; }
-  .simctl .pair { display: inline-flex; align-items: center; gap: 6px; color: var(--dim); font-size: 0.82rem; }
+  .simctl input[type=date].cfg { background: var(--tile); color: var(--text); border: 1px solid var(--hair); border-radius: 10px; padding: 5px 10px; font-size: 14px; font-family: inherit; max-width: 100%; }
+  .simctl input:disabled { opacity: .45; }
+  .simctl .pair { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 13px; }
   .simgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr)); gap: 10px; }
-  .simtile { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 13px; min-width: 0; }
-  .simtile .k { color: var(--dim); font-size: 0.72rem; text-transform: uppercase; letter-spacing: .05em; }
-  .simtile .v { font-size: 1.2rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.35; }
-  .simtile .d { color: var(--dim); font-size: 0.78rem; line-height: 1.45; overflow-wrap: anywhere; }
+  .simtile { background: var(--tile); border-radius: 16px; padding: 12px 15px; min-width: 0; }
+  .simtile .k { color: var(--muted); font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em; }
+  .simtile .v { font-size: 22px; font-weight: 700; letter-spacing: -.02em; font-variant-numeric: tabular-nums; line-height: 1.35; }
+  .simtile .d { color: var(--muted); font-size: 13px; line-height: 1.45; overflow-wrap: anywhere; }
   .simsys { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-  .simsys span { border: 1px solid var(--border); border-radius: 20px; padding: 2px 10px; font-size: 0.76rem; color: var(--dim); background: var(--bg2); }
-  .simsys span.on { color: var(--accent2); border-color: rgba(53,208,160,.5); }
+  .simsys span { border-radius: 999px; padding: 3px 11px; font-size: 12.5px; color: var(--muted); background: var(--tile); }
+  .simsys span.on { color: var(--accent2); background: color-mix(in srgb, var(--accent2) 13%, transparent); }
   .simsys span i { font-style: normal; opacity: .75; }
   .simnotes div + div { margin-top: 4px; }
   .simnotes, .simsum { overflow-wrap: anywhere; }
-  .simsum { color: var(--dim); font-size: 0.86rem; margin-bottom: 10px; }
+  .simsum { color: var(--muted); font-size: 14px; margin-bottom: 10px; }
   .simsum b { color: var(--text); }
   table.simtbl { min-width: 760px; }
   table.simtbl th.n, table.simtbl td.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  table.simtbl td { padding: 5px 10px; }
-  table.simtbl tr.top td { background: rgba(53,208,160,.08); }
-  table.simtbl tr.junk td { background: rgba(232,193,90,.06); }
+  table.simtbl td { padding: 6px 12px; }
+  table.simtbl tr.top td { background: color-mix(in srgb, var(--accent2) 8%, transparent); }
+  table.simtbl tr.junk td { background: color-mix(in srgb, var(--gold) 8%, transparent); }
   table.simtbl tr.zero td { opacity: .5; }
   table.simtbl .mul { font-weight: 600; }
-  .simname b { display: block; font-size: 0.88rem; font-weight: 600; }
-  .simname small { display: block; color: var(--dim); font-family: Consolas, ui-monospace, monospace; font-size: 0.7rem; overflow-wrap: anywhere; }
+  .simname b { display: block; font-size: 14px; font-weight: 600; }
+  .simname small { display: block; color: var(--muted); font-family: var(--mono); font-size: 11px; overflow-wrap: anywhere; }
   .simname small.list { font-family: inherit; max-width: 300px; }
-  .simbar { height: 5px; background: var(--bg); border-radius: 3px; margin-top: 3px; min-width: 64px; overflow: hidden; }
+  .simbar { height: 5px; background: var(--tile); border-radius: 3px; margin-top: 3px; min-width: 64px; overflow: hidden; }
   .simbar i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 3px; }
   tr.junk .simbar i { background: var(--gold); }
 
+  @media (max-width: 720px) {
+    .tabs { justify-content: flex-start; margin-top: 36px; }
+    .tabs button { padding: 7px 13px; font-size: 13px; }
+    main { padding-top: 36px; }
+    p.lead { font-size: 17px; }
+  }
   @media (max-width: 620px) {
     .fishrow .quick { flex-basis: 100%; }
     .detailflex .art { flex-basis: 100%; }
@@ -270,25 +292,47 @@
 </style>
 </head>
 <body>
-<canvas id="waterbg" aria-hidden="true"></canvas>
+<a class="skip" href="#main">Skip to content</a>
 
-<header>
-  <a href="index.html"><img class="logo" src="logo.png" alt="Gebsfish"></a>
-  <h1>🛠️ Server Config Editor</h1>
-  <p class="tag">Drop in the JSON files from your server's <code style="color:var(--gold)">Gebs</code> folder, tune everything visually, download them back. No text editor needed.</p>
+<header class="nav" id="top">
+  <div class="nav-inner">
+    <a class="brand" href="index.html" aria-label="Gebsfish Wiki">
+      <span class="glyph" aria-hidden="true"></span>
+      <span>Gebsfish</span>
+    </a>
+    <nav class="nav-links" id="nav-links" aria-label="Wiki">
+      <a href="index.html#fish">Fish</a>
+      <a href="index.html#items">Gear</a>
+      <a href="index.html#baits">Bait</a>
+      <a href="index.html#systems">Systems</a>
+      <a href="index.html#guide">Guide</a>
+      <a href="index.html#faq">FAQ</a>
+      <a href="index.html#changelog">Changelog</a>
+      <a href="config-editor.html" aria-current="page">Config Editor</a>
+    </nav>
+    <a class="pill small" href="https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117">Subscribe</a>
+    <button class="menu" id="menu" aria-expanded="false" aria-controls="nav-links" aria-label="Menu"><span></span><span></span></button>
+  </div>
 </header>
 
-<nav aria-label="Editor sections">
-  <button data-tab="load" class="active">📥 Load Files</button>
-  <button data-tab="fish" id="nav-fish">🐟 Fish<span class="dot"></span></button>
-  <button data-tab="bait" id="nav-bait">🪱 Bait &amp; Lures<span class="dot"></span></button>
-  <button data-tab="general" id="nav-general">⚙️ General<span class="dot"></span></button>
-  <button data-tab="junk" id="nav-junk">🗑️ Junk<span class="dot"></span></button>
-  <button data-tab="sim" id="nav-sim">🎯 What will bite?</button>
-  <a class="navlink" href="index.html">↩ Back to Wiki</a>
+<section class="hero">
+  <p class="eyebrow rise">Gebsfish for server owners</p>
+  <h1 class="rise">Config Editor.</h1>
+  <p class="lede rise">Drop in the JSON files from your server's <b>Gebs</b> folder, tune everything visually, download them back. No text editor needed.</p>
+</section>
+
+<nav class="tabs" aria-label="Editor sections">
+  <div class="seg">
+    <button data-tab="load" class="active">Load Files</button>
+    <button data-tab="fish" id="nav-fish">Fish<span class="dot"></span></button>
+    <button data-tab="bait" id="nav-bait">Bait &amp; Lures<span class="dot"></span></button>
+    <button data-tab="general" id="nav-general">General<span class="dot"></span></button>
+    <button data-tab="junk" id="nav-junk">Junk<span class="dot"></span></button>
+    <button data-tab="sim" id="nav-sim">What will bite?</button>
+  </div>
 </nav>
 
-<main>
+<main id="main">
 
 <!-- ============================ LOAD TAB ============================ -->
 <section class="tab active" id="tab-load">
@@ -296,7 +340,7 @@
   <p class="lead">Everything happens in your browser — nothing is uploaded to any server, and your files never leave your computer.</p>
 
   <div id="dropzone" role="button" tabindex="0" aria-label="Drop JSON config files here or press Enter to browse">
-    <div class="big">🎣</div>
+    <span class="glyph" aria-hidden="true"></span>
     <b>Drag &amp; drop your JSON files here</b>
     <span class="hint">or click to browse — load one file or all four at once</span>
     <span class="hint" style="margin-top:10px"><kbd>fish.json</kbd> <kbd>bait.json</kbd> <kbd>general.json</kbd> <kbd>junk.json</kbd></span>
@@ -321,35 +365,35 @@
 
 <!-- ============================ FISH TAB ============================ -->
 <section class="tab" id="tab-fish">
-  <h2>🐟 Fish — <code style="font-size:1rem;color:var(--gold)">fish.json</code></h2>
+  <h2>Fish <code>fish.json</code></h2>
   <p class="lead">Per-species tuning: how common each fish is, where and how it's caught, meat yield, weather &amp; temperature behavior, and its 24-hour bite rhythm.</p>
   <div id="fish-editor"></div>
 </section>
 
 <!-- ============================ BAIT TAB ============================ -->
 <section class="tab" id="tab-bait">
-  <h2>🪱 Bait &amp; Lures — <code style="font-size:1rem;color:var(--gold)">bait.json</code></h2>
+  <h2>Bait &amp; Lures <code>bait.json</code></h2>
   <p class="lead">Pick a bait, then set how strongly it attracts each fish. <b>1.0 is neutral</b> — higher means that fish loves this bait, lower means it ignores it.</p>
   <div id="bait-editor"></div>
 </section>
 
 <!-- ============================ GENERAL TAB ============================ -->
 <section class="tab" id="tab-general">
-  <h2>⚙️ General — <code style="font-size:1rem;color:var(--gold)">general.json</code></h2>
+  <h2>General <code>general.json</code></h2>
   <p class="lead">Global systems: weather &amp; time-of-day buffs, moon phase, water temperature, treasure, predators, foraging, recipes, and logging.</p>
   <div id="general-editor"></div>
 </section>
 
 <!-- ============================ JUNK TAB ============================ -->
 <section class="tab" id="tab-junk">
-  <h2>🗑️ Junk — <code style="font-size:1rem;color:var(--gold)">junk.json</code></h2>
+  <h2>Junk <code>junk.json</code></h2>
   <p class="lead">Items a rod can drag up instead of a fish (nets and traps never catch junk). The junk share sets how often that happens; each item's weight (0–25) sets how often it turns up among the junk; health is rolled in the min–max range.</p>
   <div id="junk-editor"></div>
 </section>
 
 <!-- ============================ WHAT WILL BITE? TAB ============================ -->
 <section class="tab" id="tab-sim">
-  <h2>🎯 What will bite?</h2>
+  <h2>What will bite?</h2>
   <p class="lead">Pick a map, a time, the weather and what's on the hook to see the odds the server will use for each catch, worked out with the mod's own math from the files you loaded. It only reads them: nothing here changes your config.</p>
   <div id="sim-editor"></div>
 </section>
@@ -370,9 +414,14 @@
 
 <div id="toasts" aria-live="polite"></div>
 
-<footer>
-  Gebsfish Config Editor · runs entirely in your browser · files are never uploaded anywhere ·
-  <a href="index.html">Gebsfish Wiki</a> · <a href="https://github.com/PackJC/gebsfish">GitHub</a>
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <span class="brand"><span class="glyph" aria-hidden="true"></span><span>Gebsfish Config Editor</span></span>
+      <nav aria-label="Elsewhere"><a href="index.html">Gebsfish Wiki</a><a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2757509117">Steam Workshop</a><a href="https://github.com/PackJC/gebsfish">GitHub</a><a href="https://discord.gg/G8uSGZ8yyf">Discord</a></nav>
+    </div>
+    <p>Runs entirely in your browser: your files are never uploaded anywhere.</p>
+  </div>
 </footer>
 
 <script src="fish-details.js"></script>
@@ -800,7 +849,9 @@ function activateTab(name){
   // The simulator recomputes on every open, so edits made in the other
   // tabs since it was last shown are always reflected.
   if (name === "sim") simRefresh();
-  window.scrollTo({ top: 0 });
+  const start = document.querySelector("main").offsetTop - document.querySelector(".nav").offsetHeight -
+    document.querySelector(".tabs").offsetHeight;
+  if (window.scrollY > start) window.scrollTo({ top: start, behavior: "instant" });
 }
 document.querySelectorAll("nav button").forEach(b => b.addEventListener("click", () => activateTab(b.dataset.tab)));
 
@@ -1115,16 +1166,16 @@ const BITE_PRESETS = {
 
 function rarityPill(p){
   const s = document.createElement("span");
-  if (p >= 20)      { s.className = "pill abundant"; s.textContent = "abundant"; }
-  else if (p >= 12) { s.className = "pill common";   s.textContent = "common"; }
-  else if (p >= 7)  { s.className = "pill uncommon"; s.textContent = "uncommon"; }
-  else              { s.className = "pill rare";     s.textContent = "rare"; }
+  if (p >= 20)      { s.className = "tag abundant"; s.textContent = "abundant"; }
+  else if (p >= 12) { s.className = "tag common";   s.textContent = "common"; }
+  else if (p >= 7)  { s.className = "tag uncommon"; s.textContent = "uncommon"; }
+  else              { s.className = "tag rare";     s.textContent = "rare"; }
   return s;
 }
 function envPill(env){
   const s = document.createElement("span");
   const name = env === 1 ? "pond" : env === 2 ? "sea" : env === 3 ? "both" : null;
-  s.className = "pill " + (name || "off");
+  s.className = "tag " + (name || "off");
   s.textContent = name || "disabled";
   // 0 (or anything the validator resets to 0) matches no water at all.
   if (!name) s.title = "Environment " + env + ": matches no water, so this fish is never caught";
@@ -3108,106 +3159,10 @@ window.addEventListener("beforeunload", e => {
 </script>
 
 <script>
-/* Underwater background — same vibe as the wiki: gradient, light rays, bubbles, fish. */
+/* The phone menu in the page header. */
 (() => {
-  const canvas = document.getElementById("waterbg");
-  if (!canvas) return;
-  const ctx = canvas.getContext("2d");
-  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let W, H, fish = [], bubbles = [], rays = [];
-  const rand = (a, b) => a + Math.random() * (b - a);
-
-  function makeFish(x){
-    const depth = Math.random();
-    return { x: x !== undefined ? x : rand(-100, W + 100), y: rand(H * 0.08, H * 0.95),
-      dir: Math.random() < 0.5 ? -1 : 1, depth, size: 12 + depth * 38,
-      speed: (12 + depth * 30) * rand(0.75, 1.25), wag: rand(0, Math.PI * 2),
-      wagSpeed: rand(3, 5.2), bob: rand(0, Math.PI * 2),
-      hue: rand(196, 214), sat: rand(28, 45), light: rand(52, 68) };
-  }
-  function populate(){
-    const n = Math.round(Math.min(14, Math.max(6, (W * H) / 110000)));
-    fish = Array.from({ length: n }, () => makeFish()).sort((a, b) => a.depth - b.depth);
-    bubbles = Array.from({ length: Math.round(n * 1.5) }, () => ({ x: rand(0, W), y: rand(0, H), r: rand(1, 3.2), s: rand(12, 28), wob: rand(0, Math.PI * 2) }));
-    rays = Array.from({ length: 4 }, (_, i) => ({ x: ((i + 0.5) * W) / 4 + rand(-60, 60), w: rand(60, 140), lean: rand(-0.18, 0.18), phase: rand(0, Math.PI * 2) }));
-  }
-  function resize(){
-    const dpr = Math.min(devicePixelRatio || 1, 2);
-    W = innerWidth; H = innerHeight;
-    canvas.width = W * dpr; canvas.height = H * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    populate();
-    if (reduced) draw(0);
-  }
-  function drawFish(f, t){
-    const wag = Math.sin(f.wag + t * f.wagSpeed) * 0.22;
-    const y = f.y + Math.sin(f.bob + t * 0.7) * 6;
-    const a = 0.05 + f.depth * 0.13;
-    ctx.save();
-    ctx.translate(f.x, y);
-    ctx.scale(f.dir, 1);
-    ctx.rotate(wag * 0.35);
-    const s = f.size;
-    ctx.fillStyle = "hsla(" + f.hue + "," + f.sat + "%," + f.light + "%," + a + ")";
-    ctx.beginPath();
-    ctx.ellipse(0, 0, s * 0.5, s * 0.21, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.moveTo(-s * 0.42, 0);
-    ctx.lineTo(-s * 0.72, -s * 0.2 + wag * s * 0.5);
-    ctx.lineTo(-s * 0.72, s * 0.2 + wag * s * 0.5);
-    ctx.closePath();
-    ctx.fill();
-    ctx.restore();
-  }
-  function draw(t){
-    ctx.clearRect(0, 0, W, H);
-    const g = ctx.createLinearGradient(0, 0, 0, H);
-    g.addColorStop(0, "#10202f");
-    g.addColorStop(0.5, "#0d1723");
-    g.addColorStop(1, "#0a111b");
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, W, H);
-    rays.forEach(r => {
-      const sway = Math.sin(t * 0.25 + r.phase) * 30;
-      const grd = ctx.createLinearGradient(r.x + sway, 0, r.x + sway + r.lean * H, H);
-      grd.addColorStop(0, "rgba(90,160,220,0.05)");
-      grd.addColorStop(1, "rgba(90,160,220,0)");
-      ctx.fillStyle = grd;
-      ctx.beginPath();
-      ctx.moveTo(r.x + sway - r.w / 2, 0);
-      ctx.lineTo(r.x + sway + r.w / 2, 0);
-      ctx.lineTo(r.x + sway + r.lean * H + r.w, H);
-      ctx.lineTo(r.x + sway + r.lean * H - r.w, H);
-      ctx.closePath();
-      ctx.fill();
-    });
-    fish.forEach(f => drawFish(f, t));
-    ctx.fillStyle = "rgba(160,205,240,0.10)";
-    bubbles.forEach(b => {
-      const x = b.x + Math.sin(b.wob + t) * 6;
-      ctx.beginPath();
-      ctx.arc(x, b.y, b.r, 0, Math.PI * 2);
-      ctx.fill();
-    });
-  }
-  let last = 0;
-  function step(ms){
-    const t = ms / 1000;
-    const dt = Math.min(0.05, t - last);
-    last = t;
-    fish.forEach(f => {
-      f.x += f.dir * f.speed * dt;
-      if (f.dir > 0 && f.x > W + 120) { Object.assign(f, makeFish(-100)); f.dir = 1; }
-      if (f.dir < 0 && f.x < -120) { Object.assign(f, makeFish(W + 100)); f.dir = -1; }
-    });
-    bubbles.forEach(b => { b.y -= b.s * dt; if (b.y < -8) { b.y = H + 8; b.x = rand(0, W); } });
-    draw(t);
-    requestAnimationFrame(step);
-  }
-  addEventListener("resize", resize);
-  resize();
-  if (!reduced) requestAnimationFrame(step);
+  const menu = document.getElementById("menu"), links = document.getElementById("nav-links");
+  menu.addEventListener("click", () => menu.setAttribute("aria-expanded", String(links.classList.toggle("open"))));
 })();
 </script>
 </body>
