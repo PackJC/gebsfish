@@ -1,5 +1,11 @@
 # Changelog
 
+## v4.0.2
+
+### Fixed
+
+- **BanovFrost servers start, with the mod's fish** — BanovFrost ships Banov's `Banovmap.pbo`, whose script defines `BANOVMAP`, so gebsfish's Banov hook was compiled in there too. It names Banov's world data class, `BanovData`, which BanovFrost doesn't have (its own is `BanovFrostData`), and the server stopped at "Can't compile "World" script module!". Each map's hook now keys on that map's own scripts (`BanovMiscScripts` on Banov, `BanovfrostMiscScripts` on BanovFrost), and BanovFrost has a hook of its own. Without a hook, the mod still puts its catches back into the map's catch list once the map has set up, as on any other custom map
+
 ## v4.0.1
 
 ### New Fish

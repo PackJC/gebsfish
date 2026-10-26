@@ -52,11 +52,31 @@ modded class DeadfallData
 
 #endif
 
-#ifdef BANOVMAP
+// Banov and BanovFrost ship the same Banovmap.pbo, whose common script
+// #defines BANOVMAP, so BANOVMAP is set on both maps. Gated on it, the hook on
+// Banov's BanovData stopped the World module compiling on BanovFrost, which has
+// no such class: its world data is BanovFrostData. Each hook is gated on the
+// CfgPatches class of the scripts PBO that declares its world data instead,
+// a name only that map has: BanovMiscScripts (BanovScripts.pbo,
+// scripts/4_World/banov.c) and BanovfrostMiscScripts (BanovFrostScripts.pbo,
+// scripts/4_World/banovfrost.c). A hook left out costs no fish: both maps
+// clear the catch list in their own InitYieldBank, and
+// MissionBase.GebRepairYieldBank then puts the mod's catches back.
+#ifdef BanovMiscScripts
 
-// Banov's WorldData was banovData until Banov renamed it BanovData (BanovScripts.pbo, scripts/4_world/banov.c); the
-// old name stopped the World module compiling on Banov servers.
+// Banov's WorldData was banovData until Banov renamed it BanovData; the old
+// name stopped the World module compiling on Banov servers.
 modded class BanovData {
+    override void InitYieldBank() {
+        GetDayZGame().GetYieldDataInitInvoker().Invoke(m_YieldBank);
+    }
+}
+
+#endif
+
+#ifdef BanovfrostMiscScripts
+
+modded class BanovFrostData {
     override void InitYieldBank() {
         GetDayZGame().GetYieldDataInitInvoker().Invoke(m_YieldBank);
     }
